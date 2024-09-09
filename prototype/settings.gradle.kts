@@ -1,4 +1,4 @@
-rootProject.name = "KtMongo"
+rootProject.name = "KtMongo-prototype"
 
 dependencyResolutionManagement {
 	repositories {
