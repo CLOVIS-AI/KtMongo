@@ -21,8 +21,8 @@ package opensavvy.ktmongo.bson
 import org.bson.*
 import org.bson.BsonWriter
 
-private class JavaBsonPrimitiveWriter(
-	val writer: BsonWriter
+internal class JavaBsonPrimitiveWriter(
+	private val writer: BsonWriter
 ) : BsonPrimitiveWriter {
 	override fun flush() {
 		writer.flush()

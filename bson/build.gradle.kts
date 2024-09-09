@@ -37,6 +37,7 @@ kotlin {
 
 	sourceSets.commonTest.dependencies {
 		implementation(libs.prepared)
+		implementation(opensavvyConventions.aligned.kotlin.test)
 	}
 }
 
