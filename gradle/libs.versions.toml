@@ -1,9 +1,15 @@
 # List of dependencies of the project
 
 [versions]
+prepared = "1.4.0"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
+mongodb-bson-jvm = "5.1.4"      # https://central.sonatype.com/artifact/org.mongodb/bson
+mongodb-bson-js = "6.8.0"       # https://www.npmjs.com/package/bson
 
 [plugins]
 
 [libraries]
+prepared = { module = "dev.opensavvy.prepared:runner-kotest", version.ref = "prepared" }
+
+mongodb-bson-jvm = { module = "org.mongodb:bson", version.ref = "mongodb-bson-jvm" }
 
 [bundles]
