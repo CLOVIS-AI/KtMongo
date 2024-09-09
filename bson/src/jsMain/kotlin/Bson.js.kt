@@ -16,4 +16,6 @@
 
 package opensavvy.ktmongo.bson
 
-actual typealias ObjectId = org.bson.types.ObjectId
+actual class Bson {
+	// TODO: implement the BSON type on top of the NPM 'bson' library
+}

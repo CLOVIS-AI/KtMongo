@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.bson.types
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
-
-class BsonPrimitiveWriterTest : PreparedSpec({
-	writerTests()
-})
+actual typealias ObjectId = org.bson.types.ObjectId

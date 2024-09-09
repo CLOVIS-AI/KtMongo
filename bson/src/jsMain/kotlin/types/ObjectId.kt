@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy, MongoDB Inc and contributors.
+ * Copyright (c) 2024, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.bson.types
 
 private const val BYTE_SIZE = 12
 private const val HEX_STRING_SIZE = BYTE_SIZE * 2

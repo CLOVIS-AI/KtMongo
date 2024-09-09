@@ -17,26 +17,16 @@
 package opensavvy.ktmongo.bson
 
 /**
- * MongoDB native identifier.
+ * A BSON document.
  *
- * ObjectIds are 12 bytes and can be generated safely in a distributed manner with very low probability of collision.
+ * A BSON value *always* has a root document.
  *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-objectid)
+ * To create instances of this class, see [buildBsonDocument].
  */
-expect class ObjectId : Comparable<ObjectId> {
-
-	constructor(bytes: ByteArray)
-
-	constructor(hexString: String)
+expect class Bson {
 
 	/**
-	 * Generates a new random ObjectId.
+	 * JSON representation of this [Bson] object, as a [String].
 	 */
-	constructor()
-
-	fun toHexString(): String
-
-	fun toByteArray(): ByteArray
+	override fun toString(): String
 }

@@ -16,41 +16,38 @@
 
 package opensavvy.ktmongo.bson
 
-import opensavvy.prepared.suite.Prepared
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.prepared.suite.SuiteDsl
-import opensavvy.prepared.suite.TestDsl
 import kotlin.test.assertEquals
 
 @Suppress("DEPRECATION")
-fun SuiteDsl.primitiveWriter(
-	writer: Prepared<BsonPrimitiveWriter>,
-	read: suspend TestDsl.() -> String,
-) = suite("BsonPrimitiveWriter $writer") {
+fun SuiteDsl.writerTests() = suite("BsonPrimitiveWriter") {
 
-	suspend fun TestDsl.checkResult(
-		// language=bson
-		bson: String,
-	) {
-		val actual = read()
-		assertEquals(bson, actual)
-	}
-
-	test("Int") {
-		writer().writeDocument {
+	test("An Int in a root document") {
+		val result = buildBsonDocument {
 			writeInt32("foo", 42)
 		}
-		checkResult("""{"foo": 42}""")
+		assertEquals("""{"foo": 42}""", result.toString())
 	}
 
 	test("More complex example") {
-		writer().writeDocument {
+		val result = buildBsonDocument {
 			writeDBPointer("user", "myproject.users", ObjectId("507f1f77bcf86cd799439011"))
 			writeInt64("age", 18)
 			writeBoolean("isAlive", true)
+
+			writeArray("children") {
+				writeDocument {
+					writeString("name", "Paul")
+				}
+				writeDocument {
+					writeString("name", "Alice")
+				}
+			}
 		}
 		val ref = "\$ref"
 		val id = "\$id"
 		val oid = "\$oid"
-		checkResult("""{"user": {"$ref": "myproject.users", "$id": {"$oid": "507f1f77bcf86cd799439011"}}, "age": 18, "isAlive": true}""")
+		assertEquals("""{"user": {"$ref": "myproject.users", "$id": {"$oid": "507f1f77bcf86cd799439011"}}, "age": 18, "isAlive": true, "children": [{"name": "Paul"}, {"name": "Alice"}]}""", result.toString())
 	}
 }

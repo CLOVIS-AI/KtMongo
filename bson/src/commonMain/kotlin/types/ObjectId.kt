@@ -14,10 +14,29 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.bson.types
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
+/**
+ * MongoDB native identifier.
+ *
+ * ObjectIds are 12 bytes and can be generated safely in a distributed manner with very low probability of collision.
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-objectid)
+ */
+expect class ObjectId : Comparable<ObjectId> {
 
-class BsonPrimitiveWriterTest : PreparedSpec({
-	writerTests()
-})
+	constructor(bytes: ByteArray)
+
+	constructor(hexString: String)
+
+	/**
+	 * Generates a new random ObjectId.
+	 */
+	constructor()
+
+	fun toHexString(): String
+
+	fun toByteArray(): ByteArray
+}

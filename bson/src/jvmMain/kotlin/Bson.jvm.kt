@@ -16,8 +16,6 @@
 
 package opensavvy.ktmongo.bson
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import org.bson.BsonDocument
 
-class BsonPrimitiveWriterTest : PreparedSpec({
-	writerTests()
-})
+actual typealias Bson = BsonDocument

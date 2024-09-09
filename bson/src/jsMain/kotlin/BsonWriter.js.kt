@@ -16,8 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
-
-class BsonPrimitiveWriterTest : PreparedSpec({
-	writerTests()
-})
+actual fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson {
+	console.error("buildBsonDocument is not implemented on this platform")
+	return Bson()
+}
