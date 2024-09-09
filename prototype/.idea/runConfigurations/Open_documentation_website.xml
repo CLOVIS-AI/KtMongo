@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+	<configuration default="false" name="Open documentation website" type="JavascriptDebugType" uri="http://localhost:7999">
+		<method v="2">
+			<option name="RunConfigurationTask" enabled="true" run_configuration_name="Documentation website" run_configuration_type="docker-deploy" />
+		</method>
+	</configuration>
+</component>

@@ -1,0 +1,9 @@
+
+services:
+  mongodb:
+    image: mongo:7
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=user
+      - MONGODB_INITDB_ROOT_PASSWORD=password
+    ports:
+      - "27017:27017"

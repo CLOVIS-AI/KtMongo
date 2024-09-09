@@ -1,0 +1,50 @@
+{% extends "main.html" %}
+{% block tabs %}
+{{ super() }}
+<style>
+	#hero-page {
+		width: 59rem;
+		max-width: 100%;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	#hero-title {
+		font-size: 3.7rem;
+		margin-top: 10vh;
+		margin-bottom: 1rem;
+		font-weight: bolder;
+	}
+
+	@media screen and (min-width: 60em) {
+		.md-sidebar--secondary {
+			display: none
+		}
+	}
+
+	@media screen and (min-width: 76.25em) {
+		.md-sidebar--primary {
+			display: none
+		}
+	}
+</style>
+
+<section class="mdx-container" id="hero-page">
+	<div class="md-typeset">
+		<div class="mdx-hero">
+			<div class="mdx-hero__content">
+				<h1 id="hero-title">{{ config.site_name }}</h1>
+
+				<div> <!-- Badges -->
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+{% block content %}
+<div style="min-height: 50vh">
+	{{ super() }}
+</div>
+{% endblock %}

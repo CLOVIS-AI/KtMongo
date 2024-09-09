@@ -1,0 +1,10 @@
+# Ignore everything by default
+# (ignore specific files instead of folders, because we can't unignore files in ignored folders)
+*.xml
+*.iml
+
+.name
+
+!inspectionProfiles/*
+!codeStyles/*
+!runConfigurations/*
