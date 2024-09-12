@@ -17,9 +17,11 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.SuiteDsl
 import kotlin.test.assertEquals
 
+@OptIn(LowLevelApi::class)
 @Suppress("DEPRECATION")
 fun SuiteDsl.writerTests() = suite("BsonPrimitiveWriter") {
 

@@ -18,8 +18,10 @@ package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.types.Decimal128
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
 
+@OptIn(LowLevelApi::class)
 private class JavaBsonWriter(
 	private val writer: BsonWriter
 ) : BsonFieldWriter, BsonValueWriter {
@@ -198,6 +200,7 @@ private class JavaBsonWriter(
 
 }
 
+@LowLevelApi
 actual fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson {
 	val document = BsonDocument()
 

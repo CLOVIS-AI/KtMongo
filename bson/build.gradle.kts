@@ -27,6 +27,10 @@ kotlin {
 
 	compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
 
+	sourceSets.commonMain.dependencies {
+		api(projects.annotations)
+	}
+
 	sourceSets.jvmMain.dependencies {
 		api(libs.mongodb.bson.jvm)
 	}
