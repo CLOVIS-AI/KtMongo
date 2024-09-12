@@ -1,30 +1,38 @@
-package fr.qsh.ktmongo.dsl.expr
+/*
+ * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import fr.qsh.ktmongo.dsl.LowLevelApi
-import fr.qsh.ktmongo.dsl.expr.common.withLoggedContext
-import fr.qsh.ktmongo.dsl.writeDocument
-import io.kotest.core.spec.style.FunSpec
-import org.bson.BsonDocument
-import org.bson.BsonDocumentWriter
-import org.bson.BsonType
+package opensavvy.ktmongo.dsl.expr
+
+import opensavvy.ktmongo.bson.buildBsonDocument
+import opensavvy.ktmongo.bson.types.BsonType
+import opensavvy.ktmongo.dsl.KtMongoDsl
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.prepared.runner.kotest.PreparedSpec
 
 @OptIn(LowLevelApi::class)
-@Suppress("unused")
-class PredicateExpressionTest : FunSpec({
+class PredicateExpressionTest : PreparedSpec({
 
+	@KtMongoDsl
 	fun <T> predicate(block: PredicateExpression<T>.() -> Unit): String {
-		val document = BsonDocument()
+		val expr = PredicateExpression<T>(testContext())
+			.apply(block)
 
-		val writer = BsonDocumentWriter(document)
-			.withLoggedContext()
-
-		writer.writeDocument {
-			PredicateExpression<T>(testCodec())
-				.apply(block)
-				.writeTo(writer)
-		}
-
-		return document.toString()
+		return buildBsonDocument {
+			expr.writeTo(this)
+		}.toString()
 	}
 
 	val eq = "\$eq"
@@ -36,7 +44,7 @@ class PredicateExpressionTest : FunSpec({
 	val lt = "\$lt"
 	val lte = "\$lte"
 
-	context("Operator \$eq") {
+	suite("Operator $eq") {
 		test("Integer") {
 			predicate {
 				eq(4)
@@ -68,7 +76,7 @@ class PredicateExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $exists") {
+	suite("Operator $exists") {
 		test("Does exist") {
 			predicate<String> {
 				exists()
@@ -90,10 +98,10 @@ class PredicateExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $type") {
+	suite("Operator $type") {
 		test("Has a given type") {
 			predicate<String> {
-				hasType(BsonType.DOUBLE)
+				hasType(BsonType.Double)
 			} shouldBeBson """
 				{
 					"$type": 1
@@ -112,7 +120,7 @@ class PredicateExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $not") {
+	suite("Operator $not") {
 		test("Is not null") {
 			predicate<String?> {
 				isNotNull()
@@ -156,4 +164,5 @@ class PredicateExpressionTest : FunSpec({
 			}
 		""".trimIndent()
 	}
+
 })
