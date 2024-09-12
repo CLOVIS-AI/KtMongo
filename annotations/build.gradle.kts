@@ -24,23 +24,11 @@ kotlin {
 	js {
 		nodejs()
 	}
-
-	compilerOptions.freeCompilerArgs.add("-Xallow-kotlin-package")
-
-	sourceSets.commonMain.dependencies {
-		api(projects.bson)
-		api(projects.annotations)
-	}
-
-	sourceSets.commonTest.dependencies {
-		implementation(libs.prepared)
-		implementation(opensavvyConventions.aligned.kotlin.test)
-	}
 }
 
 library {
-	name.set("MongoDB query DSL")
-	description.set("Kotlin-first DSL for writing expressive and typesafe MongoDB queries")
+	name.set("KtMongo annotations")
+	description.set("Annotations used by the KtMongo libraries.")
 	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
 
 	license.set {

@@ -51,6 +51,7 @@ plugins {
 }
 
 include(
+	"annotations",
 	"bson",
 	"dsl",
 
