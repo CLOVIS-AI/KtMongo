@@ -18,39 +18,44 @@ package opensavvy.ktmongo.bson.types
 
 import kotlin.reflect.KClass
 
-typealias NullableValue<T> = TypedValue<T, KClass<out T & Any>?>
-typealias NonNullValue<T> = TypedValue<T & Any, KClass<out T & Any>>
-typealias NullValue = TypedValue<Nothing?, Nothing?>
-
 /**
  * A holder class for a [value] and its [type].
+ *
+ * To get an instance of this type, see [typed].
  */
-class TypedValue<T : Any?, out K : KClass<out T & Any>?> internal constructor(
-	val value: T,
+sealed class TypedValue<out T> {
+
+	abstract val value: T
 
 	/**
 	 * The type of [value].
 	 *
 	 * If [value] is `null`, this field is `null` too.
 	 */
-	val type: K
-) {
+	abstract val type: KClass<out Any>?
 
-	init {
-		require(value != null || type == null) { "The type can only be null if the value is null too. Value: $value. Type: $type." }
+	class NonNullable<T : Any>(
+		override val value: T,
+		override val type: KClass<T>
+	) : TypedValue<T>() {
+
+		override fun toString() = "$value of $type"
 	}
 
-	/**
-	 * Extracts the `null` case out of the value.
-	 *
-	 * Useful to use smart-casting.
-	 */
-	fun orNull(): NonNullValue<T & Any>? =
-		if (value == null) null
-		else NonNullValue(value, type!!)
+	object Null : TypedValue<Nothing?>() {
+		override val value: Nothing? get() = null
+		override val type: Nothing? get() = null
+
+		override fun toString() = "null"
+	}
 }
 
-@Suppress("UNNECESSARY_NOT_NULL_ASSERTION") // the compiler is confused
-fun <T> typed(value: T): NullableValue<T> =
-	if (value != null) TypedValue(value, value!!::class)
-	else TypedValue(value, null)
+fun <T : Any> typed(value: T): TypedValue.NonNullable<T> =
+	TypedValue.NonNullable(value, value::class)
+
+fun typed(@Suppress("UNUSED_PARAMETER") value: Nothing? = null): TypedValue.Null =
+	TypedValue.Null
+
+fun <T : Any?> typed(value: T) =
+	if (value == null) typed()
+	else typed(value)
