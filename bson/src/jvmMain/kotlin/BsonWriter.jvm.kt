@@ -22,7 +22,6 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
 import org.bson.codecs.Encoder
 import org.bson.codecs.EncoderContext
-import kotlin.reflect.KClass
 
 @OptIn(LowLevelApi::class)
 private class JavaBsonWriter(
@@ -104,9 +103,9 @@ private class JavaBsonWriter(
 		writer.writeEndArray()
 	}
 
-	override fun <T> writeObjectSafe(name: String, obj: T, context: BsonContext, type: KClass<T & Any>) {
+	override fun <T> writeObjectSafe(name: String, obj: T, context: BsonContext) {
 		writer.writeName(name)
-		writeObjectSafe(obj, context, type)
+		writeObjectSafe(obj, context)
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
@@ -193,11 +192,12 @@ private class JavaBsonWriter(
 		writer.writeEndArray()
 	}
 
-	override fun <T> writeObjectSafe(obj: T, context: BsonContext, type: KClass<T & Any>) {
+	override fun <T> writeObjectSafe(obj: T, context: BsonContext) {
 		if (obj == null) {
 			writer.writeNull()
 		} else {
-			val codec: Encoder<T> = context.codecRegistry.get(type.java)
+			@Suppress("UNCHECKED_CAST", "UNNECESSARY_NOT_NULL_ASSERTION")
+			val codec = context.codecRegistry.get(obj!!::class.java) as Encoder<T>
 			codec.encode(
 				writer,
 				obj,
