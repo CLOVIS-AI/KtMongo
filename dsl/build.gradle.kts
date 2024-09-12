@@ -25,6 +25,8 @@ kotlin {
 		nodejs()
 	}
 
+	compilerOptions.freeCompilerArgs.add("-Xallow-kotlin-package")
+
 	sourceSets.commonMain.dependencies {
 		api(projects.bson)
 	}
