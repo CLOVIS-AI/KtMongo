@@ -19,6 +19,7 @@ package opensavvy.ktmongo.bson
 import opensavvy.ktmongo.bson.types.Decimal128
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KClass
 
 @DslMarker
 annotation class BsonWriterDsl
@@ -65,6 +66,13 @@ interface BsonValueWriter {
 
 	@LowLevelApi fun writeDocument(block: BsonFieldWriter.() -> Unit)
 	@LowLevelApi fun writeArray(block: BsonValueWriter.() -> Unit)
+
+	/**
+	 * Writes an arbitrary [obj] into a BSON document.
+	 *
+	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
+	 */
+	@LowLevelApi fun <T> writeObjectSafe(obj: T, context: BsonContext, type: KClass<T & Any>)
 }
 
 /**
@@ -110,6 +118,13 @@ interface BsonFieldWriter {
 
 	@LowLevelApi fun writeDocument(name: String, block: BsonFieldWriter.() -> Unit)
 	@LowLevelApi fun writeArray(name: String, block: BsonValueWriter.() -> Unit)
+
+	/**
+	 * Writes an arbitrary [obj] into a BSON document.
+	 *
+	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
+	 */
+	@LowLevelApi fun <T> writeObjectSafe(name: String, obj: T, context: BsonContext, type: KClass<T & Any>)
 }
 
 /**
@@ -150,3 +165,25 @@ interface BsonFieldWriter {
  */
 @LowLevelApi
 expect fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson
+
+// region Extensions
+
+@LowLevelApi
+inline fun <reified T : Any> BsonValueWriter.writeObjectSafe(obj: T, context: BsonContext) =
+	writeObjectSafe(obj, context, T::class)
+
+@Suppress("UNUSED_PARAMETER")
+@LowLevelApi
+fun BsonValueWriter.writeObjectSafe(obj: Nothing?, context: BsonContext) =
+	writeNull()
+
+@LowLevelApi
+inline fun <reified T : Any> BsonFieldWriter.writeObjectSafe(name: String, obj: T, context: BsonContext) =
+	writeObjectSafe(name, obj, context, T::class)
+
+@Suppress("UNUSED_PARAMETER")
+@LowLevelApi
+fun BsonFieldWriter.writeObjectSafe(name: String, obj: Nothing?, context: BsonContext) =
+	writeNull(name)
+
+// endregion

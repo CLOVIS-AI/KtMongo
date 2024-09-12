@@ -20,6 +20,9 @@ import opensavvy.ktmongo.bson.types.Decimal128
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
+import org.bson.codecs.Encoder
+import org.bson.codecs.EncoderContext
+import kotlin.reflect.KClass
 
 @OptIn(LowLevelApi::class)
 private class JavaBsonWriter(
@@ -99,6 +102,11 @@ private class JavaBsonWriter(
 		writer.writeStartArray(name)
 		block()
 		writer.writeEndArray()
+	}
+
+	override fun <T> writeObjectSafe(name: String, obj: T, context: BsonContext, type: KClass<T & Any>) {
+		writer.writeName(name)
+		writeObjectSafe(obj, context, type)
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
@@ -183,6 +191,21 @@ private class JavaBsonWriter(
 		writer.writeStartArray()
 		block()
 		writer.writeEndArray()
+	}
+
+	override fun <T> writeObjectSafe(obj: T, context: BsonContext, type: KClass<T & Any>) {
+		if (obj == null) {
+			writer.writeNull()
+		} else {
+			val codec: Encoder<T> = context.codecRegistry.get(type.java)
+			codec.encode(
+				writer,
+				obj,
+				EncoderContext.builder()
+					.isEncodingCollectibleDocument(true)
+					.build()
+			)
+		}
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
