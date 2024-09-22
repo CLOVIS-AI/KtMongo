@@ -1,26 +1,69 @@
-package fr.qsh.ktmongo.dsl.expr
+/*
+ * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import fr.qsh.ktmongo.dsl.*
-import fr.qsh.ktmongo.dsl.expr.common.AbstractCompoundExpression
-import fr.qsh.ktmongo.dsl.expr.common.AbstractExpression
-import fr.qsh.ktmongo.dsl.path.PropertySyntaxScope
-import org.bson.BsonType
-import org.bson.BsonWriter
-import org.bson.codecs.configuration.CodecRegistry
+package opensavvy.ktmongo.dsl.expr
+
+import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.types.BsonType
+import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.KtMongoDsl
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
+import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 
 /**
  * DSL for MongoDB operators that are used as predicates in conditions in a context where the targeted field is already
  * specified.
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * class User(
+ *     val name: String?,
+ *     val age: Int,
+ * )
+ *
+ * collection.find {
+ *     User::name { //(1)
+ *         eq("foo")
+ *     }
+ * }
+ * ```
+ *
+ * 1. By referring to a specific property, we obtain a [PredicateExpression] that we can use
+ * to declare many operators on that property.
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/)
+ *
+ * @param T The type on which this predicate applies.
+ * For example, if the selected field is of type `String`, then `T` is `String`.
  */
 @KtMongoDsl
 class PredicateExpression<T>(
-	codec: CodecRegistry,
-) : AbstractCompoundExpression(codec), PropertySyntaxScope {
+	context: BsonContext,
+) : AbstractCompoundExpression(context) {
 
 	// region Low-level operations
 
 	@LowLevelApi
-	private sealed class PredicateExpressionNode(codec: CodecRegistry) : AbstractExpression(codec)
+	private sealed class PredicateExpressionNode(context: BsonContext) : AbstractExpression(context)
 
 	// endregion
 	// region $eq
@@ -49,25 +92,20 @@ class PredicateExpression<T>(
 	 *
 	 * @see FilterExpression.eq Shorthand.
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun eq(value: T) {
-		accept(EqualityExpressionNode(value, codec))
+		accept(EqualityExpressionNode(value, context))
 	}
 
 	@LowLevelApi
-	private class EqualityExpressionNode<T>(
+	private inner class EqualityExpressionNode<T>(
 		val value: T,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
-		override fun write(writer: BsonWriter) {
-			if (value == null)
-				writer.writeNull("\$eq")
-			else {
-				writer.writeName("\$eq")
-				writer.writeObject(value, codec)
-			}
+		override fun write(writer: BsonFieldWriter) {
+			writer.writeObjectSafe("\$eq", value, context)
 		}
 	}
 
@@ -138,25 +176,20 @@ class PredicateExpression<T>(
 	 *
 	 * @see FilterExpression.ne Shorthand.
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun ne(value: T) {
-		accept(InequalityExpressionNode(value, codec))
+		accept(InequalityExpressionNode(value, context))
 	}
 
 	@LowLevelApi
 	private class InequalityExpressionNode<T>(
 		val value: T,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
-		override fun write(writer: BsonWriter) {
-			if (value == null)
-				writer.writeNull("\$ne")
-			else {
-				writer.writeName("\$ne")
-				writer.writeObject(value, codec)
-			}
+		override fun write(writer: BsonFieldWriter) {
+			writer.writeObjectSafe("\$ne", value, context)
 		}
 	}
 
@@ -190,19 +223,19 @@ class PredicateExpression<T>(
 	 * @see doesNotExist Opposite.
 	 * @see isNotNull Identical, but does not match elements where the field is `null`.
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun exists() {
-		accept(ExistsPredicateExpressionNode(true, codec))
+		accept(ExistsPredicateExpressionNode(true, context))
 	}
 
 	@LowLevelApi
 	private class ExistsPredicateExpressionNode(
 		val exists: Boolean,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
-		override fun write(writer: BsonWriter) {
+		override fun write(writer: BsonFieldWriter) {
 			writer.writeBoolean("\$exists", exists)
 		}
 	}
@@ -234,10 +267,10 @@ class PredicateExpression<T>(
 	 * @see exists Opposite.
 	 * @see isNull Only matches elements that are specifically `null`.
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun doesNotExist() {
-		accept(ExistsPredicateExpressionNode(false, codec))
+		accept(ExistsPredicateExpressionNode(false, context))
 	}
 
 	// endregion
@@ -272,20 +305,20 @@ class PredicateExpression<T>(
 	 * @see isNull Checks if a value has the type [BsonType.NULL].
 	 * @see isUndefined Checks if a value has the type [BsonType.UNDEFINED].
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun hasType(type: BsonType) {
-		accept(TypePredicateExpressionNode(type, codec))
+		accept(TypePredicateExpressionNode(type, context))
 	}
 
 	@LowLevelApi
 	private class TypePredicateExpressionNode(
 		val type: BsonType,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
-		override fun write(writer: BsonWriter) {
-			writer.writeInt32("\$type", type.value)
+		override fun write(writer: BsonFieldWriter) {
+			writer.writeInt32("\$type", type.code)
 		}
 	}
 
@@ -320,17 +353,17 @@ class PredicateExpression<T>(
 	 *
 	 * @see FilterExpression.not Shorthand.
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun not(expression: PredicateExpression<T>.() -> Unit) {
-		accept(NotPredicateExpressionNode(PredicateExpression<T>(codec).apply(expression), codec))
+		accept(NotPredicateExpressionNode(PredicateExpression<T>(context).apply(expression), context))
 	}
 
 	@LowLevelApi
 	private class NotPredicateExpressionNode<T>(
 		val expression: PredicateExpression<T>,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
 		override fun simplify(): AbstractExpression? {
 			if (expression.children.isEmpty())
@@ -339,7 +372,7 @@ class PredicateExpression<T>(
 			return super.simplify()
 		}
 
-		override fun write(writer: BsonWriter) {
+		override fun write(writer: BsonFieldWriter) {
 			writer.writeDocument("\$not") {
 				expression.writeTo(writer)
 			}
@@ -375,7 +408,7 @@ class PredicateExpression<T>(
 	 */
 	@KtMongoDsl
 	fun isNull() =
-		hasType(BsonType.NULL)
+		hasType(BsonType.Null)
 
 	/**
 	 * Selects documents for which the field is not `null`.
@@ -428,8 +461,10 @@ class PredicateExpression<T>(
 	 * @see isNotUndefined Opposite.
 	 */
 	@KtMongoDsl
+	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	fun isUndefined() =
-		hasType(BsonType.UNDEFINED)
+		hasType(BsonType.Undefined)
 
 	/**
 	 * Selects documents for which the field is not `undefined`.
@@ -455,6 +490,8 @@ class PredicateExpression<T>(
 	 * @see isUndefined Opposite.
 	 */
 	@KtMongoDsl
+	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	fun isNotUndefined() =
 		not { isUndefined() }
 
@@ -484,22 +521,21 @@ class PredicateExpression<T>(
 	 * @see FilterExpression.gt
 	 * @see gtNotNull
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun gt(value: T) {
-		accept(GtPredicateExpressionNode(value, codec))
+		accept(GtPredicateExpressionNode(value, context))
 	}
 
 	@LowLevelApi
 	private class GtPredicateExpressionNode<T>(
 		private val value: T,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
 		@LowLevelApi
-		override fun write(writer: BsonWriter) {
-			writer.writeName("\$gt")
-			writer.writeObject(value, codec)
+		override fun write(writer: BsonFieldWriter) {
+			writer.writeObjectSafe("\$gt", value, context)
 		}
 	}
 
@@ -557,22 +593,21 @@ class PredicateExpression<T>(
 	 * @see FilterExpression.gte
 	 * @see gteNotNull
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun gte(value: T) {
-		accept(GtePredicateExpressionNode(value, codec))
+		accept(GtePredicateExpressionNode(value, context))
 	}
 
 	@LowLevelApi
 	private class GtePredicateExpressionNode<T>(
 		private val value: T,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
 		@LowLevelApi
-		override fun write(writer: BsonWriter) {
-			writer.writeName("\$gte")
-			writer.writeObject(value, codec)
+		override fun write(writer: BsonFieldWriter) {
+			writer.writeObjectSafe("\$gte", value, context)
 		}
 	}
 
@@ -630,22 +665,21 @@ class PredicateExpression<T>(
 	 * @see FilterExpression.lt
 	 * @see ltNotNull
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun lt(value: T) {
-		accept(LtPredicateExpressionNode(value, codec))
+		accept(LtPredicateExpressionNode(value, context))
 	}
 
 	@LowLevelApi
 	private class LtPredicateExpressionNode<T>(
 		private val value: T,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
 		@LowLevelApi
-		override fun write(writer: BsonWriter) {
-			writer.writeName("\$lt")
-			writer.writeObject(value, codec)
+		override fun write(writer: BsonFieldWriter) {
+			writer.writeObjectSafe("\$lt", value, context)
 		}
 	}
 
@@ -703,22 +737,21 @@ class PredicateExpression<T>(
 	 * @see FilterExpression.lte
 	 * @see lteNotNull
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun lte(value: T) {
-		accept(LtePredicateExpressionNode(value, codec))
+		accept(LtePredicateExpressionNode(value, context))
 	}
 
 	@LowLevelApi
 	private class LtePredicateExpressionNode<T>(
 		private val value: T,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
 		@LowLevelApi
-		override fun write(writer: BsonWriter) {
-			writer.writeName("\$lte")
-			writer.writeObject(value, codec)
+		override fun write(writer: BsonFieldWriter) {
+			writer.writeObjectSafe("\$lte", value, context)
 		}
 	}
 
@@ -780,23 +813,23 @@ class PredicateExpression<T>(
 	 *
 	 * @see FilterExpression.isOneOf
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun isOneOf(values: Collection<T>) {
-		accept(OneOfPredicateExpressionNode(values, codec))
+		accept(OneOfPredicateExpressionNode(values, context))
 	}
 
 	@LowLevelApi
 	private class OneOfPredicateExpressionNode<T>(
 		val values: Collection<T>,
-		codec: CodecRegistry,
-	) : PredicateExpressionNode(codec) {
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
 
 		@LowLevelApi
-		override fun write(writer: BsonWriter) {
+		override fun write(writer: BsonFieldWriter) {
 			writer.writeArray("\$in") {
 				for (value in values)
-					writer.writeObject(value, codec)
+					writeObjectSafe(value, context)
 			}
 		}
 	}

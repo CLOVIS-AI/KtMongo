@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.types
+package opensavvy.ktmongo.dsl.utils
 
-/**
- * Binary integer decimal representation of a 128-bit decimal value, supporting 34 decimal digits
- * of significand and an exponent range of -6143 to +6144.
- */
-expect class Decimal128 : Number, Comparable<Decimal128> {
+internal class ImmutableWrapperList<T>(
+	private val wrapped: List<T>
+) : List<T> by wrapped {
 
-	// This is not strictly not necessarily, but for some reason,
-	// :bson:compileCommonMainKotlinMetadata fails without it
-	override fun toByte(): Byte
-	override fun toDouble(): Double
-	override fun toFloat(): Float
-	override fun toInt(): Int
-	override fun toLong(): Long
-	override fun toShort(): Short
-	override fun compareTo(other: Decimal128): Int
+	override fun hashCode(): Int = wrapped.hashCode()
+	override fun equals(other: Any?): Boolean = wrapped == other
+	override fun toString(): String = wrapped.toString()
 }
+
+internal fun <T> List<T>.asImmutable(): List<T> =
+	ImmutableWrapperList(this)

@@ -14,21 +14,10 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.types
+package opensavvy.ktmongo.bson
 
-/**
- * Binary integer decimal representation of a 128-bit decimal value, supporting 34 decimal digits
- * of significand and an exponent range of -6143 to +6144.
- */
-expect class Decimal128 : Number, Comparable<Decimal128> {
+import org.bson.codecs.configuration.CodecRegistry
 
-	// This is not strictly not necessarily, but for some reason,
-	// :bson:compileCommonMainKotlinMetadata fails without it
-	override fun toByte(): Byte
-	override fun toDouble(): Double
-	override fun toFloat(): Float
-	override fun toInt(): Int
-	override fun toLong(): Long
-	override fun toShort(): Short
-	override fun compareTo(other: Decimal128): Int
-}
+actual class BsonContext(
+	val codecRegistry: CodecRegistry
+)

@@ -18,8 +18,12 @@ package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.types.Decimal128
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
+import org.bson.codecs.Encoder
+import org.bson.codecs.EncoderContext
 
+@OptIn(LowLevelApi::class)
 private class JavaBsonWriter(
 	private val writer: BsonWriter
 ) : BsonFieldWriter, BsonValueWriter {
@@ -97,6 +101,11 @@ private class JavaBsonWriter(
 		writer.writeStartArray(name)
 		block()
 		writer.writeEndArray()
+	}
+
+	override fun <T> writeObjectSafe(name: String, obj: T, context: BsonContext) {
+		writer.writeName(name)
+		writeObjectSafe(obj, context)
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
@@ -183,6 +192,22 @@ private class JavaBsonWriter(
 		writer.writeEndArray()
 	}
 
+	override fun <T> writeObjectSafe(obj: T, context: BsonContext) {
+		if (obj == null) {
+			writer.writeNull()
+		} else {
+			@Suppress("UNCHECKED_CAST", "UNNECESSARY_NOT_NULL_ASSERTION")
+			val codec = context.codecRegistry.get(obj!!::class.java) as Encoder<T>
+			codec.encode(
+				writer,
+				obj,
+				EncoderContext.builder()
+					.isEncodingCollectibleDocument(true)
+					.build()
+			)
+		}
+	}
+
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	override fun writeDBPointer(namespace: String, id: ObjectId) {
 		writer.writeDBPointer(BsonDbPointer(namespace, id))
@@ -198,6 +223,7 @@ private class JavaBsonWriter(
 
 }
 
+@LowLevelApi
 actual fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson {
 	val document = BsonDocument()
 

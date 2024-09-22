@@ -25,18 +25,11 @@ kotlin {
 		nodejs()
 	}
 
-	compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
+	compilerOptions.freeCompilerArgs.add("-Xallow-kotlin-package")
 
 	sourceSets.commonMain.dependencies {
+		api(projects.bson)
 		api(projects.annotations)
-	}
-
-	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.bson.jvm)
-	}
-
-	sourceSets.jsMain.dependencies {
-		api(npm("bson", libs.versions.mongodb.bson.js.get()))
 	}
 
 	sourceSets.commonTest.dependencies {
@@ -46,8 +39,8 @@ kotlin {
 }
 
 library {
-	name.set("Kotlin BSON")
-	description.set("Kotlin-first BSON library")
+	name.set("MongoDB query DSL")
+	description.set("Kotlin-first DSL for writing expressive and typesafe MongoDB queries")
 	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
 
 	license.set {

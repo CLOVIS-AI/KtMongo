@@ -44,7 +44,7 @@ actual class ObjectId actual constructor(private val bytes: ByteArray) : Compara
 	actual fun toByteArray(): ByteArray =
 		bytes.copyOf()
 
-	override fun compareTo(other: ObjectId): Int {
+	actual override fun compareTo(other: ObjectId): Int {
 		val byteArray = toByteArray()
 		val otherByteArray = other.toByteArray()
 		for (i in 0 until BYTE_SIZE) {

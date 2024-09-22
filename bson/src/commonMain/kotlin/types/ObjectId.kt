@@ -39,4 +39,6 @@ expect class ObjectId : Comparable<ObjectId> {
 	fun toHexString(): String
 
 	fun toByteArray(): ByteArray
+
+	override fun compareTo(other: ObjectId): Int
 }

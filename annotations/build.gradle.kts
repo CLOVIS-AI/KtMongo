@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.types
+plugins {
+	alias(opensavvyConventions.plugins.base)
+	alias(opensavvyConventions.plugins.kotlin.library)
+}
 
-/**
- * Binary integer decimal representation of a 128-bit decimal value, supporting 34 decimal digits
- * of significand and an exponent range of -6143 to +6144.
- */
-expect class Decimal128 : Number, Comparable<Decimal128> {
+kotlin {
+	jvm()
+	js {
+		nodejs()
+	}
+}
 
-	// This is not strictly not necessarily, but for some reason,
-	// :bson:compileCommonMainKotlinMetadata fails without it
-	override fun toByte(): Byte
-	override fun toDouble(): Double
-	override fun toFloat(): Float
-	override fun toInt(): Int
-	override fun toLong(): Long
-	override fun toShort(): Short
-	override fun compareTo(other: Decimal128): Int
+library {
+	name.set("KtMongo annotations")
+	description.set("Annotations used by the KtMongo libraries.")
+	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
+
+	license.set {
+		name.set("Apache 2.0")
+		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+	}
 }
