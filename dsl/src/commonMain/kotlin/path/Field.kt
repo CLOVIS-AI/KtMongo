@@ -257,7 +257,7 @@ interface FieldDsl {
 }
 
 @LowLevelApi
-private class FieldImpl<Root, Type>(
+internal class FieldImpl<Root, Type>(
 	override val path: Path,
 ) : Field<Root, Type> {
 

@@ -1,19 +1,34 @@
-package fr.qsh.ktmongo.dsl.expr
+/*
+ * Copyright (c) 2024, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import io.kotest.core.spec.style.FunSpec
-import org.bson.BsonType
+package opensavvy.ktmongo.dsl.expr
 
-@Suppress("unused")
-class FilterExpressionTest : FunSpec({
+import opensavvy.prepared.runner.kotest.PreparedSpec
+
+class FilterExpressionTest : PreparedSpec({
 
 	class User(
 		val id: String,
 		val name: String,
 		val age: Int?,
+		val grades: List<Int>,
 	)
 
-	fun <T> filter(block: FilterExpression<T>.() -> Unit): String =
-		FilterExpression<T>(testCodec()).apply(block).toString(simplified = true)
+	fun filter(block: FilterExpression<User>.() -> Unit): String =
+		FilterExpression<User>(testContext()).apply(block).toString()
 
 	val eq = "\$eq"
 	val ne = "\$ne"
@@ -29,7 +44,7 @@ class FilterExpressionTest : FunSpec({
 	val lte = "\$lte"
 	val all = "\$all"
 
-	context("Operator $eq") {
+	suite("Operator $eq") {
 		test("Integer") {
 			filter {
 				User::age eq 5
@@ -55,7 +70,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $ne") {
+	suite("Operator $ne") {
 		test("Integer") {
 			filter {
 				User::age ne 12
@@ -81,7 +96,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $isOneOf") {
+	suite("Operator $isOneOf") {
 		test("With 0 elements") {
 			filter {
 				User::name.isOneOf()
@@ -126,7 +141,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $exists") {
+	suite("Operator $exists") {
 		test("Exists") {
 			filter {
 				User::age.exists()
@@ -152,10 +167,10 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $type") {
+	suite("Operator $type") {
 		test("String") {
 			filter {
-				User::age hasType BsonType.STRING
+				User::age hasType BsonType.String
 			} shouldBeBson """
 				{
 					"age": {
@@ -167,7 +182,7 @@ class FilterExpressionTest : FunSpec({
 
 		test("Null") {
 			filter {
-				User::age hasType BsonType.NULL
+				User::age hasType BsonType.Null
 			} shouldBeBson """
 				{
 					"age": {
@@ -230,7 +245,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operators $and and $or") {
+	suite("Operators $and and $or") {
 		test("And") {
 			filter {
 				and {
@@ -256,7 +271,7 @@ class FilterExpressionTest : FunSpec({
 		}
 
 		test("Empty $and") {
-			filter<User> {
+			filter {
 				and {}
 			} shouldBeBson """
 				{
@@ -357,7 +372,7 @@ class FilterExpressionTest : FunSpec({
 		}
 
 		test("Empty $or") {
-			filter<User> {
+			filter {
 				or {}
 			} shouldBeBson """
 				{
@@ -380,7 +395,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Comparison operators") {
+	suite("Comparison operators") {
 		test("int $gt") {
 			filter {
 				User::age gt 12
@@ -430,7 +445,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Array operators") {
+	suite("Array operators") {
 		val elemMatch = "\$elemMatch"
 
 		class Pet(
@@ -601,10 +616,6 @@ class FilterExpressionTest : FunSpec({
 	}
 
 	test("Operator $all") {
-		class User(
-			val grades: List<Int>,
-		)
-
 		filter {
 			User::grades containsAll listOf(1, 2, 3)
 		} shouldBeBson """
@@ -615,4 +626,5 @@ class FilterExpressionTest : FunSpec({
 			}
 		""".trimIndent()
 	}
+
 })
