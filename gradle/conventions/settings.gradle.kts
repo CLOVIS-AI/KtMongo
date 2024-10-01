@@ -1,6 +1,7 @@
 rootProject.name = "conventions"
 
 dependencyResolutionManagement {
+	@Suppress("UnstableApiUsage")
 	repositories {
 		mavenCentral()
 		gradlePluginPortal()
@@ -27,6 +28,7 @@ pluginManagement {
 			}
 
 			content {
+				@Suppress("UnstableApiUsage")
 				includeGroupAndSubgroups("dev.opensavvy")
 			}
 		}

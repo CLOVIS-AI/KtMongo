@@ -55,6 +55,11 @@ workflow:
   tags:
     - saas-macos-medium-m1
 
+  retry:
+    max: 1
+    exit_codes:
+      - 1  # Sometimes, the runner breaks and doesn't actually run the test
+
 # endregion
 # region Check
 
@@ -73,7 +78,13 @@ check[jvm]:
       -x wasmJsNodeTest
       -x wasmWasiNodeTest
       -x linuxX64Test
+      -x mingwX64Test
+      -x macosX64Test
+      -x macosArm64Test
+      -x iosX64Test
       -x iosSimulatorArm64Test
+      -x watchosX64Test
+      -x tvosX64Test
       koverVerify --rerun
       -PappVersion=$project_version
 
@@ -116,7 +127,7 @@ check[linuxX64]:
 
   script:
     - >
-      ./gradlew linuxX64Test
+      ./gradlew linuxX64Test mingwX64Test
       -PappVersion=$project_version
 
   interruptible: true
@@ -127,7 +138,9 @@ check[iosArm64]:
 
   script:
     - >
-      ./gradlew iosSimulatorArm64Test
+      ./gradlew 
+      iosSimulatorArm64Test 
+      watchosSimulatorArm64Test
       --no-configuration-cache
       -PappVersion=$project_version
 
@@ -167,6 +180,15 @@ publish-maven:gitlab[ios]:
       publishIosArm64PublicationToGitLabRepository
       publishIosSimulatorArm64PublicationToGitLabRepository
       publishIosX64PublicationToGitLabRepository
+      publishMacosX64PublicationToGitLabRepository
+      publishMacosArm64PublicationToGitLabRepository
+      publishWatchosX64PublicationToGitLabRepository
+      publishWatchosArm32PublicationToGitLabRepository
+      publishWatchosArm64PublicationToGitLabRepository
+      publishWatchosSimulatorArm64PublicationToGitLabRepository
+      publishTvosX64PublicationToGitLabRepository
+      publishTvosArm64PublicationToGitLabRepository
+      publishTvosSimulatorArm64PublicationToGitLabRepository
       --no-configuration-cache
       -PappVersion=$project_version
 
@@ -306,7 +328,7 @@ dokka:
 qodana[jvm]:
   needs: [ ]
   image:
-    name: jetbrains/qodana-jvm
+    name: jetbrains/qodana-jvm-community
     entrypoint: [ "" ]
   script:
     - qodana

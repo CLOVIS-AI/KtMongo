@@ -13,9 +13,20 @@ kotlin {
 		nodejs()
 	}
 	linuxX64()
+	linuxArm64()
+	macosX64()
+	macosArm64()
 	iosArm64()
-	iosSimulatorArm64()
 	iosX64()
+	iosSimulatorArm64()
+	watchosX64()
+	watchosArm32()
+	watchosArm64()
+	watchosSimulatorArm64()
+	tvosX64()
+	tvosArm64()
+	tvosSimulatorArm64()
+	mingwX64()
 	wasmJs {
 		browser()
 		nodejs()
@@ -50,6 +61,7 @@ library {
 
 val appGroup: String? by project
 
+@Suppress("UnstableApiUsage") // 'onlyIf' is unstable
 if (appGroup != "dev.opensavvy.playground") {
 	tasks.configureEach {
 		if (name.startsWith("publish")) {
