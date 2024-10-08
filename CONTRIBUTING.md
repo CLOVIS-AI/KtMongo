@@ -4,9 +4,11 @@ Thanks for wanting to contribute to the project!
 
 There are many things we appreciate help with. The simplest is to report problems you see in the documentation or while using the project, by creating an issue.
 
-If you have a specific change you'd like to submit, be it documentation, bug fixes or new features, please read our guide on [how to create merge requests following our conventions](https://gitlab.com/opensavvy/wiki/-/blob/main/README.md#wiki).
+If you have a specific change you'd like to submit, be it documentation, bug fixes or new features, please read our [contribution guide](https://opensavvy.dev/open-source/index.html#contributing-to-open-source-projects).
 
 > Before starting making large changes, please do talk about it with us! Some things, in particular, deploying to new platforms requires changes on our side as well.
+>
+> The simplest way of contacting us is by creating an issue on this repository, or commenting in an existing issue. Some projects may also have a Discord server, if you prefer reaching us there.
 
 ## Issue tracking
 
