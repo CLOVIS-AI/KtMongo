@@ -30,7 +30,6 @@ import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.FieldImpl
 import opensavvy.ktmongo.dsl.path.Path
-import kotlin.internal.OnlyInputTypes
 import kotlin.jvm.JvmName
 import kotlin.reflect.KProperty1
 
@@ -290,8 +289,9 @@ class FilterExpression<T>(
 	 * ```
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	operator fun <@OnlyInputTypes V> Field<T, V>.invoke(block: PredicateExpression<V>.() -> Unit) {
+	operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: PredicateExpression<V>.() -> Unit) {
 		accept(PredicateInFilterExpression(path, PredicateExpression<V>(context).apply(block), context))
 	}
 
@@ -322,8 +322,9 @@ class FilterExpression<T>(
 	 * }
 	 * ```
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	operator fun <@OnlyInputTypes V> KProperty1<T, V>.invoke(block: PredicateExpression<V>.() -> Unit) {
+	operator fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.invoke(block: PredicateExpression<V>.() -> Unit) {
 		this.field.invoke(block)
 	}
 
@@ -372,8 +373,9 @@ class FilterExpression<T>(
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/not/)
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.not(expression: PredicateExpression<V>.() -> Unit) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.not(expression: PredicateExpression<V>.() -> Unit) {
 		this { this.not(expression) }
 	}
 
@@ -401,8 +403,9 @@ class FilterExpression<T>(
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/not/)
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.not(expression: PredicateExpression<V>.() -> Unit) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.not(expression: PredicateExpression<V>.() -> Unit) {
 		this.field.not(expression)
 	}
 
@@ -429,8 +432,9 @@ class FilterExpression<T>(
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/eq/)
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.eq(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.eq(value: V) {
 		this { eq(value) }
 	}
 
@@ -454,8 +458,9 @@ class FilterExpression<T>(
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/eq/)
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.eq(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.eq(value: V) {
 		this.field.eq(value)
 	}
 
@@ -487,8 +492,9 @@ class FilterExpression<T>(
 	 *
 	 * @see eq Equality filter.
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.eqNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.eqNotNull(value: V?) {
 		this { eqNotNull(value) }
 	}
 
@@ -520,8 +526,9 @@ class FilterExpression<T>(
 	 *
 	 * @see eq Equality filter.
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.eqNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.eqNotNull(value: V?) {
 		this.field.eqNotNull(value)
 	}
 
@@ -552,8 +559,9 @@ class FilterExpression<T>(
 	 *
 	 * @see eq
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.ne(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.ne(value: V) {
 		this { ne(value) }
 	}
 
@@ -581,8 +589,9 @@ class FilterExpression<T>(
 	 *
 	 * @see eq
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.ne(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.ne(value: V) {
 		this.field.ne(value)
 	}
 
@@ -1021,8 +1030,9 @@ class FilterExpression<T>(
 	 *
 	 * @see gtNotNull
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.gt(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gt(value: V) {
 		this { gt(value) }
 	}
 
@@ -1048,8 +1058,9 @@ class FilterExpression<T>(
 	 *
 	 * @see gtNotNull
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.gt(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gt(value: V) {
 		this.field.gt(value)
 	}
 
@@ -1078,8 +1089,9 @@ class FilterExpression<T>(
 	 * @see gt
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.gtNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gtNotNull(value: V?) {
 		this { gtNotNull(value) }
 	}
 
@@ -1108,8 +1120,9 @@ class FilterExpression<T>(
 	 * @see gt
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.gtNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gtNotNull(value: V?) {
 		this.field.gtNotNull(value)
 	}
 
@@ -1135,8 +1148,9 @@ class FilterExpression<T>(
 	 *
 	 * @see gteNotNull
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.gte(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gte(value: V) {
 		this { gte(value) }
 	}
 
@@ -1162,8 +1176,9 @@ class FilterExpression<T>(
 	 *
 	 * @see gteNotNull
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.gte(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gte(value: V) {
 		this.field.gte(value)
 	}
 
@@ -1192,8 +1207,9 @@ class FilterExpression<T>(
 	 * @see gte
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.gteNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gteNotNull(value: V?) {
 		this { gteNotNull(value) }
 	}
 
@@ -1222,8 +1238,9 @@ class FilterExpression<T>(
 	 * @see gte
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.gteNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gteNotNull(value: V?) {
 		this.field.gteNotNull(value)
 	}
 
@@ -1249,8 +1266,9 @@ class FilterExpression<T>(
 	 *
 	 * @see ltNotNull
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.lt(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lt(value: V) {
 		this { lt(value) }
 	}
 
@@ -1276,8 +1294,9 @@ class FilterExpression<T>(
 	 *
 	 * @see ltNotNull
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.lt(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.lt(value: V) {
 		this.field.lt(value)
 	}
 
@@ -1306,8 +1325,9 @@ class FilterExpression<T>(
 	 * @see lt
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.ltNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.ltNotNull(value: V?) {
 		this { ltNotNull(value) }
 	}
 
@@ -1336,8 +1356,9 @@ class FilterExpression<T>(
 	 * @see lt
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.ltNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.ltNotNull(value: V?) {
 		this.field.ltNotNull(value)
 	}
 
@@ -1363,8 +1384,9 @@ class FilterExpression<T>(
 	 *
 	 * @see lteNotNull
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.lte(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lte(value: V) {
 		this { lte(value) }
 	}
 
@@ -1390,8 +1412,9 @@ class FilterExpression<T>(
 	 *
 	 * @see lteNotNull
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.lte(value: V) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.lte(value: V) {
 		this.field.lte(value)
 	}
 
@@ -1420,8 +1443,9 @@ class FilterExpression<T>(
 	 * @see lte
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> Field<T, V>.lteNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lteNotNull(value: V?) {
 		this { lteNotNull(value) }
 	}
 
@@ -1450,8 +1474,9 @@ class FilterExpression<T>(
 	 * @see lte
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, V>.lteNotNull(value: V?) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.lteNotNull(value: V?) {
 		this.field.lteNotNull(value)
 	}
 
@@ -1481,8 +1506,9 @@ class FilterExpression<T>(
 	 * @see or
 	 * @see eq
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@OnlyInputTypes V> Field<T, V>.isOneOf(values: List<V>) {
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isOneOf(values: List<V>) {
 		this { isOneOf(values) }
 	}
 
@@ -1509,8 +1535,9 @@ class FilterExpression<T>(
 	 * @see or
 	 * @see eq
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@OnlyInputTypes V> KProperty1<T, V>.isOneOf(values: List<V>) {
+	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isOneOf(values: List<V>) {
 		this.field.isOneOf(values)
 	}
 
@@ -1537,8 +1564,9 @@ class FilterExpression<T>(
 	 * @see or
 	 * @see eq
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@OnlyInputTypes V> Field<T, V>.isOneOf(vararg values: V) {
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isOneOf(vararg values: V) {
 		isOneOf(values.asList())
 	}
 
@@ -1565,8 +1593,9 @@ class FilterExpression<T>(
 	 * @see or
 	 * @see eq
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@OnlyInputTypes V> KProperty1<T, V>.isOneOf(vararg values: V) {
+	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isOneOf(vararg values: V) {
 		isOneOf(values.asList())
 	}
 
@@ -2148,9 +2177,10 @@ class FilterExpression<T>(
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/all/)
 	 */
+	@Suppress("INVISIBLE_REFERENCE")
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	infix fun <@OnlyInputTypes V> KProperty1<T, Collection<V>>.containsAll(values: Collection<V>) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, Collection<V>>.containsAll(values: Collection<V>) {
 		this.field.containsAll(values)
 	}
 

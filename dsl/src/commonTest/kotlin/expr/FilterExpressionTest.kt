@@ -16,19 +16,14 @@
 
 package opensavvy.ktmongo.dsl.expr
 
+import opensavvy.ktmongo.bson.types.BsonType
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.expr.filter.Pet
+import opensavvy.ktmongo.dsl.expr.filter.User
+import opensavvy.ktmongo.dsl.expr.filter.filter
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 class FilterExpressionTest : PreparedSpec({
-
-	class User(
-		val id: String,
-		val name: String,
-		val age: Int?,
-		val grades: List<Int>,
-	)
-
-	fun filter(block: FilterExpression<User>.() -> Unit): String =
-		FilterExpression<User>(testContext()).apply(block).toString()
 
 	val eq = "\$eq"
 	val ne = "\$ne"
@@ -38,11 +33,12 @@ class FilterExpressionTest : PreparedSpec({
 	val type = "\$type"
 	val not = "\$not"
 	val isOneOf = "\$in"
-	val gt = "\$gt"
+	val gtOp = "\$gt"
 	val gte = "\$gte"
 	val lt = "\$lt"
-	val lte = "\$lte"
+	val lteOp = "\$lte"
 	val all = "\$all"
+	val oid = "\$oid"
 
 	suite("Operator $eq") {
 		test("Integer") {
@@ -299,7 +295,7 @@ class FilterExpressionTest : PreparedSpec({
 					User::name eq "foo"
 					and {
 						User::age eq 12
-						User::id eq "abc"
+						User::id eq ObjectId("507f1f77bcf86cd799439011")
 					}
 				}
 			} shouldBeBson """
@@ -317,7 +313,9 @@ class FilterExpressionTest : PreparedSpec({
 						},
 						{
 							"id": {
-								"$eq": "abc"
+								"$eq": {
+									"$oid": "507f1f77bcf86cd799439011"
+								}
 							}
 						}
 					]
@@ -396,13 +394,13 @@ class FilterExpressionTest : PreparedSpec({
 	}
 
 	suite("Comparison operators") {
-		test("int $gt") {
+		test("int $gtOp") {
 			filter {
 				User::age gt 12
 			} shouldBeBson """
 				{
 					"age": {
-						"$gt": 12
+						"$gtOp": 12
 					}
 				}
 			""".trimIndent()
@@ -432,13 +430,13 @@ class FilterExpressionTest : PreparedSpec({
 			""".trimIndent()
 		}
 
-		test("int $lte") {
+		test("int $lteOp") {
 			filter {
 				User::age lte 12
 			} shouldBeBson """
 				{
 					"age": {
-						"$lte": 12
+						"$lteOp": 12
 					}
 				}
 			""".trimIndent()
@@ -448,22 +446,12 @@ class FilterExpressionTest : PreparedSpec({
 	suite("Array operators") {
 		val elemMatch = "\$elemMatch"
 
-		class Pet(
-			val name: String,
-			val age: Int,
-		)
-
-		class User(
-			val scores: List<Int>,
-			val pets: List<Pet>,
-		)
-
 		test("Test on an array element") {
 			filter {
-				User::scores.any eq 12
+				User::grades.any eq 12
 			} shouldBeBson """
 				{
-					"scores": {
+					"grades": {
 						"$eq": 12
 					}
 				}
@@ -472,19 +460,19 @@ class FilterExpressionTest : PreparedSpec({
 
 		test("Test on different array elements") {
 			filter {
-				User::scores.any gt 12
-				User::scores.any lte 15
+				User::grades.any gt 12
+				User::grades.any lte 15
 			} shouldBeBson """
 				{
 					"$and": [
 						{
-							"scores": {
-								"$gt": 12
+							"grades": {
+								"$gtOp": 12
 							}
 						},
 						{
-							"scores": {
-								"$lte": 15
+							"grades": {
+								"$lteOp": 15
 							}
 						}
 					]
@@ -494,16 +482,16 @@ class FilterExpressionTest : PreparedSpec({
 
 		test("Test on a single array element") {
 			filter {
-				User::scores.any {
+				User::grades.any {
 					gt(12)
 					lte(15)
 				}
 			} shouldBeBson """
 				{
-					"scores": {
+					"grades": {
 						"$elemMatch": {
-							"$gt": 12,
-							"$lte": 15
+							"$gtOp": 12,
+							"$lteOp": 15
 						}
 					}
 				}
@@ -519,12 +507,12 @@ class FilterExpressionTest : PreparedSpec({
 					"$and": [
 						{
 							"pets.age": {
-								"$gt": 15
+								"$gtOp": 15
 							}
 						},
 						{
 							"pets.age": {
-								"$lte": 18
+								"$lteOp": 18
 							}
 						}
 					]
@@ -545,12 +533,12 @@ class FilterExpressionTest : PreparedSpec({
 							"$and": [
 								{
 									"age": {
-										"$gt": 15
+										"$gtOp": 15
 									}
 								},
 								{
 									"age": {
-										"$lte": 18
+										"$lteOp": 18
 									}
 								}
 							]
@@ -573,8 +561,8 @@ class FilterExpressionTest : PreparedSpec({
 					"pets": {
 						"$elemMatch": {
 							"age": {
-								"$gt": 15,
-								"$lte": 18
+								"$gtOp": 15,
+								"$lteOp": 18
 							}
 						}
 					}
@@ -593,7 +581,7 @@ class FilterExpressionTest : PreparedSpec({
 				{
 					"$and": [
 						{
-							"pets.age": {"$gt": 3}
+							"pets.age": {"$gtOp": 3}
 						},
 						{
 							"pets": {
