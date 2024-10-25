@@ -60,6 +60,13 @@ import kotlin.reflect.KProperty1
  * Some of the functions of the DSL may be available only when [FieldDsl] is in scope.
  * All operator scopes provided by this library should bring it into scope automatically.
  *
+ * For example, when writing a filter, methods from this interface are automatically available:
+ * ```kotlin
+ * collection.find {
+ *     User::profile / Profile::name eq "Thibault Lognaise"
+ * }
+ * ```
+ *
  * @param Root The type of the document in which this field is in.
  * @param Type The type of the value stored by this field.
  */
