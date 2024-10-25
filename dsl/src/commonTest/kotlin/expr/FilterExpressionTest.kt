@@ -18,10 +18,37 @@ package opensavvy.ktmongo.dsl.expr
 
 import opensavvy.ktmongo.bson.types.BsonType
 import opensavvy.ktmongo.bson.types.ObjectId
-import opensavvy.ktmongo.dsl.expr.filter.Pet
-import opensavvy.ktmongo.dsl.expr.filter.User
-import opensavvy.ktmongo.dsl.expr.filter.filter
 import opensavvy.prepared.runner.kotest.PreparedSpec
+
+private val eqOp = "\$eq"
+private val neOp = "\$ne"
+private val andOp = "\$and"
+private val orOp = "\$or"
+private val existsOp = "\$exists"
+private val typeOp = "\$type"
+private val notOp = "\$not"
+private val isOneOfOp = "\$in"
+private val gtOp = "\$gt"
+private val gteOp = "\$gte"
+private val ltOp = "\$lt"
+private val lteOp = "\$lte"
+private val allOp = "\$all"
+
+private class Pet(
+	val name: String,
+	val age: Int,
+)
+
+private class User(
+	val id: ObjectId,
+	val name: String,
+	val age: Int?,
+	val grades: List<Int>,
+	val pets: List<Pet>,
+)
+
+private fun filter(block: FilterExpression<User>.() -> Unit): String =
+	FilterExpression<User>(testContext()).apply(block).toString()
 
 class FilterExpressionTest : PreparedSpec({
 
