@@ -23,6 +23,7 @@ dependencies {
 	// List the 'library' projects
 	dokkatoo(projects.annotations)
 	dokkatoo(projects.bson)
+	dokkatoo(projects.dsl)
 }
 
 // region Check the users of the project didn't forget to rename the group
