@@ -31,6 +31,46 @@ import opensavvy.ktmongo.dsl.path.Path
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 
+/**
+ * DSL for MongoDB operators that are used to update existing values (does *not* include aggregation operators).
+ *
+ * ### Example
+ *
+ * This expression type is available on multiple operations, most commonly `update`:
+ * ```kotlin
+ * class User(
+ *     val name: String,
+ *     val age: Int,
+ * )
+ *
+ * collection.update(
+ *     filter = {
+ *         User::name eq "Bob"
+ *     },
+ *     update = {
+ *         User::age set 18
+ *     }
+ * )
+ * ```
+ *
+ * ### Operators
+ *
+ * Fields:
+ * - [`$inc`][inc]
+ * - [`$rename`][renameTo]
+ * - [`$set`][set]
+ * - [`$setOnInsert`][setOnInsert]
+ * - [`$unset`][unset]
+ *
+ * Arrays:
+ * - [`$[]`][FieldDsl.get]
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/)
+ *
+ * @see FilterExpression Filters
+ */
 @KtMongoDsl
 class UpdateExpression<T>(
 	context: BsonContext,
