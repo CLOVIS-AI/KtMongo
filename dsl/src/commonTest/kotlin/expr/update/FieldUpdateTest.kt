@@ -14,44 +14,16 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr
+package opensavvy.ktmongo.dsl.expr.update
 
+import opensavvy.ktmongo.dsl.expr.shouldBeBson
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
-private class Friend(
-	val id: String,
-	val name: String,
-	val money: Float,
-)
-
-private class User2(
-	val id: String,
-	val name: String,
-	val age: Int?,
-	val money: Double,
-	val bestFriend: Friend,
-	val friends: List<Friend>,
-)
-
-private fun update(block: UpdateExpression<User2>.() -> Unit): String =
-	UpdateExpression<User2>(testContext()).apply(block).toString()
-
-private val set = "\$set"
-private val setOnInsert = "\$setOnInsert"
-private val inc = "\$inc"
-private val unset = "\$unset"
-private val rename = "\$rename"
-
-class UpdateExpressionTest : PreparedSpec({
-
-	test("Empty update") {
-		update { } shouldBeBson "{}"
-	}
-
+class FieldUpdateTest : PreparedSpec({
 	suite("Operator $set") {
 		test("Single field") {
 			update {
-				User2::age set 18
+				User::age set 18
 			} shouldBeBson """
 				{
 					"$set": {
@@ -63,7 +35,7 @@ class UpdateExpressionTest : PreparedSpec({
 
 		test("Nested field") {
 			update {
-				User2::bestFriend / Friend::name set "foo"
+				User::bestFriend / Friend::name set "foo"
 			} shouldBeBson """
 				{
 					"$set": {
@@ -75,8 +47,8 @@ class UpdateExpressionTest : PreparedSpec({
 
 		test("Multiple fields") {
 			update {
-				User2::age set 18
-				User2::name set "foo"
+				User::age set 18
+				User::name set "foo"
 			} shouldBeBson """
 				{
 					"$set": {
@@ -91,7 +63,7 @@ class UpdateExpressionTest : PreparedSpec({
 	suite("Operator $setOnInsert") {
 		test("Single field") {
 			update {
-				User2::age setOnInsert 18
+				User::age setOnInsert 18
 			} shouldBeBson """
 				{
 					"$setOnInsert": {
@@ -103,7 +75,7 @@ class UpdateExpressionTest : PreparedSpec({
 
 		test("Nested field") {
 			update {
-				User2::bestFriend / Friend::name setOnInsert "foo"
+				User::bestFriend / Friend::name setOnInsert "foo"
 			} shouldBeBson """
 				{
 					"$setOnInsert": {
@@ -115,8 +87,8 @@ class UpdateExpressionTest : PreparedSpec({
 
 		test("Multiple fields") {
 			update {
-				User2::age setOnInsert 18
-				User2::name setOnInsert "foo"
+				User::age setOnInsert 18
+				User::name setOnInsert "foo"
 			} shouldBeBson """
 				{
 					"$setOnInsert": {
@@ -131,7 +103,7 @@ class UpdateExpressionTest : PreparedSpec({
 	suite("Operator $inc") {
 		test("Single field") {
 			update {
-				User2::money inc 18.0
+				User::money inc 18.0
 			} shouldBeBson """
 				{
 					"$inc": {
@@ -143,7 +115,7 @@ class UpdateExpressionTest : PreparedSpec({
 
 		test("Nested field") {
 			update {
-				User2::bestFriend / Friend::money inc -12.9f
+				User::bestFriend / Friend::money inc -12.9f
 			} shouldBeBson """
 				{
 					"$inc": {
@@ -155,8 +127,8 @@ class UpdateExpressionTest : PreparedSpec({
 
 		test("Multiple fields") {
 			update {
-				User2::money inc 5.2
-				User2::bestFriend / Friend::money inc -5.2f
+				User::money inc 5.2
+				User::bestFriend / Friend::money inc -5.2f
 			} shouldBeBson """
 				{
 					"$inc": {
@@ -171,7 +143,7 @@ class UpdateExpressionTest : PreparedSpec({
 	suite("Operator $unset") {
 		test("Single field") {
 			update {
-				User2::money.unset()
+				User::money.unset()
 			} shouldBeBson """
 				{
 					"$unset": {
@@ -183,7 +155,7 @@ class UpdateExpressionTest : PreparedSpec({
 
 		test("Nested field") {
 			update {
-				(User2::bestFriend / Friend::money).unset()
+				(User::bestFriend / Friend::money).unset()
 			} shouldBeBson """
 				{
 					"$unset": {
@@ -195,8 +167,8 @@ class UpdateExpressionTest : PreparedSpec({
 
 		test("Multiple fields") {
 			update {
-				User2::money.unset()
-				User2::bestFriend.unset()
+				User::money.unset()
+				User::bestFriend.unset()
 			} shouldBeBson """
 				{
 					"$unset": {
@@ -211,7 +183,7 @@ class UpdateExpressionTest : PreparedSpec({
 	suite("Operator $rename") {
 		test("Single and nested field") {
 			update {
-				User2::bestFriend / Friend::name renameTo User2::name
+				User::bestFriend / Friend::name renameTo User::name
 			} shouldBeBson """
 				{
 					"$rename": {
@@ -223,8 +195,8 @@ class UpdateExpressionTest : PreparedSpec({
 
 		test("Multiple fields") {
 			update {
-				User2::bestFriend / Friend::name renameTo User2::name
-				User2::friends[0] / Friend::name renameTo User2::friends[1] / Friend::name
+				User::bestFriend / Friend::name renameTo User::name
+				User::friends[0] / Friend::name renameTo User::friends[1] / Friend::name
 			} shouldBeBson """
 				{
 					"$rename": {
@@ -235,5 +207,4 @@ class UpdateExpressionTest : PreparedSpec({
 			""".trimIndent()
 		}
 	}
-
 })
