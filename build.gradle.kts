@@ -25,6 +25,7 @@ dependencies {
 	dokkatoo(projects.bson)
 	dokkatoo(projects.dsl)
 	dokkatoo(projects.driverSync)
+	dokkatoo(projects.driverCoroutines)
 }
 
 // region Check the users of the project didn't forget to rename the group

@@ -25,8 +25,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  *
  * ### Operations
  *
- * - [find]
- * - [findOne]
+ * - [find][FindOperations.find]
+ * - [findOne][FindOperations.findOne]
  *
  * ### External resources
  *
