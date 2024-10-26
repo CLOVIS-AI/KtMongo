@@ -27,6 +27,7 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.dsl)
+		api(libs.kotlinx.coroutines)
 	}
 
 	sourceSets.jvmMain.dependencies {
