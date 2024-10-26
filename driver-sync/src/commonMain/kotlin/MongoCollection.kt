@@ -25,8 +25,8 @@ import opensavvy.ktmongo.sync.operations.FindOperations
  *
  * ### Operations
  *
- * - [find]
- * - [findOne]
+ * - [find][FindOperations.find]
+ * - [findOne][FindOperations.findOne]
  *
  * ### External resources
  *
