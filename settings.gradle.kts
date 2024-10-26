@@ -57,6 +57,9 @@ include(
 	"bson",
 	"dsl",
 
+	"driver-sync",
+	"driver-coroutines",
+
 	"gradle:templates:template-app",
 	"gradle:templates:template-lib",
 )

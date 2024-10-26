@@ -4,6 +4,7 @@
 prepared = "1.4.0"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
 mongodb-bson-jvm = "5.1.4"      # https://central.sonatype.com/artifact/org.mongodb/bson
 mongodb-bson-js = "6.8.0"       # https://www.npmjs.com/package/bson
+mongodb-driver = "5.2.0"        # https://central.sonatype.com/artifact/org.mongodb/mongodb-driver-kotlin-coroutine
 
 [plugins]
 
@@ -11,5 +12,7 @@ mongodb-bson-js = "6.8.0"       # https://www.npmjs.com/package/bson
 prepared = { module = "dev.opensavvy.prepared:runner-kotest", version.ref = "prepared" }
 
 mongodb-bson-jvm = { module = "org.mongodb:bson", version.ref = "mongodb-bson-jvm" }
+mongodb-coroutines-jvm = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb-driver" }
+mongodb-sync-jvm = { module = "org.mongodb:mongodb-driver-kotlin-sync", version.ref = "mongodb-driver" }
 
 [bundles]
