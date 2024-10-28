@@ -1,6 +1,23 @@
-package fr.qsh.ktmongo.dsl.path
+/*
+ * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import fr.qsh.ktmongo.dsl.LowLevelApi
+package opensavvy.ktmongo.dsl.path
+
+import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.LowLevelApi
 
 /**
  * Single segment in a [Path].
@@ -76,21 +93,44 @@ data class Path(
 	val parent: Path?,
 ) {
 
+	@LowLevelApi
 	private suspend fun SequenceScope<PathSegment>.buildSequence(current: Path) {
 		current.parent?.let { buildSequence(it) }
 		yield(current.segment)
 	}
 
-	fun asSequence(): Sequence<PathSegment> = sequence { buildSequence(this@Path) }
+	@LowLevelApi
+	fun asSequence(): Sequence<PathSegment> =
+		sequence { buildSequence(this@Path) }
 
-	override fun toString() = asSequence().joinToString(separator = ".")
+	@OptIn(LowLevelApi::class)
+	override fun toString() =
+		asSequence().joinToString(separator = ".")
 
-	companion object {
-		@LowLevelApi
-		fun root(segment: PathSegment) = Path(segment, parent = null)
-	}
+	companion object
 }
 
+/**
+ * Creates a root path from the provided [root] field name.
+ *
+ * To obtain children instances, use the [div] operator.
+ */
 @LowLevelApi
-operator fun Path.plus(segment: PathSegment): Path =
+fun Path(root: String) = Path(PathSegment.Field(root), parent = null)
+
+/**
+ * Returns a new [Path] instance that is the concatenation of the current path and a [segment].
+ */
+@LowLevelApi
+operator fun Path.div(segment: PathSegment): Path =
 	Path(segment, parent = this)
+
+/**
+ * Returns a new [Path] instance that is the concatenation of the current path and a child [path].
+ *
+ * **Danger.** This API does not check that [path] makes sense as a child of the current path!
+ */
+@LowLevelApi
+@DangerousMongoApi
+operator fun Path.div(path: Path): Path =
+	path.asSequence().fold(this) { parent, segment -> Path(segment, parent = parent) }

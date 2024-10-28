@@ -1,19 +1,29 @@
-package fr.qsh.ktmongo.dsl.expr
+/*
+ * Copyright (c) 2024, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import io.kotest.core.spec.style.FunSpec
-import org.bson.BsonType
+package opensavvy.ktmongo.dsl.expr
 
-@Suppress("unused")
-class FilterExpressionTest : FunSpec({
+import opensavvy.ktmongo.bson.types.BsonType
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.expr.filter.Pet
+import opensavvy.ktmongo.dsl.expr.filter.User
+import opensavvy.ktmongo.dsl.expr.filter.filter
+import opensavvy.prepared.runner.kotest.PreparedSpec
 
-	class User(
-		val id: String,
-		val name: String,
-		val age: Int?,
-	)
-
-	fun <T> filter(block: FilterExpression<T>.() -> Unit): String =
-		FilterExpression<T>(testCodec()).apply(block).toString(simplified = true)
+class FilterExpressionTest : PreparedSpec({
 
 	val eq = "\$eq"
 	val ne = "\$ne"
@@ -23,13 +33,14 @@ class FilterExpressionTest : FunSpec({
 	val type = "\$type"
 	val not = "\$not"
 	val isOneOf = "\$in"
-	val gt = "\$gt"
+	val gtOp = "\$gt"
 	val gte = "\$gte"
 	val lt = "\$lt"
-	val lte = "\$lte"
+	val lteOp = "\$lte"
 	val all = "\$all"
+	val oid = "\$oid"
 
-	context("Operator $eq") {
+	suite("Operator $eq") {
 		test("Integer") {
 			filter {
 				User::age eq 5
@@ -55,7 +66,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $ne") {
+	suite("Operator $ne") {
 		test("Integer") {
 			filter {
 				User::age ne 12
@@ -81,7 +92,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $isOneOf") {
+	suite("Operator $isOneOf") {
 		test("With 0 elements") {
 			filter {
 				User::name.isOneOf()
@@ -126,7 +137,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $exists") {
+	suite("Operator $exists") {
 		test("Exists") {
 			filter {
 				User::age.exists()
@@ -152,10 +163,10 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $type") {
+	suite("Operator $type") {
 		test("String") {
 			filter {
-				User::age hasType BsonType.STRING
+				User::age hasType BsonType.String
 			} shouldBeBson """
 				{
 					"age": {
@@ -167,7 +178,7 @@ class FilterExpressionTest : FunSpec({
 
 		test("Null") {
 			filter {
-				User::age hasType BsonType.NULL
+				User::age hasType BsonType.Null
 			} shouldBeBson """
 				{
 					"age": {
@@ -230,7 +241,7 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operators $and and $or") {
+	suite("Operators $and and $or") {
 		test("And") {
 			filter {
 				and {
@@ -256,7 +267,7 @@ class FilterExpressionTest : FunSpec({
 		}
 
 		test("Empty $and") {
-			filter<User> {
+			filter {
 				and {}
 			} shouldBeBson """
 				{
@@ -284,7 +295,7 @@ class FilterExpressionTest : FunSpec({
 					User::name eq "foo"
 					and {
 						User::age eq 12
-						User::id eq "abc"
+						User::id eq ObjectId("507f1f77bcf86cd799439011")
 					}
 				}
 			} shouldBeBson """
@@ -302,7 +313,9 @@ class FilterExpressionTest : FunSpec({
 						},
 						{
 							"id": {
-								"$eq": "abc"
+								"$eq": {
+									"$oid": "507f1f77bcf86cd799439011"
+								}
 							}
 						}
 					]
@@ -357,7 +370,7 @@ class FilterExpressionTest : FunSpec({
 		}
 
 		test("Empty $or") {
-			filter<User> {
+			filter {
 				or {}
 			} shouldBeBson """
 				{
@@ -380,14 +393,14 @@ class FilterExpressionTest : FunSpec({
 		}
 	}
 
-	context("Comparison operators") {
-		test("int $gt") {
+	suite("Comparison operators") {
+		test("int $gtOp") {
 			filter {
 				User::age gt 12
 			} shouldBeBson """
 				{
 					"age": {
-						"$gt": 12
+						"$gtOp": 12
 					}
 				}
 			""".trimIndent()
@@ -417,38 +430,28 @@ class FilterExpressionTest : FunSpec({
 			""".trimIndent()
 		}
 
-		test("int $lte") {
+		test("int $lteOp") {
 			filter {
 				User::age lte 12
 			} shouldBeBson """
 				{
 					"age": {
-						"$lte": 12
+						"$lteOp": 12
 					}
 				}
 			""".trimIndent()
 		}
 	}
 
-	context("Array operators") {
+	suite("Array operators") {
 		val elemMatch = "\$elemMatch"
-
-		class Pet(
-			val name: String,
-			val age: Int,
-		)
-
-		class User(
-			val scores: List<Int>,
-			val pets: List<Pet>,
-		)
 
 		test("Test on an array element") {
 			filter {
-				User::scores.any eq 12
+				User::grades.any eq 12
 			} shouldBeBson """
 				{
-					"scores": {
+					"grades": {
 						"$eq": 12
 					}
 				}
@@ -457,19 +460,19 @@ class FilterExpressionTest : FunSpec({
 
 		test("Test on different array elements") {
 			filter {
-				User::scores.any gt 12
-				User::scores.any lte 15
+				User::grades.any gt 12
+				User::grades.any lte 15
 			} shouldBeBson """
 				{
 					"$and": [
 						{
-							"scores": {
-								"$gt": 12
+							"grades": {
+								"$gtOp": 12
 							}
 						},
 						{
-							"scores": {
-								"$lte": 15
+							"grades": {
+								"$lteOp": 15
 							}
 						}
 					]
@@ -479,16 +482,16 @@ class FilterExpressionTest : FunSpec({
 
 		test("Test on a single array element") {
 			filter {
-				User::scores.any {
+				User::grades.any {
 					gt(12)
 					lte(15)
 				}
 			} shouldBeBson """
 				{
-					"scores": {
+					"grades": {
 						"$elemMatch": {
-							"$gt": 12,
-							"$lte": 15
+							"$gtOp": 12,
+							"$lteOp": 15
 						}
 					}
 				}
@@ -504,12 +507,12 @@ class FilterExpressionTest : FunSpec({
 					"$and": [
 						{
 							"pets.age": {
-								"$gt": 15
+								"$gtOp": 15
 							}
 						},
 						{
 							"pets.age": {
-								"$lte": 18
+								"$lteOp": 18
 							}
 						}
 					]
@@ -530,12 +533,12 @@ class FilterExpressionTest : FunSpec({
 							"$and": [
 								{
 									"age": {
-										"$gt": 15
+										"$gtOp": 15
 									}
 								},
 								{
 									"age": {
-										"$lte": 18
+										"$lteOp": 18
 									}
 								}
 							]
@@ -558,8 +561,8 @@ class FilterExpressionTest : FunSpec({
 					"pets": {
 						"$elemMatch": {
 							"age": {
-								"$gt": 15,
-								"$lte": 18
+								"$gtOp": 15,
+								"$lteOp": 18
 							}
 						}
 					}
@@ -578,7 +581,7 @@ class FilterExpressionTest : FunSpec({
 				{
 					"$and": [
 						{
-							"pets.age": {"$gt": 3}
+							"pets.age": {"$gtOp": 3}
 						},
 						{
 							"pets": {
@@ -601,10 +604,6 @@ class FilterExpressionTest : FunSpec({
 	}
 
 	test("Operator $all") {
-		class User(
-			val grades: List<Int>,
-		)
-
 		filter {
 			User::grades containsAll listOf(1, 2, 3)
 		} shouldBeBson """
@@ -615,4 +614,5 @@ class FilterExpressionTest : FunSpec({
 			}
 		""".trimIndent()
 	}
+
 })
