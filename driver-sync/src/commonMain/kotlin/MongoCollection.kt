@@ -18,6 +18,7 @@ package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.sync.operations.CountOperations
 import opensavvy.ktmongo.sync.operations.FindOperations
 
 /**
@@ -25,6 +26,8 @@ import opensavvy.ktmongo.sync.operations.FindOperations
  *
  * ### Operations
  *
+ * - [count][CountOperations.count]
+ * - [countEstimated][CountOperations.countEstimated]
  * - [find][FindOperations.find]
  * - [findOne][FindOperations.findOne]
  *
@@ -32,7 +35,7 @@ import opensavvy.ktmongo.sync.operations.FindOperations
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-documents)
  */
-interface MongoCollection<Document : Any> : FindOperations<Document> {
+interface MongoCollection<Document : Any> : FindOperations<Document>, CountOperations<Document> {
 
 	@LowLevelApi
 	val context: BsonContext
