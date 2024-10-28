@@ -1,56 +1,26 @@
-package fr.qsh.ktmongo.dsl.expr
+/*
+ * Copyright (c) 2024, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import fr.qsh.ktmongo.dsl.LowLevelApi
-import fr.qsh.ktmongo.dsl.expr.common.withLoggedContext
-import fr.qsh.ktmongo.dsl.writeDocument
-import io.kotest.core.spec.style.FunSpec
-import org.bson.BsonDocument
-import org.bson.BsonDocumentWriter
+package opensavvy.ktmongo.dsl.expr.update
 
-@OptIn(LowLevelApi::class)
-class UpdateExpressionTest : FunSpec({
+import opensavvy.ktmongo.dsl.expr.shouldBeBson
+import opensavvy.prepared.runner.kotest.PreparedSpec
 
-	class Friend(
-		val id: String,
-		val name: String,
-		val money: Float,
-	)
-
-	class User(
-		val id: String,
-		val name: String,
-		val age: Int?,
-		val money: Double,
-		val bestFriend: Friend,
-		val friends: List<Friend>,
-	)
-
-	fun <T> update(block: UpdateExpression<T>.() -> Unit): String {
-		val document = BsonDocument()
-
-		val writer = BsonDocumentWriter(document)
-			.withLoggedContext()
-
-		writer.writeDocument {
-			UpdateExpression<T>(testCodec())
-				.apply(block)
-				.writeTo(writer)
-		}
-
-		return document.toString()
-	}
-
-	val set = "\$set"
-	val setOnInsert = "\$setOnInsert"
-	val inc = "\$inc"
-	val unset = "\$unset"
-	val rename = "\$rename"
-
-	test("Empty update") {
-		update<User> { } shouldBeBson """{}"""
-	}
-
-	context("Operator $set") {
+class FieldUpdateTest : PreparedSpec({
+	suite("Operator $set") {
 		test("Single field") {
 			update {
 				User::age set 18
@@ -90,7 +60,7 @@ class UpdateExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $setOnInsert") {
+	suite("Operator $setOnInsert") {
 		test("Single field") {
 			update {
 				User::age setOnInsert 18
@@ -130,7 +100,7 @@ class UpdateExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $inc") {
+	suite("Operator $inc") {
 		test("Single field") {
 			update {
 				User::money inc 18.0
@@ -170,7 +140,7 @@ class UpdateExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $unset") {
+	suite("Operator $unset") {
 		test("Single field") {
 			update {
 				User::money.unset()
@@ -210,7 +180,7 @@ class UpdateExpressionTest : FunSpec({
 		}
 	}
 
-	context("Operator $rename") {
+	suite("Operator $rename") {
 		test("Single and nested field") {
 			update {
 				User::bestFriend / Friend::name renameTo User::name

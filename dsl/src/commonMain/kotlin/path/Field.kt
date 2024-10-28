@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KProperty1
 
 /**
- * A pointer to a specific field in a document.
+ * High-level, typesafe pointer to a specific field in a document.
  *
  * This type may refer to fields nested in children documents or arrays.
  * Instances are generally used to refer to a MongoDB field we want to read or update, when
@@ -59,6 +59,13 @@ import kotlin.reflect.KProperty1
  *
  * Some of the functions of the DSL may be available only when [FieldDsl] is in scope.
  * All operator scopes provided by this library should bring it into scope automatically.
+ *
+ * For example, when writing a filter, methods from this interface are automatically available:
+ * ```kotlin
+ * collection.find {
+ *     User::profile / Profile::name eq "Thibault Lognaise"
+ * }
+ * ```
  *
  * @param Root The type of the document in which this field is in.
  * @param Type The type of the value stored by this field.
@@ -162,7 +169,7 @@ operator fun <Root, Type> Field<Root, Collection<Type>>.get(index: Int): Field<R
 	FieldImpl<Root, Type>(this.path / PathSegment.Indexed(index))
 
 /**
- * DSL to refer to [fields][Field].
+ * DSL to refer to [fields][Field], usually automatically added into scope by operators.
  */
 interface FieldDsl {
 

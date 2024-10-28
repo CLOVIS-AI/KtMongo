@@ -100,6 +100,29 @@ import kotlin.reflect.KProperty1
  * ```
  *
  * To execute an operator on one of the elements of an array, see [any].
+ *
+ * ### Operators
+ *
+ * Comparison query:
+ * - [`$eq`][eq]
+ * - [`$gt`][gt]
+ * - [`$gte`][gte]
+ * - [`$in`][isOneOf]
+ * - [`$lt`][lt]
+ * - [`$lte`][lte]
+ * - [`$ne`][ne]
+ *
+ * Logical query:
+ * - [`$and`][and]
+ * - [`$not`][not]
+ * - [`$or`][or]
+ *
+ * Element query:
+ * - [`$exists`][exists]
+ * - [`$type`][hasType]
+ *
+ * Array query:
+ * - [`$elemMatch`][anyObject]
  */
 @KtMongoDsl
 class FilterExpression<T>(

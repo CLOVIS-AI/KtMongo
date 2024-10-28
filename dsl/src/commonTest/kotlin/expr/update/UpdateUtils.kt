@@ -14,42 +14,42 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr.filter
+package opensavvy.ktmongo.dsl.expr.update
 
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.expr.FilterExpression
+import opensavvy.ktmongo.dsl.expr.UpdateExpression
+import opensavvy.ktmongo.dsl.expr.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.testContext
+import opensavvy.prepared.runner.kotest.PreparedSpec
 
-val eq = "\$eq"
-val ne = "\$ne"
-val and = "\$and"
-val or = "\$or"
-val exists = "\$exists"
-val type = "\$type"
-val not = "\$not"
-val isOneOf = "\$in"
-val gt = "\$gt"
-val gte = "\$gte"
-val lt = "\$lt"
-val lte = "\$lte"
-val all = "\$all"
-val oid = "\$oid"
-val elemMatch = "\$elemMatch"
+val set = "\$set"
+val setOnInsert = "\$setOnInsert"
+val inc = "\$inc"
+val unset = "\$unset"
+val rename = "\$rename"
 
-class Pet(
+class Friend(
+	val id: String,
 	val name: String,
-	val age: Int,
+	val money: Float,
 )
 
 class User(
 	val id: ObjectId,
 	val name: String,
 	val age: Int?,
-	val grades: List<Int>,
-	val pets: List<Pet>,
+	val money: Double,
+	val bestFriend: Friend,
+	val friends: List<Friend>,
 )
 
 @KtMongoDsl
-fun filter(block: FilterExpression<User>.() -> Unit): String =
-	FilterExpression<User>(testContext()).apply(block).toString()
+fun update(block: UpdateExpression<User>.() -> Unit): String =
+	UpdateExpression<User>(testContext()).apply(block).toString()
+
+class EmptyUpdateTest : PreparedSpec({
+	test("Empty update") {
+		update { } shouldBeBson "{}"
+	}
+})

@@ -77,6 +77,8 @@ sealed class PathSegment {
 }
 
 /**
+ * Low-level, type-unsafe pointer to a specific field in a document.
+ *
  * A path is a string pointer that identifies which field(s) are impacted by an operator.
  *
  * For example, the following are valid paths:
