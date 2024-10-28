@@ -56,6 +56,24 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	// endregion
+	// region Count
+
+	override suspend fun count(): Long =
+		inner.countDocuments()
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun count(predicate: FilterExpression<Document>.() -> Unit): Long {
+		val filter = FilterExpression<Document>(context)
+			.apply(predicate)
+			.toBsonDocument()
+
+		return inner.countDocuments(filter)
+	}
+
+	override suspend fun countEstimated(): Long =
+		inner.estimatedDocumentCount()
+
+	// endregion
 
 }
 
