@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync
+package opensavvy.ktmongo.sync.operations
 
-import opensavvy.ktmongo.sync.operations.CountOperations
-import opensavvy.ktmongo.sync.operations.FindOperations
+import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.LowLevelApi
 
-/**
- * Methods to interact with a MongoDB collection.
- *
- * ### Operations
- *
- * - [count][CountOperations.count]
- * - [countEstimated][CountOperations.countEstimated]
- * - [find][FindOperations.find]
- * - [findOne][FindOperations.findOne]
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-documents)
- */
-interface MongoCollection<Document : Any> :
-	FindOperations<Document>,
-	CountOperations<Document>
+interface BaseOperations {
+
+	@LowLevelApi
+	val context: BsonContext
+}

@@ -22,7 +22,7 @@ import opensavvy.ktmongo.sync.MongoIterable
 /**
  * Interface grouping MongoDB operations allowing to search for information.
  */
-interface FindOperations<Document : Any> {
+interface FindOperations<Document : Any> : BaseOperations {
 
 	/**
 	 * Finds all documents in this collection.
