@@ -21,7 +21,7 @@ import opensavvy.ktmongo.dsl.expr.FilterExpression
 /**
  * Interface grouping MongoDB operations relating to counting documents.
  */
-interface CountOperations<Document : Any> {
+interface CountOperations<Document : Any> : BaseOperations {
 
 	/**
 	 * Counts how many documents exist in the collection.
