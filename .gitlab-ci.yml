@@ -63,8 +63,17 @@ workflow:
 # endregion
 # region Check
 
+.with-mongo:
+  parallel:
+    matrix:
+      - mongodb: [ mongo:6.0.19, mongo:7.0.15, mongo:8.0.3 ]
+
+  services:
+    - name: $mongodb
+      alias: mongo
+
 check[jvm]:
-  extends: [ .kotlin-jvm ]
+  extends: [ .kotlin-jvm, .with-mongo ]
   stage: test
 
   script:

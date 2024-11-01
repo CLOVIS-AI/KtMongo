@@ -16,18 +16,26 @@
 
 package opensavvy.ktmongo.sync
 
+import com.mongodb.MongoTimeoutException
 import com.mongodb.kotlin.client.MongoClient
+import kotlinx.coroutines.CoroutineName
 import opensavvy.prepared.suite.PreparedProvider
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.shared
 
 @PublishedApi
-internal val database by shared {
-	val client = MongoClient.create()
+internal val database by shared(CoroutineName("mongodb-establish-connection")) {
+	val client = try {
+		MongoClient.create("mongodb://localhost:27017")
+			.also { it.getDatabase("ktmongo-sync-tests").getCollection<String>("test").countDocuments() }
+	} catch (e: MongoTimeoutException) {
+		System.err.println("Cannot connect to localhost:27017. Did you start the docker-compose services? [This is normal in CI]\n${e.stackTraceToString()}")
+		MongoClient.create("mongodb://mongo:27017")
+	}
 	client.getDatabase("ktmongo-sync-tests")
 }
 
-actual inline fun <reified Document : Any> testCollection(name: String): PreparedProvider<MongoCollection<Document>> = prepared {
+actual inline fun <reified Document : Any> testCollection(name: String): PreparedProvider<MongoCollection<Document>> = prepared(CoroutineName("mongodb-create-collection-$name")) {
 	val collection = database().getCollection<Document>(name)
 	collection.asKtMongo()
 }
