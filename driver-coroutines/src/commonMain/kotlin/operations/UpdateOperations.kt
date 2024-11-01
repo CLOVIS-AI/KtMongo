@@ -16,6 +16,8 @@
 
 package opensavvy.ktmongo.coroutines.operations
 
+import opensavvy.ktmongo.coroutines.MongoCollection
+import opensavvy.ktmongo.coroutines.filter
 import opensavvy.ktmongo.dsl.expr.FilterExpression
 import opensavvy.ktmongo.dsl.expr.UpdateExpression
 
@@ -44,6 +46,19 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 *     },
 	 * )
 	 * ```
+	 *
+	 * ### Using filtered collections
+	 *
+	 * The following code is equivalent:
+	 * ```kotlin
+	 * collection.filter {
+	 *     User::name eq "Patrick"
+	 * }.updateMany {
+	 *     User::age set 15
+	 * }
+	 * ```
+	 *
+	 * To learn more, see [filter][MongoCollection.filter].
 	 *
 	 * ### External resources
 	 *
@@ -80,6 +95,19 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 *     },
 	 * )
 	 * ```
+	 *
+	 * ### Using filtered collections
+	 *
+	 * The following code is equivalent:
+	 * ```kotlin
+	 * collection.filter {
+	 *     User::name eq "Patrick"
+	 * }.updateOne {
+	 *     User::age set 15
+	 * }
+	 * ```
+	 *
+	 * To learn more, see [filter][MongoCollection.filter].
 	 *
 	 * ### External resources
 	 *
@@ -123,6 +151,19 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * If a document exists that has the `name` of "Patrick", its age is set to 15.
 	 * If none exists, a document with `name` "Patrick" and `age` 15 is created.
 	 *
+	 * ### Using filtered collections
+	 *
+	 * The following code is equivalent:
+	 * ```kotlin
+	 * collection.filter {
+	 *     User::name eq "Patrick"
+	 * }.upsertOne {
+	 *     User::age set 15
+	 * }
+	 * ```
+	 *
+	 * To learn more, see [filter][MongoCollection.filter].
+	 *
 	 * ### External resources
 	 *
 	 * - [The update operation](https://www.mongodb.com/docs/manual/reference/command/update/)
@@ -155,6 +196,19 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 *     },
 	 * )
 	 * ```
+	 *
+	 * ### Using filtered collections
+	 *
+	 * The following code is equivalent:
+	 * ```kotlin
+	 * collection.filter {
+	 *     User::name eq "Patrick"
+	 * }.findOneAndUpdate {
+	 *     User::age set 15
+	 * }
+	 * ```
+	 *
+	 * To learn more, see [filter][MongoCollection.filter].
 	 *
 	 * ### External resources
 	 *
