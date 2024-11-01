@@ -235,3 +235,124 @@ actual fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson {
 
 	return document
 }
+
+@LowLevelApi
+private class JavaRootArrayWriter(
+	private val array: BsonArray,
+) : BsonValueWriter {
+	@LowLevelApi
+	override fun writeBoolean(value: Boolean) {
+		array.add(BsonBoolean(value))
+	}
+
+	@LowLevelApi
+	override fun writeDouble(value: Double) {
+		array.add(BsonDouble(value))
+	}
+
+	@LowLevelApi
+	override fun writeInt32(value: Int) {
+		array.add(BsonInt32(value))
+	}
+
+	@LowLevelApi
+	override fun writeInt64(value: Long) {
+		array.add(BsonInt64(value))
+	}
+
+	@LowLevelApi
+	override fun writeDecimal128(value: Decimal128) {
+		array.add(BsonDecimal128(value))
+	}
+
+	@LowLevelApi
+	override fun writeDateTime(value: Long) {
+		array.add(BsonDateTime(value))
+	}
+
+	@LowLevelApi
+	override fun writeNull() {
+		array.add(BsonNull())
+	}
+
+	@LowLevelApi
+	override fun writeObjectId(value: ObjectId) {
+		array.add(BsonObjectId(value))
+	}
+
+	@LowLevelApi
+	override fun writeRegularExpression(pattern: String, options: String) {
+		array.add(BsonRegularExpression(pattern, options))
+	}
+
+	@LowLevelApi
+	override fun writeString(value: String) {
+		array.add(BsonString(value))
+	}
+
+	@LowLevelApi
+	override fun writeTimestamp(value: Long) {
+		array.add(BsonTimestamp(value))
+	}
+
+	@LowLevelApi
+	override fun writeSymbol(value: String) {
+		array.add(BsonSymbol(value))
+	}
+
+	@LowLevelApi
+	override fun writeUndefined() {
+		array.add(BsonUndefined())
+	}
+
+	@LowLevelApi
+	override fun writeDBPointer(namespace: String, id: ObjectId) {
+		array.add(BsonDbPointer(namespace, id))
+	}
+
+	@LowLevelApi
+	override fun writeJavaScriptWithScope(code: String) {
+		array.add(BsonJavaScript(code))
+	}
+
+	@LowLevelApi
+	override fun writeBinaryData(type: Byte, data: ByteArray) {
+		array.add(BsonBinary(type, data))
+	}
+
+	@LowLevelApi
+	override fun writeJavaScript(code: String) {
+		array.add(BsonJavaScript(code))
+	}
+
+	@LowLevelApi
+	override fun writeDocument(block: BsonFieldWriter.() -> Unit) {
+		array.add(buildBsonDocument(block))
+	}
+
+	@LowLevelApi
+	override fun writeArray(block: BsonValueWriter.() -> Unit) {
+		array.add(buildBsonArray(block))
+	}
+
+	@LowLevelApi
+	override fun <T> writeObjectSafe(obj: T, context: BsonContext) {
+		val document = BsonDocument()
+
+		BsonDocumentWriter(document).use { writer ->
+			JavaBsonWriter(writer).writeObjectSafe(obj, context)
+		}
+
+		array.add(document)
+	}
+
+}
+
+@LowLevelApi
+actual fun buildBsonArray(block: BsonValueWriter.() -> Unit): BsonArray {
+	val array = BsonArray()
+
+	JavaRootArrayWriter(array).block()
+
+	return array
+}

@@ -16,6 +16,9 @@
 
 package opensavvy.ktmongo.bson
 
+import org.bson.BsonArray
 import org.bson.BsonDocument
 
 actual typealias Bson = BsonDocument
+
+actual typealias BsonArray = BsonArray
