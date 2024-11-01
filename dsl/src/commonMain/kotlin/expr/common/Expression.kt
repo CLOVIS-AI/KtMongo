@@ -43,6 +43,12 @@ import opensavvy.ktmongo.dsl.expr.PredicateExpression
 interface Expression {
 
 	/**
+	 * The context used to generate this expression.
+	 */
+	@LowLevelApi
+	val context: BsonContext
+
+	/**
 	 * Makes this expression immutable.
 	 *
 	 * After this method has been called, the expression can never be modified again.
@@ -128,7 +134,7 @@ interface Expression {
  * corruption or leaking**.
  */
 abstract class AbstractExpression(
-	protected val context: BsonContext,
+	@property:LowLevelApi override val context: BsonContext,
 ) : Expression {
 
 	/**
