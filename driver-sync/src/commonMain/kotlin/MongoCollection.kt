@@ -18,6 +18,7 @@ package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.sync.operations.CountOperations
 import opensavvy.ktmongo.sync.operations.FindOperations
+import opensavvy.ktmongo.sync.operations.UpdateOperations
 
 /**
  * Methods to interact with a MongoDB collection.
@@ -28,6 +29,10 @@ import opensavvy.ktmongo.sync.operations.FindOperations
  * - [countEstimated][CountOperations.countEstimated]
  * - [find][FindOperations.find]
  * - [findOne][FindOperations.findOne]
+ * - [findOneAndUpdate][UpdateOperations.findOneAndUpdate]
+ * - [updateOne][UpdateOperations.updateOne]
+ * - [updateMany][UpdateOperations.updateMany]
+ * - [upsertOne][UpdateOperations.upsertOne]
  *
  * ### External resources
  *
@@ -35,4 +40,5 @@ import opensavvy.ktmongo.sync.operations.FindOperations
  */
 interface MongoCollection<Document : Any> :
 	FindOperations<Document>,
-	CountOperations<Document>
+	CountOperations<Document>,
+	UpdateOperations<Document>
