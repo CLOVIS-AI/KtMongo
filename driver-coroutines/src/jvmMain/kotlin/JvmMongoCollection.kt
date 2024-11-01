@@ -16,10 +16,12 @@
 
 package opensavvy.ktmongo.coroutines
 
+import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.FilterExpression
+import opensavvy.ktmongo.dsl.expr.UpdateExpression
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import org.bson.BsonDocument
 
@@ -72,6 +74,61 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	override suspend fun countEstimated(): Long =
 		inner.estimatedDocumentCount()
+
+	// endregion
+	// region Update
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun updateMany(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) {
+		val filter = FilterExpression<Document>(context)
+			.apply(filter)
+			.toBsonDocument()
+
+		val update = UpdateExpression<Document>(context)
+			.apply(update)
+			.toBsonDocument()
+
+		inner.updateMany(filter, update)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun updateOne(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) {
+		val filter = FilterExpression<Document>(context)
+			.apply(filter)
+			.toBsonDocument()
+
+		val update = UpdateExpression<Document>(context)
+			.apply(update)
+			.toBsonDocument()
+
+		inner.updateOne(filter, update)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun upsertOne(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) {
+		val filter = FilterExpression<Document>(context)
+			.apply(filter)
+			.toBsonDocument()
+
+		val update = UpdateExpression<Document>(context)
+			.apply(update)
+			.toBsonDocument()
+
+		inner.updateOne(filter, update, UpdateOptions().upsert(true))
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun findOneAndUpdate(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit): Document? {
+		val filter = FilterExpression<Document>(context)
+			.apply(filter)
+			.toBsonDocument()
+
+		val update = UpdateExpression<Document>(context)
+			.apply(update)
+			.toBsonDocument()
+
+		return inner.findOneAndUpdate(filter, update)
+	}
 
 	// endregion
 
