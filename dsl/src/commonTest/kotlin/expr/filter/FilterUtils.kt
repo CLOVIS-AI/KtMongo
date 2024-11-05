@@ -19,6 +19,7 @@ package opensavvy.ktmongo.dsl.expr.filter
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.expr.FilterExpression
+import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.testContext
 
 val eq = "\$eq"
@@ -51,5 +52,5 @@ class User(
 )
 
 @KtMongoDsl
-fun filter(block: FilterExpression<User>.() -> Unit): String =
+fun filter(block: FilterOperators<User>.() -> Unit): String =
 	FilterExpression<User>(testContext()).apply(block).toString()
