@@ -20,7 +20,7 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.PredicateExpression
+import opensavvy.ktmongo.dsl.expr.PredicateOperators
 import opensavvy.ktmongo.dsl.tree.AbstractNode
 import opensavvy.ktmongo.dsl.tree.Node
 
@@ -124,7 +124,7 @@ interface Expression : Node<Expression> {
  * }
  * ```
  *
- * Of course, the operator described above is already made available: [PredicateExpression.hasType].
+ * Of course, the operator described above is already made available: [PredicateOperators.hasType].
  *
  * **Note that if your operator accepts a variable number of sub-expressions (e.g. `$and`), you must ensure that it works for any
  * number of expressions, including 1 and 0.** See [simplify].

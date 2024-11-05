@@ -142,7 +142,7 @@ class FilterExpression<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	override operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: PredicateExpression<V>.() -> Unit) {
+	override operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: PredicateOperators<V>.() -> Unit) {
 		accept(PredicateInFilterExpression(path, PredicateExpression<V>(context).apply(block), context))
 	}
 
@@ -169,7 +169,7 @@ class FilterExpression<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun <V> Field<T, Collection<V>>.any(block: PredicateExpression<V>.() -> Unit) {
+	override fun <V> Field<T, Collection<V>>.any(block: PredicateOperators<V>.() -> Unit) {
 		accept(ElementMatchExpressionNode<V>(this.path, PredicateExpression<V>(context).apply(block), context))
 	}
 
