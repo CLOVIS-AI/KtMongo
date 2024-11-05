@@ -21,6 +21,8 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.PredicateExpression
+import opensavvy.ktmongo.dsl.tree.AbstractNode
+import opensavvy.ktmongo.dsl.tree.Node
 
 /**
  * A node in the BSON AST.
@@ -40,7 +42,7 @@ import opensavvy.ktmongo.dsl.expr.PredicateExpression
  *
  * Use [toString][Any.toString] to view the JSON representation of this expression.
  */
-interface Expression {
+interface Expression : Node<Expression> {
 
 	/**
 	 * The context used to generate this expression.
@@ -55,7 +57,7 @@ interface Expression {
 	 * This ensures that expressions cannot change after they have been used within other expressions.
 	 */
 	@LowLevelApi
-	fun freeze()
+	override fun freeze()
 
 	/**
 	 * Returns a simplified (but equivalent) expression to the current expression.
@@ -63,7 +65,7 @@ interface Expression {
 	 * Returns `null` when the current expression was simplified into a no-op (= it does nothing).
 	 */
 	@LowLevelApi
-	fun simplify(): Expression?
+	override fun simplify(): Expression?
 
 	/**
 	 * Writes the result of [simplifying][simplify] this expression into [writer].
@@ -135,18 +137,7 @@ interface Expression {
  */
 abstract class AbstractExpression(
 	@property:LowLevelApi override val context: BsonContext,
-) : Expression {
-
-	/**
-	 * `true` if this expression is immutable.
-	 */
-	protected var frozen: Boolean = false
-		private set
-
-	@LowLevelApi
-	final override fun freeze() {
-		frozen = true
-	}
+) : AbstractNode<Expression>(), Expression {
 
 	/**
 	 * Called when this operator should be written to a [writer].

@@ -21,6 +21,7 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.tree.CompoundNode
 import opensavvy.ktmongo.dsl.utils.asImmutable
 
 /**
@@ -36,7 +37,7 @@ import opensavvy.ktmongo.dsl.utils.asImmutable
  *
  * Prefer implementing [AbstractCompoundExpression] instead of implementing this interface directly.
  */
-interface CompoundExpression : Expression {
+interface CompoundExpression : Expression, CompoundNode<Expression> {
 
 	/**
 	 * Adds a new [expression] as a child of this one.
@@ -53,7 +54,7 @@ interface CompoundExpression : Expression {
 	@LowLevelApi
 	@DangerousMongoApi
 	@KtMongoDsl
-	fun accept(expression: Expression)
+	override fun accept(expression: Expression)
 
 	companion object
 }
