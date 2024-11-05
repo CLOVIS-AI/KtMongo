@@ -29,7 +29,8 @@ Operators are organized by the context in which they are available in. For examp
 Instances of these classes are usually provided by the driver as part of its functions.
 
 - [Filter operators][opensavvy.ktmongo.dsl.expr.FilterOperators]
-- [Update operators][opensavvy.ktmongo.dsl.expr.UpdateExpression]
+- [Update operators][opensavvy.ktmongo.dsl.expr.UpdateOperators]
+- [Upsert operators][opensavvy.ktmongo.dsl.expr.UpsertOperators]
 
 To create a custom operator (for example because it isn't part of the library yet), see [AbstractExpression][opensavvy.ktmongo.dsl.expr.common.AbstractExpression].
 
