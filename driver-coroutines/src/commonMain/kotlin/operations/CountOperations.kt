@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.coroutines.operations
 
-import opensavvy.ktmongo.dsl.expr.FilterExpression
+import opensavvy.ktmongo.dsl.expr.FilterOperators
 
 /**
  * Interface grouping MongoDB operations relating to counting documents.
@@ -56,7 +56,7 @@ interface CountOperations<Document : Any> : BaseOperations {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.countDocuments/)
 	 */
 	suspend fun count(
-		predicate: FilterExpression<Document>.() -> Unit
+		predicate: FilterOperators<Document>.() -> Unit
 	): Long
 
 	/**
