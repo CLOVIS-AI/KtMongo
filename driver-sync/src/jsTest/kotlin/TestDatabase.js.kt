@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.sync
 
-actual class Bson {
-	// TODO: implement the BSON type on top of the NPM 'bson' library
-}
+import opensavvy.prepared.suite.PreparedProvider
 
-actual class BsonArray {
-	// TODO: implement the BSON array type on top of the NPM 'bson' library
+actual inline fun <reified Document : Any> testCollection(name: String): PreparedProvider<MongoCollection<Document>> {
+	TODO("Not yet implemented")
 }

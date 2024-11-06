@@ -20,3 +20,8 @@ actual fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson {
 	console.error("buildBsonDocument is not implemented on this platform")
 	return Bson()
 }
+
+actual fun buildBsonArray(block: BsonValueWriter.() -> Unit): BsonArray {
+	console.error("buildBsonArray is not implemented on this platform")
+	return BsonArray()
+}

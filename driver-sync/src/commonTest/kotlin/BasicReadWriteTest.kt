@@ -14,12 +14,32 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.sync
 
-actual class Bson {
-	// TODO: implement the BSON type on top of the NPM 'bson' library
+import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.suite.SuiteDsl
+
+fun SuiteDsl.basicReadWriteTest() = suite("Basic read/write test") {
+	class User(
+		val name: String,
+		val age: Int,
+	)
+
+	val users by testCollection<User>("basic-users")
+
+	test("Foo") {
+		users().upsertOne(
+			filter = {
+				User::name eq "Foo"
+			},
+			update = {
+				User::name set "Bad"
+				User::age setOnInsert 0
+			}
+		)
+	}
 }
 
-actual class BsonArray {
-	// TODO: implement the BSON array type on top of the NPM 'bson' library
-}
+class BasicReadWriteTest : PreparedSpec({
+	basicReadWriteTest()
+})

@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.expr.FilterExpression
 /**
  * Interface grouping MongoDB operations allowing to search for information.
  */
-interface FindOperations<Document : Any> {
+interface FindOperations<Document : Any> : BaseOperations {
 
 	/**
 	 * Finds all documents in this collection.

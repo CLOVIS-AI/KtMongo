@@ -24,6 +24,13 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 annotation class BsonWriterDsl
 
 /**
+ * Parent interface for type parameters that can accept either [BsonValueWriter] or [BsonFieldWriter].
+ */
+@LowLevelApi
+@BsonWriterDsl
+sealed interface AnyBsonWriter
+
+/**
  * Generator of BSON values.
  *
  * This interface is used to write a generic BSON value.
@@ -31,11 +38,11 @@ annotation class BsonWriterDsl
  *
  * To write fields in a BSON document, see [BsonFieldWriter].
  *
- * Instances of this interface are commonly obtained by calling the [buildBsonDocument] function.
+ * Instances of this interface are commonly obtained by calling the [buildBsonArray] function.
  */
 @LowLevelApi
 @BsonWriterDsl
-interface BsonValueWriter {
+interface BsonValueWriter : AnyBsonWriter {
 	@LowLevelApi fun writeBoolean(value: Boolean)
 	@LowLevelApi fun writeDouble(value: Double)
 	@LowLevelApi fun writeInt32(value: Int)
@@ -87,7 +94,7 @@ interface BsonValueWriter {
  */
 @LowLevelApi
 @BsonWriterDsl
-interface BsonFieldWriter {
+interface BsonFieldWriter : AnyBsonWriter {
 	@LowLevelApi fun write(name: String, block: BsonValueWriter.() -> Unit)
 
 	@LowLevelApi fun writeBoolean(name: String, value: Boolean)
@@ -168,3 +175,32 @@ interface BsonFieldWriter {
  */
 @LowLevelApi
 expect fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson
+
+/**
+ * Instantiates a new [Bson] array.
+ *
+ * ### Example
+ *
+ * To create the following BSON array:
+ * ```bson
+ * [
+ *     12,
+ *     null,
+ *     {
+ *         "name": "Barry"
+ *     }
+ * ]
+ * ```
+ * use the code:
+ * ```kotlin
+ * buildBsonArray {
+ *     writeInt32(12)
+ *     writeNull()
+ *     writeDocument {
+ *         writeString("name", "Barry")
+ *     }
+ * }
+ * ```
+ */
+@LowLevelApi
+expect fun buildBsonArray(block: BsonValueWriter.() -> Unit): BsonArray

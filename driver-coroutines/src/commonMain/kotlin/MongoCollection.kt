@@ -16,24 +16,29 @@
 
 package opensavvy.ktmongo.coroutines
 
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.coroutines.operations.CountOperations
 import opensavvy.ktmongo.coroutines.operations.FindOperations
-import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.coroutines.operations.UpdateOperations
 
 /**
  * Methods to interact with a MongoDB collection.
  *
  * ### Operations
  *
+ * - [count][CountOperations.count]
+ * - [countEstimated][CountOperations.countEstimated]
  * - [find][FindOperations.find]
  * - [findOne][FindOperations.findOne]
+ * - [findOneAndUpdate][UpdateOperations.findOneAndUpdate]
+ * - [updateOne][UpdateOperations.updateOne]
+ * - [updateMany][UpdateOperations.updateMany]
+ * - [upsertOne][UpdateOperations.upsertOne]
  *
  * ### External resources
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-documents)
  */
-interface MongoCollection<Document : Any> : FindOperations<Document> {
-
-	@LowLevelApi
-	val context: BsonContext
-}
+interface MongoCollection<Document : Any> :
+	FindOperations<Document>,
+	CountOperations<Document>,
+	UpdateOperations<Document>

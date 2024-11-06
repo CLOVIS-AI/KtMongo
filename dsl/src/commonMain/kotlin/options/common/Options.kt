@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.dsl.options.common
 
-actual class Bson {
-	// TODO: implement the BSON type on top of the NPM 'bson' library
-}
+import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
 
-actual class BsonArray {
-	// TODO: implement the BSON array type on top of the NPM 'bson' library
-}
+/**
+ * Parent interface for all option types.
+ *
+ * Option types are used to pass additional arguments to MongoDB operations.
+ * See the different implementations for more information.
+ */
+interface Options : CompoundExpression

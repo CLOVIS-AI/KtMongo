@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.coroutines.operations
 
-actual class Bson {
-	// TODO: implement the BSON type on top of the NPM 'bson' library
-}
+import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.LowLevelApi
 
-actual class BsonArray {
-	// TODO: implement the BSON array type on top of the NPM 'bson' library
+interface BaseOperations {
+
+	@LowLevelApi
+	val context: BsonContext
 }

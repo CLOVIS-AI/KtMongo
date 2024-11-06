@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.dsl.options
 
-actual class Bson {
-	// TODO: implement the BSON type on top of the NPM 'bson' library
-}
+import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
+import opensavvy.ktmongo.dsl.options.common.LimitOption
+import opensavvy.ktmongo.dsl.options.common.Options
 
-actual class BsonArray {
-	// TODO: implement the BSON array type on top of the NPM 'bson' library
-}
+/**
+ * The options for a `collection.count` operation.
+ */
+class CountOptions<Document : Any>(context: BsonContext) : AbstractCompoundExpression(context), Options, LimitOption
