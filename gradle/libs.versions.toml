@@ -15,6 +15,7 @@ kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core",
 prepared = { module = "dev.opensavvy.prepared:runner-kotest", version.ref = "prepared" }
 
 mongodb-bson-jvm = { module = "org.mongodb:bson", version.ref = "mongodb-bson-jvm" }
+mongodb-core-jvm = { module = "org.mongodb:mongodb-driver-core", version.ref = "mongodb-driver" }
 mongodb-coroutines-jvm = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb-driver" }
 mongodb-sync-jvm = { module = "org.mongodb:mongodb-driver-kotlin-sync", version.ref = "mongodb-driver" }
 

@@ -24,8 +24,7 @@ import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.Expression
 import opensavvy.ktmongo.dsl.models.Count
 import opensavvy.ktmongo.dsl.options.CountOptions
-import opensavvy.ktmongo.dsl.options.common.LimitOption
-import opensavvy.ktmongo.dsl.options.common.option
+import opensavvy.ktmongo.dsl.options.toJava
 import org.bson.BsonDocument
 
 /**
@@ -74,8 +73,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 		return inner.countDocuments(
 			model.toBsonDocument(),
-			com.mongodb.client.model.CountOptions()
-				.limit(options.option<LimitOption, _>()?.toInt() ?: 0)
+			options.toJava(),
 		)
 	}
 
