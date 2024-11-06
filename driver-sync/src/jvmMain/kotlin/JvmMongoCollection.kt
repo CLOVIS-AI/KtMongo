@@ -20,8 +20,7 @@ import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.UpdateExpression
+import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import org.bson.BsonDocument
 
@@ -49,7 +48,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		JvmMongoIterable(inner.find())
 
 	@OptIn(LowLevelApi::class)
-	override fun find(predicate: FilterExpression<Document>.() -> Unit): JvmMongoIterable<Document> {
+	override fun find(predicate: FilterOperators<Document>.() -> Unit): JvmMongoIterable<Document> {
 		val filter = FilterExpression<Document>(context)
 			.apply(predicate)
 			.toBsonDocument()
@@ -64,7 +63,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		inner.countDocuments()
 
 	@OptIn(LowLevelApi::class)
-	override fun count(predicate: FilterExpression<Document>.() -> Unit): Long {
+	override fun count(predicate: FilterOperators<Document>.() -> Unit): Long {
 		val filter = FilterExpression<Document>(context)
 			.apply(predicate)
 			.toBsonDocument()
@@ -79,7 +78,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	// region Update
 
 	@OptIn(LowLevelApi::class)
-	override fun updateMany(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) {
+	override fun updateMany(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) {
 		val filter = FilterExpression<Document>(context)
 			.apply(filter)
 			.toBsonDocument()
@@ -92,7 +91,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	@OptIn(LowLevelApi::class)
-	override fun updateOne(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) {
+	override fun updateOne(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) {
 		val filter = FilterExpression<Document>(context)
 			.apply(filter)
 			.toBsonDocument()
@@ -105,7 +104,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	@OptIn(LowLevelApi::class)
-	override fun upsertOne(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) {
+	override fun upsertOne(filter: FilterOperators<Document>.() -> Unit, update: UpsertOperators<Document>.() -> Unit) {
 		val filter = FilterExpression<Document>(context)
 			.apply(filter)
 			.toBsonDocument()
@@ -118,7 +117,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	@OptIn(LowLevelApi::class)
-	override fun findOneAndUpdate(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit): Document? {
+	override fun findOneAndUpdate(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit): Document? {
 		val filter = FilterExpression<Document>(context)
 			.apply(filter)
 			.toBsonDocument()
