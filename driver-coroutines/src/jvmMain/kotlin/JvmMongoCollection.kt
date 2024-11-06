@@ -21,7 +21,11 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.*
-import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
+import opensavvy.ktmongo.dsl.expr.common.Expression
+import opensavvy.ktmongo.dsl.models.Count
+import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.options.common.LimitOption
+import opensavvy.ktmongo.dsl.options.common.option
 import org.bson.BsonDocument
 
 /**
@@ -63,12 +67,16 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		inner.countDocuments()
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun count(predicate: FilterOperators<Document>.() -> Unit): Long {
-		val filter = FilterExpression<Document>(context)
+	override suspend fun count(predicate: Count<Document>.() -> Unit): Long {
+		val options = CountOptions<Document>(context)
+		val model = Count<Document>(context, options)
 			.apply(predicate)
-			.toBsonDocument()
 
-		return inner.countDocuments(filter)
+		return inner.countDocuments(
+			model.toBsonDocument(),
+			com.mongodb.client.model.CountOptions()
+				.limit(options.option<LimitOption, _>()?.toInt() ?: 0)
+		)
 	}
 
 	override suspend fun countEstimated(): Long =
@@ -134,7 +142,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 }
 
 @OptIn(LowLevelApi::class)
-private fun AbstractCompoundExpression.toBsonDocument(): BsonDocument =
+private fun Expression.toBsonDocument(): BsonDocument =
 	buildBsonDocument {
 		writeTo(this)
 	}
