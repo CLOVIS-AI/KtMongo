@@ -27,7 +27,6 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  *
  * Trees are expected to be built bottom-up: a node is always built before its parents.
  * Once a node has been [accepted][CompoundNode.accept] by a parent, it [freezes][freeze] (becomes forever immutable).
- * Before the node is accepted, however, it gets a chance to [simplify] itself.
  * The same node may be added to multiple parent nodes.
  *
  * This schemes ensures that trees are always as simplified as possible: we are always building a single node at a time,
@@ -38,15 +37,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  * - Nodes that group other nodes into a single larger node.
  *
  * The former category implements this interface, whereas the latter implements [CompoundNode].
- *
- * ### Implementing this interface
- *
- * See [AbstractNode].
- *
- * @param Self The type of node returned by the [simplify] methods.
- * In most cases, it should be an interface that implements [Node] and is implemented by the current subtype.
  */
-interface Node<out Self : Node<Self>> {
+interface Node {
 
 	/**
 	 * Makes this node immutable.
@@ -59,29 +51,15 @@ interface Node<out Self : Node<Self>> {
 	@LowLevelApi
 	fun freeze()
 
-	/**
-	 * Returns a simplified (but equivalent) node to the current node.
-	 *
-	 * This function is always called before this node is added to a parent node;
-	 * the result value is added in its stead after being [frozen][freeze].
-	 * To learn more about this process, see [Node].
-	 *
-	 * The simplest default implementation is to return `this`.
-	 *
-	 * @return `null` when the current node was simplified into nothingness (i.e. it does nothing).
-	 */
-	@LowLevelApi
-	fun simplify(): Self?
-
 }
 
 /**
  * Helper to implement [Node].
  *
- * This class takes care of handling [freezing][freeze].
- * Implementors should ensure to check the value of [frozen] before accepting any mutation.
+ * Should generally be used to implement [Node] by delegation.
+ * Users should ensure to check the value of [frozen] before accepting any mutation.
  */
-abstract class AbstractNode<out Self : Node<Self>> : Node<Self> {
+internal class NodeImpl : Node {
 
 	/**
 	 * `true` if [freeze] has been called. Can never become `false` again.
@@ -89,12 +67,11 @@ abstract class AbstractNode<out Self : Node<Self>> : Node<Self> {
 	 * If this value is `true`, this node should reject any attempt to mutate it.
 	 * It is the responsibility of the implementor to satisfy this invariant.
 	 */
-	protected var frozen: Boolean = false
+	var frozen: Boolean = false
 		private set
 
 	@LowLevelApi
-	final override fun freeze() {
+	override fun freeze() {
 		frozen = true
 	}
-
 }

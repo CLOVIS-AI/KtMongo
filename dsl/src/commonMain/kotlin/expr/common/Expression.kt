@@ -21,8 +21,8 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.PredicateOperators
-import opensavvy.ktmongo.dsl.tree.AbstractNode
 import opensavvy.ktmongo.dsl.tree.Node
+import opensavvy.ktmongo.dsl.tree.NodeImpl
 
 /**
  * A node in the BSON AST.
@@ -42,7 +42,7 @@ import opensavvy.ktmongo.dsl.tree.Node
  *
  * Use [toString][Any.toString] to view the JSON representation of this expression.
  */
-interface Expression : Node<Expression> {
+interface Expression : Node {
 
 	/**
 	 * The context used to generate this expression.
@@ -65,7 +65,7 @@ interface Expression : Node<Expression> {
 	 * Returns `null` when the current expression was simplified into a no-op (= it does nothing).
 	 */
 	@LowLevelApi
-	override fun simplify(): Expression?
+	fun simplify(): Expression?
 
 	/**
 	 * Writes the result of [simplifying][simplify] this expression into [writer].
@@ -135,9 +135,21 @@ interface Expression : Node<Expression> {
  * operator you create so they can benefit from future fixes. Again, **an improperly-written operator may allow data
  * corruption or leaking**.
  */
-abstract class AbstractExpression(
+abstract class AbstractExpression private constructor(
 	@property:LowLevelApi override val context: BsonContext,
-) : AbstractNode<Expression>(), Expression {
+	private val node: NodeImpl,
+) : Node by node, Expression {
+
+	constructor(context: BsonContext) : this(context, NodeImpl())
+
+	/**
+	 * `true` if [freeze] has been called. Can never become `false` again.
+	 *
+	 * If this value is `true`, this node should reject any attempt to mutate it.
+	 * It is the responsibility of the implementor to satisfy this invariant.
+	 */
+	protected val frozen: Boolean
+		get() = node.frozen
 
 	/**
 	 * Called when this operator should be written to a [writer].

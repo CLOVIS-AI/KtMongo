@@ -32,7 +32,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  * Instead, this node should be considered as representing the children itself, as a single unit.
  * Subtypes may decide to provide such a feature, however.
  */
-interface CompoundNode<N : Node<N>> {
+interface CompoundNode<N : Node> {
 
 	/**
 	 * Adds a new [Node] into the current node.
