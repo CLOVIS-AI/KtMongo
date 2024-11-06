@@ -62,7 +62,7 @@ class FieldUpdateTest : PreparedSpec({
 
 	suite("Operator $setOnInsert") {
 		test("Single field") {
-			update {
+			upsert {
 				User::age setOnInsert 18
 			} shouldBeBson """
 				{
@@ -74,7 +74,7 @@ class FieldUpdateTest : PreparedSpec({
 		}
 
 		test("Nested field") {
-			update {
+			upsert {
 				User::bestFriend / Friend::name setOnInsert "foo"
 			} shouldBeBson """
 				{
@@ -86,7 +86,7 @@ class FieldUpdateTest : PreparedSpec({
 		}
 
 		test("Multiple fields") {
-			update {
+			upsert {
 				User::age setOnInsert 18
 				User::name setOnInsert "foo"
 			} shouldBeBson """

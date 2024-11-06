@@ -20,9 +20,11 @@ import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.UpdateExpression
-import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
+import opensavvy.ktmongo.dsl.expr.*
+import opensavvy.ktmongo.dsl.expr.common.Expression
+import opensavvy.ktmongo.dsl.models.Count
+import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.options.toJava
 import org.bson.BsonDocument
 
 /**
@@ -49,7 +51,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		JvmMongoIterable(inner.find())
 
 	@OptIn(LowLevelApi::class)
-	override fun find(predicate: FilterExpression<Document>.() -> Unit): JvmMongoIterable<Document> {
+	override fun find(predicate: FilterOperators<Document>.() -> Unit): JvmMongoIterable<Document> {
 		val filter = FilterExpression<Document>(context)
 			.apply(predicate)
 			.toBsonDocument()
@@ -64,12 +66,15 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		inner.countDocuments()
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun count(predicate: FilterExpression<Document>.() -> Unit): Long {
-		val filter = FilterExpression<Document>(context)
+	override suspend fun count(predicate: Count<Document>.() -> Unit): Long {
+		val options = CountOptions<Document>(context)
+		val model = Count<Document>(context, options)
 			.apply(predicate)
-			.toBsonDocument()
 
-		return inner.countDocuments(filter)
+		return inner.countDocuments(
+			model.toBsonDocument(),
+			options.toJava(),
+		)
 	}
 
 	override suspend fun countEstimated(): Long =
@@ -79,7 +84,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	// region Update
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun updateMany(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) {
+	override suspend fun updateMany(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) {
 		val filter = FilterExpression<Document>(context)
 			.apply(filter)
 			.toBsonDocument()
@@ -92,7 +97,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun updateOne(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) {
+	override suspend fun updateOne(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) {
 		val filter = FilterExpression<Document>(context)
 			.apply(filter)
 			.toBsonDocument()
@@ -105,7 +110,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun upsertOne(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) {
+	override suspend fun upsertOne(filter: FilterOperators<Document>.() -> Unit, update: UpsertOperators<Document>.() -> Unit) {
 		val filter = FilterExpression<Document>(context)
 			.apply(filter)
 			.toBsonDocument()
@@ -118,7 +123,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun findOneAndUpdate(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit): Document? {
+	override suspend fun findOneAndUpdate(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit): Document? {
 		val filter = FilterExpression<Document>(context)
 			.apply(filter)
 			.toBsonDocument()
@@ -135,7 +140,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 }
 
 @OptIn(LowLevelApi::class)
-private fun AbstractCompoundExpression.toBsonDocument(): BsonDocument =
+private fun Expression.toBsonDocument(): BsonDocument =
 	buildBsonDocument {
 		writeTo(this)
 	}

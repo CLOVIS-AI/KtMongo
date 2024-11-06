@@ -18,18 +18,20 @@ package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.UpdateExpression
+import opensavvy.ktmongo.dsl.expr.FilterOperators
+import opensavvy.ktmongo.dsl.expr.UpdateOperators
+import opensavvy.ktmongo.dsl.expr.UpsertOperators
+import opensavvy.ktmongo.dsl.models.Count
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
-	private val globalFilter: FilterExpression<Document>.() -> Unit,
+	private val globalFilter: FilterOperators<Document>.() -> Unit,
 ) : MongoCollection<Document> {
 
 	override fun find(): MongoIterable<Document> =
 		upstream.find(globalFilter)
 
-	override fun find(predicate: FilterExpression<Document>.() -> Unit): MongoIterable<Document> =
+	override fun find(predicate: FilterOperators<Document>.() -> Unit): MongoIterable<Document> =
 		upstream.find {
 			globalFilter()
 			predicate()
@@ -42,7 +44,7 @@ private class FilteredCollection<Document : Any>(
 	override suspend fun count(): Long =
 		upstream.count(globalFilter)
 
-	override suspend fun count(predicate: FilterExpression<Document>.() -> Unit): Long =
+	override suspend fun count(predicate: Count<Document>.() -> Unit): Long =
 		upstream.count {
 			globalFilter()
 			predicate()
@@ -51,7 +53,7 @@ private class FilteredCollection<Document : Any>(
 	override suspend fun countEstimated(): Long =
 		count()
 
-	override suspend fun updateMany(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) =
+	override suspend fun updateMany(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) =
 		upstream.updateMany(
 			filter = {
 				globalFilter()
@@ -60,7 +62,7 @@ private class FilteredCollection<Document : Any>(
 			update = update,
 		)
 
-	override suspend fun updateOne(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) =
+	override suspend fun updateOne(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) =
 		upstream.updateOne(
 			filter = {
 				globalFilter()
@@ -69,7 +71,7 @@ private class FilteredCollection<Document : Any>(
 			update = update,
 		)
 
-	override suspend fun upsertOne(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit) =
+	override suspend fun upsertOne(filter: FilterOperators<Document>.() -> Unit, update: UpsertOperators<Document>.() -> Unit) =
 		upstream.upsertOne(
 			filter = {
 				globalFilter()
@@ -78,7 +80,7 @@ private class FilteredCollection<Document : Any>(
 			update = update,
 		)
 
-	override suspend fun findOneAndUpdate(filter: FilterExpression<Document>.() -> Unit, update: UpdateExpression<Document>.() -> Unit): Document? =
+	override suspend fun findOneAndUpdate(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit): Document? =
 		upstream.findOneAndUpdate(
 			filter = {
 				globalFilter()
@@ -116,5 +118,5 @@ private class FilteredCollection<Document : Any>(
  * activeOrders.find() // Only returns orders that are not logically deleted
  * ```
  */
-fun <Document : Any> MongoCollection<Document>.filter(filter: FilterExpression<Document>.() -> Unit): MongoCollection<Document> =
+fun <Document : Any> MongoCollection<Document>.filter(filter: FilterOperators<Document>.() -> Unit): MongoCollection<Document> =
 	FilteredCollection(this, filter)

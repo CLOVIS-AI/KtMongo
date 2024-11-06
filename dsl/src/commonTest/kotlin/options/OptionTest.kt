@@ -16,16 +16,24 @@
 
 package opensavvy.ktmongo.dsl.options
 
-import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.common.Options
-import opensavvy.ktmongo.dsl.options.common.OptionsHolder
-import opensavvy.ktmongo.dsl.options.common.WithLimit
+import opensavvy.ktmongo.dsl.expr.shouldBeBson
+import opensavvy.ktmongo.dsl.expr.testContext
+import opensavvy.ktmongo.dsl.options.common.LimitOption
+import opensavvy.ktmongo.dsl.options.common.option
+import opensavvy.prepared.runner.kotest.PreparedSpec
 
-/**
- * The options for a `collection.count` operation.
- */
-@OptIn(LowLevelApi::class)
-class CountOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context),
-	WithLimit
+@LowLevelApi
+class OptionTest : PreparedSpec({
+
+	test("Validate the system") {
+		val countOptions = CountOptions<String>(testContext())
+		countOptions.toString() shouldBeBson "{}"
+
+		countOptions.limit(99)
+		countOptions.toString() shouldBeBson "{\"limit\": 99}"
+
+		check(countOptions.option<LimitOption, _>() == 99L)
+	}
+
+})

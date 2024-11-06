@@ -16,16 +16,10 @@
 
 package opensavvy.ktmongo.dsl.options
 
-import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.common.Options
-import opensavvy.ktmongo.dsl.options.common.OptionsHolder
-import opensavvy.ktmongo.dsl.options.common.WithLimit
+import opensavvy.ktmongo.dsl.options.common.LimitOption
+import opensavvy.ktmongo.dsl.options.common.option
 
-/**
- * The options for a `collection.count` operation.
- */
-@OptIn(LowLevelApi::class)
-class CountOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context),
-	WithLimit
+@LowLevelApi
+fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongodb.client.model.CountOptions()
+	.limit(option<LimitOption, _>()?.toInt() ?: 0)

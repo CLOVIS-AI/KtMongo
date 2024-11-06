@@ -14,18 +14,4 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.options
-
-import opensavvy.ktmongo.bson.BsonContext
-import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.common.Options
-import opensavvy.ktmongo.dsl.options.common.OptionsHolder
-import opensavvy.ktmongo.dsl.options.common.WithLimit
-
-/**
- * The options for a `collection.count` operation.
- */
-@OptIn(LowLevelApi::class)
-class CountOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context),
-	WithLimit
+package opensavvy.ktmongo.dsl

@@ -18,9 +18,7 @@ package opensavvy.ktmongo.dsl.expr.update
 
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.expr.UpdateExpression
-import opensavvy.ktmongo.dsl.expr.shouldBeBson
-import opensavvy.ktmongo.dsl.expr.testContext
+import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 val set = "\$set"
@@ -45,7 +43,11 @@ class User(
 )
 
 @KtMongoDsl
-fun update(block: UpdateExpression<User>.() -> Unit): String =
+fun update(block: UpdateOperators<User>.() -> Unit): String =
+	UpdateExpression<User>(testContext()).apply(block).toString()
+
+@KtMongoDsl
+fun upsert(block: UpsertOperators<User>.() -> Unit): String =
 	UpdateExpression<User>(testContext()).apply(block).toString()
 
 class EmptyUpdateTest : PreparedSpec({

@@ -21,17 +21,43 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
-import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
+
+/**
+ * Maximum number of elements analyzed by this operation.
+ *
+ * For more information, see [WithLimit].
+ */
+class LimitOption(
+	val limit: Long,
+	context: BsonContext,
+) : AbstractExpression(context), Option<Long> {
+
+	override val value: Long
+		get() = limit
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) {
+		writer.writeInt64("limit", limit)
+	}
+}
 
 /**
  * Limits the number of elements returned by a query.
  *
  * See [limit].
  */
-interface LimitOption : CompoundExpression {
+interface WithLimit : Options {
 
 	/**
 	 * The maximum number of matching documents to return.
+	 *
+	 * ```kotlin
+	 * collections.count {
+	 *     options {
+	 *         limit(99)
+	 *     }
+	 * }
+	 * ```
 	 */
 	fun limit(limit: Int) {
 		limit(limit.toLong())
@@ -39,21 +65,20 @@ interface LimitOption : CompoundExpression {
 
 	/**
 	 * The maximum number of matching documents to return.
+	 *
+	 * ```kotlin
+	 * collections.count {
+	 *     options {
+	 *         limit(99L)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note that not all drivers support specifying a limit larger than an `Int`.
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun limit(limit: Long) {
-		accept(LimitOptionExpression(limit, context))
-	}
-
-	private class LimitOptionExpression(
-		private val limit: Long,
-		context: BsonContext,
-	) : AbstractExpression(context) {
-
-		@LowLevelApi
-		override fun write(writer: BsonFieldWriter) {
-			writer.writeInt64("limit", limit)
-		}
+		accept(LimitOption(limit, context))
 	}
 
 }

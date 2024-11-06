@@ -14,43 +14,40 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr.filter
+package opensavvy.ktmongo.dsl.models
 
-import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.expr.FilterExpression
 import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.testContext
+import opensavvy.ktmongo.dsl.options.CountOptions
 
-val eq = "\$eq"
-val ne = "\$ne"
-val and = "\$and"
-val or = "\$or"
-val exists = "\$exists"
-val type = "\$type"
-val not = "\$not"
-val isOneOf = "\$in"
-val gt = "\$gt"
-val gte = "\$gte"
-val lt = "\$lt"
-val lte = "\$lte"
-val all = "\$all"
-val oid = "\$oid"
-val elemMatch = "\$elemMatch"
-
-class Pet(
-	val name: String,
-	val age: Int,
-)
-
-class User(
-	val id: ObjectId,
-	val name: String,
-	val age: Int?,
-	val grades: List<Int>,
-	val pets: List<Pet>,
-)
-
+/**
+ * Counting a number of documents in a collection.
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * users.count {
+ *     options {
+ *         limit(99)
+ *     }
+ *
+ *     User::age lt 18
+ * }
+ * ```
+ *
+ * @see FilterOperators Filter operators
+ * @see CountOptions Options
+ */
 @KtMongoDsl
-fun filter(block: FilterOperators<User>.() -> Unit): String =
-	FilterExpression<User>(testContext()).apply(block).toString()
+class Count<Document>(
+	context: BsonContext,
+	val options: CountOptions<Document>,
+) : FilterOperators<Document> by FilterExpression<Document>(context) {
+
+	@KtMongoDsl
+	fun options(block: CountOptions<Document>.() -> Unit) {
+		options.block()
+	}
+}

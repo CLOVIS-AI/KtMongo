@@ -29,52 +29,15 @@ import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
 import kotlin.reflect.KClass
-import kotlin.reflect.KProperty1
 
 /**
- * DSL for MongoDB operators that are used to update existing values (does *not* include aggregation operators).
- *
- * ### Example
- *
- * This expression type is available on multiple operations, most commonly `update`:
- * ```kotlin
- * class User(
- *     val name: String,
- *     val age: Int,
- * )
- *
- * collection.update(
- *     filter = {
- *         User::name eq "Bob"
- *     },
- *     update = {
- *         User::age set 18
- *     }
- * )
- * ```
- *
- * ### Operators
- *
- * Fields:
- * - [`$inc`][inc]
- * - [`$rename`][renameTo]
- * - [`$set`][set]
- * - [`$setOnInsert`][setOnInsert]
- * - [`$unset`][unset]
- *
- * Arrays:
- * - [`$[]`][FieldDsl.get]
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/)
- *
- * @see FilterExpression Filters
+ * Implementation of [UpdateOperators].
  */
 @KtMongoDsl
 class UpdateExpression<T>(
 	context: BsonContext,
 ) : AbstractCompoundExpression(context),
+	UpsertOperators<T>,
 	FieldDsl {
 
 	// region Low-level operations
@@ -121,66 +84,11 @@ class UpdateExpression<T>(
 	// endregion
 	// region $set
 
-	/**
-	 * Replaces the value of a field with the specified [value].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.filter {
-	 *     User::name eq "foo"
-	 * }.updateMany {
-	 *     User::age set 18
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
-	 *
-	 * @see setOnInsert Only set if a new document is created.
-	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V) {
+	override infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V) {
 		accept(SetExpressionNode(listOf(this.path to value), context))
-	}
-
-	/**
-	 * Replaces the value of a field with the specified [value].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.filter {
-	 *     User::name eq "foo"
-	 * }.updateMany {
-	 *     User::age set 18
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
-	 *
-	 * @see setOnInsert Only set if a new document is created.
-	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.set(value: V) {
-		this.field.set(value)
 	}
 
 	@LowLevelApi
@@ -204,76 +112,11 @@ class UpdateExpression<T>(
 	// endregion
 	// region $setOnInsert
 
-	/**
-	 * If an upsert operation results in an insert of a document,
-	 * then this operator assigns the specified [value] to the field.
-	 * If the update operation does not result in an insert, this operator does nothing.
-	 *
-	 * If used in an update operation that isn't an upsert, no document can be inserted,
-	 * and thus this operator never does anything.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.filter {
-	 *     User::name eq "foo"
-	 * }.upsertOne {
-	 *     User::age setOnInsert 18
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/setOnInsert/)
-	 *
-	 * @see set Always set the value.
-	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setOnInsert(value: V) {
+	override infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setOnInsert(value: V) {
 		accept(SetOnInsertExpressionNode(listOf(this.path to value), context))
-	}
-
-	/**
-	 * If an upsert operation results in an insert of a document,
-	 * then this operator assigns the specified [value] to the field.
-	 * If the update operation does not result in an insert, this operator does nothing.
-	 *
-	 * If used in an update operation that isn't an upsert, no document can be inserted,
-	 * and thus this operator never does anything.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.filter {
-	 *     User::name eq "foo"
-	 * }.upsertOne {
-	 *     User::age setOnInsert 18
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/setOnInsert/)
-	 *
-	 * @see set Always set the value.
-	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setOnInsert(value: V) {
-		this.field.setOnInsert(value)
 	}
 
 	@LowLevelApi
@@ -296,74 +139,11 @@ class UpdateExpression<T>(
 	// endregion
 	// region $inc
 
-	/**
-	 * Increments a field by the specified [amount].
-	 *
-	 * [amount] may be negative, in which case the field is decremented.
-	 *
-	 * If the field doesn't exist (either the document doesn't have it, or the operation is an upsert and a new document is created),
-	 * the field is created with an initial value of [amount].
-	 *
-	 * Use of this operator with a field with a `null` value will generate an error.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 * )
-	 *
-	 * // It's the new year!
-	 * collection.updateMany {
-	 *     User::age inc 1
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
-	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.inc(amount: V) {
+	override infix fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.inc(amount: V) {
 		accept(IncrementExpressionNode(listOf(this.path to amount), context))
-	}
-
-	/**
-	 * Increments a field by the specified [amount].
-	 *
-	 * [amount] may be negative, in which case the field is decremented.
-	 *
-	 * If the field doesn't exist (either the document doesn't have it, or the operation is an upsert and a new document is created),
-	 * the field is created with an initial value of [amount].
-	 *
-	 * Use of this operator with a field with a `null` value will generate an error.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 * )
-	 *
-	 * // It's the new year!
-	 * collection.updateMany {
-	 *     User::age inc 1
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
-	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Number> KProperty1<T, V>.inc(amount: V) {
-		this.field.inc(amount)
 	}
 
 	@LowLevelApi
@@ -386,66 +166,11 @@ class UpdateExpression<T>(
 	// endregion
 	// region $unset
 
-	/**
-	 * Deletes a field.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 *     val alive: Boolean,
-	 * )
-	 *
-	 * collection.filter {
-	 *     User::name eq "Luke Skywalker"
-	 * }.updateOne {
-	 *     User::age.unset()
-	 *     User::alive set false
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/unset/)
-	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.unset() {
+	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.unset() {
 		accept(UnsetExpressionNode(listOf(this.path), context))
-	}
-
-	/**
-	 * Deletes a field.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 *     val alive: Boolean,
-	 * )
-	 *
-	 * collection.filter {
-	 *     User::name eq "Luke Skywalker"
-	 * }.updateOne {
-	 *     User::age.unset()
-	 *     User::alive set false
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/unset/)
-	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.unset() {
-		this.field.unset()
 	}
 
 	@LowLevelApi
@@ -468,116 +193,11 @@ class UpdateExpression<T>(
 	// endregion
 	// region $rename
 
-	/**
-	 * Renames a field.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 *     val ageOld: Int,
-	 * )
-	 *
-	 * collection.updateMany {
-	 *     User::ageOld renameTo User::age
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/rename/)
-	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: Field<T, V>) {
+	override infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: Field<T, V>) {
 		accept(RenameExpressionNode(listOf(this.path to newName.path), context))
-	}
-
-	/**
-	 * Renames a field.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 *     val ageOld: Int,
-	 * )
-	 *
-	 * collection.updateMany {
-	 *     User::ageOld renameTo User::age
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/rename/)
-	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.renameTo(newName: Field<T, V>) {
-		this.field.renameTo(newName)
-	}
-
-	/**
-	 * Renames a field.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 *     val ageOld: Int,
-	 * )
-	 *
-	 * collection.updateMany {
-	 *     User::ageOld renameTo User::age
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/rename/)
-	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: KProperty1<T, V>) {
-		this.renameTo(newName.field)
-	}
-
-	/**
-	 * Renames a field.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 *     val ageOld: Int,
-	 * )
-	 *
-	 * collection.updateMany {
-	 *     User::ageOld renameTo User::age
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/rename/)
-	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.renameTo(newName: KProperty1<T, V>) {
-		this.renameTo(newName.field)
 	}
 
 	@LowLevelApi

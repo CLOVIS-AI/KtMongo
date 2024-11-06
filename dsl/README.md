@@ -28,14 +28,23 @@ Operators are organized by the context in which they are available in. For examp
 
 Instances of these classes are usually provided by the driver as part of its functions.
 
-- [Filter operators][opensavvy.ktmongo.dsl.expr.FilterExpression]
-- [Update operators][opensavvy.ktmongo.dsl.expr.UpdateExpression]
+- [Filter operators][opensavvy.ktmongo.dsl.expr.FilterOperators]
+- [Update operators][opensavvy.ktmongo.dsl.expr.UpdateOperators]
+- [Upsert operators][opensavvy.ktmongo.dsl.expr.UpsertOperators]
 
 To create a custom operator (for example because it isn't part of the library yet), see [AbstractExpression][opensavvy.ktmongo.dsl.expr.common.AbstractExpression].
 
 # Package opensavvy.ktmongo.dsl
 
 Annotations and other global concepts.
+
+# Package opensavvy.ktmongo.dsl.tree
+
+Helpers to represent trees of data, built bottom-up.
+
+Users of the library are not expected to interact with this package.
+
+However, contributors to the library, and users wanting to implement custom operators, should familiarize themselves with this package.
 
 # Package opensavvy.ktmongo.dsl.expr
 

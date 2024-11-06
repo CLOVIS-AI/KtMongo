@@ -20,7 +20,9 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.PredicateExpression
+import opensavvy.ktmongo.dsl.expr.PredicateOperators
+import opensavvy.ktmongo.dsl.tree.Node
+import opensavvy.ktmongo.dsl.tree.NodeImpl
 
 /**
  * A node in the BSON AST.
@@ -40,7 +42,7 @@ import opensavvy.ktmongo.dsl.expr.PredicateExpression
  *
  * Use [toString][Any.toString] to view the JSON representation of this expression.
  */
-interface Expression {
+interface Expression : Node {
 
 	/**
 	 * The context used to generate this expression.
@@ -55,7 +57,7 @@ interface Expression {
 	 * This ensures that expressions cannot change after they have been used within other expressions.
 	 */
 	@LowLevelApi
-	fun freeze()
+	override fun freeze()
 
 	/**
 	 * Returns a simplified (but equivalent) expression to the current expression.
@@ -122,7 +124,7 @@ interface Expression {
  * }
  * ```
  *
- * Of course, the operator described above is already made available: [PredicateExpression.hasType].
+ * Of course, the operator described above is already made available: [PredicateOperators.hasType].
  *
  * **Note that if your operator accepts a variable number of sub-expressions (e.g. `$and`), you must ensure that it works for any
  * number of expressions, including 1 and 0.** See [simplify].
@@ -133,20 +135,21 @@ interface Expression {
  * operator you create so they can benefit from future fixes. Again, **an improperly-written operator may allow data
  * corruption or leaking**.
  */
-abstract class AbstractExpression(
+abstract class AbstractExpression private constructor(
 	@property:LowLevelApi override val context: BsonContext,
-) : Expression {
+	private val node: NodeImpl,
+) : Node by node, Expression {
+
+	constructor(context: BsonContext) : this(context, NodeImpl())
 
 	/**
-	 * `true` if this expression is immutable.
+	 * `true` if [freeze] has been called. Can never become `false` again.
+	 *
+	 * If this value is `true`, this node should reject any attempt to mutate it.
+	 * It is the responsibility of the implementor to satisfy this invariant.
 	 */
-	protected var frozen: Boolean = false
-		private set
-
-	@LowLevelApi
-	final override fun freeze() {
-		frozen = true
-	}
+	protected val frozen: Boolean
+		get() = node.frozen
 
 	/**
 	 * Called when this operator should be written to a [writer].

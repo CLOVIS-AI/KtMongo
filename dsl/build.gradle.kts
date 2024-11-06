@@ -30,6 +30,10 @@ kotlin {
 		api(projects.annotations)
 	}
 
+	sourceSets.jvmMain.dependencies {
+		api(libs.mongodb.core.jvm)
+	}
+
 	sourceSets.commonTest.dependencies {
 		implementation(libs.prepared)
 		implementation(opensavvyConventions.aligned.kotlin.test)

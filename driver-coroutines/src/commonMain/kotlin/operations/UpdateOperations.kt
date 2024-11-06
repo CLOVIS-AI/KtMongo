@@ -18,8 +18,9 @@ package opensavvy.ktmongo.coroutines.operations
 
 import opensavvy.ktmongo.coroutines.MongoCollection
 import opensavvy.ktmongo.coroutines.filter
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.UpdateExpression
+import opensavvy.ktmongo.dsl.expr.FilterOperators
+import opensavvy.ktmongo.dsl.expr.UpdateOperators
+import opensavvy.ktmongo.dsl.expr.UpsertOperators
 
 /**
  * Interface grouping MongoDB operations allowing to update existing information.
@@ -69,8 +70,8 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @see updateOne
 	 */
 	suspend fun updateMany(
-		filter: FilterExpression<Document>.() -> Unit = {},
-		update: UpdateExpression<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit = {},
+		update: UpdateOperators<Document>.() -> Unit,
 	)
 
 	/**
@@ -119,8 +120,8 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @see findOneAndUpdate Also returns the result of the update.
 	 */
 	suspend fun updateOne(
-		filter: FilterExpression<Document>.() -> Unit = {},
-		update: UpdateExpression<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit = {},
+		update: UpdateOperators<Document>.() -> Unit,
 	)
 
 	/**
@@ -172,8 +173,8 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @see updateOne
 	 */
 	suspend fun upsertOne(
-		filter: FilterExpression<Document>.() -> Unit = {},
-		update: UpdateExpression<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit = {},
+		update: UpsertOperators<Document>.() -> Unit,
 	)
 
 	/**
@@ -220,8 +221,8 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @see updateOne Do not return the value.
 	 */
 	suspend fun findOneAndUpdate(
-		filter: FilterExpression<Document>.() -> Unit = {},
-		update: UpdateExpression<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit = {},
+		update: UpdateOperators<Document>.() -> Unit,
 	): Document?
 
 }
