@@ -23,7 +23,11 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.Expression
 import opensavvy.ktmongo.dsl.models.Count
+import opensavvy.ktmongo.dsl.models.Find
 import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.options.FindOptions
+import opensavvy.ktmongo.dsl.options.common.LimitOption
+import opensavvy.ktmongo.dsl.options.common.option
 import opensavvy.ktmongo.dsl.options.toJava
 import org.bson.BsonDocument
 
@@ -51,12 +55,15 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		JvmMongoIterable(inner.find())
 
 	@OptIn(LowLevelApi::class)
-	override fun find(predicate: FilterOperators<Document>.() -> Unit): JvmMongoIterable<Document> {
-		val filter = FilterExpression<Document>(context)
+	override fun find(predicate: Find<Document>.() -> Unit): JvmMongoIterable<Document> {
+		val options = FindOptions<Document>(context)
+		val model = Find<Document>(context, options)
 			.apply(predicate)
-			.toBsonDocument()
 
-		return JvmMongoIterable(inner.find(filter))
+		return JvmMongoIterable(
+			inner.find(model.toBsonDocument())
+				.limit(options.option<LimitOption, _>()?.toInt() ?: 0)
+		)
 	}
 
 	// endregion
