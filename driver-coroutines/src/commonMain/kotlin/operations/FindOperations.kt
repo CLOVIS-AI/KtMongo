@@ -18,7 +18,8 @@ package opensavvy.ktmongo.coroutines.operations
 
 import opensavvy.ktmongo.coroutines.MongoIterable
 import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.models.Find
+import opensavvy.ktmongo.dsl.expr.FilterOperators
+import opensavvy.ktmongo.dsl.options.FindOptions
 
 /**
  * Interface grouping MongoDB operations allowing to search for information.
@@ -59,7 +60,10 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 *
 	 * @see findOne When only one result is expected.
 	 */
-	fun find(predicate: Find<Document>.() -> Unit): MongoIterable<Document>
+	fun find(
+		options: FindOptions<Document>.() -> Unit = {},
+		predicate: FilterOperators<Document>.() -> Unit,
+	): MongoIterable<Document>
 
 	/**
 	 * Finds a document in this collection that satisfies [predicate].
@@ -85,7 +89,10 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 *
 	 * @see find When multiple results are expected.
 	 */
-	suspend fun findOne(predicate: Find<Document>.() -> Unit): Document? =
-		find(predicate).firstOrNull()
+	suspend fun findOne(
+		options: FindOptions<Document>.() -> Unit = {},
+		predicate: FilterOperators<Document>.() -> Unit,
+	): Document? =
+		find(options, predicate).firstOrNull()
 
 }

@@ -28,11 +28,7 @@ import opensavvy.ktmongo.dsl.options.FindOptions
  * ### Example
  *
  * ```kotlin
- * users.find {
- *     options {
- *         limit(12)
- *     }
- *
+ * users.find({ limit(12) }) {
  *     User::age lt 18
  * }
  * ```
@@ -41,13 +37,11 @@ import opensavvy.ktmongo.dsl.options.FindOptions
  * @see FindOptions Options
  */
 @KtMongoDsl
-class Find<Document>(
-	context: BsonContext,
+class Find<Document> private constructor(
+	val context: BsonContext,
 	val options: FindOptions<Document>,
-) : FilterOperators<Document> by FilterExpression<Document>(context) {
+	val filter: FilterOperators<Document>,
+) {
 
-	@KtMongoDsl
-	fun options(block: FindOptions<Document>.() -> Unit) {
-		options.block()
-	}
+	constructor(context: BsonContext) : this(context, FindOptions(context), FilterExpression(context))
 }

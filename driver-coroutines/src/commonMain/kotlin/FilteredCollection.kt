@@ -21,8 +21,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.UpdateOperators
 import opensavvy.ktmongo.dsl.expr.UpsertOperators
-import opensavvy.ktmongo.dsl.models.Find
 import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.options.FindOptions
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
@@ -30,10 +30,13 @@ private class FilteredCollection<Document : Any>(
 ) : MongoCollection<Document> {
 
 	override fun find(): MongoIterable<Document> =
-		upstream.find(globalFilter)
+		upstream.find(predicate = globalFilter)
 
-	override fun find(predicate: Find<Document>.() -> Unit): MongoIterable<Document> =
-		upstream.find {
+	override fun find(
+		options: FindOptions<Document>.() -> Unit,
+		predicate: FilterOperators<Document>.() -> Unit,
+	): MongoIterable<Document> =
+		upstream.find(options) {
 			globalFilter()
 			predicate()
 		}

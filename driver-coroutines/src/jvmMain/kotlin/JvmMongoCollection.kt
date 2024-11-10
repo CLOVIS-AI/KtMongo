@@ -55,14 +55,18 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		JvmMongoIterable(inner.find())
 
 	@OptIn(LowLevelApi::class)
-	override fun find(predicate: Find<Document>.() -> Unit): JvmMongoIterable<Document> {
-		val options = FindOptions<Document>(context)
-		val model = Find<Document>(context, options)
-			.apply(predicate)
+	override fun find(
+		options: FindOptions<Document>.() -> Unit,
+		predicate: FilterOperators<Document>.() -> Unit,
+	): MongoIterable<Document> {
+		val model = Find<Document>(context)
+
+		model.options.options()
+		model.filter.predicate()
 
 		return JvmMongoIterable(
-			inner.find(model.toBsonDocument())
-				.limit(options.option<LimitOption, _>()?.toInt() ?: 0)
+			inner.find(model.filter.toBsonDocument())
+				.limit(model.options.option<LimitOption, _>()?.toInt() ?: 0)
 		)
 	}
 
