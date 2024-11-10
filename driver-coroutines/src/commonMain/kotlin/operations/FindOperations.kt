@@ -36,7 +36,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	fun find(): MongoIterable<Document>
 
 	/**
-	 * Finds all documents in this collection that satisfy [predicate].
+	 * Finds all documents in this collection that satisfy [filter].
 	 *
 	 * If multiple predicates are specified, an [and][opensavvy.ktmongo.dsl.expr.FilterExpression.and] operator is implied.
 	 *
@@ -62,11 +62,11 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 */
 	fun find(
 		options: FindOptions<Document>.() -> Unit = {},
-		predicate: FilterOperators<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
 	): MongoIterable<Document>
 
 	/**
-	 * Finds a document in this collection that satisfies [predicate].
+	 * Finds a document in this collection that satisfies [filter].
 	 *
 	 * If multiple predicates are specified, and [and][FilterExpression.and] operator is implied.
 	 *
@@ -91,8 +91,8 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 */
 	suspend fun findOne(
 		options: FindOptions<Document>.() -> Unit = {},
-		predicate: FilterOperators<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
 	): Document? =
-		find(options, predicate).firstOrNull()
+		find(options, filter).firstOrNull()
 
 }

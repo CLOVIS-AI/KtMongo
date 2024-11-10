@@ -31,15 +31,15 @@ private class FilteredCollection<Document : Any>(
 ) : MongoCollection<Document> {
 
 	override fun find(): MongoIterable<Document> =
-		upstream.find(predicate = globalFilter)
+		upstream.find(filter = globalFilter)
 
 	override fun find(
 		options: FindOptions<Document>.() -> Unit,
-		predicate: FilterOperators<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
 	): MongoIterable<Document> =
 		upstream.find(options) {
 			globalFilter()
-			predicate()
+			filter()
 		}
 
 	@LowLevelApi
