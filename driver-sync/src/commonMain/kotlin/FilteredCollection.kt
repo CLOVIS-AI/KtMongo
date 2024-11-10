@@ -21,8 +21,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.UpdateOperators
 import opensavvy.ktmongo.dsl.expr.UpsertOperators
-import opensavvy.ktmongo.dsl.models.Count
 import opensavvy.ktmongo.dsl.models.Find
+import opensavvy.ktmongo.dsl.options.CountOptions
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
@@ -43,13 +43,19 @@ private class FilteredCollection<Document : Any>(
 		get() = upstream.context
 
 	override fun count(): Long =
-		upstream.count(globalFilter)
+		upstream.count(predicate = globalFilter)
 
-	override fun count(predicate: Count<Document>.() -> Unit): Long =
-		upstream.count {
-			globalFilter()
-			predicate()
-		}
+	override fun count(
+		options: CountOptions<Document>.() -> Unit,
+		predicate: FilterOperators<Document>.() -> Unit,
+	): Long =
+		upstream.count(
+			options = options,
+			predicate = {
+				globalFilter()
+				predicate()
+			}
+		)
 
 	override fun countEstimated(): Long =
 		count()

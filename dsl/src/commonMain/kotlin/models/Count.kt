@@ -28,11 +28,7 @@ import opensavvy.ktmongo.dsl.options.CountOptions
  * ### Example
  *
  * ```kotlin
- * users.count {
- *     options {
- *         limit(99)
- *     }
- *
+ * users.count({ limit(99) }) {
  *     User::age lt 18
  * }
  * ```
@@ -41,13 +37,12 @@ import opensavvy.ktmongo.dsl.options.CountOptions
  * @see CountOptions Options
  */
 @KtMongoDsl
-class Count<Document>(
-	context: BsonContext,
+class Count<Document> private constructor(
+	val context: BsonContext,
 	val options: CountOptions<Document>,
-) : FilterOperators<Document> by FilterExpression<Document>(context) {
+	val filter: FilterOperators<Document>,
+) {
 
-	@KtMongoDsl
-	fun options(block: CountOptions<Document>.() -> Unit) {
-		options.block()
-	}
+	constructor(context: BsonContext) : this(context, CountOptions(context), FilterExpression(context))
+
 }

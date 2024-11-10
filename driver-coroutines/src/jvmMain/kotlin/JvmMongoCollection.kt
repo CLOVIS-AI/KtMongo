@@ -39,7 +39,7 @@ import org.bson.BsonDocument
  * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongo].
  */
 class JvmMongoCollection<Document : Any> internal constructor(
-	private val inner: com.mongodb.kotlin.client.coroutine.MongoCollection<Document>
+	private val inner: com.mongodb.kotlin.client.coroutine.MongoCollection<Document>,
 ) : MongoCollection<Document> {
 
 	@LowLevelApi
@@ -73,14 +73,18 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		inner.countDocuments()
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun count(predicate: Count<Document>.() -> Unit): Long {
-		val options = CountOptions<Document>(context)
-		val model = Count<Document>(context, options)
-			.apply(predicate)
+	override suspend fun count(
+		options: CountOptions<Document>.() -> Unit,
+		predicate: FilterOperators<Document>.() -> Unit,
+	): Long {
+		val model = Count<Document>(context)
+
+		model.options.options()
+		model.filter.predicate()
 
 		return inner.countDocuments(
-			model.toBsonDocument(),
-			options.toJava(),
+			model.filter.toBsonDocument(),
+			model.options.toJava()
 		)
 	}
 
