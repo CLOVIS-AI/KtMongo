@@ -23,6 +23,7 @@ import opensavvy.ktmongo.dsl.expr.UpdateOperators
 import opensavvy.ktmongo.dsl.expr.UpsertOperators
 import opensavvy.ktmongo.dsl.options.CountOptions
 import opensavvy.ktmongo.dsl.options.FindOptions
+import opensavvy.ktmongo.dsl.options.UpdateOptions
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
@@ -63,35 +64,58 @@ private class FilteredCollection<Document : Any>(
 	override fun countEstimated(): Long =
 		count()
 
-	override fun updateMany(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) =
+	override fun updateMany(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	) {
 		upstream.updateMany(
+			options = options,
 			filter = {
 				globalFilter()
 				filter()
 			},
 			update = update,
 		)
+	}
 
-	override fun updateOne(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) =
+	override fun updateOne(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	) {
 		upstream.updateOne(
+			options = options,
 			filter = {
 				globalFilter()
 				filter()
 			},
 			update = update,
 		)
+	}
 
-	override fun upsertOne(filter: FilterOperators<Document>.() -> Unit, update: UpsertOperators<Document>.() -> Unit) =
+	override fun upsertOne(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpsertOperators<Document>.() -> Unit,
+	) {
 		upstream.upsertOne(
+			options = options,
 			filter = {
 				globalFilter()
 				filter()
 			},
 			update = update,
 		)
+	}
 
-	override fun findOneAndUpdate(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit): Document? =
+	override fun findOneAndUpdate(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	): Document? =
 		upstream.findOneAndUpdate(
+			options = options,
 			filter = {
 				globalFilter()
 				filter()

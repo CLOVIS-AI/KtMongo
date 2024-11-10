@@ -16,14 +16,14 @@
 
 package opensavvy.ktmongo.coroutines
 
+import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.Expression
-import opensavvy.ktmongo.dsl.models.Count
-import opensavvy.ktmongo.dsl.models.Find
+import opensavvy.ktmongo.dsl.models.*
 import opensavvy.ktmongo.dsl.options.CountOptions
 import opensavvy.ktmongo.dsl.options.FindOptions
 import opensavvy.ktmongo.dsl.options.common.LimitOption
@@ -99,55 +99,63 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	// region Update
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun updateMany(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) {
-		val filter = FilterExpression<Document>(context)
-			.apply(filter)
-			.toBsonDocument()
+	override suspend fun updateMany(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	) {
+		val model = UpdateMany<Document>(context)
 
-		val update = UpdateExpression<Document>(context)
-			.apply(update)
-			.toBsonDocument()
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
 
-		inner.updateMany(filter, update)
+		inner.updateMany(model.filter.toBsonDocument(), model.update.toBsonDocument(), UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun updateOne(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) {
-		val filter = FilterExpression<Document>(context)
-			.apply(filter)
-			.toBsonDocument()
+	override suspend fun updateOne(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	) {
+		val model = UpdateOne<Document>(context)
 
-		val update = UpdateExpression<Document>(context)
-			.apply(update)
-			.toBsonDocument()
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
 
-		inner.updateOne(filter, update)
+		inner.updateOne(model.filter.toBsonDocument(), model.update.toBsonDocument(), UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun upsertOne(filter: FilterOperators<Document>.() -> Unit, update: UpsertOperators<Document>.() -> Unit) {
-		val filter = FilterExpression<Document>(context)
-			.apply(filter)
-			.toBsonDocument()
+	override suspend fun upsertOne(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpsertOperators<Document>.() -> Unit,
+	) {
+		val model = UpsertOne<Document>(context)
 
-		val update = UpdateExpression<Document>(context)
-			.apply(update)
-			.toBsonDocument()
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
 
-		inner.updateOne(filter, update, UpdateOptions().upsert(true))
+		inner.updateOne(model.filter.toBsonDocument(), model.update.toBsonDocument(), UpdateOptions().upsert(true))
 	}
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun findOneAndUpdate(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit): Document? {
-		val filter = FilterExpression<Document>(context)
-			.apply(filter)
-			.toBsonDocument()
+	override suspend fun findOneAndUpdate(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	): Document? {
+		val model = UpdateOne<Document>(context)
 
-		val update = UpdateExpression<Document>(context)
-			.apply(update)
-			.toBsonDocument()
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
 
-		return inner.findOneAndUpdate(filter, update)
+		return inner.findOneAndUpdate(model.filter.toBsonDocument(), model.update.toBsonDocument(), FindOneAndUpdateOptions())
 	}
 
 	// endregion
