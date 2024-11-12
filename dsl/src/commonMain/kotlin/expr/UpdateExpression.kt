@@ -24,10 +24,10 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.expr.common.Expression
-import opensavvy.ktmongo.dsl.expr.common.acceptAll
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.tree.acceptAll
 import kotlin.reflect.KClass
 
 /**
