@@ -17,5 +17,28 @@
 package opensavvy.ktmongo.sync
 
 import opensavvy.prepared.suite.PreparedProvider
+import opensavvy.prepared.suite.cleanUp
+import opensavvy.prepared.suite.prepared
+import opensavvy.prepared.suite.randomInt
 
-expect inline fun <reified Document : Any> testCollection(name: String): PreparedProvider<MongoCollection<Document>>
+expect inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>>
+
+val collectionPostfix by randomInt(0, Int.MAX_VALUE)
+inline fun <reified Document : Any> testCollection(name: String): PreparedProvider<MongoCollection<Document>> = prepared {
+	val name = "$name-${collectionPostfix()}"
+
+	val realCollection by testCollectionExact<Document>(name)
+
+	cleanUp("Log the collection after failed test", onSuccess = false) {
+		println("Collection $name with ${realCollection().count()} documents:")
+		realCollection().find().forEach { document ->
+			println(" • $document")
+		}
+	}
+
+	cleanUp("Drop the collection", onFailure = false) {
+		println("Dropping the collection is not implemented yet")
+	}
+
+	realCollection()
+}

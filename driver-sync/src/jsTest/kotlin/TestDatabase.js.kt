@@ -18,6 +18,6 @@ package opensavvy.ktmongo.sync
 
 import opensavvy.prepared.suite.PreparedProvider
 
-actual inline fun <reified Document : Any> testCollection(name: String): PreparedProvider<MongoCollection<Document>> {
+actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>> {
 	TODO("Not yet implemented")
 }

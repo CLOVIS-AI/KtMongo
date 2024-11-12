@@ -35,7 +35,7 @@ internal val database by shared(CoroutineName("mongodb-establish-connection")) {
 	client.getDatabase("ktmongo-sync-tests")
 }
 
-actual inline fun <reified Document : Any> testCollection(name: String): PreparedProvider<MongoCollection<Document>> = prepared(CoroutineName("mongodb-create-collection-$name")) {
+actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>> = prepared(CoroutineName("mongodb-create-collection-$name")) {
 	val collection = database().getCollection<Document>(name)
 	collection.asKtMongo()
 }
