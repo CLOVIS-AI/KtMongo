@@ -122,6 +122,15 @@ private class FilteredCollection<Document : Any>(
 			},
 			update = update,
 		)
+
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String {
+		val filter = FilterExpression<Document>(context)
+			.apply(globalFilter)
+			.toBsonDocument()
+
+		return "$upstream.filter $filter"
+	}
 }
 
 /**

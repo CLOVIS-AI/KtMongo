@@ -158,6 +158,9 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	// endregion
 
+	override fun toString(): String =
+		"MongoCollection(${inner.namespace})"
+
 }
 
 /**
