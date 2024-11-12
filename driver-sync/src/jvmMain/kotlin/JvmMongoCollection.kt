@@ -23,6 +23,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.*
+import opensavvy.ktmongo.dsl.options.BulkWriteOptions
 import opensavvy.ktmongo.dsl.options.CountOptions
 import opensavvy.ktmongo.dsl.options.FindOptions
 import opensavvy.ktmongo.dsl.options.common.LimitOption
@@ -154,6 +155,23 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.update.update()
 
 		return inner.findOneAndUpdate(model.filter.toBsonDocument(), model.update.toBsonDocument(), FindOneAndUpdateOptions())
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun bulkWrite(
+		options: BulkWriteOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		operations: BulkWrite<Document>.() -> Unit,
+	) {
+		val model = BulkWrite<Document>(context, filter)
+
+		model.options.options()
+		model.operations()
+
+		inner.bulkWrite(
+			model.operations.map { it.toJava() }.toList(),
+			options = com.mongodb.client.model.BulkWriteOptions()
+		)
 	}
 
 	// endregion

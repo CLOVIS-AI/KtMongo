@@ -25,6 +25,7 @@ import opensavvy.ktmongo.sync.operations.UpdateOperations
  *
  * ### Operations
  *
+ * - [bulkWrite][UpdateOperations.bulkWrite]
  * - [count][CountOperations.count]
  * - [countEstimated][CountOperations.countEstimated]
  * - [find][FindOperations.find]
