@@ -20,6 +20,8 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.options.UpdateOptions
+import opensavvy.ktmongo.dsl.tree.ImmutableNode
+import opensavvy.ktmongo.dsl.tree.Node
 
 /**
  * Updating a single element in a collection.
@@ -41,7 +43,7 @@ class UpdateOne<Document> private constructor(
 	val options: UpdateOptions<Document>,
 	val filter: FilterOperators<Document>,
 	val update: UpdateOperators<Document>,
-) {
+) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
 	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterExpression(context), UpdateExpression(context))
 }
@@ -66,7 +68,7 @@ class UpsertOne<Document> private constructor(
 	val options: UpdateOptions<Document>,
 	val filter: FilterOperators<Document>,
 	val update: UpsertOperators<Document>,
-) {
+) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
 	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterExpression(context), UpdateExpression(context))
 }
@@ -91,7 +93,7 @@ class UpdateMany<Document> private constructor(
 	val options: UpdateOptions<Document>,
 	val filter: FilterOperators<Document>,
 	val update: UpdateOperators<Document>,
-) {
+) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
 	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterExpression(context), UpdateExpression(context))
 }
