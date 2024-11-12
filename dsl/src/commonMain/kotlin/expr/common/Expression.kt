@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.dsl.expr.common
 
+import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.buildBsonDocument
@@ -80,6 +81,15 @@ interface Expression : Node {
 
 	companion object
 }
+
+/**
+ * Creates a new [BSON document][buildBsonDocument] containing the data from this expression.
+ */
+@LowLevelApi
+fun Expression.toBsonDocument(): Bson =
+	buildBsonDocument {
+		writeTo(this)
+	}
 
 /**
  * Utility implementation for [Expression], which handles the [context], [toString] representation and [freezing][freeze].

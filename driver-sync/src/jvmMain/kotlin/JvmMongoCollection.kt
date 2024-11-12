@@ -19,17 +19,15 @@ package opensavvy.ktmongo.sync
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
-import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.*
-import opensavvy.ktmongo.dsl.expr.common.Expression
+import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.*
 import opensavvy.ktmongo.dsl.options.CountOptions
 import opensavvy.ktmongo.dsl.options.FindOptions
 import opensavvy.ktmongo.dsl.options.common.LimitOption
 import opensavvy.ktmongo.dsl.options.common.option
 import opensavvy.ktmongo.dsl.options.toJava
-import org.bson.BsonDocument
 
 /**
  * Implementation of [MongoCollection] based on [MongoDB's MongoCollection][com.mongodb.kotlin.client.MongoCollection].
@@ -162,11 +160,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 }
 
-@OptIn(LowLevelApi::class)
-private fun Expression.toBsonDocument(): BsonDocument =
-	buildBsonDocument {
-		writeTo(this)
-	}
+}
 
 /**
  * Converts a [MongoDB collection][com.mongodb.kotlin.client.MongoCollection] into a [KtMongo collection][JvmMongoCollection].
