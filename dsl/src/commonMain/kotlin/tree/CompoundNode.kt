@@ -58,3 +58,17 @@ interface CompoundNode<N : Node> {
 	fun accept(node: N)
 
 }
+
+/**
+ * Adds any number of [nodes] into this one.
+ *
+ * To learn more about the behavior of this function and the security implications, see [accept][CompoundNode.accept].
+ */
+@LowLevelApi
+@DangerousMongoApi
+@KtMongoDsl
+fun <N : Node> CompoundNode<N>.acceptAll(nodes: Iterable<N>) {
+	for (child in nodes) {
+		accept(child)
+	}
+}

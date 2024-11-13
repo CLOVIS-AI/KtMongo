@@ -21,6 +21,8 @@ import opensavvy.ktmongo.coroutines.filter
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.UpdateOperators
 import opensavvy.ktmongo.dsl.expr.UpsertOperators
+import opensavvy.ktmongo.dsl.models.BulkWrite
+import opensavvy.ktmongo.dsl.options.BulkWriteOptions
 import opensavvy.ktmongo.dsl.options.UpdateOptions
 
 /**
@@ -229,5 +231,76 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 		filter: FilterOperators<Document>.() -> Unit = {},
 		update: UpdateOperators<Document>.() -> Unit,
 	): Document?
+
+	/**
+	 * Performs multiple update operations in a single request.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.bulkWrite {
+	 *     upsertOne(
+	 *         filter = {
+	 *             User::name eq "Patrick"
+	 *         },
+	 *         update = {
+	 *             User::age set 15
+	 *         }
+	 *     )
+	 *
+	 *     updateMany {
+	 *         User::age inc 1
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * To see which operations are available and their respective syntax, see [BulkWrite].
+	 *
+	 * ### Using filtered writes
+	 *
+	 * We can group operations by the filter they apply on:
+	 * ```kotlin
+	 * collection.bulkWrite {
+	 *     filtered(filter = { User::isAlive eq true }) {
+	 *         updateOne(…)
+	 *         updateOne(…)
+	 *         updateMany(…)
+	 *     }
+	 *
+	 *     updateOne(…)
+	 * }
+	 * ```
+	 *
+	 * To learn more, see [filtered][BulkWrite.filtered].
+	 *
+	 * ### Using filtered collections
+	 *
+	 * If we want all operations to use the same filter, we can declare it before calling
+	 * the operation:
+	 * ```kotlin
+	 * collection.filter {
+	 *     User::isAlive eq true
+	 * }.bulkWrite {
+	 *     updateOne(…)
+	 *     updateOne(…)
+	 *     updateMany(…)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite)
+	 */
+	suspend fun bulkWrite(
+		options: BulkWriteOptions<Document>.() -> Unit = {},
+		filter: FilterOperators<Document>.() -> Unit = {},
+		operations: BulkWrite<Document>.() -> Unit,
+	)
+
 
 }

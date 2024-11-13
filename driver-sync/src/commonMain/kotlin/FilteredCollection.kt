@@ -18,9 +18,13 @@ package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.expr.FilterExpression
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.UpdateOperators
 import opensavvy.ktmongo.dsl.expr.UpsertOperators
+import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
+import opensavvy.ktmongo.dsl.models.BulkWrite
+import opensavvy.ktmongo.dsl.options.BulkWriteOptions
 import opensavvy.ktmongo.dsl.options.CountOptions
 import opensavvy.ktmongo.dsl.options.FindOptions
 import opensavvy.ktmongo.dsl.options.UpdateOptions
@@ -122,6 +126,28 @@ private class FilteredCollection<Document : Any>(
 			},
 			update = update,
 		)
+
+	override fun bulkWrite(
+		options: BulkWriteOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		operations: BulkWrite<Document>.() -> Unit
+	) = upstream.bulkWrite(
+		options = options,
+		filter = {
+			globalFilter()
+			filter()
+		},
+		operations = operations,
+	)
+
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String {
+		val filter = FilterExpression<Document>(context)
+			.apply(globalFilter)
+			.toBsonDocument()
+
+		return "$upstream.filter $filter"
+	}
 }
 
 /**

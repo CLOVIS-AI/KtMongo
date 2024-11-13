@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync
+package opensavvy.ktmongo.dsl.options
 
-import opensavvy.prepared.suite.PreparedProvider
+import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.options.common.Options
+import opensavvy.ktmongo.dsl.options.common.OptionsHolder
 
-actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>> {
-	TODO("Not yet implemented")
-}
+/**
+ * The options for a `collection.bulkWrite` operation.
+ */
+class BulkWriteOptions<Document>(context: BsonContext) :
+	Options by OptionsHolder(context)

@@ -132,17 +132,3 @@ abstract class AbstractCompoundExpression(
 
 	companion object
 }
-
-/**
- * Adds any number of [expressions] into this one.
- *
- * To learn more about the behavior of this function and the security implications, see [accept][CompoundExpression.accept].
- */
-@LowLevelApi
-@DangerousMongoApi
-@KtMongoDsl
-fun CompoundExpression.acceptAll(expressions: Iterable<Expression>) {
-	for (child in expressions) {
-		accept(child)
-	}
-}
