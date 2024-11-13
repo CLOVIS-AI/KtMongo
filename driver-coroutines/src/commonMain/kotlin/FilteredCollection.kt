@@ -21,7 +21,9 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.UpdateOperators
 import opensavvy.ktmongo.dsl.expr.UpsertOperators
-import opensavvy.ktmongo.dsl.models.Count
+import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.options.FindOptions
+import opensavvy.ktmongo.dsl.options.UpdateOptions
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
@@ -29,12 +31,15 @@ private class FilteredCollection<Document : Any>(
 ) : MongoCollection<Document> {
 
 	override fun find(): MongoIterable<Document> =
-		upstream.find(globalFilter)
+		upstream.find(filter = globalFilter)
 
-	override fun find(predicate: FilterOperators<Document>.() -> Unit): MongoIterable<Document> =
-		upstream.find {
+	override fun find(
+		options: FindOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+	): MongoIterable<Document> =
+		upstream.find(options) {
 			globalFilter()
-			predicate()
+			filter()
 		}
 
 	@LowLevelApi
@@ -42,46 +47,75 @@ private class FilteredCollection<Document : Any>(
 		get() = upstream.context
 
 	override suspend fun count(): Long =
-		upstream.count(globalFilter)
+		upstream.count(predicate = globalFilter)
 
-	override suspend fun count(predicate: Count<Document>.() -> Unit): Long =
-		upstream.count {
-			globalFilter()
-			predicate()
-		}
+	override suspend fun count(
+		options: CountOptions<Document>.() -> Unit,
+		predicate: FilterOperators<Document>.() -> Unit,
+	): Long =
+		upstream.count(
+			options = options,
+			predicate = {
+				globalFilter()
+				predicate()
+			}
+		)
 
 	override suspend fun countEstimated(): Long =
 		count()
 
-	override suspend fun updateMany(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) =
+	override suspend fun updateMany(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	) {
 		upstream.updateMany(
+			options = options,
 			filter = {
 				globalFilter()
 				filter()
 			},
 			update = update,
 		)
+	}
 
-	override suspend fun updateOne(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) =
+	override suspend fun updateOne(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	) {
 		upstream.updateOne(
+			options = options,
 			filter = {
 				globalFilter()
 				filter()
 			},
 			update = update,
 		)
+	}
 
-	override suspend fun upsertOne(filter: FilterOperators<Document>.() -> Unit, update: UpsertOperators<Document>.() -> Unit) =
+	override suspend fun upsertOne(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpsertOperators<Document>.() -> Unit,
+	) {
 		upstream.upsertOne(
+			options = options,
 			filter = {
 				globalFilter()
 				filter()
 			},
 			update = update,
 		)
+	}
 
-	override suspend fun findOneAndUpdate(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit): Document? =
+	override suspend fun findOneAndUpdate(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	): Document? =
 		upstream.findOneAndUpdate(
+			options = options,
 			filter = {
 				globalFilter()
 				filter()

@@ -19,6 +19,7 @@ package opensavvy.ktmongo.sync.operations
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.UpdateOperators
 import opensavvy.ktmongo.dsl.expr.UpsertOperators
+import opensavvy.ktmongo.dsl.options.UpdateOptions
 import opensavvy.ktmongo.sync.MongoCollection
 import opensavvy.ktmongo.sync.filter
 
@@ -70,6 +71,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @see updateOne
 	 */
 	fun updateMany(
+		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterOperators<Document>.() -> Unit = {},
 		update: UpdateOperators<Document>.() -> Unit,
 	)
@@ -120,6 +122,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @see findOneAndUpdate Also returns the result of the update.
 	 */
 	fun updateOne(
+		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterOperators<Document>.() -> Unit = {},
 		update: UpdateOperators<Document>.() -> Unit,
 	)
@@ -173,6 +176,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @see updateOne
 	 */
 	fun upsertOne(
+		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterOperators<Document>.() -> Unit = {},
 		update: UpsertOperators<Document>.() -> Unit,
 	)
@@ -221,6 +225,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @see updateOne Do not return the value.
 	 */
 	fun findOneAndUpdate(
+		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterOperators<Document>.() -> Unit = {},
 		update: UpdateOperators<Document>.() -> Unit,
 	): Document?

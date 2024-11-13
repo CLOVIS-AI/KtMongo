@@ -20,29 +20,28 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.expr.FilterExpression
 import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.options.FindOptions
 
 /**
- * Counting a number of documents in a collection.
+ * Searching for documents in a collection.
  *
  * ### Example
  *
  * ```kotlin
- * users.count({ limit(99) }) {
+ * users.find({ limit(12) }) {
  *     User::age lt 18
  * }
  * ```
  *
  * @see FilterOperators Filter operators
- * @see CountOptions Options
+ * @see FindOptions Options
  */
 @KtMongoDsl
-class Count<Document> private constructor(
+class Find<Document> private constructor(
 	val context: BsonContext,
-	val options: CountOptions<Document>,
+	val options: FindOptions<Document>,
 	val filter: FilterOperators<Document>,
 ) {
 
-	constructor(context: BsonContext) : this(context, CountOptions(context), FilterExpression(context))
-
+	constructor(context: BsonContext) : this(context, FindOptions(context), FilterExpression(context))
 }

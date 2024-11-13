@@ -16,14 +16,18 @@
 
 package opensavvy.ktmongo.sync
 
+import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.Expression
-import opensavvy.ktmongo.dsl.models.Count
+import opensavvy.ktmongo.dsl.models.*
 import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.options.FindOptions
+import opensavvy.ktmongo.dsl.options.common.LimitOption
+import opensavvy.ktmongo.dsl.options.common.option
 import opensavvy.ktmongo.dsl.options.toJava
 import org.bson.BsonDocument
 
@@ -35,7 +39,7 @@ import org.bson.BsonDocument
  * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongo].
  */
 class JvmMongoCollection<Document : Any> internal constructor(
-	private val inner: com.mongodb.kotlin.client.MongoCollection<Document>
+	private val inner: com.mongodb.kotlin.client.MongoCollection<Document>,
 ) : MongoCollection<Document> {
 
 	@LowLevelApi
@@ -51,12 +55,19 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		JvmMongoIterable(inner.find())
 
 	@OptIn(LowLevelApi::class)
-	override fun find(predicate: FilterOperators<Document>.() -> Unit): JvmMongoIterable<Document> {
-		val filter = FilterExpression<Document>(context)
-			.apply(predicate)
-			.toBsonDocument()
+	override fun find(
+		options: FindOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+	): MongoIterable<Document> {
+		val model = Find<Document>(context)
 
-		return JvmMongoIterable(inner.find(filter))
+		model.options.options()
+		model.filter.filter()
+
+		return JvmMongoIterable(
+			inner.find(model.filter.toBsonDocument())
+				.limit(model.options.option<LimitOption, _>()?.toInt() ?: 0)
+		)
 	}
 
 	// endregion
@@ -66,14 +77,18 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		inner.countDocuments()
 
 	@OptIn(LowLevelApi::class)
-	override fun count(predicate: Count<Document>.() -> Unit): Long {
-		val options = CountOptions<Document>(context)
-		val model = Count<Document>(context, options)
-			.apply(predicate)
+	override fun count(
+		options: CountOptions<Document>.() -> Unit,
+		predicate: FilterOperators<Document>.() -> Unit,
+	): Long {
+		val model = Count<Document>(context)
+
+		model.options.options()
+		model.filter.predicate()
 
 		return inner.countDocuments(
-			model.toBsonDocument(),
-			options.toJava(),
+			model.filter.toBsonDocument(),
+			model.options.toJava()
 		)
 	}
 
@@ -84,55 +99,63 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	// region Update
 
 	@OptIn(LowLevelApi::class)
-	override fun updateMany(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) {
-		val filter = FilterExpression<Document>(context)
-			.apply(filter)
-			.toBsonDocument()
+	override fun updateMany(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	) {
+		val model = UpdateMany<Document>(context)
 
-		val update = UpdateExpression<Document>(context)
-			.apply(update)
-			.toBsonDocument()
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
 
-		inner.updateMany(filter, update)
+		inner.updateMany(model.filter.toBsonDocument(), model.update.toBsonDocument(), UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
-	override fun updateOne(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit) {
-		val filter = FilterExpression<Document>(context)
-			.apply(filter)
-			.toBsonDocument()
+	override fun updateOne(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	) {
+		val model = UpdateOne<Document>(context)
 
-		val update = UpdateExpression<Document>(context)
-			.apply(update)
-			.toBsonDocument()
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
 
-		inner.updateOne(filter, update)
+		inner.updateOne(model.filter.toBsonDocument(), model.update.toBsonDocument(), UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
-	override fun upsertOne(filter: FilterOperators<Document>.() -> Unit, update: UpsertOperators<Document>.() -> Unit) {
-		val filter = FilterExpression<Document>(context)
-			.apply(filter)
-			.toBsonDocument()
+	override fun upsertOne(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpsertOperators<Document>.() -> Unit,
+	) {
+		val model = UpsertOne<Document>(context)
 
-		val update = UpdateExpression<Document>(context)
-			.apply(update)
-			.toBsonDocument()
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
 
-		inner.updateOne(filter, update, UpdateOptions().upsert(true))
+		inner.updateOne(model.filter.toBsonDocument(), model.update.toBsonDocument(), UpdateOptions().upsert(true))
 	}
 
 	@OptIn(LowLevelApi::class)
-	override fun findOneAndUpdate(filter: FilterOperators<Document>.() -> Unit, update: UpdateOperators<Document>.() -> Unit): Document? {
-		val filter = FilterExpression<Document>(context)
-			.apply(filter)
-			.toBsonDocument()
+	override fun findOneAndUpdate(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdateOperators<Document>.() -> Unit,
+	): Document? {
+		val model = UpdateOne<Document>(context)
 
-		val update = UpdateExpression<Document>(context)
-			.apply(update)
-			.toBsonDocument()
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
 
-		return inner.findOneAndUpdate(filter, update)
+		return inner.findOneAndUpdate(model.filter.toBsonDocument(), model.update.toBsonDocument(), FindOneAndUpdateOptions())
 	}
 
 	// endregion

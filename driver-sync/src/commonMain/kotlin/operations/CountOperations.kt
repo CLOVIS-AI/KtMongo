@@ -16,7 +16,8 @@
 
 package opensavvy.ktmongo.sync.operations
 
-import opensavvy.ktmongo.dsl.models.Count
+import opensavvy.ktmongo.dsl.expr.FilterOperators
+import opensavvy.ktmongo.dsl.options.CountOptions
 
 /**
  * Interface grouping MongoDB operations relating to counting documents.
@@ -45,7 +46,7 @@ interface CountOperations<Document : Any> : BaseOperations {
 	 *     val age: Int,
 	 * )
 	 *
-	 * collection.countDocuments {
+	 * collection.count {
 	 *     User::name eq "foo"
 	 *     User::age eq 10
 	 * }
@@ -56,7 +57,8 @@ interface CountOperations<Document : Any> : BaseOperations {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.countDocuments/)
 	 */
 	fun count(
-		predicate: Count<Document>.() -> Unit
+		options: CountOptions<Document>.() -> Unit = {},
+		predicate: FilterOperators<Document>.() -> Unit
 	): Long
 
 	/**
