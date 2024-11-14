@@ -157,6 +157,16 @@ private class FilteredCollection<Document : Any>(
 		)
 	}
 
+	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
+		deleteMany(
+			options = {
+			},
+			filter = {
+				globalFilter()
+			}
+		)
+	}
+
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String {
 		val filter = FilterExpression<Document>(context)
