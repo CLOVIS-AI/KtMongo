@@ -45,8 +45,8 @@ inline fun <reified Document : Any> testCollection(name: String): PreparedProvid
 		}
 	}
 
-	cleanUp("Drop the collection", onFailure = false) {
-		println("Dropping the collection is not implemented yet")
+	cleanUp("Drop the collection $name", onFailure = false) {
+		realCollection().drop()
 	}
 
 	realCollection()
