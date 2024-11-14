@@ -17,6 +17,7 @@
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.internal)
+	alias(opensavvyConventions.plugins.aligned.kotlinx.serialization)
 }
 
 kotlin {
@@ -30,5 +31,11 @@ kotlin {
 		api(projects.driverCoroutines)
 
 		api(libs.prepared)
+
+		api(libs.kotlinx.serialization)
+	}
+
+	sourceSets.jvmMain.dependencies {
+		api(libs.mongodb.kotlinx.serialization)
 	}
 }
