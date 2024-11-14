@@ -1,7 +1,7 @@
-site_name: OpenSavvy Playground
+site_name: OpenSavvy KtMongo
 site_author: OpenSavvy & contributors
 site_description: >
-  Project template with CI/CD and IDE configuration.
+  The next MongoDB driver for Kotlin
 
 theme:
   name: material
@@ -87,9 +87,7 @@ nav:
 
   - Getting started: []
 
-  - Module1: []
-
-  - Module2: []
+  - Features: []
 
   - Reference:
       - reference.md
