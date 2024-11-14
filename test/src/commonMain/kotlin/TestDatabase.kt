@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync
+package opensavvy.ktmongo.test
 
+import opensavvy.ktmongo.coroutines.MongoCollection
 import opensavvy.prepared.suite.PreparedProvider
 import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.prepared

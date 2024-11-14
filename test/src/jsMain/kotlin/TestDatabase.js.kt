@@ -14,32 +14,11 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync
+package opensavvy.ktmongo.test
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
-import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.ktmongo.coroutines.MongoCollection
+import opensavvy.prepared.suite.PreparedProvider
 
-fun SuiteDsl.basicReadWriteTest() = suite("Basic read/write test") {
-	class User(
-		val name: String,
-		val age: Int,
-	)
-
-	val users by testCollection<User>("basic-users")
-
-	test("Foo") {
-		users().upsertOne(
-			filter = {
-				User::name eq "Foo"
-			},
-			update = {
-				User::name set "Bad"
-				User::age setOnInsert 0
-			}
-		)
-	}
+actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>> {
+	TODO("Not yet implemented")
 }
-
-class BasicReadWriteTest : PreparedSpec({
-	basicReadWriteTest()
-})

@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync
+package opensavvy.ktmongo.test
 
 import com.mongodb.MongoTimeoutException
-import com.mongodb.kotlin.client.MongoClient
+import com.mongodb.kotlin.client.coroutine.MongoClient
 import kotlinx.coroutines.CoroutineName
+import opensavvy.ktmongo.coroutines.MongoCollection
+import opensavvy.ktmongo.coroutines.asKtMongo
 import opensavvy.prepared.suite.PreparedProvider
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.shared
