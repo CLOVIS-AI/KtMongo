@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.sync.operations.CountOperations
+import opensavvy.ktmongo.sync.operations.DeleteOperations
 import opensavvy.ktmongo.sync.operations.FindOperations
 import opensavvy.ktmongo.sync.operations.UpdateOperations
 
@@ -28,6 +29,8 @@ import opensavvy.ktmongo.sync.operations.UpdateOperations
  * - [bulkWrite][UpdateOperations.bulkWrite]
  * - [count][CountOperations.count]
  * - [countEstimated][CountOperations.countEstimated]
+ * - [deleteOne][DeleteOperations.deleteOne]
+ * - [deleteMany][DeleteOperations.deleteMany]
  * - [find][FindOperations.find]
  * - [findOne][FindOperations.findOne]
  * - [findOneAndUpdate][UpdateOperations.findOneAndUpdate]
@@ -42,4 +45,5 @@ import opensavvy.ktmongo.sync.operations.UpdateOperations
 interface MongoCollection<Document : Any> :
 	FindOperations<Document>,
 	CountOperations<Document>,
-	UpdateOperations<Document>
+	UpdateOperations<Document>,
+	DeleteOperations<Document>
