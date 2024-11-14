@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.sync
 
 import com.mongodb.client.model.DeleteOptions
+import com.mongodb.client.model.DropCollectionOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
@@ -201,6 +202,16 @@ class JvmMongoCollection<Document : Any> internal constructor(
 			filter = filter.toBsonDocument(),
 			options = DeleteOptions()
 		)
+	}
+
+	// endregion
+	// region Collection administration
+
+	@OptIn(LowLevelApi::class)
+	override fun drop(options: DropOptions<Document>.() -> Unit) {
+		val options = DropOptions<Document>(context).apply(options)
+
+		inner.drop(DropCollectionOptions())
 	}
 
 	// endregion
