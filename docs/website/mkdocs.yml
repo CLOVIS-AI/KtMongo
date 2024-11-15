@@ -85,7 +85,8 @@ use_directory_urls: false
 nav:
   - Home: index.md
 
-  - Getting started: []
+  - Getting started:
+      - tutorials/index.md
 
   - Features: []
 
