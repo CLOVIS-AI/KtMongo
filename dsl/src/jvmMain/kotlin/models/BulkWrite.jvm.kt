@@ -16,13 +16,11 @@
 
 package opensavvy.ktmongo.dsl.models
 
-import com.mongodb.client.model.UpdateManyModel
-import com.mongodb.client.model.UpdateOneModel
-import com.mongodb.client.model.UpdateOptions
-import com.mongodb.client.model.WriteModel
+import com.mongodb.client.model.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 
+@Suppress("UNCHECKED_CAST")
 @OptIn(LowLevelApi::class)
 fun <Document> AvailableInBulkWrite<Document>.toJava(): WriteModel<Document> = when (this) {
 	is UpdateMany<*> -> UpdateManyModel<Document>(
@@ -41,5 +39,9 @@ fun <Document> AvailableInBulkWrite<Document>.toJava(): WriteModel<Document> = w
 		/* filter = */ this.filter.toBsonDocument(),
 		/* update = */ this.update.toBsonDocument(),
 		/* options = */ UpdateOptions().upsert(true),
+	)
+
+	is InsertOne<*> -> InsertOneModel<Document>(
+		/* document = */ (this.document as Document)!!
 	)
 }

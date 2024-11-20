@@ -40,7 +40,7 @@ class InsertOne<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: InsertOneOptions<Document>,
 	val document: Document,
-) : Node by ImmutableNode {
+) : Node by ImmutableNode, AvailableInBulkWrite<Document> {
 
 	constructor(context: BsonContext, document: Document) : this(context, InsertOneOptions(context), document)
 }

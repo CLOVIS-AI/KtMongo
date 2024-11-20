@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.UpdateOperators
 import opensavvy.ktmongo.dsl.expr.UpsertOperators
 import opensavvy.ktmongo.dsl.options.BulkWriteOptions
+import opensavvy.ktmongo.dsl.options.InsertOneOptions
 import opensavvy.ktmongo.dsl.options.UpdateOptions
 import opensavvy.ktmongo.dsl.tree.CompoundNode
 import opensavvy.ktmongo.dsl.tree.Node
@@ -80,7 +81,7 @@ sealed interface AvailableInBulkWrite<Document> : Node
  * @see BulkWriteOptions Options
  */
 @KtMongoDsl
-class BulkWrite<Document> private constructor(
+class BulkWrite<Document : Any> private constructor(
 	val context: BsonContext,
 	private val globalFilter: FilterOperators<Document>.() -> Unit,
 	val options: BulkWriteOptions<Document>,
@@ -132,6 +133,104 @@ class BulkWrite<Document> private constructor(
 
 		@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 		acceptAll(child.operations.asIterable())
+	}
+
+	/**
+	 * Inserts a [document].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.bulkWrite {
+	 *     insertOne(User(name = "Bob", age = 18))
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite/#insertone)
+	 *
+	 * @see insertMany Insert multiple documents.
+	 * @see updateOne Update an existing document.
+	 * @see upsertOne Update or insert a document.
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	fun insertOne(
+		document: Document,
+		options: InsertOneOptions<Document>.() -> Unit = {},
+	) {
+		val model = InsertOne<Document>(context, document)
+
+		model.options.options()
+
+		accept(model)
+	}
+
+	/**
+	 * Inserts multiple [documents] in a single operation.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.bulkWrite {
+	 *     insertMany(listOf(User(name = "Bob", age = 18), User(name = "Alice", age = 17)))
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite/#insertone)
+	 *
+	 * @see insertOne Insert a single document.
+	 * @see updateMany Update multiple documents.
+	 */
+	fun insertMany(
+		documents: Iterable<Document>,
+		options: InsertOneOptions<Document>.() -> Unit = {},
+	) {
+		for (document in documents) {
+			insertOne(document, options)
+		}
+	}
+
+	/**
+	 * Inserts multiple [documents] in a single operation.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.bulkWrite {
+	 *     insertMany(User(name = "Bob", age = 18), User(name = "Alice", age = 17))
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite/#insertone)
+	 *
+	 * @see insertOne Insert a single document.
+	 * @see updateMany Update multiple documents.
+	 */
+	fun insertMany(
+		vararg documents: Document,
+		options: InsertOneOptions<Document>.() -> Unit = {},
+	) {
+		insertMany(documents.asList(), options)
 	}
 
 	/**
@@ -205,6 +304,7 @@ class BulkWrite<Document> private constructor(
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite/#updateone-and-updatemany)
 	 *
 	 * @see updateMany Update multiple documents.
+	 * @see insertOne Create a new document.
 	 * @see upsertOne Create a document if none are found.
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
@@ -256,6 +356,7 @@ class BulkWrite<Document> private constructor(
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite/#updateone-and-updatemany)
 	 * - [The behavior of upsert functions](https://www.mongodb.com/docs/manual/reference/method/db.collection.update/#insert-a-new-document-if-no-match-exists--upsert-)
 	 *
+	 * @see insertOne Always create a new document.
 	 * @see updateOne Do nothing if no matching documents are found.
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
