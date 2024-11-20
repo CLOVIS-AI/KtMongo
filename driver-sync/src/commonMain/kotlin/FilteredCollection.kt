@@ -167,6 +167,12 @@ private class FilteredCollection<Document : Any>(
 		)
 	}
 
+	override fun insertOne(document: Document, options: InsertOneOptions<Document>.() -> Unit) =
+		upstream.insertOne(document, options)
+
+	override fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) =
+		upstream.insertMany(documents, options)
+
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String {
 		val filter = FilterExpression<Document>(context)
