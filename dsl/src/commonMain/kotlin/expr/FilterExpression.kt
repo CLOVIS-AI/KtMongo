@@ -175,7 +175,7 @@ class FilterExpression<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun <V> Field<T, Collection<V>>.anyObject(block: FilterOperators<V>.() -> Unit) {
+	override fun <V> Field<T, Collection<V>>.any(block: FilterOperators<V>.() -> Unit) {
 		accept(ElementMatchExpressionNode<V>(path, FilterExpression<V>(context).apply(block), context))
 	}
 

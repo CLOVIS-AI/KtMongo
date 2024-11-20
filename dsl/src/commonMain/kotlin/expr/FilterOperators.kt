@@ -117,7 +117,7 @@ import kotlin.reflect.KProperty1
  * - [`$type`][hasType]
  *
  * Array query:
- * - [`$elemMatch`][anyObject]
+ * - [`$elemMatch`][any]
  */
 @KtMongoDsl
 interface FilterOperators<T> : CompoundExpression, FieldDsl {
@@ -1842,7 +1842,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * see the [any] property.
 	 *
 	 * This function only allows specifying operators on array elements directly.
-	 * To specify operators on sub-fields of array elements, see [anyObject].
+	 * To specify operators on sub-fields of array elements, see [any].
 	 *
 	 * ### External resources
 	 *
@@ -1894,7 +1894,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * see the [any] property.
 	 *
 	 * This function only allows specifying operators on array elements directly.
-	 * To specify operators on sub-fields of array elements, see [anyObject].
+	 * To specify operators on sub-fields of array elements, see [any].
 	 *
 	 * ### External resources
 	 *
@@ -1926,7 +1926,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * val currentMonth = 3
 	 *
 	 * collection.find {
-	 *     Customer::pets.anyObject {
+	 *     Customer::pets.any {
 	 *         Pet::birthMonth gte currentMonth
 	 *         Pet::birthMonth lte (currentMonth + 1)
 	 *     }
@@ -1960,7 +1960,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	fun <V> Field<T, Collection<V>>.anyObject(block: FilterOperators<V>.() -> Unit)
+	fun <V> Field<T, Collection<V>>.any(block: FilterOperators<V>.() -> Unit)
 
 	/**
 	 * Specify multiple operators on fields of a single array element.
@@ -1983,7 +1983,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * val currentMonth = 3
 	 *
 	 * collection.find {
-	 *     Customer::pets.anyObject {
+	 *     Customer::pets.any {
 	 *         Pet::birthMonth gte currentMonth
 	 *         Pet::birthMonth lte (currentMonth + 1)
 	 *     }
@@ -2017,8 +2017,8 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	fun <V> KProperty1<T, Collection<V>>.anyObject(block: FilterOperators<V>.() -> Unit) {
-		this.field.anyObject(block)
+	fun <V> KProperty1<T, Collection<V>>.any(block: FilterOperators<V>.() -> Unit) {
+		this.field.any(block)
 	}
 
 	// endregion
