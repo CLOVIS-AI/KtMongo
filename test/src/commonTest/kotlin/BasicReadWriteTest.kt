@@ -29,7 +29,13 @@ class BasicReadWriteTest : PreparedSpec({
 
 	val users by testCollection<User>("basic-users")
 
-	test("Simple write and read") {
+	test("Simple insert and read") {
+		users().insertOne(User(name = "Bob", age = 18))
+
+		check(User("Bob", age = 18) in users().find().toList())
+	}
+
+	test("Simple upsert and read") {
 		users().upsertOne(
 			filter = {
 				User::name eq "Foo"
