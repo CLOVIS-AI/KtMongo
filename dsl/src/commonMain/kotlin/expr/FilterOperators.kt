@@ -94,7 +94,7 @@ import kotlin.reflect.KProperty1
  * }
  * ```
  *
- * To execute an operator on one of the elements of an array, see [any].
+ * To execute an operator on one of the elements of an array, see [anyValue].
  *
  * ### Operators
  *
@@ -1683,7 +1683,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * }
 	 * ```
 	 *
-	 * This function is a shorthand for `any`:
+	 * This function is a shorthand for [any]:
 	 * ```kotlin
 	 * collection.find {
 	 *     User::grades.any / Gradle::name eq 19
@@ -1717,7 +1717,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * }
 	 * ```
 	 *
-	 * This function is a shorthand for `any`:
+	 * This function is a shorthand for [any]:
 	 * ```kotlin
 	 * collection.find {
 	 *     User::grades.any / Gradle::name eq 19
@@ -1751,7 +1751,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * }
 	 * ```
 	 *
-	 * This function is a shorthand for `any`:
+	 * This function is a shorthand for [any]:
 	 * ```kotlin
 	 * collection.find {
 	 *     User::grades.any / Gradle::name eq 19
@@ -1785,7 +1785,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * }
 	 * ```
 	 *
-	 * This function is a shorthand for `any`:
+	 * This function is a shorthand for [any]:
 	 * ```kotlin
 	 * collection.find {
 	 *     User::grades.any / Gradle::name eq 19
@@ -1815,7 +1815,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     Student::grades.any {
+	 *     Student::grades.anyValue {
 	 *         gte(8)
 	 *         lte(10)
 	 *     }
@@ -1850,7 +1850,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	fun <V> Field<T, Collection<V>>.any(block: PredicateOperators<V>.() -> Unit)
+	fun <V> Field<T, Collection<V>>.anyValue(block: PredicateOperators<V>.() -> Unit)
 
 	/**
 	 * Specify multiple operators on a single array element.
@@ -1867,7 +1867,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     Student::grades.any {
+	 *     Student::grades.anyValue {
 	 *         gte(8)
 	 *         lte(10)
 	 *     }
@@ -1901,8 +1901,8 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/)
 	 */
 	@KtMongoDsl
-	fun <V> KProperty1<T, Collection<V>>.any(block: PredicateOperators<V>.() -> Unit) {
-		this.field.any(block)
+	fun <V> KProperty1<T, Collection<V>>.anyValue(block: PredicateOperators<V>.() -> Unit) {
+		this.field.anyValue(block)
 	}
 
 	/**
@@ -1952,7 +1952,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * because the pet "Gwen" has a matching birth month.
 	 *
 	 * If you want to perform operators on the elements directly (not on their fields), use
-	 * [any] instead.
+	 * [anyValue] instead.
 	 *
 	 * ### External resources
 	 *
@@ -2009,7 +2009,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * because the pet "Gwen" has a matching birth month.
 	 *
 	 * If you want to perform operators on the elements directly (not on their fields), use
-	 * [any] instead.
+	 * [anyValue] instead.
 	 *
 	 * ### External resources
 	 *

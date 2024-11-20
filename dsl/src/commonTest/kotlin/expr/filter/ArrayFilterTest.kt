@@ -56,7 +56,7 @@ class ArrayFilterTest : PreparedSpec({
 
 	test("Test on a single array element") {
 		filter {
-			User::grades.any {
+			User::grades.anyValue {
 				gt(12)
 				lte(15)
 			}
