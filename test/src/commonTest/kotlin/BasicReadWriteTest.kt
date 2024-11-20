@@ -16,19 +16,20 @@
 
 package opensavvy.ktmongo.sync
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.kotest.PreparedSpec
-import opensavvy.prepared.suite.SuiteDsl
 
-fun SuiteDsl.basicReadWriteTest() = suite("Basic read/write test") {
-	class User(
+class BasicReadWriteTest : PreparedSpec({
+	@Serializable
+	data class User(
 		val name: String,
 		val age: Int,
 	)
 
 	val users by testCollection<User>("basic-users")
 
-	test("Foo") {
+	test("Simple write and read") {
 		users().upsertOne(
 			filter = {
 				User::name eq "Foo"
@@ -38,9 +39,7 @@ fun SuiteDsl.basicReadWriteTest() = suite("Basic read/write test") {
 				User::age setOnInsert 0
 			}
 		)
-	}
-}
 
-class BasicReadWriteTest : PreparedSpec({
-	basicReadWriteTest()
+		check(User("Bad", 0) in users().find().toList())
+	}
 })
