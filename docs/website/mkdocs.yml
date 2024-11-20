@@ -87,8 +87,16 @@ nav:
 
   - Getting started:
       - tutorials/index.md
+      - tutorials/find.md
+      - tutorials/update.md
 
-  - Features: []
+      - Migrating from KMongo:
+          - tutorials/from-kmongo/index.md
+          - tutorials/from-kmongo/find.md
+          - tutorials/from-kmongo/nested-fields.md
+          - tutorials/from-kmongo/update.md
+
+#  - Features: []
 
   - Reference:
       - reference.md
