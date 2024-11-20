@@ -5,14 +5,13 @@
 	#hero-page {
 		width: 59rem;
 		max-width: 100%;
-		min-height: 75vh;
 		margin-left: auto;
 		margin-right: auto;
 	}
 
 	#hero-title {
 		font-size: 3.7rem;
-		margin-top: 30vh;
+		margin-top: 10vh;
 		margin-bottom: 1rem;
 		font-weight: bolder;
 	}
@@ -38,23 +37,19 @@
 
 				<p>{{ config.site_description }}</p>
 
-				<div> <!-- Badges -->
-
-					<a href="https://discord.gg/48Wv6BkJx6"><img src="https://img.shields.io/badge/Discuss-Discord-7289da"></a>
-				</div>
-
-				<a href="#welcome" title="{{ page.next_page.title | e }}"
-				   class="md-button md-button--primary">
-					What is it?
-				</a>
-
-				<a href="{{ config.repo_pages }}/api-docs" title="API reference" class="md-button">
-					Visit reference
-				</a>
-
-				<a href="{{ config.repo_url }}" title="Open repository on GitLab" class="md-button">
-					Visit repository
-				</a>
+				<p>
+					<a href="{{ config.repo_url }}">View repository</a>
+					•
+					<a href="https://opensavvy.dev">Learn more about us</a>
+					•
+					<a href="https://slack-chats.kotlinlang.org/c/opensavvy">Kotlin Slack</a>
+					•
+					<a href="https://discord.gg/48Wv6BkJx6">Join our Discord</a>
+					•
+					<a href="https://techhub.social/@opensavvy">Mastodon</a>
+					•
+					<a href="https://bsky.app/profile/opensavvy.techhub.social.ap.brid.gy">Bluesky</a>
+				</p>
 			</div>
 		</div>
 	</div>
