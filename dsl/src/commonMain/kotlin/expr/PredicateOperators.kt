@@ -44,6 +44,8 @@ import opensavvy.ktmongo.dsl.path.FieldDsl
  * 1. By referring to a specific property, we obtain a [PredicateOperators] that we can use
  * to declare many operators on that property.
  *
+ * If you can't find the operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/4).
+ *
  * ### External resources
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/)

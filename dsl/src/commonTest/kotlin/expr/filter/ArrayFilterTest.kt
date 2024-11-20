@@ -56,7 +56,7 @@ class ArrayFilterTest : PreparedSpec({
 
 	test("Test on a single array element") {
 		filter {
-			User::grades.any {
+			User::grades.anyValue {
 				gt(12)
 				lte(15)
 			}
@@ -96,7 +96,7 @@ class ArrayFilterTest : PreparedSpec({
 
 	test("Test on subfields of a single array element") {
 		filter {
-			User::pets.anyObject {
+			User::pets.any {
 				Pet::age gt 15
 				Pet::age lte 18
 			}
@@ -124,7 +124,7 @@ class ArrayFilterTest : PreparedSpec({
 
 	test("Test on a single subfield of a single array element") {
 		filter {
-			User::pets.anyObject {
+			User::pets.any {
 				Pet::age {
 					gt(15)
 					lte(18)
@@ -147,7 +147,7 @@ class ArrayFilterTest : PreparedSpec({
 	test("Everything combined") {
 		filter {
 			User::pets / Pet::age gt 3
-			User::pets.anyObject {
+			User::pets.any {
 				Pet::age gte 1
 				Pet::name eq "Chocolat"
 			}

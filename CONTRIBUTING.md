@@ -10,6 +10,8 @@ If you have a specific change you'd like to submit, be it documentation, bug fix
 >
 > The simplest way of contacting us is by creating an issue on this repository, or commenting in an existing issue. Some projects may also have a Discord server, if you prefer reaching us there.
 
+A simple way to contribute is to [submit integration tests](test/README.md) for features that are important to you, to ensure we won't accidentally break them.
+
 ## Issue tracking
 
 If you want to contribute, but do not know what to improve, we recommend going through to existing issues.

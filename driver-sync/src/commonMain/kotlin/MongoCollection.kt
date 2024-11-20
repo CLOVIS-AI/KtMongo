@@ -32,6 +32,8 @@ import opensavvy.ktmongo.sync.operations.*
  * - [find][FindOperations.find]
  * - [findOne][FindOperations.findOne]
  * - [findOneAndUpdate][UpdateOperations.findOneAndUpdate]
+ * - [insertOne][InsertOperations.insertOne]
+ * - [insertMany][InsertOperations.insertMany]
  * - [updateOne][UpdateOperations.updateOne]
  * - [updateMany][UpdateOperations.updateMany]
  * - [upsertOne][UpdateOperations.upsertOne]
@@ -45,4 +47,5 @@ interface MongoCollection<Document : Any> :
 	CountOperations<Document>,
 	UpdateOperations<Document>,
 	DeleteOperations<Document>,
-	CollectionOperations<Document>
+	CollectionOperations<Document>,
+	InsertOperations<Document>

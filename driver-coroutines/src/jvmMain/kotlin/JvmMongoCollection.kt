@@ -174,6 +174,33 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	// endregion
+	// region Insert
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun insertOne(document: Document, options: InsertOneOptions<Document>.() -> Unit) {
+		val model = InsertOne(context, document)
+
+		model.options.options()
+
+		inner.insertOne(
+			model.document,
+			com.mongodb.client.model.InsertOneOptions()
+		)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) {
+		val model = InsertMany(context, documents.toList())
+
+		model.options.options()
+
+		inner.insertMany(
+			model.documents,
+			com.mongodb.client.model.InsertManyOptions()
+		)
+	}
+
+	// endregion
 	// region Delete
 
 	@OptIn(LowLevelApi::class)
@@ -181,7 +208,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: DeleteOneOptions<Document>.() -> Unit,
 		filter: FilterOperators<Document>.() -> Unit,
 	) {
-		val options = DeleteOneOptions<Document>(context).apply(options)
+		DeleteOneOptions<Document>(context).apply(options)
 		val filter = FilterExpression<Document>(context).apply(filter)
 
 		inner.deleteOne(
@@ -195,7 +222,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: DeleteManyOptions<Document>.() -> Unit,
 		filter: FilterOperators<Document>.() -> Unit,
 	) {
-		val options = DeleteManyOptions<Document>(context).apply(options)
+		DeleteManyOptions<Document>(context).apply(options)
 		val filter = FilterExpression<Document>(context).apply(filter)
 
 		inner.deleteOne(
@@ -209,7 +236,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
-		val options = DropOptions<Document>(context).apply(options)
+		DropOptions<Document>(context).apply(options)
 
 		inner.drop(DropCollectionOptions())
 	}

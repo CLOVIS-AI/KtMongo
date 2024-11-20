@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ * Copyright (c) 2024, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,13 +169,13 @@ class FilterExpression<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun <V> Field<T, Collection<V>>.any(block: PredicateOperators<V>.() -> Unit) {
+	override fun <V> Field<T, Collection<V>>.anyValue(block: PredicateOperators<V>.() -> Unit) {
 		accept(ElementMatchExpressionNode<V>(this.path, PredicateExpression<V>(context).apply(block), context))
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun <V> Field<T, Collection<V>>.anyObject(block: FilterOperators<V>.() -> Unit) {
+	override fun <V> Field<T, Collection<V>>.any(block: FilterOperators<V>.() -> Unit) {
 		accept(ElementMatchExpressionNode<V>(path, FilterExpression<V>(context).apply(block), context))
 	}
 
