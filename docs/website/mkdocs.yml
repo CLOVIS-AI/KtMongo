@@ -90,6 +90,8 @@ nav:
 
       - Migrating from KMongo:
           - tutorials/from-kmongo/index.md
+          - tutorials/from-kmongo/find.md
+          - tutorials/from-kmongo/nested-fields.md
 
   - Features: []
 
