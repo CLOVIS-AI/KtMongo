@@ -96,7 +96,7 @@ nav:
           - tutorials/from-kmongo/nested-fields.md
           - tutorials/from-kmongo/update.md
 
-  - Features: []
+#  - Features: []
 
   - Reference:
       - reference.md
