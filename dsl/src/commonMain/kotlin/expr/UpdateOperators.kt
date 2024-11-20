@@ -52,11 +52,13 @@ import kotlin.reflect.KProperty1
  * - [`$inc`][inc]
  * - [`$rename`][renameTo]
  * - [`$set`][set]
- * - [`$setOnInsert`][UpsertOperators.setOnInsert] (only for upserts)
+ * - [`$setOnInsert`][UpsertOperators.setOnInsert] (only for [upserts][UpsertOperators])
  * - [`$unset`][unset]
  *
  * On arrays:
  * - [`$[]`][FieldDsl.get]
+ *
+ * If you can't find the operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/5).
  *
  * ### External resources
  *
@@ -379,6 +381,8 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
  * DSL for MongoDB operators that are used to update existing values, creating new documents if none exist (does *not* include aggregation operators).
  *
  * This interface is a variant of [UpdateOperators] used in upsert operations. See [UpdateOperators] for more information.
+ *
+ * If you can't find the operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/5).
  */
 @KtMongoDsl
 interface UpsertOperators<T> : UpdateOperators<T> {

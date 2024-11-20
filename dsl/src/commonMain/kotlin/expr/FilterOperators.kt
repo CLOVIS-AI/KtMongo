@@ -117,7 +117,10 @@ import kotlin.reflect.KProperty1
  * - [`$type`][hasType]
  *
  * Array query:
+ * - [`$all`][containsAll]
  * - [`$elemMatch`][any]
+ *
+ * If you can't find an operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/4).
  */
 @KtMongoDsl
 interface FilterOperators<T> : CompoundExpression, FieldDsl {
