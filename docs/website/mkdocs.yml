@@ -88,6 +88,9 @@ nav:
   - Getting started:
       - tutorials/index.md
 
+      - Migrating from KMongo:
+          - tutorials/from-kmongo/index.md
+
   - Features: []
 
   - Reference:

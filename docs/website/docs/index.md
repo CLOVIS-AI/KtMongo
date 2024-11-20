@@ -140,5 +140,5 @@ Broadly-speaking, our objectives can be described as follows:
 
 - [**Configuring KtMongo in a new project**](tutorials/index.md)
 - **Using KtMongo alongside the official Kotlin driver**
-- **Migrating from KMongo**
+- [**Migrating from KMongo**](tutorials/from-kmongo/index.md)
 - **Discovering the new features**
