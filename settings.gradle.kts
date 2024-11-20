@@ -60,6 +60,8 @@ include(
 	"driver-sync",
 	"driver-coroutines",
 
+	"test",
+
 	"gradle:templates:template-app",
 	"gradle:templates:template-lib",
 )

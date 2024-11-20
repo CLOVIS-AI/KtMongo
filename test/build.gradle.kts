@@ -16,7 +16,8 @@
 
 plugins {
 	alias(opensavvyConventions.plugins.base)
-	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(opensavvyConventions.plugins.kotlin.internal)
+	alias(opensavvyConventions.plugins.aligned.kotlinx.serialization)
 }
 
 kotlin {
@@ -26,25 +27,15 @@ kotlin {
 	}
 
 	sourceSets.commonMain.dependencies {
-		api(projects.dsl)
+		api(projects.driverSync)
+		api(projects.driverCoroutines)
+
+		api(libs.prepared)
+
+		api(libs.kotlinx.serialization)
 	}
 
 	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.sync.jvm)
-	}
-
-	sourceSets.commonTest.dependencies {
-		implementation(libs.prepared)
-	}
-}
-
-library {
-	name.set("MongoDB driver for Kotlin (synchronous)")
-	description.set("Kotlin-first MongoDB driver")
-	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
-
-	license.set {
-		name.set("Apache 2.0")
-		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+		api(libs.mongodb.kotlinx.serialization)
 	}
 }

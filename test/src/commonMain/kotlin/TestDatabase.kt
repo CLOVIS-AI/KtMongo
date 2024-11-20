@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync
+package opensavvy.ktmongo.test
 
+import kotlinx.coroutines.ensureActive
+import opensavvy.ktmongo.coroutines.MongoCollection
 import opensavvy.prepared.suite.PreparedProvider
 import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.randomInt
+import kotlin.coroutines.coroutineContext
 
 expect inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>>
 
@@ -31,13 +34,19 @@ inline fun <reified Document : Any> testCollection(name: String): PreparedProvid
 
 	cleanUp("Log the collection after failed test", onSuccess = false) {
 		println("Collection $name with ${realCollection().count()} documents:")
-		realCollection().find().forEach { document ->
-			println(" • $document")
+
+		try {
+			realCollection().find().forEach { document ->
+				println(" • $document")
+			}
+		} catch (e: Exception) {
+			coroutineContext.ensureActive()
+			println("Could not print collection • ${e.stackTraceToString()}")
 		}
 	}
 
-	cleanUp("Drop the collection", onFailure = false) {
-		println("Dropping the collection is not implemented yet")
+	cleanUp("Drop the collection $name", onFailure = false) {
+		realCollection().drop()
 	}
 
 	realCollection()

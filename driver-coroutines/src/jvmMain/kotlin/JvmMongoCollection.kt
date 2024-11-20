@@ -16,6 +16,8 @@
 
 package opensavvy.ktmongo.coroutines
 
+import com.mongodb.client.model.DeleteOptions
+import com.mongodb.client.model.DropCollectionOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
@@ -23,12 +25,9 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.*
-import opensavvy.ktmongo.dsl.options.BulkWriteOptions
-import opensavvy.ktmongo.dsl.options.CountOptions
-import opensavvy.ktmongo.dsl.options.FindOptions
+import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.options.common.LimitOption
 import opensavvy.ktmongo.dsl.options.common.option
-import opensavvy.ktmongo.dsl.options.toJava
 
 /**
  * Implementation of [MongoCollection] based on [MongoDB's MongoCollection][com.mongodb.kotlin.client.coroutine.MongoCollection].
@@ -172,6 +171,47 @@ class JvmMongoCollection<Document : Any> internal constructor(
 			model.operations.map { it.toJava() }.toList(),
 			options = com.mongodb.client.model.BulkWriteOptions()
 		)
+	}
+
+	// endregion
+	// region Delete
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun deleteOne(
+		options: DeleteOneOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+	) {
+		val options = DeleteOneOptions<Document>(context).apply(options)
+		val filter = FilterExpression<Document>(context).apply(filter)
+
+		inner.deleteOne(
+			filter = filter.toBsonDocument(),
+			options = DeleteOptions()
+		)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun deleteMany(
+		options: DeleteManyOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+	) {
+		val options = DeleteManyOptions<Document>(context).apply(options)
+		val filter = FilterExpression<Document>(context).apply(filter)
+
+		inner.deleteOne(
+			filter = filter.toBsonDocument(),
+			options = DeleteOptions()
+		)
+	}
+
+	// endregion
+	// region Collection administration
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
+		val options = DropOptions<Document>(context).apply(options)
+
+		inner.drop(DropCollectionOptions())
 	}
 
 	// endregion

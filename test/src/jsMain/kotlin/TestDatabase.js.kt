@@ -14,37 +14,11 @@
  * limitations under the License.
  */
 
-plugins {
-	alias(opensavvyConventions.plugins.base)
-	alias(opensavvyConventions.plugins.kotlin.library)
-}
+package opensavvy.ktmongo.test
 
-kotlin {
-	jvm()
-	js {
-		nodejs()
-	}
+import opensavvy.ktmongo.coroutines.MongoCollection
+import opensavvy.prepared.suite.PreparedProvider
 
-	sourceSets.commonMain.dependencies {
-		api(projects.dsl)
-	}
-
-	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.sync.jvm)
-	}
-
-	sourceSets.commonTest.dependencies {
-		implementation(libs.prepared)
-	}
-}
-
-library {
-	name.set("MongoDB driver for Kotlin (synchronous)")
-	description.set("Kotlin-first MongoDB driver")
-	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
-
-	license.set {
-		name.set("Apache 2.0")
-		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-	}
+actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>> {
+	TODO("Not yet implemented")
 }

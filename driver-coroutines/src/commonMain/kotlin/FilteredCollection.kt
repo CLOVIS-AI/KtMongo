@@ -24,10 +24,7 @@ import opensavvy.ktmongo.dsl.expr.UpdateOperators
 import opensavvy.ktmongo.dsl.expr.UpsertOperators
 import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.BulkWrite
-import opensavvy.ktmongo.dsl.options.BulkWriteOptions
-import opensavvy.ktmongo.dsl.options.CountOptions
-import opensavvy.ktmongo.dsl.options.FindOptions
-import opensavvy.ktmongo.dsl.options.UpdateOptions
+import opensavvy.ktmongo.dsl.options.*
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
@@ -139,6 +136,36 @@ private class FilteredCollection<Document : Any>(
 		},
 		operations = operations,
 	)
+
+	override suspend fun deleteOne(options: DeleteOneOptions<Document>.() -> Unit, filter: FilterOperators<Document>.() -> Unit) {
+		upstream.deleteOne(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			}
+		)
+	}
+
+	override suspend fun deleteMany(options: DeleteManyOptions<Document>.() -> Unit, filter: FilterOperators<Document>.() -> Unit) {
+		upstream.deleteMany(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			}
+		)
+	}
+
+	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
+		deleteMany(
+			options = {
+			},
+			filter = {
+				globalFilter()
+			}
+		)
+	}
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String {

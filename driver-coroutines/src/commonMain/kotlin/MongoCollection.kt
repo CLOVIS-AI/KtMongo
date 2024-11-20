@@ -16,9 +16,7 @@
 
 package opensavvy.ktmongo.coroutines
 
-import opensavvy.ktmongo.coroutines.operations.CountOperations
-import opensavvy.ktmongo.coroutines.operations.FindOperations
-import opensavvy.ktmongo.coroutines.operations.UpdateOperations
+import opensavvy.ktmongo.coroutines.operations.*
 
 /**
  * Methods to interact with a MongoDB collection.
@@ -28,6 +26,9 @@ import opensavvy.ktmongo.coroutines.operations.UpdateOperations
  * - [bulkWrite][UpdateOperations.bulkWrite]
  * - [count][CountOperations.count]
  * - [countEstimated][CountOperations.countEstimated]
+ * - [deleteOne][DeleteOperations.deleteOne]
+ * - [deleteMany][DeleteOperations.deleteMany]
+ * - [drop][CollectionOperations.drop]
  * - [find][FindOperations.find]
  * - [findOne][FindOperations.findOne]
  * - [findOneAndUpdate][UpdateOperations.findOneAndUpdate]
@@ -42,4 +43,6 @@ import opensavvy.ktmongo.coroutines.operations.UpdateOperations
 interface MongoCollection<Document : Any> :
 	FindOperations<Document>,
 	CountOperations<Document>,
-	UpdateOperations<Document>
+	UpdateOperations<Document>,
+	DeleteOperations<Document>,
+	CollectionOperations<Document>

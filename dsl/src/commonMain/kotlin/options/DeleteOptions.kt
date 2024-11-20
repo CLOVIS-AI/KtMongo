@@ -14,32 +14,20 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync
+package opensavvy.ktmongo.dsl.options
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
-import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.options.common.Options
+import opensavvy.ktmongo.dsl.options.common.OptionsHolder
 
-fun SuiteDsl.basicReadWriteTest() = suite("Basic read/write test") {
-	class User(
-		val name: String,
-		val age: Int,
-	)
+/**
+ * The options for a `collection.updateOne` operation.
+ */
+class DeleteOneOptions<Document>(context: BsonContext) :
+	Options by OptionsHolder(context)
 
-	val users by testCollection<User>("basic-users")
-
-	test("Foo") {
-		users().upsertOne(
-			filter = {
-				User::name eq "Foo"
-			},
-			update = {
-				User::name set "Bad"
-				User::age setOnInsert 0
-			}
-		)
-	}
-}
-
-class BasicReadWriteTest : PreparedSpec({
-	basicReadWriteTest()
-})
+/**
+ * The options for a `collection.updateMany` operation.
+ */
+class DeleteManyOptions<Document>(context: BsonContext) :
+	Options by OptionsHolder(context)
