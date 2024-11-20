@@ -87,6 +87,8 @@ nav:
 
   - Getting started:
       - tutorials/index.md
+      - tutorials/find.md
+      - tutorials/update.md
 
       - Migrating from KMongo:
           - tutorials/from-kmongo/index.md
