@@ -94,6 +94,7 @@ nav:
           - tutorials/from-kmongo/index.md
           - tutorials/from-kmongo/find.md
           - tutorials/from-kmongo/nested-fields.md
+          - tutorials/from-kmongo/update.md
 
   - Features: []
 
