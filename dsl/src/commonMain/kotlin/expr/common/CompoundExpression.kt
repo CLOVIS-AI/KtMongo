@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ * Copyright (c) 2024, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,6 +59,11 @@ interface CompoundExpression : Expression, CompoundNode<Expression> {
 	companion object
 }
 
+/**
+ * Abstract utility class to help implement [CompoundExpression].
+ *
+ * Learn more by reading [Expression], [AbstractExpression] and [CompoundExpression].
+ */
 abstract class AbstractCompoundExpression(
 	context: BsonContext,
 ) : AbstractExpression(context), CompoundExpression {
