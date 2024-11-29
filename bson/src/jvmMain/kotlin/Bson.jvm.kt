@@ -21,4 +21,18 @@ import org.bson.BsonDocument
 
 actual typealias Bson = BsonDocument
 
-actual typealias BsonArray = BsonArray
+actual class BsonArray(val raw: BsonArray) {
+
+	actual override fun toString(): String {
+		// Yes, this is very ugly, and probably inefficient.
+		// The Java library doesn't provide a way to serialize arrays to JSON.
+		// https://www.mongodb.com/community/forums/t/how-to-convert-a-single-bsonvalue-such-as-bsonarray-to-json-in-the-java-bson-library
+
+		val document = BsonDocument("a", raw).toJson()
+
+		return document.substring(
+			document.indexOf('['),
+			document.lastIndexOf(']') + 1
+		).trim()
+	}
+}

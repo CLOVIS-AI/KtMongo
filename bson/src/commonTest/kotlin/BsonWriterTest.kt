@@ -56,4 +56,22 @@ fun SuiteDsl.writerTests() = suite("BsonPrimitiveWriter") {
 		val result = buildBsonDocument {}
 		check(result.toString() == """{}""")
 	}
+
+	test("An empty array") {
+		val result = buildBsonArray {}
+		check(result.toString() == """[]""")
+	}
+
+	test("An array with multiple elements") {
+		val result = buildBsonArray {
+			writeInt32(123)
+			writeBoolean(false)
+			writeDocument {
+				writeString("name", "Paul")
+				writeInt32("age", 18)
+			}
+		}
+
+		check(result.toString() == """[123, false, {"name": "Paul", "age": 18}]""")
+	}
 }
