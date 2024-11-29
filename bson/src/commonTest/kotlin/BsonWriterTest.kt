@@ -19,7 +19,6 @@ package opensavvy.ktmongo.bson
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.SuiteDsl
-import kotlin.test.assertEquals
 
 @OptIn(LowLevelApi::class)
 @Suppress("DEPRECATION")
@@ -29,7 +28,7 @@ fun SuiteDsl.writerTests() = suite("BsonPrimitiveWriter") {
 		val result = buildBsonDocument {
 			writeInt32("foo", 42)
 		}
-		assertEquals("""{"foo": 42}""", result.toString())
+		check(result.toString() == """{"foo": 42}""")
 	}
 
 	test("More complex example") {
@@ -50,6 +49,11 @@ fun SuiteDsl.writerTests() = suite("BsonPrimitiveWriter") {
 		val ref = "\$ref"
 		val id = "\$id"
 		val oid = "\$oid"
-		assertEquals("""{"user": {"$ref": "myproject.users", "$id": {"$oid": "507f1f77bcf86cd799439011"}}, "age": 18, "isAlive": true, "children": [{"name": "Paul"}, {"name": "Alice"}]}""", result.toString())
+		check(result.toString() == """{"user": {"$ref": "myproject.users", "$id": {"$oid": "507f1f77bcf86cd799439011"}}, "age": 18, "isAlive": true, "children": [{"name": "Paul"}, {"name": "Alice"}]}""")
+	}
+
+	test("An empty document") {
+		val result = buildBsonDocument {}
+		check(result.toString() == """{}""")
 	}
 }
