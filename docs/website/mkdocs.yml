@@ -98,6 +98,7 @@ nav:
 
   - Features:
       - features/crud.md
+      - features/bulk-writes.md
 
   - Reference:
       - reference.md
