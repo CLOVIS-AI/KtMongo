@@ -22,9 +22,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
-import opensavvy.ktmongo.dsl.path.Field
-import opensavvy.ktmongo.dsl.path.FieldDsl
-import opensavvy.ktmongo.dsl.path.FieldImpl
+import opensavvy.ktmongo.dsl.path.*
 import kotlin.jvm.JvmName
 import kotlin.reflect.KProperty1
 
@@ -619,6 +617,116 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	@KtMongoDsl
 	fun KProperty1<T, *>.doesNotExist() {
 		this.field.doesNotExist()
+	}
+
+	/**
+	 * Matches documents in which an array is empty or absent.
+	 *
+	 * ### Example
+	 *
+	 * Return all users that have no grades (either an empty array, or the `grades` field is absent):
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val grades: List<Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades.isEmpty()
+	 * }
+	 * ```
+	 *
+	 * @see exists
+	 * @see isNull
+	 * @see isNotEmpty
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Field<T, Collection<*>>.isEmpty() {
+		FieldImpl<T, Any>(path / PathSegment.Indexed(0)).doesNotExist()
+	}
+
+	/**
+	 * Matches documents in which an array is empty or absent.
+	 *
+	 * ### Example
+	 *
+	 * Return all users that have no grades (either an empty array, or the `grades` field is absent):
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val grades: List<Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades.isEmpty()
+	 * }
+	 * ```
+	 *
+	 * @see exists
+	 * @see isNull
+	 * @see isNotEmpty
+	 */
+	@KtMongoDsl
+	fun KProperty1<T, Collection<*>>.isEmpty() {
+		this.field.isEmpty()
+	}
+
+	/**
+	 * Matches documents in which an array is not empty.
+	 *
+	 * ### Example
+	 *
+	 * Return all users that have one or more grades.
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val grades: List<Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades.isNotEmpty()
+	 * }
+	 * ```
+	 *
+	 * @see exists
+	 * @see isNotNull
+	 * @see isEmpty
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Field<T, Collection<*>>.isNotEmpty() {
+		FieldImpl<T, Any>(path / PathSegment.Indexed(0)).exists()
+	}
+
+	/**
+	 * Matches documents in which an array is not empty.
+	 *
+	 * ### Example
+	 *
+	 * Return all users that have one or more grades.
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val grades: List<Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades.isNotEmpty()
+	 * }
+	 * ```
+	 *
+	 * @see exists
+	 * @see isNotNull
+	 * @see isEmpty
+	 */
+	@KtMongoDsl
+	fun KProperty1<T, Collection<*>>.isNotEmpty() {
+		this.field.isNotEmpty()
 	}
 
 	// endregion

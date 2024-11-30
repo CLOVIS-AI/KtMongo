@@ -18,6 +18,7 @@ package opensavvy.ktmongo.dsl.path
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.PathSegment.*
+import opensavvy.ktmongo.dsl.path.PathSegment.Field
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 @OptIn(LowLevelApi::class)
@@ -36,7 +37,7 @@ class PathTest : PreparedSpec({
 	}
 
 	test("Indexed") {
-		check((Path("test") / Indexed(3) / Field("bar")).toString() == "test.$3.bar")
+		check((Path("test") / Indexed(3) / Field("bar")).toString() == "test.3.bar")
 	}
 
 	test("Positional") {

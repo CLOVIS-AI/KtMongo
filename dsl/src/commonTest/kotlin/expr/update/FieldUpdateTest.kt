@@ -201,7 +201,7 @@ class FieldUpdateTest : PreparedSpec({
 				{
 					"$rename": {
 						"bestFriend.name": "name",
-						"friends.$0.name": "friends.$1.name"
+						"friends.0.name": "friends.1.name"
 					}
 				}
 			""".trimIndent()
