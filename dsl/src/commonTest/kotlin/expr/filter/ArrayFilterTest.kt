@@ -187,4 +187,28 @@ class ArrayFilterTest : PreparedSpec({
 			}
 		""".trimIndent()
 	}
+
+	test("isEmpty") {
+		filter {
+			User::grades.isEmpty()
+		} shouldBeBson """
+			{
+				"grades.0": {
+					"$exists": false
+				}
+			}
+		""".trimIndent()
+	}
+
+	test("isNotEmpty") {
+		filter {
+			User::grades.isNotEmpty()
+		} shouldBeBson """
+			{
+				"grades.0": {
+					"$exists": true
+				}
+			}
+		""".trimIndent()
+	}
 })
