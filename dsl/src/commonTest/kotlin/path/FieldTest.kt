@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ * Copyright (c) 2024, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,13 +66,13 @@ class FieldTest : PreparedSpec({
 	suite("Indexed access") {
 		test("Indexed object") {
 			with(TestFieldDsl()) {
-				User::friends[0] shouldHavePath "friends.$0"
+				User::friends[0] shouldHavePath "friends.0"
 			}
 		}
 
 		test("Indexed nested field") {
 			with(TestFieldDsl()) {
-				User::friends[0] / Friend::name shouldHavePath "friends.$0.name"
+				User::friends[0] / Friend::name shouldHavePath "friends.0.name"
 			}
 		}
 	}

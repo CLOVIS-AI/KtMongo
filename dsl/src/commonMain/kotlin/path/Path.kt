@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ * Copyright (c) 2024, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ sealed class PathSegment {
 	 */
 	@LowLevelApi
 	data class Indexed(val index: Int) : PathSegment() {
-		override fun toString() = "\$$index"
+		override fun toString() = "$index"
 	}
 
 	/**
