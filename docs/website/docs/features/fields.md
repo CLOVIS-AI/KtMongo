@@ -102,6 +102,20 @@ students.find {
 }
 ```
 
+Now that we are able to select a specific grade, we can update it using the `selected` operator. For example, if we wanted to increase that grade:
+```kotlin
+students.updateOne(
+	filter = {
+		Student::grades.anyValue {
+			gt(18)
+			lte(19)
+		}
+	}
+) {
+	Student::grades.selected inc 1
+}
+```
+
 ### Based on the properties of a nested document
 
 This section is the same as the previous one, but instead of filtering on an item itself, we filter based on the field of the item.
@@ -140,3 +154,18 @@ users.find {
 	}
 }
 ```
+
+Now that we are able to select a specific pet, we can use the `selected` operator to update it:
+```kotlin
+users.updateOne(
+	filter = {
+		User::pets.any {
+			Pet::name eq "Lucy"
+			Pet::age eq 4
+		}
+	}
+) {
+	User::pets.selected / Pet::age inc 1
+}
+```
+Only the pet we referred to will be updated.
