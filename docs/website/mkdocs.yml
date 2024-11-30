@@ -99,6 +99,7 @@ nav:
   - Features:
       - features/crud.md
       - features/bulk-writes.md
+      - features/fields.md
 
   - Reference:
       - reference.md
