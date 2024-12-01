@@ -169,3 +169,22 @@ users.updateOne(
 }
 ```
 Only the pet we referred to will be updated.
+
+### Update all elements
+
+If we want to update all elements in an array, we can use the `all` operator:
+```kotlin
+class User(
+	val name: String,
+	val pets: List<Pet>,
+)
+
+class Pet(
+	val name: String,
+	val age: Int,
+)
+
+users.updateMany {
+	User::pets.all / Pet::age set 1
+}
+```
