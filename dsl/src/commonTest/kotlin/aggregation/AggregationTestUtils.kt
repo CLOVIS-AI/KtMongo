@@ -22,6 +22,7 @@ import opensavvy.ktmongo.dsl.expr.testContext
 
 val match = "\$match"
 val sample = "\$sample"
+val skip = "\$skip"
 val set = "\$set"
 
 @OptIn(LowLevelApi::class)

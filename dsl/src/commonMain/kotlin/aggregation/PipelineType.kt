@@ -19,6 +19,7 @@ package opensavvy.ktmongo.dsl.aggregation
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.aggregation.stages.HasMatch
 import opensavvy.ktmongo.dsl.aggregation.stages.HasSample
+import opensavvy.ktmongo.dsl.aggregation.stages.HasSkip
 
 /**
  * The super-type for all [pipeline][Pipeline] features.
@@ -50,7 +51,8 @@ interface PipelineType {
 	 */
 	object Aggregate : PipelineType,
 		HasMatch,
-		HasSample
+		HasSample,
+		HasSkip
 
 	/**
 	 * Marker type for pipeline features that are available in update operations using a pipeline.
