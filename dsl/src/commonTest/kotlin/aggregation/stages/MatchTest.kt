@@ -14,26 +14,22 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.aggregation
+package opensavvy.ktmongo.dsl.aggregation.stages
 
-import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.stages.match
+import opensavvy.ktmongo.dsl.aggregation.PipelineType
+import opensavvy.ktmongo.dsl.aggregation.aggregate
+import opensavvy.ktmongo.dsl.aggregation.match
+import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.filter.eq
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
-@OptIn(LowLevelApi::class)
-class AggregationStageTest : PreparedSpec({
+class MatchTest : PreparedSpec({
 
 	class Target(
 		val foo: String,
-		val bar: Int,
 	)
 
-	test("Empty pipeline") {
-		aggregate<_, Target>(PipelineType.Aggregate) shouldBeBson "[]"
-	}
-
-	test("Single-stage pipeline") {
+	test("Simple $match") {
 		aggregate<_, Target>(PipelineType.Aggregate)
 			.match { Target::foo eq "Bob" }
 			.shouldBeBson("""

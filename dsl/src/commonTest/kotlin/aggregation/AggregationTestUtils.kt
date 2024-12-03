@@ -17,36 +17,17 @@
 package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.stages.match
-import opensavvy.ktmongo.dsl.expr.filter.eq
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.ktmongo.dsl.expr.shouldBeBson
+import opensavvy.ktmongo.dsl.expr.testContext
+
+val match = "\$match"
+val sample = "\$sample"
+val set = "\$set"
 
 @OptIn(LowLevelApi::class)
-class AggregationStageTest : PreparedSpec({
+fun <Type : PipelineType, Document : Any> aggregate(type: Type) =
+	Pipeline<Type, Document>(testContext(), type)
 
-	class Target(
-		val foo: String,
-		val bar: Int,
-	)
-
-	test("Empty pipeline") {
-		aggregate<_, Target>(PipelineType.Aggregate) shouldBeBson "[]"
-	}
-
-	test("Single-stage pipeline") {
-		aggregate<_, Target>(PipelineType.Aggregate)
-			.match { Target::foo eq "Bob" }
-			.shouldBeBson("""
-				[
-					{
-						"$match": {
-							"foo": {
-								"$eq": "Bob"
-							}
-						}
-					}
-				]
-			""".trimIndent())
-	}
-
-})
+infix fun Pipeline<*, *>.shouldBeBson(expected: String) {
+	this.toString() shouldBeBson expected
+}
