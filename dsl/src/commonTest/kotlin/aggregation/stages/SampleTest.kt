@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.dsl.aggregation.stages
 
+import io.kotest.assertions.throwables.shouldThrow
 import opensavvy.ktmongo.dsl.aggregation.PipelineType
 import opensavvy.ktmongo.dsl.aggregation.aggregate
 import opensavvy.ktmongo.dsl.aggregation.sample
@@ -36,6 +37,20 @@ class SampleTest : PreparedSpec({
 					}
 				]
 			""".trimIndent())
+	}
+
+	test("Sample of 0 elements is forbidden") {
+		shouldThrow<IllegalArgumentException> {
+			aggregate<_, Nothing>(PipelineType.Aggregate)
+				.sample(0)
+		}
+	}
+
+	test("Sample of less than 0 elements is forbidden") {
+		shouldThrow<IllegalArgumentException> {
+			aggregate<_, Nothing>(PipelineType.Aggregate)
+				.sample(-1)
+		}
 	}
 
 })
