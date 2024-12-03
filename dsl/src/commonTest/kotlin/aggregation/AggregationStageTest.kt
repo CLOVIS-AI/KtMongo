@@ -18,12 +18,14 @@ package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.stages.match
+import opensavvy.ktmongo.dsl.aggregation.stages.sample
 import opensavvy.ktmongo.dsl.expr.filter.eq
 import opensavvy.ktmongo.dsl.expr.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.testContext
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 val match = "\$match"
+val sample = "\$sample"
 val set = "\$set"
 
 @OptIn(LowLevelApi::class)
@@ -55,6 +57,20 @@ class AggregationStageTest : PreparedSpec({
 							"foo": {
 								"$eq": "Bob"
 							}
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
+	test(sample) {
+		aggregate(PipelineType.Aggregate)
+			.sample(5)
+			.shouldBeBson("""
+				[
+					{
+						"$sample": {
+							"size": 5
 						}
 					}
 				]
