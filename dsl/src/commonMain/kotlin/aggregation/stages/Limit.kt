@@ -26,73 +26,66 @@ import opensavvy.ktmongo.dsl.aggregation.PipelineType
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 
 /**
- * Marks that a pipeline is able to [skip].
+ * Marks that a pipeline is able to [limit].
  */
 @OptIn(DangerousMongoApi::class)
-interface HasSkip : PipelineFeature
+interface HasLimit : PipelineFeature
 
 /**
- * Skips over the specified [amount] of documents that pass into the stage,
- * and passes the remaining documents to the next stage.
+ * Limits the number of elements passed to the next stage to [amount].
  *
- * ### Using skip with sorted results
+ * ### Using limit with sorted results
  *
- * Sort results aren't stable with `skip`: if multiple documents are identical, their relative order is undefined
+ * Sort results aren't stable with `limit`: if multiple documents are identical, their relative order is undefined
  * and may change from one execution to the next.
  *
  * To avoid surprises, include a unique field in your sort, for example `_id`.
  *
  * ### External resources
  *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)
  *
- * @see limit Limit the number of elements.
+ * @see skip Skip over an amount of elements.
+ * @see sample Randomly limit the number of elements.
  */
 @OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <Type, Document : Any> Pipeline<Type, Document>.skip(amount: Long): Pipeline<Type, Document>
-	where Type : PipelineType, Type : HasSkip =
-	withStage(SkipStage(amount, context))
+fun <Type, Document : Any> Pipeline<Type, Document>.limit(amount: Long): Pipeline<Type, Document>
+	where Type : PipelineType, Type : HasLimit =
+	withStage(LimitStage(amount, context))
 
 /**
- * Skips over the specified [amount] of documents that pass into the stage,
- * and passes the remaining documents to the next stage.
+ * Limits the number of elements passed to the next stage to [amount].
  *
- * ### Using skip with sorted results
+ * ### Using limit with sorted results
  *
- * Sort results aren't stable with `skip`: if multiple documents are identical, their relative order is undefined
+ * Sort results aren't stable with `limit`: if multiple documents are identical, their relative order is undefined
  * and may change from one execution to the next.
  *
  * To avoid surprises, include a unique field in your sort, for example `_id`.
  *
  * ### External resources
  *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)
  *
- * @see limit Limit the number of elements.
+ * @see skip Skip over an amount of elements.
+ * @see sample Randomly limit the number of elements.
  */
 @OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <Type, Document : Any> Pipeline<Type, Document>.skip(amount: Int): Pipeline<Type, Document>
-	where Type : PipelineType, Type : HasSkip =
-	skip(amount.toLong())
+fun <Type, Document : Any> Pipeline<Type, Document>.limit(amount: Int): Pipeline<Type, Document>
+	where Type : PipelineType, Type : HasLimit =
+	limit(amount.toLong())
 
-private class SkipStage(
+private class LimitStage(
 	val amount: Long,
 	context: BsonContext,
 ) : AbstractExpression(context) {
 
 	init {
-		require(amount >= 0) { "At least 0 elements should be skipped. Found: $amount" }
+		require(amount >= 0) { "Negative limits are not allowed. Found: $amount" }
 	}
 
 	@LowLevelApi
-	override fun simplify(): AbstractExpression? =
-		when {
-			amount == 0L -> null
-			else -> this
-		}
-
-	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
-		writeInt64("\$skip", amount)
+		writeInt64("\$limit", amount)
 	}
 }

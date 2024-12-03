@@ -42,6 +42,8 @@ interface HasSample : PipelineFeature
  * ### External resources
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/)
+ *
+ * @see limit Selects the first elements found.
  */
 @OptIn(LowLevelApi::class, DangerousMongoApi::class)
 fun <Type, Document : Any> Pipeline<Type, Document>.sample(size: Int): Pipeline<Type, Document>

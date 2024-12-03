@@ -20,6 +20,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.testContext
 
+val limit = "\$limit"
 val match = "\$match"
 val sample = "\$sample"
 val skip = "\$skip"
