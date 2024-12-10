@@ -40,6 +40,11 @@ interface ValueDsl : FieldDsl {
 	fun <Context : Any, Result> of(field: KProperty1<Context, Result>): Value<Context, Result> =
 		of(field.field)
 
+	// TODO: document once we have a few more operators
+	@OptIn(LowLevelApi::class)
+	fun <Context : Any, Result> of(value: Result): Value<Context, Result> =
+		LiteralValue(value, context)
+
 }
 
 private class FieldValue<Context : Any, Result>(
@@ -50,5 +55,18 @@ private class FieldValue<Context : Any, Result>(
 	@LowLevelApi
 	override fun write(writer: BsonValueWriter) {
 		writer.writeString("$$field")
+	}
+}
+
+private class LiteralValue<Context : Any, Result>(
+	val value: Any?,
+	context: BsonContext,
+) : AbstractValue<Context, Result>(context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonValueWriter) {
+		writer.writeDocument {
+			writeObjectSafe("\$literal", value, context)
+		}
 	}
 }

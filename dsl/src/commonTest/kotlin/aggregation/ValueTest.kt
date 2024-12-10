@@ -26,6 +26,7 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
 class ValueTest : PreparedSpec({
 
 	val dollar = "$"
+	val literal = "\$literal"
 
 	class ValueDslImpl : ValueDsl {
 		override val context: BsonContext = testContext()
@@ -60,6 +61,32 @@ class ValueTest : PreparedSpec({
 			} shouldBeBson """
 				[
 					"${dollar}profile.age"
+				]
+			""".trimIndent()
+		}
+	}
+
+	suite("Embedding Kotlin values with of") {
+		test("Embedding a primitive integer") {
+			value {
+				of<Nothing, _>(5)
+			} shouldBeBson """
+				[
+					{
+						"$literal": 5
+					}
+				]
+			""".trimIndent()
+		}
+
+		test("Embedding null") {
+			value {
+				of<Nothing, _>(null)
+			} shouldBeBson """
+				[
+					{
+						"$literal": null
+					}
 				]
 			""".trimIndent()
 		}
