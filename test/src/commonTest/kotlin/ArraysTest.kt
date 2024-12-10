@@ -56,4 +56,81 @@ class ArraysTest : PreparedSpec({
 		}
 	}
 
+	test("Position operator: $") {
+		@Serializable
+		data class Pet(
+			val name: String,
+			val age: Int,
+		)
+
+		@Serializable
+		data class Profile(
+			val name: String,
+			val pets: List<Pet>,
+		)
+
+		val profiles = testCollection<Profile>("arrays-positional")
+			.immediate("profiles")
+
+		val initial = listOf(
+			Profile("Bob", listOf(Pet("Bobby", 1), Pet("Cacahuète", 10))),
+			Profile("Julia", listOf(Pet("Chouquette", 7)))
+		)
+
+		profiles.insertMany(initial)
+
+		// Cacahuète got one year older
+		val expected = listOf(
+			Profile("Bob", listOf(Pet("Bobby", 1), Pet("Cacahuète", 11))),
+			Profile("Julia", listOf(Pet("Chouquette", 7)))
+		)
+
+		profiles.updateMany(
+			filter = {
+				Profile::pets.any / Pet::name eq "Cacahuète"
+			},
+			update = {
+				Profile::pets.selected / Pet::age inc 1
+			}
+		)
+
+		check(expected == profiles.find().toList())
+	}
+
+	test("All position operator: $[]") {
+		@Serializable
+		data class Pet(
+			val name: String,
+			val age: Int,
+		)
+
+		@Serializable
+		data class Profile(
+			val name: String,
+			val pets: List<Pet>,
+		)
+
+		val profiles = testCollection<Profile>("arrays-positional")
+			.immediate("profiles")
+
+		val initial = listOf(
+			Profile("Bob", listOf(Pet("Bobby", 1), Pet("Cacahuète", 10))),
+			Profile("Julia", listOf(Pet("Chouquette", 7)))
+		)
+
+		profiles.insertMany(initial)
+
+		// All pets get one year older
+		val expected = listOf(
+			Profile("Bob", listOf(Pet("Bobby", 2), Pet("Cacahuète", 11))),
+			Profile("Julia", listOf(Pet("Chouquette", 8)))
+		)
+
+		profiles.updateMany {
+			Profile::pets.all / Pet::age inc 1
+		}
+
+		check(expected == profiles.find().toList())
+	}
+
 })

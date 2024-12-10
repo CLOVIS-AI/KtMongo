@@ -20,8 +20,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
-import opensavvy.ktmongo.dsl.path.Field
-import opensavvy.ktmongo.dsl.path.FieldDsl
+import opensavvy.ktmongo.dsl.path.*
 import kotlin.reflect.KProperty1
 
 /**
@@ -56,7 +55,8 @@ import kotlin.reflect.KProperty1
  * - [`$unset`][unset]
  *
  * On arrays:
- * - [`$[]`][FieldDsl.get]
+ * - [`$`][selected]
+ * - [`$[]`][all]
  *
  * If you can't find the operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/5).
  *
@@ -372,6 +372,156 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.renameTo(newName: KProperty1<T, V>) {
 		this.renameTo(newName.field)
 	}
+
+	// endregion
+	// region Positional operator: $
+
+	/**
+	 * The positional operator: update an array item selected in the filter.
+	 *
+	 * When we use [any][FilterOperators.any] or [anyValue][FilterOperators.anyValue]
+	 * in a filter to select an item, we can use this operator to update whichever item was selected.
+	 *
+	 * Do not use this operator in an `upsert`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val pets: List<Pet>,
+	 * )
+	 *
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.updateMany(
+	 *     filter = {
+	 *         User::pets.any / Pet::name eq "Bobby"
+	 *     },
+	 *     update = {
+	 *         User::pets.selected / Pet::age inc 1
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This example finds all users who have a pet named "Bobby", and increases its age by 1.
+	 * Note that if the users have other pets, they are not impacted.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <E> Field<T, Collection<E>>.selected: Field<T, E>
+		get() = FieldImpl<T, E>(path / PathSegment.Positional)
+
+	/**
+	 * The positional operator: update an array item selected in the filter.
+	 *
+	 * When we use [any][FilterOperators.any] or [anyValue][FilterOperators.anyValue]
+	 * in a filter to select an item, we can use this operator to update whichever item was selected.
+	 *
+	 * Do not use this operator in an `upsert`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val pets: List<Pet>,
+	 * )
+	 *
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.updateMany(
+	 *     filter = {
+	 *         User::pets.any / Pet::name eq "Bobby"
+	 *     },
+	 *     update = {
+	 *         User::pets.selected / Pet::age inc 1
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This example finds all users who have a pet named "Bobby", and increases its age by 1.
+	 * Note that if the users have other pets, they are not impacted.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional/)
+	 */
+	val <E> KProperty1<T, Collection<E>>.selected: Field<T, E>
+		get() = this.field.selected
+
+	// endregion
+	// region All positional operator: $[]
+
+	/**
+	 * The all positional operator: selects all elements of an array.
+	 *
+	 * This operator is used to declare an update that applies to all items of an array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val pets: List<Pet>,
+	 * )
+	 *
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.updateMany {
+	 *     User::pets.all / Pet::age inc 1
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-all/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <E> Field<T, Collection<E>>.all: Field<T, E>
+		get() = FieldImpl<T, E>(path / PathSegment.AllPositional)
+
+	/**
+	 * The all positional operator: selects all elements of an array.
+	 *
+	 * This operator is used to declare an update that applies to all items of an array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val pets: List<Pet>,
+	 * )
+	 *
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.updateMany {
+	 *     User::pets.all / Pet::age inc 1
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-all/)
+	 */
+	val <E> KProperty1<T, Collection<E>>.all: Field<T, E>
+		get() = this.field.all
 
 	// endregion
 
