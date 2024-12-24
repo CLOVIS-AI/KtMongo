@@ -1,8 +1,6 @@
 
 mkdocs:
-  image:
-    name: squidfunk/mkdocs-material
-    entrypoint: [ "/bin/sh", "-c" ]
+  image: registry.gitlab.com/opensavvy/automation/containers/mkdocs:$ci_containers
   stage: build
 
   before_script:
