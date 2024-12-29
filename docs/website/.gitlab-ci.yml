@@ -2,8 +2,11 @@
 mkdocs:
   image: registry.gitlab.com/opensavvy/automation/containers/mkdocs:$ci_containers
   stage: build
+  extends: [ .os.gradle ]
+  needs: [ os.version ]
 
   before_script:
+    - ./gradlew docs:website:embedDokkaIntoMkDocs -PappVersion=$project_version
     - cd docs/website
     - ls
     - 'echo "repo_url: $CI_PROJECT_URL">>mkdocs.yml'

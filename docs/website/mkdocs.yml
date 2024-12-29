@@ -101,5 +101,8 @@ nav:
       - features/bulk-writes.md
       - features/fields.md
 
-  - Reference:
+# !!! EMBEDDED DOKKA START, DO NOT COMMIT !!! #
+# !!! EMBEDDED DOKKA END, DO NOT COMMIT !!! #
+
+  - Reference (external):
       - reference.md
