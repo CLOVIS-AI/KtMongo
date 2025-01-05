@@ -21,11 +21,11 @@ plugins {
 
 dependencies {
 	// List the 'library' projects
-	dokkatoo(projects.annotations)
-	dokkatoo(projects.bson)
-	dokkatoo(projects.dsl)
-	dokkatoo(projects.driverSync)
-	dokkatoo(projects.driverCoroutines)
+	dokka(projects.annotations)
+	dokka(projects.bson)
+	dokka(projects.dsl)
+	dokka(projects.driverSync)
+	dokka(projects.driverCoroutines)
 }
 
 // region Check the users of the project didn't forget to rename the group

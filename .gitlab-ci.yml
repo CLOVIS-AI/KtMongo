@@ -310,7 +310,7 @@ dokka:
 
   script:
     - >
-      ./gradlew :dokkatooGeneratePublicationHtml
+      ./gradlew :dokkaGeneratePublicationHtml
       --no-configuration-cache
       -PappVersion=$project_version
 
