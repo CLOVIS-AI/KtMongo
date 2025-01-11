@@ -59,4 +59,12 @@ class MapsTest : PreparedSpec({
 		}
 	}
 
+	test("Position operator: $") {
+		val user = User("Alex", friends = mapOf("alice" to User("Alice"), "bob" to User("Bob")))
+		users().insertOne(user)
+		users().insertOne(User("Should not be returned", friends = mapOf("arthur" to User("Arthur"))))
+
+		check(users().find { User::friends["bob"].exists() }.toList() == listOf(user))
+	}
+
 })

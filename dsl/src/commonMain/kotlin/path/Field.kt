@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -169,6 +169,35 @@ operator fun <Root, Type> Field<Root, Collection<Type>>.get(index: Int): Field<R
 	FieldImpl<Root, Type>(this.path / PathSegment.Indexed(index))
 
 /**
+ * Refers to a specific item in a map, by its name.
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * class User(
+ *     val name: String,
+ *     val friends: Map<String, Friend>,
+ * )
+ *
+ * class Friend(
+ *     val name: String,
+ * )
+ *
+ * // Refer to the friend Bob
+ * println(User::friends["bob"])
+ * // → 'friends.bob'
+ *
+ * // Refer to Bob's name
+ * println(User::friends["bob"] / Friend::name)
+ * // → 'friends.bob.name'
+ * ```
+ */
+@KtMongoDsl
+@OptIn(LowLevelApi::class)
+operator fun <Root, Type> Field<Root, Map<String, Type>>.get(key: String): Field<Root, Type> =
+	FieldImpl<Root, Type>(this.path / PathSegment.Field(key))
+
+/**
  * DSL to refer to [fields][Field], usually automatically added into scope by operators.
  */
 interface FieldDsl {
@@ -259,6 +288,34 @@ interface FieldDsl {
 	 */
 	@KtMongoDsl
 	operator fun <Root, Type> KProperty1<Root, Collection<Type>>.get(index: Int): Field<Root, Type> =
+		this.field[index]
+
+	/**
+	 * Refers to a specific item in a map, by its name.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val friends: Map<String, Friend>,
+	 * )
+	 *
+	 * class Friend(
+	 *     val name: String,
+	 * )
+	 *
+	 * // Refer to the friend Bob
+	 * println(User::friends["bob"])
+	 * // → 'friends.bob'
+	 *
+	 * // Refer to Bob's name
+	 * println(User::friends["bob"] / Friend::name)
+	 * // → 'friends.bob.name'
+	 * ```
+	 */
+	@KtMongoDsl
+	operator fun <Root, Type> KProperty1<Root, Map<String, Type>>.get(index: String): Field<Root, Type> =
 		this.field[index]
 
 }
