@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.dsl.expr
 
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.bson.types.BsonType
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
@@ -675,6 +676,65 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	}
 
 	/**
+	 * Matches documents in which a map is empty or absent.
+	 *
+	 * ### Example
+	 *
+	 * Return all users that have no grades (either an empty map, or the `grades` field is absent):
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val grades: Map<String, Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades.isMapEmpty()
+	 * }
+	 * ```
+	 *
+	 * @see exists
+	 * @see isNull
+	 * @see isNotEmpty
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Field<T, Map<String, *>>.isMapEmpty() {
+		or {
+			doesNotExist()
+			FieldImpl<T, Any>(path) eq buildBsonDocument { }
+		}
+	}
+
+	/**
+	 * Matches documents in which a map is empty or absent.
+	 *
+	 * ### Example
+	 *
+	 * Return all users that have no grades (either an empty map, or the `grades` field is absent):
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val grades: Map<String, Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades.isMapEmpty()
+	 * }
+	 * ```
+	 *
+	 * @see exists
+	 * @see isNull
+	 * @see isNotEmpty
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun KProperty1<T, Map<String, *>>.isMapEmpty() {
+		this.field.isMapEmpty()
+	}
+
+	/**
 	 * Matches documents in which an array is not empty.
 	 *
 	 * ### Example
@@ -727,6 +787,64 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	@KtMongoDsl
 	fun KProperty1<T, Collection<*>>.isNotEmpty() {
 		this.field.isNotEmpty()
+	}
+
+	/**
+	 * Matches documents in which a map is not empty.
+	 *
+	 * ### Example
+	 *
+	 * Return all users that have one or more grades.
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val grades: Map<String, Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades.isMapNotEmpty()
+	 * }
+	 * ```
+	 *
+	 * @see exists
+	 * @see isNotNull
+	 * @see isEmpty
+	 */
+	// Spec: https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#objects
+	//       "An object without [fields] is less than an object with [fields]."
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Field<T, Map<String, *>>.isMapNotEmpty() {
+		FieldImpl<T, Any>(path) gt buildBsonDocument { }
+	}
+
+	/**
+	 * Matches documents in which a map is not empty.
+	 *
+	 * ### Example
+	 *
+	 * Return all users that have one or more grades.
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val grades: Map<String, Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades.isMapNotEmpty()
+	 * }
+	 * ```
+	 *
+	 * @see exists
+	 * @see isNotNull
+	 * @see isEmpty
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun KProperty1<T, Map<String, *>>.isMapNotEmpty() {
+		this.field.isMapNotEmpty()
 	}
 
 	// endregion
