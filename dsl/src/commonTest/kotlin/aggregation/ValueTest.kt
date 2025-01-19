@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,18 +22,16 @@ import opensavvy.ktmongo.dsl.expr.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.testContext
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
+const val literal = "\$literal"
+
 @LowLevelApi
 class ValueTest : PreparedSpec({
 
 	val dollar = "$"
-	val literal = "\$literal"
 
 	class ValueDslImpl : ValueDsl {
 		override val context: BsonContext = testContext()
 	}
-
-	fun value(block: ValueDsl.() -> Value<*, *>) =
-		ValueDslImpl().block().toString()
 
 	class Profile(
 		val age: Int,
@@ -43,6 +41,9 @@ class ValueTest : PreparedSpec({
 		val name: String,
 		val profile: Profile,
 	)
+
+	fun value(block: ValueDsl.() -> Value<User, *>) =
+		ValueDslImpl().block().toString()
 
 	suite("Referring to fields with of") {
 		test("Referring to a top-level field") {
@@ -69,7 +70,7 @@ class ValueTest : PreparedSpec({
 	suite("Embedding Kotlin values with of") {
 		test("Embedding a primitive integer") {
 			value {
-				of<Nothing, _>(5)
+				of(5)
 			} shouldBeBson """
 				[
 					{
@@ -81,7 +82,7 @@ class ValueTest : PreparedSpec({
 
 		test("Embedding null") {
 			value {
-				of<Nothing, _>(null)
+				of(null)
 			} shouldBeBson """
 				[
 					{
@@ -90,5 +91,22 @@ class ValueTest : PreparedSpec({
 				]
 			""".trimIndent()
 		}
+	}
+
+	test("Foo") {
+		value {
+			of(5) eq of(User::profile / Profile::age)
+		} shouldBeBson """
+			[
+				{
+					"${opensavvy.ktmongo.dsl.expr.filter.eq}": [
+						{
+							"$literal": 5
+						},
+						"${dollar}profile.age"
+					]
+				}
+			]
+		""".trimIndent()
 	}
 })

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.Value
+import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.expr.common.Expression
@@ -223,6 +225,33 @@ class FilterExpression<T>(
 						writeObjectSafe(value, context)
 					}
 				}
+			}
+		}
+	}
+
+	// endregion
+	// region $expr
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@KtMongoDsl
+	override fun expr(block: ValueDsl.() -> Value<T & Any, Boolean>) {
+		val value = ExprEvaluator(context).block()
+		accept(ExprExpressionNode(value, context))
+	}
+
+	@LowLevelApi
+	private class ExprEvaluator(override val context: BsonContext) : ValueDsl
+
+	@OptIn(LowLevelApi::class)
+	private class ExprExpressionNode<T>(
+		val value: Value<*, T>,
+		context: BsonContext,
+	) : FilterExpressionNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			write("\$expr") {
+				value.writeTo(this)
 			}
 		}
 	}

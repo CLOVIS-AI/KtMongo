@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,12 @@
 package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.buildBsonArray
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.expr.FilterOperators
+import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.expr.common.Expression
 import opensavvy.ktmongo.dsl.tree.Node
 import opensavvy.ktmongo.dsl.tree.NodeImpl
@@ -29,6 +32,10 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  *
  * Each implementation of this interface is a logical BSON node in our own intermediate representation.
  * Each node knows how to [writeTo] itself into a BSON document.
+ *
+ * Instances of this interface are obtained by the end-user through the [ValueDsl] builder.
+ * Functions from KtMongo which expect aggregation values provide an instance of [ValueDsl] into scope automatically.
+ * For example, see [FilterOperators.expr].
  *
  * ### Difference with Expression
  *
@@ -49,8 +56,10 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  * ### Debugging notes
  *
  * Use [toString] to view the JSON representation of this expression.
+ *
+ * @see ValueDsl Builder for aggregation values.
  */
-interface Value<Root : Any, Type> : Node {
+interface Value<in Root : Any, out Type> : Node {
 
 	/**
 	 * The context used to generate this value.
@@ -88,6 +97,15 @@ interface Value<Root : Any, Type> : Node {
 	override fun toString(): String
 }
 
+/**
+ * Utility implementation of [Value], which handles the [context], [toString] representation and [freezing][freeze].
+ *
+ * ### Implementing a new operator
+ *
+ * Implementing class is identical in concept to implementing [AbstractExpression].
+ * The main difference is the writer is a [BsonValueWriter] instead of a [BsonFieldWriter].
+ */
+@LowLevelApi
 abstract class AbstractValue<Root : Any, Type> private constructor(
 	@property:LowLevelApi override val context: BsonContext,
 	private val node: NodeImpl,
