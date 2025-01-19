@@ -110,8 +110,8 @@ The specific use-case of optional filters is quite common, so KtMongo provides a
 ```kotlin title="Using KtMongo"
 songs.find {
 	Song::artist / Artist::name eq artistName
-	Song::releaseDate gte minDate
-	Song::releaseDate lte maxDate
+	Song::releaseDate gteNotNull minDate
+	Song::releaseDate lteNotNull maxDate
 }
 ```
 
