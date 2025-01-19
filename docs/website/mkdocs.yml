@@ -99,7 +99,11 @@ nav:
   - Features:
       - features/crud.md
       - features/bulk-writes.md
-      - features/fields.md
+
+      - Data types:
+          - features/fields.md
+          - features/arrays.md
+          - features/maps.md
 
 # !!! EMBEDDED DOKKA START, DO NOT COMMIT !!! #
 # !!! EMBEDDED DOKKA END, DO NOT COMMIT !!! #
