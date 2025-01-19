@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,17 @@
 
 package opensavvy.ktmongo.bson
 
+/**
+ * Currently not implemented, creates an empty BSON document.
+ */
 actual fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson {
 	console.error("buildBsonDocument is not implemented on this platform")
 	return Bson()
 }
 
+/**
+ * Currently not implemented, creates an empty BSON array.
+ */
 actual fun buildBsonArray(block: BsonValueWriter.() -> Unit): BsonArray {
 	console.error("buildBsonArray is not implemented on this platform")
 	return BsonArray()
