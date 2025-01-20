@@ -54,6 +54,7 @@ import opensavvy.ktmongo.dsl.expr.common.Expression
  * - [`$limit`][limit]
  * - [`$match`][match]
  * - [`$sample`][sample]
+ * - [`$set`][set]
  * - [`$skip`][skip]
  *
  * If you can't find a stage you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/7).

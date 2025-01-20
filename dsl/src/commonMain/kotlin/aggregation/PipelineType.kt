@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,7 @@
 package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.DangerousMongoApi
-import opensavvy.ktmongo.dsl.aggregation.stages.HasLimit
-import opensavvy.ktmongo.dsl.aggregation.stages.HasMatch
-import opensavvy.ktmongo.dsl.aggregation.stages.HasSample
-import opensavvy.ktmongo.dsl.aggregation.stages.HasSkip
+import opensavvy.ktmongo.dsl.aggregation.stages.*
 
 /**
  * The super-type for all [pipeline][Pipeline] features.
@@ -54,12 +51,14 @@ interface PipelineType {
 		HasLimit,
 		HasMatch,
 		HasSample,
+		HasSet,
 		HasSkip
 
 	/**
 	 * Marker type for pipeline features that are available in update operations using a pipeline.
 	 */
-	object Update : PipelineType
+	object Update : PipelineType,
+		HasSet
 }
 
 /**
