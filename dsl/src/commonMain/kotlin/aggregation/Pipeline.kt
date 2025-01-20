@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,10 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.buildBsonArray
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.stages.limit
 import opensavvy.ktmongo.dsl.aggregation.stages.match
+import opensavvy.ktmongo.dsl.aggregation.stages.sample
+import opensavvy.ktmongo.dsl.aggregation.stages.skip
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
@@ -48,7 +51,10 @@ import opensavvy.ktmongo.dsl.expr.common.Expression
  * Each stage is defined as an extension function on this class.
  * Note that as mentioned, not all stages are available for all pipeline types.
  * The following stages are available:
+ * - [`$limit`][limit]
  * - [`$match`][match]
+ * - [`$sample`][sample]
+ * - [`$skip`][skip]
  *
  * If you can't find a stage you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/7).
  *
