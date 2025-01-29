@@ -18,10 +18,7 @@ package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.UpdateOperators
-import opensavvy.ktmongo.dsl.expr.UpsertOperators
+import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.BulkWrite
 import opensavvy.ktmongo.dsl.options.*
@@ -80,6 +77,21 @@ private class FilteredCollection<Document : Any>(
 		)
 	}
 
+	override suspend fun updateManyWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		upstream.updateManyWithPipeline(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			},
+			update = update,
+		)
+	}
+
 	override suspend fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterOperators<Document>.() -> Unit,
@@ -95,12 +107,42 @@ private class FilteredCollection<Document : Any>(
 		)
 	}
 
+	override suspend fun updateOneWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		upstream.updateOneWithPipeline(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			},
+			update = update,
+		)
+	}
+
 	override suspend fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterOperators<Document>.() -> Unit,
 		update: UpsertOperators<Document>.() -> Unit,
 	) {
 		upstream.upsertOne(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			},
+			update = update,
+		)
+	}
+
+	override suspend fun upsertOneWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		upstream.upsertOneWithPipeline(
 			options = options,
 			filter = {
 				globalFilter()

@@ -50,4 +50,5 @@ interface MongoCollection<Document : Any> :
 	DeleteOperations<Document>,
 	CollectionOperations<Document>,
 	InsertOperations<Document>,
-	AggregationOperations<Document>
+	AggregationOperations<Document>,
+	UpdatePipelineOperations<Document>

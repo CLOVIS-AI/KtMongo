@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.sync
 
 import kotlinx.serialization.Serializable
+import opensavvy.ktmongo.coroutines.filter
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
@@ -56,5 +57,25 @@ class AggregationTests : PreparedSpec({
 		println("Sending aggregation: $results")
 
 		check(results.toList() == listOf(Song(creationDate = 13, editionDate = 1)))
+	}
+
+	test("Update with pipeline") {
+		songs().insertOne(Song(creationDate = 0, editionDate = 1))
+		songs().insertOne(Song(creationDate = 1, editionDate = 1))
+		songs().insertOne(Song(creationDate = 2, editionDate = 1))
+
+		val anomalies = songs().filter {
+			expr {
+				of(Song::creationDate) gt of(Song::editionDate)
+			}
+		}
+
+		anomalies.updateOneWithPipeline {
+			set {
+				Song::creationDate set 12
+			}
+		}
+
+		check(Song(creationDate = 12, editionDate = 1) in anomalies.find().toList())
 	}
 })
