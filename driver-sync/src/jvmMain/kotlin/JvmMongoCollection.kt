@@ -175,6 +175,54 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	// endregion
+	// region Update with pipeline
+
+	@OptIn(LowLevelApi::class)
+	override fun updateManyWithPipeline(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		val model = UpdateManyWithPipeline<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		inner.updateMany(model.filter.toBsonDocument(), model.updates, UpdateOptions())
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun updateOneWithPipeline(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		val model = UpdateOneWithPipeline<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		inner.updateOne(model.filter.toBsonDocument(), model.updates, UpdateOptions())
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun upsertOneWithPipeline(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		val model = UpsertOneWithPipeline<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		inner.updateOne(model.filter.toBsonDocument(), model.updates, UpdateOptions().upsert(true))
+	}
+
+	// endregion
 	// region Insert
 
 	@OptIn(LowLevelApi::class)

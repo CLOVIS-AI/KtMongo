@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.sync.operations.*
+import opensavvy.ktmongo.sync.operations.operations.UpdatePipelineOperations
 
 /**
  * Methods to interact with a MongoDB collection.
@@ -50,4 +51,5 @@ interface MongoCollection<Document : Any> :
 	DeleteOperations<Document>,
 	CollectionOperations<Document>,
 	InsertOperations<Document>,
-	AggregationOperations<Document>
+	AggregationOperations<Document>,
+	UpdatePipelineOperations<Document>
