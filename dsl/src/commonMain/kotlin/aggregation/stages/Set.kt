@@ -27,6 +27,7 @@ import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
+import opensavvy.ktmongo.dsl.expr.common.Expression
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
@@ -50,7 +51,7 @@ interface HasSet<Document : Any> : Pipeline<Document> {
 	fun set(
 		block: SetOperators<Document>.() -> Unit,
 	): Pipeline<Document> =
-		withStage(SetStage(SetExpression<Document>(context).apply(block), context))
+		withStage(createSetStage(context, block))
 
 }
 
@@ -65,6 +66,9 @@ private class SetStage(
 		}
 	}
 }
+
+internal fun <Document : Any> createSetStage(context: BsonContext, block: SetOperators<Document>.() -> Unit): Expression =
+	SetStage(SetExpression<Document>(context).apply(block), context)
 
 /**
  * The operators allowed in a [set] stage.
