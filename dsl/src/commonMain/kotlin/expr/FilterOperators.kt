@@ -22,6 +22,8 @@ import opensavvy.ktmongo.bson.types.BsonType
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.Value
+import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
 import opensavvy.ktmongo.dsl.path.*
 import kotlin.jvm.JvmName
@@ -2299,6 +2301,39 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, Collection<V>>.containsAll(values: Collection<V>) {
 		this.field.containsAll(values)
 	}
+
+	// endregion
+	// region $expr
+
+	/**
+	 * Enables the usage of [aggregation values][ValueDsl] within a regular query.
+	 *
+	 * Aggregation values are much more powerful than regular query operators (for example, it is possible to compare two
+	 * fields of the same document). However, the way they are written is quite different, and the way they are
+	 * evaluated by MongoDB is quite different again. Before using aggregation values, be sure to read [ValueDsl].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val anomalies = products.find {
+	 *     expr {
+	 *         of(Product::creationDate) gt of(Product::releaseDate)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/expr/)
+	 */
+	@KtMongoDsl
+	fun expr(block: ValueDsl.() -> Value<T & Any, Boolean>)
 
 	// endregion
 }

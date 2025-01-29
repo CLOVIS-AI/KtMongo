@@ -20,6 +20,7 @@ import opensavvy.ktmongo.bson.types.Decimal128
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
+import org.bson.BsonArray
 import org.bson.codecs.Encoder
 import org.bson.codecs.EncoderContext
 
@@ -332,7 +333,7 @@ private class JavaRootArrayWriter(
 
 	@LowLevelApi
 	override fun writeArray(block: BsonValueWriter.() -> Unit) {
-		array.add(buildBsonArray(block))
+		array.add(buildBsonArray(block).raw)
 	}
 
 	@LowLevelApi
@@ -349,10 +350,11 @@ private class JavaRootArrayWriter(
 }
 
 @LowLevelApi
-actual fun buildBsonArray(block: BsonValueWriter.() -> Unit): BsonArray {
-	val array = BsonArray()
+actual fun buildBsonArray(block: BsonValueWriter.() -> Unit): opensavvy.ktmongo.bson.BsonArray {
+	val nativeArray = BsonArray()
+	val array = opensavvy.ktmongo.bson.BsonArray(nativeArray)
 
-	JavaRootArrayWriter(array).block()
+	JavaRootArrayWriter(nativeArray).block()
 
 	return array
 }
