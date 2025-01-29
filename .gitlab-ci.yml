@@ -72,6 +72,11 @@ workflow:
     - name: $mongodb
       alias: mongo
 
+  retry:
+    max: 1
+    exit_codes:
+      - 2  # Sometimes, the job fails due to timeouts?
+
 check[jvm]:
   extends: [ .kotlin-jvm, .with-mongo ]
   stage: test
