@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 *     filter = {
 	 *         User::name eq "Patrick"
 	 *     },
-	 *     age = {
+	 *     update = {
 	 *         User::age set 15
 	 *     },
 	 * )
@@ -95,7 +95,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 *     filter = {
 	 *         User::name eq "Patrick"
 	 *     },
-	 *     age = {
+	 *     update = {
 	 *         User::age set 15
 	 *     },
 	 * )
@@ -148,7 +148,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 *     filter = {
 	 *         User::name eq "Patrick"
 	 *     },
-	 *     age = {
+	 *     update = {
 	 *         User::age set 15
 	 *     },
 	 * )
@@ -198,7 +198,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 *     filter = {
 	 *         User::name eq "Patrick"
 	 *     },
-	 *     age = {
+	 *     update = {
 	 *         User::age set 15
 	 *     },
 	 * )
