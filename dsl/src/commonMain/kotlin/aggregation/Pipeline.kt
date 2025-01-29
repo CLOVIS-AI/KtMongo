@@ -16,9 +16,7 @@
 
 package opensavvy.ktmongo.dsl.aggregation
 
-import opensavvy.ktmongo.bson.BsonContext
-import opensavvy.ktmongo.bson.BsonValueWriter
-import opensavvy.ktmongo.bson.buildBsonArray
+import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -214,6 +212,17 @@ class PipelineChainLink internal constructor(
 	@LowLevelApi
 	fun toList(): List<Expression> =
 		hierarchyReversed().toList().reversed()
+
+	/**
+	 * Converts this chain in a list of BSON documents, each representing a stage.
+	 *
+	 * The first element of the returned list is the root of the chain, followed by the second element of the chain, etc.
+	 */
+	@LowLevelApi
+	fun toBsonList(): List<Bson> =
+		hierarchyReversed()
+			.map { buildBsonDocument { it.writeTo(this) } }
+			.toList().reversed()
 
 	/**
 	 * Equivalent to [Pipeline.writeTo].

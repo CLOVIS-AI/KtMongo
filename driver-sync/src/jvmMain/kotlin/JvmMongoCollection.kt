@@ -21,7 +21,6 @@ import com.mongodb.client.model.DropCollectionOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
-import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.expr.*
@@ -252,16 +251,8 @@ class JvmMongoCollection<Document : Any> internal constructor(
 			context = context,
 			chain = PipelineChainLink(context),
 			iterableBuilder = { pipeline ->
-				val stages = pipeline.chain
-					.toList()
-					.map { stage ->
-						buildBsonDocument {
-							stage.writeTo(this)
-						}
-					}
-
 				inner.aggregate(
-					stages
+					pipeline.chain.toBsonList()
 				).asKtMongo()
 			}
 		)
