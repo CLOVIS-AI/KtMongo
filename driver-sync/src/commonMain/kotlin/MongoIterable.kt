@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,4 +83,14 @@ interface MongoIterable<Document : Any> {
 	fun toSequence(): Sequence<Document> = throw UnsupportedOperationException("Sequences are not supported because they create memory lists. Use lists, streams, flows, or simply forEach instead.")
 
 	// endregion
+}
+
+internal interface LazyMongoIterable<Document : Any> : MongoIterable<Document> {
+	fun asIterable(): MongoIterable<Document>
+
+	override fun firstOrNull(): Document? =
+		asIterable().firstOrNull()
+
+	override fun forEach(action: (Document) -> Unit) =
+		asIterable().forEach(action)
 }
