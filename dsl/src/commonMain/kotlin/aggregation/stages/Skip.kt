@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,61 +19,61 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.aggregation.PipelineFeature
-import opensavvy.ktmongo.dsl.aggregation.PipelineType
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 
 /**
- * Marks that a pipeline is able to [skip].
+ * Pipeline implementing the `$skip` stage.
  */
-@OptIn(DangerousMongoApi::class)
-interface HasSkip : PipelineFeature
+@KtMongoDsl
+interface HasSkip<Document : Any> : Pipeline<Document> {
 
-/**
- * Skips over the specified [amount] of documents that pass into the stage,
- * and passes the remaining documents to the next stage.
- *
- * ### Using skip with sorted results
- *
- * Sort results aren't stable with `skip`: if multiple documents are identical, their relative order is undefined
- * and may change from one execution to the next.
- *
- * To avoid surprises, include a unique field in your sort, for example `_id`.
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)
- *
- * @see limit Limit the number of elements.
- */
-@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <Type, Document : Any> Pipeline<Type, Document>.skip(amount: Long): Pipeline<Type, Document>
-	where Type : PipelineType, Type : HasSkip =
-	withStage(SkipStage(amount, context))
+	/**
+	 * Skips over the specified [amount] of documents that pass into the stage,
+	 * and passes the remaining documents to the next stage.
+	 *
+	 * ### Using skip with sorted results
+	 *
+	 * Sort results aren't stable with `skip`: if multiple documents are identical, their relative order is undefined
+	 * and may change from one execution to the next.
+	 *
+	 * To avoid surprises, include a unique field in your sort, for example `_id`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)
+	 *
+	 * @see HasLimit.limit Limit the number of elements.
+	 */
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	fun skip(amount: Long): Pipeline<Document> =
+		withStage(SkipStage(amount, context))
 
-/**
- * Skips over the specified [amount] of documents that pass into the stage,
- * and passes the remaining documents to the next stage.
- *
- * ### Using skip with sorted results
- *
- * Sort results aren't stable with `skip`: if multiple documents are identical, their relative order is undefined
- * and may change from one execution to the next.
- *
- * To avoid surprises, include a unique field in your sort, for example `_id`.
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)
- *
- * @see limit Limit the number of elements.
- */
-@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <Type, Document : Any> Pipeline<Type, Document>.skip(amount: Int): Pipeline<Type, Document>
-	where Type : PipelineType, Type : HasSkip =
-	skip(amount.toLong())
+	/**
+	 * Skips over the specified [amount] of documents that pass into the stage,
+	 * and passes the remaining documents to the next stage.
+	 *
+	 * ### Using skip with sorted results
+	 *
+	 * Sort results aren't stable with `skip`: if multiple documents are identical, their relative order is undefined
+	 * and may change from one execution to the next.
+	 *
+	 * To avoid surprises, include a unique field in your sort, for example `_id`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/)
+	 *
+	 * @see HasLimit.limit Limit the number of elements.
+	 */
+	@KtMongoDsl
+	fun skip(amount: Int): Pipeline<Document> =
+		skip(amount.toLong())
+
+}
 
 private class SkipStage(
 	val amount: Long,

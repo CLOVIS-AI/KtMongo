@@ -21,7 +21,9 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.*
+import opensavvy.ktmongo.dsl.aggregation.Pipeline
+import opensavvy.ktmongo.dsl.aggregation.Value
+import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
@@ -31,23 +33,26 @@ import opensavvy.ktmongo.dsl.path.Path
 import kotlin.reflect.KProperty1
 
 /**
- * Marks that a pipeline is able to use [set].
+ * Pipeline implementing the `$set` stage.
  */
-@OptIn(DangerousMongoApi::class)
-interface HasSet : PipelineFeature
+@KtMongoDsl
+interface HasSet<Document : Any> : Pipeline<Document> {
 
-/**
- * Adds new fields to documents, or overwrites existing fields.
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/)
- */
-@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <Type, Document : Any> Pipeline<Type, Document>.set(
-	block: SetOperators<Document>.() -> Unit,
-): Pipeline<Type, Document> where Type : PipelineType, Type : HasSet =
-	withStage(SetStage(SetExpression<Document>(context).apply(block), context))
+	/**
+	 * Adds new fields to documents, or overwrites existing fields.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/)
+	 */
+	@KtMongoDsl
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	fun set(
+		block: SetOperators<Document>.() -> Unit,
+	): Pipeline<Document> =
+		withStage(SetStage(SetExpression<Document>(context).apply(block), context))
+
+}
 
 @OptIn(LowLevelApi::class)
 private class SetStage(

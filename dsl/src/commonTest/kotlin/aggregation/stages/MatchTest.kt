@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 
 package opensavvy.ktmongo.dsl.aggregation.stages
 
-import opensavvy.ktmongo.dsl.aggregation.PipelineType
-import opensavvy.ktmongo.dsl.aggregation.aggregate
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.match
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.filter.eq
@@ -30,7 +29,7 @@ class MatchTest : PreparedSpec({
 	)
 
 	test("Simple $match") {
-		aggregate<_, Target>(PipelineType.Aggregate)
+		TestPipeline<Target>()
 			.match { Target::foo eq "Bob" }
 			.shouldBeBson("""
 				[

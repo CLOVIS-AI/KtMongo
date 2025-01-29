@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,36 +19,36 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.aggregation.PipelineFeature
-import opensavvy.ktmongo.dsl.aggregation.PipelineType
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 
 /**
- * Marks that a pipeline is able to [sample].
+ * Pipeline implementing the `$sample` stage.
  */
-@OptIn(DangerousMongoApi::class)
-interface HasSample : PipelineFeature
+@KtMongoDsl
+interface HasSample<Document : Any> : Pipeline<Document> {
 
-/**
- * Randomly selects [size] documents.
- *
- * ### Pipeline optimizations
- *
- * MongoDB is able to perform sampling more efficiently if it is the first stage of the pipeline and [size] is less
- * than 5% of the collection size.
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/)
- *
- * @see limit Selects the first elements found.
- */
-@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <Type, Document : Any> Pipeline<Type, Document>.sample(size: Int): Pipeline<Type, Document>
-	where Type : PipelineType, Type : HasSample =
-	withStage(SampleStage(size, context))
+	/**
+	 * Randomly selects [size] documents.
+	 *
+	 * ### Pipeline optimizations
+	 *
+	 * MongoDB is able to perform sampling more efficiently if it is the first stage of the pipeline and [size] is less
+	 * than 5% of the collection size.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/)
+	 *
+	 * @see HasLimit.limit Selects the first elements found.
+	 */
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	fun sample(size: Int): Pipeline<Document> =
+		withStage(SampleStage(size, context))
+}
 
 private class SampleStage(
 	val size: Int,
