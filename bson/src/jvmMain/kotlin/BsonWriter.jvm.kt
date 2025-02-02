@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -224,6 +224,11 @@ private class JavaBsonWriter(
 
 }
 
+/**
+ * Creates a BSON document with the contents defined in [block].
+ *
+ * The returned type is from the official MongoDB BSON library.
+ */
 @LowLevelApi
 actual fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson {
 	val document = BsonDocument()
@@ -349,6 +354,11 @@ private class JavaRootArrayWriter(
 
 }
 
+/**
+ * Creates a BSON document with the contents defined in [block].
+ *
+ * The returned type is from the official MongoDB BSON library.
+ */
 @LowLevelApi
 actual fun buildBsonArray(block: BsonValueWriter.() -> Unit): opensavvy.ktmongo.bson.BsonArray {
 	val nativeArray = BsonArray()
