@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,7 @@ package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.UpdateOperators
-import opensavvy.ktmongo.dsl.expr.UpsertOperators
+import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.BulkWrite
 import opensavvy.ktmongo.dsl.options.*
@@ -80,6 +77,21 @@ private class FilteredCollection<Document : Any>(
 		)
 	}
 
+	override fun updateManyWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		upstream.updateManyWithPipeline(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			},
+			update = update,
+		)
+	}
+
 	override fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterOperators<Document>.() -> Unit,
@@ -95,12 +107,42 @@ private class FilteredCollection<Document : Any>(
 		)
 	}
 
+	override fun updateOneWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		upstream.updateOneWithPipeline(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			},
+			update = update,
+		)
+	}
+
 	override fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterOperators<Document>.() -> Unit,
 		update: UpsertOperators<Document>.() -> Unit,
 	) {
 		upstream.upsertOne(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			},
+			update = update,
+		)
+	}
+
+	override fun upsertOneWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		upstream.upsertOneWithPipeline(
 			options = options,
 			filter = {
 				globalFilter()
@@ -172,6 +214,9 @@ private class FilteredCollection<Document : Any>(
 
 	override fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) =
 		upstream.insertMany(documents, options)
+
+	override fun aggregate(): MongoAggregationPipeline<Document> =
+		upstream.aggregate().match(globalFilter)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String {

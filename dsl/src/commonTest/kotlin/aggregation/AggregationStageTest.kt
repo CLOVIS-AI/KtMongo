@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.stages.match
 import opensavvy.ktmongo.dsl.expr.filter.eq
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
@@ -30,11 +29,11 @@ class AggregationStageTest : PreparedSpec({
 	)
 
 	test("Empty pipeline") {
-		aggregate<_, Target>(PipelineType.Aggregate) shouldBeBson "[]"
+		TestPipeline<Target>() shouldBeBson "[]"
 	}
 
 	test("Single-stage pipeline") {
-		aggregate<_, Target>(PipelineType.Aggregate)
+		TestPipeline<Target>()
 			.match { Target::foo eq "Bob" }
 			.shouldBeBson("""
 				[

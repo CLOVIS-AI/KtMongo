@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 
 package opensavvy.ktmongo.dsl.aggregation
 
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.expr.common.Expression
 import opensavvy.ktmongo.dsl.expr.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.testContext
 
@@ -27,9 +29,26 @@ val skip = "\$skip"
 val set = "\$set"
 
 @OptIn(LowLevelApi::class)
-fun <Type : PipelineType, Document : Any> aggregate(type: Type) =
-	Pipeline<Type, Document>(testContext(), type)
+class TestPipeline<Document : Any>(
+	chain: PipelineChainLink = PipelineChainLink(testContext(), null, null)
+) : AbstractPipeline<Document>(
+	testContext(),
+	chain,
+), AggregationPipeline<Document>, UpdatePipeline<Document> {
 
-infix fun Pipeline<*, *>.shouldBeBson(expected: String) {
+	@DangerousMongoApi
+	@LowLevelApi
+	override fun withStage(stage: Expression): TestPipeline<Document> =
+		TestPipeline(chain.withStage(stage))
+
+	@Suppress("UNCHECKED_CAST")
+	@DangerousMongoApi
+	@LowLevelApi
+	override fun <New : Any> reinterpret(): TestPipeline<New> =
+		this as TestPipeline<New>
+
+}
+
+infix fun Pipeline<*>.shouldBeBson(expected: String) {
 	this.toString() shouldBeBson expected
 }

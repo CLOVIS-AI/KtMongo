@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,13 +17,15 @@
 package opensavvy.ktmongo.dsl.aggregation.stages
 
 import io.kotest.assertions.throwables.shouldThrow
-import opensavvy.ktmongo.dsl.aggregation.*
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
+import opensavvy.ktmongo.dsl.aggregation.limit
+import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 class LimitTest : PreparedSpec({
 
 	test("Nominal $limit") {
-		aggregate<_, Nothing>(PipelineType.Aggregate)
+		TestPipeline<Nothing>()
 			.limit(5)
 			.shouldBeBson("""
 				[
@@ -35,7 +37,7 @@ class LimitTest : PreparedSpec({
 	}
 
 	test("Limit of 0 is kept") {
-		aggregate<_, Nothing>(PipelineType.Aggregate)
+		TestPipeline<Nothing>()
 			.limit(0)
 			.shouldBeBson("""
 				[
@@ -48,7 +50,7 @@ class LimitTest : PreparedSpec({
 
 	test("Limit less than 0 is forbidden") {
 		shouldThrow<IllegalArgumentException> {
-			aggregate<_, Nothing>(PipelineType.Aggregate)
+			TestPipeline<Nothing>()
 				.limit(-1)
 		}
 	}

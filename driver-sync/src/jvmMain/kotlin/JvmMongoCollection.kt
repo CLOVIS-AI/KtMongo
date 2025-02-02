@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.*
@@ -174,6 +175,54 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	}
 
 	// endregion
+	// region Update with pipeline
+
+	@OptIn(LowLevelApi::class)
+	override fun updateManyWithPipeline(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		val model = UpdateManyWithPipeline<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		inner.updateMany(model.filter.toBsonDocument(), model.updates, UpdateOptions())
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun updateOneWithPipeline(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		val model = UpdateOneWithPipeline<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		inner.updateOne(model.filter.toBsonDocument(), model.updates, UpdateOptions())
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun upsertOneWithPipeline(
+		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		filter: FilterOperators<Document>.() -> Unit,
+		update: UpdatePipelineOperators<Document>.() -> Unit,
+	) {
+		val model = UpsertOneWithPipeline<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		inner.updateOne(model.filter.toBsonDocument(), model.updates, UpdateOptions().upsert(true))
+	}
+
+	// endregion
 	// region Insert
 
 	@OptIn(LowLevelApi::class)
@@ -240,6 +289,21 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 		inner.drop(DropCollectionOptions())
 	}
+
+	// endregion
+	// region Aggregation
+
+	@OptIn(LowLevelApi::class)
+	override fun aggregate(): MongoAggregationPipeline<Document> =
+		MongoAggregationPipeline<Document>(
+			context = context,
+			chain = PipelineChainLink(context),
+			iterableBuilder = { pipeline ->
+				inner.aggregate(
+					pipeline.chain.toBsonList()
+				).asKtMongo()
+			}
+		)
 
 	// endregion
 

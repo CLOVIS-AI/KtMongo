@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,61 +19,61 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.aggregation.PipelineFeature
-import opensavvy.ktmongo.dsl.aggregation.PipelineType
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 
 /**
- * Marks that a pipeline is able to [limit].
+ * Pipeline implementing the `$limit` stage.
  */
-@OptIn(DangerousMongoApi::class)
-interface HasLimit : PipelineFeature
+@KtMongoDsl
+interface HasLimit<Document : Any> : Pipeline<Document> {
 
-/**
- * Limits the number of elements passed to the next stage to [amount].
- *
- * ### Using limit with sorted results
- *
- * Sort results aren't stable with `limit`: if multiple documents are identical, their relative order is undefined
- * and may change from one execution to the next.
- *
- * To avoid surprises, include a unique field in your sort, for example `_id`.
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)
- *
- * @see skip Skip over an amount of elements.
- * @see sample Randomly limit the number of elements.
- */
-@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <Type, Document : Any> Pipeline<Type, Document>.limit(amount: Long): Pipeline<Type, Document>
-	where Type : PipelineType, Type : HasLimit =
-	withStage(LimitStage(amount, context))
+	/**
+	 * Limits the number of elements passed to the next stage to [amount].
+	 *
+	 * ### Using limit with sorted results
+	 *
+	 * Sort results aren't stable with `limit`: if multiple documents are identical, their relative order is undefined
+	 * and may change from one execution to the next.
+	 *
+	 * To avoid surprises, include a unique field in your sort, for example `_id`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)
+	 *
+	 * @see HasSkip.skip Skip over an amount of elements.
+	 * @see HasSample.sample Randomly limit the number of elements.
+	 */
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	fun limit(amount: Long): Pipeline<Document> =
+		withStage(LimitStage(amount, context))
 
-/**
- * Limits the number of elements passed to the next stage to [amount].
- *
- * ### Using limit with sorted results
- *
- * Sort results aren't stable with `limit`: if multiple documents are identical, their relative order is undefined
- * and may change from one execution to the next.
- *
- * To avoid surprises, include a unique field in your sort, for example `_id`.
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)
- *
- * @see skip Skip over an amount of elements.
- * @see sample Randomly limit the number of elements.
- */
-@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <Type, Document : Any> Pipeline<Type, Document>.limit(amount: Int): Pipeline<Type, Document>
-	where Type : PipelineType, Type : HasLimit =
-	limit(amount.toLong())
+	/**
+	 * Limits the number of elements passed to the next stage to [amount].
+	 *
+	 * ### Using limit with sorted results
+	 *
+	 * Sort results aren't stable with `limit`: if multiple documents are identical, their relative order is undefined
+	 * and may change from one execution to the next.
+	 *
+	 * To avoid surprises, include a unique field in your sort, for example `_id`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/)
+	 *
+	 * @see HasSkip.skip Skip over an amount of elements.
+	 * @see HasSample.sample Randomly limit the number of elements.
+	 */
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	fun limit(amount: Int): Pipeline<Document> =
+		limit(amount.toLong())
+}
 
 private class LimitStage(
 	val amount: Long,

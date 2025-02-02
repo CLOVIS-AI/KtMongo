@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,7 @@
 package opensavvy.ktmongo.dsl.aggregation.stages
 
 import io.kotest.assertions.throwables.shouldThrow
-import opensavvy.ktmongo.dsl.aggregation.PipelineType
-import opensavvy.ktmongo.dsl.aggregation.aggregate
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.sample
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.kotest.PreparedSpec
@@ -26,7 +25,7 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
 class SampleTest : PreparedSpec({
 
 	test(sample) {
-		aggregate<_, Nothing>(PipelineType.Aggregate)
+		TestPipeline<Nothing>()
 			.sample(5)
 			.shouldBeBson("""
 				[
@@ -41,14 +40,14 @@ class SampleTest : PreparedSpec({
 
 	test("Sample of 0 elements is forbidden") {
 		shouldThrow<IllegalArgumentException> {
-			aggregate<_, Nothing>(PipelineType.Aggregate)
+			TestPipeline<Nothing>()
 				.sample(0)
 		}
 	}
 
 	test("Sample of less than 0 elements is forbidden") {
 		shouldThrow<IllegalArgumentException> {
-			aggregate<_, Nothing>(PipelineType.Aggregate)
+			TestPipeline<Nothing>()
 				.sample(-1)
 		}
 	}

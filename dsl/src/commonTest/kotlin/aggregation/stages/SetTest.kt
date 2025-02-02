@@ -16,7 +16,10 @@
 
 package opensavvy.ktmongo.dsl.aggregation.stages
 
-import opensavvy.ktmongo.dsl.aggregation.*
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
+import opensavvy.ktmongo.dsl.aggregation.literal
+import opensavvy.ktmongo.dsl.aggregation.set
+import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.filter.gt
 import opensavvy.prepared.runner.kotest.PreparedSpec
 import kotlin.text.Typography.dollar
@@ -30,7 +33,7 @@ class SetTest : PreparedSpec({
 	)
 
 	test("Simple $set") {
-		aggregate<_, Target>(PipelineType.Update)
+		TestPipeline<Target>()
 			.set {
 				Target::foo set "bar"
 				Target::isAlive set (of(Target::deathDate) gt of(18))

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,14 @@
 package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.sync.operations.*
+import opensavvy.ktmongo.sync.operations.operations.UpdatePipelineOperations
 
 /**
  * Methods to interact with a MongoDB collection.
  *
  * ### Operations
  *
+ * - [aggregate][AggregationOperations.aggregate]
  * - [bulkWrite][UpdateOperations.bulkWrite]
  * - [count][CountOperations.count]
  * - [countEstimated][CountOperations.countEstimated]
@@ -48,4 +50,6 @@ interface MongoCollection<Document : Any> :
 	UpdateOperations<Document>,
 	DeleteOperations<Document>,
 	CollectionOperations<Document>,
-	InsertOperations<Document>
+	InsertOperations<Document>,
+	AggregationOperations<Document>,
+	UpdatePipelineOperations<Document>
