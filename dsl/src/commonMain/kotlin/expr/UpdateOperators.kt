@@ -130,6 +130,134 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 		this.field.set(value)
 	}
 
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.updateMany {
+	 *     User::age.setIf(someComplexOperation, 18)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 *
+	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: V) {
+		if (condition)
+			this set value
+	}
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.updateMany {
+	 *     User::age.setIf(someComplexOperation, 18)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 *
+	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setIf(condition: Boolean, value: V) =
+		this.field.setIf(condition, value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.updateMany {
+	 *     User::age.setUnless(someComplexOperation, 18)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 *
+	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: V) {
+		if (!condition)
+			this set value
+	}
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.updateMany {
+	 *     User::age.setUnless(someComplexOperation, 18)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 *
+	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setUnless(condition: Boolean, value: V) =
+		this.field.setUnless(condition, value)
+
 	// endregion
 	// region $inc
 

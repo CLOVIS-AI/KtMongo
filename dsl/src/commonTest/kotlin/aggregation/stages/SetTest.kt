@@ -16,10 +16,7 @@
 
 package opensavvy.ktmongo.dsl.aggregation.stages
 
-import opensavvy.ktmongo.dsl.aggregation.TestPipeline
-import opensavvy.ktmongo.dsl.aggregation.literal
-import opensavvy.ktmongo.dsl.aggregation.set
-import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
+import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.ktmongo.dsl.expr.filter.gt
 import opensavvy.prepared.runner.kotest.PreparedSpec
 import kotlin.text.Typography.dollar
@@ -57,6 +54,96 @@ class SetTest : PreparedSpec({
 					}
 				]
 			""".trimIndent())
+	}
+
+	suite("setIf and setUnless") {
+
+		test("Aggregation values") {
+			TestPipeline<Target>()
+				.set {
+					Target::deathDate.setIf(of(Target::isAlive), of(12))
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"deathDate": {
+									"$cond": {
+										"if": "${dollar}isAlive",
+										"then": {
+											"$literal": 12
+										},
+										"else": "${dollar}deathDate"
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Kotlin values") {
+			TestPipeline<Target>()
+				.set {
+					Target::deathDate.setIf(of(Target::isAlive), 12)
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"deathDate": {
+									"$cond": {
+										"if": "${dollar}isAlive",
+										"then": {
+											"$literal": 12
+										},
+										"else": "${dollar}deathDate"
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Boolean condition") {
+			TestPipeline<Target>()
+				.set {
+					Target::deathDate.setIf(true, of(12))
+					Target::deathDate.setIf(false, of(13))
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"deathDate": {
+									"$literal": 12
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Boolean condition and Kotlin values") {
+			TestPipeline<Target>()
+				.set {
+					Target::deathDate.setIf(true, 12)
+					Target::deathDate.setIf(false, 13)
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"deathDate": {
+									"$literal": 12
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
 	}
 
 })
