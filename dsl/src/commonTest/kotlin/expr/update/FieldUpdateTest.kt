@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,8 +127,8 @@ class FieldUpdateTest : PreparedSpec({
 
 		test("Multiple fields") {
 			update {
-				User::money inc 5.2
-				User::bestFriend / Friend::money inc -5.2f
+				User::money += 5.2
+				User::bestFriend / Friend::money += -5.2f
 			} shouldBeBson """
 				{
 					"$inc": {
