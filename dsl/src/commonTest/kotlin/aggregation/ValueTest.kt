@@ -23,6 +23,7 @@ import opensavvy.ktmongo.dsl.expr.testContext
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 const val literal = "\$literal"
+const val cond = "\$cond"
 
 @LowLevelApi
 class ValueTest : PreparedSpec({

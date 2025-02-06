@@ -78,4 +78,22 @@ class AggregationTests : PreparedSpec({
 
 		check(Song(creationDate = 12, editionDate = 1) in anomalies.find().toList())
 	}
+
+	test("Update with a condition") {
+		songs().insertOne(Song(creationDate = 0, editionDate = 1))
+		songs().insertOne(Song(creationDate = 1, editionDate = 1))
+		songs().insertOne(Song(creationDate = 2, editionDate = 3))
+
+		songs().updateManyWithPipeline {
+			set {
+				Song::creationDate set cond(
+					of(Song::editionDate) gt of(Song::creationDate),
+					of(12),
+					of(11)
+				)
+			}
+		}
+
+		check(Song(creationDate = 12, editionDate = 3) in songs().find().toList())
+	}
 })

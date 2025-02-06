@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ import kotlin.reflect.KProperty1
  * ### Operators
  *
  * On regular fields:
- * - [`$inc`][inc]
+ * - [`$inc`][plusAssign]
  * - [`$rename`][renameTo]
  * - [`$set`][set]
  * - [`$setOnInsert`][UpsertOperators.setOnInsert] (only for [upserts][UpsertOperators])
@@ -130,6 +130,134 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 		this.field.set(value)
 	}
 
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.updateMany {
+	 *     User::age.setIf(someComplexOperation, 18)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 *
+	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: V) {
+		if (condition)
+			this set value
+	}
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.updateMany {
+	 *     User::age.setIf(someComplexOperation, 18)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 *
+	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setIf(condition: Boolean, value: V) =
+		this.field.setIf(condition, value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.updateMany {
+	 *     User::age.setUnless(someComplexOperation, 18)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 *
+	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: V) {
+		if (!condition)
+			this set value
+	}
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.updateMany {
+	 *     User::age.setUnless(someComplexOperation, 18)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 *
+	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setUnless(condition: Boolean, value: V) =
+		this.field.setUnless(condition, value)
+
 	// endregion
 	// region $inc
 
@@ -198,6 +326,72 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	infix fun <@kotlin.internal.OnlyInputTypes V : Number> KProperty1<T, V>.inc(amount: V) {
 		this.field.inc(amount)
 	}
+
+	/**
+	 * Increments a field by the specified [amount].
+	 *
+	 * [amount] may be negative, in which case the field is decremented.
+	 *
+	 * If the field doesn't exist (either the document doesn't have it, or the operation is an upsert and a new document is created),
+	 * the field is created with an initial value of [amount].
+	 *
+	 * Use of this operator with a field with a `null` value will generate an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * // It's the new year!
+	 * collection.updateMany {
+	 *     User::age += 1
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.plusAssign(amount: V): Unit =
+		this.inc(amount)
+
+	/**
+	 * Increments a field by the specified [amount].
+	 *
+	 * [amount] may be negative, in which case the field is decremented.
+	 *
+	 * If the field doesn't exist (either the document doesn't have it, or the operation is an upsert and a new document is created),
+	 * the field is created with an initial value of [amount].
+	 *
+	 * Use of this operator with a field with a `null` value will generate an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * // It's the new year!
+	 * collection.updateMany {
+	 *     User::age += 1
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <@kotlin.internal.OnlyInputTypes V : Number> KProperty1<T, V>.plusAssign(amount: V): Unit =
+		this.field.plusAssign(amount)
 
 	// endregion
 	// region $unset

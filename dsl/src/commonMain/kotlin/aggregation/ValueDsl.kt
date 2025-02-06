@@ -21,6 +21,7 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.operators.ComparisonValueOperators
+import opensavvy.ktmongo.dsl.aggregation.operators.ConditionalOperators
 import opensavvy.ktmongo.dsl.aggregation.operators.ValueOperators
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.path.Field
@@ -94,7 +95,8 @@ import kotlin.reflect.KProperty1
  */
 @KtMongoDsl
 interface ValueDsl : ValueOperators,
-	ComparisonValueOperators {
+	ComparisonValueOperators,
+	ConditionalOperators {
 
 	/**
 	 * Refers to a [field] within an [aggregation value][ValueDsl].
