@@ -20,6 +20,7 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.operators.ArithmeticValueOperators
 import opensavvy.ktmongo.dsl.aggregation.operators.ComparisonValueOperators
 import opensavvy.ktmongo.dsl.aggregation.operators.ConditionalOperators
 import opensavvy.ktmongo.dsl.aggregation.operators.ValueOperators
@@ -94,12 +95,16 @@ import kotlin.reflect.KProperty1
  * - [`$gte`][gte]
  * - [`$lte`][lte]
  *
+ * Combine values:
+ * - [`$add`][plus]
+ *
  * @see Value Representation of an aggregation value.
  */
 @KtMongoDsl
 interface ValueDsl : ValueOperators,
 	ComparisonValueOperators,
-	ConditionalOperators {
+	ConditionalOperators,
+	ArithmeticValueOperators {
 
 	/**
 	 * Refers to a [field] within an [aggregation value][ValueDsl].
