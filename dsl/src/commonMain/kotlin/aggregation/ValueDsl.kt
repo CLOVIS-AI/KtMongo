@@ -19,7 +19,7 @@ package opensavvy.ktmongo.dsl.aggregation
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.aggregation.operators.ArithmeticValueOperators
 import opensavvy.ktmongo.dsl.aggregation.operators.ComparisonValueOperators
-import opensavvy.ktmongo.dsl.aggregation.operators.ConditionalOperators
+import opensavvy.ktmongo.dsl.aggregation.operators.ConditionalValueOperators
 import opensavvy.ktmongo.dsl.aggregation.operators.ValueOperators
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.path.Field
@@ -99,5 +99,5 @@ import opensavvy.ktmongo.dsl.path.Field
 @KtMongoDsl
 interface ValueDsl : ValueOperators,
 	ComparisonValueOperators,
-	ConditionalOperators,
+	ConditionalValueOperators,
 	ArithmeticValueOperators
