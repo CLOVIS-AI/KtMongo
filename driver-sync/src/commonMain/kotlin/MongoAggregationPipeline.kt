@@ -24,7 +24,7 @@ import opensavvy.ktmongo.dsl.aggregation.AbstractPipeline
 import opensavvy.ktmongo.dsl.aggregation.AggregationPipeline
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
-import opensavvy.ktmongo.dsl.aggregation.stages.SetOperators
+import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.common.Expression
 
@@ -74,7 +74,7 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 		super.sample(size) as MongoAggregationPipeline<Output>
 
 	@KtMongoDsl
-	override fun set(block: SetOperators<Output>.() -> Unit): MongoAggregationPipeline<Output> =
+	override fun set(block: SetStageOperators<Output>.() -> Unit): MongoAggregationPipeline<Output> =
 		super.set(block) as MongoAggregationPipeline<Output>
 
 	@KtMongoDsl
