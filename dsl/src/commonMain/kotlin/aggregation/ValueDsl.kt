@@ -16,16 +16,13 @@
 
 package opensavvy.ktmongo.dsl.aggregation
 
-import opensavvy.ktmongo.bson.BsonContext
-import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.operators.ArithmeticValueOperators
 import opensavvy.ktmongo.dsl.aggregation.operators.ComparisonValueOperators
-import opensavvy.ktmongo.dsl.aggregation.operators.ConditionalOperators
+import opensavvy.ktmongo.dsl.aggregation.operators.ConditionalValueOperators
 import opensavvy.ktmongo.dsl.aggregation.operators.ValueOperators
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.path.Field
-import kotlin.reflect.KProperty1
 
 /**
  * DSL to instantiate aggregation values, usually automatically added into scope by aggregation stages.
@@ -83,6 +80,9 @@ import kotlin.reflect.KProperty1
  * Access values:
  * - [`$literal`][of]
  *
+ * Conditionally compute values:
+ * - [`$cond`][cond]
+ *
  * Compare values:
  * - [`$eq`][eq]
  * - [`$ne`][ne]
@@ -91,101 +91,13 @@ import kotlin.reflect.KProperty1
  * - [`$gte`][gte]
  * - [`$lte`][lte]
  *
+ * Combine values:
+ * - [`$add`][plus]
+ *
  * @see Value Representation of an aggregation value.
  */
 @KtMongoDsl
 interface ValueDsl : ValueOperators,
 	ComparisonValueOperators,
-	ConditionalOperators {
-
-	/**
-	 * Refers to a [field] within an [aggregation value][ValueDsl].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Product(
-	 *     val acceptanceDate: Instant,
-	 *     val publishingDate: Instant,
-	 * )
-	 *
-	 * val publishedBeforeAcceptance = products.find {
-	 *     expr {
-	 *         of(Product::publishingDate) lt of(Product::acceptanceDate)
-	 *     }
-	 * }
-	 * ```
-	 */
-	@OptIn(LowLevelApi::class)
-	fun <Context : Any, Result> of(field: Field<Context, Result>): Value<Context, Result> =
-		FieldValue(field, context)
-
-	/**
-	 * Refers to a [field] within an [aggregation value][ValueDsl].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Product(
-	 *     val acceptanceDate: Instant,
-	 *     val publishingDate: Instant,
-	 * )
-	 *
-	 * val publishedBeforeAcceptance = products.find {
-	 *     expr {
-	 *         of(Product::publishingDate) lt of(Product::acceptanceDate)
-	 *     }
-	 * }
-	 * ```
-	 */
-	fun <Context : Any, Result> of(field: KProperty1<Context, Result>): Value<Context, Result> =
-		of(field.field)
-
-	/**
-	 * Refers to a Kotlin [value] within an [aggregation value][ValueDsl].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Product(
-	 *     val age: Int,
-	 * )
-	 *
-	 * val publishedBeforeAcceptance = products.find {
-	 *     expr {
-	 *         of(Product::age) lt of(15)
-	 *     }
-	 * }
-	 * ```
-	 */
-	@OptIn(LowLevelApi::class)
-	fun <Result> of(value: Result): Value<Any, Result> =
-		LiteralValue(value, context)
-
-}
-
-@OptIn(LowLevelApi::class)
-private class FieldValue<Context : Any, Result>(
-	val field: Field<Context, Result>,
-	context: BsonContext,
-) : AbstractValue<Context, Result>(context) {
-
-	@LowLevelApi
-	override fun write(writer: BsonValueWriter) {
-		writer.writeString("$$field")
-	}
-}
-
-@OptIn(LowLevelApi::class)
-private class LiteralValue<Result>(
-	val value: Any?,
-	context: BsonContext,
-) : AbstractValue<Any, Result>(context) {
-
-	@LowLevelApi
-	override fun write(writer: BsonValueWriter) {
-		writer.writeDocument {
-			writeObjectSafe("\$literal", value, context)
-		}
-	}
-}
+	ConditionalValueOperators,
+	ArithmeticValueOperators

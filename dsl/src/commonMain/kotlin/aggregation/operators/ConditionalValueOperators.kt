@@ -30,7 +30,7 @@ import opensavvy.ktmongo.dsl.aggregation.ValueDsl
  * To learn more about aggregation operators, view [ValueDsl].
  */
 @KtMongoDsl
-interface ConditionalOperators : ValueOperators {
+interface ConditionalValueOperators : ValueOperators {
 
 	/**
 	 * Decides between two [values][Value] depending on the evaluation of a boolean value.

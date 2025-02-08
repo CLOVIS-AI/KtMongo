@@ -49,7 +49,7 @@ interface HasSet<Document : Any> : Pipeline<Document> {
 	@KtMongoDsl
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun set(
-		block: SetOperators<Document>.() -> Unit,
+		block: SetStageOperators<Document>.() -> Unit,
 	): Pipeline<Document> =
 		withStage(createSetStage(context, block))
 
@@ -57,7 +57,7 @@ interface HasSet<Document : Any> : Pipeline<Document> {
 
 @OptIn(LowLevelApi::class)
 private class SetStage(
-	val expression: SetOperators<*>,
+	val expression: SetStageOperators<*>,
 	context: BsonContext,
 ) : AbstractExpression(context) {
 	override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -67,14 +67,14 @@ private class SetStage(
 	}
 }
 
-internal fun <Document : Any> createSetStage(context: BsonContext, block: SetOperators<Document>.() -> Unit): Expression =
-	SetStage(SetExpression<Document>(context).apply(block), context)
+internal fun <Document : Any> createSetStage(context: BsonContext, block: SetStageOperators<Document>.() -> Unit): Expression =
+	SetStage(SetStageExpression<Document>(context).apply(block), context)
 
 /**
  * The operators allowed in a [set] stage.
  */
 @KtMongoDsl
-interface SetOperators<T : Any> : CompoundExpression, ValueDsl, FieldDsl {
+interface SetStageOperators<T : Any> : CompoundExpression, ValueDsl, FieldDsl {
 
 	// region $set
 
@@ -383,9 +383,9 @@ interface SetOperators<T : Any> : CompoundExpression, ValueDsl, FieldDsl {
 	// endregion
 }
 
-private class SetExpression<T : Any>(
+private class SetStageExpression<T : Any>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), SetOperators<T> {
+) : AbstractCompoundExpression(context), SetStageOperators<T> {
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun <V> Field<T, V>.set(value: Value<T, V>) {

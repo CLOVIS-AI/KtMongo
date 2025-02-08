@@ -27,6 +27,7 @@ val match = "\$match"
 val sample = "\$sample"
 val skip = "\$skip"
 val set = "\$set"
+val add = "\$add"
 
 @OptIn(LowLevelApi::class)
 class TestPipeline<Document : Any>(

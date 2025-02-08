@@ -21,7 +21,7 @@ import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.stages.SetOperators
+import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
 import opensavvy.ktmongo.dsl.aggregation.stages.createSetStage
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
@@ -59,7 +59,7 @@ interface UpdatePipelineOperators<Document : Any> : CompoundExpression {
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun set(
-		block: SetOperators<Document>.() -> Unit,
+		block: SetStageOperators<Document>.() -> Unit,
 	) {
 		accept(createSetStage(context, block))
 	}
