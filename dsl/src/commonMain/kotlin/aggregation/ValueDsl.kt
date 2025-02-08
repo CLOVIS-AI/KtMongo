@@ -83,6 +83,9 @@ import kotlin.reflect.KProperty1
  * Access values:
  * - [`$literal`][of]
  *
+ * Conditionally compute values:
+ * - [`$cond`][cond]
+ *
  * Compare values:
  * - [`$eq`][eq]
  * - [`$ne`][ne]
