@@ -97,6 +97,8 @@ import opensavvy.ktmongo.dsl.path.Field
  * - [`$acosh`][acosh]
  * - [`$asin`][asin]
  * - [`$asinh`][asinh]
+ * - [`$atan`][atan]
+ * - [`$atanh`][atanh]
  *
  * @see Value Representation of an aggregation value.
  */

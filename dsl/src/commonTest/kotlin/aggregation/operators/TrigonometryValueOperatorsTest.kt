@@ -23,6 +23,8 @@ val acos = "\$acos"
 val acosh = "\$acosh"
 val asin = "\$asin"
 val asinh = "\$asinh"
+val atan = "\$atan"
+val atanh = "\$atanh"
 
 class TrigonometryValueOperatorsTest : PreparedSpec({
 	class Target(
@@ -107,6 +109,42 @@ class TrigonometryValueOperatorsTest : PreparedSpec({
 							"$set": {
 								"b": {
 									"$asinh": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(atan) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set atan(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$atan": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(atanh) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set atanh(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$atanh": "$c"
 								}
 							}
 						}

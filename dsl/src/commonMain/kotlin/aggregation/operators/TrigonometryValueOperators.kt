@@ -159,6 +159,68 @@ interface TrigonometryValueOperators : ValueOperators {
 	fun <Context : Any> asinh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "asinh", value)
 
+	/**
+	 * The inverse tangent (arc tangent) of a value, in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set atan(of(Triangle::sideB) / of(Triangle::sideA))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> atan(value: Value<Context, Double?>): Value<Context, Double?> =
+		UnaryTrigonometryOperator(context, "atan", value)
+
+	/**
+	 * The inverse hyperbolic tangent (hyperbolic arc tangent) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set atanh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> atanh(value: Value<Context, Double?>): Value<Context, Double?> =
+		UnaryTrigonometryOperator(context, "atanh", value)
+
 	// endregion
 
 	@OptIn(LowLevelApi::class)
