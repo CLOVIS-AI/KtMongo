@@ -95,6 +95,8 @@ import opensavvy.ktmongo.dsl.path.Field
  * Trigonometric operators and angle management:
  * - [`$acos`][acos]
  * - [`$acosh`][acosh]
+ * - [`$asin`][asin]
+ * - [`$asinh`][asinh]
  *
  * @see Value Representation of an aggregation value.
  */

@@ -21,6 +21,8 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
 
 val acos = "\$acos"
 val acosh = "\$acosh"
+val asin = "\$asin"
+val asinh = "\$asinh"
 
 class TrigonometryValueOperatorsTest : PreparedSpec({
 	class Target(
@@ -31,7 +33,7 @@ class TrigonometryValueOperatorsTest : PreparedSpec({
 
 	val a = "\$a"
 	val b = "\$b"
-	"\$c"
+	val c = "\$c"
 
 	test(acos) {
 		TestPipeline<Target>()
@@ -69,6 +71,42 @@ class TrigonometryValueOperatorsTest : PreparedSpec({
 									"$acosh": {
 										"$literal": 2.0
 									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(asin) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set asin(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$asin": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(asinh) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set asinh(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$asinh": "$c"
 								}
 							}
 						}

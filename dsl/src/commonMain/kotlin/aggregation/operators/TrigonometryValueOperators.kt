@@ -97,6 +97,68 @@ interface TrigonometryValueOperators : ValueOperators {
 	fun <Context : Any> acosh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "acosh", value)
 
+	/**
+	 * The inverse sine (arc sine) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set asin(of(Triangle::sideA) / of(Triangle::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> asin(value: Value<Context, Double?>): Value<Context, Double?> =
+		UnaryTrigonometryOperator(context, "asin", value)
+
+	/**
+	 * The inverse hyperbolic sine (hyperbolic arc sine) of a value, in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set asinh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> asinh(value: Value<Context, Double?>): Value<Context, Double?> =
+		UnaryTrigonometryOperator(context, "asinh", value)
+
 	// endregion
 
 	@OptIn(LowLevelApi::class)
