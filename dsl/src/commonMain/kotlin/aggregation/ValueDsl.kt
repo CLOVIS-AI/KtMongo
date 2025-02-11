@@ -17,10 +17,7 @@
 package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.aggregation.operators.ArithmeticValueOperators
-import opensavvy.ktmongo.dsl.aggregation.operators.ComparisonValueOperators
-import opensavvy.ktmongo.dsl.aggregation.operators.ConditionalValueOperators
-import opensavvy.ktmongo.dsl.aggregation.operators.ValueOperators
+import opensavvy.ktmongo.dsl.aggregation.operators.*
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.path.Field
 
@@ -95,10 +92,14 @@ import opensavvy.ktmongo.dsl.path.Field
  * - [`$abs`][abs]
  * - [`$add`][plus]
  *
+ * Trigonometric operators and angle management:
+ * - [`$acos`][acos]
+ *
  * @see Value Representation of an aggregation value.
  */
 @KtMongoDsl
 interface ValueDsl : ValueOperators,
 	ComparisonValueOperators,
 	ConditionalValueOperators,
-	ArithmeticValueOperators
+	ArithmeticValueOperators,
+	TrigonometryValueOperators
