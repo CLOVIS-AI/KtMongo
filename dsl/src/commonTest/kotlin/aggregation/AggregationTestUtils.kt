@@ -27,6 +27,7 @@ val match = "\$match"
 val sample = "\$sample"
 val skip = "\$skip"
 val set = "\$set"
+val abs = "\$abs"
 val add = "\$add"
 
 @OptIn(LowLevelApi::class)

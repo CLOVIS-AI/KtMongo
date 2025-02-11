@@ -29,6 +29,28 @@ class ArithmeticValueOperatorsTest : PreparedSpec({
 	val score = "\$score"
 	val average = "\$average"
 
+	suite(abs) {
+		test("Usage with a number") {
+			TestPipeline<Target>()
+				.set {
+					Target::average set abs(of(5.2))
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"average": {
+									"$abs": {
+										"$literal": 5.2
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
 	suite(add) {
 		test("Binary usage") {
 			TestPipeline<Target>()

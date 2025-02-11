@@ -91,7 +91,8 @@ import opensavvy.ktmongo.dsl.path.Field
  * - [`$gte`][gte]
  * - [`$lte`][lte]
  *
- * Combine values:
+ * Arithmetic operators:
+ * - [`$abs`][abs]
  * - [`$add`][plus]
  *
  * @see Value Representation of an aggregation value.
