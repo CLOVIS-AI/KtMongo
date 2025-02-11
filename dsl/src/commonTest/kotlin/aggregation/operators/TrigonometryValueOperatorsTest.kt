@@ -16,13 +16,11 @@
 
 package opensavvy.ktmongo.dsl.aggregation.operators
 
-import opensavvy.ktmongo.dsl.aggregation.TestPipeline
-import opensavvy.ktmongo.dsl.aggregation.add
-import opensavvy.ktmongo.dsl.aggregation.set
-import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
+import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 val acos = "\$acos"
+val acosh = "\$acosh"
 
 class TrigonometryValueOperatorsTest : PreparedSpec({
 	class Target(
@@ -50,6 +48,26 @@ class TrigonometryValueOperatorsTest : PreparedSpec({
 											"$a",
 											"$b"
 										]
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(acosh) {
+		TestPipeline<Target>()
+			.set {
+				Target::c set acosh(of(2.0))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"c": {
+									"$acosh": {
+										"$literal": 2.0
 									}
 								}
 							}

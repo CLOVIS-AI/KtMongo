@@ -31,7 +31,7 @@ import opensavvy.ktmongo.dsl.aggregation.ValueDsl
  */
 interface TrigonometryValueOperators : ValueOperators {
 
-	// region $acos
+	// region cos/sin/tan
 
 	/**
 	 * The inverse cosine (arc cosine) of a value, in radians.
@@ -65,6 +65,37 @@ interface TrigonometryValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> acos(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "acos", value)
+
+	/**
+	 * The inverse hyperbolic cosine (hyperbolic arc cosine) of a value, in radians.
+	 *
+	 * The value must be in the range `1..∞`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set acosh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> acosh(value: Value<Context, Double?>): Value<Context, Double?> =
+		UnaryTrigonometryOperator(context, "acosh", value)
 
 	// endregion
 
