@@ -105,8 +105,10 @@ interface Field<@Suppress("unused") Root, @Suppress("unused") out Type> {
 	 *
 	 * @see get Access a specific element of an array
 	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	operator fun <Child> div(child: Field<in Type, Child>): Field<Root, Child>
+	operator fun <Child> div(child: Field<in Type, Child>): Field<Root, Child> =
+		FieldImpl(path / child.path)
 
 	/**
 	 * Refers to [child] as a nested field of the current field.
@@ -135,8 +137,10 @@ interface Field<@Suppress("unused") Root, @Suppress("unused") out Type> {
 	 *
 	 * @see get Access a specific element of an array
 	 */
+	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	operator fun <Child> div(child: KProperty1<in Type, Child>): Field<Root, Child>
+	operator fun <Child> div(child: KProperty1<in Type, Child>): Field<Root, Child> =
+		FieldImpl(path / PathSegment.Field(child.name))
 }
 
 /**
@@ -324,13 +328,6 @@ interface FieldDsl {
 internal class FieldImpl<Root, Type>(
 	override val path: Path,
 ) : Field<Root, Type> {
-
-	@OptIn(DangerousMongoApi::class)
-	override fun <Child> div(child: Field<in Type, Child>): Field<Root, Child> =
-		FieldImpl(path / child.path)
-
-	override fun <Child> div(child: KProperty1<in Type, Child>): Field<Root, Child> =
-		FieldImpl(path / PathSegment.Field(child.name))
 
 	override fun toString() = path.toString()
 
