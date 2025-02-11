@@ -60,9 +60,21 @@ theme:
         name: "Dark theme (click to switch to system)"
 
 plugins:
-  - social
+  # - social # https://github.com/squidfunk/mkdocs-material/issues/7818
   - search
   - privacy
+  - blog:
+      post_excerpt: optional
+      authors: false
+      blog_dir: news
+  - tags:
+      tag_file: news/tags.md
+  - rss:
+      match_path: 'news/posts/.*'
+      date_from_meta:
+        as_creation: date.created
+        as_update: date.updated
+      use_git: false
 
 markdown_extensions:
   - admonition
@@ -112,3 +124,7 @@ nav:
 
   - Reference (external):
       - reference.md
+
+  - News:
+      - news/index.md
+      - news/tags.md
