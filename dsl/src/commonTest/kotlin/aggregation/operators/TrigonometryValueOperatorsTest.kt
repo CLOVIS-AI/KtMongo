@@ -23,6 +23,8 @@ val cos = "\$cos"
 val cosh = "\$cosh"
 val acos = "\$acos"
 val acosh = "\$acosh"
+val sin = "\$sin"
+val sinh = "\$sinh"
 val asin = "\$asin"
 val asinh = "\$asinh"
 val atan = "\$atan"
@@ -114,6 +116,42 @@ class TrigonometryValueOperatorsTest : PreparedSpec({
 									"$acosh": {
 										"$literal": 2.0
 									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(sin) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set sin(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$sin": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(sinh) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set sinh(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$sinh": "$c"
 								}
 							}
 						}

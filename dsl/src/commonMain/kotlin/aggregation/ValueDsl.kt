@@ -101,6 +101,8 @@ import opensavvy.ktmongo.dsl.path.Field
  * - [`$atanh`][atanh]
  * - [`$cos`][cos]
  * - [`$cosh`][cosh]
+ * - [`$sin`][sin]
+ * - [`$sinh`][sinh]
  * - [`$degreesToRadians`][toRadians]
  * - [`$radiansToDegrees`][toDegrees]
  *
