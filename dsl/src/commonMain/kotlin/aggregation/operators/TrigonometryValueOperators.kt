@@ -341,6 +341,66 @@ interface TrigonometryValueOperators : ValueOperators {
 	fun <Context : Any> atanh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "atanh", value)
 
+	/**
+	 * The tangent of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (tan(of(Trigonometry::angleA) * of(Trigonometry::sideA)))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> tan(value: Value<Context, Double?>): Value<Context, Double?> =
+		UnaryTrigonometryOperator(context, "tan", value)
+
+	/**
+	 * The hyperbolic tangent of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set tanh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> tanh(value: Value<Context, Double?>): Value<Context, Double?> =
+		UnaryTrigonometryOperator(context, "tanh", value)
+
 	// endregion
 	// region °/radians
 

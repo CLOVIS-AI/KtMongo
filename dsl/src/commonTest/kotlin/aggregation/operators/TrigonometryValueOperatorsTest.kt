@@ -27,6 +27,8 @@ val sin = "\$sin"
 val sinh = "\$sinh"
 val asin = "\$asin"
 val asinh = "\$asinh"
+val tan = "\$tan"
+val tanh = "\$tanh"
 val atan = "\$atan"
 val atanh = "\$atanh"
 
@@ -188,6 +190,42 @@ class TrigonometryValueOperatorsTest : PreparedSpec({
 							"$set": {
 								"b": {
 									"$asinh": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(tan) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set tan(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$tan": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(tanh) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set tanh(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$tanh": "$c"
 								}
 							}
 						}
