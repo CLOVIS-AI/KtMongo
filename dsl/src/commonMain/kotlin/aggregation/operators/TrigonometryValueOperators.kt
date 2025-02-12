@@ -98,6 +98,66 @@ interface TrigonometryValueOperators : ValueOperators {
 		UnaryTrigonometryOperator(context, "acosh", value)
 
 	/**
+	 * The cosine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (of(cos(Triangle::angleA) * of(Triangle::hypotenuse)))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> cos(value: Value<Context, Double?>): Value<Context, Double?> =
+		UnaryTrigonometryOperator(context, "cos", value)
+
+	/**
+	 * The hyperbolic cosine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val angle: Double,
+	 *     val cosh: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::cosh set cosh(of(Trigonometry::angle))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> cosh(value: Value<Context, Double?>): Value<Context, Double?> =
+		UnaryTrigonometryOperator(context, "cosh", value)
+
+	/**
 	 * The inverse sine (arc sine) of a value, in radians.
 	 *
 	 * The value must be in the range `-1..1`.

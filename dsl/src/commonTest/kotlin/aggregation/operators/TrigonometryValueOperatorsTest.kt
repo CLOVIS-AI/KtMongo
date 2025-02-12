@@ -19,6 +19,8 @@ package opensavvy.ktmongo.dsl.aggregation.operators
 import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
+val cos = "\$cos"
+val cosh = "\$cosh"
 val acos = "\$acos"
 val acosh = "\$acosh"
 val asin = "\$asin"
@@ -36,6 +38,42 @@ class TrigonometryValueOperatorsTest : PreparedSpec({
 	val a = "\$a"
 	val b = "\$b"
 	val c = "\$c"
+
+	test(cos) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set cos(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$cos": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(cosh) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set cosh(of(Target::c))
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$cosh": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
 
 	test(acos) {
 		TestPipeline<Target>()
