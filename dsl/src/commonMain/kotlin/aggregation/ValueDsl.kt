@@ -101,6 +101,8 @@ import opensavvy.ktmongo.dsl.path.Field
  * - [`$atanh`][atanh]
  * - [`$cos`][cos]
  * - [`$cosh`][cosh]
+ * - [`$degreesToRadians`][toRadians]
+ * - [`$radiansToDegrees`][toDegrees]
  *
  * @see Value Representation of an aggregation value.
  */

@@ -282,6 +282,67 @@ interface TrigonometryValueOperators : ValueOperators {
 		UnaryTrigonometryOperator(context, "atanh", value)
 
 	// endregion
+	// region °/radians
+
+	/**
+	 * Converts an angle in degrees to an angle in radians.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val angleADeg: Double,
+	 *     val angleARad: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Trigonometry::angleARad set of(Trigonometry::angleADeg).toRadians()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/)
+	 *
+	 * @see toDegrees Opposite operation
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, Double> Value<Context, Double>.toRadians(): Value<Context, Double> =
+		UnaryTrigonometryOperator(context, "degreesToRadians", this)
+
+	/**
+	 * Converts an angle in radians to an angle in degrees.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val angleADeg: Double,
+	 *     val angleARad: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Trigonometry::angleADeg set of(Trigonometry::angleARad).toDegrees()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/)
+	 *
+	 * @see toRadians Opposite operation
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, Double> Value<Context, Double>.toDegrees(): Value<Context, Double> =
+		UnaryTrigonometryOperator(context, "radiansToDegrees", this)
+
+	// endregion
 
 	@OptIn(LowLevelApi::class)
 	private class UnaryTrigonometryOperator<Context : Any, T>(

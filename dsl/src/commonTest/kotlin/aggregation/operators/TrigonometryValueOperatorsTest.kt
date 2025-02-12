@@ -28,6 +28,9 @@ val asinh = "\$asinh"
 val atan = "\$atan"
 val atanh = "\$atanh"
 
+val degreesToRadians = "\$degreesToRadians"
+val radiansToDegrees = "\$radiansToDegrees"
+
 class TrigonometryValueOperatorsTest : PreparedSpec({
 	class Target(
 		val a: Double,
@@ -183,6 +186,42 @@ class TrigonometryValueOperatorsTest : PreparedSpec({
 							"$set": {
 								"b": {
 									"$atanh": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(degreesToRadians) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set of(Target::c).toRadians()
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$degreesToRadians": "$c"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+	}
+
+	test(radiansToDegrees) {
+		TestPipeline<Target>()
+			.set {
+				Target::b set of(Target::c).toDegrees()
+			}
+			.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"b": {
+									"$radiansToDegrees": "$c"
 								}
 							}
 						}
