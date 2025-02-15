@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ plugins {
 dependencies {
 	// List the 'library' projects
 	dokka(projects.annotations)
-	// dokka(projects.bson) // Uncomment after https://gitlab.com/opensavvy/automation/dokka-material-mkdocs/-/issues/8
+	dokka(projects.bson)
 	dokka(projects.dsl)
 	dokka(projects.driverSync)
 	dokka(projects.driverCoroutines)
