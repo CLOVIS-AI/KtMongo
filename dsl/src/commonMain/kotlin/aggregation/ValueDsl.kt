@@ -17,10 +17,7 @@
 package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.aggregation.operators.ArithmeticValueOperators
-import opensavvy.ktmongo.dsl.aggregation.operators.ComparisonValueOperators
-import opensavvy.ktmongo.dsl.aggregation.operators.ConditionalValueOperators
-import opensavvy.ktmongo.dsl.aggregation.operators.ValueOperators
+import opensavvy.ktmongo.dsl.aggregation.operators.*
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.path.Field
 
@@ -91,8 +88,25 @@ import opensavvy.ktmongo.dsl.path.Field
  * - [`$gte`][gte]
  * - [`$lte`][lte]
  *
- * Combine values:
+ * Arithmetic operators:
+ * - [`$abs`][abs]
  * - [`$add`][plus]
+ *
+ * Trigonometric operators and angle management:
+ * - [`$acos`][acos]
+ * - [`$acosh`][acosh]
+ * - [`$asin`][asin]
+ * - [`$asinh`][asinh]
+ * - [`$atan`][atan]
+ * - [`$atanh`][atanh]
+ * - [`$cos`][cos]
+ * - [`$cosh`][cosh]
+ * - [`$sin`][sin]
+ * - [`$sinh`][sinh]
+ * - [`$tan`][tan]
+ * - [`$tanh`][tanh]
+ * - [`$degreesToRadians`][toRadians]
+ * - [`$radiansToDegrees`][toDegrees]
  *
  * @see Value Representation of an aggregation value.
  */
@@ -100,4 +114,5 @@ import opensavvy.ktmongo.dsl.path.Field
 interface ValueDsl : ValueOperators,
 	ComparisonValueOperators,
 	ConditionalValueOperators,
-	ArithmeticValueOperators
+	ArithmeticValueOperators,
+	TrigonometryValueOperators

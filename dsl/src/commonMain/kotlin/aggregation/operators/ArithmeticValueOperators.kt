@@ -31,6 +31,56 @@ import opensavvy.ktmongo.dsl.aggregation.ValueDsl
  */
 interface ArithmeticValueOperators : ValueOperators {
 
+	// region $abs
+
+	/**
+	 * The absolute value of a number.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val name: String,
+	 *     val startTemp: Int,
+	 *     val endTemp: Int,
+	 *     val diffTemp: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline(filter = { Sensor::diffTemp.isNull() }) {
+	 *     set {
+	 *         Sensor::diffTemp set abs(of(Sensor::startTemp) - of(Sensor::endTemp))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> abs(value: Value<Context, Result>): Value<Context, Result> =
+		AbsoluteValueOperator(context, value)
+
+	@OptIn(LowLevelApi::class)
+	private class AbsoluteValueOperator<Context : Any, T>(
+		context: BsonContext,
+		private val value: Value<Context, T>
+	) : AbstractValue<Context, T>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				write("\$abs") {
+					value.writeTo(this)
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $add
 
 	/**
