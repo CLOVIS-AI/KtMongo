@@ -84,7 +84,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	// region $add
 
 	/**
-	 * Sums two aggregation values and returns `true` if they are equivalent.
+	 * Sums two aggregation values.
 	 *
 	 * ### Example
 	 *
@@ -140,6 +140,73 @@ interface ArithmeticValueOperators : ValueOperators {
 		override fun write(writer: BsonValueWriter) = with(writer) {
 			writeDocument {
 				writeArray("\$add") {
+					for (operand in operands) {
+						operand.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
+	// region $concat
+
+	/**
+	 * Concatenates two strings together.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         User::fullName set (of(User::firstName) concat of(" ") concat of(User::lastName))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> Value<Context, String>.concat(other: Value<Context, String>): Value<Context, String> =
+		ConcatValueOperator(context, listOf(this, other))
+
+	@OptIn(LowLevelApi::class)
+	private class ConcatValueOperator<Context : Any>(
+		context: BsonContext,
+		private val operands: List<Value<Context, String>>
+	) : AbstractValue<Context, String>(context) {
+
+		override fun simplify(): AbstractValue<Context, String> {
+			val flattenedOperands = ArrayList<Value<Context, String>>()
+
+			for (operand in operands) {
+				if (operand is ConcatValueOperator) {
+					flattenedOperands += operand.operands
+				} else {
+					flattenedOperands += operand
+				}
+			}
+
+			return if (flattenedOperands != operands) {
+				ConcatValueOperator(context, flattenedOperands)
+			} else {
+				this
+			}
+		}
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$concat") {
 					for (operand in operands) {
 						operand.writeTo(this)
 					}

@@ -24,10 +24,12 @@ class ArithmeticValueOperatorsTest : PreparedSpec({
 	class Target(
 		val score: Int,
 		val average: Double,
+		val name: String,
 	)
 
 	val score = "\$score"
 	val average = "\$average"
+	val name = "\$name"
 
 	suite(abs) {
 		test("Usage with a number") {
@@ -115,6 +117,57 @@ class ArithmeticValueOperatorsTest : PreparedSpec({
 										"$score",
 										{
 											"$literal": 15
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite(concat) {
+		test("Binary usage") {
+			TestPipeline<Target>()
+				.set {
+					Target::name set (of(Target::name) concat of(" II"))
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"name": {
+									"$concat": [
+										"$name",
+										{
+											"$literal": " II"
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("N-ary usage") {
+			TestPipeline<Target>()
+				.set {
+					Target::name set (of("[") concat of(Target::name) concat of("]"))
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"name": {
+									"$concat": [
+										{
+											"$literal": "["
+										},
+										"$name",
+										{
+											"$literal": "]"
 										}
 									]
 								}

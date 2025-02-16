@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,4 +49,6 @@ library {
 		name.set("Apache 2.0")
 		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
 	}
+
+	coverage.set(67)
 }

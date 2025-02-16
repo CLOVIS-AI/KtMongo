@@ -91,6 +91,7 @@ import opensavvy.ktmongo.dsl.path.Field
  * Arithmetic operators:
  * - [`$abs`][abs]
  * - [`$add`][plus]
+ * - [`$concat`][concat]
  *
  * Trigonometric operators and angle management:
  * - [`$acos`][acos]
