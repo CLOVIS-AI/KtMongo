@@ -29,6 +29,7 @@ val skip = "\$skip"
 val set = "\$set"
 val abs = "\$abs"
 val add = "\$add"
+val concat = "\$concat"
 
 @OptIn(LowLevelApi::class)
 class TestPipeline<Document : Any>(
