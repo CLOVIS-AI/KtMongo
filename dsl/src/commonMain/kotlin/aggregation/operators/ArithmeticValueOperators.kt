@@ -84,7 +84,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	// region $add
 
 	/**
-	 * Sums two aggregation values and returns `true` if they are equivalent.
+	 * Sums two aggregation values.
 	 *
 	 * ### Example
 	 *
