@@ -31,6 +31,7 @@ import opensavvy.ktmongo.dsl.aggregation.stages.*
 interface AggregationPipeline<Document : Any> : Pipeline<Document>,
 	HasLimit<Document>,
 	HasMatch<Document>,
+	HasProject<Document>,
 	HasSample<Document>,
 	HasSet<Document>,
 	HasSkip<Document>,
@@ -46,5 +47,6 @@ interface AggregationPipeline<Document : Any> : Pipeline<Document>,
  * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/update/#update-with-aggregation-pipeline)
  */
 interface UpdatePipeline<Document : Any> : Pipeline<Document>,
+	HasProject<Document>,
 	HasSet<Document>,
 	HasUnset<Document>

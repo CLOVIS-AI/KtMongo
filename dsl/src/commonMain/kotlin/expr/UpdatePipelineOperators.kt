@@ -21,10 +21,7 @@ import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.createSetStage
-import opensavvy.ktmongo.dsl.aggregation.stages.createUnsetStage
+import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
 
@@ -64,6 +61,46 @@ interface UpdatePipelineOperators<Document : Any> : CompoundExpression {
 		block: SetStageOperators<Document>.() -> Unit,
 	) {
 		accept(createSetStage(context, block))
+	}
+
+	/**
+	 * Specify which fields should be kept.
+	 *
+	 * This method is equivalent to the [`$project` stage][HasProject.project].
+	 *
+	 * ### Difference with $set and $unset
+	 *
+	 * This stage is quite similar to [`$set`][set] and [`$unset`][unset]:
+	 * - Like `$set`, this stage can override existing fields. However, `$project` deletes fields that aren't mentioned, whereas `$set` leaves them as-is.
+	 * - Like `$unset`, this stage can delete fields. However, `$project` explicitly specifies the fields to keep, whereas `$unset` explicitly specifies the fields to remove.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val score: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     project {
+	 *         include(User::age)
+	 *         User::score set 12
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project)
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@KtMongoDsl
+	fun project(
+		block: ProjectStageOperators<Document>.() -> Unit,
+	) {
+		accept(createProjectStage(context, block))
 	}
 
 	/**
