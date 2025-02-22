@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.common.Options
 import opensavvy.ktmongo.dsl.options.common.OptionsHolder
 import opensavvy.ktmongo.dsl.options.common.WithLimit
+import opensavvy.ktmongo.dsl.options.common.WithSort
 
 /**
  * The options for a `collection.find` operation.
@@ -28,4 +29,5 @@ import opensavvy.ktmongo.dsl.options.common.WithLimit
 @OptIn(LowLevelApi::class)
 class FindOptions<Document : Any>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithLimit
+	WithLimit,
+	WithSort<Document>

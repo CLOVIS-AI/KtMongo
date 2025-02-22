@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,5 +47,15 @@ class BasicReadWriteTest : PreparedSpec({
 		)
 
 		check(User("Bad", 0) in users().find().toList())
+	}
+
+	test("Read ordered by age") {
+		val bob = User(name = "Bob", age = 18)
+		val alice = User(name = "Alice", age = 19)
+		users().insertOne(bob)
+		users().insertOne(alice)
+
+		check(listOf(bob, alice) == users().find(options = { sort { ascending(User::age) } }, {}).toList())
+		check(listOf(alice, bob) == users().find(options = { sort { descending(User::age) } }, {}).toList())
 	}
 })

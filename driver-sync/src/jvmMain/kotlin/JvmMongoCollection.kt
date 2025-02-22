@@ -28,6 +28,7 @@ import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.*
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.options.common.LimitOption
+import opensavvy.ktmongo.dsl.options.common.SortOption
 import opensavvy.ktmongo.dsl.options.common.option
 
 /**
@@ -66,6 +67,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		return JvmMongoIterable(
 			inner.find(model.filter.toBsonDocument())
 				.limit(model.options.option<LimitOption, _>()?.toInt() ?: 0)
+				.sort(model.options.option<SortOption<*>, _>())
 		)
 	}
 
