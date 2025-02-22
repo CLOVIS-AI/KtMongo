@@ -30,6 +30,7 @@ val set = "\$set"
 val abs = "\$abs"
 val add = "\$add"
 val concat = "\$concat"
+val sort = "\$sort"
 val unset = "\$unset"
 val project = "\$project"
 
