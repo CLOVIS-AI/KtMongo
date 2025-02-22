@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.dsl.aggregation
 
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.common.Expression
@@ -52,6 +53,13 @@ class TestPipeline<Document : Any>(
 	@LowLevelApi
 	override fun <New : Any> reinterpret(): TestPipeline<New> =
 		this as TestPipeline<New>
+
+	override fun embedInUnionWith(writer: BsonFieldWriter) = with(writer) {
+		writeString("coll", "other")
+		writeArray("pipeline") {
+			this@TestPipeline.writeTo(this)
+		}
+	}
 
 }
 

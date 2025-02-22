@@ -17,18 +17,23 @@
 package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractPipeline
 import opensavvy.ktmongo.dsl.aggregation.AggregationPipeline
-import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
+import opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWithCompatibility
+import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
 import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
+import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.common.Expression
+import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
 
 class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal constructor(
+	private val collection: String,
 	context: BsonContext,
 	chain: PipelineChainLink,
 	private val iterableBuilder: (MongoAggregationPipeline<*>) -> MongoIterable<*>,
@@ -39,13 +44,13 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	@LowLevelApi
 	@DangerousMongoApi
 	override fun withStage(stage: Expression): MongoAggregationPipeline<Output> =
-		MongoAggregationPipeline(context, chain.withStage(stage), iterableBuilder)
+		MongoAggregationPipeline(collection, context, chain.withStage(stage), iterableBuilder)
 
 	@Suppress("UNCHECKED_CAST") // The type is phantom, the cast is guaranteed to succeed
 	@LowLevelApi
 	@DangerousMongoApi
-	override fun <New : Any> reinterpret(): Pipeline<New> =
-		this as Pipeline<New>
+	override fun <New : Any> reinterpret(): MongoAggregationPipeline<New> =
+		this as MongoAggregationPipeline<New>
 
 	// endregion
 	// region Lazy iterable
@@ -84,6 +89,17 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	@KtMongoDsl
 	override fun skip(amount: Int): MongoAggregationPipeline<Output> =
 		super.skip(amount) as MongoAggregationPipeline<Output>
+
+	// endregion
+	// region $unionWith compatibility
+
+	@LowLevelApi
+	override fun embedInUnionWith(writer: BsonFieldWriter) = with(writer) {
+		writeString("coll", collection)
+		writeArray("pipeline") {
+			this@MongoAggregationPipeline.writeTo(this)
+		}
+	}
 
 	// endregion
 

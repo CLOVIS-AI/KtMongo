@@ -301,6 +301,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun aggregate(): MongoAggregationPipeline<Document> =
 		MongoAggregationPipeline<Document>(
+			collection = inner.namespace.collectionName,
 			context = context,
 			chain = PipelineChainLink(context),
 			iterableBuilder = { pipeline ->

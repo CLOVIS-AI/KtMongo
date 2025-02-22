@@ -117,4 +117,23 @@ class AggregationTests : PreparedSpec({
 
 		check(Song(creationDate = 0, editionDate = 12) in songs().find().toList())
 	}
+
+	test("Union") {
+		songs().insertOne(Song(creationDate = 0, editionDate = 1))
+		songs().insertOne(Song(creationDate = 1, editionDate = 2))
+		songs().insertOne(Song(creationDate = 2, editionDate = 2))
+
+		val first = songs().aggregate()
+			.match { Song::editionDate eq 2 }
+
+		val second = songs().aggregate()
+			.match { Song::creationDate gte 2 }
+
+		val expected = listOf(
+			Song(creationDate = 1, editionDate = 2),
+			Song(creationDate = 2, editionDate = 2),
+			Song(creationDate = 2, editionDate = 2),
+		)
+		check(expected == second.unionWith(first).sort { ascending(Song::creationDate); ascending(Song::editionDate) }.toList())
+	}
 })
