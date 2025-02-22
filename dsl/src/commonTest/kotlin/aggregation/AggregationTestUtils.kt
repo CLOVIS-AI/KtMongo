@@ -30,6 +30,8 @@ val set = "\$set"
 val abs = "\$abs"
 val add = "\$add"
 val concat = "\$concat"
+val unset = "\$unset"
+val project = "\$project"
 
 @OptIn(LowLevelApi::class)
 class TestPipeline<Document : Any>(

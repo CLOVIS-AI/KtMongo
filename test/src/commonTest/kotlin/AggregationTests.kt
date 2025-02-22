@@ -96,4 +96,25 @@ class AggregationTests : PreparedSpec({
 
 		check(Song(creationDate = 12, editionDate = 3) in songs().find().toList())
 	}
+
+	test("Set and unset") {
+		songs().insertOne(Song(creationDate = 0, editionDate = 1))
+		songs().insertOne(Song(creationDate = 1, editionDate = 2))
+
+		songs().filter {
+			Song::creationDate eq 0
+		}.updateManyWithPipeline {
+			unset {
+				exclude(Song::editionDate)
+			}
+		}
+
+		songs().filter {
+			Song::editionDate.doesNotExist()
+		}.updateMany {
+			Song::editionDate set 12
+		}
+
+		check(Song(creationDate = 0, editionDate = 12) in songs().find().toList())
+	}
 })
