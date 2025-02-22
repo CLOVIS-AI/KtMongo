@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ import opensavvy.ktmongo.dsl.options.CountOptions
  * @see CountOptions Options
  */
 @KtMongoDsl
-class Count<Document> private constructor(
+class Count<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: CountOptions<Document>,
 	val filter: FilterOperators<Document>,

@@ -26,6 +26,6 @@ import opensavvy.ktmongo.dsl.options.common.WithLimit
  * The options for a `collection.find` operation.
  */
 @OptIn(LowLevelApi::class)
-class FindOptions<Document>(context: BsonContext) :
+class FindOptions<Document : Any>(context: BsonContext) :
 	Options by OptionsHolder(context),
 	WithLimit
