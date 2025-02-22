@@ -90,6 +90,22 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	override fun skip(amount: Int): MongoAggregationPipeline<Output> =
 		super.skip(amount) as MongoAggregationPipeline<Output>
 
+	@KtMongoDsl
+	override fun sort(block: SortOptionDsl<Output>.() -> Unit): MongoAggregationPipeline<Output> =
+		super.sort(block) as MongoAggregationPipeline<Output>
+
+	@KtMongoDsl
+	override fun unset(block: UnsetStageOperators<Output>.() -> Unit): MongoAggregationPipeline<Output> =
+		super.unset(block) as MongoAggregationPipeline<Output>
+
+	@KtMongoDsl
+	override fun project(block: ProjectStageOperators<Output>.() -> Unit): MongoAggregationPipeline<Output> =
+		super.project(block) as MongoAggregationPipeline<Output>
+
+	@KtMongoDsl
+	override fun unionWith(other: HasUnionWithCompatibility<Output>): MongoAggregationPipeline<Output> =
+		super.unionWith(other) as MongoAggregationPipeline<Output>
+
 	// endregion
 	// region $unionWith compatibility
 
