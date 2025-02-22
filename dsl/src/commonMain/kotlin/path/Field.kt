@@ -139,7 +139,7 @@ interface Field<@Suppress("unused") Root, @Suppress("unused") out Type> {
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	operator fun <Child> div(child: KProperty1<in Type, Child>): Field<Root, Child> =
+	operator fun <Child> div(child: KProperty1<in Type & Any, Child>): Field<Root, Child> =
 		FieldImpl(path / PathSegment.Field(child.name))
 }
 
@@ -263,7 +263,7 @@ interface FieldDsl {
 	 * @see get Access a specific element of an array
 	 */
 	@KtMongoDsl
-	operator fun <Root, Parent, Child> KProperty1<Root, Parent>.div(child: KProperty1<Parent, Child>): Field<Root, Child> =
+	operator fun <Root, Parent, Child> KProperty1<Root, Parent>.div(child: KProperty1<Parent & Any, Child>): Field<Root, Child> =
 		this.field / child
 
 	/**
