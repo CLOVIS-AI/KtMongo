@@ -17,9 +17,12 @@
 package opensavvy.ktmongo.dsl.models
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.FilterExpression
 import opensavvy.ktmongo.dsl.expr.FilterOperators
+import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.options.FindOptions
 
 /**
@@ -28,7 +31,7 @@ import opensavvy.ktmongo.dsl.options.FindOptions
  * ### Example
  *
  * ```kotlin
- * users.find({ limit(12) }) {
+ * users.find(options = { limit(12) }) {
  *     User::age lt 18
  * }
  * ```
@@ -38,10 +41,20 @@ import opensavvy.ktmongo.dsl.options.FindOptions
  */
 @KtMongoDsl
 class Find<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	val options: FindOptions<Document>,
 	val filter: FilterOperators<Document>,
-) {
+) : AbstractExpression(context) {
 
 	constructor(context: BsonContext) : this(context, FindOptions(context), FilterExpression(context))
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeDocument("options") {
+			options.writeTo(this)
+		}
+		writeDocument("filter") {
+			filter.writeTo(this)
+		}
+	}
 }
