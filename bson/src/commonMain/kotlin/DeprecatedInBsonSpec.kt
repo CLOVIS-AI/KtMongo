@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,4 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+/**
+ * Deprecation messages for BSON functionality that is deprecated in the [BSON spec](https://bsonspec.org/spec.html).
+ */
 const val DEPRECATED_IN_BSON_SPEC = "This functionality is deprecated in the BSON specification. See https://bsonspec.org/spec.html"

@@ -24,6 +24,18 @@ import opensavvy.ktmongo.dsl.aggregation.stages.*
  * Aggregation pipelines read data from one or more collections and transform it in a manner of ways.
  * Finally, the data can be sent to the server, or written to another collection.
  *
+ * ### Example
+ *
+ * ```kotlin
+ * invoices.aggregate()
+ *     .match { Invoice::isDraft eq false }
+ *     .set {
+ *         Invoice::anomaly set (of(Invoice::modificationDate) lt of(Invoice::creationDate))
+ *     }
+ *     .sort { ascending(Invoice::creationDate) }
+ *     .toList()
+ * ```
+ *
  * ### External resources
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/aggregation-pipeline/)
@@ -40,7 +52,18 @@ interface AggregationPipeline<Document : Any> : Pipeline<Document>,
 /**
  * An update pipeline.
  *
- * Update pipelines allow more complex updates without resorting to an entire [AggregationPipeline].
+ * Update pipelines allow more complex updates directly through the various `update` functions.
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * users.updateManyWithPipeline {
+ *     set {
+ *         User::score set (of(User::score) + (of(User::scoreMultiplier) * of(User::dailyScore)))
+ *         User::dailyScore set 0
+ *     }
+ * }
+ * ```
  *
  * ### External resources
  *

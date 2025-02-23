@@ -34,6 +34,13 @@ Instances of these classes are usually provided by the driver as part of its fun
 
 To create a custom operator (for example because it isn't part of the library yet), see [AbstractExpression][opensavvy.ktmongo.dsl.expr.common.AbstractExpression].
 
+## Aggregation DSLs
+
+KtMongo has support for aggregation pipelines through dedicated DSLs.
+
+- [Aggregation pipelines and stages][opensavvy.ktmongo.dsl.aggregation.Pipeline]
+- [Aggregation operators][opensavvy.ktmongo.dsl.aggregation.ValueDsl]
+
 # Package opensavvy.ktmongo.dsl
 
 Annotations and other global concepts.
@@ -45,6 +52,44 @@ Helpers to represent trees of data, built bottom-up.
 Users of the library are not expected to interact with this package.
 
 However, contributors to the library, and users wanting to implement custom operators, should familiarize themselves with this package.
+
+# Package opensavvy.ktmongo.dsl.aggregation
+
+Aggregation pipelines are powerful ways to query and update MongoDB documents. Compared to regular queries, aggregation pipelines can perform more complex operations, can compare fields from the same document together, or combine data from other sources.
+
+Aggregation pipelines are declared as a Sequence-like chain of **stages**. Each stage is responsible for transforming documents in a certain way. MongoDB is able to parallelize work from different stages. To see which stages are available, see [`Pipeline`][opensavvy.ktmongo.dsl.aggregation.Pipeline].
+
+```kotlin
+users.aggregate()
+	.match {
+		// Similar to List.filter
+		User::age gt 18
+	}
+	.project {
+		// Select which fields we are interested in.
+		// All other fields are ignored.
+		include(User::age)
+		include(User::name)
+	}
+	.toList()
+```
+
+Additionally, many stages allow building complex expressions based on different fields. For example, within [`$set`][opensavvy.ktmongo.dsl.aggregation.stages.HasSet.set] and [`$project`][opensavvy.ktmongo.dsl.aggregation.stages.HasProject.project], we can use the [`$cond`][opensavvy.ktmongo.dsl.aggregation.operators.ConditionalValueOperators.cond] operator to conditionally set the value of a field based on other fields:
+
+```kotlin
+users.aggregate()
+	.set {
+		User::risk set cond(
+			condition = of(User::isAdult),
+			ifTrue = of(User::age) * of(5),
+			iFalse = of(18) - of(User::age),
+		)
+	}
+	.toList()
+```
+To learn more about aggregation operators and their syntax, see [`ValueDsl`][opensavvy.ktmongo.dsl.aggregation.ValueDsl].
+
+You may also be interested in reading the [official documentation on aggregations](https://www.mongodb.com/docs/manual/aggregation/).
 
 # Package opensavvy.ktmongo.dsl.expr
 

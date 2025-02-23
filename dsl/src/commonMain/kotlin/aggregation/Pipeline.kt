@@ -68,7 +68,7 @@ import opensavvy.ktmongo.dsl.expr.common.Expression
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/aggregation/)
  *
- * @param Output The type of document that this pipeline results in. The main way to change this type is to use projection stages.
+ * @param Output The type of document that this pipeline results in. Changing this type is possible by calling [reinterpret].
  */
 @KtMongoDsl
 interface Pipeline<Output : Any> {

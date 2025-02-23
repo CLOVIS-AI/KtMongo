@@ -91,7 +91,7 @@ interface Value<in Root : Any, out Type> : Node {
 	/**
 	 * JSON representation of this expression.
 	 *
-	 * Note that since this class represents a BSON _value_, a BSON libraries often only support _documents_,
+	 * Note that since this class represents a BSON _value_, and BSON libraries often only support _documents_,
 	 * the actual value may be surrounded by some boilerplate (like an array or a useless value).
 	 */
 	override fun toString(): String

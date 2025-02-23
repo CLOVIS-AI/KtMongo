@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy, MongoDB Inc and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,14 @@ import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
  *
  * - [BSON spec](https://bsonspec.org/spec.html)
  */
-enum class BsonType(val code: Byte) {
+enum class BsonType(
+	/**
+	 * The byte identifier for this particular type.
+	 *
+	 * Guaranteed to be in the range `-1` ([MinKey]) to `127` ([MaxKey]).
+ 	 */
+	val code: Byte,
+) {
 	Double(1),
 
 	String(2),

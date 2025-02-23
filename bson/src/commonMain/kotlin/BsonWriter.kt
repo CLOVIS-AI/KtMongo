@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,11 @@ import opensavvy.ktmongo.bson.types.Decimal128
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 
+/**
+ * Annotation to mark types that are part of the BSON writer DSL.
+ *
+ * To learn more, see [AnyBsonWriter].
+ */
 @DslMarker
 annotation class BsonWriterDsl
 
@@ -84,7 +89,7 @@ interface BsonValueWriter : AnyBsonWriter {
 }
 
 /**
- * Generator of BSON values.
+ * Generator of BSON document fields.
  *
  * This interface is used to write fields in a BSON document.
  *
@@ -138,12 +143,12 @@ interface BsonFieldWriter : AnyBsonWriter {
 }
 
 /**
- * Instantiates a new [Bson] document.
+ * Instantiates a new [BSON document][Bson].
  *
  * ### Example
  *
  * To create the following BSON document:
- * ```bson
+ * ```json
  * {
  *     "name": "Bob",
  *     "isAlive": true,
@@ -177,12 +182,12 @@ interface BsonFieldWriter : AnyBsonWriter {
 expect fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson
 
 /**
- * Instantiates a new [Bson] array.
+ * Instantiates a new [BSON array][BsonArray].
  *
  * ### Example
  *
  * To create the following BSON array:
- * ```bson
+ * ```json
  * [
  *     12,
  *     null,

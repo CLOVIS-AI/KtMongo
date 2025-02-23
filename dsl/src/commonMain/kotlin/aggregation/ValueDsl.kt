@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.path.Field
 
 /**
- * DSL to instantiate aggregation values, usually automatically added into scope by aggregation stages.
+ * DSL to instantiate aggregation values, available in most aggregation stages.
  *
  * ### What are aggregation values?
  *
@@ -50,7 +50,7 @@ import opensavvy.ktmongo.dsl.path.Field
  * Operators accept multiple aggregation values which must conform to some type requirements. As an example:
  * ```kotlin
  * users.find {
- *     expr {
+ *     expr { // Use aggregation values in a regular find() request
  *         val maxScore = of(User::scores).max()
  *         maxScore lt of(15)
  *     }
@@ -61,7 +61,7 @@ import opensavvy.ktmongo.dsl.path.Field
  * { "expr": { "lt": [{ "$max": "$scores" }, { "$literal": 15 }] } }
  * ```
  *
- * As you can see, we use the [of] method to convert from Kotlin values or from field names to aggregation values.
+ * As you can see, we use the [of][ValueOperators.of] method to convert from Kotlin values or from field names to aggregation values.
  * Because each side of an operator accepts an aggregation value, we can thus compare multiple fields from the same document,
  * use conditionals or other complex requests.
  *
@@ -75,39 +75,39 @@ import opensavvy.ktmongo.dsl.path.Field
  * ### Operators
  *
  * Access values:
- * - [`$literal`][of]
+ * - [`$literal`][ValueOperators.of]
  *
  * Conditionally compute values:
- * - [`$cond`][cond]
+ * - [`$cond`][ConditionalValueOperators.cond]
  *
  * Compare values:
- * - [`$eq`][eq]
- * - [`$ne`][ne]
- * - [`$gt`][gt]
- * - [`$lt`][lt]
- * - [`$gte`][gte]
- * - [`$lte`][lte]
+ * - [`$eq`][ComparisonValueOperators.eq]
+ * - [`$ne`][ComparisonValueOperators.ne]
+ * - [`$gt`][ComparisonValueOperators.gt]
+ * - [`$lt`][ComparisonValueOperators.lt]
+ * - [`$gte`][ComparisonValueOperators.gte]
+ * - [`$lte`][ComparisonValueOperators.lte]
  *
  * Arithmetic operators:
- * - [`$abs`][abs]
- * - [`$add`][plus]
- * - [`$concat`][concat]
+ * - [`$abs`][ArithmeticValueOperators.abs]
+ * - [`$add`][ArithmeticValueOperators.plus]
+ * - [`$concat`][ArithmeticValueOperators.concat]
  *
  * Trigonometric operators and angle management:
- * - [`$acos`][acos]
- * - [`$acosh`][acosh]
- * - [`$asin`][asin]
- * - [`$asinh`][asinh]
- * - [`$atan`][atan]
- * - [`$atanh`][atanh]
- * - [`$cos`][cos]
- * - [`$cosh`][cosh]
- * - [`$sin`][sin]
- * - [`$sinh`][sinh]
- * - [`$tan`][tan]
- * - [`$tanh`][tanh]
- * - [`$degreesToRadians`][toRadians]
- * - [`$radiansToDegrees`][toDegrees]
+ * - [`$acos`][TrigonometryValueOperators.acos]
+ * - [`$acosh`][TrigonometryValueOperators.acosh]
+ * - [`$asin`][TrigonometryValueOperators.asin]
+ * - [`$asinh`][TrigonometryValueOperators.asinh]
+ * - [`$atan`][TrigonometryValueOperators.atan]
+ * - [`$atanh`][TrigonometryValueOperators.atanh]
+ * - [`$cos`][TrigonometryValueOperators.cos]
+ * - [`$cosh`][TrigonometryValueOperators.cosh]
+ * - [`$sin`][TrigonometryValueOperators.sin]
+ * - [`$sinh`][TrigonometryValueOperators.sinh]
+ * - [`$tan`][TrigonometryValueOperators.tan]
+ * - [`$tanh`][TrigonometryValueOperators.tanh]
+ * - [`$degreesToRadians`][TrigonometryValueOperators.toRadians]
+ * - [`$radiansToDegrees`][TrigonometryValueOperators.toDegrees]
  *
  * @see Value Representation of an aggregation value.
  */
