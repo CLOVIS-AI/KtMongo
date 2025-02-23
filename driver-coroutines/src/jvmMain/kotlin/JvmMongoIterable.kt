@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongo].
  */
 class JvmMongoIterable<Document : Any> internal constructor(
-	private val inner: com.mongodb.kotlin.client.coroutine.FindFlow<Document>
+	private val inner: com.mongodb.kotlin.client.coroutine.FindFlow<Document>,
+	private val repr: (() -> String)? = null,
 ) : MongoIterable<Document> {
 
 	/**
@@ -54,6 +55,9 @@ class JvmMongoIterable<Document : Any> internal constructor(
 
 	override fun asFlow(): Flow<Document> =
 		inner
+
+	override fun toString(): String =
+		repr?.invoke() ?: super.toString()
 }
 
 /**

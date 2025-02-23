@@ -47,6 +47,9 @@ interface AggregationPipeline<Document : Any> : Pipeline<Document>,
 	HasSample<Document>,
 	HasSet<Document>,
 	HasSkip<Document>,
+	HasSort<Document>,
+	HasUnionWith<Document>,
+	HasUnionWithCompatibility<Document>,
 	HasUnset<Document>
 
 /**

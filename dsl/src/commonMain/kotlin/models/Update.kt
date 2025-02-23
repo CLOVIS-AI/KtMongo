@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ import opensavvy.ktmongo.dsl.tree.Node
  * @see UpdateOperators Update operators
  */
 @KtMongoDsl
-class UpdateOne<Document> private constructor(
+class UpdateOne<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterOperators<Document>,
@@ -63,7 +63,7 @@ class UpdateOne<Document> private constructor(
  * @see UpdateOperators Update operators
  */
 @KtMongoDsl
-class UpsertOne<Document> private constructor(
+class UpsertOne<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterOperators<Document>,
@@ -88,7 +88,7 @@ class UpsertOne<Document> private constructor(
  * @see UpdateOperators Update operators
  */
 @KtMongoDsl
-class UpdateMany<Document> private constructor(
+class UpdateMany<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterOperators<Document>,

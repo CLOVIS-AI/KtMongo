@@ -31,9 +31,8 @@ import opensavvy.ktmongo.dsl.expr.common.Expression
  * Similar to [Sequence] and [Flow](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow/),
  * but executed by MongoDB itself.
  *
- * MongoDB has different types of pipelines with different available operators.
- * Using this library, all pipeline types are modelled as instances of this class, but with a different [Type]
- * type parameter.
+ * MongoDB has different types of pipelines with different available operators, which are represented by the different
+ * implementations of this interface.
  *
  * Instances of this class are immutable.
  *
@@ -48,9 +47,13 @@ import opensavvy.ktmongo.dsl.expr.common.Expression
  * The following stages are available:
  * - [`$limit`][opensavvy.ktmongo.dsl.aggregation.stages.HasLimit.limit]
  * - [`$match`][opensavvy.ktmongo.dsl.aggregation.stages.HasMatch.match]
+ * - [`$project`][opensavvy.ktmongo.dsl.aggregation.stages.HasProject.project]
  * - [`$sample`][opensavvy.ktmongo.dsl.aggregation.stages.HasSample.sample]
  * - [`$set`][opensavvy.ktmongo.dsl.aggregation.stages.HasSet.set]
  * - [`$skip`][opensavvy.ktmongo.dsl.aggregation.stages.HasSkip.skip]
+ * - [`$sort`][opensavvy.ktmongo.dsl.aggregation.stages.HasSort.sort]
+ * - [`$unionWith`][opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWith.unionWith]
+ * - [`$unset`][opensavvy.ktmongo.dsl.aggregation.stages.HasUnset.unset]
  *
  * If you can't find a stage you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/7).
  *

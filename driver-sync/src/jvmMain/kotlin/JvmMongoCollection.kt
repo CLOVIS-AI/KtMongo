@@ -28,6 +28,7 @@ import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.*
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.options.common.LimitOption
+import opensavvy.ktmongo.dsl.options.common.SortOption
 import opensavvy.ktmongo.dsl.options.common.option
 
 /**
@@ -51,7 +52,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	// region Find
 
 	override fun find(): JvmMongoIterable<Document> =
-		JvmMongoIterable(inner.find())
+		JvmMongoIterable(inner.find(), repr = { "$this.find()" })
 
 	@OptIn(LowLevelApi::class)
 	override fun find(
@@ -66,6 +67,8 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		return JvmMongoIterable(
 			inner.find(model.filter.toBsonDocument())
 				.limit(model.options.option<LimitOption, _>()?.toInt() ?: 0)
+				.sort(model.options.option<SortOption<*>, _>()),
+			repr = { "$this.find($model)" }
 		)
 	}
 
@@ -296,6 +299,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun aggregate(): MongoAggregationPipeline<Document> =
 		MongoAggregationPipeline<Document>(
+			collection = inner.namespace.collectionName,
 			context = context,
 			chain = PipelineChainLink(context),
 			iterableBuilder = { pipeline ->
