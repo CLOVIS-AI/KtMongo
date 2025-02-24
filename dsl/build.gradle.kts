@@ -41,7 +41,7 @@ kotlin {
 }
 
 library {
-	name.set("MongoDB query DSL")
+	name.set("MongoDB request DSL")
 	description.set("Kotlin-first DSL for writing expressive and typesafe MongoDB queries")
 	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
 
