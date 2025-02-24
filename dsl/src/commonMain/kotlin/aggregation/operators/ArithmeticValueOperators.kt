@@ -63,22 +63,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> abs(value: Value<Context, Result>): Value<Context, Result> =
-		AbsoluteValueOperator(context, value)
-
-	@OptIn(LowLevelApi::class)
-	private class AbsoluteValueOperator<Context : Any, T>(
-		context: BsonContext,
-		private val value: Value<Context, T>
-	) : AbstractValue<Context, T>(context) {
-
-		override fun write(writer: BsonValueWriter) = with(writer) {
-			writeDocument {
-				write("\$abs") {
-					value.writeTo(this)
-				}
-			}
-		}
-	}
+		UnarySameTypeValueOperator(context, "abs", value)
 
 	// endregion
 	// region $add
@@ -149,6 +134,38 @@ interface ArithmeticValueOperators : ValueOperators {
 	}
 
 	// endregion
+	// region $ceil
+
+	/**
+	 * The smallest integer greater than or equal to the specified [value].
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val value: Double,
+	 *     val minBound: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Sensor::minBound set ceil(Sensor::value)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> ceil(value: Value<Context, Result>): Value<Context, Result> =
+		UnarySameTypeValueOperator(context, "ceil", value)
+
+	// endregion
 	// region $concat
 
 	/**
@@ -217,4 +234,19 @@ interface ArithmeticValueOperators : ValueOperators {
 
 	// endregion
 
+	@LowLevelApi
+	private class UnarySameTypeValueOperator<Context : Any, T>(
+		context: BsonContext,
+		private val operator: String,
+		private val value: Value<Context, T>,
+	) : AbstractValue<Context, T>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				write("$$operator") {
+					value.writeTo(this)
+				}
+			}
+		}
+	}
 }
