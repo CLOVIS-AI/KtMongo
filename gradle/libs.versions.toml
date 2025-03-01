@@ -3,7 +3,7 @@
 [versions]
 coroutines = "1.10.1"           # https://github.com/Kotlin/kotlinx.coroutines/releases
 serialization = "1.8.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
-prepared = "1.4.0"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
+prepared = "1.5.2"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
 mongodb-bson-jvm = "5.1.4"      # https://central.sonatype.com/artifact/org.mongodb/bson
 mongodb-bson-js = "6.8.0"       # https://www.npmjs.com/package/bson
 mongodb-driver = "5.2.0"        # https://central.sonatype.com/artifact/org.mongodb/mongodb-driver-kotlin-coroutine
