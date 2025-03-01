@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
+import opensavvy.ktmongo.dsl.path.Path
 import kotlin.reflect.KProperty1
 
 /**
@@ -100,6 +101,63 @@ interface ValueOperators : FieldDsl {
 	fun <Result> of(value: Result): Value<Any, Result> =
 		LiteralValue(value, context)
 
+	/**
+	 * Refers to [field] as a nested field of the current value.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 * )
+	 *
+	 * class Data(
+	 *     val users: List<User>,
+	 *     val userNames: List<Int>,
+	 * )
+	 *
+	 * data.aggregate()
+	 *     .set {
+	 *         Data::userNames set Data::users.map { it / User::name }
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
+	 */
+	@OptIn(LowLevelApi::class)
+	operator fun <Context: Any, Root, Child> Value<Context, Root>.div(field: Field<Root, Child>): Value<Context, Child> =
+		GetFieldValue(this, field.path, context)
+
+	/**
+	 * Refers to [field] as a nested field of the current value.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 * )
+	 *
+	 * class Data(
+	 *     val users: List<User>,
+	 *     val userNames: List<Int>,
+	 * )
+	 *
+	 * data.aggregate()
+	 *     .set {
+	 *         Data::userNames set Data::users.map { it / User::name }
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
+	 */
+	operator fun <Context: Any, Root, Child> Value<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
+		this / field.field
+
 }
 
 @OptIn(LowLevelApi::class)
@@ -126,4 +184,26 @@ private class LiteralValue<Result>(
 			writeObjectSafe("\$literal", value, context)
 		}
 	}
+}
+
+@OptIn(LowLevelApi::class)
+private class GetFieldValue<Context : Any, Result>(
+	private val root: Value<Context, *>,
+	private val child: Path,
+	context: BsonContext,
+) : AbstractValue<Context, Result>(context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonValueWriter) = with(writer) {
+		writeDocument {
+			writeDocument("\$getField") {
+				write("input") {
+					root.writeTo(this)
+				}
+
+				writeString("field", child.toString())
+			}
+		}
+	}
+
 }

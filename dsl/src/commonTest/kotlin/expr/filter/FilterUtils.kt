@@ -38,6 +38,7 @@ val all = "\$all"
 val oid = "\$oid"
 val elemMatch = "\$elemMatch"
 val expr = "\$expr"
+val getField = "\$getField"
 
 class Pet(
 	val name: String,

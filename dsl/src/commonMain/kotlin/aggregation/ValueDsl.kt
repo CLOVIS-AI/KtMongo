@@ -101,6 +101,9 @@ import opensavvy.ktmongo.dsl.path.Field
  * - [`$map`][ArrayValueOperators.map]
  * - [`$sortArray`][ArrayValueOperators.sortedBy]
  *
+ * Document operators:
+ * - [`$getField`][ValueOperators.div]
+ *
  * Trigonometric operators and angle management:
  * - [`$acos`][TrigonometryValueOperators.acos]
  * - [`$acosh`][TrigonometryValueOperators.acosh]

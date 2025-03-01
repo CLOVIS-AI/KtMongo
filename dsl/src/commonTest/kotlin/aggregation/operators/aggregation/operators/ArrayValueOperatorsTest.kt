@@ -18,6 +18,7 @@ package opensavvy.ktmongo.dsl.aggregation.operators.aggregation.operators
 
 import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.ktmongo.dsl.expr.filter.eq
+import opensavvy.ktmongo.dsl.expr.filter.getField
 import opensavvy.ktmongo.dsl.expr.filter.gt
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
@@ -218,6 +219,40 @@ class ArrayValueOperatorsTest : PreparedSpec({
 												"$arrayThis",
 												{"$literal": 4}
 											]
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Usage with a child field") {
+			TestPipeline<Target>()
+				.set {
+					Target::results set Target::users
+						.map {
+							it / User::name
+						}
+						.also {
+							@Suppress("UnusedVariable", "unused")
+							val foo: Value<Target, List<String>> = it // Ensure that the type doesn't change
+						}
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"results": {
+									"$map": {
+										"input": "$users",
+										"as": "this",
+										"in": {
+											"$getField": {
+												"input": "$arrayThis",
+												"field": "name"
+											}
 										}
 									}
 								}
