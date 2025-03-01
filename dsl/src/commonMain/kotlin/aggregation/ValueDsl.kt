@@ -97,6 +97,7 @@ import opensavvy.ktmongo.dsl.path.Field
  * Array operators:
  * - [`$filter`][ArrayValueOperators.filter]
  * - [`$firstN`][ArrayValueOperators.take]
+ * - [`$lastN`][ArrayValueOperators.takeLast]
  *
  * Trigonometric operators and angle management:
  * - [`$acos`][TrigonometryValueOperators.acos]

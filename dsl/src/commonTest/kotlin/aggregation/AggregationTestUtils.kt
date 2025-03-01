@@ -37,6 +37,7 @@ val unset = "\$unset"
 val project = "\$project"
 val filter = "\$filter"
 val firstN = "\$firstN"
+val lastN = "\$lastN"
 
 @OptIn(LowLevelApi::class)
 class TestPipeline<Document : Any>(

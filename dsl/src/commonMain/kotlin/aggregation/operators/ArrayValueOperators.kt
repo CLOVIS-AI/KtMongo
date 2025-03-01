@@ -392,5 +392,154 @@ interface ArrayValueOperators : ValueOperators {
 	}
 
 	// endregion
+	// region $lastN
+
+	/**
+	 * Returns the last [limit] elements in an array, similar to [kotlin.collections.takeLast].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val lastScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::lastScores set Player::scores.takeLast(3)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
+		limit: Value<Context, Number>,
+	): Value<Context, List<T>> =
+		TakeLastValueOperator(
+			input = this,
+			limit = limit,
+			context = context,
+		)
+
+	/**
+	 * Returns the last [limit] elements in an array, similar to [kotlin.collections.takeLast].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val lastScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::lastScores set Player::scores.takeLast(3)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T> Field<Context, Collection<T>>.takeLast(
+		limit: Value<Context, Number>,
+	): Value<Context, List<T>> =
+		of(this).takeLast(limit)
+
+	/**
+	 * Returns the last [limit] elements in an array, similar to [kotlin.collections.takeLast].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val lastScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::lastScores set Player::scores.takeLast(3)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T> KProperty1<Context, Collection<T>>.takeLast(
+		limit: Value<Context, Number>,
+	): Value<Context, List<T>> =
+		of(this).takeLast(limit)
+
+	/**
+	 * Returns the last [limit] elements in an array, similar to [kotlin.collections.takeLast].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val lastScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::lastScores set Player::scores.takeLast(3)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T> Collection<T>.takeLast(
+		limit: Value<Context, Number>,
+	): Value<Context, List<T>> =
+		of(this).takeLast(limit)
+
+	@LowLevelApi
+	private class TakeLastValueOperator<Context : Any, T>(
+		private val input: Value<Context, Collection<T>>,
+		private val limit: Value<Context, Number>,
+		context: BsonContext,
+	) : AbstractValue<Context, List<T>>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeDocument("\$lastN") {
+					write("input") {
+						input.writeTo(this)
+					}
+
+					write("n") {
+						limit.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
 
 }
