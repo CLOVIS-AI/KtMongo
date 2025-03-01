@@ -6,8 +6,8 @@ serialization = "1.8.0"         # https://github.com/Kotlin/kotlinx.serializatio
 prepared = "1.5.2"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
 mongodb-bson-jvm = "5.3.1"      # https://central.sonatype.com/artifact/org.mongodb/bson/versions
 mongodb-bson-js = "6.10.3"      # https://www.npmjs.com/package/bson
-mongodb-driver = "5.2.0"        # https://central.sonatype.com/artifact/org.mongodb/mongodb-driver-kotlin-coroutine
-mongodb-serialization = "5.2.1" # https://central.sonatype.com/artifact/org.mongodb/bson-kotlinx
+mongodb-driver = "5.3.1"        # https://central.sonatype.com/artifact/org.mongodb/mongodb-driver-kotlin-coroutine
+mongodb-serialization = "5.3.1" # https://central.sonatype.com/artifact/org.mongodb/bson-kotlinx
 
 [plugins]
 
