@@ -22,12 +22,19 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
 
 class ArrayValueOperatorsTest : PreparedSpec({
 
+	class User(
+		val name: String,
+		val age: Int,
+	)
+
 	class Target(
 		val numbers: List<Int>,
+		val users: List<User>,
 		val results: List<Any>
 	)
 
 	val numbers = "\$numbers"
+	val users = "\$users"
 	val arrayThis = "$\$this"
 
 	suite(filter) {
@@ -164,6 +171,36 @@ class ArrayValueOperatorsTest : PreparedSpec({
 									"$lastN": {
 										"input": "$numbers",
 										"n": {"$literal": 5}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite(sortArray) {
+		test("Sort by field") {
+			TestPipeline<Target>()
+				.set {
+					Target::results set Target::users
+						.sortedBy {
+							ascending(User::name)
+							descending(User::age)
+						}
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"results": {
+									"$sortArray": {
+										"input": "$users",
+										"sortBy": {
+											"name": 1,
+											"age": -1
+										}
 									}
 								}
 							}
