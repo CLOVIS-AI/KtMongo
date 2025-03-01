@@ -208,6 +208,50 @@ class ArrayValueOperatorsTest : PreparedSpec({
 					]
 				""".trimIndent())
 		}
+
+		test("Sort by elements (ascending)") {
+			TestPipeline<Target>()
+				.set {
+					Target::results set Target::numbers
+						.sorted()
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"results": {
+									"$sortArray": {
+										"input": "$numbers",
+										"sortBy": 1
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Sort by elements (descending)") {
+			TestPipeline<Target>()
+				.set {
+					Target::results set Target::numbers
+						.sortedDescending()
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"results": {
+									"$sortArray": {
+										"input": "$numbers",
+										"sortBy": -1
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
 	}
 
 })
