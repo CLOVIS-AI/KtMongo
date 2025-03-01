@@ -23,6 +23,7 @@ import opensavvy.ktmongo.dsl.expr.common.Expression
 import opensavvy.ktmongo.dsl.expr.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.testContext
 
+val count = "\$count"
 val limit = "\$limit"
 val match = "\$match"
 val sample = "\$sample"
@@ -31,6 +32,7 @@ val set = "\$set"
 val abs = "\$abs"
 val add = "\$add"
 val ceil = "\$ceil"
+val floor = "\$floor"
 val concat = "\$concat"
 val sort = "\$sort"
 val unset = "\$unset"

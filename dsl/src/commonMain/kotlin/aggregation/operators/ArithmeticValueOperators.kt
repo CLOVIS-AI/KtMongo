@@ -233,6 +233,38 @@ interface ArithmeticValueOperators : ValueOperators {
 	}
 
 	// endregion
+	// region $floor
+
+	/**
+	 * The largest integer less than or equal to the specified [value].
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val value: Double,
+	 *     val minBound: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Sensor::minBound set floor(of(Sensor::value))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> floor(value: Value<Context, Result>): Value<Context, Result> =
+		UnarySameTypeValueOperator(context, "floor", value)
+
+	// endregion
 
 	@LowLevelApi
 	private class UnarySameTypeValueOperator<Context : Any, T>(
