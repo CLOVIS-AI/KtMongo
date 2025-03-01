@@ -94,6 +94,9 @@ import opensavvy.ktmongo.dsl.path.Field
  * - [`$ceil`][ArithmeticValueOperators.ceil]
  * - [`$concat`][ArithmeticValueOperators.concat]
  *
+ * Array operators:
+ * - [`$filter`][ArrayValueOperators.filter]
+ *
  * Trigonometric operators and angle management:
  * - [`$acos`][TrigonometryValueOperators.acos]
  * - [`$acosh`][TrigonometryValueOperators.acosh]
@@ -114,6 +117,7 @@ import opensavvy.ktmongo.dsl.path.Field
  */
 @KtMongoDsl
 interface ValueDsl : ValueOperators,
+	ArrayValueOperators,
 	ComparisonValueOperators,
 	ConditionalValueOperators,
 	ArithmeticValueOperators,

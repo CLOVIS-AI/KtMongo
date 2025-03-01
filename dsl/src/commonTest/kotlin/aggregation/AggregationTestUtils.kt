@@ -35,6 +35,7 @@ val concat = "\$concat"
 val sort = "\$sort"
 val unset = "\$unset"
 val project = "\$project"
+val filter = "\$filter"
 
 @OptIn(LowLevelApi::class)
 class TestPipeline<Document : Any>(
