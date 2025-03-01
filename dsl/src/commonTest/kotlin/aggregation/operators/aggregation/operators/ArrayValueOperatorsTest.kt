@@ -125,4 +125,28 @@ class ArrayValueOperatorsTest : PreparedSpec({
 		}
 	}
 
+	suite(firstN) {
+		test("Usage with a list of integers") {
+			TestPipeline<Target>()
+				.set {
+					Target::results set Target::numbers
+						.take(of(5))
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"results": {
+									"$firstN": {
+										"input": "$numbers",
+										"n": {"$literal": 5}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
 })

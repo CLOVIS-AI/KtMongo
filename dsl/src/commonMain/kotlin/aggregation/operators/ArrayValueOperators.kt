@@ -246,5 +246,151 @@ interface ArrayValueOperators : ValueOperators {
 	}
 
 	// endregion
+	// region $firstN
+
+	/**
+	 * Returns the first [limit] elements in an array, similar to [kotlin.collections.take].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val firstScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::firstScores set Player::scores.take(3)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T> Value<Context, Collection<T>>.take(
+		limit: Value<Context, Number>,
+	): Value<Context, List<T>> =
+		TakeValueOperator(
+			input = this,
+			limit = limit,
+			context = context,
+		)
+
+	/**
+	 * Returns the first [limit] elements in an array, similar to [kotlin.collections.take].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val firstScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::firstScores set Player::scores.take(3)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
+	 */
+	@KtMongoDsl
+	fun <Context : Any, T> Field<Context, Collection<T>>.take(
+		limit: Value<Context, Number>,
+	): Value<Context, List<T>> =
+		of(this).take(limit)
+
+	/**
+	 * Returns the first [limit] elements in an array, similar to [kotlin.collections.take].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val firstScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::firstScores set Player::scores.take(3)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
+	 */
+	@KtMongoDsl
+	fun <Context : Any, T> KProperty1<Context, Collection<T>>.take(
+		limit: Value<Context, Number>,
+	): Value<Context, List<T>> =
+		of(this).take(limit)
+
+	/**
+	 * Returns the first [limit] elements in an array, similar to [kotlin.collections.take].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val firstScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::firstScores set Player::scores.take(3)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
+	 */
+	@KtMongoDsl
+	fun <Context : Any, T> Collection<T>.take(
+		limit: Value<Context, Number>,
+	): Value<Context, List<T>> =
+		of(this).take(limit)
+
+	@LowLevelApi
+	private class TakeValueOperator<Context : Any, T>(
+		private val input: Value<Context, Collection<T>>,
+		private val limit: Value<Context, Number>,
+		context: BsonContext,
+	) : AbstractValue<Context, List<T>>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeDocument("\$firstN") {
+					write("input") {
+						input.writeTo(this)
+					}
+
+					write("n") {
+						limit.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
 
 }
