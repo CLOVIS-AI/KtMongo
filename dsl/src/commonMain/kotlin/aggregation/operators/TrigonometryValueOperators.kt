@@ -430,7 +430,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, Double> Value<Context, Double>.toRadians(): Value<Context, Double> =
+	fun <Context : Any> Value<Context, Double>.toRadians(): Value<Context, Double> =
 		UnaryTrigonometryOperator(context, "degreesToRadians", this)
 
 	/**
@@ -459,7 +459,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, Double> Value<Context, Double>.toDegrees(): Value<Context, Double> =
+	fun <Context : Any> Value<Context, Double>.toDegrees(): Value<Context, Double> =
 		UnaryTrigonometryOperator(context, "radiansToDegrees", this)
 
 	// endregion
