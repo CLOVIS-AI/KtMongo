@@ -1,7 +1,7 @@
 # List of dependencies of the project
 
 [versions]
-coroutines = "1.9.0"            # https://github.com/Kotlin/kotlinx.coroutines/releases
+coroutines = "1.10.1"           # https://github.com/Kotlin/kotlinx.coroutines/releases
 serialization = "1.7.3"         # https://github.com/Kotlin/kotlinx.serialization/releases
 prepared = "1.4.0"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
 mongodb-bson-jvm = "5.1.4"      # https://central.sonatype.com/artifact/org.mongodb/bson
