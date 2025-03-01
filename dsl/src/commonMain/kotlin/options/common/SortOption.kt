@@ -127,7 +127,17 @@ interface WithSort<Document : Any> : Options {
 }
 
 /**
- * DSL to describe the sort order.
+ * DSL to describe a sort order.
+ *
+ * This DSL declares the methods [ascending] and [descending] which describe in which order elements are sorted.
+ *
+ * For example,
+ * ```kotlin
+ * ascending(User::name)
+ * descending(User::age)
+ * ```
+ * will sort users in alphabetical order of their name, and when users have the same name, will sort them in decreasing
+ * order of their age.
  *
  * See [WithSort.sort].
  */
