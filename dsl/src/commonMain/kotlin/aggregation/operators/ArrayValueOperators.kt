@@ -547,6 +547,172 @@ interface ArrayValueOperators : ValueOperators {
 	}
 
 	// endregion
+	// region $map
+
+	/**
+	 * Applies a [transform] to all elements in an array and returns the array with the applied results, similar to
+	 * [kotlin.collections.map].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::scores set Player::scores
+	 *             .map {
+	 *                 it + of(1)
+	 *             }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T, R> Value<Context, Collection<T>>.map(
+		variableName: String = "this",
+		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+	): Value<Context, List<R>> =
+		MapValueOperator(
+			input = this,
+			transform = PredicateEvaluator(context).transform(ThisValue(variableName, context)),
+			variableName = variableName,
+			context = context,
+		)
+
+	/**
+	 * Applies a [transform] to all elements in an array and returns the array with the applied results, similar to
+	 * [kotlin.collections.map].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::scores set Player::scores
+	 *             .map {
+	 *                 it + of(1)
+	 *             }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
+	 */
+	@KtMongoDsl
+	fun <Context : Any, T, R> Field<Context, Collection<T>>.map(
+		variableName: String = "this",
+		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+	): Value<Context, List<R>> =
+		of(this).map(variableName, transform)
+
+	/**
+	 * Applies a [transform] to all elements in an array and returns the array with the applied results, similar to
+	 * [kotlin.collections.map].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::scores set Player::scores
+	 *             .map {
+	 *                 it + of(1)
+	 *             }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
+	 */
+	@KtMongoDsl
+	fun <Context : Any, T, R> KProperty1<Context, Collection<T>>.map(
+		variableName: String = "this",
+		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+	): Value<Context, List<R>> =
+		of(this).map(variableName, transform)
+
+	/**
+	 * Applies a [transform] to all elements in an array and returns the array with the applied results, similar to
+	 * [kotlin.collections.map].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::scores set Player::scores
+	 *             .map {
+	 *                 it + of(1)
+	 *             }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
+	 */
+	@KtMongoDsl
+	fun <Context : Any, T, R> Collection<T>.map(
+		variableName: String = "this",
+		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+	): Value<Context, List<R>> =
+		of(this).map(variableName, transform)
+
+	@LowLevelApi
+	private class MapValueOperator<Context : Any, R>(
+		private val input: Value<*, *>,
+		private val transform: Value<*, *>,
+		private val variableName: String,
+		context: BsonContext,
+	) : AbstractValue<Context, R>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeDocument("\$map") {
+					write("input") {
+						input.writeTo(this)
+					}
+
+					writeString("as", variableName)
+
+					write("in") {
+						transform.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $sortArray
 
 	/**

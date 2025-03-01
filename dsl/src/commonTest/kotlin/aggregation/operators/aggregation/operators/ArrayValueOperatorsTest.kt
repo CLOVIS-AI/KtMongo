@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.dsl.aggregation.operators.aggregation.operators
 
 import opensavvy.ktmongo.dsl.aggregation.*
+import opensavvy.ktmongo.dsl.expr.filter.eq
 import opensavvy.ktmongo.dsl.expr.filter.gt
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
@@ -36,6 +37,7 @@ class ArrayValueOperatorsTest : PreparedSpec({
 	val numbers = "\$numbers"
 	val users = "\$users"
 	val arrayThis = "$\$this"
+	val foo = "$\$foo"
 
 	suite(filter) {
 		test("Usage with a list of integers") {
@@ -100,8 +102,6 @@ class ArrayValueOperatorsTest : PreparedSpec({
 		}
 
 		test("Usage with another variable name") {
-			val foo = "$\$foo"
-
 			TestPipeline<Target>()
 				.set {
 					Target::results set Target::numbers
@@ -121,6 +121,102 @@ class ArrayValueOperatorsTest : PreparedSpec({
 											"$gt": [
 												"$foo",
 												{"$literal": 3}
+											]
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite(map) {
+		test("Usage with a list of integers") {
+			TestPipeline<Target>()
+				.set {
+					Target::results set Target::numbers
+						.map {
+							it + of(4)
+						}
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"results": {
+									"$map": {
+										"input": "$numbers",
+										"as": "this",
+										"in": {
+											"$add": [
+												"$arrayThis",
+												{"$literal": 4}
+											]
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Usage with a variable name") {
+			TestPipeline<Target>()
+				.set {
+					Target::results set Target::numbers
+						.map(variableName = "foo") {
+							it + of(4)
+						}
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"results": {
+									"$map": {
+										"input": "$numbers",
+										"as": "foo",
+										"in": {
+											"$add": [
+												"$foo",
+												{"$literal": 4}
+											]
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Usage with a type conversion") {
+			TestPipeline<Target>()
+				.set {
+					Target::results set Target::numbers
+						.map {
+							it eq of(4)
+						}
+						.also {
+							@Suppress("UnusedVariable", "unused")
+							val foo: Value<Target, List<Boolean>> = it // Ensure that the type doesn't change
+						}
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"results": {
+									"$map": {
+										"input": "$numbers",
+										"as": "this",
+										"in": {
+											"$eq": [
+												"$arrayThis",
+												{"$literal": 4}
 											]
 										}
 									}
