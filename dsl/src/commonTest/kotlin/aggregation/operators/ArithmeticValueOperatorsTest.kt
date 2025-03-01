@@ -147,6 +147,26 @@ class ArithmeticValueOperatorsTest : PreparedSpec({
 		}
 	}
 
+	suite(floor) {
+		test("Usage with a number") {
+			TestPipeline<Target>()
+				.set {
+					Target::average set floor(of(Target::average))
+				}
+				.shouldBeBson("""
+					[
+						{
+							"$set": {
+								"average": {
+									"$floor": "$average"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
 	suite(concat) {
 		test("Binary usage") {
 			TestPipeline<Target>()
