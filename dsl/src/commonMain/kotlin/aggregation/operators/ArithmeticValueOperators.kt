@@ -146,12 +146,12 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * ```kotlin
 	 * class Sensor(
 	 *     val value: Double,
-	 *     val minBound: Double,
+	 *     val maxBound: Double,
 	 * )
 	 *
 	 * collection.aggregate()
 	 *     .set {
-	 *         Sensor::minBound set ceil(Sensor::value)
+	 *         Sensor::maxBound set ceil(of(Sensor::value))
 	 *     }.toList()
 	 * ```
 	 *
