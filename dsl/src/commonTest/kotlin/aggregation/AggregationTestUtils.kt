@@ -37,6 +37,11 @@ val concat = "\$concat"
 val sort = "\$sort"
 val unset = "\$unset"
 val project = "\$project"
+val filter = "\$filter"
+val map = "\$map"
+val firstN = "\$firstN"
+val lastN = "\$lastN"
+val sortArray = "\$sortArray"
 
 @OptIn(LowLevelApi::class)
 class TestPipeline<Document : Any>(
