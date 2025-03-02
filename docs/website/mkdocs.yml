@@ -79,7 +79,10 @@ plugins:
 markdown_extensions:
   - admonition
   - attr_list
+  - def_list
   - md_in_html
+  - footnotes
+  - tables
   - pymdownx.details
   - pymdownx.superfences
   - pymdownx.highlight:
@@ -89,6 +92,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.tabbed:
       alternate_style: true
+  - toc:
+      permalink: true
 
 edit_uri: edit/main/docs/website/docs
 

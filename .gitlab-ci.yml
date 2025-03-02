@@ -14,7 +14,7 @@ include:
 
 variables:
   # https://gitlab.com/opensavvy/automation/containers
-  ci_containers: 0.6.0
+  ci_containers: 0.7.0
 
 workflow:
   rules:
