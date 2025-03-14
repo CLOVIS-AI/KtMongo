@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,30 +25,15 @@ kotlin {
 		nodejs()
 	}
 
-	compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
-
 	sourceSets.commonMain.dependencies {
-		api(projects.annotations)
-	}
-
-	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.bson.jvm)
-	}
-
-	sourceSets.jsMain.dependencies {
-		api(npm("bson", libs.versions.mongodb.bson.js.get()))
-	}
-
-	sourceSets.commonTest.dependencies {
-		implementation(projects.bsonTests)
-		implementation(libs.prepared.kotest)
-		implementation(opensavvyConventions.aligned.kotlin.test)
+		api(projects.bson)
+		api(libs.prepared)
 	}
 }
 
 library {
-	name.set("Kotlin BSON")
-	description.set("Kotlin-first BSON library")
+	name.set("Kotlin BSON • Test suites")
+	description.set("Test suites for validating a BSON implementation on all platforms supported by Kotlin")
 	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
 
 	license.set {
