@@ -21,9 +21,6 @@ plugins {
 
 kotlin {
 	jvm()
-	js {
-		nodejs()
-	}
 
 	sourceSets.commonMain.dependencies {
 		api(projects.dsl)

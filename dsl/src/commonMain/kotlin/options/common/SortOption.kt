@@ -19,7 +19,6 @@ package opensavvy.ktmongo.dsl.options.common
 import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
-import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -57,7 +56,7 @@ class SortOption<Document : Any>(
 
 	@OptIn(LowLevelApi::class)
 	override val value: Bson
-		get() = buildBsonDocument {
+		get() = context.buildDocument {
 			for (child in children) {
 				child.writeTo(this)
 			}

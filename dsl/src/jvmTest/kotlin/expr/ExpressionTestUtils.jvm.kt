@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,62 +17,15 @@
 package opensavvy.ktmongo.dsl.expr
 
 import opensavvy.ktmongo.bson.BsonContext
-import org.bson.codecs.AtomicBooleanCodec
-import org.bson.codecs.AtomicIntegerCodec
-import org.bson.codecs.AtomicLongCodec
-import org.bson.codecs.BigDecimalCodec
-import org.bson.codecs.BinaryCodec
-import org.bson.codecs.BooleanCodec
-import org.bson.codecs.BsonArrayCodec
-import org.bson.codecs.BsonBinaryCodec
-import org.bson.codecs.BsonBooleanCodec
-import org.bson.codecs.BsonDBPointerCodec
-import org.bson.codecs.BsonDateTimeCodec
-import org.bson.codecs.BsonDecimal128Codec
-import org.bson.codecs.BsonDocumentCodec
-import org.bson.codecs.BsonDoubleCodec
-import org.bson.codecs.BsonInt32Codec
-import org.bson.codecs.BsonInt64Codec
-import org.bson.codecs.BsonJavaScriptCodec
-import org.bson.codecs.BsonMaxKeyCodec
-import org.bson.codecs.BsonMinKeyCodec
-import org.bson.codecs.BsonNullCodec
-import org.bson.codecs.BsonObjectIdCodec
-import org.bson.codecs.BsonRegularExpressionCodec
-import org.bson.codecs.BsonStringCodec
-import org.bson.codecs.BsonSymbolCodec
-import org.bson.codecs.BsonTimestampCodec
-import org.bson.codecs.BsonUndefinedCodec
-import org.bson.codecs.BsonValueCodec
-import org.bson.codecs.ByteArrayCodec
-import org.bson.codecs.ByteCodec
-import org.bson.codecs.CharacterCodec
-import org.bson.codecs.CodeCodec
-import org.bson.codecs.DateCodec
-import org.bson.codecs.Decimal128Codec
-import org.bson.codecs.DocumentCodec
-import org.bson.codecs.DoubleCodec
-import org.bson.codecs.FloatCodec
-import org.bson.codecs.IntegerCodec
-import org.bson.codecs.JsonObjectCodec
-import org.bson.codecs.LongCodec
-import org.bson.codecs.MaxKeyCodec
-import org.bson.codecs.MinKeyCodec
-import org.bson.codecs.ObjectIdCodec
-import org.bson.codecs.OverridableUuidRepresentationUuidCodec
-import org.bson.codecs.PatternCodec
-import org.bson.codecs.RawBsonDocumentCodec
-import org.bson.codecs.ShortCodec
-import org.bson.codecs.StringCodec
-import org.bson.codecs.SymbolCodec
-import org.bson.codecs.UuidCodec
+import opensavvy.ktmongo.bson.official.JvmBsonContext
+import org.bson.codecs.*
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.jsr310.InstantCodec
 import org.bson.codecs.jsr310.LocalDateCodec
 import org.bson.codecs.jsr310.LocalDateTimeCodec
 import org.bson.codecs.jsr310.LocalTimeCodec
 
-actual fun testContext(): BsonContext = BsonContext(
+actual fun testContext(): BsonContext = JvmBsonContext(
 	codecRegistry = CodecRegistries.fromCodecs(
 		AtomicBooleanCodec(),
 		AtomicIntegerCodec(),

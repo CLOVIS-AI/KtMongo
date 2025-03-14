@@ -14,18 +14,63 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.bson.official
 
-import opensavvy.ktmongo.bson.types.Decimal128
-import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
 import org.bson.BsonArray
 import org.bson.codecs.Encoder
 import org.bson.codecs.EncoderContext
+import org.bson.codecs.configuration.CodecRegistries
+import org.bson.codecs.configuration.CodecRegistry
+import org.bson.types.Decimal128
+import org.bson.types.ObjectId
+
+/**
+ * BSON implementation based on the official Java and Kotlin MongoDB drivers.
+ */
+class JvmBsonContext(
+	codecRegistry: CodecRegistry,
+) : BsonContext {
+
+	@LowLevelApi
+	val codecRegistry: CodecRegistry = CodecRegistries.fromRegistries(
+		codecRegistry,
+		CodecRegistries.fromCodecs(
+			KotlinBsonCodec(),
+			KotlinBsonArrayCodec(),
+		)
+	)
+
+	@LowLevelApi
+	override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson {
+		val document = BsonDocument()
+
+		BsonDocumentWriter(document).use { writer ->
+			JavaBsonWriter(this, writer).writeDocument {
+				block()
+			}
+		}
+
+		return Bson(document)
+	}
+
+	@LowLevelApi
+	override fun buildArray(block: BsonValueWriter.() -> Unit): opensavvy.ktmongo.bson.official.BsonArray {
+		val nativeArray = BsonArray()
+
+		JavaRootArrayWriter(this, nativeArray).block()
+
+		return opensavvy.ktmongo.bson.official.BsonArray(nativeArray)
+	}
+}
 
 @OptIn(LowLevelApi::class)
 private class JavaBsonWriter(
+	private val context: JvmBsonContext,
 	private val writer: BsonWriter
 ) : BsonFieldWriter, BsonValueWriter {
 	override fun write(name: String, block: BsonValueWriter.() -> Unit) {
@@ -104,22 +149,22 @@ private class JavaBsonWriter(
 		writer.writeEndArray()
 	}
 
-	override fun <T> writeObjectSafe(name: String, obj: T, context: BsonContext) {
+	override fun <T> writeObjectSafe(name: String, obj: T) {
 		writer.writeName(name)
-		writeObjectSafe(obj, context)
+		writeObjectSafe(obj)
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	override fun writeDBPointer(name: String, namespace: String, id: ObjectId) {
-		writer.writeDBPointer(name, BsonDbPointer(namespace, id))
+	override fun writeDBPointer(name: String, namespace: String, id: ByteArray) {
+		writer.writeDBPointer(name, BsonDbPointer(namespace, ObjectId(id)))
 	}
 
-	override fun writeObjectId(name: String, value: ObjectId) {
-		writer.writeObjectId(name, value)
+	override fun writeObjectId(name: String, id: ByteArray) {
+		writer.writeObjectId(name, ObjectId(id))
 	}
 
-	override fun writeDecimal128(name: String, value: Decimal128) {
-		writer.writeDecimal128(name, value)
+	override fun writeDecimal128(name: String, low: Long, high: Long) {
+		writer.writeDecimal128(name, Decimal128.fromIEEE754BIDEncoding(high, low))
 	}
 
 	override fun writeBoolean(value: Boolean) {
@@ -193,7 +238,7 @@ private class JavaBsonWriter(
 		writer.writeEndArray()
 	}
 
-	override fun <T> writeObjectSafe(obj: T, context: BsonContext) {
+	override fun <T> writeObjectSafe(obj: T) {
 		if (obj == null) {
 			writer.writeNull()
 		} else {
@@ -210,40 +255,22 @@ private class JavaBsonWriter(
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	override fun writeDBPointer(namespace: String, id: ObjectId) {
-		writer.writeDBPointer(BsonDbPointer(namespace, id))
+	override fun writeDBPointer(namespace: String, id: ByteArray) {
+		writer.writeDBPointer(BsonDbPointer(namespace, ObjectId(id)))
 	}
 
-	override fun writeObjectId(value: ObjectId) {
-		writer.writeObjectId(value)
+	override fun writeObjectId(value: ByteArray) {
+		writer.writeObjectId(ObjectId(value))
 	}
 
-	override fun writeDecimal128(value: Decimal128) {
-		writer.writeDecimal128(value)
+	override fun writeDecimal128(low: Long, high: Long) {
+		writer.writeDecimal128(Decimal128.fromIEEE754BIDEncoding(high, low))
 	}
-
-}
-
-/**
- * Creates a BSON document with the contents defined in [block].
- *
- * The returned type is from the official MongoDB BSON library.
- */
-@LowLevelApi
-actual fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson {
-	val document = BsonDocument()
-
-	BsonDocumentWriter(document).use { writer ->
-		JavaBsonWriter(writer).writeDocument {
-			block()
-		}
-	}
-
-	return document
 }
 
 @LowLevelApi
 private class JavaRootArrayWriter(
+	private val context: JvmBsonContext,
 	private val array: BsonArray,
 ) : BsonValueWriter {
 	@LowLevelApi
@@ -267,8 +294,8 @@ private class JavaRootArrayWriter(
 	}
 
 	@LowLevelApi
-	override fun writeDecimal128(value: Decimal128) {
-		array.add(BsonDecimal128(value))
+	override fun writeDecimal128(low: Long, high: Long) {
+		array.add(BsonDecimal128(Decimal128.fromIEEE754BIDEncoding(high, low)))
 	}
 
 	@LowLevelApi
@@ -282,8 +309,8 @@ private class JavaRootArrayWriter(
 	}
 
 	@LowLevelApi
-	override fun writeObjectId(value: ObjectId) {
-		array.add(BsonObjectId(value))
+	override fun writeObjectId(id: ByteArray) {
+		array.add(BsonObjectId(ObjectId(id)))
 	}
 
 	@LowLevelApi
@@ -302,20 +329,24 @@ private class JavaRootArrayWriter(
 	}
 
 	@LowLevelApi
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	override fun writeSymbol(value: String) {
 		array.add(BsonSymbol(value))
 	}
 
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeUndefined() {
 		array.add(BsonUndefined())
 	}
 
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
-	override fun writeDBPointer(namespace: String, id: ObjectId) {
-		array.add(BsonDbPointer(namespace, id))
+	override fun writeDBPointer(namespace: String, id: ByteArray) {
+		array.add(BsonDbPointer(namespace, ObjectId(id)))
 	}
 
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeJavaScriptWithScope(code: String) {
 		array.add(BsonJavaScript(code))
@@ -333,38 +364,23 @@ private class JavaRootArrayWriter(
 
 	@LowLevelApi
 	override fun writeDocument(block: BsonFieldWriter.() -> Unit) {
-		array.add(buildBsonDocument(block))
+		array.add(context.buildDocument(block).raw)
 	}
 
 	@LowLevelApi
 	override fun writeArray(block: BsonValueWriter.() -> Unit) {
-		array.add(buildBsonArray(block).raw)
+		array.add(context.buildArray(block).raw)
 	}
 
 	@LowLevelApi
-	override fun <T> writeObjectSafe(obj: T, context: BsonContext) {
+	override fun <T> writeObjectSafe(obj: T) {
 		val document = BsonDocument()
 
 		BsonDocumentWriter(document).use { writer ->
-			JavaBsonWriter(writer).writeObjectSafe(obj, context)
+			JavaBsonWriter(context, writer).writeObjectSafe(obj)
 		}
 
 		array.add(document)
 	}
 
-}
-
-/**
- * Creates a BSON document with the contents defined in [block].
- *
- * The returned type is from the official MongoDB BSON library.
- */
-@LowLevelApi
-actual fun buildBsonArray(block: BsonValueWriter.() -> Unit): opensavvy.ktmongo.bson.BsonArray {
-	val nativeArray = BsonArray()
-	val array = opensavvy.ktmongo.bson.BsonArray(nativeArray)
-
-	JavaRootArrayWriter(nativeArray).block()
-
-	return array
 }

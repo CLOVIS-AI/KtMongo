@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,27 @@
 package opensavvy.ktmongo.dsl.models
 
 import com.mongodb.client.model.*
+import opensavvy.ktmongo.bson.official.Bson
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 
 @Suppress("UNCHECKED_CAST")
 @OptIn(LowLevelApi::class)
 fun <Document> AvailableInBulkWrite<Document>.toJava(): WriteModel<Document> = when (this) {
 	is UpdateMany<*> -> UpdateManyModel<Document>(
-		/* filter = */ this.filter.toBsonDocument(),
-		/* update = */ this.update.toBsonDocument(),
+		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* update = */ (context.buildDocument(this.update) as Bson).raw,
 		/* options = */ UpdateOptions(),
 	)
 
 	is UpdateOne<*> -> UpdateOneModel<Document>(
-		/* filter = */ this.filter.toBsonDocument(),
-		/* update = */ this.update.toBsonDocument(),
+		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* update = */ (context.buildDocument(this.update) as Bson).raw,
 		/* options = */ UpdateOptions(),
 	)
 
 	is UpsertOne<*> -> UpdateOneModel<Document>(
-		/* filter = */ this.filter.toBsonDocument(),
-		/* update = */ this.update.toBsonDocument(),
+		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* update = */ (context.buildDocument(this.update) as Bson).raw,
 		/* options = */ UpdateOptions().upsert(true),
 	)
 

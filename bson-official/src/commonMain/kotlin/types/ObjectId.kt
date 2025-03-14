@@ -14,20 +14,31 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.bson.official.types
 
 /**
- * Currently not implemented, creates an empty BSON document.
+ * MongoDB native identifier.
+ *
+ * ObjectIds are 12 bytes and can be generated safely in a distributed manner with very low probability of collision.
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-objectid)
  */
-actual fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson {
-	console.error("buildBsonDocument is not implemented on this platform")
-	return Bson()
-}
+expect class ObjectId : Comparable<ObjectId> {
 
-/**
- * Currently not implemented, creates an empty BSON array.
- */
-actual fun buildBsonArray(block: BsonValueWriter.() -> Unit): BsonArray {
-	console.error("buildBsonArray is not implemented on this platform")
-	return BsonArray()
+	constructor(bytes: ByteArray)
+
+	constructor(hexString: String)
+
+	/**
+	 * Generates a new random ObjectId.
+	 */
+	constructor()
+
+	fun toHexString(): String
+
+	fun toByteArray(): ByteArray
+
+	override fun compareTo(other: ObjectId): Int
 }

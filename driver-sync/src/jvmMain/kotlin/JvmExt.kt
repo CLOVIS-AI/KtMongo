@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.sync
 
-actual class Bson {
-	// TODO: implement the BSON type on top of the NPM 'bson' library
-}
+import opensavvy.ktmongo.bson.Bson
+import org.bson.BsonDocument
 
-actual class BsonArray {
-	// TODO: implement the BSON array type on top of the NPM 'bson' library
-}
+internal fun Bson.toJava(): BsonDocument =
+	(this as opensavvy.ktmongo.bson.official.Bson).raw

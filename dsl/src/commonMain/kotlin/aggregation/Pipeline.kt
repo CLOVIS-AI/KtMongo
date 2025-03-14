@@ -16,7 +16,9 @@
 
 package opensavvy.ktmongo.dsl.aggregation
 
-import opensavvy.ktmongo.bson.*
+import opensavvy.ktmongo.bson.Bson
+import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -224,7 +226,7 @@ class PipelineChainLink internal constructor(
 	@LowLevelApi
 	fun toBsonList(): List<Bson> =
 		hierarchyReversed()
-			.map { buildBsonDocument { it.writeTo(this) } }
+			.map { context.buildDocument { it.writeTo(this) } }
 			.toList().reversed()
 
 	/**
@@ -245,7 +247,7 @@ class PipelineChainLink internal constructor(
 	 * JSON representation of this pipeline.
 	 */
 	@OptIn(LowLevelApi::class)
-	override fun toString(): String = buildBsonArray {
+	override fun toString(): String = context.buildArray {
 		writeTo(this)
 	}.toString()
 

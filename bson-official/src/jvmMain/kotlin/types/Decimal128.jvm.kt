@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.bson.official.types
 
-import org.bson.codecs.configuration.CodecRegistry
+import org.bson.types.Decimal128
 
-actual class BsonContext(
-	val codecRegistry: CodecRegistry
-)
+actual typealias Decimal128 = Decimal128

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,7 @@
 
 package opensavvy.ktmongo.dsl.expr
 
-import opensavvy.ktmongo.bson.buildBsonDocument
-import opensavvy.ktmongo.bson.types.BsonType
+import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.kotest.PreparedSpec
@@ -30,7 +29,7 @@ class PredicateExpressionTest : PreparedSpec({
 		val expr = PredicateExpression<T>(testContext())
 			.apply(block)
 
-		return buildBsonDocument {
+		return testContext().buildDocument {
 			expr.writeTo(this)
 		}.toString()
 	}
@@ -40,8 +39,8 @@ class PredicateExpressionTest : PreparedSpec({
 	val type = "\$type"
 	val not = "\$not"
 	val gt = "\$gt"
-	val gte = "\$gte"
-	val lt = "\$lt"
+	"\$gte"
+	"\$lt"
 	val lte = "\$lte"
 
 	suite("Operator $eq") {

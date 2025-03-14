@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ class UpdateExpression<T>(
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument("\$set") {
 				for ((field, value) in mappings) {
-					writeObjectSafe(field.toString(), value, context)
+					writeObjectSafe(field.toString(), value)
 				}
 			}
 		}
@@ -130,7 +130,7 @@ class UpdateExpression<T>(
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument("\$setOnInsert") {
 				for ((field, value) in mappings) {
-					writeObjectSafe(field.toString(), value, context)
+					writeObjectSafe(field.toString(), value)
 				}
 			}
 		}
@@ -157,7 +157,7 @@ class UpdateExpression<T>(
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument("\$inc") {
 				for ((field, value) in mappings) {
-					writeObjectSafe(field.toString(), value, context)
+					writeObjectSafe(field.toString(), value)
 				}
 			}
 		}

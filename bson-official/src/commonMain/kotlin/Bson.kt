@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr
+package opensavvy.ktmongo.bson.official
 
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.Bson
+import opensavvy.ktmongo.bson.BsonArray
 
-actual fun testContext(): BsonContext = BsonContext()
+expect class Bson : Bson
+
+expect class BsonArray : BsonArray

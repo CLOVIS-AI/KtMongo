@@ -18,8 +18,8 @@ package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueWriteable
 import opensavvy.ktmongo.bson.BsonValueWriter
-import opensavvy.ktmongo.bson.buildBsonArray
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
@@ -59,7 +59,7 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  *
  * @see ValueDsl Builder for aggregation values.
  */
-interface Value<in Root : Any, out Type> : Node {
+interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
 
 	/**
 	 * The context used to generate this value.
@@ -86,7 +86,7 @@ interface Value<in Root : Any, out Type> : Node {
 	 * Writes the result of [simplifying][simplify] this value into [writer].
 	 */
 	@LowLevelApi
-	fun writeTo(writer: BsonValueWriter)
+	override fun writeTo(writer: BsonValueWriter)
 
 	/**
 	 * JSON representation of this expression.
@@ -146,7 +146,7 @@ abstract class AbstractValue<Root : Any, Type> private constructor(
 	 */
 	@OptIn(LowLevelApi::class)
 	fun toString(simplified: Boolean): String {
-		val document = buildBsonArray {
+		val document = context.buildArray {
 			if (simplified)
 				writeTo(this)
 			else

@@ -14,27 +14,28 @@
  * limitations under the License.
  */
 
-
 package opensavvy.ktmongo.bson
 
-import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
 
-@OptIn(LowLevelApi::class)
+@OptIn(LowLevelApi::class, ExperimentalStdlibApi::class)
 @Suppress("DEPRECATION")
-fun SuiteDsl.writerTests() = suite("BsonPrimitiveWriter") {
+fun SuiteDsl.writerTests(
+	prepareContext: Prepared<BsonContext>,
+) = suite("BsonPrimitiveWriter") {
 
 	test("An Int in a root document") {
-		val result = buildBsonDocument {
+		val result = prepareContext().buildDocument {
 			writeInt32("foo", 42)
 		}
 		check(result.toString() == """{"foo": 42}""")
 	}
 
 	test("More complex example") {
-		val result = buildBsonDocument {
-			writeDBPointer("user", "myproject.users", ObjectId("507f1f77bcf86cd799439011"))
+		val result = prepareContext().buildDocument {
+			writeDBPointer("user", "myproject.users", "67d43dbc64b52e612b1b2f7b".hexToByteArray())// (0x67d43dbc), 0x67d43dbc, 0x64b52e612b1b2f7b)
 			writeInt64("age", 18)
 			writeBoolean("isAlive", true)
 
@@ -50,21 +51,21 @@ fun SuiteDsl.writerTests() = suite("BsonPrimitiveWriter") {
 		val ref = "\$ref"
 		val id = "\$id"
 		val oid = "\$oid"
-		check(result.toString() == """{"user": {"$ref": "myproject.users", "$id": {"$oid": "507f1f77bcf86cd799439011"}}, "age": 18, "isAlive": true, "children": [{"name": "Paul"}, {"name": "Alice"}]}""")
+		check(result.toString() == """{"user": {"$ref": "myproject.users", "$id": {"$oid": "67d43dbc64b52e612b1b2f7b"}}, "age": 18, "isAlive": true, "children": [{"name": "Paul"}, {"name": "Alice"}]}""")
 	}
 
 	test("An empty document") {
-		val result = buildBsonDocument {}
+		val result = prepareContext().buildDocument {}
 		check(result.toString() == """{}""")
 	}
 
 	test("An empty array") {
-		val result = buildBsonArray {}
+		val result = prepareContext().buildArray {}
 		check(result.toString() == """[]""")
 	}
 
 	test("An array with multiple elements") {
-		val result = buildBsonArray {
+		val result = prepareContext().buildArray {
 			writeInt32(123)
 			writeBoolean(false)
 			writeDocument {

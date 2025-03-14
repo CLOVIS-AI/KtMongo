@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,28 @@
 
 package opensavvy.ktmongo.bson
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.ktmongo.dsl.LowLevelApi
 
-class BsonPrimitiveWriterTest : PreparedSpec({
-	writerTests()
-})
+/**
+ * An object that can be represented as fields in a [BSON document][Bson].
+ */
+interface BsonFieldWriteable {
+
+	/**
+	 * Writes this object to the provided [writer].
+	 */
+	@LowLevelApi
+	fun writeTo(writer: BsonFieldWriter)
+}
+
+/**
+ * An object that can be represented as an item in a [BSON array][BsonArray].
+ */
+interface BsonValueWriteable {
+
+	/**
+	 * Writes this object to the provided [writer].
+	 */
+	@LowLevelApi
+	fun writeTo(writer: BsonValueWriter)
+}

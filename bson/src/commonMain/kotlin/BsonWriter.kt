@@ -16,8 +16,6 @@
 
 package opensavvy.ktmongo.bson
 
-import opensavvy.ktmongo.bson.types.Decimal128
-import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 /**
@@ -43,7 +41,7 @@ sealed interface AnyBsonWriter
  *
  * To write fields in a BSON document, see [BsonFieldWriter].
  *
- * Instances of this interface are commonly obtained by calling the [buildBsonArray] function.
+ * Instances of this interface are commonly obtained by calling the [BsonContext.buildArray] function.
  */
 @LowLevelApi
 @BsonWriterDsl
@@ -54,10 +52,10 @@ interface BsonValueWriter : AnyBsonWriter {
 	@LowLevelApi fun writeInt32(value: Short) = writeInt32(value.toInt())
 	@LowLevelApi fun writeInt32(value: Byte) = writeInt32(value.toInt())
 	@LowLevelApi fun writeInt64(value: Long)
-	@LowLevelApi fun writeDecimal128(value: Decimal128)
+	@LowLevelApi fun writeDecimal128(low: Long, high: Long)
 	@LowLevelApi fun writeDateTime(value: Long)
 	@LowLevelApi fun writeNull()
-	@LowLevelApi fun writeObjectId(value: ObjectId)
+	@LowLevelApi fun writeObjectId(id: ByteArray)
 	@LowLevelApi fun writeRegularExpression(pattern: String, options: String)
 	@LowLevelApi fun writeString(value: String)
 	@LowLevelApi fun writeTimestamp(value: Long)
@@ -69,7 +67,7 @@ interface BsonValueWriter : AnyBsonWriter {
 	@LowLevelApi fun writeUndefined()
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	@LowLevelApi fun writeDBPointer(namespace: String, id: ObjectId)
+	@LowLevelApi fun writeDBPointer(namespace: String, id: ByteArray)
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi fun writeJavaScriptWithScope(code: String)
@@ -85,7 +83,7 @@ interface BsonValueWriter : AnyBsonWriter {
 	 *
 	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
 	 */
-	@LowLevelApi fun <T> writeObjectSafe(obj: T, context: BsonContext)
+	@LowLevelApi fun <T> writeObjectSafe(obj: T)
 }
 
 /**
@@ -95,7 +93,7 @@ interface BsonValueWriter : AnyBsonWriter {
  *
  * To write generic values, see [BsonValueWriter].
  *
- * Instances of this interface are commonly obtained by calling the [buildBsonDocument] function.
+ * Instances of this interface are commonly obtained by calling the [BsonContext.buildDocument] function.
  */
 @LowLevelApi
 @BsonWriterDsl
@@ -108,10 +106,10 @@ interface BsonFieldWriter : AnyBsonWriter {
 	@LowLevelApi fun writeInt32(name: String, value: Short) = writeInt32(name, value.toInt())
 	@LowLevelApi fun writeInt32(name: String, value: Byte) = writeInt32(name, value.toInt())
 	@LowLevelApi fun writeInt64(name: String, value: Long)
-	@LowLevelApi fun writeDecimal128(name: String, value: Decimal128)
+	@LowLevelApi fun writeDecimal128(name: String, low: Long, high: Long)
 	@LowLevelApi fun writeDateTime(name: String, value: Long)
 	@LowLevelApi fun writeNull(name: String)
-	@LowLevelApi fun writeObjectId(name: String, value: ObjectId)
+	@LowLevelApi fun writeObjectId(name: String, id: ByteArray)
 	@LowLevelApi fun writeRegularExpression(name: String, pattern: String, options: String)
 	@LowLevelApi fun writeString(name: String, value: String)
 	@LowLevelApi fun writeTimestamp(name: String, value: Long)
@@ -123,7 +121,7 @@ interface BsonFieldWriter : AnyBsonWriter {
 	@LowLevelApi fun writeUndefined(name: String)
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	@LowLevelApi fun writeDBPointer(name: String, namespace: String, id: ObjectId)
+	@LowLevelApi fun writeDBPointer(name: String, namespace: String, id: ByteArray)
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi fun writeJavaScriptWithScope(name: String, code: String)
@@ -139,73 +137,5 @@ interface BsonFieldWriter : AnyBsonWriter {
 	 *
 	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
 	 */
-	@LowLevelApi fun <T> writeObjectSafe(name: String, obj: T, context: BsonContext)
+	@LowLevelApi fun <T> writeObjectSafe(name: String, obj: T)
 }
-
-/**
- * Instantiates a new [BSON document][Bson].
- *
- * ### Example
- *
- * To create the following BSON document:
- * ```json
- * {
- *     "name": "Bob",
- *     "isAlive": true,
- *     "children": [
- *         {
- *             "name": "Alice"
- *         },
- *         {
- *             "name": "Charles"
- *         }
- *     ]
- * }
- * ```
- * use the code:
- * ```kotlin
- * buildBsonDocument {
- *     writeString("name", "Alice")
- *     writeBoolean("isAlive", true)
- *     writeArray("children") {
- *         writeDocument {
- *             writeString("name", "Alice")
- *         }
- *         writeDocument {
- *             writeString("name", "Charles")
- *         }
- *     }
- * }
- * ```
- */
-@LowLevelApi
-expect fun buildBsonDocument(block: BsonFieldWriter.() -> Unit): Bson
-
-/**
- * Instantiates a new [BSON array][BsonArray].
- *
- * ### Example
- *
- * To create the following BSON array:
- * ```json
- * [
- *     12,
- *     null,
- *     {
- *         "name": "Barry"
- *     }
- * ]
- * ```
- * use the code:
- * ```kotlin
- * buildBsonArray {
- *     writeInt32(12)
- *     writeNull()
- *     writeDocument {
- *         writeString("name", "Barry")
- *     }
- * }
- * ```
- */
-@LowLevelApi
-expect fun buildBsonArray(block: BsonValueWriter.() -> Unit): BsonArray

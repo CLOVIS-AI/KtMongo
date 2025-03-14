@@ -21,12 +21,9 @@ plugins {
 
 kotlin {
 	jvm()
-	js {
-		nodejs()
-	}
 
 	sourceSets.commonMain.dependencies {
-		api(projects.bson)
+		api(projects.bsonOfficial)
 		api(projects.annotations)
 	}
 

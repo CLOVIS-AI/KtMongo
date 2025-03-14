@@ -1,4 +1,4 @@
-# Module Kotlin BSON
+# Module Kotlin BSON • Multiplatform abstraction for different BSON implementations
 
 Kotlin Multiplatform-ready implementation of BSON.
 

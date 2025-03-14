@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ package opensavvy.ktmongo.bson
 /**
  * A BSON document.
  *
- * To create instances of this class, see [buildBsonDocument].
+ * To create instances of this class, see [BsonContext.buildDocument].
  */
-expect class Bson {
+interface Bson {
 
 	/**
 	 * JSON representation of this [Bson] object, as a [String].
@@ -32,12 +32,12 @@ expect class Bson {
 /**
  * A BSON array.
  *
- * To create instances of this class, see [buildBsonArray].
+ * To create instances of this class, see [BsonContext.buildArray].
  */
-expect class BsonArray {
+interface BsonArray {
 
 	/**
-	 * JSON representation of this [BsonArray] object, as a [String].
+	 * JSON representation of this [BsonArray], as a [String].
 	 */
 	override fun toString(): String
 }

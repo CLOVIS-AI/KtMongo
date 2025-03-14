@@ -20,11 +20,11 @@ import com.mongodb.client.model.DeleteOptions
 import com.mongodb.client.model.DropCollectionOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOptions
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.official.Bson
+import opensavvy.ktmongo.bson.official.JvmBsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.expr.*
-import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.*
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.options.common.LimitOption
@@ -46,8 +46,8 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	fun asKotlinClient() = inner
 
 	@LowLevelApi
-	override val context: BsonContext
-		get() = BsonContext(inner.codecRegistry)
+	override val context: JvmBsonContext
+		get() = JvmBsonContext(inner.codecRegistry)
 
 	// region Find
 
@@ -65,9 +65,9 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 
 		return JvmMongoIterable(
-			inner.find(model.filter.toBsonDocument())
+			inner.find(context.buildDocument(model.filter).raw)
 				.limit(model.options.option<LimitOption, _>()?.toInt() ?: 0)
-				.sort(model.options.option<SortOption<*>, _>()),
+				.sort((model.options.option<SortOption<*>, _>() as Bson?)?.raw),
 			repr = { "$this.find($model)" }
 		)
 	}
@@ -89,7 +89,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.predicate()
 
 		return inner.countDocuments(
-			model.filter.toBsonDocument(),
+			context.buildDocument(model.filter).raw,
 			model.options.toJava()
 		)
 	}
@@ -112,7 +112,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateMany(model.filter.toBsonDocument(), model.update.toBsonDocument(), UpdateOptions())
+		inner.updateMany(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -127,7 +127,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateOne(model.filter.toBsonDocument(), model.update.toBsonDocument(), UpdateOptions())
+		inner.updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -142,7 +142,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateOne(model.filter.toBsonDocument(), model.update.toBsonDocument(), UpdateOptions().upsert(true))
+		inner.updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions().upsert(true))
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -157,7 +157,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		return inner.findOneAndUpdate(model.filter.toBsonDocument(), model.update.toBsonDocument(), FindOneAndUpdateOptions())
+		return inner.findOneAndUpdate(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, FindOneAndUpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -192,7 +192,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateMany(model.filter.toBsonDocument(), model.updates, UpdateOptions())
+		inner.updateMany(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -207,7 +207,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateOne(model.filter.toBsonDocument(), model.updates, UpdateOptions())
+		inner.updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -222,7 +222,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateOne(model.filter.toBsonDocument(), model.updates, UpdateOptions().upsert(true))
+		inner.updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions().upsert(true))
 	}
 
 	// endregion
@@ -264,7 +264,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		val filter = FilterExpression<Document>(context).apply(filter)
 
 		inner.deleteOne(
-			filter = filter.toBsonDocument(),
+			filter = context.buildDocument(filter).raw,
 			options = DeleteOptions()
 		)
 	}
@@ -278,7 +278,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		val filter = FilterExpression<Document>(context).apply(filter)
 
 		inner.deleteOne(
-			filter = filter.toBsonDocument(),
+			filter = context.buildDocument(filter).raw,
 			options = DeleteOptions()
 		)
 	}
@@ -304,7 +304,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 			chain = PipelineChainLink(context),
 			iterableBuilder = { pipeline ->
 				inner.aggregate(
-					pipeline.chain.toBsonList()
+					pipeline.chain.toBsonList().map { it.toJava() }
 				).asKtMongo()
 			}
 		)

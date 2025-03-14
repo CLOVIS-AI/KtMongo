@@ -72,6 +72,7 @@ include(
 	"annotations",
 
 	"bson",
+	"bson-official",
 	"bson-tests",
 
 	"dsl",

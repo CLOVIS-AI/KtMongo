@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.types
-
-import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+package opensavvy.ktmongo.bson
 
 /**
  * The different data types supported in BSON documents.
