@@ -42,6 +42,7 @@ dependencies {
 	dokka(projects.bsonOfficial)
 	dokka(projects.bsonTests)
 	dokka(projects.dsl)
+	dokka(projects.driverSharedOfficial)
 	dokka(projects.driverSync)
 	dokka(projects.driverCoroutines)
 

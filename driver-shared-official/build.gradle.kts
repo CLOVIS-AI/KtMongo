@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,23 +24,21 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.dsl)
-		implementation(projects.driverSharedOfficial)
-		api(libs.kotlinx.coroutines)
+		api(projects.bsonOfficial)
 	}
 
 	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.coroutines.jvm)
+		api(libs.mongodb.core.jvm)
 	}
 
 	sourceSets.commonTest.dependencies {
 		implementation(libs.prepared.kotest)
-		implementation(opensavvyConventions.aligned.kotlin.test)
 	}
 }
 
 library {
-	name.set("MongoDB driver for Kotlin (coroutines)")
-	description.set("Kotlin-first MongoDB driver")
+	name.set("Shared utilities for the sync- and coroutines-based KtMongo drivers based on the official Kotlin driver")
+	description.set("This is an intermediate dependency of the driver-sync and driver-coroutines libraries. Users should not need to interact with this artifact directly.")
 	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
 
 	license.set {

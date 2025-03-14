@@ -77,6 +77,7 @@ include(
 
 	"dsl",
 
+	"driver-shared-official",
 	"driver-sync",
 	"driver-coroutines",
 

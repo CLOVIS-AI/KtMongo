@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,4 +14,13 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl
+package opensavvy.ktmongo.official.options
+
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.options.common.LimitOption
+import opensavvy.ktmongo.dsl.options.common.option
+
+@LowLevelApi
+fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongodb.client.model.CountOptions()
+	.limit(option<LimitOption, _>()?.toInt() ?: 0)

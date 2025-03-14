@@ -32,6 +32,8 @@ import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.options.common.LimitOption
 import opensavvy.ktmongo.dsl.options.common.SortOption
 import opensavvy.ktmongo.dsl.options.common.option
+import opensavvy.ktmongo.official.models.toJava
+import opensavvy.ktmongo.official.options.toJava
 
 /**
  * Implementation of [MongoCollection] based on [MongoDB's MongoCollection][com.mongodb.kotlin.client.coroutine.MongoCollection].
