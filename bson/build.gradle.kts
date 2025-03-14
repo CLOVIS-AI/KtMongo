@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ kotlin {
 library {
 	name.set("Kotlin BSON")
 	description.set("Kotlin-first BSON library")
-	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
+	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
 
 	license.set {
 		name.set("Apache 2.0")

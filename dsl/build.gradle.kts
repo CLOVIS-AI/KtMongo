@@ -43,7 +43,7 @@ kotlin {
 library {
 	name.set("MongoDB request DSL")
 	description.set("Kotlin-first DSL for writing expressive and typesafe MongoDB queries")
-	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
+	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
 
 	license.set {
 		name.set("Apache 2.0")
