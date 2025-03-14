@@ -34,7 +34,7 @@ kotlin {
 	}
 
 	sourceSets.commonTest.dependencies {
-		implementation(libs.prepared)
+		implementation(libs.prepared.kotest)
 	}
 }
 
