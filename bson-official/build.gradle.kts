@@ -41,6 +41,10 @@ kotlin {
 		implementation(libs.prepared.kotest)
 		implementation(opensavvyConventions.aligned.kotlin.test)
 	}
+
+	sourceSets.jvmTest.dependencies {
+		implementation(libs.mongodb.sync.jvm)
+	}
 }
 
 library {

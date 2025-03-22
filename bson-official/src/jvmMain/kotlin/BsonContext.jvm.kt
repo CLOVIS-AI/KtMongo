@@ -40,8 +40,8 @@ class JvmBsonContext(
 	val codecRegistry: CodecRegistry = CodecRegistries.fromRegistries(
 		codecRegistry,
 		CodecRegistries.fromCodecs(
-			KotlinBsonCodec(),
-			KotlinBsonArrayCodec(),
+			KotlinBsonCodec(this),
+			KotlinBsonArrayCodec(this),
 		)
 	)
 
@@ -55,7 +55,7 @@ class JvmBsonContext(
 			}
 		}
 
-		return Bson(document)
+		return Bson(document, this)
 	}
 
 	@LowLevelApi
@@ -64,7 +64,7 @@ class JvmBsonContext(
 
 		JavaRootArrayWriter(this, nativeArray).block()
 
-		return opensavvy.ktmongo.bson.official.BsonArray(nativeArray)
+		return BsonArray(nativeArray, this)
 	}
 }
 
