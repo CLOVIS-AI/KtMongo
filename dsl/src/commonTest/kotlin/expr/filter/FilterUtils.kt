@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.dsl.expr.filter
 
-import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.official.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.expr.FilterExpression
 import opensavvy.ktmongo.dsl.expr.FilterOperators

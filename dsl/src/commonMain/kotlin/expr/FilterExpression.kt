@@ -222,7 +222,7 @@ class FilterExpression<T>(
 			writeDocument(path.toString()) {
 				writeArray("\$all") {
 					for (value in values) {
-						writeObjectSafe(value, context)
+						writeObjectSafe(value)
 					}
 				}
 			}

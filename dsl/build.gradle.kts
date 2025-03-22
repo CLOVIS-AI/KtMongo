@@ -21,21 +21,14 @@ plugins {
 
 kotlin {
 	jvm()
-	js {
-		nodejs()
-	}
 
 	sourceSets.commonMain.dependencies {
-		api(projects.bson)
+		api(projects.bsonOfficial)
 		api(projects.annotations)
 	}
 
-	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.core.jvm)
-	}
-
 	sourceSets.commonTest.dependencies {
-		implementation(libs.prepared)
+		implementation(libs.prepared.kotest)
 		implementation(opensavvyConventions.aligned.kotlin.test)
 	}
 }
@@ -43,7 +36,7 @@ kotlin {
 library {
 	name.set("MongoDB request DSL")
 	description.set("Kotlin-first DSL for writing expressive and typesafe MongoDB queries")
-	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
+	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
 
 	license.set {
 		name.set("Apache 2.0")

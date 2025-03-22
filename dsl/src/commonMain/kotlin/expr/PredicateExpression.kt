@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package opensavvy.ktmongo.dsl.expr
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
-import opensavvy.ktmongo.bson.types.BsonType
+import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -54,7 +54,7 @@ class PredicateExpression<T>(
 	) : PredicateExpressionNode(context) {
 
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$eq", value, context)
+			writer.writeObjectSafe("\$eq", value)
 		}
 	}
 
@@ -74,7 +74,7 @@ class PredicateExpression<T>(
 	) : PredicateExpressionNode(context) {
 
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$ne", value, context)
+			writer.writeObjectSafe("\$ne", value)
 		}
 	}
 
@@ -170,7 +170,7 @@ class PredicateExpression<T>(
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$gt", value, context)
+			writer.writeObjectSafe("\$gt", value)
 		}
 	}
 
@@ -188,7 +188,7 @@ class PredicateExpression<T>(
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$gte", value, context)
+			writer.writeObjectSafe("\$gte", value)
 		}
 	}
 
@@ -206,7 +206,7 @@ class PredicateExpression<T>(
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$lt", value, context)
+			writer.writeObjectSafe("\$lt", value)
 		}
 	}
 
@@ -224,7 +224,7 @@ class PredicateExpression<T>(
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$lte", value, context)
+			writer.writeObjectSafe("\$lte", value)
 		}
 	}
 
@@ -247,7 +247,7 @@ class PredicateExpression<T>(
 		override fun write(writer: BsonFieldWriter) {
 			writer.writeArray("\$in") {
 				for (value in values)
-					writeObjectSafe(value, context)
+					writeObjectSafe(value)
 			}
 		}
 	}

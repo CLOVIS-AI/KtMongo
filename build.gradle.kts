@@ -39,7 +39,10 @@ dependencies {
 	// List the 'library' projects
 	dokka(projects.annotations)
 	dokka(projects.bson)
+	dokka(projects.bsonOfficial)
+	dokka(projects.bsonTests)
 	dokka(projects.dsl)
+	dokka(projects.driverSharedOfficial)
 	dokka(projects.driverSync)
 	dokka(projects.driverCoroutines)
 

@@ -17,7 +17,6 @@
 package opensavvy.ktmongo.dsl.expr
 
 import opensavvy.ktmongo.bson.BsonContext
-import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -146,6 +145,6 @@ internal class UpdatePipelineExpression<Document : Any> @LowLevelApi constructor
 ) : AbstractCompoundExpression(context), UpdatePipelineOperators<Document> {
 
 	val stages get() = children
-		.map { buildBsonDocument { it.writeTo(this) } }
+		.map { context.buildDocument { it.writeTo(this) } }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,33 +22,44 @@ plugins {
 kotlin {
 	jvm()
 	js {
+		browser()
 		nodejs()
 	}
-
-	compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
+	linuxX64()
+	linuxArm64()
+	macosX64()
+	macosArm64()
+	iosArm64()
+	iosX64()
+	iosSimulatorArm64()
+	watchosX64()
+	watchosArm32()
+	watchosArm64()
+	watchosSimulatorArm64()
+	tvosX64()
+	tvosArm64()
+	tvosSimulatorArm64()
+	mingwX64()
+	wasmJs {
+		browser()
+		nodejs()
+	}
 
 	sourceSets.commonMain.dependencies {
 		api(projects.annotations)
 	}
 
-	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.bson.jvm)
-	}
-
-	sourceSets.jsMain.dependencies {
-		api(npm("bson", libs.versions.mongodb.bson.js.get()))
-	}
-
 	sourceSets.commonTest.dependencies {
-		implementation(libs.prepared)
+		implementation(projects.bsonTests)
+		implementation(libs.prepared.kotest)
 		implementation(opensavvyConventions.aligned.kotlin.test)
 	}
 }
 
 library {
-	name.set("Kotlin BSON")
-	description.set("Kotlin-first BSON library")
-	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
+	name.set("Kotlin BSON • Multiplatform abstraction for different BSON implementations")
+	description.set("Interfaces and types for abstraction over different BSON implementations.")
+	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
 
 	license.set {
 		name.set("Apache 2.0")

@@ -181,7 +181,7 @@ private class LiteralValue<Result>(
 	@LowLevelApi
 	override fun write(writer: BsonValueWriter) {
 		writer.writeDocument {
-			writeObjectSafe("\$literal", value, context)
+			writeObjectSafe("\$literal", value)
 		}
 	}
 }

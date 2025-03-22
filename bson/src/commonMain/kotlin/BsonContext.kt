@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,102 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.dsl.LowLevelApi
+
 /**
- * Platform-specific information required by the BSON writers and readers to perform some operation.
- * This may be used by the platform to parameterize the behavior of writers and readers.
+ * Configuration for the BSON serialization.
  *
- * For example, a platform may store the serialization configuration in this class.
+ * Instances of this class are platform-specific and are used to create BSON documents.
+ * Platforms can thus parameterize the behavior of writers and readers.
+ *
+ * For example, a platform may store its serialization configuration in this class.
  */
-expect class BsonContext
+interface BsonContext {
+
+	/**
+	 * Instantiates a new [BSON document][Bson].
+	 *
+	 * ### Example
+	 *
+	 * To create the following BSON document:
+	 * ```json
+	 * {
+	 *     "name": "Bob",
+	 *     "isAlive": true,
+	 *     "children": [
+	 *         {
+	 *             "name": "Alice"
+	 *         },
+	 *         {
+	 *             "name": "Charles"
+	 *         }
+	 *     ]
+	 * }
+	 * ```
+	 * use the code:
+	 * ```kotlin
+	 * buildDocument {
+	 *     writeString("name", "Alice")
+	 *     writeBoolean("isAlive", true)
+	 *     writeArray("children") {
+	 *         writeDocument {
+	 *             writeString("name", "Alice")
+	 *         }
+	 *         writeDocument {
+	 *             writeString("name", "Charles")
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 */
+	@LowLevelApi
+	@BsonWriterDsl
+	fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson
+
+	/**
+	 * Instantiates a new [BSON document][Bson] representing the provided [instance].
+	 */
+	@LowLevelApi
+	@BsonWriterDsl
+	fun buildDocument(instance: BsonFieldWriteable): Bson =
+		buildDocument { instance.writeTo(this) }
+
+	/**
+	 * Instantiates a new [BSON array][BsonArray].
+	 *
+	 * ### Example
+	 *
+	 * To create the following BSON array:
+	 * ```json
+	 * [
+	 *     12,
+	 *     null,
+	 *     {
+	 *         "name": "Barry"
+	 *     }
+	 * ]
+	 * ```
+	 * use the code:
+	 * ```kotlin
+	 * buildArray {
+	 *     writeInt32(12)
+	 *     writeNull()
+	 *     writeDocument {
+	 *         writeString("name", "Barry")
+	 *     }
+	 * }
+	 * ```
+	 */
+	@LowLevelApi
+	@BsonWriterDsl
+	fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray
+
+	/**
+	 * Instantiates a new [BSON array][BsonArray] representing the provided [instance].
+	 */
+	@LowLevelApi
+	@BsonWriterDsl
+	fun buildArray(instance: BsonValueWriteable): BsonArray =
+		buildArray { instance.writeTo(this) }
+
+}

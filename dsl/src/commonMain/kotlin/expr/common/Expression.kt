@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy, 4SH and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 
 package opensavvy.ktmongo.dsl.expr.common
 
-import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriteable
 import opensavvy.ktmongo.bson.BsonFieldWriter
-import opensavvy.ktmongo.bson.buildBsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.PredicateOperators
 import opensavvy.ktmongo.dsl.tree.Node
@@ -43,7 +42,7 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  *
  * Use [toString][Any.toString] to view the JSON representation of this expression.
  */
-interface Expression : Node {
+interface Expression : Node, BsonFieldWriteable {
 
 	/**
 	 * The context used to generate this expression.
@@ -72,7 +71,7 @@ interface Expression : Node {
 	 * Writes the result of [simplifying][simplify] this expression into [writer].
 	 */
 	@LowLevelApi
-	fun writeTo(writer: BsonFieldWriter)
+	override fun writeTo(writer: BsonFieldWriter)
 
 	/**
 	 * JSON representation of this expression.
@@ -81,15 +80,6 @@ interface Expression : Node {
 
 	companion object
 }
-
-/**
- * Creates a new [BSON document][buildBsonDocument] containing the data from this expression.
- */
-@LowLevelApi
-fun Expression.toBsonDocument(): Bson =
-	buildBsonDocument {
-		writeTo(this)
-	}
 
 /**
  * Utility implementation for [Expression], which handles the [context], [toString] representation and [freezing][freeze].
@@ -186,7 +176,7 @@ abstract class AbstractExpression private constructor(
 	 */
 	@OptIn(LowLevelApi::class)
 	fun toString(simplified: Boolean): String {
-		val document = buildBsonDocument {
+		val document = context.buildDocument {
 			if (simplified)
 				writeTo(this)
 			else

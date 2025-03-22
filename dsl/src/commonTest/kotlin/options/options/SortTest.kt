@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.dsl.options.options
 
-import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.official.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.shouldBeBson
 import opensavvy.ktmongo.dsl.expr.testContext

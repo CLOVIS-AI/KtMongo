@@ -19,7 +19,6 @@ package opensavvy.ktmongo.sync
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.expr.*
-import opensavvy.ktmongo.dsl.expr.common.toBsonDocument
 import opensavvy.ktmongo.dsl.models.BulkWrite
 import opensavvy.ktmongo.dsl.options.*
 
@@ -222,7 +221,7 @@ private class FilteredCollection<Document : Any>(
 	override fun toString(): String {
 		val filter = FilterExpression<Document>(context)
 			.apply(globalFilter)
-			.toBsonDocument()
+			.let(context::buildDocument)
 
 		return "$upstream.filter $filter"
 	}

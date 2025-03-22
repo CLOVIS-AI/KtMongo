@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,26 @@ plugins {
 kotlin {
 	jvm()
 	js {
+		browser()
+		nodejs()
+	}
+	linuxX64()
+	linuxArm64()
+	macosX64()
+	macosArm64()
+	iosArm64()
+	iosX64()
+	iosSimulatorArm64()
+	watchosX64()
+	watchosArm32()
+	watchosArm64()
+	watchosSimulatorArm64()
+	tvosX64()
+	tvosArm64()
+	tvosSimulatorArm64()
+	mingwX64()
+	wasmJs {
+		browser()
 		nodejs()
 	}
 }
@@ -29,7 +49,7 @@ kotlin {
 library {
 	name.set("KtMongo annotations")
 	description.set("Annotations used by the KtMongo libraries.")
-	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
+	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
 
 	license.set {
 		name.set("Apache 2.0")

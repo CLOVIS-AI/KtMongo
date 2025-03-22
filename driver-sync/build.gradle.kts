@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,10 @@ plugins {
 
 kotlin {
 	jvm()
-	js {
-		nodejs()
-	}
 
 	sourceSets.commonMain.dependencies {
 		api(projects.dsl)
+		implementation(projects.driverSharedOfficial)
 	}
 
 	sourceSets.jvmMain.dependencies {
@@ -34,14 +32,14 @@ kotlin {
 	}
 
 	sourceSets.commonTest.dependencies {
-		implementation(libs.prepared)
+		implementation(libs.prepared.kotest)
 	}
 }
 
 library {
 	name.set("MongoDB driver for Kotlin (synchronous)")
 	description.set("Kotlin-first MongoDB driver")
-	homeUrl.set("https://gitlab.com/opensavvy/ktmongo")
+	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
 
 	license.set {
 		name.set("Apache 2.0")
