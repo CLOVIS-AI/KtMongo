@@ -73,6 +73,7 @@ include(
 
 	"bson",
 	"bson-official",
+	"bson-multiplatform",
 	"bson-tests",
 
 	"dsl",
