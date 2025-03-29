@@ -32,10 +32,6 @@ kotlin {
 		api(libs.mongodb.bson.jvm)
 	}
 
-	sourceSets.jsMain.dependencies {
-		api(npm("bson", libs.versions.mongodb.bson.js.get()))
-	}
-
 	sourceSets.commonTest.dependencies {
 		implementation(projects.bsonTests)
 		implementation(libs.prepared.kotest)
