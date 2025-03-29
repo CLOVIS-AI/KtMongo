@@ -18,6 +18,7 @@ package opensavvy.ktmongo.bson.multiplatform
 
 import opensavvy.ktmongo.bson.raw.boolean
 import opensavvy.ktmongo.bson.raw.int32
+import opensavvy.ktmongo.bson.raw.int64
 import opensavvy.prepared.runner.kotest.PreparedSpec
 import opensavvy.prepared.suite.prepared
 
@@ -28,4 +29,5 @@ class MultiplatformBsonWriterTest : PreparedSpec({
 
 	boolean(context)
 	int32(context)
+	int64(context)
 })

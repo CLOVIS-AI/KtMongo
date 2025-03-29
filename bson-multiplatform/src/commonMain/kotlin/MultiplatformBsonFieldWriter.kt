@@ -63,7 +63,9 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun writeInt64(name: String, value: Long) {
-		TODO()
+		writeType(BsonType.Int64)
+		writeName(name)
+		writer.writeInt64(value)
 	}
 
 	@LowLevelApi
