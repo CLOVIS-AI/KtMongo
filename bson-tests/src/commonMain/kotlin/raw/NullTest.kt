@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.multiplatform
+@file:OptIn(LowLevelApi::class)
 
-import opensavvy.ktmongo.bson.raw.*
-import opensavvy.prepared.runner.kotest.PreparedSpec
-import opensavvy.prepared.suite.prepared
+package opensavvy.ktmongo.bson.raw
 
-class MultiplatformBsonWriterTest : PreparedSpec({
-	val context by prepared {
-		BsonContext()
+import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.prepared.suite.Prepared
+import opensavvy.prepared.suite.SuiteDsl
+
+/**
+ * Test null representation.
+ *
+ * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/null.json.
+ */
+fun SuiteDsl.reprNull(context: Prepared<BsonContext>) = suite("Null") {
+	test("Null") {
+		context().buildDocument {
+			writeNull("a")
+		} shouldBeHex "080000000A610000"
 	}
-
-	boolean(context)
-	int32(context)
-	int64(context)
-	double(context)
-	string(context)
-	reprNull(context)
-	document(context)
-	array(context)
-	binary(context)
-	code(context)
-	datetime(context)
-})
+}

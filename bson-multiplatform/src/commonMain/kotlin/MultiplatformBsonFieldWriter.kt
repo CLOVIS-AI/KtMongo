@@ -85,7 +85,8 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun writeNull(name: String) {
-		TODO()
+		writeType(BsonType.Null)
+		writeName(name)
 	}
 
 	@LowLevelApi
