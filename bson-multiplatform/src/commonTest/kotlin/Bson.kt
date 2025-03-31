@@ -31,4 +31,5 @@ class MultiplatformBsonWriterTest : PreparedSpec({
 	double(context)
 	string(context)
 	document(context)
+	array(context)
 })

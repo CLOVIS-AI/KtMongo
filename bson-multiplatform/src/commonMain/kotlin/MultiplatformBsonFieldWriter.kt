@@ -146,18 +146,14 @@ internal class MultiplatformBsonFieldWriter(
 		TODO()
 	}
 
-	@LowLevelApi
-	override fun writeDocument(name: String, block: BsonFieldWriter.() -> Unit) {
-		writeType(BsonType.Document)
-		writeName(name)
-
+	private inline fun writeArbitraryDocument(writeTo: (BsonFieldWriter) -> Unit) {
 		// We create the entire document in a child buffer so we can measure the size.
 		// Once we know the size, we can write it entirely to the real buffer.
 		val childBuffer = Buffer()
 		val childWriter = RawBsonWriter(childBuffer)
 		val childFieldWriter = MultiplatformBsonFieldWriter(childWriter)
 
-		childFieldWriter.block()
+		writeTo(childFieldWriter)
 		childWriter.writeUnsignedByte(0u)
 
 		// We now have an intermediate buffer, we can measure the size then transfer it the real writer
@@ -167,8 +163,20 @@ internal class MultiplatformBsonFieldWriter(
 	}
 
 	@LowLevelApi
+	override fun writeDocument(name: String, block: BsonFieldWriter.() -> Unit) {
+		writeType(BsonType.Document)
+		writeName(name)
+		writeArbitraryDocument(block)
+	}
+
+	@LowLevelApi
 	override fun writeArray(name: String, block: BsonValueWriter.() -> Unit) {
-		TODO()
+		writeType(BsonType.Array)
+		writeName(name)
+		writeArbitraryDocument {
+			val writer = MultiplatformBsonArrayFieldWriter(it)
+			writer.block()
+		}
 	}
 
 	@LowLevelApi

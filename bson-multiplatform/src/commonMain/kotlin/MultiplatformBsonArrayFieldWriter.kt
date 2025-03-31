@@ -16,117 +16,124 @@
 
 package opensavvy.ktmongo.bson.multiplatform
 
-import kotlinx.io.Sink
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
-internal class MultiplatformBsonValueWriter(
-	private val sink: Sink,
+internal class MultiplatformBsonArrayFieldWriter(
+	private val writer: BsonFieldWriter,
 ) : BsonValueWriter {
+	private var size = 0
+
+	private fun nextIndex(): String =
+		(size++).toString()
+
 	@LowLevelApi
 	override fun writeBoolean(value: Boolean) {
-		TODO("Not yet implemented")
+		writer.writeBoolean(nextIndex(), value)
 	}
 
 	@LowLevelApi
 	override fun writeDouble(value: Double) {
-		TODO("Not yet implemented")
+		writer.writeDouble(nextIndex(), value)
 	}
 
 	@LowLevelApi
 	override fun writeInt32(value: Int) {
-		TODO("Not yet implemented")
+		writer.writeInt32(nextIndex(), value)
 	}
 
 	@LowLevelApi
 	override fun writeInt64(value: Long) {
-		TODO("Not yet implemented")
+		writer.writeInt64(nextIndex(), value)
 	}
 
 	@LowLevelApi
 	override fun writeDecimal128(low: Long, high: Long) {
-		TODO("Not yet implemented")
+		writer.writeDecimal128(nextIndex(), low, high)
 	}
 
 	@LowLevelApi
 	override fun writeDateTime(value: Long) {
-		TODO("Not yet implemented")
+		writer.writeDateTime(nextIndex(), value)
 	}
 
 	@LowLevelApi
 	override fun writeNull() {
-		TODO("Not yet implemented")
+		writer.writeNull(nextIndex())
 	}
 
 	@LowLevelApi
 	override fun writeObjectId(id: ByteArray) {
-		TODO("Not yet implemented")
+		writer.writeObjectId(nextIndex(), id)
 	}
 
 	@LowLevelApi
 	override fun writeRegularExpression(pattern: String, options: String) {
-		TODO("Not yet implemented")
+		writer.writeRegularExpression(nextIndex(), pattern, options)
 	}
 
 	@LowLevelApi
 	override fun writeString(value: String) {
-		TODO("Not yet implemented")
+		writer.writeString(nextIndex(), value)
 	}
 
 	@LowLevelApi
 	override fun writeTimestamp(value: Long) {
-		TODO("Not yet implemented")
+		writer.writeTimestamp(nextIndex(), value)
 	}
 
+	@Suppress("DEPRECATION")
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeSymbol(value: String) {
-		TODO("Not yet implemented")
+		writer.writeSymbol(nextIndex(), value)
 	}
 
+	@Suppress("DEPRECATION")
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeUndefined() {
-		TODO("Not yet implemented")
+		writer.writeUndefined(nextIndex())
 	}
 
+	@Suppress("DEPRECATION")
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeDBPointer(namespace: String, id: ByteArray) {
-		TODO("Not yet implemented")
+		writer.writeDBPointer(nextIndex(), namespace, id)
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeJavaScriptWithScope(code: String) {
-		TODO("Not yet implemented")
+		writer.writeJavaScript(nextIndex(), code)
 	}
 
 	@LowLevelApi
 	override fun writeBinaryData(type: Byte, data: ByteArray) {
-		TODO("Not yet implemented")
+		writer.writeBinaryData(nextIndex(), type, data)
 	}
 
 	@LowLevelApi
 	override fun writeJavaScript(code: String) {
-		TODO("Not yet implemented")
+		writer.writeJavaScript(nextIndex(), code)
 	}
 
 	@LowLevelApi
 	override fun writeDocument(block: BsonFieldWriter.() -> Unit) {
-		TODO("Not yet implemented")
+		writer.writeDocument(nextIndex(), block)
 	}
 
 	@LowLevelApi
 	override fun writeArray(block: BsonValueWriter.() -> Unit) {
-		TODO("Not yet implemented")
+		writer.writeArray(nextIndex(), block)
 	}
 
 	@LowLevelApi
 	override fun <T> writeObjectSafe(obj: T) {
-		TODO("Not yet implemented")
+		writer.writeObjectSafe(nextIndex(), obj)
 	}
 }

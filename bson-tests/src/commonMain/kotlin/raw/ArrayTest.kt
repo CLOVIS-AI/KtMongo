@@ -38,9 +38,7 @@ fun SuiteDsl.array(context: Prepared<BsonContext>) = suite("Array") {
 	test("Single-element array") {
 		context().buildDocument {
 			writeArray("a") {
-				writeDocument {
-					writeInt32("\$numberInt", 10)
-				}
+				writeInt32(10)
 			}
 		} shouldBeHex "140000000461000C0000001030000A0000000000"
 	}
