@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson.multiplatform
 
+import kotlinx.io.Buffer
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
@@ -145,7 +146,22 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun writeDocument(name: String, block: BsonFieldWriter.() -> Unit) {
-		TODO()
+		writeType(BsonType.Document)
+		writeName(name)
+
+		// We create the entire document in a child buffer so we can measure the size.
+		// Once we know the size, we can write it entirely to the real buffer.
+		val childBuffer = Buffer()
+		val childWriter = RawBsonWriter(childBuffer)
+		val childFieldWriter = MultiplatformBsonFieldWriter(childWriter)
+
+		childFieldWriter.block()
+		childWriter.writeUnsignedByte(0u)
+
+		// We now have an intermediate buffer, we can measure the size then transfer it the real writer
+		check(childBuffer.size <= Int.MAX_VALUE) { "A BSON document cannot be larger than 16MiB. Found ${childBuffer.size} bytes." }
+		writer.writeInt32(childBuffer.size.toInt() + 4)
+		writer.sink.write(childBuffer, childBuffer.size)
 	}
 
 	@LowLevelApi

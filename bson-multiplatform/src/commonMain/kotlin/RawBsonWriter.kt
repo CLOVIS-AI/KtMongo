@@ -20,7 +20,7 @@ import kotlinx.io.*
 
 // https://bsonspec.org/spec.html
 internal class RawBsonWriter(
-	private val sink: Sink,
+	internal val sink: Sink,
 ) {
 
 	fun writeUnsignedByte(value: UByte) {
