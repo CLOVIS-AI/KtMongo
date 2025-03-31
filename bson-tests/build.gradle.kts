@@ -68,6 +68,7 @@ kotlin {
 		api(projects.bson)
 		api(libs.prepared)
 		implementation(libs.prepared.kotest)
+		implementation(libs.kotlinx.datetime)
 	}
 }
 

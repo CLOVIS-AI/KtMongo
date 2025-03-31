@@ -34,4 +34,5 @@ class MultiplatformBsonWriterTest : PreparedSpec({
 	array(context)
 	binary(context)
 	code(context)
+	datetime(context)
 })

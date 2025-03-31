@@ -78,7 +78,9 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun writeDateTime(name: String, value: Long) {
-		TODO()
+		writeType(BsonType.Datetime)
+		writeName(name)
+		writer.writeInt64(value)
 	}
 
 	@LowLevelApi
