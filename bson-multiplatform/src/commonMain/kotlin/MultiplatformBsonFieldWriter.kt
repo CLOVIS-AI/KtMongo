@@ -156,7 +156,9 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun writeJavaScript(name: String, code: String) {
-		TODO()
+		writeType(BsonType.JavaScript)
+		writeName(name)
+		writer.writeString(code)
 	}
 
 	private inline fun writeArbitraryDocument(writeTo: (BsonFieldWriter) -> Unit) {
