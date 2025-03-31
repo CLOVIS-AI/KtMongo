@@ -137,7 +137,7 @@ internal class MultiplatformBsonFieldWriter(
 	}
 
 	@LowLevelApi
-	override fun writeBinaryData(name: String, type: Byte, data: ByteArray) {
+	override fun writeBinaryData(name: String, type: UByte, data: ByteArray) {
 		TODO()
 	}
 

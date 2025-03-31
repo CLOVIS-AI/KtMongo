@@ -72,7 +72,8 @@ interface BsonValueWriter : AnyBsonWriter {
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi fun writeJavaScriptWithScope(code: String)
 
-	@LowLevelApi fun writeBinaryData(type: Byte, data: ByteArray)
+	@LowLevelApi
+	fun writeBinaryData(type: UByte, data: ByteArray)
 	@LowLevelApi fun writeJavaScript(code: String)
 
 	@LowLevelApi fun writeDocument(block: BsonFieldWriter.() -> Unit)
@@ -126,7 +127,8 @@ interface BsonFieldWriter : AnyBsonWriter {
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi fun writeJavaScriptWithScope(name: String, code: String)
 
-	@LowLevelApi fun writeBinaryData(name: String, type: Byte, data: ByteArray)
+	@LowLevelApi
+	fun writeBinaryData(name: String, type: UByte, data: ByteArray)
 	@LowLevelApi fun writeJavaScript(name: String, code: String)
 
 	@LowLevelApi fun writeDocument(name: String, block: BsonFieldWriter.() -> Unit)

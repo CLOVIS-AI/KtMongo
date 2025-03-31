@@ -113,7 +113,7 @@ internal class MultiplatformBsonArrayFieldWriter(
 	}
 
 	@LowLevelApi
-	override fun writeBinaryData(type: Byte, data: ByteArray) {
+	override fun writeBinaryData(type: UByte, data: ByteArray) {
 		writer.writeBinaryData(nextIndex(), type, data)
 	}
 

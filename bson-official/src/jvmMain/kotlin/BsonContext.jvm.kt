@@ -129,8 +129,8 @@ private class JavaBsonWriter(
 		writer.writeJavaScriptWithScope(name, code)
 	}
 
-	override fun writeBinaryData(name: String, type: Byte, data: ByteArray) {
-		writer.writeBinaryData(name, BsonBinary(type, data))
+	override fun writeBinaryData(name: String, type: UByte, data: ByteArray) {
+		writer.writeBinaryData(name, BsonBinary(type.toByte(), data))
 	}
 
 	override fun writeJavaScript(name: String, code: String) {
@@ -218,8 +218,8 @@ private class JavaBsonWriter(
 		writer.writeJavaScriptWithScope(code)
 	}
 
-	override fun writeBinaryData(type: Byte, data: ByteArray) {
-		writer.writeBinaryData(BsonBinary(type, data))
+	override fun writeBinaryData(type: UByte, data: ByteArray) {
+		writer.writeBinaryData(BsonBinary(type.toByte(), data))
 	}
 
 	override fun writeJavaScript(code: String) {
@@ -353,8 +353,8 @@ private class JavaRootArrayWriter(
 	}
 
 	@LowLevelApi
-	override fun writeBinaryData(type: Byte, data: ByteArray) {
-		array.add(BsonBinary(type, data))
+	override fun writeBinaryData(type: UByte, data: ByteArray) {
+		array.add(BsonBinary(type.toByte(), data))
 	}
 
 	@LowLevelApi
