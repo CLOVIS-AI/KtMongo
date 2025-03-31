@@ -138,7 +138,20 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun writeBinaryData(name: String, type: UByte, data: ByteArray) {
-		TODO()
+		writeType(BsonType.BinaryData)
+		writeName(name)
+		if (type == 2u.toUByte()) {
+			// Yes, it's strange that the size is added twice, but that's how subtype 0x2 is supposed to behave.
+			// See the footnote in https://bsonspec.org/spec.html.
+			writer.writeInt32(data.size + 4)
+			writer.writeUnsignedByte(type)
+			writer.writeInt32(data.size)
+			writer.sink.write(data)
+		} else {
+			writer.writeInt32(data.size)
+			writer.writeUnsignedByte(type)
+			writer.sink.write(data)
+		}
 	}
 
 	@LowLevelApi

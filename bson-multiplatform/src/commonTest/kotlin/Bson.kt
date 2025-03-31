@@ -32,4 +32,5 @@ class MultiplatformBsonWriterTest : PreparedSpec({
 	string(context)
 	document(context)
 	array(context)
+	binary(context)
 })
