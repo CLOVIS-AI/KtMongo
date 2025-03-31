@@ -56,4 +56,11 @@ internal class RawBsonWriter(
 		writeUnsignedByte(0u)
 	}
 
+	fun writeString(value: String) {
+		val bytes = value.encodeToByteArray()
+		writeInt32(bytes.size + 1)
+		sink.write(bytes)
+		writeUnsignedByte(0u)
+	}
+
 }
