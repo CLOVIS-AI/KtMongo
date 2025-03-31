@@ -52,7 +52,9 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun writeDouble(name: String, value: Double) {
-		TODO()
+		writeType(BsonType.Double)
+		writeName(name)
+		writer.writeDouble(value)
 	}
 
 	@LowLevelApi

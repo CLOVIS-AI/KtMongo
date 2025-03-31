@@ -44,7 +44,7 @@ internal class RawBsonWriter(
 	}
 
 	fun writeDouble(value: Double) {
-		sink.writeDouble(value)
+		sink.writeDoubleLe(value)
 	}
 
 	fun writeCString(value: String) {

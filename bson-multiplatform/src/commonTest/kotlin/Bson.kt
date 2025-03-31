@@ -28,6 +28,7 @@ class MultiplatformBsonWriterTest : PreparedSpec({
 	boolean(context)
 	int32(context)
 	int64(context)
+	double(context)
 	string(context)
 	document(context)
 })
