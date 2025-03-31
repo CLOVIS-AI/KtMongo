@@ -18,6 +18,8 @@ package opensavvy.ktmongo.bson.multiplatform
 
 import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.bson.BsonArrayReader
+import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 class Bson internal constructor(
@@ -26,6 +28,11 @@ class Bson internal constructor(
 
 	@LowLevelApi
 	override fun toByteArray(): ByteArray = data
+
+	@LowLevelApi
+	override fun read(): BsonDocumentReader {
+		TODO("Not yet implemented")
+	}
 
 	override fun toString(): String = "TODO" // TODO
 }
@@ -36,6 +43,11 @@ class BsonArray internal constructor(
 
 	@LowLevelApi
 	override fun toByteArray(): ByteArray = data
+
+	@LowLevelApi
+	override fun read(): BsonArrayReader {
+		TODO("Not yet implemented")
+	}
 
 	override fun toString(): String = "TODO" // TODO
 }

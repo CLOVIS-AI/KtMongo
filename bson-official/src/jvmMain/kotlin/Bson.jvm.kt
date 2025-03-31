@@ -18,6 +18,8 @@ package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.bson.BsonArrayReader
+import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonBinaryWriter
 import org.bson.BsonDocument
@@ -37,6 +39,11 @@ actual class Bson internal constructor(
 	override fun toByteArray(): ByteArray =
 		raw.toByteArray(context)
 
+	@LowLevelApi
+	override fun read(): BsonDocumentReader {
+		TODO("Not yet implemented")
+	}
+
 	override fun toString(): String =
 		raw.toString()
 }
@@ -50,6 +57,11 @@ actual class BsonArray internal constructor(
 	override fun toByteArray(): ByteArray {
 		val fullArray = BsonDocument("a", raw).toByteArray(context)
 		return fullArray.sliceArray(7..fullArray.lastIndex - 2)
+	}
+
+	@LowLevelApi
+	override fun read(): BsonArrayReader {
+		TODO("Not yet implemented")
 	}
 
 	override fun toString(): String {

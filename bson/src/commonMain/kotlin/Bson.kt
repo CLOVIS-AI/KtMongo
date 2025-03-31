@@ -32,6 +32,12 @@ interface Bson {
 	fun toByteArray(): ByteArray
 
 	/**
+	 * Reads the fields of this document.
+	 */
+	@LowLevelApi
+	fun read(): BsonDocumentReader
+
+	/**
 	 * JSON representation of this [Bson] object, as a [String].
 	 */
 	override fun toString(): String
@@ -48,6 +54,12 @@ interface BsonArray {
 	 * Low-level byte representation of this BSON document.
 	 */
 	fun toByteArray(): ByteArray
+
+	/**
+	 * Reads the elements of this array.
+	 */
+	@LowLevelApi
+	fun read(): BsonArrayReader
 
 	/**
 	 * JSON representation of this [BsonArray], as a [String].
