@@ -16,16 +16,20 @@
 
 package opensavvy.ktmongo.bson.official
 
-import com.mongodb.MongoClientSettings
-import opensavvy.ktmongo.bson.writerTests
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.kotest.PreparedSpec
-import opensavvy.prepared.suite.prepared
 
-val testContext by prepared {
-	JvmBsonContext(MongoClientSettings.getDefaultCodecRegistry())
-}
+@OptIn(LowLevelApi::class)
+class BsonReaderTest : PreparedSpec({
 
-@OptIn(ExperimentalStdlibApi::class)
-class JvmBsonContextTest : PreparedSpec({
-	writerTests(testContext)
+	test("Read basic data types") {
+		val output = testContext().buildDocument {
+			writeString("hello", "world")
+			writeInt32("a", 42)
+		}
+
+		check(output.read().read("hello")?.readString() == "world")
+		check(output.read().read("a")?.readInt32() == 42)
+	}
+
 })

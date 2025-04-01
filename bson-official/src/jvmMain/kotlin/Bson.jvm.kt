@@ -40,12 +40,12 @@ actual class Bson internal constructor(
 		raw.toByteArray(context)
 
 	@LowLevelApi
-	override fun read(): BsonDocumentReader {
-		TODO("Not yet implemented")
-	}
+	override fun read(): BsonDocumentReader =
+		BsonDocumentReader(raw)
 
+	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
-		raw.toString()
+		read().toString()
 }
 
 actual class BsonArray internal constructor(
@@ -60,22 +60,12 @@ actual class BsonArray internal constructor(
 	}
 
 	@LowLevelApi
-	override fun read(): BsonArrayReader {
-		TODO("Not yet implemented")
-	}
+	override fun read(): BsonArrayReader =
+		BsonArrayReader(raw)
 
-	override fun toString(): String {
-		// Yes, this is very ugly, and probably inefficient.
-		// The Java library doesn't provide a way to serialize arrays to JSON.
-		// https://www.mongodb.com/community/forums/t/how-to-convert-a-single-bsonvalue-such-as-bsonarray-to-json-in-the-java-bson-library
-
-		val document = BsonDocument("a", raw).toJson()
-
-		return document.substring(
-			document.indexOf('['),
-			document.lastIndexOf(']') + 1
-		).trim()
-	}
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String =
+		read().toString()
 }
 
 // Inspired by https://gist.github.com/Koboo/ebd7c6802101e1a941ef31baca04113d
