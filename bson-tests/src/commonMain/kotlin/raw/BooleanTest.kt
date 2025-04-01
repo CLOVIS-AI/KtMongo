@@ -29,15 +29,21 @@ import opensavvy.prepared.suite.SuiteDsl
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/boolean.json.
  */
 fun SuiteDsl.boolean(context: Prepared<BsonContext>) = suite("Boolean") {
-	test("True") {
-		context().buildDocument {
-			writeBoolean("b", true)
-		} shouldBeHex "090000000862000100"
+	testBson(
+		context,
+		name = "True",
+		expectedBinaryHex = "090000000862000100",
+		expectedJson = """{"b": true}""",
+	) {
+		writeBoolean("b", true)
 	}
 
-	test("False") {
-		context().buildDocument {
-			writeBoolean("b", false)
-		} shouldBeHex "090000000862000000"
+	testBson(
+		context,
+		name = "False",
+		expectedBinaryHex = "090000000862000000",
+		expectedJson = """{"b": false}""",
+	) {
+		writeBoolean("b", false)
 	}
 }

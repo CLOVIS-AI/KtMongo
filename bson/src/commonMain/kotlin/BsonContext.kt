@@ -77,6 +77,14 @@ interface BsonContext {
 		buildDocument { instance.writeTo(this) }
 
 	/**
+	 * Instantiates a new [BSON document][Bson] by reading its [bytes] representation.
+	 *
+	 * The reverse operation is available as [Bson.toByteArray].
+	 */
+	@LowLevelApi
+	fun readDocument(bytes: ByteArray): Bson
+
+	/**
 	 * Instantiates a new [BSON array][BsonArray].
 	 *
 	 * ### Example
@@ -113,5 +121,13 @@ interface BsonContext {
 	@BsonWriterDsl
 	fun buildArray(instance: BsonValueWriteable): BsonArray =
 		buildArray { instance.writeTo(this) }
+
+	/**
+	 * Instantiates a new [BSON array][BsonArray] by reading its [bytes] representation.
+	 *
+	 * The reverse operation is available as [BsonArray.toByteArray].
+	 */
+	@LowLevelApi
+	fun readArray(bytes: ByteArray): BsonArray
 
 }
