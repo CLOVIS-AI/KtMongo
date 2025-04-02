@@ -20,6 +20,7 @@ import io.kotest.assertions.withClue
 import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -33,39 +34,108 @@ infix fun Bson.shouldBeHex(expected: String) {
 	}
 }
 
+@OptIn(LowLevelApi::class)
+@PreparedDslMarker
+interface BsonTestDsl {
+
+	@PreparedDslMarker
+	// @Language("json")
+	var expectedJson: String?
+
+	@PreparedDslMarker
+	var expectedBinaryHex: String?
+
+	@PreparedDslMarker
+	fun document(block: BsonFieldWriter.() -> Unit)
+
+	@PreparedDslMarker
+	fun verify(name: String, block: BsonDocumentReader.() -> Unit)
+
+}
+
 @OptIn(LowLevelApi::class, ExperimentalStdlibApi::class)
 @PreparedDslMarker
 fun SuiteDsl.testBson(
 	context: Prepared<BsonContext>,
 	name: String,
-	expectedBinaryHex: String? = null,
-	expectedJson: String? = null,
-	builder: BsonFieldWriter.() -> Unit,
+	block: BsonTestDsl.() -> Unit,
 ) = suite(name) {
-	require(expectedBinaryHex != null || expectedJson != null) { "At least one of the 'expectedXXX' parameters should be specified" }
+	var _expectedJson: String? = null
+	var _expectedBinaryHex: String? = null
+	var _documentWriter: (BsonFieldWriter.() -> Unit)? = null
+	val _verifications = ArrayList<Pair<String, BsonDocumentReader.() -> Unit>>()
 
-	if (expectedBinaryHex != null) {
+	block(
+		object : BsonTestDsl {
+			override var expectedJson: String?
+				get() = _expectedJson
+				set(value) {
+					check(_expectedJson == null) { "Cannot specify multiple expected JSON representations in a single test block" }
+					_expectedJson = value
+				}
+
+			override var expectedBinaryHex: String?
+				get() = _expectedBinaryHex
+				set(value) {
+					check(_expectedBinaryHex == null) { "Cannot specify multiple expected binary representations in a single test block" }
+					_expectedBinaryHex = value
+				}
+
+			override fun document(block: BsonFieldWriter.() -> Unit) {
+				check(_documentWriter == null) { "Cannot specify multiple BSON builders in a single test block" }
+				_documentWriter = block
+			}
+
+			override fun verify(name: String, block: BsonDocumentReader.() -> Unit) {
+				_verifications += name to block
+			}
+		}
+	)
+
+	require(_expectedBinaryHex != null || _expectedJson != null) { "At least one of the 'expectedXXX' parameters should be specified" }
+
+	if (_expectedBinaryHex != null && _documentWriter != null) {
 		test("Write to binary") {
-			withClue({ "Expected JSON: '$expectedJson'" }.takeIf { expectedJson != null }) {
+			withClue({ "Expected JSON: '$_expectedJson'" }.takeIf { _expectedJson != null }) {
 				context().buildDocument {
-					builder()
-				} shouldBeHex expectedBinaryHex
+					_documentWriter()
+				} shouldBeHex _expectedBinaryHex
 			}
 		}
 	}
 
-	if (expectedJson != null) {
+	if (_expectedJson != null && _documentWriter != null) {
 		test("Write to JSON") {
 			context().buildDocument {
-				builder()
-			}.toString() shouldBe expectedJson
+				_documentWriter()
+			}.toString() shouldBe _expectedJson
 		}
 	}
 
-	if (expectedBinaryHex != null && expectedJson != null) {
+	if (_expectedBinaryHex != null && _expectedJson != null) {
 		test("Read to JSON") {
-			withClue({ "Reading the document '$expectedBinaryHex' into JSON" }) {
-				context().readDocument(expectedBinaryHex.hexToByteArray(HexFormat.UpperCase)).toString() shouldBe expectedJson
+			withClue({ "Reading the document '$_expectedBinaryHex' into JSON" }) {
+				context().readDocument(_expectedBinaryHex.hexToByteArray(HexFormat.UpperCase)).toString() shouldBe _expectedJson
+			}
+		}
+	}
+
+	if (_documentWriter != null) {
+		for ((name, verification) in _verifications) {
+			test("DSL → $name") {
+				context().buildDocument {
+					_documentWriter()
+				}.read().verification()
+			}
+		}
+	}
+
+	if (_expectedBinaryHex != null) {
+		for ((name, verification) in _verifications) {
+			test("Binary → $name") {
+				context().readDocument(_expectedBinaryHex.hexToByteArray(HexFormat.UpperCase))
+					.read()
+					.verification()
 			}
 		}
 	}
