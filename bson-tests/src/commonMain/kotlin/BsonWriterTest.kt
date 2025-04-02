@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.raw.boolean
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -75,5 +76,9 @@ fun SuiteDsl.writerTests(
 		}
 
 		check(result.toString() == """[123, false, {"name": "Paul", "age": 18}]""")
+	}
+
+	suite("BSON corpus") {
+		boolean(prepareContext)
 	}
 }

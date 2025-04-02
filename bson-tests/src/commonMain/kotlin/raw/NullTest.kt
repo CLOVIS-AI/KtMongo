@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.official
+@file:OptIn(LowLevelApi::class)
 
-import com.mongodb.MongoClientSettings
-import opensavvy.ktmongo.bson.writerTests
-import opensavvy.prepared.runner.kotest.PreparedSpec
-import opensavvy.prepared.suite.prepared
+package opensavvy.ktmongo.bson.raw
 
-@OptIn(ExperimentalStdlibApi::class)
-class JvmBsonContextTest : PreparedSpec({
-	writerTests(
-		prepared("BSON context") {
-			JvmBsonContext(MongoClientSettings.getDefaultCodecRegistry())
-		}
-	)
-})
+import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.prepared.suite.Prepared
+import opensavvy.prepared.suite.SuiteDsl
+
+/**
+ * Test null representation.
+ *
+ * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/null.json.
+ */
+fun SuiteDsl.reprNull(context: Prepared<BsonContext>) = suite("Null") {
+	test("Null") {
+		context().buildDocument {
+			writeNull("a")
+		} shouldBeHex "080000000A610000"
+	}
+}

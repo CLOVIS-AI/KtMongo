@@ -16,12 +16,20 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.dsl.LowLevelApi
+
 /**
  * A BSON document.
  *
  * To create instances of this class, see [BsonContext.buildDocument].
  */
 interface Bson {
+
+	/**
+	 * Low-level byte representation of this BSON document.
+	 */
+	@LowLevelApi
+	fun toByteArray(): ByteArray
 
 	/**
 	 * JSON representation of this [Bson] object, as a [String].
@@ -35,6 +43,11 @@ interface Bson {
  * To create instances of this class, see [BsonContext.buildArray].
  */
 interface BsonArray {
+
+	/**
+	 * Low-level byte representation of this BSON document.
+	 */
+	fun toByteArray(): ByteArray
 
 	/**
 	 * JSON representation of this [BsonArray], as a [String].

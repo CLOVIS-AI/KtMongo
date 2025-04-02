@@ -17,35 +17,50 @@
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(opensavvyConventions.plugins.aligned.kotest)
 }
 
 kotlin {
 	jvm()
-
-	compilerOptions.freeCompilerArgs.add("-Xexpect-actual-classes")
+	js {
+		browser()
+		nodejs()
+	}
+	linuxX64()
+	linuxArm64()
+	macosX64()
+	macosArm64()
+	iosArm64()
+	iosX64()
+	iosSimulatorArm64()
+	watchosX64()
+	watchosArm32()
+	watchosArm64()
+	watchosSimulatorArm64()
+	tvosX64()
+	tvosArm64()
+	tvosSimulatorArm64()
+	mingwX64()
+	// @OptIn(ExperimentalWasmDsl::class)
+	// wasmJs {
+	// 	browser()
+	// 	nodejs()
+	// }
 
 	sourceSets.commonMain.dependencies {
 		api(projects.bson)
-	}
-
-	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.bson.jvm)
+		api(libs.kotlinx.io)
 	}
 
 	sourceSets.commonTest.dependencies {
 		implementation(projects.bsonTests)
 		implementation(libs.prepared.kotest)
-		implementation(opensavvyConventions.aligned.kotlin.test)
-	}
-
-	sourceSets.jvmTest.dependencies {
-		implementation(libs.mongodb.sync.jvm)
 	}
 }
 
 library {
-	name.set("Kotlin BSON • Based on the official MongoDB implementation")
-	description.set("Kotlin-first BSON library based on the official BSON libraries")
+	name.set("Kotlin BSON • Pure Kotlin Multiplatform implementation")
+	description.set("Kotlin-first BSON library implemented in pure Kotlin code")
 	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
 
 	license.set {

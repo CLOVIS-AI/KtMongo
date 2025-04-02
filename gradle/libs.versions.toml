@@ -3,6 +3,8 @@
 [versions]
 coroutines = "1.10.1"           # https://github.com/Kotlin/kotlinx.coroutines/releases
 serialization = "1.8.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
+datetime = "0.6.2"              # https://github.com/Kotlin/kotlinx-datetime/releases
+io = "0.7.0"                    # https://github.com/Kotlin/kotlinx-io/releases
 prepared = "1.5.2"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
 mongodb-bson-jvm = "5.3.1"      # https://central.sonatype.com/artifact/org.mongodb/bson/versions
 mongodb-bson-js = "6.10.3"      # https://www.npmjs.com/package/bson
@@ -14,6 +16,8 @@ mongodb-serialization = "5.3.1" # https://central.sonatype.com/artifact/org.mong
 [libraries]
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
+kotlinx-io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "io" }
 
 prepared = { module = "dev.opensavvy.prepared:suite", version.ref = "prepared" }
 prepared-kotest = { module = "dev.opensavvy.prepared:runner-kotest", version.ref = "prepared" }

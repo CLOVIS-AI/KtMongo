@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.official
+package opensavvy.ktmongo.bson.multiplatform
 
-import com.mongodb.MongoClientSettings
-import opensavvy.ktmongo.bson.writerTests
-import opensavvy.prepared.runner.kotest.PreparedSpec
-import opensavvy.prepared.suite.prepared
+import opensavvy.ktmongo.bson.Bson
+import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.dsl.LowLevelApi
 
-@OptIn(ExperimentalStdlibApi::class)
-class JvmBsonContextTest : PreparedSpec({
-	writerTests(
-		prepared("BSON context") {
-			JvmBsonContext(MongoClientSettings.getDefaultCodecRegistry())
-		}
-	)
-})
+class Bson internal constructor(
+	private val data: ByteArray,
+) : Bson {
+
+	@LowLevelApi
+	override fun toByteArray(): ByteArray = data
+
+	override fun toString(): String = "TODO" // TODO
+}
+
+class BsonArray internal constructor(
+	private val data: ByteArray,
+) : BsonArray {
+
+	@LowLevelApi
+	override fun toByteArray(): ByteArray = data
+
+	override fun toString(): String = "TODO" // TODO
+}

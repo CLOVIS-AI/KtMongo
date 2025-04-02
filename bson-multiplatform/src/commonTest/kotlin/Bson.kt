@@ -14,18 +14,26 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.official
+package opensavvy.ktmongo.bson.multiplatform
 
-import com.mongodb.MongoClientSettings
-import opensavvy.ktmongo.bson.writerTests
+import opensavvy.ktmongo.bson.raw.*
 import opensavvy.prepared.runner.kotest.PreparedSpec
 import opensavvy.prepared.suite.prepared
 
-@OptIn(ExperimentalStdlibApi::class)
-class JvmBsonContextTest : PreparedSpec({
-	writerTests(
-		prepared("BSON context") {
-			JvmBsonContext(MongoClientSettings.getDefaultCodecRegistry())
-		}
-	)
+class MultiplatformBsonWriterTest : PreparedSpec({
+	val context by prepared {
+		BsonContext()
+	}
+
+	boolean(context)
+	int32(context)
+	int64(context)
+	double(context)
+	string(context)
+	reprNull(context)
+	document(context)
+	array(context)
+	binary(context)
+	code(context)
+	datetime(context)
 })

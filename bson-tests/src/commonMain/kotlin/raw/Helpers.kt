@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.official
+package opensavvy.ktmongo.bson.raw
 
-import com.mongodb.MongoClientSettings
-import opensavvy.ktmongo.bson.writerTests
-import opensavvy.prepared.runner.kotest.PreparedSpec
-import opensavvy.prepared.suite.prepared
+import io.kotest.assertions.withClue
+import io.kotest.matchers.shouldBe
+import opensavvy.ktmongo.bson.Bson
+import opensavvy.ktmongo.dsl.LowLevelApi
 
-@OptIn(ExperimentalStdlibApi::class)
-class JvmBsonContextTest : PreparedSpec({
-	writerTests(
-		prepared("BSON context") {
-			JvmBsonContext(MongoClientSettings.getDefaultCodecRegistry())
-		}
-	)
-})
+@OptIn(ExperimentalStdlibApi::class, LowLevelApi::class)
+infix fun Bson.shouldBeHex(expected: String) {
+	withClue({ "Encoding BSON object: $this" }) {
+		this.toByteArray().toHexString(HexFormat.UpperCase) shouldBe expected
+	}
+}
