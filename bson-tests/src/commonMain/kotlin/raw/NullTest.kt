@@ -18,6 +18,7 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -29,9 +30,13 @@ import opensavvy.prepared.suite.SuiteDsl
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/null.json.
  */
 fun SuiteDsl.reprNull(context: Prepared<BsonContext>) = suite("Null") {
-	test("Null") {
-		context().buildDocument {
-			writeNull("a")
-		} shouldBeHex "080000000A610000"
+	testBson(
+		context,
+		"Null"
+	) {
+		document { writeNull("a") }
+		expectedBinaryHex = "080000000A610000"
+		expectedJson = """{"a": null}"""
+		verify("Read value") { read("a")?.readNull() shouldBe Unit }
 	}
 }

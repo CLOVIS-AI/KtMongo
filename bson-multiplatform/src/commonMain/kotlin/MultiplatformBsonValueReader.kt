@@ -171,6 +171,7 @@ internal class MultiplatformBsonValueReader(
 		BsonType.Int64 -> readInt64().toString()
 		BsonType.Double -> commonDoubleToString(readDouble())
 		BsonType.String -> '"' + readString() + '"'
+		BsonType.Null -> "null"
 		else -> "{$type}: $bytes" // TODO
 	}
 
