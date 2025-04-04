@@ -149,7 +149,11 @@ internal class RawBsonReader(
 	}
 
 	fun readString(): String {
-		TODO()
+		val byteCount = readInt32() // includes the null-terminator
+
+		return source.readString(byteCount.toLong() - 1)
+			.also { source.skip(1) } // null-terminator
+			.also { readCount += byteCount }
 	}
 
 	@OptIn(ExperimentalStdlibApi::class)

@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson.multiplatform
 
+import kotlinx.io.readIntLe
 import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueReader
@@ -61,7 +62,7 @@ internal class MultiplatformBsonDocumentReader(
 			@Suppress("DEPRECATION")
 			val fieldSize = when (type) {
 				BsonType.Double -> 8
-				BsonType.String -> TODO()
+				BsonType.String -> reader.peek().readIntLe() + 4
 				BsonType.Document -> TODO()
 				BsonType.Array -> TODO()
 				BsonType.BinaryData -> TODO()
