@@ -18,6 +18,8 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -29,17 +31,57 @@ import opensavvy.prepared.suite.SuiteDsl
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/array.json.
  */
 fun SuiteDsl.array(context: Prepared<BsonContext>) = suite("Array") {
-	test("Empty") {
-		context().buildDocument {
+	testBson(
+		context,
+		"Empty"
+	) {
+		document {
 			writeArray("a") {}
-		} shouldBeHex "0D000000046100050000000000"
+		}
+		expectedBinaryHex = "0D000000046100050000000000"
+		expectedJson = """{"a": []}"""
+		verify("Read value") { read("a")?.readArray() shouldNotBe null }
 	}
 
-	test("Single-element array") {
-		context().buildDocument {
+	testBson(
+		context,
+		"Single-element array"
+	) {
+		document {
 			writeArray("a") {
 				writeInt32(10)
 			}
-		} shouldBeHex "140000000461000C0000001030000A0000000000"
+		}
+		expectedBinaryHex = "140000000461000C0000001030000A0000000000"
+		expectedJson = """{"a": [10]}"""
+		verify("Read value") { read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10 }
+	}
+
+	testBson(
+		context,
+		"Single Element Array with index set incorrectly to empty string"
+	) {
+		expectedBinaryHex = "130000000461000B00000010000A0000000000"
+		expectedJson = """{"a": [10]}"""
+		verify("Read value") { read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10 }
+	}
+
+	testBson(
+		context,
+		"Single Element Array with index set incorrectly to ab"
+	) {
+		expectedBinaryHex = "150000000461000D000000106162000A0000000000"
+		expectedJson = """{"a": [10]}"""
+		verify("Read value") { read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10 }
+	}
+
+	testBson(
+		context,
+		"Multi Element Array with duplicate indexes"
+	) {
+		expectedBinaryHex = "1b000000046100130000001030000a000000103000140000000000"
+		expectedJson = """{"a": [10, 20]}"""
+		verify("Read first value") { read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10 }
+		verify("Read second value") { read("a")?.readArray()?.read(1)?.readInt32() shouldBe 20 }
 	}
 }

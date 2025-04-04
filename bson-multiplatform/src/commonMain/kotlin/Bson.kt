@@ -46,9 +46,10 @@ class BsonArray internal constructor(
 	override fun toByteArray(): ByteArray = data
 
 	@LowLevelApi
-	override fun read(): BsonArrayReader {
-		TODO("Not yet implemented")
-	}
+	override fun read(): BsonArrayReader =
+		MultiplatformBsonArrayReader(Bytes(data))
 
-	override fun toString(): String = "TODO" // TODO
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String =
+		read().toString()
 }

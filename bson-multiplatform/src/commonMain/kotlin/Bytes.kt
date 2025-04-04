@@ -148,6 +148,16 @@ internal class RawBsonReader(
 			.also { readCount += byteCount.toInt() + 1 } // null-terminator
 	}
 
+	fun skipCString() {
+		val peek = source.peek()
+		var byteCount = 0L
+		while (peek.request(1) && peek.readByte() != 0.toByte())
+			byteCount++
+
+		source.skip(byteCount + 1) // null-terminator
+			.also { readCount += byteCount.toInt() + 1 }
+	}
+
 	fun readString(): String {
 		val byteCount = readInt32() // includes the null-terminator
 
