@@ -70,6 +70,10 @@ kotlin {
 		implementation(libs.prepared.kotest)
 		implementation(libs.kotlinx.datetime)
 	}
+
+	compilerOptions {
+		freeCompilerArgs.set(listOf("-Xmulti-dollar-interpolation"))
+	}
 }
 
 library {

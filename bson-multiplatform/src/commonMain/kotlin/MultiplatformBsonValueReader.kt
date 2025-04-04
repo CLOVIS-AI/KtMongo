@@ -18,6 +18,10 @@ package opensavvy.ktmongo.bson.multiplatform
 
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.math.abs
+import kotlin.math.floor
+import kotlin.math.log10
+import kotlin.math.pow
 
 @LowLevelApi
 internal class MultiplatformBsonValueReader(
@@ -40,7 +44,7 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readDouble(): Double {
 		checkType(BsonType.Double)
-		TODO("Not yet implemented")
+		return bytes.reader.readDouble()
 	}
 
 	@LowLevelApi
@@ -163,6 +167,35 @@ internal class MultiplatformBsonValueReader(
 
 	override fun toString(): String = when (type) {
 		BsonType.Boolean -> readBoolean().toString()
+		BsonType.Double -> commonDoubleToString(readDouble())
 		else -> "{$type}: $bytes" // TODO
+	}
+
+	private fun commonDoubleToString(value: Double): String {
+		// NaN and ±∞ don't exist in JSON, so we have to explicitly specify that we're representing a Double
+		if (value.isNaN() || value.isInfinite()) {
+			return "{\"\$numberDouble\": \"$value\"}"
+		}
+
+		if (abs(value) > 1_000_000.0) {
+			val exponent = floor(log10(abs(value))).toInt()
+			val scientific = value / 10.0.pow(exponent)
+			return """${scientific}E$exponent"""
+		}
+
+		var str = value.toString()
+
+		// JS prints decimal numbers as integers when possible, other platforms always have a trailing .0
+		if ('.' !in str) {
+			str += ".0"
+		}
+
+		// JS prints -0.0 as 0.0, other platforms make a difference
+		@Suppress("ReplaceCallWithBinaryOperator") // https://youtrack.jetbrains.com/issue/KTIJ-33701
+		if (value == 0.0 && value.compareTo(0) < 0 && !str.startsWith('-')) {
+			str = "-$str"
+		}
+
+		return str
 	}
 }
