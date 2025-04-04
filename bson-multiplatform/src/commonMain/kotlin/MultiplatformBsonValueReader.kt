@@ -156,7 +156,7 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readDocument(): BsonDocumentReader {
 		checkType(BsonType.Document)
-		TODO("Not yet implemented")
+		return MultiplatformBsonDocumentReader(bytes)
 	}
 
 	@LowLevelApi
@@ -172,6 +172,7 @@ internal class MultiplatformBsonValueReader(
 		BsonType.Double -> commonDoubleToString(readDouble())
 		BsonType.String -> '"' + readString() + '"'
 		BsonType.Null -> "null"
+		BsonType.Document -> readDocument().toString()
 		else -> "{$type}: $bytes" // TODO
 	}
 

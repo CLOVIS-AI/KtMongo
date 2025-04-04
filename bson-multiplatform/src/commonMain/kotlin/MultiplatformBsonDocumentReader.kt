@@ -63,7 +63,7 @@ internal class MultiplatformBsonDocumentReader(
 			val fieldSize = when (type) {
 				BsonType.Double -> 8
 				BsonType.String -> reader.peek().readIntLe() + 4
-				BsonType.Document -> TODO()
+				BsonType.Document -> reader.peek().readIntLe()
 				BsonType.Array -> TODO()
 				BsonType.BinaryData -> TODO()
 				BsonType.Undefined -> 0
