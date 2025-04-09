@@ -21,11 +21,11 @@ import opensavvy.ktmongo.bson.writerTests
 import opensavvy.prepared.runner.kotest.PreparedSpec
 import opensavvy.prepared.suite.prepared
 
+val testContext by prepared {
+	JvmBsonContext(MongoClientSettings.getDefaultCodecRegistry())
+}
+
 @OptIn(ExperimentalStdlibApi::class)
 class JvmBsonContextTest : PreparedSpec({
-	writerTests(
-		prepared("BSON context") {
-			JvmBsonContext(MongoClientSettings.getDefaultCodecRegistry())
-		}
-	)
+	writerTests(testContext)
 })

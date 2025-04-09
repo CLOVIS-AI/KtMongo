@@ -28,7 +28,7 @@ enum class BsonType(
 	 * The byte identifier for this particular type.
 	 *
 	 * Guaranteed to be in the range `-1` ([MinKey]) to `127` ([MaxKey]).
- 	 */
+	 */
 	val code: Byte,
 ) {
 	Double(1),
@@ -75,5 +75,18 @@ enum class BsonType(
 
 	MinKey(-1),
 
-	MaxKey(127)
+	MaxKey(127),
+	;
+
+	companion object {
+
+		/**
+		 * Finds a [BsonType] instance which has a [BsonType.code] equal to [code].
+		 *
+		 * @throws NoSuchElementException If the provided [code] matches no [BsonType] instance.
+		 */
+		fun fromCode(code: Byte): BsonType =
+			entries.first { it.code == code }
+
+	}
 }

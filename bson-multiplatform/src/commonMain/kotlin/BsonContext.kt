@@ -50,7 +50,16 @@ class BsonContext : BsonContext {
 	}
 
 	@LowLevelApi
+	override fun readDocument(bytes: ByteArray): Bson =
+		Bson(bytes.copyOf())
+
+	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray {
 		TODO()
 	}
+
+	@LowLevelApi
+	override fun readArray(bytes: ByteArray): BsonArray =
+		BsonArray(bytes.copyOf())
+
 }

@@ -18,6 +18,7 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -29,15 +30,23 @@ import opensavvy.prepared.suite.SuiteDsl
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/boolean.json.
  */
 fun SuiteDsl.boolean(context: Prepared<BsonContext>) = suite("Boolean") {
-	test("True") {
-		context().buildDocument {
-			writeBoolean("b", true)
-		} shouldBeHex "090000000862000100"
+	testBson(
+		context,
+		name = "True",
+	) {
+		document { writeBoolean("b", true) }
+		expectedBinaryHex = "090000000862000100"
+		expectedJson = """{"b": true}"""
+		verify("Read value") { read("b")?.readBoolean() shouldBe true }
 	}
 
-	test("False") {
-		context().buildDocument {
-			writeBoolean("b", false)
-		} shouldBeHex "090000000862000000"
+	testBson(
+		context,
+		name = "False",
+	) {
+		document { writeBoolean("b", false) }
+		expectedBinaryHex = "090000000862000000"
+		expectedJson = """{"b": false}"""
+		verify("Read value") { read("b")?.readBoolean() shouldBe false }
 	}
 }

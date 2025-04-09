@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
-import opensavvy.ktmongo.bson.raw.boolean
+import opensavvy.ktmongo.bson.raw.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -80,5 +80,15 @@ fun SuiteDsl.writerTests(
 
 	suite("BSON corpus") {
 		boolean(prepareContext)
+		int32(prepareContext)
+		int64(prepareContext)
+		double(prepareContext)
+		string(prepareContext)
+		reprNull(prepareContext)
+		document(prepareContext)
+		array(prepareContext)
+		binary(prepareContext)
+		code(prepareContext)
+		datetime(prepareContext)
 	}
 }

@@ -18,6 +18,8 @@ package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.bson.BsonArrayReader
+import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonBinaryWriter
 import org.bson.BsonDocument
@@ -37,8 +39,13 @@ actual class Bson internal constructor(
 	override fun toByteArray(): ByteArray =
 		raw.toByteArray(context)
 
+	@LowLevelApi
+	override fun read(): BsonDocumentReader =
+		BsonDocumentReader(raw)
+
+	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
-		raw.toString()
+		read().toString()
 }
 
 actual class BsonArray internal constructor(
@@ -52,18 +59,13 @@ actual class BsonArray internal constructor(
 		return fullArray.sliceArray(7..fullArray.lastIndex - 2)
 	}
 
-	override fun toString(): String {
-		// Yes, this is very ugly, and probably inefficient.
-		// The Java library doesn't provide a way to serialize arrays to JSON.
-		// https://www.mongodb.com/community/forums/t/how-to-convert-a-single-bsonvalue-such-as-bsonarray-to-json-in-the-java-bson-library
+	@LowLevelApi
+	override fun read(): BsonArrayReader =
+		BsonArrayReader(raw)
 
-		val document = BsonDocument("a", raw).toJson()
-
-		return document.substring(
-			document.indexOf('['),
-			document.lastIndexOf(']') + 1
-		).trim()
-	}
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String =
+		read().toString()
 }
 
 // Inspired by https://gist.github.com/Koboo/ebd7c6802101e1a941ef31baca04113d

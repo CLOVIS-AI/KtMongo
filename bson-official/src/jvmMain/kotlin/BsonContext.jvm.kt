@@ -22,12 +22,14 @@ import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
 import org.bson.BsonArray
+import org.bson.codecs.DecoderContext
 import org.bson.codecs.Encoder
 import org.bson.codecs.EncoderContext
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.configuration.CodecRegistry
 import org.bson.types.Decimal128
 import org.bson.types.ObjectId
+import java.nio.ByteBuffer
 
 /**
  * BSON implementation based on the official Java and Kotlin MongoDB drivers.
@@ -59,12 +61,34 @@ class JvmBsonContext(
 	}
 
 	@LowLevelApi
+	override fun readDocument(bytes: ByteArray): Bson {
+		val codec = codecRegistry.get(BsonDocument::class.java)
+		val buffer = ByteBuffer.wrap(bytes)
+		val document = codec.decode(
+			BsonBinaryReader(buffer),
+			DecoderContext.builder().build(),
+		)
+		return Bson(document, this)
+	}
+
+	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): opensavvy.ktmongo.bson.official.BsonArray {
 		val nativeArray = BsonArray()
 
 		JavaRootArrayWriter(this, nativeArray).block()
 
 		return BsonArray(nativeArray, this)
+	}
+
+	@LowLevelApi
+	override fun readArray(bytes: ByteArray): opensavvy.ktmongo.bson.official.BsonArray {
+		val codec = codecRegistry.get(BsonArray::class.java)
+		val buffer = ByteBuffer.wrap(bytes)
+		val document = codec.decode(
+			BsonBinaryReader(buffer),
+			DecoderContext.builder().build(),
+		)
+		return BsonArray(document, this)
 	}
 }
 

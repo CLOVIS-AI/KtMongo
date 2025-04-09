@@ -14,29 +14,22 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+package opensavvy.ktmongo.bson.official
 
-package opensavvy.ktmongo.bson.raw
-
-import io.kotest.matchers.shouldBe
-import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.prepared.suite.Prepared
-import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.runner.kotest.PreparedSpec
 
-/**
- * Test null representation.
- *
- * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/null.json.
- */
-fun SuiteDsl.reprNull(context: Prepared<BsonContext>) = suite("Null") {
-	testBson(
-		context,
-		"Null"
-	) {
-		document { writeNull("a") }
-		expectedBinaryHex = "080000000A610000"
-		expectedJson = """{"a": null}"""
-		verify("Read value") { read("a")?.readNull() shouldBe Unit }
+@OptIn(LowLevelApi::class)
+class BsonReaderTest : PreparedSpec({
+
+	test("Read basic data types") {
+		val output = testContext().buildDocument {
+			writeString("hello", "world")
+			writeInt32("a", 42)
+		}
+
+		check(output.read().read("hello")?.readString() == "world")
+		check(output.read().read("a")?.readInt32() == 42)
 	}
-}
+
+})
