@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,6 +108,51 @@ class ComparisonFilterTest : PreparedSpec({
 				{
 					"name": {
 						"$isOneOf": [
+							"Alfred",
+							"Arthur",
+							"Annabelle"
+						]
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite("Operator $isNotOneOf") {
+		test("With 0 elements") {
+			filter {
+				User::name.isNotOneOf()
+			} shouldBeBson """
+				{
+					"name": {
+						"$isNotOneOf": [
+						]
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("With 1 element") {
+			filter {
+				User::name.isNotOneOf("Alfred")
+			} shouldBeBson """
+				{
+					"name": {
+						"$isNotOneOf": [
+							"Alfred"
+						]
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("With multiple elements") {
+			filter {
+				User::name.isNotOneOf("Alfred", "Arthur", "Annabelle")
+			} shouldBeBson """
+				{
+					"name": {
+						"$isNotOneOf": [
 							"Alfred",
 							"Arthur",
 							"Annabelle"

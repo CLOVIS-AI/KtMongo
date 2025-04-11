@@ -253,4 +253,28 @@ class PredicateExpression<T>(
 	}
 
 	// endregion
+	// region $nin
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@KtMongoDsl
+	override fun isNotOneOf(values: Collection<T>) {
+		accept(NotOneOfPredicateExpressionNode(values, context))
+	}
+
+	@LowLevelApi
+	private class NotOneOfPredicateExpressionNode<T>(
+		val values: Collection<T>,
+		context: BsonContext,
+	) : PredicateExpressionNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) {
+			writer.writeArray("\$nin") {
+				for (value in values)
+					writeObjectSafe(value)
+			}
+		}
+	}
+
+	// endregion
 }

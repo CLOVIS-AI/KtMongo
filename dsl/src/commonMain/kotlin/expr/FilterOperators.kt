@@ -25,7 +25,6 @@ import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
 import opensavvy.ktmongo.dsl.path.*
-import kotlin.jvm.JvmName
 import kotlin.reflect.KProperty1
 
 /**
@@ -1731,6 +1730,130 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isOneOf(vararg values: V) {
 		isOneOf(values.asList())
+	}
+
+	/**
+	 * Selects documents for which this field is not equal to any of the given [values].
+	 *
+	 * This operator will also select documents for which the field doesn't exist.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name.isNotOneOf(listOf("Alfred", "Arthur"))
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
+	 *
+	 * @see isOneOf
+	 * @see ne
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isNotOneOf(values: List<V>) {
+		this { isNotOneOf(values) }
+	}
+
+	/**
+	 * Selects documents for which this field is not equal to any of the given [values].
+	 *
+	 * This operator will also select documents for which the field doesn't exist.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name.isNotOneOf(listOf("Alfred", "Arthur"))
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
+	 *
+	 * @see isOneOf
+	 * @see ne
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isNotOneOf(values: List<V>) {
+		this.field.isNotOneOf(values)
+	}
+
+	/**
+	 * Selects documents for which this field is not equal to any of the given [values].
+	 *
+	 * This operator will also select documents for which the field doesn't exist.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name.isNotOneOf("Alfred", "Arthur")
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
+	 *
+	 * @see isOneOf
+	 * @see ne
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isNotOneOf(vararg values: V) {
+		isNotOneOf(values.asList())
+	}
+
+	/**
+	 * Selects documents for which this field is not equal to any of the given [values].
+	 *
+	 * This operator will also select documents for which the field doesn't exist.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name.isNotOneOf("Alfred", "Arthur")
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
+	 *
+	 * @see isOneOf
+	 * @see ne
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isNotOneOf(vararg values: V) {
+		isNotOneOf(values.asList())
 	}
 
 	// endregion

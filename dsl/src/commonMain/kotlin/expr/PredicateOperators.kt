@@ -694,5 +694,70 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	}
 
 	// endregion
+	// region $nin
+
+	/**
+	 * Selects documents for which this field is not equal to any of the given [values].
+	 *
+	 * This operator will also select documents for which the field doesn't exist.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name {
+	 *         isNotOneOf(listOf("Alfred", "Arthur"))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
+	 *
+	 * @see FilterExpression.isNotOneOf
+	 * @see ne
+	 */
+	@KtMongoDsl
+	fun isNotOneOf(values: Collection<T>)
+
+	/**
+	 * Selects documents for which this field is not equal to any of the given [values].
+	 *
+	 * This operator will also select documents for which the field doesn't exist.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name {
+	 *         isNotOneOf("Alfred", "Arthur")
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
+	 *
+	 * @see FilterExpression.isNotOneOf
+	 * @see ne
+	 */
+	@KtMongoDsl
+	fun isNotOneOf(vararg values: T) {
+		isNotOneOf(values.asList())
+	}
+
+	// endregion
 
 }
