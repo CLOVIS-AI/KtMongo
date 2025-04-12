@@ -19,7 +19,7 @@ package opensavvy.ktmongo.sync.operations
 import opensavvy.ktmongo.dsl.command.BulkWrite
 import opensavvy.ktmongo.dsl.options.BulkWriteOptions
 import opensavvy.ktmongo.dsl.options.UpdateOptions
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateOperators
 import opensavvy.ktmongo.dsl.query.UpsertOperators
 import opensavvy.ktmongo.sync.MongoCollection
@@ -74,7 +74,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun updateMany(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateOperators<Document>.() -> Unit,
 	)
 
@@ -125,7 +125,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateOperators<Document>.() -> Unit,
 	)
 
@@ -179,7 +179,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpsertOperators<Document>.() -> Unit,
 	)
 
@@ -228,7 +228,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun findOneAndUpdate(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateOperators<Document>.() -> Unit,
 	): Document?
 
@@ -298,7 +298,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun bulkWrite(
 		options: BulkWriteOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
 		operations: BulkWrite<Document>.() -> Unit,
 	)
 

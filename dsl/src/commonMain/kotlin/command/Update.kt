@@ -34,14 +34,14 @@ import opensavvy.ktmongo.dsl.tree.Node
  * }
  * ```
  *
- * @see FilterOperators Filter operators
+ * @see FilterQuery Filter operators
  * @see UpdateOperators Update operators
  */
 @KtMongoDsl
 class UpdateOne<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
-	val filter: FilterOperators<Document>,
+	val filter: FilterQuery<Document>,
 	val update: UpdateOperators<Document>,
 ) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
@@ -59,14 +59,14 @@ class UpdateOne<Document : Any> private constructor(
  * }
  * ```
  *
- * @see FilterOperators Filter operators
+ * @see FilterQuery Filter operators
  * @see UpdateOperators Update operators
  */
 @KtMongoDsl
 class UpsertOne<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
-	val filter: FilterOperators<Document>,
+	val filter: FilterQuery<Document>,
 	val update: UpsertOperators<Document>,
 ) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
@@ -84,14 +84,14 @@ class UpsertOne<Document : Any> private constructor(
  * }
  * ```
  *
- * @see FilterOperators Filter operators
+ * @see FilterQuery Filter operators
  * @see UpdateOperators Update operators
  */
 @KtMongoDsl
 class UpdateMany<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
-	val filter: FilterOperators<Document>,
+	val filter: FilterQuery<Document>,
 	val update: UpdateOperators<Document>,
 ) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 

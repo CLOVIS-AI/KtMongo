@@ -59,7 +59,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun find(
 		options: FindOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): MongoIterable<Document> {
 		val model = Find<Document>(context)
 
@@ -83,7 +83,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun count(
 		options: CountOptions<Document>.() -> Unit,
-		predicate: FilterOperators<Document>.() -> Unit,
+		predicate: FilterQuery<Document>.() -> Unit,
 	): Long {
 		val model = Count<Document>(context)
 
@@ -105,7 +105,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun updateMany(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateOperators<Document>.() -> Unit,
 	) {
 		val model = UpdateMany<Document>(context)
@@ -120,7 +120,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun updateOne(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateOperators<Document>.() -> Unit,
 	) {
 		val model = UpdateOne<Document>(context)
@@ -135,7 +135,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun upsertOne(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpsertOperators<Document>.() -> Unit,
 	) {
 		val model = UpsertOne<Document>(context)
@@ -150,7 +150,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun findOneAndUpdate(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateOperators<Document>.() -> Unit,
 	): Document? {
 		val model = UpdateOne<Document>(context)
@@ -165,7 +165,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun bulkWrite(
 		options: BulkWriteOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		operations: BulkWrite<Document>.() -> Unit,
 	) {
 		val model = BulkWrite<Document>(context, filter)
@@ -185,7 +185,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun updateManyWithPipeline(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdatePipelineOperators<Document>.() -> Unit,
 	) {
 		val model = UpdateManyWithPipeline<Document>(context)
@@ -200,7 +200,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun updateOneWithPipeline(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdatePipelineOperators<Document>.() -> Unit,
 	) {
 		val model = UpdateOneWithPipeline<Document>(context)
@@ -215,7 +215,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun upsertOneWithPipeline(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdatePipelineOperators<Document>.() -> Unit,
 	) {
 		val model = UpsertOneWithPipeline<Document>(context)
@@ -260,7 +260,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun deleteOne(
 		options: DeleteOneOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	) {
 		DeleteOneOptions<Document>(context).apply(options)
 		val filter = FilterExpression<Document>(context).apply(filter)
@@ -274,7 +274,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun deleteMany(
 		options: DeleteManyOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	) {
 		DeleteManyOptions<Document>(context).apply(options)
 		val filter = FilterExpression<Document>(context).apply(filter)

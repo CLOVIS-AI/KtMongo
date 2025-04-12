@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.FindOptions
 import opensavvy.ktmongo.dsl.query.FilterExpression
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 
 /**
@@ -36,14 +36,14 @@ import opensavvy.ktmongo.dsl.query.common.AbstractExpression
  * }
  * ```
  *
- * @see FilterOperators Filter operators
+ * @see FilterQuery Filter operators
  * @see FindOptions Options
  */
 @KtMongoDsl
 class Find<Document : Any> private constructor(
 	context: BsonContext,
 	val options: FindOptions<Document>,
-	val filter: FilterOperators<Document>,
+	val filter: FilterQuery<Document>,
 ) : AbstractExpression(context) {
 
 	constructor(context: BsonContext) : this(context, FindOptions(context), FilterExpression(context))

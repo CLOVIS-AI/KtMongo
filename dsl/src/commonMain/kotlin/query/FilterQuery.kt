@@ -122,7 +122,7 @@ import kotlin.reflect.KProperty1
  * If you can't find an operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/4).
  */
 @KtMongoDsl
-interface FilterOperators<T> : CompoundExpression, FieldDsl {
+interface FilterQuery<T> : CompoundExpression, FieldDsl {
 
 	// region $and, $or
 
@@ -153,7 +153,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * @see or Logical `OR` operation.
 	 */
 	@KtMongoDsl
-	fun and(block: FilterOperators<T>.() -> Unit)
+	fun and(block: FilterQuery<T>.() -> Unit)
 
 	/**
 	 * Performs a logical `OR` operation on one or more expressions,
@@ -183,7 +183,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 * @see and Logical `AND` operation.
 	 */
 	@KtMongoDsl
-	fun or(block: FilterOperators<T>.() -> Unit)
+	fun or(block: FilterQuery<T>.() -> Unit)
 
 	// endregion
 	// region Predicate access
@@ -2313,7 +2313,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	fun <V> Field<T, Collection<V>>.any(block: FilterOperators<V>.() -> Unit)
+	fun <V> Field<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit)
 
 	/**
 	 * Specify multiple operators on fields of a single array element.
@@ -2370,7 +2370,7 @@ interface FilterOperators<T> : CompoundExpression, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	fun <V> KProperty1<T, Collection<V>>.any(block: FilterOperators<V>.() -> Unit) {
+	fun <V> KProperty1<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit) {
 		this.field.any(block)
 	}
 

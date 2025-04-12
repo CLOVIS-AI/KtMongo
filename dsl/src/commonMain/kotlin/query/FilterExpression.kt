@@ -31,13 +31,13 @@ import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 import opensavvy.ktmongo.dsl.query.common.Expression
 
 /**
- * Implementation of the [FilterOperators] interface.
+ * Implementation of the [FilterQuery] interface.
  */
 @KtMongoDsl
 class FilterExpression<T>(
 	context: BsonContext,
 ) : AbstractCompoundExpression(context),
-	FilterOperators<T>,
+	FilterQuery<T>,
 	FieldDsl {
 
 	// region Low-level operations
@@ -59,7 +59,7 @@ class FilterExpression<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun and(block: FilterOperators<T>.() -> Unit) {
+	override fun and(block: FilterQuery<T>.() -> Unit) {
 		accept(AndFilterExpressionNode<T>(FilterExpression<T>(context).apply(block).children, context))
 	}
 
@@ -106,7 +106,7 @@ class FilterExpression<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun or(block: FilterOperators<T>.() -> Unit) {
+	override fun or(block: FilterQuery<T>.() -> Unit) {
 		accept(OrFilterExpressionNode<T>(FilterExpression<T>(context).apply(block).children, context))
 	}
 
@@ -177,7 +177,7 @@ class FilterExpression<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun <V> Field<T, Collection<V>>.any(block: FilterOperators<V>.() -> Unit) {
+	override fun <V> Field<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit) {
 		accept(ElementMatchExpressionNode<V>(path, FilterExpression<V>(context).apply(block), context))
 	}
 

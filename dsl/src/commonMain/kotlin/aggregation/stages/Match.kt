@@ -23,7 +23,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.query.FilterExpression
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 
 /**
@@ -52,7 +52,7 @@ interface HasMatch<Document : Any> : Pipeline<Document> {
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun match(
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): Pipeline<Document> =
 		withStage(MatchStage(FilterExpression<Document>(context).apply(filter), context))
 

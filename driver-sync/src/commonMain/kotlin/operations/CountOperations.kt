@@ -17,7 +17,7 @@
 package opensavvy.ktmongo.sync.operations
 
 import opensavvy.ktmongo.dsl.options.CountOptions
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * Interface grouping MongoDB operations relating to counting documents.
@@ -58,7 +58,7 @@ interface CountOperations<Document : Any> : BaseOperations {
 	 */
 	fun count(
 		options: CountOptions<Document>.() -> Unit = {},
-		predicate: FilterOperators<Document>.() -> Unit
+		predicate: FilterQuery<Document>.() -> Unit,
 	): Long
 
 	/**

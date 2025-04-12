@@ -29,7 +29,7 @@ import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
 import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
 import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
 import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.common.Expression
 
 class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal constructor(
@@ -71,7 +71,7 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 		super.limit(amount) as MongoAggregationPipeline<Output>
 
 	@KtMongoDsl
-	override fun match(filter: FilterOperators<Output>.() -> Unit): MongoAggregationPipeline<Output> =
+	override fun match(filter: FilterQuery<Output>.() -> Unit): MongoAggregationPipeline<Output> =
 		super.match(filter) as MongoAggregationPipeline<Output>
 
 	@KtMongoDsl

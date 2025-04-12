@@ -21,7 +21,7 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriteable
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 import opensavvy.ktmongo.dsl.query.common.Expression
 import opensavvy.ktmongo.dsl.tree.Node
@@ -35,7 +35,7 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  *
  * Instances of this interface are obtained by the end-user through the [ValueDsl] builder.
  * Functions from KtMongo which expect aggregation values provide an instance of [ValueDsl] into scope automatically.
- * For example, see [FilterOperators.expr].
+ * For example, see [FilterQuery.expr].
  *
  * ### Difference with Expression
  *

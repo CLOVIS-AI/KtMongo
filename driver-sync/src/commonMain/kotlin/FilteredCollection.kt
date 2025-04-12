@@ -24,7 +24,7 @@ import opensavvy.ktmongo.dsl.query.*
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
-	private val globalFilter: FilterOperators<Document>.() -> Unit,
+	private val globalFilter: FilterQuery<Document>.() -> Unit,
 ) : MongoCollection<Document> {
 
 	override fun find(): MongoIterable<Document> =
@@ -32,7 +32,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun find(
 		options: FindOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): MongoIterable<Document> =
 		upstream.find(options) {
 			globalFilter()
@@ -48,7 +48,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun count(
 		options: CountOptions<Document>.() -> Unit,
-		predicate: FilterOperators<Document>.() -> Unit,
+		predicate: FilterQuery<Document>.() -> Unit,
 	): Long =
 		upstream.count(
 			options = options,
@@ -63,7 +63,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun updateMany(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateOperators<Document>.() -> Unit,
 	) {
 		upstream.updateMany(
@@ -78,7 +78,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun updateManyWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdatePipelineOperators<Document>.() -> Unit,
 	) {
 		upstream.updateManyWithPipeline(
@@ -93,7 +93,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateOperators<Document>.() -> Unit,
 	) {
 		upstream.updateOne(
@@ -108,7 +108,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun updateOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdatePipelineOperators<Document>.() -> Unit,
 	) {
 		upstream.updateOneWithPipeline(
@@ -123,7 +123,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpsertOperators<Document>.() -> Unit,
 	) {
 		upstream.upsertOne(
@@ -138,7 +138,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun upsertOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdatePipelineOperators<Document>.() -> Unit,
 	) {
 		upstream.upsertOneWithPipeline(
@@ -153,7 +153,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun findOneAndUpdate(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateOperators<Document>.() -> Unit,
 	): Document? =
 		upstream.findOneAndUpdate(
@@ -167,8 +167,8 @@ private class FilteredCollection<Document : Any>(
 
 	override fun bulkWrite(
 		options: BulkWriteOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
-		operations: BulkWrite<Document>.() -> Unit
+		filter: FilterQuery<Document>.() -> Unit,
+		operations: BulkWrite<Document>.() -> Unit,
 	) = upstream.bulkWrite(
 		options = options,
 		filter = {
@@ -178,7 +178,7 @@ private class FilteredCollection<Document : Any>(
 		operations = operations,
 	)
 
-	override fun deleteOne(options: DeleteOneOptions<Document>.() -> Unit, filter: FilterOperators<Document>.() -> Unit) {
+	override fun deleteOne(options: DeleteOneOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
 		upstream.deleteOne(
 			options = options,
 			filter = {
@@ -188,7 +188,7 @@ private class FilteredCollection<Document : Any>(
 		)
 	}
 
-	override fun deleteMany(options: DeleteManyOptions<Document>.() -> Unit, filter: FilterOperators<Document>.() -> Unit) {
+	override fun deleteMany(options: DeleteManyOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
 		upstream.deleteMany(
 			options = options,
 			filter = {
@@ -255,5 +255,5 @@ private class FilteredCollection<Document : Any>(
  * activeOrders.find() // Only returns orders that are not logically deleted
  * ```
  */
-fun <Document : Any> MongoCollection<Document>.filter(filter: FilterOperators<Document>.() -> Unit): MongoCollection<Document> =
+fun <Document : Any> MongoCollection<Document>.filter(filter: FilterQuery<Document>.() -> Unit): MongoCollection<Document> =
 	FilteredCollection(this, filter)

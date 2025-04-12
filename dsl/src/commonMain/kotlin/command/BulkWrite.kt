@@ -23,7 +23,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.BulkWriteOptions
 import opensavvy.ktmongo.dsl.options.InsertOneOptions
 import opensavvy.ktmongo.dsl.options.UpdateOptions
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateOperators
 import opensavvy.ktmongo.dsl.query.UpsertOperators
 import opensavvy.ktmongo.dsl.tree.CompoundNode
@@ -83,14 +83,14 @@ sealed interface AvailableInBulkWrite<Document> : Node
 @KtMongoDsl
 class BulkWrite<Document : Any> private constructor(
 	val context: BsonContext,
-	private val globalFilter: FilterOperators<Document>.() -> Unit,
+	private val globalFilter: FilterQuery<Document>.() -> Unit,
 	val options: BulkWriteOptions<Document>,
 ) : CompoundNode<AvailableInBulkWrite<Document>> {
 
 	private val _operations = ArrayList<AvailableInBulkWrite<Document>>()
 	val operations: Sequence<AvailableInBulkWrite<Document>> get() = _operations.asSequence()
 
-	constructor(context: BsonContext, globalFilter: FilterOperators<Document>.() -> Unit) : this(context, globalFilter, BulkWriteOptions(context))
+	constructor(context: BsonContext, globalFilter: FilterQuery<Document>.() -> Unit) : this(context, globalFilter, BulkWriteOptions(context))
 
 	@LowLevelApi
 	@DangerousMongoApi
@@ -116,7 +116,7 @@ class BulkWrite<Document : Any> private constructor(
 	 * ```
 	 */
 	fun filtered(
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 		operations: BulkWrite<Document>.() -> Unit,
 	) {
 		val parent = this
@@ -263,7 +263,7 @@ class BulkWrite<Document : Any> private constructor(
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun updateMany(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateOperators<Document>.() -> Unit,
 	) {
 		val model = UpdateMany<Document>(context)
@@ -310,7 +310,7 @@ class BulkWrite<Document : Any> private constructor(
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateOperators<Document>.() -> Unit,
 	) {
 		val model = UpdateOne<Document>(context)
@@ -362,7 +362,7 @@ class BulkWrite<Document : Any> private constructor(
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpsertOperators<Document>.() -> Unit,
 	) {
 		val model = UpsertOne<Document>(context)

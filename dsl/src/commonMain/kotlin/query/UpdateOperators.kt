@@ -573,7 +573,7 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	/**
 	 * The positional operator: update an array item selected in the filter.
 	 *
-	 * When we use [any][FilterOperators.any] or [anyValue][FilterOperators.anyValue]
+	 * When we use [any][FilterQuery.any] or [anyValue][FilterQuery.anyValue]
 	 * in a filter to select an item, we can use this operator to update whichever item was selected.
 	 *
 	 * Do not use this operator in an `upsert`.
@@ -615,7 +615,7 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	/**
 	 * The positional operator: update an array item selected in the filter.
 	 *
-	 * When we use [any][FilterOperators.any] or [anyValue][FilterOperators.anyValue]
+	 * When we use [any][FilterQuery.any] or [anyValue][FilterQuery.anyValue]
 	 * in a filter to select an item, we can use this operator to update whichever item was selected.
 	 *
 	 * Do not use this operator in an `upsert`.

@@ -20,7 +20,7 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.options.CountOptions
 import opensavvy.ktmongo.dsl.query.FilterExpression
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * Counting a number of documents in a collection.
@@ -33,14 +33,14 @@ import opensavvy.ktmongo.dsl.query.FilterOperators
  * }
  * ```
  *
- * @see FilterOperators Filter operators
+ * @see FilterQuery Filter operators
  * @see CountOptions Options
  */
 @KtMongoDsl
 class Count<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: CountOptions<Document>,
-	val filter: FilterOperators<Document>,
+	val filter: FilterQuery<Document>,
 ) {
 
 	constructor(context: BsonContext) : this(context, CountOptions(context), FilterExpression(context))

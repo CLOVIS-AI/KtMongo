@@ -18,7 +18,7 @@ package opensavvy.ktmongo.sync.operations
 
 import opensavvy.ktmongo.dsl.options.FindOptions
 import opensavvy.ktmongo.dsl.query.FilterExpression
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.sync.MongoIterable
 
 /**
@@ -62,7 +62,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 */
 	fun find(
 		options: FindOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): MongoIterable<Document>
 
 	/**
@@ -91,7 +91,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 */
 	fun findOne(
 		options: FindOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): Document? =
 		find(options, filter).firstOrNull()
 

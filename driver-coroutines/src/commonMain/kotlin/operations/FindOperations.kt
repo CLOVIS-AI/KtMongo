@@ -19,7 +19,7 @@ package opensavvy.ktmongo.coroutines.operations
 import opensavvy.ktmongo.coroutines.MongoIterable
 import opensavvy.ktmongo.dsl.options.FindOptions
 import opensavvy.ktmongo.dsl.query.FilterExpression
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * Interface grouping MongoDB operations allowing to search for information.
@@ -62,7 +62,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 */
 	fun find(
 		options: FindOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): MongoIterable<Document>
 
 	/**
@@ -91,7 +91,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 */
 	suspend fun findOne(
 		options: FindOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): Document? =
 		find(options, filter).firstOrNull()
 

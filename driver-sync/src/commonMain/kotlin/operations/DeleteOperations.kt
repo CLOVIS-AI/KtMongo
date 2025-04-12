@@ -18,7 +18,7 @@ package opensavvy.ktmongo.sync.operations
 
 import opensavvy.ktmongo.dsl.options.DeleteManyOptions
 import opensavvy.ktmongo.dsl.options.DeleteOneOptions
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * Interface grouping MongoDB operations relating to deleting documents.
@@ -47,7 +47,7 @@ interface DeleteOperations<Document : Any> : BaseOperations {
 	 */
 	fun deleteOne(
 		options: DeleteOneOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit
+		filter: FilterQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -72,7 +72,7 @@ interface DeleteOperations<Document : Any> : BaseOperations {
 	 */
 	fun deleteMany(
 		options: DeleteManyOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit
+		filter: FilterQuery<Document>.() -> Unit,
 	)
 
 }

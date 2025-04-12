@@ -19,7 +19,7 @@ package opensavvy.ktmongo.dsl.aggregation
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.aggregation.operators.*
 import opensavvy.ktmongo.dsl.path.Field
-import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * DSL to instantiate aggregation values, available in most aggregation stages.
@@ -28,7 +28,7 @@ import opensavvy.ktmongo.dsl.query.FilterOperators
  *
  * In MongoDB, operators targeting regular queries and aggregation pipelines often have the same name but a different
  * syntax. Using KtMongo, operators keep the same name __and syntax__ for both usages, but the way they are used in
- * practice is still quite different. For example, compare [`$eq` (query)][FilterOperators.eq]
+ * practice is still quite different. For example, compare [`$eq` (query)][FilterQuery.eq]
  * and [`$eq` (aggregation)][ComparisonValueOperators.eq].
  *
  * In regular queries, operators do not have a return type, and invoking them immediately adds them to the current query.
@@ -65,7 +65,7 @@ import opensavvy.ktmongo.dsl.query.FilterOperators
  * Because each side of an operator accepts an aggregation value, we can thus compare multiple fields from the same document,
  * use conditionals or other complex requests.
  *
- * In this example, we used the [`$expr`][FilterOperators.expr] query predicate to write an aggregation value within
+ * In this example, we used the [`$expr`][FilterQuery.expr] query predicate to write an aggregation value within
  * a regular query. `$expr` requires returning a boolean, so the last operator of the value needed to be a boolean-returning
  * operator, which `$lt` is one of. In other contexts, aggregation values can be typed with any other document type.
  *
