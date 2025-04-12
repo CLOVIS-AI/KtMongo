@@ -18,8 +18,8 @@ package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.BulkWrite
 import opensavvy.ktmongo.dsl.expr.*
-import opensavvy.ktmongo.dsl.models.BulkWrite
 import opensavvy.ktmongo.dsl.options.*
 
 private class FilteredCollection<Document : Any>(

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.official.models
+package opensavvy.ktmongo.official.command
 
 import com.mongodb.client.model.*
 import opensavvy.ktmongo.bson.official.Bson
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.models.*
+import opensavvy.ktmongo.dsl.command.*
 
 @Suppress("UNCHECKED_CAST")
 @OptIn(LowLevelApi::class)

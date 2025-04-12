@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.Count
 import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.expr.common.Expression
-import opensavvy.ktmongo.dsl.models.Count
 import opensavvy.ktmongo.dsl.options.CountOptions
 import opensavvy.ktmongo.dsl.tree.CompoundNode
 

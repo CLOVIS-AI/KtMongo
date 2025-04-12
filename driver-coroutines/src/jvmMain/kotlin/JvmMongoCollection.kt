@@ -26,13 +26,13 @@ import opensavvy.ktmongo.bson.official.Bson
 import opensavvy.ktmongo.bson.official.JvmBsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
+import opensavvy.ktmongo.dsl.command.*
 import opensavvy.ktmongo.dsl.expr.*
-import opensavvy.ktmongo.dsl.models.*
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.options.common.LimitOption
 import opensavvy.ktmongo.dsl.options.common.SortOption
 import opensavvy.ktmongo.dsl.options.common.option
-import opensavvy.ktmongo.official.models.toJava
+import opensavvy.ktmongo.official.command.toJava
 import opensavvy.ktmongo.official.options.toJava
 
 /**
