@@ -18,7 +18,11 @@ package opensavvy.ktmongo.dsl.query.update
 
 import opensavvy.ktmongo.bson.official.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.query.*
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
+import opensavvy.ktmongo.dsl.query.shouldBeBson
+import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 val set = "\$set"
@@ -42,13 +46,15 @@ class User(
 	val friends: List<Friend>,
 )
 
+@OptIn(LowLevelApi::class)
 @KtMongoDsl
 fun update(block: UpdateQuery<User>.() -> Unit): String =
-	UpdateExpression<User>(testContext()).apply(block).toString()
+	UpdateQuery<User>(testContext()).apply(block).toString()
 
+@OptIn(LowLevelApi::class)
 @KtMongoDsl
 fun upsert(block: UpsertQuery<User>.() -> Unit): String =
-	UpdateExpression<User>(testContext()).apply(block).toString()
+	UpsertQuery<User>(testContext()).apply(block).toString()
 
 class EmptyUpdateTest : PreparedSpec({
 	test("Empty update") {

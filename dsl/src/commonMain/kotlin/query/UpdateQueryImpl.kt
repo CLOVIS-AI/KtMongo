@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+@file:JvmMultifileClass
+@file:JvmName("UpdateQueryKt")
+
 package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonContext
@@ -34,7 +37,7 @@ import kotlin.reflect.KClass
  * Implementation of [UpdateQuery].
  */
 @KtMongoDsl
-class UpdateExpression<T>(
+private class UpdateQueryImpl<T>(
 	context: BsonContext,
 ) : AbstractCompoundExpression(context),
 	UpsertQuery<T>,
@@ -72,7 +75,7 @@ class UpdateExpression<T>(
 
 		@OptIn(DangerousMongoApi::class)
 		if (simplifiedChildren != children)
-			return UpdateExpression<T>(context).apply {
+			return UpdateQueryImpl<T>(context).apply {
 				acceptAll(simplifiedChildren)
 			}
 		return this
@@ -240,3 +243,17 @@ class UpdateExpression<T>(
 		)
 	}
 }
+
+/**
+ * Creates an empty [UpdateQuery].
+ */
+@LowLevelApi
+fun <T> UpdateQuery(context: BsonContext): UpdateQuery<T> =
+	UpdateQueryImpl(context)
+
+/**
+ * Creates an empty [UpsertQuery].
+ */
+@LowLevelApi
+fun <T> UpsertQuery(context: BsonContext): UpsertQuery<T> =
+	UpdateQueryImpl(context)

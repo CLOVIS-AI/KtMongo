@@ -21,7 +21,6 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.UpdateExpression
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.dsl.tree.ImmutableNode
@@ -50,7 +49,7 @@ class UpdateOne<Document : Any> private constructor(
 ) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateExpression(context))
+	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateQuery(context))
 }
 
 /**
@@ -76,7 +75,7 @@ class UpsertOne<Document : Any> private constructor(
 ) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateExpression(context))
+	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpsertQuery(context))
 }
 
 /**
@@ -102,5 +101,5 @@ class UpdateMany<Document : Any> private constructor(
 ) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateExpression(context))
+	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateQuery(context))
 }
