@@ -18,7 +18,7 @@ package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.bson.official.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.query.FilterExpression
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.testContext
 
@@ -55,6 +55,7 @@ class User(
 	val isAlive: Boolean = true,
 )
 
+@OptIn(LowLevelApi::class)
 @KtMongoDsl
 fun filter(block: FilterQuery<User>.() -> Unit): String =
-	FilterExpression<User>(testContext()).apply(block).toString()
+	FilterQuery<User>(testContext()).apply(block).toString()

@@ -20,7 +20,10 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.UpdateOptions
-import opensavvy.ktmongo.dsl.query.*
+import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.query.UpdateOperators
+import opensavvy.ktmongo.dsl.query.UpdatePipelineExpression
+import opensavvy.ktmongo.dsl.query.UpdatePipelineOperators
 import opensavvy.ktmongo.dsl.tree.ImmutableNode
 import opensavvy.ktmongo.dsl.tree.Node
 
@@ -48,7 +51,8 @@ class UpdateOneWithPipeline<Document : Any> private constructor(
 	val update: UpdatePipelineOperators<Document>,
 ) : Node by ImmutableNode {
 
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterExpression(context), UpdatePipelineExpression(context))
+	@OptIn(LowLevelApi::class)
+	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdatePipelineExpression(context))
 
 	@LowLevelApi
 	val updates get() = (update as UpdatePipelineExpression<*>).stages
@@ -78,7 +82,8 @@ class UpsertOneWithPipeline<Document : Any> private constructor(
 	val update: UpdatePipelineOperators<Document>,
 ) : Node by ImmutableNode {
 
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterExpression(context), UpdatePipelineExpression(context))
+	@OptIn(LowLevelApi::class)
+	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdatePipelineExpression(context))
 
 	@LowLevelApi
 	val updates get() = (update as UpdatePipelineExpression<*>).stages
@@ -108,7 +113,8 @@ class UpdateManyWithPipeline<Document : Any> private constructor(
 	val update: UpdatePipelineOperators<Document>,
 ) : Node by ImmutableNode {
 
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterExpression(context), UpdatePipelineExpression(context))
+	@OptIn(LowLevelApi::class)
+	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdatePipelineExpression(context))
 
 	@LowLevelApi
 	val updates get() = (update as UpdatePipelineExpression<*>).stages

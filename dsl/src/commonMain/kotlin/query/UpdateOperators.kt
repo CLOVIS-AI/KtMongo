@@ -64,7 +64,7 @@ import kotlin.reflect.KProperty1
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/)
  *
- * @see FilterExpression Filters
+ * @see FilterQuery Filters
  */
 @KtMongoDsl
 interface UpdateOperators<T> : CompoundExpression, FieldDsl {

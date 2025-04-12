@@ -168,7 +168,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		filter: FilterQuery<Document>.() -> Unit,
 		operations: BulkWrite<Document>.() -> Unit,
 	) {
-		val model = BulkWrite<Document>(context, filter)
+		val model = BulkWrite(context, filter)
 
 		model.options.options()
 		model.operations()
@@ -263,7 +263,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		filter: FilterQuery<Document>.() -> Unit,
 	) {
 		DeleteOneOptions<Document>(context).apply(options)
-		val filter = FilterExpression<Document>(context).apply(filter)
+		val filter = FilterQuery<Document>(context).apply(filter)
 
 		inner.deleteOne(
 			filter = context.buildDocument(filter).raw,
@@ -277,7 +277,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		filter: FilterQuery<Document>.() -> Unit,
 	) {
 		DeleteManyOptions<Document>(context).apply(options)
-		val filter = FilterExpression<Document>(context).apply(filter)
+		val filter = FilterQuery<Document>(context).apply(filter)
 
 		inner.deleteOne(
 			filter = context.buildDocument(filter).raw,
@@ -300,7 +300,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun aggregate(): MongoAggregationPipeline<Document> =
-		MongoAggregationPipeline<Document>(
+		MongoAggregationPipeline(
 			collection = inner.namespace.collectionName,
 			context = context,
 			chain = PipelineChainLink(context),

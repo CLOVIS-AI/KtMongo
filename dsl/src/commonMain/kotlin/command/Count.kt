@@ -19,7 +19,6 @@ package opensavvy.ktmongo.dsl.command
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.options.CountOptions
-import opensavvy.ktmongo.dsl.query.FilterExpression
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
@@ -43,6 +42,6 @@ class Count<Document : Any> private constructor(
 	val filter: FilterQuery<Document>,
 ) {
 
-	constructor(context: BsonContext) : this(context, CountOptions(context), FilterExpression(context))
+	constructor(context: BsonContext) : this(context, CountOptions(context), FilterQuery(context))
 
 }

@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+@file:JvmMultifileClass
+@file:JvmName("FilterQueryKt")
+
 package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonContext
@@ -30,11 +33,8 @@ import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 import opensavvy.ktmongo.dsl.query.common.Expression
 
-/**
- * Implementation of the [FilterQuery] interface.
- */
 @KtMongoDsl
-class FilterExpression<T>(
+private class FilterQueryImpl<T>(
 	context: BsonContext,
 ) : AbstractCompoundExpression(context),
 	FilterQuery<T>,
@@ -60,7 +60,7 @@ class FilterExpression<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun and(block: FilterQuery<T>.() -> Unit) {
-		accept(AndFilterExpressionNode<T>(FilterExpression<T>(context).apply(block).children, context))
+		accept(AndFilterExpressionNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
 	}
 
 	@DangerousMongoApi
@@ -75,7 +75,7 @@ class FilterExpression<T>(
 				return null
 
 			if (declaredChildren.size == 1)
-				return FilterExpression<T>(context).apply { accept(declaredChildren.single()) }
+				return FilterQueryImpl<T>(context).apply { accept(declaredChildren.single()) }
 
 			// If there are nested $and operators, we combine them into the current one
 			val nestedChildren = ArrayList<Expression>()
@@ -107,7 +107,7 @@ class FilterExpression<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun or(block: FilterQuery<T>.() -> Unit) {
-		accept(OrFilterExpressionNode<T>(FilterExpression<T>(context).apply(block).children, context))
+		accept(OrFilterExpressionNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
 	}
 
 	@DangerousMongoApi
@@ -122,7 +122,7 @@ class FilterExpression<T>(
 				return null
 
 			if (declaredChildren.size == 1)
-				return FilterExpression<T>(context).apply { accept(declaredChildren.single()) }
+				return FilterQueryImpl<T>(context).apply { accept(declaredChildren.single()) }
 
 			return super.simplify()
 		}
@@ -178,7 +178,7 @@ class FilterExpression<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun <V> Field<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit) {
-		accept(ElementMatchExpressionNode<V>(path, FilterExpression<V>(context).apply(block), context))
+		accept(ElementMatchExpressionNode<V>(path, FilterQueryImpl<V>(context).apply(block), context))
 	}
 
 	@DangerousMongoApi
@@ -259,3 +259,10 @@ class FilterExpression<T>(
 	// endregion
 
 }
+
+/**
+ * Creates an empty [FilterQuery].
+ */
+@LowLevelApi
+fun <T> FilterQuery(context: BsonContext): FilterQuery<T> =
+	FilterQueryImpl(context)

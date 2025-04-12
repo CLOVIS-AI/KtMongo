@@ -20,7 +20,10 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.BulkWrite
 import opensavvy.ktmongo.dsl.options.*
-import opensavvy.ktmongo.dsl.query.*
+import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.query.UpdateOperators
+import opensavvy.ktmongo.dsl.query.UpdatePipelineOperators
+import opensavvy.ktmongo.dsl.query.UpsertOperators
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
@@ -219,7 +222,7 @@ private class FilteredCollection<Document : Any>(
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String {
-		val filter = FilterExpression<Document>(context)
+		val filter = FilterQuery<Document>(context)
 			.apply(globalFilter)
 			.let(context::buildDocument)
 

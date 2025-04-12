@@ -21,7 +21,6 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.FindOptions
-import opensavvy.ktmongo.dsl.query.FilterExpression
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 
@@ -46,7 +45,8 @@ class Find<Document : Any> private constructor(
 	val filter: FilterQuery<Document>,
 ) : AbstractExpression(context) {
 
-	constructor(context: BsonContext) : this(context, FindOptions(context), FilterExpression(context))
+	@OptIn(LowLevelApi::class)
+	constructor(context: BsonContext) : this(context, FindOptions(context), FilterQuery(context))
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {

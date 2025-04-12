@@ -80,7 +80,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/eq/)
 	 *
-	 * @see FilterExpression.eq Shorthand.
+	 * @see FilterQuery.eq Shorthand.
 	 */
 	@KtMongoDsl
 	fun eq(value: T)
@@ -115,7 +115,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/eq/)
 	 *
-	 * @see FilterExpression.eqNotNull Shorthand.
+	 * @see FilterQuery.eqNotNull Shorthand.
 	 * @see eq Equality filter.
 	 */
 	@KtMongoDsl
@@ -150,7 +150,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/ne/)
 	 *
-	 * @see FilterExpression.ne Shorthand.
+	 * @see FilterQuery.ne Shorthand.
 	 */
 	@KtMongoDsl
 	fun ne(value: T)
@@ -181,7 +181,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/exists/)
 	 *
-	 * @see FilterExpression.exists Shorthand.
+	 * @see FilterQuery.exists Shorthand.
 	 * @see doesNotExist Opposite.
 	 * @see isNotNull Identical, but does not match elements where the field is `null`.
 	 */
@@ -211,7 +211,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/exists/)
 	 *
-	 * @see FilterExpression.doesNotExist Shorthand.
+	 * @see FilterQuery.doesNotExist Shorthand.
 	 * @see exists Opposite.
 	 * @see isNull Only matches elements that are specifically `null`.
 	 */
@@ -246,7 +246,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/type/)
 	 *
-	 * @see FilterExpression.hasType Shorthand.
+	 * @see FilterQuery.hasType Shorthand.
 	 * @see isNull Checks if a value has the type [BsonType.Null].
 	 * @see isUndefined Checks if a value has the type [BsonType.Undefined].
 	 */
@@ -282,7 +282,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/not/)
 	 *
-	 * @see FilterExpression.not Shorthand.
+	 * @see FilterQuery.not Shorthand.
 	 */
 	@KtMongoDsl
 	fun not(expression: PredicateOperators<T>.() -> Unit)
@@ -310,7 +310,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/#type-check)
 	 *
-	 * @see FilterExpression.isNull Shorthand.
+	 * @see FilterQuery.isNull Shorthand.
 	 * @see doesNotExist Checks if the value is not set.
 	 * @see isNotNull Opposite.
 	 */
@@ -338,7 +338,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/#type-check)
 	 *
-	 * @see FilterExpression.isNotNull Shorthand.
+	 * @see FilterQuery.isNotNull Shorthand.
 	 * @see isNull Opposite.
 	 */
 	@KtMongoDsl
@@ -365,7 +365,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/#type-check)
 	 *
-	 * @see FilterExpression.isUndefined Shorthand.
+	 * @see FilterQuery.isUndefined Shorthand.
 	 * @see isNotUndefined Opposite.
 	 */
 	@KtMongoDsl
@@ -394,7 +394,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/#type-check)
 	 *
-	 * @see FilterExpression.isNotUndefined Shorthand.
+	 * @see FilterQuery.isNotUndefined Shorthand.
 	 * @see isUndefined Opposite.
 	 */
 	@KtMongoDsl
@@ -426,7 +426,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gt/)
 	 *
-	 * @see FilterExpression.gt
+	 * @see FilterQuery.gt
 	 * @see gtNotNull
 	 */
 	@KtMongoDsl
@@ -454,7 +454,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gt/)
 	 *
-	 * @see FilterExpression.gtNotNull
+	 * @see FilterQuery.gtNotNull
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
 	@KtMongoDsl
@@ -483,7 +483,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gte/)
 	 *
-	 * @see FilterExpression.gte
+	 * @see FilterQuery.gte
 	 * @see gteNotNull
 	 */
 	@KtMongoDsl
@@ -511,7 +511,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gte/)
 	 *
-	 * @see FilterExpression.gteNotNull
+	 * @see FilterQuery.gteNotNull
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
 	@KtMongoDsl
@@ -540,7 +540,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lt/)
 	 *
-	 * @see FilterExpression.lt
+	 * @see FilterQuery.lt
 	 * @see ltNotNull
 	 */
 	@KtMongoDsl
@@ -568,8 +568,8 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lt/)
 	 *
-	 * @see FilterExpression.ltNotNull
-	 * @see lqNotNull Learn more about the 'notNull' variants
+	 * @see FilterQuery.ltNotNull
+	 * @see ltNotNull Learn more about the 'notNull' variants
 	 */
 	@KtMongoDsl
 	fun ltNotNull(value: T?) {
@@ -597,7 +597,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lte/)
 	 *
-	 * @see FilterExpression.lte
+	 * @see FilterQuery.lte
 	 * @see lteNotNull
 	 */
 	@KtMongoDsl
@@ -625,7 +625,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lte/)
 	 *
-	 * @see FilterExpression.lteNotNull
+	 * @see FilterQuery.lteNotNull
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
 	@KtMongoDsl
@@ -659,7 +659,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/in/)
 	 *
-	 * @see FilterExpression.isOneOf
+	 * @see FilterQuery.isOneOf
 	 */
 	@KtMongoDsl
 	fun isOneOf(values: Collection<T>)
@@ -686,7 +686,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/in/)
 	 *
-	 * @see FilterExpression.isOneOf
+	 * @see FilterQuery.isOneOf
 	 */
 	@KtMongoDsl
 	fun isOneOf(vararg values: T) {

@@ -18,7 +18,6 @@ package opensavvy.ktmongo.coroutines.operations
 
 import opensavvy.ktmongo.coroutines.MongoIterable
 import opensavvy.ktmongo.dsl.options.FindOptions
-import opensavvy.ktmongo.dsl.query.FilterExpression
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
@@ -38,7 +37,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	/**
 	 * Finds all documents in this collection that satisfy [filter].
 	 *
-	 * If multiple predicates are specified, an [and][FilterExpression.and] operator is implied.
+	 * If multiple predicates are specified, an [and][FilterQuery.and] operator is implied.
 	 *
 	 * ### Example
 	 *
@@ -68,7 +67,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	/**
 	 * Finds a document in this collection that satisfies [filter].
 	 *
-	 * If multiple predicates are specified, and [and][FilterExpression.and] operator is implied.
+	 * If multiple predicates are specified, and [and][FilterQuery.and] operator is implied.
 	 *
 	 * This function doesn't check that there is exactly one value in the collection.
 	 * It simply returns the first matching document it finds.
