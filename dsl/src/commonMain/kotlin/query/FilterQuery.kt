@@ -189,7 +189,7 @@ interface FilterQuery<T> : CompoundExpression, FieldDsl {
 	// region Predicate access
 
 	/**
-	 * Targets a single field to execute a [targeted predicate][PredicateOperators].
+	 * Targets a single field to execute a [targeted predicate][FilterQueryPredicate].
 	 *
 	 * ### Example
 	 *
@@ -217,10 +217,10 @@ interface FilterQuery<T> : CompoundExpression, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: PredicateOperators<V>.() -> Unit)
+	operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit)
 
 	/**
-	 * Targets a single field to execute a [targeted predicate][PredicateOperators].
+	 * Targets a single field to execute a [targeted predicate][FilterQueryPredicate].
 	 *
 	 * ### Example
 	 *
@@ -248,7 +248,7 @@ interface FilterQuery<T> : CompoundExpression, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	operator fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.invoke(block: PredicateOperators<V>.() -> Unit) {
+	operator fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit) {
 		this.field.invoke(block)
 	}
 
@@ -281,7 +281,7 @@ interface FilterQuery<T> : CompoundExpression, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.not(expression: PredicateOperators<V>.() -> Unit) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.not(expression: FilterQueryPredicate<V>.() -> Unit) {
 		this { not(expression) }
 	}
 
@@ -311,7 +311,7 @@ interface FilterQuery<T> : CompoundExpression, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.not(expression: PredicateOperators<V>.() -> Unit) {
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.not(expression: FilterQueryPredicate<V>.() -> Unit) {
 		this.field.not(expression)
 	}
 
@@ -2203,7 +2203,7 @@ interface FilterQuery<T> : CompoundExpression, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	fun <V> Field<T, Collection<V>>.anyValue(block: PredicateOperators<V>.() -> Unit)
+	fun <V> Field<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit)
 
 	/**
 	 * Specify multiple operators on a single array element.
@@ -2254,7 +2254,7 @@ interface FilterQuery<T> : CompoundExpression, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/)
 	 */
 	@KtMongoDsl
-	fun <V> KProperty1<T, Collection<V>>.anyValue(block: PredicateOperators<V>.() -> Unit) {
+	fun <V> KProperty1<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit) {
 		this.field.anyValue(block)
 	}
 

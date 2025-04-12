@@ -26,12 +26,12 @@ import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 
 /**
- * Implementation of [PredicateOperators].
+ * Implementation of [FilterQueryPredicate].
  */
 @KtMongoDsl
 class PredicateExpression<T>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), PredicateOperators<T> {
+) : AbstractCompoundExpression(context), FilterQueryPredicate<T> {
 
 	// region Low-level operations
 
@@ -129,7 +129,7 @@ class PredicateExpression<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun not(expression: PredicateOperators<T>.() -> Unit) {
+	override fun not(expression: FilterQueryPredicate<T>.() -> Unit) {
 		accept(NotPredicateExpressionNode(PredicateExpression<T>(context).apply(expression), context))
 	}
 

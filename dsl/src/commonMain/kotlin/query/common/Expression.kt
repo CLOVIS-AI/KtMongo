@@ -20,7 +20,7 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriteable
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.query.PredicateOperators
+import opensavvy.ktmongo.dsl.query.FilterQueryPredicate
 import opensavvy.ktmongo.dsl.tree.Node
 import opensavvy.ktmongo.dsl.tree.NodeImpl
 
@@ -124,7 +124,7 @@ interface Expression : Node, BsonFieldWriteable {
  * }
  * ```
  *
- * Of course, the operator described above is already made available: [PredicateOperators.hasType].
+ * Of course, the operator described above is already made available: [FilterQueryPredicate.hasType].
  *
  * **Note that if your operator accepts a variable number of sub-expressions (e.g. `$and`), you must ensure that it works for any
  * number of expressions, including 1 and 0.** See [simplify].

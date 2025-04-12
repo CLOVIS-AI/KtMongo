@@ -41,7 +41,7 @@ import opensavvy.ktmongo.dsl.query.common.CompoundExpression
  * }
  * ```
  *
- * 1. By referring to a specific property, we obtain a [PredicateOperators] that we can use
+ * 1. By referring to a specific property, we obtain a [FilterQueryPredicate] that we can use
  * to declare many operators on that property.
  *
  * If you can't find the operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/4).
@@ -54,7 +54,7 @@ import opensavvy.ktmongo.dsl.query.common.CompoundExpression
  * For example, if the selected field is of type `String`, then `T` is `String`.
  */
 @KtMongoDsl
-interface PredicateOperators<T> : CompoundExpression, FieldDsl {
+interface FilterQueryPredicate<T> : CompoundExpression, FieldDsl {
 
 	// region $eq
 
@@ -285,7 +285,7 @@ interface PredicateOperators<T> : CompoundExpression, FieldDsl {
 	 * @see FilterQuery.not Shorthand.
 	 */
 	@KtMongoDsl
-	fun not(expression: PredicateOperators<T>.() -> Unit)
+	fun not(expression: FilterQueryPredicate<T>.() -> Unit)
 
 	// endregion
 	// region Nullability

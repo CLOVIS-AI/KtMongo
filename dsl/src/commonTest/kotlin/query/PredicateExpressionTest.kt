@@ -25,7 +25,7 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
 class PredicateExpressionTest : PreparedSpec({
 
 	@KtMongoDsl
-	fun <T> predicate(block: PredicateOperators<T>.() -> Unit): String {
+	fun <T> predicate(block: FilterQueryPredicate<T>.() -> Unit): String {
 		val expr = PredicateExpression<T>(testContext())
 			.apply(block)
 
