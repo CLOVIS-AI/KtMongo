@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+@file:JvmMultifileClass
+@file:JvmName("FilterQueryPredicateKt")
+
 package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonContext
@@ -29,7 +32,7 @@ import opensavvy.ktmongo.dsl.query.common.AbstractExpression
  * Implementation of [FilterQueryPredicate].
  */
 @KtMongoDsl
-class PredicateExpression<T>(
+private class FilterQueryPredicateImpl<T>(
 	context: BsonContext,
 ) : AbstractCompoundExpression(context), FilterQueryPredicate<T> {
 
@@ -130,12 +133,12 @@ class PredicateExpression<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun not(expression: FilterQueryPredicate<T>.() -> Unit) {
-		accept(NotPredicateExpressionNode(PredicateExpression<T>(context).apply(expression), context))
+		accept(NotPredicateExpressionNode(FilterQueryPredicateImpl<T>(context).apply(expression), context))
 	}
 
 	@LowLevelApi
 	private class NotPredicateExpressionNode<T>(
-		val expression: PredicateExpression<T>,
+		val expression: FilterQueryPredicateImpl<T>,
 		context: BsonContext,
 	) : PredicateExpressionNode(context) {
 
@@ -278,3 +281,10 @@ class PredicateExpression<T>(
 
 	// endregion
 }
+
+/**
+ * Creates an empty [FilterQueryPredicate].
+ */
+@LowLevelApi
+fun <T> FilterQueryPredicate(context: BsonContext): FilterQueryPredicate<T> =
+	FilterQueryPredicateImpl(context)

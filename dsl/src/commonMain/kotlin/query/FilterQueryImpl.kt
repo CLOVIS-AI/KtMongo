@@ -145,7 +145,7 @@ private class FilterQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit) {
-		accept(PredicateInFilterExpression(path, PredicateExpression<V>(context).apply(block), context))
+		accept(PredicateInFilterExpression(path, FilterQueryPredicate<V>(context).apply(block), context))
 	}
 
 	@LowLevelApi
@@ -172,7 +172,7 @@ private class FilterQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun <V> Field<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit) {
-		accept(ElementMatchExpressionNode<V>(this.path, PredicateExpression<V>(context).apply(block), context))
+		accept(ElementMatchExpressionNode<V>(this.path, FilterQueryPredicate<V>(context).apply(block), context))
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)

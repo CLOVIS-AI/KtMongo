@@ -26,7 +26,7 @@ class PredicateExpressionTest : PreparedSpec({
 
 	@KtMongoDsl
 	fun <T> predicate(block: FilterQueryPredicate<T>.() -> Unit): String {
-		val expr = PredicateExpression<T>(testContext())
+		val expr = FilterQueryPredicate<T>(testContext())
 			.apply(block)
 
 		return testContext().buildDocument {
