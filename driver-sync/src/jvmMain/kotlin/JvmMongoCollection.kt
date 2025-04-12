@@ -106,7 +106,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	override fun updateMany(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	) {
 		val model = UpdateMany<Document>(context)
 
@@ -121,7 +121,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	override fun updateOne(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	) {
 		val model = UpdateOne<Document>(context)
 
@@ -136,7 +136,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	override fun upsertOne(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpsertOperators<Document>.() -> Unit,
+		update: UpsertQuery<Document>.() -> Unit,
 	) {
 		val model = UpsertOne<Document>(context)
 
@@ -151,7 +151,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	override fun findOneAndUpdate(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	): Document? {
 		val model = UpdateOne<Document>(context)
 

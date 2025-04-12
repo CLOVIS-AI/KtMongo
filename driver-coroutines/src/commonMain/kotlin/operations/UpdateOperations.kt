@@ -22,8 +22,8 @@ import opensavvy.ktmongo.dsl.command.BulkWrite
 import opensavvy.ktmongo.dsl.options.BulkWriteOptions
 import opensavvy.ktmongo.dsl.options.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.UpdateOperators
-import opensavvy.ktmongo.dsl.query.UpsertOperators
+import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
 
 /**
  * Interface grouping MongoDB operations allowing to update existing information.
@@ -75,7 +75,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	suspend fun updateMany(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -126,7 +126,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	suspend fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -180,7 +180,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	suspend fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpsertOperators<Document>.() -> Unit,
+		update: UpsertQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -229,7 +229,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	suspend fun findOneAndUpdate(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	): Document?
 
 	/**

@@ -24,8 +24,8 @@ import opensavvy.ktmongo.dsl.options.BulkWriteOptions
 import opensavvy.ktmongo.dsl.options.InsertOneOptions
 import opensavvy.ktmongo.dsl.options.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.UpdateOperators
-import opensavvy.ktmongo.dsl.query.UpsertOperators
+import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.dsl.tree.CompoundNode
 import opensavvy.ktmongo.dsl.tree.Node
 import opensavvy.ktmongo.dsl.tree.acceptAll
@@ -264,7 +264,7 @@ class BulkWrite<Document : Any> private constructor(
 	fun updateMany(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	) {
 		val model = UpdateMany<Document>(context)
 
@@ -311,7 +311,7 @@ class BulkWrite<Document : Any> private constructor(
 	fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	) {
 		val model = UpdateOne<Document>(context)
 
@@ -363,7 +363,7 @@ class BulkWrite<Document : Any> private constructor(
 	fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpsertOperators<Document>.() -> Unit,
+		update: UpsertQuery<Document>.() -> Unit,
 	) {
 		val model = UpsertOne<Document>(context)
 

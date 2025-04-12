@@ -51,7 +51,7 @@ import kotlin.reflect.KProperty1
  * - [`$inc`][plusAssign]
  * - [`$rename`][renameTo]
  * - [`$set`][set]
- * - [`$setOnInsert`][UpsertOperators.setOnInsert] (only for [upserts][UpsertOperators])
+ * - [`$setOnInsert`][UpsertQuery.setOnInsert] (only for [upserts][UpsertQuery])
  * - [`$unset`][unset]
  *
  * On arrays:
@@ -67,7 +67,7 @@ import kotlin.reflect.KProperty1
  * @see FilterQuery Filters
  */
 @KtMongoDsl
-interface UpdateOperators<T> : CompoundExpression, FieldDsl {
+interface UpdateQuery<T> : CompoundExpression, FieldDsl {
 
 	// region $set
 
@@ -93,7 +93,7 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 *
-	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -121,7 +121,7 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 *
-	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
@@ -154,7 +154,7 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 *
-	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -187,7 +187,7 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 *
-	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -218,7 +218,7 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 *
-	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -251,7 +251,7 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 *
-	 * @see UpsertOperators.setOnInsert Only set if a new document is created.
+	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -724,12 +724,12 @@ interface UpdateOperators<T> : CompoundExpression, FieldDsl {
 /**
  * DSL for MongoDB operators that are used to update existing values, creating new documents if none exist (does *not* include aggregation operators).
  *
- * This interface is a variant of [UpdateOperators] used in upsert operations. See [UpdateOperators] for more information.
+ * This interface is a variant of [UpdateQuery] used in upsert operations. See [UpdateQuery] for more information.
  *
  * If you can't find the operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/5).
  */
 @KtMongoDsl
-interface UpsertOperators<T> : UpdateOperators<T> {
+interface UpsertQuery<T> : UpdateQuery<T> {
 
 	// region $setOnInsert
 

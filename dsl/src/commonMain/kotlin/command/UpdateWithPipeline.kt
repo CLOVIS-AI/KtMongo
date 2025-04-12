@@ -21,9 +21,9 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.UpdateOperators
 import opensavvy.ktmongo.dsl.query.UpdatePipelineExpression
 import opensavvy.ktmongo.dsl.query.UpdatePipelineOperators
+import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.tree.ImmutableNode
 import opensavvy.ktmongo.dsl.tree.Node
 
@@ -41,7 +41,7 @@ import opensavvy.ktmongo.dsl.tree.Node
  * ```
  *
  * @see FilterQuery Filter operators
- * @see UpdateOperators Update operators
+ * @see UpdateQuery Update operators
  */
 @KtMongoDsl
 class UpdateOneWithPipeline<Document : Any> private constructor(
@@ -72,7 +72,7 @@ class UpdateOneWithPipeline<Document : Any> private constructor(
  * ```
  *
  * @see FilterQuery Filter operators
- * @see UpdateOperators Update operators
+ * @see UpdateQuery Update operators
  */
 @KtMongoDsl
 class UpsertOneWithPipeline<Document : Any> private constructor(
@@ -103,7 +103,7 @@ class UpsertOneWithPipeline<Document : Any> private constructor(
  * ```
  *
  * @see FilterQuery Filter operators
- * @see UpdateOperators Update operators
+ * @see UpdateQuery Update operators
  */
 @KtMongoDsl
 class UpdateManyWithPipeline<Document : Any> private constructor(

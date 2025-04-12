@@ -31,13 +31,13 @@ import opensavvy.ktmongo.dsl.tree.acceptAll
 import kotlin.reflect.KClass
 
 /**
- * Implementation of [UpdateOperators].
+ * Implementation of [UpdateQuery].
  */
 @KtMongoDsl
 class UpdateExpression<T>(
 	context: BsonContext,
 ) : AbstractCompoundExpression(context),
-	UpsertOperators<T>,
+	UpsertQuery<T>,
 	FieldDsl {
 
 	// region Low-level operations

@@ -21,9 +21,9 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.BulkWrite
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.UpdateOperators
 import opensavvy.ktmongo.dsl.query.UpdatePipelineOperators
-import opensavvy.ktmongo.dsl.query.UpsertOperators
+import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
@@ -67,7 +67,7 @@ private class FilteredCollection<Document : Any>(
 	override suspend fun updateMany(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	) {
 		upstream.updateMany(
 			options = options,
@@ -97,7 +97,7 @@ private class FilteredCollection<Document : Any>(
 	override suspend fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	) {
 		upstream.updateOne(
 			options = options,
@@ -127,7 +127,7 @@ private class FilteredCollection<Document : Any>(
 	override suspend fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpsertOperators<Document>.() -> Unit,
+		update: UpsertQuery<Document>.() -> Unit,
 	) {
 		upstream.upsertOne(
 			options = options,
@@ -157,7 +157,7 @@ private class FilteredCollection<Document : Any>(
 	override suspend fun findOneAndUpdate(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdateOperators<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	): Document? =
 		upstream.findOneAndUpdate(
 			options = options,

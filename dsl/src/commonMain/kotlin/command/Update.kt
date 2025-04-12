@@ -22,8 +22,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateExpression
-import opensavvy.ktmongo.dsl.query.UpdateOperators
-import opensavvy.ktmongo.dsl.query.UpsertOperators
+import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.dsl.tree.ImmutableNode
 import opensavvy.ktmongo.dsl.tree.Node
 
@@ -39,14 +39,14 @@ import opensavvy.ktmongo.dsl.tree.Node
  * ```
  *
  * @see FilterQuery Filter operators
- * @see UpdateOperators Update operators
+ * @see UpdateQuery Update operators
  */
 @KtMongoDsl
 class UpdateOne<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
-	val update: UpdateOperators<Document>,
+	val update: UpdateQuery<Document>,
 ) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
 	@OptIn(LowLevelApi::class)
@@ -65,14 +65,14 @@ class UpdateOne<Document : Any> private constructor(
  * ```
  *
  * @see FilterQuery Filter operators
- * @see UpdateOperators Update operators
+ * @see UpdateQuery Update operators
  */
 @KtMongoDsl
 class UpsertOne<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
-	val update: UpsertOperators<Document>,
+	val update: UpsertQuery<Document>,
 ) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
 	@OptIn(LowLevelApi::class)
@@ -91,14 +91,14 @@ class UpsertOne<Document : Any> private constructor(
  * ```
  *
  * @see FilterQuery Filter operators
- * @see UpdateOperators Update operators
+ * @see UpdateQuery Update operators
  */
 @KtMongoDsl
 class UpdateMany<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
-	val update: UpdateOperators<Document>,
+	val update: UpdateQuery<Document>,
 ) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
 
 	@OptIn(LowLevelApi::class)
