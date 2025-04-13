@@ -21,9 +21,9 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.UpdatePipelineExpression
-import opensavvy.ktmongo.dsl.query.UpdatePipelineOperators
 import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
+import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQueryImpl
 import opensavvy.ktmongo.dsl.tree.ImmutableNode
 import opensavvy.ktmongo.dsl.tree.Node
 
@@ -48,14 +48,14 @@ class UpdateOneWithPipeline<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
-	val update: UpdatePipelineOperators<Document>,
+	val update: UpdateWithPipelineQuery<Document>,
 ) : Node by ImmutableNode {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdatePipelineExpression(context))
+	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateWithPipelineQuery(context))
 
 	@LowLevelApi
-	val updates get() = (update as UpdatePipelineExpression<*>).stages
+	val updates get() = (update as UpdateWithPipelineQueryImpl<*>).stages
 }
 
 /**
@@ -79,14 +79,14 @@ class UpsertOneWithPipeline<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
-	val update: UpdatePipelineOperators<Document>,
+	val update: UpdateWithPipelineQuery<Document>,
 ) : Node by ImmutableNode {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdatePipelineExpression(context))
+	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateWithPipelineQuery(context))
 
 	@LowLevelApi
-	val updates get() = (update as UpdatePipelineExpression<*>).stages
+	val updates get() = (update as UpdateWithPipelineQueryImpl<*>).stages
 }
 
 /**
@@ -110,12 +110,12 @@ class UpdateManyWithPipeline<Document : Any> private constructor(
 	val context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
-	val update: UpdatePipelineOperators<Document>,
+	val update: UpdateWithPipelineQuery<Document>,
 ) : Node by ImmutableNode {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdatePipelineExpression(context))
+	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateWithPipelineQuery(context))
 
 	@LowLevelApi
-	val updates get() = (update as UpdatePipelineExpression<*>).stages
+	val updates get() = (update as UpdateWithPipelineQueryImpl<*>).stages
 }

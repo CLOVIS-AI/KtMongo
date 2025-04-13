@@ -188,7 +188,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	override suspend fun updateManyWithPipeline(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
 		val model = UpdateManyWithPipeline<Document>(context)
 
@@ -203,7 +203,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	override suspend fun updateOneWithPipeline(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
 		val model = UpdateOneWithPipeline<Document>(context)
 
@@ -218,7 +218,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	override suspend fun upsertOneWithPipeline(
 		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
 		val model = UpsertOneWithPipeline<Document>(context)
 

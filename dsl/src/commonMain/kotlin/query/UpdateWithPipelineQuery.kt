@@ -28,7 +28,7 @@ import opensavvy.ktmongo.dsl.query.common.CompoundExpression
  * Interface describing the DSL when declaring an update with a pipeline.
  */
 @KtMongoDsl
-interface UpdatePipelineOperators<Document : Any> : CompoundExpression {
+interface UpdateWithPipelineQuery<Document : Any> : CompoundExpression {
 
 	/**
 	 * Overrides the value of existing fields or inserts new ones.
@@ -140,11 +140,18 @@ interface UpdatePipelineOperators<Document : Any> : CompoundExpression {
 }
 
 @LowLevelApi
-internal class UpdatePipelineExpression<Document : Any> @LowLevelApi constructor(
+internal class UpdateWithPipelineQueryImpl<Document : Any> @LowLevelApi constructor(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), UpdatePipelineOperators<Document> {
+) : AbstractCompoundExpression(context), UpdateWithPipelineQuery<Document> {
 
 	val stages get() = children
 		.map { context.buildDocument { it.writeTo(this) } }
 
 }
+
+/**
+ * Creates an empty [UpdateWithPipelineQuery].
+ */
+@LowLevelApi
+fun <T : Any> UpdateWithPipelineQuery(context: BsonContext): UpdateWithPipelineQuery<T> =
+	UpdateWithPipelineQueryImpl(context)

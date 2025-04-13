@@ -18,7 +18,7 @@ package opensavvy.ktmongo.coroutines.operations
 
 import opensavvy.ktmongo.dsl.options.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.UpdatePipelineOperators
+import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 
 /**
  * Interface grouping MongoDB operations allowing to update existing information using aggregation pipelines.
@@ -58,7 +58,7 @@ interface UpdatePipelineOperations<Document : Any> : BaseOperations {
 	suspend fun updateManyWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -97,7 +97,7 @@ interface UpdatePipelineOperations<Document : Any> : BaseOperations {
 	suspend fun updateOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -135,7 +135,7 @@ interface UpdatePipelineOperations<Document : Any> : BaseOperations {
 	suspend fun upsertOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	)
 
 }

@@ -21,8 +21,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.BulkWrite
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.UpdatePipelineOperators
 import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 
 private class FilteredCollection<Document : Any>(
@@ -82,7 +82,7 @@ private class FilteredCollection<Document : Any>(
 	override suspend fun updateManyWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
 		upstream.updateManyWithPipeline(
 			options = options,
@@ -112,7 +112,7 @@ private class FilteredCollection<Document : Any>(
 	override suspend fun updateOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
 		upstream.updateOneWithPipeline(
 			options = options,
@@ -142,7 +142,7 @@ private class FilteredCollection<Document : Any>(
 	override suspend fun upsertOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
 		upstream.upsertOneWithPipeline(
 			options = options,
