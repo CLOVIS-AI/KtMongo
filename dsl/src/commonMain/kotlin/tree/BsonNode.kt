@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.dsl.tree
 
+import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriteable
 import opensavvy.ktmongo.bson.BsonFieldWriter
@@ -72,6 +73,13 @@ interface BsonNode : Node, BsonFieldWriteable {
 	 */
 	@LowLevelApi
 	override fun writeTo(writer: BsonFieldWriter)
+
+	/**
+	 * Writes the result of [simplifying][simplify] to a new [BSON document][Bson].
+	 */
+	@LowLevelApi
+	fun toBson(): Bson =
+		context.buildDocument { writeTo(this) }
 
 	/**
 	 * JSON representation of this expression.

@@ -25,14 +25,11 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
 class PredicateExpressionTest : PreparedSpec({
 
 	@KtMongoDsl
-	fun <T> predicate(block: FilterQueryPredicate<T>.() -> Unit): String {
-		val expr = FilterQueryPredicate<T>(testContext())
+	fun <T> predicate(block: FilterQueryPredicate<T>.() -> Unit): String =
+		FilterQueryPredicate<T>(testContext())
 			.apply(block)
-
-		return testContext().buildDocument {
-			expr.writeTo(this)
-		}.toString()
-	}
+			.toBson()
+			.toString()
 
 	val eq = "\$eq"
 	val exists = "\$exists"
@@ -134,7 +131,7 @@ class PredicateExpressionTest : PreparedSpec({
 
 		test("Empty $not is no-op and thus removed") {
 			predicate<String> {
-				not {  }
+				not { }
 			} shouldBeBson """
 				{
 				}
