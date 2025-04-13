@@ -17,7 +17,7 @@
 package opensavvy.ktmongo.official.options
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.command.CountOptions
 import opensavvy.ktmongo.dsl.options.common.LimitOption
 import opensavvy.ktmongo.dsl.options.common.option
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,63 +18,65 @@ package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.common.Options
 import opensavvy.ktmongo.dsl.options.common.OptionsHolder
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.ImmutableNode
 import opensavvy.ktmongo.dsl.tree.Node
 
 /**
- * Inserting a single element in a collection.
+ * Deleting a single document from a collection.
  *
  * ### Example
  *
  * ```kotlin
- * users.insertOne(User(name = "Bob", age = 18))
+ * users.deleteOne {
+ *     User::name eq "Patrick"
+ * }
  * ```
- *
- * @see InsertMany
- * @see InsertOneOptions Options
  */
 @KtMongoDsl
-class InsertOne<Document : Any> private constructor(
+class DeleteOne<Document : Any> private constructor(
 	val context: BsonContext,
-	val options: InsertOneOptions<Document>,
-	val document: Document,
+	val options: DeleteOneOptions<Document>,
+	val filter: FilterQuery<Document>,
 ) : Node by ImmutableNode, AvailableInBulkWrite<Document> {
 
-	constructor(context: BsonContext, document: Document) : this(context, InsertOneOptions(context), document)
+	@OptIn(LowLevelApi::class)
+	constructor(context: BsonContext) : this(context, DeleteOneOptions(context), FilterQuery(context))
 }
 
 /**
- * Inserting multiple elements in a collection in a single operation.
+ * Deleting multiple documents from a collection.
  *
  * ### Example
  *
  * ```kotlin
- * users.insertMany(User(name = "Bob", age = 18), User(name = "Fred", age = 19), User(name = "Arthur", age = 22))
+ * users.deleteMany {
+ *     User::age gte 200
+ * }
  * ```
- *
- * @see InsertOne
- * @see InsertManyOptions Options
  */
 @KtMongoDsl
-class InsertMany<Document : Any> private constructor(
+class DeleteMany<Document : Any> private constructor(
 	val context: BsonContext,
-	val options: InsertManyOptions<Document>,
-	val documents: List<Document>,
-) : Node by ImmutableNode {
+	val options: DeleteManyOptions<Document>,
+	val filter: FilterQuery<Document>,
+) : Node by ImmutableNode, AvailableInBulkWrite<Document> {
 
-	constructor(context: BsonContext, documents: List<Document>) : this(context, InsertManyOptions(context), documents)
+	@OptIn(LowLevelApi::class)
+	constructor(context: BsonContext) : this(context, DeleteManyOptions(context), FilterQuery(context))
 }
 
 /**
- * The options for a `collection.insertOne` operation.
+ * The options for a [DeleteOne] command.
  */
-class InsertOneOptions<Document>(context: BsonContext) :
+class DeleteOneOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context)
 
 /**
- * The options for a `collection.insertMany` operation.
+ * The options for a [DeleteMany] command.
  */
-class InsertManyOptions<Document>(context: BsonContext) :
+class DeleteManyOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context)

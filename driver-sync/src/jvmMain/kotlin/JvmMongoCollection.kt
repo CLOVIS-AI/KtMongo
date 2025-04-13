@@ -104,7 +104,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun updateMany(
-		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateQuery<Document>.() -> Unit,
 	) {
@@ -119,7 +119,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun updateOne(
-		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateQuery<Document>.() -> Unit,
 	) {
@@ -134,7 +134,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun upsertOne(
-		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpsertQuery<Document>.() -> Unit,
 	) {
@@ -149,7 +149,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun findOneAndUpdate(
-		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateQuery<Document>.() -> Unit,
 	): Document? {
@@ -184,7 +184,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun updateManyWithPipeline(
-		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
@@ -199,7 +199,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun updateOneWithPipeline(
-		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
@@ -214,7 +214,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun upsertOneWithPipeline(
-		options: opensavvy.ktmongo.dsl.options.UpdateOptions<Document>.() -> Unit,
+		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {

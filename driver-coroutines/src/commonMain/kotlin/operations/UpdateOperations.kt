@@ -19,8 +19,8 @@ package opensavvy.ktmongo.coroutines.operations
 import opensavvy.ktmongo.coroutines.MongoCollection
 import opensavvy.ktmongo.coroutines.filter
 import opensavvy.ktmongo.dsl.command.BulkWrite
-import opensavvy.ktmongo.dsl.options.BulkWriteOptions
-import opensavvy.ktmongo.dsl.options.UpdateOptions
+import opensavvy.ktmongo.dsl.command.BulkWriteOptions
+import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery

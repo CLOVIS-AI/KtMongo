@@ -17,7 +17,7 @@
 package opensavvy.ktmongo.coroutines.operations
 
 import opensavvy.ktmongo.coroutines.MongoIterable
-import opensavvy.ktmongo.dsl.options.FindOptions
+import opensavvy.ktmongo.dsl.command.FindOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**

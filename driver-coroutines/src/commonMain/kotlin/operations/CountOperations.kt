@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.coroutines.operations
 
-import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.command.CountOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**

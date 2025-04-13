@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.sync.operations.operations
 
-import opensavvy.ktmongo.dsl.options.UpdateOptions
+import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.sync.operations.BaseOperations

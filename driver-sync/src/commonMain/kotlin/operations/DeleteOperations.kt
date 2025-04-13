@@ -16,8 +16,8 @@
 
 package opensavvy.ktmongo.sync.operations
 
-import opensavvy.ktmongo.dsl.options.DeleteManyOptions
-import opensavvy.ktmongo.dsl.options.DeleteOneOptions
+import opensavvy.ktmongo.dsl.command.DeleteManyOptions
+import opensavvy.ktmongo.dsl.command.DeleteOneOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**

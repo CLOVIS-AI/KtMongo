@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 package opensavvy.ktmongo.coroutines.operations
 
 import opensavvy.ktmongo.coroutines.filter
-import opensavvy.ktmongo.dsl.options.InsertManyOptions
-import opensavvy.ktmongo.dsl.options.InsertOneOptions
+import opensavvy.ktmongo.dsl.command.InsertManyOptions
+import opensavvy.ktmongo.dsl.command.InsertOneOptions
 
 interface InsertOperations<Document> : BaseOperations {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,29 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.options
+package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.KtMongoDsl
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.common.Options
 import opensavvy.ktmongo.dsl.options.common.OptionsHolder
 
 /**
- * The options for a `collection.insertOne` operation.
+ * Deleting an entire collection at once.
  */
-class InsertOneOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context)
+@KtMongoDsl
+class Drop<Document : Any> private constructor(
+	val context: BsonContext,
+	val options: DropOptions<Document>,
+) {
+
+	constructor(context: BsonContext) : this(context, DropOptions(context))
+}
 
 /**
- * The options for a `collection.insertMany` operation.
+ * The options for a [Drop] command.
  */
-class InsertManyOptions<Document>(context: BsonContext) :
+@OptIn(LowLevelApi::class)
+class DropOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context)

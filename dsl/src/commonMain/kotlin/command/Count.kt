@@ -18,7 +18,10 @@ package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.options.common.Options
+import opensavvy.ktmongo.dsl.options.common.OptionsHolder
+import opensavvy.ktmongo.dsl.options.common.WithLimit
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
@@ -42,6 +45,15 @@ class Count<Document : Any> private constructor(
 	val filter: FilterQuery<Document>,
 ) {
 
+	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, CountOptions(context), FilterQuery(context))
 
 }
+
+/**
+ * The options for a [Count] command.
+ */
+@OptIn(LowLevelApi::class)
+class CountOptions<Document>(context: BsonContext) :
+	Options by OptionsHolder(context),
+	WithLimit

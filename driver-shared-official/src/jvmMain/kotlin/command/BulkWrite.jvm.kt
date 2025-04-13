@@ -27,22 +27,32 @@ fun <Document> AvailableInBulkWrite<Document>.toJava(): WriteModel<Document> = w
 	is UpdateMany<*> -> UpdateManyModel<Document>(
 		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
 		/* update = */ (context.buildDocument(this.update) as Bson).raw,
-		/* options = */ UpdateOptions(),
+		/* options = */ com.mongodb.client.model.UpdateOptions(),
 	)
 
 	is UpdateOne<*> -> UpdateOneModel<Document>(
 		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
 		/* update = */ (context.buildDocument(this.update) as Bson).raw,
-		/* options = */ UpdateOptions(),
+		/* options = */ com.mongodb.client.model.UpdateOptions(),
 	)
 
 	is UpsertOne<*> -> UpdateOneModel<Document>(
 		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
 		/* update = */ (context.buildDocument(this.update) as Bson).raw,
-		/* options = */ UpdateOptions().upsert(true),
+		/* options = */ com.mongodb.client.model.UpdateOptions().upsert(true),
 	)
 
 	is InsertOne<*> -> InsertOneModel<Document>(
 		/* document = */ (this.document as Document)!!
+	)
+
+	is DeleteOne<*> -> DeleteOneModel<Document>(
+		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* options = */ DeleteOptions(),
+	)
+
+	is DeleteMany<*> -> DeleteManyModel<Document>(
+		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* options = */ DeleteOptions(),
 	)
 }

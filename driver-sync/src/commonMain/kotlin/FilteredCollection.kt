@@ -18,7 +18,7 @@ package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.command.BulkWrite
+import opensavvy.ktmongo.dsl.command.*
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery

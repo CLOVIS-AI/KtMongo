@@ -20,9 +20,8 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.BulkWriteOptions
-import opensavvy.ktmongo.dsl.options.InsertOneOptions
-import opensavvy.ktmongo.dsl.options.UpdateOptions
+import opensavvy.ktmongo.dsl.options.common.Options
+import opensavvy.ktmongo.dsl.options.common.OptionsHolder
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
@@ -121,7 +120,7 @@ class BulkWrite<Document : Any> private constructor(
 	) {
 		val parent = this
 
-		val child = BulkWrite<Document>(
+		val child = BulkWrite(
 			context = context,
 			globalFilter = {
 				parent.globalFilter(this)
@@ -164,7 +163,7 @@ class BulkWrite<Document : Any> private constructor(
 		document: Document,
 		options: InsertOneOptions<Document>.() -> Unit = {},
 	) {
-		val model = InsertOne<Document>(context, document)
+		val model = InsertOne(context, document)
 
 		model.options.options()
 
@@ -376,3 +375,9 @@ class BulkWrite<Document : Any> private constructor(
 	}
 
 }
+
+/**
+ * The options for a [BulkWrite] command.
+ */
+class BulkWriteOptions<Document>(context: BsonContext) :
+	Options by OptionsHolder(context)
