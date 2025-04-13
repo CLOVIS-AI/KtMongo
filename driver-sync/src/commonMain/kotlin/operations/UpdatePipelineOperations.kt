@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync.operations.operations
+package opensavvy.ktmongo.sync.operations
 
 import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
-import opensavvy.ktmongo.sync.operations.BaseOperations
 
 /**
  * Interface grouping MongoDB operations allowing to update existing information using aggregation pipelines.
