@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.Count
 import opensavvy.ktmongo.dsl.options.CountOptions
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundNode
 
@@ -116,7 +116,7 @@ interface Options : BsonNode, CompoundNode<Option<*>> {
 	override fun toString(): String // Specified explicitly to force implementation by the 'by' keyword
 }
 
-internal class OptionsHolder(context: BsonContext) : AbstractCompoundExpression(context), Options {
+internal class OptionsHolder(context: BsonContext) : AbstractCompoundBsonNode(context), Options {
 	@LowLevelApi
 	@DangerousMongoApi
 	override fun accept(node: Option<*>) {

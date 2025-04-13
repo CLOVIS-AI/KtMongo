@@ -14,20 +14,17 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.query.common
+package opensavvy.ktmongo.dsl.tree
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
-import opensavvy.ktmongo.dsl.tree.BsonNode
-import opensavvy.ktmongo.dsl.tree.CompoundNode
 import opensavvy.ktmongo.dsl.utils.asImmutable
 
 /**
- * A compound expression is an [opensavvy.ktmongo.dsl.tree.BsonNode] that may have children.
+ * A compound expression is an [BsonNode] that may have children.
  *
  * A compound expression may have `0..n` children.
  * Children are added by calling the [accept] function.
@@ -37,12 +34,12 @@ import opensavvy.ktmongo.dsl.utils.asImmutable
  *
  * ### Implementation notes
  *
- * Prefer implementing [AbstractCompoundExpression] instead of implementing this interface directly.
+ * Prefer implementing [AbstractCompoundBsonNode] instead of implementing this interface directly.
  */
-interface CompoundExpression : BsonNode, CompoundNode<BsonNode> {
+interface CompoundBsonNode : BsonNode, CompoundNode<BsonNode> {
 
 	/**
-	 * Adds a new [expression] as a child of this one.
+	 * Adds a new [node] as a child of this one.
 	 *
 	 * Since [BsonNode] subtypes may generate arbitrary BSON, it is possible
 	 * to use this method to inject arbitrary BSON (escaped or not) into any KtMongo DSL.
@@ -56,19 +53,19 @@ interface CompoundExpression : BsonNode, CompoundNode<BsonNode> {
 	@LowLevelApi
 	@DangerousMongoApi
 	@KtMongoDsl
-	override fun accept(expression: BsonNode)
+	override fun accept(node: BsonNode)
 
 	companion object
 }
 
 /**
- * Abstract utility class to help implement [CompoundExpression].
+ * Abstract utility class to help implement [CompoundBsonNode].
  *
- * Learn more by reading [BsonNode], [opensavvy.ktmongo.dsl.tree.AbstractBsonNode] and [CompoundExpression].
+ * Learn more by reading [BsonNode], [AbstractBsonNode] and [CompoundBsonNode].
  */
-abstract class AbstractCompoundExpression(
+abstract class AbstractCompoundBsonNode(
 	context: BsonContext,
-) : AbstractBsonNode(context), CompoundExpression {
+) : AbstractBsonNode(context), CompoundBsonNode {
 
 	// region Sub-expression binding
 
@@ -81,11 +78,11 @@ abstract class AbstractCompoundExpression(
 	@LowLevelApi
 	@DangerousMongoApi
 	@KtMongoDsl
-	override fun accept(expression: BsonNode) {
-		require(!frozen) { "This expression has already been frozen, it cannot accept the child expression $expression" }
-		require(expression != this) { "Trying to add an expression to itself!" }
+	override fun accept(node: BsonNode) {
+		require(!frozen) { "This expression has already been frozen, it cannot accept the child expression $node" }
+		require(node != this) { "Trying to add an expression to itself!" }
 
-		val simplified = expression.simplify()
+		val simplified = node.simplify()
 
 		if (simplified != null) {
 			require(simplified !== this) { "Trying to add an expression to itself!" }

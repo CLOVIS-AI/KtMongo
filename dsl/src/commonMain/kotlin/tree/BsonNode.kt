@@ -22,8 +22,6 @@ import opensavvy.ktmongo.bson.BsonFieldWriteable
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQueryPredicate
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.CompoundExpression
 
 /**
  * A node in the BSON AST.
@@ -101,10 +99,10 @@ interface BsonNode : Node, BsonFieldWriteable {
  * If you are not careful, this may make injection attacks or data leaking possible.**
  *
  * Before writing your own operator, familiarize yourself with the documentation of [BsonNode], [AbstractBsonNode],
- * [CompoundExpression] and [AbstractCompoundExpression], as well as [BsonFieldWriter].
+ * [CompoundBsonNode] and [AbstractCompoundBsonNode], as well as [BsonFieldWriter].
  *
  * Fundamentally, an operator is anything that is able to [write] itself into a BSON document.
- * Operators should not be mutable, except through their [accept][CompoundExpression.accept] method (if they have one).
+ * Operators should not be mutable, except through their [accept][CompoundBsonNode.accept] method (if they have one).
  *
  * An operator generally looks like the following:
  * ```kotlin
@@ -123,7 +121,7 @@ interface BsonNode : Node, BsonFieldWriteable {
  * including while the operator is being constructed (e.g. when using a debugger). It is extremely important that the
  * `toString` representation they see is consistent with the final BSON sent over the wire.
  *
- * Once you have created your operator, use the [accept][CompoundExpression.accept] method to register it into a DSL:
+ * Once you have created your operator, use the [accept][CompoundBsonNode.accept] method to register it into a DSL:
  * ```kotlin
  * collection.find {
  *     User::name {
@@ -137,13 +135,13 @@ interface BsonNode : Node, BsonFieldWriteable {
  * **Note that if your operator accepts a variable number of sub-expressions (e.g. `$and`), you must ensure that it works for any
  * number of expressions, including 1 and 0.** See [simplify].
  *
- * To create an operator that can accept multiple children operators (for example `$and`), implement [AbstractCompoundExpression].
+ * To create an operator that can accept multiple children operators (for example `$and`), implement [AbstractCompoundBsonNode].
  *
  * Since operators are complex to write, risky to get wrong, and hard to test, we highly recommend to upstream any
  * operator you create so they can benefit from future fixes. Again, **an improperly-written operator may allow data
  * corruption or leaking**.
  *
- * Operators should preferably be immutable. To create mutable operators, prefer using [AbstractCompoundExpression].
+ * Operators should preferably be immutable. To create mutable operators, prefer using [AbstractCompoundBsonNode].
  * Note that once [frozen] is `true`, operators **must be immutable forever**, or other features of this library will break.
  */
 abstract class AbstractBsonNode private constructor(

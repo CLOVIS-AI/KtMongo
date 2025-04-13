@@ -27,8 +27,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.acceptAll
 import kotlin.reflect.KClass
@@ -39,7 +39,7 @@ import kotlin.reflect.KClass
 @KtMongoDsl
 private class UpdateQueryImpl<T>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context),
+) : AbstractCompoundBsonNode(context),
 	UpsertQuery<T>,
 	FieldDsl {
 

@@ -27,10 +27,10 @@ import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.CompoundExpression
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -126,7 +126,7 @@ private class ProjectStage(
  * The operators allowed in a [`$project` stage][HasProject.project].
  */
 @KtMongoDsl
-interface ProjectStageOperators<Document : Any> : CompoundExpression, ValueDsl, FieldDsl, SetStageOperators<Document> {
+interface ProjectStageOperators<Document : Any> : CompoundBsonNode, ValueDsl, FieldDsl, SetStageOperators<Document> {
 
 	/**
 	 * Excludes the `_id` field.
@@ -211,7 +211,7 @@ interface ProjectStageOperators<Document : Any> : CompoundExpression, ValueDsl, 
 
 private class ProjectStageBsonNode<Document : Any>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), ProjectStageOperators<Document> {
+) : AbstractCompoundBsonNode(context), ProjectStageOperators<Document> {
 
 	// region Exclude ID
 

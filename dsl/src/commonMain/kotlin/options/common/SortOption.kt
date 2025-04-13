@@ -25,10 +25,10 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.CompoundExpression
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -42,7 +42,7 @@ import kotlin.reflect.KProperty1
  */
 class SortOption<Document : Any>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), Option<Bson>, SortOptionDsl<Document> {
+) : AbstractCompoundBsonNode(context), Option<Bson>, SortOptionDsl<Document> {
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun ascending(field: Field<Document, *>) {
@@ -141,7 +141,7 @@ interface WithSort<Document : Any> : Options {
  * See [WithSort.sort].
  */
 @KtMongoDsl
-interface SortOptionDsl<Document : Any> : CompoundExpression, FieldDsl {
+interface SortOptionDsl<Document : Any> : CompoundBsonNode, FieldDsl {
 
 	/**
 	 * If two documents have a different value of [field], the one with lesser value will be returned first.

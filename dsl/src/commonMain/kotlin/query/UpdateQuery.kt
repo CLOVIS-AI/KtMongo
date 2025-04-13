@@ -20,7 +20,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.*
-import opensavvy.ktmongo.dsl.query.common.CompoundExpression
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -67,7 +67,7 @@ import kotlin.reflect.KProperty1
  * @see FilterQuery Filters
  */
 @KtMongoDsl
-interface UpdateQuery<T> : CompoundExpression, FieldDsl {
+interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 
 	// region $set
 

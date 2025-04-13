@@ -20,7 +20,7 @@ import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.path.FieldDsl
-import opensavvy.ktmongo.dsl.query.common.CompoundExpression
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 
 /**
  * DSL for MongoDB operators that are used as predicates in conditions in a context where the targeted field is already
@@ -54,7 +54,7 @@ import opensavvy.ktmongo.dsl.query.common.CompoundExpression
  * For example, if the selected field is of type `String`, then `T` is `String`.
  */
 @KtMongoDsl
-interface FilterQueryPredicate<T> : CompoundExpression, FieldDsl {
+interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 
 	// region $eq
 

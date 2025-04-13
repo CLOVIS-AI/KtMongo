@@ -24,7 +24,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.*
-import opensavvy.ktmongo.dsl.query.common.CompoundExpression
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -122,7 +122,7 @@ import kotlin.reflect.KProperty1
  * If you can't find an operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/4).
  */
 @KtMongoDsl
-interface FilterQuery<T> : CompoundExpression, FieldDsl {
+interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 
 	// region $and, $or
 

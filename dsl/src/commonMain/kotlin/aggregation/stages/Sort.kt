@@ -25,8 +25,8 @@ import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 
 /**
@@ -63,7 +63,7 @@ interface HasSort<Document : Any> : Pipeline<Document> {
 
 private class SortStage<Document : Any>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), SortOptionDsl<Document> {
+) : AbstractCompoundBsonNode(context), SortOptionDsl<Document> {
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun ascending(field: Field<Document, *>) {

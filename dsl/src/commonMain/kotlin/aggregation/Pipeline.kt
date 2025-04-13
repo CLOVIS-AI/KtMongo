@@ -22,10 +22,10 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.CompoundExpression
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 
 /**
  * A multi-stage pipeline that performs complex operations on MongoDB.
@@ -89,14 +89,14 @@ interface Pipeline<Output : Any> {
 	/**
 	 * Creates a new pipeline that expands on the current one by adding [stage].
 	 *
-	 * This method is analogous to [CompoundExpression.accept], with the main difference that the latter mutates the
+	 * This method is analogous to [CompoundBsonNode.accept], with the main difference that the latter mutates the
 	 * current expression, whereas this method returns a new pipeline on which the stage is applied
 	 * (because pipelines are immutable).
 	 *
 	 * **End-users should not need to call this function.**
 	 * All implemented stages provide an extension function on the [Pipeline] type.
 	 * This function is provided for cases in which you need a stage that is not yet provided by the library.
-	 * If that is your situation, start by reading [AbstractBsonNode] and [AbstractCompoundExpression].
+	 * If that is your situation, start by reading [AbstractBsonNode] and [AbstractCompoundBsonNode].
 	 * If you want to proceed and implement your own stage, consider getting in touch with the maintainers of the
 	 * library so it can be shared to all users.
 	 *

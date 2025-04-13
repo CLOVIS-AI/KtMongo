@@ -29,14 +29,14 @@ import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 
 @KtMongoDsl
 private class FilterQueryImpl<T>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context),
+) : AbstractCompoundBsonNode(context),
 	FilterQuery<T>,
 	FieldDsl {
 

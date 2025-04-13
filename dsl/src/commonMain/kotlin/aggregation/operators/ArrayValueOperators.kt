@@ -28,8 +28,8 @@ import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -871,7 +871,7 @@ interface ArrayValueOperators : ValueOperators {
 	@LowLevelApi
 	private class SortOptionDslBsonNode<Context : Any>(
 		context: BsonContext,
-	) : AbstractCompoundExpression(context), SortOptionDsl<Context> {
+	) : AbstractCompoundBsonNode(context), SortOptionDsl<Context> {
 
 		@OptIn(DangerousMongoApi::class)
 		override fun ascending(field: Field<Context, *>) {

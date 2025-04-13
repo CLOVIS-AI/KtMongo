@@ -25,8 +25,8 @@ import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 
 /**
  * Implementation of [FilterQueryPredicate].
@@ -34,7 +34,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 @KtMongoDsl
 private class FilterQueryPredicateImpl<T>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), FilterQueryPredicate<T> {
+) : AbstractCompoundBsonNode(context), FilterQueryPredicate<T> {
 
 	// region Low-level operations
 

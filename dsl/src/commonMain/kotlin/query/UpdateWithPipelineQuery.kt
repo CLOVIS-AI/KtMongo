@@ -21,14 +21,14 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.stages.*
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.CompoundExpression
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 
 /**
  * Interface describing the DSL when declaring an update with a pipeline.
  */
 @KtMongoDsl
-interface UpdateWithPipelineQuery<Document : Any> : CompoundExpression {
+interface UpdateWithPipelineQuery<Document : Any> : CompoundBsonNode {
 
 	/**
 	 * Overrides the value of existing fields or inserts new ones.
@@ -142,7 +142,7 @@ interface UpdateWithPipelineQuery<Document : Any> : CompoundExpression {
 @LowLevelApi
 internal class UpdateWithPipelineQueryImpl<Document : Any> @LowLevelApi constructor(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), UpdateWithPipelineQuery<Document> {
+) : AbstractCompoundBsonNode(context), UpdateWithPipelineQuery<Document> {
 
 	val stages get() = children
 		.map { context.buildDocument { it.writeTo(this) } }

@@ -27,10 +27,10 @@ import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
-import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.CompoundExpression
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -74,7 +74,7 @@ internal fun <Document : Any> createSetStage(context: BsonContext, block: SetSta
  * The operators allowed in a [set] stage.
  */
 @KtMongoDsl
-interface SetStageOperators<T : Any> : CompoundExpression, ValueDsl, FieldDsl {
+interface SetStageOperators<T : Any> : CompoundBsonNode, ValueDsl, FieldDsl {
 
 	// region $set
 
@@ -385,7 +385,7 @@ interface SetStageOperators<T : Any> : CompoundExpression, ValueDsl, FieldDsl {
 
 private class SetStageBsonNode<T : Any>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), SetStageOperators<T> {
+) : AbstractCompoundBsonNode(context), SetStageOperators<T> {
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun <V> Field<T, V>.set(value: Value<T, V>) {
