@@ -23,9 +23,9 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 import opensavvy.ktmongo.dsl.query.common.CompoundExpression
-import opensavvy.ktmongo.dsl.query.common.Expression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
 
 /**
  * A multi-stage pipeline that performs complex operations on MongoDB.
@@ -96,11 +96,11 @@ interface Pipeline<Output : Any> {
 	 * **End-users should not need to call this function.**
 	 * All implemented stages provide an extension function on the [Pipeline] type.
 	 * This function is provided for cases in which you need a stage that is not yet provided by the library.
-	 * If that is your situation, start by reading [AbstractExpression] and [AbstractCompoundExpression].
+	 * If that is your situation, start by reading [AbstractBsonNode] and [AbstractCompoundExpression].
 	 * If you want to proceed and implement your own stage, consider getting in touch with the maintainers of the
 	 * library so it can be shared to all users.
 	 *
-	 * The provided [stage] must validate the entire contract of [Expression]. Additionally, it should always emit
+	 * The provided [stage] must validate the entire contract of [BsonNode]. Additionally, it should always emit
 	 * the name of the stage first. For example, this is a valid stage:
 	 * ```json
 	 * "$match": {
@@ -127,7 +127,7 @@ interface Pipeline<Output : Any> {
 	 */
 	@DangerousMongoApi
 	@LowLevelApi
-	fun withStage(stage: Expression): Pipeline<Output>
+	fun withStage(stage: BsonNode): Pipeline<Output>
 
 	/**
 	 * Changes the type of the returned document, with no type-safety.
@@ -147,7 +147,7 @@ interface Pipeline<Output : Any> {
 	/**
 	 * Writes the entire pipeline into [writer].
 	 *
-	 * This function is similar to [Expression.writeTo], with the difference that expressions generate documents,
+	 * This function is similar to [BsonNode.writeTo], with the difference that expressions generate documents,
 	 * and pipelines generate arrays.
 	 *
 	 * Using this method will thus write an array containing the different stages.
@@ -173,7 +173,7 @@ interface Pipeline<Output : Any> {
 class PipelineChainLink internal constructor(
 	private val context: BsonContext,
 	private val previous: PipelineChainLink?,
-	private val current: Expression?,
+	private val current: BsonNode?,
 ) {
 
 	/**
@@ -186,7 +186,7 @@ class PipelineChainLink internal constructor(
 	/**
 	 * Equivalent to [Pipeline.withStage], but generating a chain link instead.
 	 */
-	fun withStage(stage: Expression): PipelineChainLink {
+	fun withStage(stage: BsonNode): PipelineChainLink {
 		val simplified = stage.simplify() ?: return this
 		simplified.freeze()
 		return PipelineChainLink(context, this, simplified)
@@ -198,7 +198,7 @@ class PipelineChainLink internal constructor(
 	 * The first returned element is the current one, the second returned element is the previous one,
 	 * the third element is the previous one, etc.
 	 */
-	private fun hierarchyReversed(): Sequence<Expression> = sequence {
+	private fun hierarchyReversed(): Sequence<BsonNode> = sequence {
 		var cursor: PipelineChainLink? = this@PipelineChainLink
 
 		while (cursor != null) {
@@ -215,7 +215,7 @@ class PipelineChainLink internal constructor(
 	 * The first element of the returned list is the root of the chain, followed by the second element of the chain, etc.
 	 */
 	@LowLevelApi
-	fun toList(): List<Expression> =
+	fun toList(): List<BsonNode> =
 		hierarchyReversed().toList().reversed()
 
 	/**
@@ -304,7 +304,7 @@ abstract class AbstractPipeline<Output : Any> @OptIn(LowLevelApi::class) constru
 	 */
 	@DangerousMongoApi
 	@LowLevelApi
-	abstract override fun withStage(stage: Expression): Pipeline<Output>
+	abstract override fun withStage(stage: BsonNode): Pipeline<Output>
 
 	@LowLevelApi
 	final override fun writeTo(writer: BsonValueWriter) {

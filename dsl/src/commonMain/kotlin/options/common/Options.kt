@@ -23,7 +23,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.Count
 import opensavvy.ktmongo.dsl.options.CountOptions
 import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.Expression
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundNode
 
 /**
@@ -70,7 +70,7 @@ import opensavvy.ktmongo.dsl.tree.CompoundNode
  *
  * ### Implementing this interface
  *
- * Implementations of this interface must be careful to respect the contract of [Expression], in particular about
+ * Implementations of this interface must be careful to respect the contract of [BsonNode], in particular about
  * the [toString] representation.
  *
  * Option implementations must be immutable. If the user wants to change an option, they can specify it a second time
@@ -79,7 +79,7 @@ import opensavvy.ktmongo.dsl.tree.CompoundNode
  * @param Value The [value] stored by this option.
  * For example, [LimitOption] stores an integer.
  */
-interface Option<out Value> : Expression {
+interface Option<out Value> : BsonNode {
 
 	/**
 	 * The value stored by this option, as specified by the user.
@@ -100,7 +100,7 @@ interface Option<out Value> : Expression {
  * For example, for options related to the [Count] model, see [CountOptions].
  */
 @KtMongoDsl
-interface Options : Expression, CompoundNode<Option<*>> {
+interface Options : BsonNode, CompoundNode<Option<*>> {
 
 	/**
 	 * The full list of options set on this container.
@@ -120,7 +120,7 @@ internal class OptionsHolder(context: BsonContext) : AbstractCompoundExpression(
 	@LowLevelApi
 	@DangerousMongoApi
 	override fun accept(node: Option<*>) {
-		this.accept(node as Expression)
+		this.accept(node as BsonNode)
 	}
 
 	@OptIn(LowLevelApi::class)

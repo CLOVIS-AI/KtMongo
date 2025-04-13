@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.query.common
+package opensavvy.ktmongo.dsl.tree
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriteable
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQueryPredicate
-import opensavvy.ktmongo.dsl.tree.Node
-import opensavvy.ktmongo.dsl.tree.NodeImpl
+import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
+import opensavvy.ktmongo.dsl.query.common.CompoundExpression
 
 /**
  * A node in the BSON AST.
@@ -36,13 +36,13 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  *
  * ### Implementation notes
  *
- * Prefer implementing [AbstractExpression] instead of implementing this interface directly.
+ * Prefer implementing [AbstractBsonNode] instead of implementing this interface directly.
  *
  * ### Debugging notes
  *
  * Use [toString][Any.toString] to view the JSON representation of this expression.
  */
-interface Expression : Node, BsonFieldWriteable {
+interface BsonNode : Node, BsonFieldWriteable {
 
 	/**
 	 * The context used to generate this expression.
@@ -65,7 +65,7 @@ interface Expression : Node, BsonFieldWriteable {
 	 * Returns `null` when the current expression was simplified into a no-op (= it does nothing).
 	 */
 	@LowLevelApi
-	fun simplify(): Expression?
+	fun simplify(): BsonNode?
 
 	/**
 	 * Writes the result of [simplifying][simplify] this expression into [writer].
@@ -82,7 +82,7 @@ interface Expression : Node, BsonFieldWriteable {
 }
 
 /**
- * Utility implementation for [Expression], which handles the [context], [toString] representation and [freezing][freeze].
+ * Utility implementation for [BsonNode], which handles the [context], [toString] representation and [freezing][freeze].
  *
  * ### Implementing a new operator
  *
@@ -92,7 +92,7 @@ interface Expression : Node, BsonFieldWriteable {
  * Because they are able to write arbitrary BSON, no checks whatsoever are possible.
  * If you are not careful, this may make injection attacks or data leaking possible.**
  *
- * Before writing your own operator, familiarize yourself with the documentation of [Expression], [AbstractExpression],
+ * Before writing your own operator, familiarize yourself with the documentation of [BsonNode], [AbstractBsonNode],
  * [CompoundExpression] and [AbstractCompoundExpression], as well as [BsonFieldWriter].
  *
  * Fundamentally, an operator is anything that is able to [write] itself into a BSON document.
@@ -104,7 +104,7 @@ interface Expression : Node, BsonFieldWriteable {
  * private class TypePredicateExpressionNode(
  *     val type: BsonType,
  *     context: BsonContext,
- * ) : AbstractExpression(context) {
+ * ) : AbstractBsonNode(context) {
  *
  *     override fun write(writer: BsonFieldWriter) {
  *         writer.writeInt32("\$type", type.code)
@@ -134,11 +134,14 @@ interface Expression : Node, BsonFieldWriteable {
  * Since operators are complex to write, risky to get wrong, and hard to test, we highly recommend to upstream any
  * operator you create so they can benefit from future fixes. Again, **an improperly-written operator may allow data
  * corruption or leaking**.
+ *
+ * Operators should preferably be immutable. To create mutable operators, prefer using [AbstractCompoundExpression].
+ * Note that once [frozen] is `true`, operators **must be immutable forever**, or other features of this library will break.
  */
-abstract class AbstractExpression private constructor(
+abstract class AbstractBsonNode private constructor(
 	@property:LowLevelApi override val context: BsonContext,
 	private val node: NodeImpl,
-) : Node by node, Expression {
+) : Node by node, BsonNode {
 
 	constructor(context: BsonContext) : this(context, NodeImpl())
 
@@ -161,7 +164,7 @@ abstract class AbstractExpression private constructor(
 	protected abstract fun write(writer: BsonFieldWriter)
 
 	@LowLevelApi
-	override fun simplify(): AbstractExpression? = this
+	override fun simplify(): AbstractBsonNode? = this
 
 	@LowLevelApi
 	final override fun writeTo(writer: BsonFieldWriter) {

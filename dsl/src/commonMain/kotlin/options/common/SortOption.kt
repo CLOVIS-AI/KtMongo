@@ -26,9 +26,9 @@ import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 import opensavvy.ktmongo.dsl.query.common.CompoundExpression
-import opensavvy.ktmongo.dsl.query.common.Expression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -46,12 +46,12 @@ class SortOption<Document : Any>(
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun ascending(field: Field<Document, *>) {
-		accept(SortExpression(field.path, 1, context))
+		accept(SortBsonNode(field.path, 1, context))
 	}
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun descending(field: Field<Document, *>) {
-		accept(SortExpression(field.path, -1, context))
+		accept(SortBsonNode(field.path, -1, context))
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -63,23 +63,23 @@ class SortOption<Document : Any>(
 		}
 
 	@LowLevelApi
-	override fun simplify(children: List<Expression>): AbstractExpression? =
+	override fun simplify(children: List<BsonNode>): AbstractBsonNode? =
 		if (children.isNotEmpty()) this
 		else null
 
 	@LowLevelApi
-	override fun write(writer: BsonFieldWriter, children: List<Expression>) = with(writer) {
+	override fun write(writer: BsonFieldWriter, children: List<BsonNode>) = with(writer) {
 		writeDocument("sort") {
 			super.write(this, children)
 		}
 	}
 
 	@LowLevelApi
-	private class SortExpression(
+	private class SortBsonNode(
 		val path: Path,
 		val value: Int,
 		context: BsonContext,
-	) : AbstractExpression(context) {
+	) : AbstractBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeInt32(path.toString(), value)

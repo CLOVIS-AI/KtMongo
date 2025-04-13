@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Pipeline implementing the `$skip` stage.
@@ -78,14 +78,14 @@ interface HasSkip<Document : Any> : Pipeline<Document> {
 private class SkipStage(
 	val amount: Long,
 	context: BsonContext,
-) : AbstractExpression(context) {
+) : AbstractBsonNode(context) {
 
 	init {
 		require(amount >= 0) { "At least 0 elements should be skipped. Found: $amount" }
 	}
 
 	@LowLevelApi
-	override fun simplify(): AbstractExpression? =
+	override fun simplify(): AbstractBsonNode? =
 		when {
 			amount == 0L -> null
 			else -> this

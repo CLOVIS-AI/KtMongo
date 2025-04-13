@@ -23,7 +23,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Pipeline implementing the `$match` stage.
@@ -60,7 +60,7 @@ interface HasMatch<Document : Any> : Pipeline<Document> {
 private class MatchStage(
 	val expression: FilterQuery<*>,
 	context: BsonContext,
-) : AbstractExpression(context) {
+) : AbstractBsonNode(context) {
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeDocument("\$match") {

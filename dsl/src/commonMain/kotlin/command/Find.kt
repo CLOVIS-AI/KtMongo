@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.FindOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Searching for documents in a collection.
@@ -43,7 +43,7 @@ class Find<Document : Any> private constructor(
 	context: BsonContext,
 	val options: FindOptions<Document>,
 	val filter: FilterQuery<Document>,
-) : AbstractExpression(context) {
+) : AbstractBsonNode(context) {
 
 	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, FindOptions(context), FilterQuery(context))

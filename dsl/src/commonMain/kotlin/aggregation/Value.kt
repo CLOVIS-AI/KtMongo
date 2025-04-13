@@ -22,8 +22,8 @@ import opensavvy.ktmongo.bson.BsonValueWriteable
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
-import opensavvy.ktmongo.dsl.query.common.Expression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.Node
 import opensavvy.ktmongo.dsl.tree.NodeImpl
 
@@ -39,8 +39,8 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  *
  * ### Difference with Expression
  *
- * This interface and its hierarchy mimic [Expression].
- * The main difference is the expected context: [Expression] represents an operator, which is stored as a BSON document
+ * This interface and its hierarchy mimic [BsonNode].
+ * The main difference is the expected context: [BsonNode] represents an operator, which is stored as a BSON document
  * and doesn't participate in any type hierarchy.
  * Instead, [Value] is stored as a BSON value and its return type can be further embedded into more values.
  *
@@ -102,7 +102,7 @@ interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
  *
  * ### Implementing a new operator
  *
- * Implementing class is identical in concept to implementing [AbstractExpression].
+ * Implementing class is identical in concept to implementing [AbstractBsonNode].
  * The main difference is the writer is a [BsonValueWriter] instead of a [BsonFieldWriter].
  */
 @LowLevelApi

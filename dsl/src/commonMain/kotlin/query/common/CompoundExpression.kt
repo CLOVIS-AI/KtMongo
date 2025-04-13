@@ -21,11 +21,13 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundNode
 import opensavvy.ktmongo.dsl.utils.asImmutable
 
 /**
- * A compound expression is an [Expression] that may have children.
+ * A compound expression is an [opensavvy.ktmongo.dsl.tree.BsonNode] that may have children.
  *
  * A compound expression may have `0..n` children.
  * Children are added by calling the [accept] function.
@@ -37,14 +39,14 @@ import opensavvy.ktmongo.dsl.utils.asImmutable
  *
  * Prefer implementing [AbstractCompoundExpression] instead of implementing this interface directly.
  */
-interface CompoundExpression : Expression, CompoundNode<Expression> {
+interface CompoundExpression : BsonNode, CompoundNode<BsonNode> {
 
 	/**
 	 * Adds a new [expression] as a child of this one.
 	 *
-	 * Since [Expression] subtypes may generate arbitrary BSON, it is possible
+	 * Since [BsonNode] subtypes may generate arbitrary BSON, it is possible
 	 * to use this method to inject arbitrary BSON (escaped or not) into any KtMongo DSL.
-	 * Incorrect [Expression] implementations can create memory leaks,
+	 * Incorrect [BsonNode] implementations can create memory leaks,
 	 * performance issues, data corruption or data leaks.
 	 *
 	 * We recommend against calling this function directly.
@@ -54,7 +56,7 @@ interface CompoundExpression : Expression, CompoundNode<Expression> {
 	@LowLevelApi
 	@DangerousMongoApi
 	@KtMongoDsl
-	override fun accept(expression: Expression)
+	override fun accept(expression: BsonNode)
 
 	companion object
 }
@@ -62,24 +64,24 @@ interface CompoundExpression : Expression, CompoundNode<Expression> {
 /**
  * Abstract utility class to help implement [CompoundExpression].
  *
- * Learn more by reading [Expression], [AbstractExpression] and [CompoundExpression].
+ * Learn more by reading [BsonNode], [opensavvy.ktmongo.dsl.tree.AbstractBsonNode] and [CompoundExpression].
  */
 abstract class AbstractCompoundExpression(
 	context: BsonContext,
-) : AbstractExpression(context), CompoundExpression {
+) : AbstractBsonNode(context), CompoundExpression {
 
 	// region Sub-expression binding
 
-	private val _children = ArrayList<Expression>()
+	private val _children = ArrayList<BsonNode>()
 
 	@LowLevelApi
-	protected val children: List<Expression>
+	protected val children: List<BsonNode>
 		get() = _children.asImmutable()
 
 	@LowLevelApi
 	@DangerousMongoApi
 	@KtMongoDsl
-	override fun accept(expression: Expression) {
+	override fun accept(expression: BsonNode) {
 		require(!frozen) { "This expression has already been frozen, it cannot accept the child expression $expression" }
 		require(expression != this) { "Trying to add an expression to itself!" }
 
@@ -100,14 +102,14 @@ abstract class AbstractCompoundExpression(
 	 *
 	 * @param children The children of this expression, previously added with [accept].
 	 * **They have already been simplified.**
-	 * @see Expression.simplify
+	 * @see BsonNode.simplify
 	 */
 	@LowLevelApi
-	protected open fun simplify(children: List<Expression>): AbstractExpression? =
+	protected open fun simplify(children: List<BsonNode>): AbstractBsonNode? =
 		this
 
 	@LowLevelApi
-	final override fun simplify(): AbstractExpression? =
+	final override fun simplify(): AbstractBsonNode? =
 		simplify(children)
 
 	// endregion
@@ -118,10 +120,10 @@ abstract class AbstractCompoundExpression(
 	 *
 	 * @param children The children of this expression, previously added with [accept].
 	 * **They have already been simplified**.
-	 * @see AbstractExpression.write
+	 * @see AbstractBsonNode.write
 	 */
 	@LowLevelApi
-	protected open fun write(writer: BsonFieldWriter, children: List<Expression>) {
+	protected open fun write(writer: BsonFieldWriter, children: List<BsonNode>) {
 		for (child in children) {
 			check(this !== child) { "Trying to write myself as my own child!" }
 			child.writeTo(writer)

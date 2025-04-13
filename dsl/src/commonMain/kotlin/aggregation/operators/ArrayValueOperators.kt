@@ -29,7 +29,7 @@ import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -753,7 +753,7 @@ interface ArrayValueOperators : ValueOperators {
 	): Value<Context, List<T>> =
 		SortValueOperator(
 			input = this,
-			sortOrder = SortOptionDslExpression<T & Any>(context).apply { order() }.toValue(),
+			sortOrder = SortOptionDslBsonNode<T & Any>(context).apply { order() }.toValue(),
 			context = context,
 		)
 
@@ -869,26 +869,26 @@ interface ArrayValueOperators : ValueOperators {
 		of(this).sortedBy(order)
 
 	@LowLevelApi
-	private class SortOptionDslExpression<Context : Any>(
+	private class SortOptionDslBsonNode<Context : Any>(
 		context: BsonContext,
 	) : AbstractCompoundExpression(context), SortOptionDsl<Context> {
 
 		@OptIn(DangerousMongoApi::class)
 		override fun ascending(field: Field<Context, *>) {
-			accept(SortExpression(field.path, 1, context))
+			accept(SortBsonNode(field.path, 1, context))
 		}
 
 		@OptIn(DangerousMongoApi::class)
 		override fun descending(field: Field<Context, *>) {
-			accept(SortExpression(field.path, -1, context))
+			accept(SortBsonNode(field.path, -1, context))
 		}
 
 		@LowLevelApi
-		private class SortExpression(
+		private class SortBsonNode(
 			val path: Path,
 			val value: Int,
 			context: BsonContext,
-		) : AbstractExpression(context) {
+		) : AbstractBsonNode(context) {
 
 			override fun write(writer: BsonFieldWriter) = with(writer) {
 				writeInt32(path.toString(), value)
@@ -903,13 +903,13 @@ interface ArrayValueOperators : ValueOperators {
 		) : AbstractValue<Context, Nothing>(context) {
 
 			init {
-				this@SortOptionDslExpression.freeze()
+				this@SortOptionDslBsonNode.freeze()
 			}
 
 			@LowLevelApi
 			override fun write(writer: BsonValueWriter) = with(writer) {
 				writeDocument {
-					this@SortOptionDslExpression.writeTo(this)
+					this@SortOptionDslBsonNode.writeTo(this)
 				}
 			}
 		}

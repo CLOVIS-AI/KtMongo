@@ -20,7 +20,7 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Maximum number of elements analyzed by this operation.
@@ -30,7 +30,7 @@ import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 class LimitOption(
 	val limit: Long,
 	context: BsonContext,
-) : AbstractExpression(context), Option<Long> {
+) : AbstractBsonNode(context), Option<Long> {
 
 	override val value: Long
 		get() = limit

@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Pipeline implementing the `$sample` stage.
@@ -53,7 +53,7 @@ interface HasSample<Document : Any> : Pipeline<Document> {
 private class SampleStage(
 	val size: Int,
 	context: BsonContext,
-) : AbstractExpression(context) {
+) : AbstractBsonNode(context) {
 
 	init {
 		require(size >= 1) { "The sample size should be at least 1. Found: $size" }

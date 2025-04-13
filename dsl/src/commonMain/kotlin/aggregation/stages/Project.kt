@@ -28,9 +28,9 @@ import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 import opensavvy.ktmongo.dsl.query.common.CompoundExpression
-import opensavvy.ktmongo.dsl.query.common.Expression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -106,13 +106,13 @@ interface HasProject<Document : Any> : Pipeline<Document> {
 
 }
 
-internal fun <Document : Any> createProjectStage(context: BsonContext, block: ProjectStageOperators<Document>.() -> Unit): Expression =
-	ProjectStage(ProjectStageExpression<Document>(context).apply(block), context)
+internal fun <Document : Any> createProjectStage(context: BsonContext, block: ProjectStageOperators<Document>.() -> Unit): BsonNode =
+	ProjectStage(ProjectStageBsonNode<Document>(context).apply(block), context)
 
 private class ProjectStage(
 	val expression: ProjectStageOperators<*>,
-	context: BsonContext
-) : AbstractExpression(context) {
+	context: BsonContext,
+) : AbstractBsonNode(context) {
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -209,7 +209,7 @@ interface ProjectStageOperators<Document : Any> : CompoundExpression, ValueDsl, 
 
 }
 
-private class ProjectStageExpression<Document : Any>(
+private class ProjectStageBsonNode<Document : Any>(
 	context: BsonContext,
 ) : AbstractCompoundExpression(context), ProjectStageOperators<Document> {
 
@@ -217,13 +217,13 @@ private class ProjectStageExpression<Document : Any>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun excludeId() {
-		accept(ProjectExcludeIdExpression(context))
+		accept(ProjectExcludeIdBsonNode(context))
 	}
 
 	@LowLevelApi
-	private class ProjectExcludeIdExpression(
+	private class ProjectExcludeIdBsonNode(
 		context: BsonContext,
-	) : AbstractExpression(context) {
+	) : AbstractBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeInt32("_id", 0)
@@ -235,14 +235,14 @@ private class ProjectStageExpression<Document : Any>(
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun include(field: Field<Document, *>) {
-		accept(ProjectIncludeExpression(field.path, context))
+		accept(ProjectIncludeBsonNode(field.path, context))
 	}
 
 	@LowLevelApi
-	private class ProjectIncludeExpression(
+	private class ProjectIncludeBsonNode(
 		val path: Path,
 		context: BsonContext,
-	) : AbstractExpression(context) {
+	) : AbstractBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeInt32(path.toString(), 1)
@@ -254,15 +254,15 @@ private class ProjectStageExpression<Document : Any>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun <V> Field<Document, V>.set(value: Value<Document, V>) {
-		accept(ProjectSetExpression(this.path, value, context))
+		accept(ProjectSetBsonNode(this.path, value, context))
 	}
 
 	@LowLevelApi
-	private class ProjectSetExpression(
+	private class ProjectSetBsonNode(
 		val path: Path,
 		val value: Value<*, *>,
 		context: BsonContext,
-	) : AbstractExpression(context) {
+	) : AbstractBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) =  with(writer) {
 			write(path.toString()) {

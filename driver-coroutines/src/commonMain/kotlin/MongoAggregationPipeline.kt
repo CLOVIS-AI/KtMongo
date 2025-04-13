@@ -30,7 +30,7 @@ import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
 import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
 import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.common.Expression
+import opensavvy.ktmongo.dsl.tree.BsonNode
 
 class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal constructor(
 	private val collection: String,
@@ -43,7 +43,7 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 
 	@LowLevelApi
 	@DangerousMongoApi
-	override fun withStage(stage: Expression): MongoAggregationPipeline<Output> =
+	override fun withStage(stage: BsonNode): MongoAggregationPipeline<Output> =
 		MongoAggregationPipeline(collection, context, chain.withStage(stage), iterableBuilder)
 
 	@Suppress("UNCHECKED_CAST") // The type is phantom, the cast is guaranteed to succeed

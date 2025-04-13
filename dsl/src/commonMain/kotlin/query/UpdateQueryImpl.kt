@@ -28,8 +28,8 @@ import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.query.common.AbstractExpression
-import opensavvy.ktmongo.dsl.query.common.Expression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.acceptAll
 import kotlin.reflect.KClass
 
@@ -45,17 +45,17 @@ private class UpdateQueryImpl<T>(
 
 	// region Low-level operations
 
-	private class OperatorCombinator<T : AbstractExpression>(
+	private class OperatorCombinator<T : AbstractBsonNode>(
 		val type: KClass<T>,
-		val combinator: (List<T>, BsonContext) -> T
+		val combinator: (List<T>, BsonContext) -> T,
 	) {
 		@Suppress("UNCHECKED_CAST") // This is a private class, it should not be used incorrectly
-		operator fun invoke(sources: List<AbstractExpression>, context: BsonContext) =
+		operator fun invoke(sources: List<AbstractBsonNode>, context: BsonContext) =
 			combinator(sources as List<T>, context)
 	}
 
 	@LowLevelApi
-	override fun simplify(children: List<Expression>): AbstractExpression? {
+	override fun simplify(children: List<BsonNode>): AbstractBsonNode? {
 		if (children.isEmpty())
 			return null
 
@@ -63,7 +63,7 @@ private class UpdateQueryImpl<T>(
 			@Suppress("UNCHECKED_CAST") // safe because of the filter
 			val matching = newChildren
 				.filter { it::class == combinator.type }
-				as List<UpdateExpressionNode>
+				as List<UpdateBsonNodeNode>
 
 			if (matching.size <= 1)
 			// At least two elements are required to combine them into a single one!
@@ -82,7 +82,7 @@ private class UpdateQueryImpl<T>(
 	}
 
 	@LowLevelApi
-	private sealed class UpdateExpressionNode(context: BsonContext) : AbstractExpression(context)
+	private sealed class UpdateBsonNodeNode(context: BsonContext) : AbstractBsonNode(context)
 
 	// endregion
 	// region $set
@@ -91,14 +91,14 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V) {
-		accept(SetExpressionNode(listOf(this.path to value), context))
+		accept(SetBsonNodeNode(listOf(this.path to value), context))
 	}
 
 	@LowLevelApi
-	private class SetExpressionNode(
+	private class SetBsonNodeNode(
 		val mappings: List<Pair<Path, *>>,
 		context: BsonContext,
-	) : UpdateExpressionNode(context) {
+	) : UpdateBsonNodeNode(context) {
 
 		override fun simplify() =
 			this.takeUnless { mappings.isEmpty() }
@@ -119,15 +119,15 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setOnInsert(value: V) {
-		accept(SetOnInsertExpressionNode(listOf(this.path to value), context))
+		accept(SetOnInsertBsonNodeNode(listOf(this.path to value), context))
 	}
 
 	@LowLevelApi
-	private class SetOnInsertExpressionNode(
+	private class SetOnInsertBsonNodeNode(
 		val mappings: List<Pair<Path, *>>,
 		context: BsonContext,
-	) : UpdateExpressionNode(context) {
-		override fun simplify(): AbstractExpression? =
+	) : UpdateBsonNodeNode(context) {
+		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { mappings.isEmpty() }
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -146,15 +146,15 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override infix fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.inc(amount: V) {
-		accept(IncrementExpressionNode(listOf(this.path to amount), context))
+		accept(IncrementBsonNodeNode(listOf(this.path to amount), context))
 	}
 
 	@LowLevelApi
-	private class IncrementExpressionNode(
+	private class IncrementBsonNodeNode(
 		val mappings: List<Pair<Path, Number>>,
 		context: BsonContext,
-	) : UpdateExpressionNode(context) {
-		override fun simplify(): AbstractExpression? =
+	) : UpdateBsonNodeNode(context) {
+		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { mappings.isEmpty() }
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -173,15 +173,15 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.unset() {
-		accept(UnsetExpressionNode(listOf(this.path), context))
+		accept(UnsetBsonNodeNode(listOf(this.path), context))
 	}
 
 	@LowLevelApi
-	private class UnsetExpressionNode(
+	private class UnsetBsonNodeNode(
 		val fields: List<Path>,
 		context: BsonContext,
-	) : UpdateExpressionNode(context) {
-		override fun simplify(): AbstractExpression? =
+	) : UpdateBsonNodeNode(context) {
+		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { fields.isEmpty() }
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -200,15 +200,15 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: Field<T, V>) {
-		accept(RenameExpressionNode(listOf(this.path to newName.path), context))
+		accept(RenameBsonNodeNode(listOf(this.path to newName.path), context))
 	}
 
 	@LowLevelApi
-	private class RenameExpressionNode(
+	private class RenameBsonNodeNode(
 		val fields: List<Pair<Path, Path>>,
 		context: BsonContext,
-	) : UpdateExpressionNode(context) {
-		override fun simplify(): AbstractExpression? =
+	) : UpdateBsonNodeNode(context) {
+		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { fields.isEmpty() }
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -225,20 +225,20 @@ private class UpdateQueryImpl<T>(
 	companion object {
 		@OptIn(LowLevelApi::class)
 		private val combinators = listOf(
-			OperatorCombinator(SetExpressionNode::class) { sources, context ->
-				SetExpressionNode(sources.flatMap { it.mappings }, context)
+			OperatorCombinator(SetBsonNodeNode::class) { sources, context ->
+				SetBsonNodeNode(sources.flatMap { it.mappings }, context)
 			},
-			OperatorCombinator(SetOnInsertExpressionNode::class) { sources, context ->
-				SetOnInsertExpressionNode(sources.flatMap { it.mappings }, context)
+			OperatorCombinator(SetOnInsertBsonNodeNode::class) { sources, context ->
+				SetOnInsertBsonNodeNode(sources.flatMap { it.mappings }, context)
 			},
-			OperatorCombinator(IncrementExpressionNode::class) { sources, context ->
-				IncrementExpressionNode(sources.flatMap { it.mappings }, context)
+			OperatorCombinator(IncrementBsonNodeNode::class) { sources, context ->
+				IncrementBsonNodeNode(sources.flatMap { it.mappings }, context)
 			},
-			OperatorCombinator(UnsetExpressionNode::class) { sources, context ->
-				UnsetExpressionNode(sources.flatMap { it.fields }, context)
+			OperatorCombinator(UnsetBsonNodeNode::class) { sources, context ->
+				UnsetBsonNodeNode(sources.flatMap { it.fields }, context)
 			},
-			OperatorCombinator(RenameExpressionNode::class) { sources, context ->
-				RenameExpressionNode(sources.flatMap { it.fields }, context)
+			OperatorCombinator(RenameBsonNodeNode::class) { sources, context ->
+				RenameBsonNodeNode(sources.flatMap { it.fields }, context)
 			},
 		)
 	}
