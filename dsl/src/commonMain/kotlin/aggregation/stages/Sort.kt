@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
+import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode

@@ -28,9 +28,6 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
 import opensavvy.ktmongo.dsl.options.*
-import opensavvy.ktmongo.dsl.options.common.LimitOption
-import opensavvy.ktmongo.dsl.options.common.SortOption
-import opensavvy.ktmongo.dsl.options.common.option
 import opensavvy.ktmongo.dsl.query.*
 import opensavvy.ktmongo.official.command.toJava
 import opensavvy.ktmongo.official.options.toJava

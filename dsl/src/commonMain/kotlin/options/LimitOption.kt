@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.options.common
+package opensavvy.ktmongo.dsl.options
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter

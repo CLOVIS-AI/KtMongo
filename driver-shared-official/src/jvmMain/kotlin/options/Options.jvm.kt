@@ -18,8 +18,8 @@ package opensavvy.ktmongo.official.options
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
-import opensavvy.ktmongo.dsl.options.common.LimitOption
-import opensavvy.ktmongo.dsl.options.common.option
+import opensavvy.ktmongo.dsl.options.LimitOption
+import opensavvy.ktmongo.dsl.options.option
 
 @LowLevelApi
 fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongodb.client.model.CountOptions()

@@ -25,7 +25,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.ValueDsl
-import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
+import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode

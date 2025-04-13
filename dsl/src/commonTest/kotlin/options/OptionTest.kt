@@ -18,8 +18,6 @@ package opensavvy.ktmongo.dsl.options
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
-import opensavvy.ktmongo.dsl.options.common.LimitOption
-import opensavvy.ktmongo.dsl.options.common.option
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.kotest.PreparedSpec

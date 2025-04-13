@@ -19,9 +19,9 @@ package opensavvy.ktmongo.dsl.command
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.common.Options
-import opensavvy.ktmongo.dsl.options.common.OptionsHolder
-import opensavvy.ktmongo.dsl.options.common.WithLimit
+import opensavvy.ktmongo.dsl.options.Options
+import opensavvy.ktmongo.dsl.options.OptionsHolder
+import opensavvy.ktmongo.dsl.options.WithLimit
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
