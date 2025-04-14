@@ -21,8 +21,8 @@ import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KProperty1
@@ -2428,11 +2428,11 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	// region $expr
 
 	/**
-	 * Enables the usage of [aggregation values][ValueDsl] within a regular query.
+	 * Enables the usage of [aggregation values][AggregationOperators] within a regular query.
 	 *
 	 * Aggregation values are much more powerful than regular query operators (for example, it is possible to compare two
 	 * fields of the same document). However, the way they are written is quite different, and the way they are
-	 * evaluated by MongoDB is quite different again. Before using aggregation values, be sure to read [ValueDsl].
+	 * evaluated by MongoDB is quite different again. Before using aggregation values, be sure to read [AggregationOperators].
 	 *
 	 * ### Example
 	 *
@@ -2455,7 +2455,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/expr/)
 	 */
 	@KtMongoDsl
-	fun expr(block: ValueDsl.() -> Value<T & Any, Boolean>)
+	fun expr(block: AggregationOperators.() -> Value<T & Any, Boolean>)
 
 	// endregion
 }

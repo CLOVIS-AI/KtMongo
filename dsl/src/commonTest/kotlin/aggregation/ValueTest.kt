@@ -31,7 +31,7 @@ class ValueTest : PreparedSpec({
 
 	val dollar = "$"
 
-	class ValueDslImpl : ValueDsl {
+	class AggregationOperatorsImpl : AggregationOperators {
 		override val context: BsonContext = testContext()
 	}
 
@@ -44,8 +44,8 @@ class ValueTest : PreparedSpec({
 		val profile: Profile,
 	)
 
-	fun value(block: ValueDsl.() -> Value<User, *>) =
-		ValueDslImpl().block().toString()
+	fun value(block: AggregationOperators.() -> Value<User, *>) =
+		AggregationOperatorsImpl().block().toString()
 
 	suite("Referring to fields with of") {
 		test("Referring to a top-level field") {

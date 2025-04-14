@@ -123,7 +123,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * @see Value Representation of an aggregation value.
  */
 @KtMongoDsl
-interface ValueDsl : ValueOperators,
+interface AggregationOperators : ValueOperators,
 	ArrayValueOperators,
 	ComparisonValueOperators,
 	ConditionalValueOperators,

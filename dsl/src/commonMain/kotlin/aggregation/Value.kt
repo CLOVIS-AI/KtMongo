@@ -33,8 +33,8 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  * Each implementation of this interface is a logical BSON node in our own intermediate representation.
  * Each node knows how to [writeTo] itself into a BSON document.
  *
- * Instances of this interface are obtained by the end-user through the [ValueDsl] builder.
- * Functions from KtMongo which expect aggregation values provide an instance of [ValueDsl] into scope automatically.
+ * Instances of this interface are obtained by the end-user through the [AggregationOperators] builder.
+ * Functions from KtMongo which expect aggregation values provide an instance of [AggregationOperators] into scope automatically.
  * For example, see [FilterQuery.expr].
  *
  * ### Difference with Expression
@@ -57,7 +57,7 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  *
  * Use [toString] to view the JSON representation of this expression.
  *
- * @see ValueDsl Builder for aggregation values.
+ * @see AggregationOperators Builder for aggregation values.
  */
 interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
 

@@ -24,8 +24,8 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
@@ -234,13 +234,13 @@ private class FilterQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun expr(block: ValueDsl.() -> Value<T & Any, Boolean>) {
+	override fun expr(block: AggregationOperators.() -> Value<T & Any, Boolean>) {
 		val value = ExprEvaluator(context).block()
 		accept(ExprBsonNodeNode(value, context))
 	}
 
 	@LowLevelApi
-	private class ExprEvaluator(override val context: BsonContext) : ValueDsl
+	private class ExprEvaluator(override val context: BsonContext) : AggregationOperators
 
 	@OptIn(LowLevelApi::class)
 	private class ExprBsonNodeNode<T>(

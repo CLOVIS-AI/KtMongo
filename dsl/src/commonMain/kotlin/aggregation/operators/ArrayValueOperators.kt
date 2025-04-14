@@ -23,8 +23,8 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
@@ -35,7 +35,7 @@ import kotlin.reflect.KProperty1
 /**
  * Operators to manipulate arrays.
  *
- * To learn more about aggregation operators, see [opensavvy.ktmongo.dsl.aggregation.ValueDsl].
+ * To learn more about aggregation operators, see [opensavvy.ktmongo.dsl.aggregation.AggregationOperators].
  */
 interface ArrayValueOperators : ValueOperators {
 
@@ -78,7 +78,7 @@ interface ArrayValueOperators : ValueOperators {
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
 		limit: Value<Context, Number>? = null,
 		variableName: String = "this",
-		predicate: ValueDsl.(Value<Any, T>) -> Value<T & Any, Boolean>,
+		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
 		FilterValueOperator(
 			input = this,
@@ -123,7 +123,7 @@ interface ArrayValueOperators : ValueOperators {
 	fun <Context : Any, T> Field<Context, Collection<T>>.filter(
 		limit: Value<Context, Number>? = null,
 		variableName: String = "this",
-		predicate: ValueDsl.(Value<Any, T>) -> Value<T & Any, Boolean>,
+		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
 		of(this).filter(limit, variableName, predicate)
 
@@ -162,7 +162,7 @@ interface ArrayValueOperators : ValueOperators {
 	fun <Context : Any, T> KProperty1<Context, Collection<T>>.filter(
 		limit: Value<Context, Number>? = null,
 		variableName: String = "this",
-		predicate: ValueDsl.(Value<Any, T>) -> Value<T & Any, Boolean>,
+		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
 		of(this).filter(limit, variableName, predicate)
 
@@ -201,12 +201,12 @@ interface ArrayValueOperators : ValueOperators {
 	fun <Context : Any, T> Collection<T>.filter(
 		limit: Value<Context, Number>? = null,
 		variableName: String = "this",
-		predicate: ValueDsl.(Value<Any, T>) -> Value<T & Any, Boolean>,
+		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
 		of(this).filter(limit, variableName, predicate)
 
 	@LowLevelApi
-	private class PredicateEvaluator(override val context: BsonContext) : ValueDsl
+	private class PredicateEvaluator(override val context: BsonContext) : AggregationOperators
 
 	@LowLevelApi
 	private class ThisValue(
@@ -579,7 +579,7 @@ interface ArrayValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, T, R> Value<Context, Collection<T>>.map(
 		variableName: String = "this",
-		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
 	): Value<Context, List<R>> =
 		MapValueOperator(
 			input = this,
@@ -617,7 +617,7 @@ interface ArrayValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, T, R> Field<Context, Collection<T>>.map(
 		variableName: String = "this",
-		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
 	): Value<Context, List<R>> =
 		of(this).map(variableName, transform)
 
@@ -650,7 +650,7 @@ interface ArrayValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, T, R> KProperty1<Context, Collection<T>>.map(
 		variableName: String = "this",
-		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
 	): Value<Context, List<R>> =
 		of(this).map(variableName, transform)
 
@@ -683,7 +683,7 @@ interface ArrayValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, T, R> Collection<T>.map(
 		variableName: String = "this",
-		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
 	): Value<Context, List<R>> =
 		of(this).map(variableName, transform)
 

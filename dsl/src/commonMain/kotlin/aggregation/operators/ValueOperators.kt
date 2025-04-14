@@ -20,8 +20,8 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
@@ -30,7 +30,7 @@ import kotlin.reflect.KProperty1
 /**
  * Supertype for all interface operators describing operators on aggregation values.
  *
- * Most of the time, end-users will be using the subtype [ValueDsl] instead of this interface.
+ * Most of the time, end-users will be using the subtype [AggregationOperators] instead of this interface.
  */
 interface ValueOperators : FieldDsl {
 
@@ -38,7 +38,7 @@ interface ValueOperators : FieldDsl {
 	val context: BsonContext
 
 	/**
-	 * Refers to a [field] within an [aggregation value][ValueDsl].
+	 * Refers to a [field] within an [aggregation value][AggregationOperators].
 	 *
 	 * ### Example
 	 *
@@ -60,7 +60,7 @@ interface ValueOperators : FieldDsl {
 		FieldValue(field, context)
 
 	/**
-	 * Refers to a [field] within an [aggregation value][ValueDsl].
+	 * Refers to a [field] within an [aggregation value][AggregationOperators].
 	 *
 	 * ### Example
 	 *
@@ -81,7 +81,7 @@ interface ValueOperators : FieldDsl {
 		of(field.field)
 
 	/**
-	 * Refers to a Kotlin [value] within an [aggregation value][ValueDsl].
+	 * Refers to a Kotlin [value] within an [aggregation value][AggregationOperators].
 	 *
 	 * ### Example
 	 *

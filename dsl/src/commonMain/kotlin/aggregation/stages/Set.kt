@@ -21,9 +21,9 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
@@ -74,7 +74,7 @@ internal fun <Document : Any> createSetStage(context: BsonContext, block: SetSta
  * The operators allowed in a [set] stage.
  */
 @KtMongoDsl
-interface SetStageOperators<T : Any> : CompoundBsonNode, ValueDsl, FieldDsl {
+interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, FieldDsl {
 
 	// region $set
 

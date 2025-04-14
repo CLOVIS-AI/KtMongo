@@ -21,9 +21,9 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
@@ -126,7 +126,7 @@ private class ProjectStage(
  * The operators allowed in a [`$project` stage][HasProject.project].
  */
 @KtMongoDsl
-interface ProjectStageOperators<Document : Any> : CompoundBsonNode, ValueDsl, FieldDsl, SetStageOperators<Document> {
+interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationOperators, FieldDsl, SetStageOperators<Document> {
 
 	/**
 	 * Excludes the `_id` field.

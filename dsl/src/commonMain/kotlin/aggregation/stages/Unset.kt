@@ -21,8 +21,8 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
@@ -79,7 +79,7 @@ internal fun <Document : Any> createUnsetStage(context: BsonContext, block: Unse
  * The operators allowed in an [`$unset`][HasUnset.unset] stage.
  */
 @KtMongoDsl
-interface UnsetStageOperators<Document : Any> : BsonNode, ValueDsl, FieldDsl {
+interface UnsetStageOperators<Document : Any> : BsonNode, AggregationOperators, FieldDsl {
 
 	/**
 	 * Excludes a field from the current document.
