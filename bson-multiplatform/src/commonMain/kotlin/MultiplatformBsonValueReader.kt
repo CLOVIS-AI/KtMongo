@@ -177,6 +177,7 @@ internal class MultiplatformBsonValueReader(
 		return MultiplatformBsonArrayReader(bytes)
 	}
 
+	@Suppress("DEPRECATION")
 	override fun toString(): String = when (type) {
 		BsonType.Boolean -> readBoolean().toString()
 		BsonType.Int32 -> readInt32().toString()
@@ -184,6 +185,7 @@ internal class MultiplatformBsonValueReader(
 		BsonType.Double -> commonDoubleToString(readDouble())
 		BsonType.String -> '"' + readString() + '"'
 		BsonType.Null -> "null"
+		BsonType.Undefined -> """{"${'$'}undefined": true}"""
 		BsonType.Document -> readDocument().toString()
 		BsonType.Array -> readArray().toString()
 		BsonType.JavaScript -> """{"${'$'}code": "${readJavaScript()}"}"""

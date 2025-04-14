@@ -122,7 +122,8 @@ internal class MultiplatformBsonFieldWriter(
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeUndefined(name: String) {
-		TODO()
+		writeType(BsonType.Undefined)
+		writeName(name)
 	}
 
 	@Suppress("DEPRECATION")
