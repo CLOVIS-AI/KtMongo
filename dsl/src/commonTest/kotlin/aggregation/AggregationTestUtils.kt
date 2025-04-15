@@ -22,6 +22,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import org.intellij.lang.annotations.Language
 
 val count = "\$count"
 val limit = "\$limit"
@@ -71,6 +72,6 @@ class TestPipeline<Document : Any>(
 
 }
 
-infix fun Pipeline<*>.shouldBeBson(expected: String) {
+infix fun Pipeline<*>.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
 	this.toString() shouldBeBson expected
 }
