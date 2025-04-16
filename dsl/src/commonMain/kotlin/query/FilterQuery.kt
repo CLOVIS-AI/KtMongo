@@ -25,6 +25,7 @@ import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import org.intellij.lang.annotations.Language
 import kotlin.reflect.KProperty1
 
 /**
@@ -118,6 +119,9 @@ import kotlin.reflect.KProperty1
  * Array query:
  * - [`$all`][containsAll]
  * - [`$elemMatch`][any]
+ *
+ * Text query:
+ * - [`$regex`][regex]
  *
  * If you can't find an operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/4).
  */
@@ -2456,6 +2460,125 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@KtMongoDsl
 	fun expr(block: AggregationOperators.() -> Value<T & Any, Boolean>)
+
+	// endregion
+	// region $regex
+
+	/**
+	 * Matches documents where the field corresponds to a given regex expression.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name.regex("John .*")
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * If possible, prefer using a `"^"` prefix. For example, if we know that a pattern will only be present
+	 * at the start of a string, `"^foo"` will use indexes, whereas `"foo"` will not.
+	 *
+	 * Avoid using `.*` at the start and end of a pattern. `"foo"` is identical to `"foo.*"`, but the former
+	 * can use indexes and the latter cannot.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/regex)
+	 * - [Syntax sheet](https://www.pcre.org/current/doc/html/pcre2syntax.html)
+	 *
+	 * @param caseInsensitive If `true`, the result is matched even if its case doesn't match.
+	 * Note that this also disables index usage (even case-insensitive indexes) and ignores collation.
+	 * @param dotAll If `true`, the dot character (`.`) can match newlines.
+	 * @param extended If `true`, whitespace (except in character classes) is ignored,
+	 * and segments starting from an unescaped pound (`#`) until a newline are ignored, similarly to a Python comment.
+	 * ```kotlin
+	 * User::name.regex(
+	 *     pattern = """
+	 *         abc # This is a comment, it's not part of the pattern
+	 *         123
+	 *     """.trimIndent(),
+	 *     extended = true,
+	 * )
+	 * ```
+	 * which is identical to the non-extended pattern `"abc123"`.
+	 * @param matchEachLine If `true`, the special characters `^` and `$` match the beginning and end
+	 * of each line, instead of matching the beginning and end of the entire string.
+	 * Therefore, `"^S"` will match `"First line\nSecond line"`, which would not match otherwise.
+	 */
+	@KtMongoDsl
+	fun Field<T, String>.regex(
+		@Language("JSRegexp") pattern: String,
+		caseInsensitive: Boolean = false,
+		dotAll: Boolean = false,
+		extended: Boolean = false,
+		matchEachLine: Boolean = false,
+	) {
+		this { regex(pattern, caseInsensitive, dotAll, extended, matchEachLine) }
+	}
+
+	/**
+	 * Matches documents where the field corresponds to a given regex expression.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name.regex("John .*")
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * If possible, prefer using a `"^"` prefix. For example, if we know that a pattern will only be present
+	 * at the start of a string, `"^foo"` will use indexes, whereas `"foo"` will not.
+	 *
+	 * Avoid using `.*` at the start and end of a pattern. `"foo"` is identical to `"foo.*"`, but the former
+	 * can use indexes and the latter cannot.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/regex)
+	 * - [Syntax sheet](https://www.pcre.org/current/doc/html/pcre2syntax.html)
+	 *
+	 * @param caseInsensitive If `true`, the result is matched even if its case doesn't match.
+	 * Note that this also disables index usage (even case-insensitive indexes) and ignores collation.
+	 * @param dotAll If `true`, the dot character (`.`) can match newlines.
+	 * @param extended If `true`, whitespace (except in character classes) is ignored,
+	 * and segments starting from an unescaped pound (`#`) until a newline are ignored, similarly to a Python comment.
+	 * ```kotlin
+	 * User::name.regex(
+	 *     pattern = """
+	 *         abc # This is a comment, it's not part of the pattern
+	 *         123
+	 *     """.trimIndent(),
+	 *     extended = true,
+	 * )
+	 * ```
+	 * which is identical to the non-extended pattern `"abc123"`.
+	 * @param matchEachLine If `true`, the special characters `^` and `$` match the beginning and end
+	 * of each line, instead of matching the beginning and end of the entire string.
+	 * Therefore, `"^S"` will match `"First line\nSecond line"`, which would not match otherwise.
+	 */
+	@KtMongoDsl
+	fun KProperty1<T, String>.regex(
+		@Language("JSRegexp") pattern: String,
+		caseInsensitive: Boolean = false,
+		dotAll: Boolean = false,
+		extended: Boolean = false,
+		matchEachLine: Boolean = false,
+	) {
+		this { regex(pattern, caseInsensitive, dotAll, extended, matchEachLine) }
+	}
 
 	// endregion
 }

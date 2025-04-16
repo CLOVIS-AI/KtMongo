@@ -40,6 +40,8 @@ val oid = "\$oid"
 val elemMatch = "\$elemMatch"
 val expr = "\$expr"
 val getField = "\$getField"
+val regex = "\$regex"
+val regularExpression = "\$regularExpression"
 
 class Pet(
 	val name: String,
