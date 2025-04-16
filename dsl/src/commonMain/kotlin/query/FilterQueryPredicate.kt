@@ -21,6 +21,7 @@ import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import org.intellij.lang.annotations.Language
 
 /**
  * DSL for MongoDB operators that are used as predicates in conditions in a context where the targeted field is already
@@ -757,6 +758,68 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	fun isNotOneOf(vararg values: T) {
 		isNotOneOf(values.asList())
 	}
+
+	// endregion
+	// region $regex
+
+	/**
+	 * Matches documents where the field corresponds to a given regex expression.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name {
+	 *         regex("John .*")
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * If possible, prefer using a `"^"` prefix. For example, if we know that a pattern will only be present
+	 * at the start of a string, `"^foo"` will use indexes, whereas `"foo"` will not.
+	 *
+	 * Avoid using `.*` at the start and end of a pattern. `"foo"` is identical to `"foo.*"`, but the former
+	 * can use indexes and the latter cannot.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/regex)
+	 * - [Syntax sheet](https://www.pcre.org/current/doc/html/pcre2syntax.html)
+	 *
+	 * @param caseInsensitive If `true`, the result is matched even if its case doesn't match.
+	 * Note that this also disables index usage (even case-insensitive indexes) and ignores collation.
+	 * @param dotAll If `true`, the dot character (`.`) can match newlines.
+	 * @param extended If `true`, whitespace (except in character classes) is ignored,
+	 * and segments starting from an unescaped pound (`#`) until a newline are ignored, similarly to a Python comment.
+	 * ```kotlin
+	 * User::name.regex(
+	 *     pattern = """
+	 *         abc # This is a comment, it's not part of the pattern
+	 *         123
+	 *     """.trimIndent(),
+	 *     extended = true,
+	 * )
+	 * ```
+	 * which is identical to the non-extended pattern `"abc123"`.
+	 * @param matchEachLine If `true`, the special characters `^` and `$` match the beginning and end
+	 * of each line, instead of matching the beginning and end of the entire string.
+	 * Therefore, `"^S"` will match `"First line\nSecond line"`, which would not match otherwise.
+	 * @see FilterQuery.regex Shorthand syntax
+	 */
+	@KtMongoDsl
+	fun regex(
+		@Language("JSRegexp") pattern: String,
+		caseInsensitive: Boolean = false,
+		dotAll: Boolean = false,
+		extended: Boolean = false,
+		matchEachLine: Boolean = false,
+	)
 
 	// endregion
 

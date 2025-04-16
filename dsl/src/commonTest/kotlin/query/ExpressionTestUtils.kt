@@ -18,10 +18,11 @@ package opensavvy.ktmongo.dsl.query
 
 import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
+import org.intellij.lang.annotations.Language
 
 expect fun testContext(): BsonContext
 
-infix fun String.shouldBeBson(expected: String) {
+infix fun String.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
 	this shouldBe expected
 		.replace("\n", "")
 		.replace("\t", "")

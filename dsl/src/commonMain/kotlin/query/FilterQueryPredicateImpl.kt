@@ -280,6 +280,54 @@ private class FilterQueryPredicateImpl<T>(
 	}
 
 	// endregion
+	// region $regex
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@KtMongoDsl
+	override fun regex(
+		pattern: String,
+		caseInsensitive: Boolean,
+		dotAll: Boolean,
+		extended: Boolean,
+		matchEachLine: Boolean,
+	) {
+		accept(RegexBsonNode(pattern, caseInsensitive, dotAll, extended, matchEachLine, context))
+	}
+
+	@LowLevelApi
+	private class RegexBsonNode(
+		val pattern: String,
+		val caseInsensitive: Boolean,
+		val dotAll: Boolean,
+		val extended: Boolean,
+		val matchEachLine: Boolean,
+		context: BsonContext,
+	) : PredicateBsonNodeNode(context) {
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeRegularExpression(
+				"\$regex",
+				pattern,
+				buildString {
+					// ⚠ Must be in alphabetical order
+
+					if (caseInsensitive)
+						append('i')
+
+					if (matchEachLine)
+						append('m')
+
+					if (dotAll)
+						append('s')
+
+					if (extended)
+						append('x')
+				}
+			)
+		}
+	}
+
+	// endregion
 }
 
 /**
