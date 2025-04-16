@@ -66,7 +66,7 @@ workflow:
 .with-mongo:
   parallel:
     matrix:
-      - mongodb: [ mongo:6.0.19, mongo:7.0.15, mongo:8.0.3 ]
+      - mongodb: [ mongo:6.0.21, mongo:7.0.18, mongo:8.0.6 ]
 
   services:
     - name: $mongodb
