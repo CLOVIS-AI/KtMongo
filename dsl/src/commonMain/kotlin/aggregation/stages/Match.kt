@@ -22,9 +22,8 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
+import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Pipeline implementing the `$match` stage.
@@ -52,16 +51,16 @@ interface HasMatch<Document : Any> : Pipeline<Document> {
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun match(
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): Pipeline<Document> =
-		withStage(MatchStage(FilterExpression<Document>(context).apply(filter), context))
+		withStage(MatchStage(FilterQuery<Document>(context).apply(filter), context))
 
 }
 
 private class MatchStage(
-	val expression: FilterExpression<*>,
+	val expression: FilterQuery<*>,
 	context: BsonContext,
-) : AbstractExpression(context) {
+) : AbstractBsonNode(context) {
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeDocument("\$match") {

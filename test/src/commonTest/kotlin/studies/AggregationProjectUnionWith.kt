@@ -19,7 +19,7 @@ package opensavvy.ktmongo.sync.studies
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.coroutines.MongoAggregationPipeline
 import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
-import opensavvy.ktmongo.dsl.expr.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
@@ -167,7 +167,7 @@ class AggregationProjectUnionWith : PreparedSpec({
 	 * }
 	 * ```
 	 */
-	fun FilterOperators<Invoice>.commonMatch() = and {
+	fun FilterQuery<Invoice>.commonMatch() = and {
 		Invoice::vendor / Vendor::_id eq "507f1f77bcf86cd799439011"
 		Invoice::customer / Customer::_id eq "507f191e810c19729de860ea"
 	}

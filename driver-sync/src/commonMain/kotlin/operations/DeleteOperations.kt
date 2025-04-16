@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 package opensavvy.ktmongo.sync.operations
 
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.options.DeleteManyOptions
-import opensavvy.ktmongo.dsl.options.DeleteOneOptions
+import opensavvy.ktmongo.dsl.command.DeleteManyOptions
+import opensavvy.ktmongo.dsl.command.DeleteOneOptions
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * Interface grouping MongoDB operations relating to deleting documents.
@@ -47,7 +47,7 @@ interface DeleteOperations<Document : Any> : BaseOperations {
 	 */
 	fun deleteOne(
 		options: DeleteOneOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit
+		filter: FilterQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -72,7 +72,7 @@ interface DeleteOperations<Document : Any> : BaseOperations {
 	 */
 	fun deleteMany(
 		options: DeleteManyOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit
+		filter: FilterQuery<Document>.() -> Unit,
 	)
 
 }

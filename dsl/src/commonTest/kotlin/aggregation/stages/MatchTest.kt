@@ -19,7 +19,7 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.match
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.ktmongo.dsl.expr.filter.eq
+import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 class MatchTest : PreparedSpec({

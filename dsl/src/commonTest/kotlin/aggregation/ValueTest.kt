@@ -18,8 +18,9 @@ package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.shouldBeBson
-import opensavvy.ktmongo.dsl.expr.testContext
+import opensavvy.ktmongo.dsl.query.filter.eq
+import opensavvy.ktmongo.dsl.query.shouldBeBson
+import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 const val literal = "\$literal"
@@ -30,7 +31,7 @@ class ValueTest : PreparedSpec({
 
 	val dollar = "$"
 
-	class ValueDslImpl : ValueDsl {
+	class AggregationOperatorsImpl : AggregationOperators {
 		override val context: BsonContext = testContext()
 	}
 
@@ -43,8 +44,8 @@ class ValueTest : PreparedSpec({
 		val profile: Profile,
 	)
 
-	fun value(block: ValueDsl.() -> Value<User, *>) =
-		ValueDslImpl().block().toString()
+	fun value(block: AggregationOperators.() -> Value<User, *>) =
+		AggregationOperatorsImpl().block().toString()
 
 	suite("Referring to fields with of") {
 		test("Referring to a top-level field") {
@@ -100,7 +101,7 @@ class ValueTest : PreparedSpec({
 		} shouldBeBson """
 			[
 				{
-					"${opensavvy.ktmongo.dsl.expr.filter.eq}": [
+					"$eq": [
 						{
 							"$literal": 5
 						},

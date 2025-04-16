@@ -18,13 +18,16 @@ package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.*
-import opensavvy.ktmongo.dsl.models.BulkWrite
+import opensavvy.ktmongo.dsl.command.*
 import opensavvy.ktmongo.dsl.options.*
+import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
-	private val globalFilter: FilterOperators<Document>.() -> Unit,
+	private val globalFilter: FilterQuery<Document>.() -> Unit,
 ) : MongoCollection<Document> {
 
 	override fun find(): MongoIterable<Document> =
@@ -32,7 +35,7 @@ private class FilteredCollection<Document : Any>(
 
 	override fun find(
 		options: FindOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): MongoIterable<Document> =
 		upstream.find(options) {
 			globalFilter()
@@ -48,7 +51,7 @@ private class FilteredCollection<Document : Any>(
 
 	override suspend fun count(
 		options: CountOptions<Document>.() -> Unit,
-		predicate: FilterOperators<Document>.() -> Unit,
+		predicate: FilterQuery<Document>.() -> Unit,
 	): Long =
 		upstream.count(
 			options = options,
@@ -63,8 +66,8 @@ private class FilteredCollection<Document : Any>(
 
 	override suspend fun updateMany(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
-		update: UpdateOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	) {
 		upstream.updateMany(
 			options = options,
@@ -78,8 +81,8 @@ private class FilteredCollection<Document : Any>(
 
 	override suspend fun updateManyWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
 		upstream.updateManyWithPipeline(
 			options = options,
@@ -93,8 +96,8 @@ private class FilteredCollection<Document : Any>(
 
 	override suspend fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
-		update: UpdateOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	) {
 		upstream.updateOne(
 			options = options,
@@ -108,8 +111,8 @@ private class FilteredCollection<Document : Any>(
 
 	override suspend fun updateOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
 		upstream.updateOneWithPipeline(
 			options = options,
@@ -123,8 +126,8 @@ private class FilteredCollection<Document : Any>(
 
 	override suspend fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
-		update: UpsertOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpsertQuery<Document>.() -> Unit,
 	) {
 		upstream.upsertOne(
 			options = options,
@@ -138,8 +141,8 @@ private class FilteredCollection<Document : Any>(
 
 	override suspend fun upsertOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
-		update: UpdatePipelineOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	) {
 		upstream.upsertOneWithPipeline(
 			options = options,
@@ -153,8 +156,8 @@ private class FilteredCollection<Document : Any>(
 
 	override suspend fun findOneAndUpdate(
 		options: UpdateOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
-		update: UpdateOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
 	): Document? =
 		upstream.findOneAndUpdate(
 			options = options,
@@ -167,8 +170,8 @@ private class FilteredCollection<Document : Any>(
 
 	override suspend fun bulkWrite(
 		options: BulkWriteOptions<Document>.() -> Unit,
-		filter: FilterOperators<Document>.() -> Unit,
-		operations: BulkWrite<Document>.() -> Unit
+		filter: FilterQuery<Document>.() -> Unit,
+		operations: BulkWrite<Document>.() -> Unit,
 	) = upstream.bulkWrite(
 		options = options,
 		filter = {
@@ -178,7 +181,7 @@ private class FilteredCollection<Document : Any>(
 		operations = operations,
 	)
 
-	override suspend fun deleteOne(options: DeleteOneOptions<Document>.() -> Unit, filter: FilterOperators<Document>.() -> Unit) {
+	override suspend fun deleteOne(options: DeleteOneOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
 		upstream.deleteOne(
 			options = options,
 			filter = {
@@ -188,7 +191,7 @@ private class FilteredCollection<Document : Any>(
 		)
 	}
 
-	override suspend fun deleteMany(options: DeleteManyOptions<Document>.() -> Unit, filter: FilterOperators<Document>.() -> Unit) {
+	override suspend fun deleteMany(options: DeleteManyOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
 		upstream.deleteMany(
 			options = options,
 			filter = {
@@ -219,7 +222,7 @@ private class FilteredCollection<Document : Any>(
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String {
-		val filter = FilterExpression<Document>(context)
+		val filter = FilterQuery<Document>(context)
 			.apply(globalFilter)
 			.let(context::buildDocument)
 
@@ -255,5 +258,5 @@ private class FilteredCollection<Document : Any>(
  * activeOrders.find() // Only returns orders that are not logically deleted
  * ```
  */
-fun <Document : Any> MongoCollection<Document>.filter(filter: FilterOperators<Document>.() -> Unit): MongoCollection<Document> =
+fun <Document : Any> MongoCollection<Document>.filter(filter: FilterQuery<Document>.() -> Unit): MongoCollection<Document> =
 	FilteredCollection(this, filter)

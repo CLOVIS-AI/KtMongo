@@ -22,11 +22,11 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDslImpl
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.path.PathSegment
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -98,7 +98,7 @@ interface HasCount<Document : Any> : Pipeline<Document> {
 private class CountStage(
 	val path: Path,
 	context: BsonContext,
-) : AbstractExpression(context) {
+) : AbstractBsonNode(context) {
 
 	init {
 		require(path.parent == null) { "The \$count stage only accepts a simple field name, not nested fields. Found '$path'." }

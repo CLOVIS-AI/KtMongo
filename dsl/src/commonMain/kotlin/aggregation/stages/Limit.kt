@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Pipeline implementing the `$limit` stage.
@@ -78,7 +78,7 @@ interface HasLimit<Document : Any> : Pipeline<Document> {
 private class LimitStage(
 	val amount: Long,
 	context: BsonContext,
-) : AbstractExpression(context) {
+) : AbstractBsonNode(context) {
 
 	init {
 		require(amount >= 0) { "Negative limits are not allowed. Found: $amount" }

@@ -21,16 +21,16 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
-import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
-import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
-import opensavvy.ktmongo.dsl.expr.common.Expression
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -59,7 +59,7 @@ interface HasSet<Document : Any> : Pipeline<Document> {
 private class SetStage(
 	val expression: SetStageOperators<*>,
 	context: BsonContext,
-) : AbstractExpression(context) {
+) : AbstractBsonNode(context) {
 	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeDocument("\$set") {
 			expression.writeTo(this)
@@ -67,14 +67,14 @@ private class SetStage(
 	}
 }
 
-internal fun <Document : Any> createSetStage(context: BsonContext, block: SetStageOperators<Document>.() -> Unit): Expression =
-	SetStage(SetStageExpression<Document>(context).apply(block), context)
+internal fun <Document : Any> createSetStage(context: BsonContext, block: SetStageOperators<Document>.() -> Unit): BsonNode =
+	SetStage(SetStageBsonNode<Document>(context).apply(block), context)
 
 /**
  * The operators allowed in a [set] stage.
  */
 @KtMongoDsl
-interface SetStageOperators<T : Any> : CompoundExpression, ValueDsl, FieldDsl {
+interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, FieldDsl {
 
 	// region $set
 
@@ -383,21 +383,21 @@ interface SetStageOperators<T : Any> : CompoundExpression, ValueDsl, FieldDsl {
 	// endregion
 }
 
-private class SetStageExpression<T : Any>(
+private class SetStageBsonNode<T : Any>(
 	context: BsonContext,
-) : AbstractCompoundExpression(context), SetStageOperators<T> {
+) : AbstractCompoundBsonNode(context), SetStageOperators<T> {
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun <V> Field<T, V>.set(value: Value<T, V>) {
-		accept(SetExpression(this.path, value, context))
+		accept(SetBsonNode(this.path, value, context))
 	}
 
 	@LowLevelApi
-	private class SetExpression(
+	private class SetBsonNode(
 		val path: Path,
 		val value: Value<*, *>,
 		context: BsonContext,
-	) : AbstractExpression(context) {
+	) : AbstractBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			write(path.toString()) {

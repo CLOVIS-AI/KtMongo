@@ -17,7 +17,7 @@
 package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.dsl.aggregation.*
-import opensavvy.ktmongo.dsl.expr.filter.gt
+import opensavvy.ktmongo.dsl.query.filter.gt
 import opensavvy.prepared.runner.kotest.PreparedSpec
 import kotlin.text.Typography.dollar
 

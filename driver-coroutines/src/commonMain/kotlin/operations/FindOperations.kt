@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,8 @@
 package opensavvy.ktmongo.coroutines.operations
 
 import opensavvy.ktmongo.coroutines.MongoIterable
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.options.FindOptions
+import opensavvy.ktmongo.dsl.command.FindOptions
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * Interface grouping MongoDB operations allowing to search for information.
@@ -38,7 +37,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	/**
 	 * Finds all documents in this collection that satisfy [filter].
 	 *
-	 * If multiple predicates are specified, an [and][opensavvy.ktmongo.dsl.expr.FilterExpression.and] operator is implied.
+	 * If multiple predicates are specified, an [and][FilterQuery.and] operator is implied.
 	 *
 	 * ### Example
 	 *
@@ -62,13 +61,13 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 */
 	fun find(
 		options: FindOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): MongoIterable<Document>
 
 	/**
 	 * Finds a document in this collection that satisfies [filter].
 	 *
-	 * If multiple predicates are specified, and [and][FilterExpression.and] operator is implied.
+	 * If multiple predicates are specified, and [and][FilterQuery.and] operator is implied.
 	 *
 	 * This function doesn't check that there is exactly one value in the collection.
 	 * It simply returns the first matching document it finds.
@@ -91,7 +90,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	 */
 	suspend fun findOne(
 		options: FindOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
 	): Document? =
 		find(options, filter).firstOrNull()
 

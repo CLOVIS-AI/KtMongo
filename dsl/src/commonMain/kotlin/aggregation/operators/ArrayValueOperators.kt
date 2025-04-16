@@ -23,19 +23,19 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
-import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
-import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
+import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import kotlin.reflect.KProperty1
 
 /**
  * Operators to manipulate arrays.
  *
- * To learn more about aggregation operators, see [opensavvy.ktmongo.dsl.aggregation.ValueDsl].
+ * To learn more about aggregation operators, see [opensavvy.ktmongo.dsl.aggregation.AggregationOperators].
  */
 interface ArrayValueOperators : ValueOperators {
 
@@ -78,7 +78,7 @@ interface ArrayValueOperators : ValueOperators {
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
 		limit: Value<Context, Number>? = null,
 		variableName: String = "this",
-		predicate: ValueDsl.(Value<Any, T>) -> Value<T & Any, Boolean>,
+		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
 		FilterValueOperator(
 			input = this,
@@ -123,7 +123,7 @@ interface ArrayValueOperators : ValueOperators {
 	fun <Context : Any, T> Field<Context, Collection<T>>.filter(
 		limit: Value<Context, Number>? = null,
 		variableName: String = "this",
-		predicate: ValueDsl.(Value<Any, T>) -> Value<T & Any, Boolean>,
+		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
 		of(this).filter(limit, variableName, predicate)
 
@@ -162,7 +162,7 @@ interface ArrayValueOperators : ValueOperators {
 	fun <Context : Any, T> KProperty1<Context, Collection<T>>.filter(
 		limit: Value<Context, Number>? = null,
 		variableName: String = "this",
-		predicate: ValueDsl.(Value<Any, T>) -> Value<T & Any, Boolean>,
+		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
 		of(this).filter(limit, variableName, predicate)
 
@@ -201,12 +201,12 @@ interface ArrayValueOperators : ValueOperators {
 	fun <Context : Any, T> Collection<T>.filter(
 		limit: Value<Context, Number>? = null,
 		variableName: String = "this",
-		predicate: ValueDsl.(Value<Any, T>) -> Value<T & Any, Boolean>,
+		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
 		of(this).filter(limit, variableName, predicate)
 
 	@LowLevelApi
-	private class PredicateEvaluator(override val context: BsonContext) : ValueDsl
+	private class PredicateEvaluator(override val context: BsonContext) : AggregationOperators
 
 	@LowLevelApi
 	private class ThisValue(
@@ -579,7 +579,7 @@ interface ArrayValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, T, R> Value<Context, Collection<T>>.map(
 		variableName: String = "this",
-		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
 	): Value<Context, List<R>> =
 		MapValueOperator(
 			input = this,
@@ -617,7 +617,7 @@ interface ArrayValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, T, R> Field<Context, Collection<T>>.map(
 		variableName: String = "this",
-		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
 	): Value<Context, List<R>> =
 		of(this).map(variableName, transform)
 
@@ -650,7 +650,7 @@ interface ArrayValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, T, R> KProperty1<Context, Collection<T>>.map(
 		variableName: String = "this",
-		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
 	): Value<Context, List<R>> =
 		of(this).map(variableName, transform)
 
@@ -683,7 +683,7 @@ interface ArrayValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, T, R> Collection<T>.map(
 		variableName: String = "this",
-		transform: ValueDsl.(Value<Any, T>) -> Value<Context, R>,
+		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
 	): Value<Context, List<R>> =
 		of(this).map(variableName, transform)
 
@@ -753,7 +753,7 @@ interface ArrayValueOperators : ValueOperators {
 	): Value<Context, List<T>> =
 		SortValueOperator(
 			input = this,
-			sortOrder = SortOptionDslExpression<T & Any>(context).apply { order() }.toValue(),
+			sortOrder = SortOptionDslBsonNode<T & Any>(context).apply { order() }.toValue(),
 			context = context,
 		)
 
@@ -869,26 +869,26 @@ interface ArrayValueOperators : ValueOperators {
 		of(this).sortedBy(order)
 
 	@LowLevelApi
-	private class SortOptionDslExpression<Context : Any>(
+	private class SortOptionDslBsonNode<Context : Any>(
 		context: BsonContext,
-	) : AbstractCompoundExpression(context), SortOptionDsl<Context> {
+	) : AbstractCompoundBsonNode(context), SortOptionDsl<Context> {
 
 		@OptIn(DangerousMongoApi::class)
 		override fun ascending(field: Field<Context, *>) {
-			accept(SortExpression(field.path, 1, context))
+			accept(SortBsonNode(field.path, 1, context))
 		}
 
 		@OptIn(DangerousMongoApi::class)
 		override fun descending(field: Field<Context, *>) {
-			accept(SortExpression(field.path, -1, context))
+			accept(SortBsonNode(field.path, -1, context))
 		}
 
 		@LowLevelApi
-		private class SortExpression(
+		private class SortBsonNode(
 			val path: Path,
 			val value: Int,
 			context: BsonContext,
-		) : AbstractExpression(context) {
+		) : AbstractBsonNode(context) {
 
 			override fun write(writer: BsonFieldWriter) = with(writer) {
 				writeInt32(path.toString(), value)
@@ -903,13 +903,13 @@ interface ArrayValueOperators : ValueOperators {
 		) : AbstractValue<Context, Nothing>(context) {
 
 			init {
-				this@SortOptionDslExpression.freeze()
+				this@SortOptionDslBsonNode.freeze()
 			}
 
 			@LowLevelApi
 			override fun write(writer: BsonValueWriter) = with(writer) {
 				writeDocument {
-					this@SortOptionDslExpression.writeTo(this)
+					this@SortOptionDslBsonNode.writeTo(this)
 				}
 			}
 		}

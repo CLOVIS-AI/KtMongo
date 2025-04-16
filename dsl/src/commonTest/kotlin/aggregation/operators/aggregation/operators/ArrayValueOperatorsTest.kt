@@ -17,9 +17,9 @@
 package opensavvy.ktmongo.dsl.aggregation.operators.aggregation.operators
 
 import opensavvy.ktmongo.dsl.aggregation.*
-import opensavvy.ktmongo.dsl.expr.filter.eq
-import opensavvy.ktmongo.dsl.expr.filter.getField
-import opensavvy.ktmongo.dsl.expr.filter.gt
+import opensavvy.ktmongo.dsl.query.filter.eq
+import opensavvy.ktmongo.dsl.query.filter.getField
+import opensavvy.ktmongo.dsl.query.filter.gt
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 class ArrayValueOperatorsTest : PreparedSpec({

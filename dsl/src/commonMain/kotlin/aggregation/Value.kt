@@ -21,9 +21,9 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriteable
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
-import opensavvy.ktmongo.dsl.expr.common.Expression
+import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.Node
 import opensavvy.ktmongo.dsl.tree.NodeImpl
 
@@ -33,14 +33,14 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  * Each implementation of this interface is a logical BSON node in our own intermediate representation.
  * Each node knows how to [writeTo] itself into a BSON document.
  *
- * Instances of this interface are obtained by the end-user through the [ValueDsl] builder.
- * Functions from KtMongo which expect aggregation values provide an instance of [ValueDsl] into scope automatically.
- * For example, see [FilterOperators.expr].
+ * Instances of this interface are obtained by the end-user through the [AggregationOperators] builder.
+ * Functions from KtMongo which expect aggregation values provide an instance of [AggregationOperators] into scope automatically.
+ * For example, see [FilterQuery.expr].
  *
  * ### Difference with Expression
  *
- * This interface and its hierarchy mimic [Expression].
- * The main difference is the expected context: [Expression] represents an operator, which is stored as a BSON document
+ * This interface and its hierarchy mimic [BsonNode].
+ * The main difference is the expected context: [BsonNode] represents an operator, which is stored as a BSON document
  * and doesn't participate in any type hierarchy.
  * Instead, [Value] is stored as a BSON value and its return type can be further embedded into more values.
  *
@@ -57,7 +57,7 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  *
  * Use [toString] to view the JSON representation of this expression.
  *
- * @see ValueDsl Builder for aggregation values.
+ * @see AggregationOperators Builder for aggregation values.
  */
 interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
 
@@ -102,7 +102,7 @@ interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
  *
  * ### Implementing a new operator
  *
- * Implementing class is identical in concept to implementing [AbstractExpression].
+ * Implementing class is identical in concept to implementing [AbstractBsonNode].
  * The main difference is the writer is a [BsonValueWriter] instead of a [BsonFieldWriter].
  */
 @LowLevelApi

@@ -28,11 +28,11 @@ Operators are organized by the context in which they are available in. For examp
 
 Instances of these classes are usually provided by the driver as part of its functions.
 
-- [Filter operators][opensavvy.ktmongo.dsl.expr.FilterOperators]
-- [Update operators][opensavvy.ktmongo.dsl.expr.UpdateOperators]
-- [Upsert operators][opensavvy.ktmongo.dsl.expr.UpsertOperators]
+- [Filter operators][opensavvy.ktmongo.dsl.query.FilterQuery]
+- [Update operators][opensavvy.ktmongo.dsl.query.UpdateOperators]
+- [Upsert operators][opensavvy.ktmongo.dsl.query.UpsertOperators]
 
-To create a custom operator (for example because it isn't part of the library yet), see [AbstractExpression][opensavvy.ktmongo.dsl.expr.common.AbstractExpression].
+To create a custom operator (for example because it isn't part of the library yet), see [AbstractExpression][opensavvy.ktmongo.dsl.query.common.AbstractExpression].
 
 ## Aggregation DSLs
 
@@ -47,9 +47,9 @@ Annotations and other global concepts.
 
 # Package opensavvy.ktmongo.dsl.tree
 
-Helpers to represent trees of data, built bottom-up.
+Helpers to represent trees of data built bottom-up. Nodes become immutable when they become branches of another tree, and offer utilities for debugging (e.g. JSON representation in their `toString` implementation).
 
-Users of the library are not expected to interact with this package.
+Users of the library are not expected to interact with this package in day-to-day operations.
 
 However, contributors to the library, and users wanting to implement custom operators, should familiarize themselves with this package.
 
@@ -91,19 +91,13 @@ To learn more about aggregation operators and their syntax, see [`ValueDsl`][ope
 
 You may also be interested in reading the [official documentation on aggregations](https://www.mongodb.com/docs/manual/aggregation/).
 
-# Package opensavvy.ktmongo.dsl.expr
+# Package opensavvy.ktmongo.dsl.query
 
 Operators, classified by the context in which they are available in.
 
 Classes of this package are not expected to be instantiated by the user. Instead, it is expected by the driver will provide an instance of these classes in its own DSL, such that the user doesn't have to think about which class they should use.
 
 However, the user should still be aware of these classes, as they are the place where operators are documented.
-
-# Package opensavvy.ktmongo.dsl.expr.common
-
-The general concept of what it means to be a BSON expression or a BSON operator.
-
-Expressions can be written into a BSON stream, use their BSON representation when `toString` is called, and are able to simplify themselves to eliminate redundant constructs or handle 0-ary operators. 
 
 # Package opensavvy.ktmongo.dsl.path
 

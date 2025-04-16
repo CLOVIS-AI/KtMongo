@@ -21,13 +21,13 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
 
 /**
  * Operators to arithmetically combine two or more values.
  *
- * To learn more about aggregation operators, see [ValueDsl].
+ * To learn more about aggregation operators, see [AggregationOperators].
  */
 interface ArithmeticValueOperators : ValueOperators {
 

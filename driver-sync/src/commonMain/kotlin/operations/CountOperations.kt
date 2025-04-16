@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package opensavvy.ktmongo.sync.operations
 
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.command.CountOptions
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * Interface grouping MongoDB operations relating to counting documents.
@@ -58,7 +58,7 @@ interface CountOperations<Document : Any> : BaseOperations {
 	 */
 	fun count(
 		options: CountOptions<Document>.() -> Unit = {},
-		predicate: FilterOperators<Document>.() -> Unit
+		predicate: FilterQuery<Document>.() -> Unit,
 	): Long
 
 	/**

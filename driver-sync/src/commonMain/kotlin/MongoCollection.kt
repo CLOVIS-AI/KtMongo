@@ -17,7 +17,6 @@
 package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.sync.operations.*
-import opensavvy.ktmongo.sync.operations.operations.UpdatePipelineOperations
 
 /**
  * Methods to interact with a MongoDB collection.

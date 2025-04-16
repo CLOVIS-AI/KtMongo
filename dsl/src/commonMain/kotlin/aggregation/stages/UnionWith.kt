@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Pipeline implementing the `$unionWith` stage.
@@ -122,7 +122,7 @@ interface HasUnionWithCompatibility<Document : Any> : Pipeline<Document> {
 private class UnionWithStage(
 	val other: HasUnionWithCompatibility<*>,
 	context: BsonContext,
-) : AbstractExpression(context) {
+) : AbstractBsonNode(context) {
 
 	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeDocument("\$unionWith") {

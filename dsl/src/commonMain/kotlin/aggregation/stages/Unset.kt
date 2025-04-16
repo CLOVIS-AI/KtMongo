@@ -21,12 +21,12 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
-import opensavvy.ktmongo.dsl.expr.common.Expression
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import kotlin.reflect.KProperty1
 
 /**
@@ -72,14 +72,14 @@ interface HasUnset<Document : Any> : Pipeline<Document> {
 
 }
 
-internal fun <Document : Any> createUnsetStage(context: BsonContext, block: UnsetStageOperators<Document>.() -> Unit): Expression =
+internal fun <Document : Any> createUnsetStage(context: BsonContext, block: UnsetStageOperators<Document>.() -> Unit): BsonNode =
 	UnsetStage<Document>(context).apply { block() }
 
 /**
  * The operators allowed in an [`$unset`][HasUnset.unset] stage.
  */
 @KtMongoDsl
-interface UnsetStageOperators<Document : Any> : Expression, ValueDsl, FieldDsl {
+interface UnsetStageOperators<Document : Any> : BsonNode, AggregationOperators, FieldDsl {
 
 	/**
 	 * Excludes a field from the current document.
@@ -113,7 +113,7 @@ interface UnsetStageOperators<Document : Any> : Expression, ValueDsl, FieldDsl {
 
 private class UnsetStage<Document : Any>(
 	context: BsonContext,
-) : AbstractExpression(context), UnsetStageOperators<Document> {
+) : AbstractBsonNode(context), UnsetStageOperators<Document> {
 
 	private val fields = HashSet<Field<*, *>>()
 
@@ -123,7 +123,7 @@ private class UnsetStage<Document : Any>(
 	}
 
 	@LowLevelApi
-	override fun simplify(): AbstractExpression? =
+	override fun simplify(): AbstractBsonNode? =
 		if (fields.isEmpty()) null
 		else super.simplify()
 

@@ -16,12 +16,12 @@
 
 package opensavvy.ktmongo.sync.operations
 
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.UpdateOperators
-import opensavvy.ktmongo.dsl.expr.UpsertOperators
-import opensavvy.ktmongo.dsl.models.BulkWrite
-import opensavvy.ktmongo.dsl.options.BulkWriteOptions
-import opensavvy.ktmongo.dsl.options.UpdateOptions
+import opensavvy.ktmongo.dsl.command.BulkWrite
+import opensavvy.ktmongo.dsl.command.BulkWriteOptions
+import opensavvy.ktmongo.dsl.command.UpdateOptions
+import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.sync.MongoCollection
 import opensavvy.ktmongo.sync.filter
 
@@ -74,8 +74,8 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun updateMany(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
-		update: UpdateOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit = {},
+		update: UpdateQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -125,8 +125,8 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
-		update: UpdateOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit = {},
+		update: UpdateQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -179,8 +179,8 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
-		update: UpsertOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit = {},
+		update: UpsertQuery<Document>.() -> Unit,
 	)
 
 	/**
@@ -228,8 +228,8 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun findOneAndUpdate(
 		options: UpdateOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
-		update: UpdateOperators<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit = {},
+		update: UpdateQuery<Document>.() -> Unit,
 	): Document?
 
 	/**
@@ -298,7 +298,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 */
 	fun bulkWrite(
 		options: BulkWriteOptions<Document>.() -> Unit = {},
-		filter: FilterOperators<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
 		operations: BulkWrite<Document>.() -> Unit,
 	)
 

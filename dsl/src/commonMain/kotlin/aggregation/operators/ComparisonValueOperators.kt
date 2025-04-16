@@ -21,14 +21,14 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.aggregation.ValueDsl
-import opensavvy.ktmongo.dsl.expr.FilterOperators
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * Operators to compare two values.
  *
- * To learn more about aggregation operators, view [ValueDsl].
+ * To learn more about aggregation operators, view [AggregationOperators].
  */
 interface ComparisonValueOperators : ValueOperators {
 
@@ -59,7 +59,7 @@ interface ComparisonValueOperators : ValueOperators {
 	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
 	 *
 	 * @see ne Negation of this operator.
-	 * @see FilterOperators.eq Equivalent operator in regular queries.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -93,7 +93,7 @@ interface ComparisonValueOperators : ValueOperators {
 	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
 	 *
 	 * @see eq Negation of this operator.
-	 * @see FilterOperators.ne Equivalent operator in regular queries.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl

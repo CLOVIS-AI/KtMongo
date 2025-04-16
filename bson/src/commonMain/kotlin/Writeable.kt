@@ -28,10 +28,15 @@ interface BsonFieldWriteable {
 	 */
 	@LowLevelApi
 	fun writeTo(writer: BsonFieldWriter)
+
+	/**
+	 * JSON representation of this object as a [BSON document][Bson].
+	 */
+	override fun toString(): String
 }
 
 /**
- * An object that can be represented as an item in a [BSON array][BsonArray].
+ * An object that can be represented as a BSON value (value of a field, item in an array, an array itself).
  */
 interface BsonValueWriteable {
 
@@ -40,4 +45,9 @@ interface BsonValueWriteable {
 	 */
 	@LowLevelApi
 	fun writeTo(writer: BsonValueWriter)
+
+	/**
+	 * JSON representation of this object.
+	 */
+	override fun toString(): String
 }
