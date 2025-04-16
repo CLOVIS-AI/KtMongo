@@ -17,11 +17,11 @@
 package opensavvy.ktmongo.sync.operations
 
 import opensavvy.ktmongo.dsl.command.BulkWrite
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.UpdateOperators
-import opensavvy.ktmongo.dsl.expr.UpsertOperators
 import opensavvy.ktmongo.dsl.options.BulkWriteOptions
 import opensavvy.ktmongo.dsl.options.UpdateOptions
+import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.UpdateOperators
+import opensavvy.ktmongo.dsl.query.UpsertOperators
 import opensavvy.ktmongo.sync.MongoCollection
 import opensavvy.ktmongo.sync.filter
 

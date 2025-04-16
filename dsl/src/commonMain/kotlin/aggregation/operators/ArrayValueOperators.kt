@@ -25,11 +25,11 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.ValueDsl
-import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
+import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 import kotlin.reflect.KProperty1
 
 /**

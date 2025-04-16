@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr
+package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
@@ -23,8 +23,8 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.ValueDsl
-import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
 import opensavvy.ktmongo.dsl.path.*
+import opensavvy.ktmongo.dsl.query.common.CompoundExpression
 import kotlin.reflect.KProperty1
 
 /**

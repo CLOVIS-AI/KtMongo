@@ -19,11 +19,11 @@ package opensavvy.ktmongo.coroutines.operations
 import opensavvy.ktmongo.coroutines.MongoCollection
 import opensavvy.ktmongo.coroutines.filter
 import opensavvy.ktmongo.dsl.command.BulkWrite
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.UpdateOperators
-import opensavvy.ktmongo.dsl.expr.UpsertOperators
 import opensavvy.ktmongo.dsl.options.BulkWriteOptions
 import opensavvy.ktmongo.dsl.options.UpdateOptions
+import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.UpdateOperators
+import opensavvy.ktmongo.dsl.query.UpsertOperators
 
 /**
  * Interface grouping MongoDB operations allowing to update existing information.

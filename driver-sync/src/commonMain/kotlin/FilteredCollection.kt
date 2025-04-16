@@ -19,8 +19,8 @@ package opensavvy.ktmongo.sync
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.BulkWrite
-import opensavvy.ktmongo.dsl.expr.*
 import opensavvy.ktmongo.dsl.options.*
+import opensavvy.ktmongo.dsl.query.*
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,

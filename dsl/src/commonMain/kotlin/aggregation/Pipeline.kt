@@ -22,10 +22,10 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
-import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
-import opensavvy.ktmongo.dsl.expr.common.Expression
+import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
+import opensavvy.ktmongo.dsl.query.common.AbstractExpression
+import opensavvy.ktmongo.dsl.query.common.CompoundExpression
+import opensavvy.ktmongo.dsl.query.common.Expression
 
 /**
  * A multi-stage pipeline that performs complex operations on MongoDB.

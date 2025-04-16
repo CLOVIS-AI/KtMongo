@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr
+package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.stages.*
-import opensavvy.ktmongo.dsl.expr.common.AbstractCompoundExpression
-import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
+import opensavvy.ktmongo.dsl.query.common.AbstractCompoundExpression
+import opensavvy.ktmongo.dsl.query.common.CompoundExpression
 
 /**
  * Interface describing the DSL when declaring an update with a pipeline.
@@ -33,7 +33,7 @@ interface UpdatePipelineOperators<Document : Any> : CompoundExpression {
 	/**
 	 * Overrides the value of existing fields or inserts new ones.
 	 *
-	 * This method is equivalent to the [`$set` stage][opensavvy.ktmongo.dsl.aggregation.stages.HasSet].
+	 * This method is equivalent to the [`$set` stage][HasSet].
 	 *
 	 * ### Example
 	 *
@@ -105,7 +105,7 @@ interface UpdatePipelineOperators<Document : Any> : CompoundExpression {
 	/**
 	 * Deletes existing fields.
 	 *
-	 * This method is equivalent to the [`$unset` stage][opensavvy.ktmongo.dsl.aggregation.stages.HasUnset].
+	 * This method is equivalent to the [`$unset` stage][HasUnset].
 	 *
 	 * ### Example
 	 *

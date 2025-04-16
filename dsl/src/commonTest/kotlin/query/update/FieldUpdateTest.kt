@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr.update
+package opensavvy.ktmongo.dsl.query.update
 
-import opensavvy.ktmongo.dsl.expr.shouldBeBson
+import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 class FieldUpdateTest : PreparedSpec({

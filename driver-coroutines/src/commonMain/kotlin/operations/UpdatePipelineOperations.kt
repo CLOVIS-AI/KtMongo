@@ -16,9 +16,9 @@
 
 package opensavvy.ktmongo.coroutines.operations
 
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.UpdatePipelineOperators
 import opensavvy.ktmongo.dsl.options.UpdateOptions
+import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.UpdatePipelineOperators
 
 /**
  * Interface grouping MongoDB operations allowing to update existing information using aggregation pipelines.

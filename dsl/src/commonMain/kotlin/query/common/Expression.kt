@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr.common
+package opensavvy.ktmongo.dsl.query.common
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriteable
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.PredicateOperators
+import opensavvy.ktmongo.dsl.query.PredicateOperators
 import opensavvy.ktmongo.dsl.tree.Node
 import opensavvy.ktmongo.dsl.tree.NodeImpl
 

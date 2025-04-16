@@ -18,9 +18,9 @@ package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.options.CountOptions
+import opensavvy.ktmongo.dsl.query.FilterExpression
+import opensavvy.ktmongo.dsl.query.FilterOperators
 
 /**
  * Counting a number of documents in a collection.

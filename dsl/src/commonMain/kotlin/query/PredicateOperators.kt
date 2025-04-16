@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr
+package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.dsl.KtMongoDsl
-import opensavvy.ktmongo.dsl.expr.common.CompoundExpression
 import opensavvy.ktmongo.dsl.path.FieldDsl
+import opensavvy.ktmongo.dsl.query.common.CompoundExpression
 
 /**
  * DSL for MongoDB operators that are used as predicates in conditions in a context where the targeted field is already

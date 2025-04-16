@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 package opensavvy.ktmongo.coroutines.operations
 
 import opensavvy.ktmongo.coroutines.MongoIterable
-import opensavvy.ktmongo.dsl.expr.FilterExpression
-import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.options.FindOptions
+import opensavvy.ktmongo.dsl.query.FilterExpression
+import opensavvy.ktmongo.dsl.query.FilterOperators
 
 /**
  * Interface grouping MongoDB operations allowing to search for information.
@@ -38,7 +38,7 @@ interface FindOperations<Document : Any> : BaseOperations {
 	/**
 	 * Finds all documents in this collection that satisfy [filter].
 	 *
-	 * If multiple predicates are specified, an [and][opensavvy.ktmongo.dsl.expr.FilterExpression.and] operator is implied.
+	 * If multiple predicates are specified, an [and][FilterExpression.and] operator is implied.
 	 *
 	 * ### Example
 	 *

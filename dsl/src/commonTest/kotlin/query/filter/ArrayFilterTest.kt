@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr.filter
+package opensavvy.ktmongo.dsl.query.filter
 
-import opensavvy.ktmongo.dsl.expr.shouldBeBson
+import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 class ArrayFilterTest : PreparedSpec({

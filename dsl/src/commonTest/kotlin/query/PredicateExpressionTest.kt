@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.expr
+package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.KtMongoDsl

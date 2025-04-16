@@ -22,11 +22,11 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
-import opensavvy.ktmongo.dsl.expr.common.AbstractExpression
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDslImpl
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.path.PathSegment
+import opensavvy.ktmongo.dsl.query.common.AbstractExpression
 import kotlin.reflect.KProperty1
 
 /**

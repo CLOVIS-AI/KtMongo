@@ -18,8 +18,8 @@ package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.aggregation.operators.*
-import opensavvy.ktmongo.dsl.expr.FilterOperators
 import opensavvy.ktmongo.dsl.path.Field
+import opensavvy.ktmongo.dsl.query.FilterOperators
 
 /**
  * DSL to instantiate aggregation values, available in most aggregation stages.
@@ -28,7 +28,7 @@ import opensavvy.ktmongo.dsl.path.Field
  *
  * In MongoDB, operators targeting regular queries and aggregation pipelines often have the same name but a different
  * syntax. Using KtMongo, operators keep the same name __and syntax__ for both usages, but the way they are used in
- * practice is still quite different. For example, compare [`$eq` (query)][opensavvy.ktmongo.dsl.expr.FilterOperators.eq]
+ * practice is still quite different. For example, compare [`$eq` (query)][FilterOperators.eq]
  * and [`$eq` (aggregation)][ComparisonValueOperators.eq].
  *
  * In regular queries, operators do not have a return type, and invoking them immediately adds them to the current query.

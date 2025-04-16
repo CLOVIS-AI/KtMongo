@@ -19,9 +19,9 @@ package opensavvy.ktmongo.dsl.aggregation
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.expr.common.Expression
-import opensavvy.ktmongo.dsl.expr.shouldBeBson
-import opensavvy.ktmongo.dsl.expr.testContext
+import opensavvy.ktmongo.dsl.query.common.Expression
+import opensavvy.ktmongo.dsl.query.shouldBeBson
+import opensavvy.ktmongo.dsl.query.testContext
 
 val count = "\$count"
 val limit = "\$limit"

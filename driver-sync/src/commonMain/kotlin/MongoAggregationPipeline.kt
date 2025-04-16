@@ -28,9 +28,9 @@ import opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWithCompatibility
 import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
 import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
 import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
-import opensavvy.ktmongo.dsl.expr.FilterOperators
-import opensavvy.ktmongo.dsl.expr.common.Expression
 import opensavvy.ktmongo.dsl.options.common.SortOptionDsl
+import opensavvy.ktmongo.dsl.query.FilterOperators
+import opensavvy.ktmongo.dsl.query.common.Expression
 
 class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal constructor(
 	private val collection: String,
