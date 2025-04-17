@@ -18,6 +18,7 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -31,40 +32,62 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  */
 @OptIn(ExperimentalEncodingApi::class)
 fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
-	test("Empty string") {
-		context().buildDocument {
-			writeJavaScript("a", "")
-		} shouldBeHex "0D0000000D6100010000000000"
+	testBson(
+		context,
+		name = "Empty string",
+	) {
+		document { writeJavaScript("a", "") }
+		expectedBinaryHex = "0D0000000D6100010000000000"
+		expectedJson = $$"""{"a": {"$code": ""}}"""
+		verify("Read value") { read("a")?.readJavaScript() shouldBe "" }
 	}
 
-	test("Single character") {
-		context().buildDocument {
-			writeJavaScript("a", "b")
-		} shouldBeHex "0E0000000D610002000000620000"
+	testBson(
+		context,
+		name = "Single character",
+	) {
+		document { writeJavaScript("a", "b") }
+		expectedBinaryHex = "0E0000000D610002000000620000"
+		expectedJson = $$"""{"a": {"$code": "b"}}"""
+		verify("Read value") { read("a")?.readJavaScript() shouldBe "b" }
 	}
 
-	test("Multi-character") {
-		context().buildDocument {
-			writeJavaScript("a", "abababababab")
-		} shouldBeHex "190000000D61000D0000006162616261626162616261620000"
+	testBson(
+		context,
+		name = "Multi-character",
+	) {
+		document { writeJavaScript("a", "abababababab") }
+		expectedBinaryHex = "190000000D61000D0000006162616261626162616261620000"
+		expectedJson = $$"""{"a": {"$code": "abababababab"}}"""
+		verify("Read value") { read("a")?.readJavaScript() shouldBe "abababababab" }
 	}
 
-	test("two-byte UTF-8 (\u00e9)") {
-		context().buildDocument {
-			writeJavaScript("a", "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9")
-		} shouldBeHex "190000000D61000D000000C3A9C3A9C3A9C3A9C3A9C3A90000"
+	testBson(
+		context,
+		name = "two-byte UTF-8 (\u00e9)",
+	) {
+		document { writeJavaScript("a", "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9") }
+		expectedBinaryHex = "190000000D61000D000000C3A9C3A9C3A9C3A9C3A9C3A90000"
+		expectedJson = $$"""{"a": {"$code": "éééééé"}}"""
+		verify("Read value") { read("a")?.readJavaScript() shouldBe "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9" }
 	}
 
-	test("three-byte UTF-8 (\u2606)") {
-		context().buildDocument {
-			writeJavaScript("a", "\u2606\u2606\u2606\u2606")
-		} shouldBeHex "190000000D61000D000000E29886E29886E29886E298860000"
+	testBson(
+		context,
+		name = "three-byte UTF-8 (\u2606)",
+	) {
+		document { writeJavaScript("a", "\u2606\u2606\u2606\u2606") }
+		expectedBinaryHex = "190000000D61000D000000E29886E29886E29886E298860000"
+		expectedJson = $$"""{"a": {"$code": "☆☆☆☆"}}"""
+		verify("Read value") { read("a")?.readJavaScript() shouldBe "\u2606\u2606\u2606\u2606" }
 	}
 
-	test("Embedded nulls") {
-		context().buildDocument {
-			writeJavaScript("a", "ab\u0000bab\u0000babab")
-		} shouldBeHex "190000000D61000D0000006162006261620062616261620000"
+	testBson(
+		context,
+		name = "Embedded nulls",
+	) {
+		document { writeJavaScript("a", "ab\u0000bab\u0000babab") }
+		expectedBinaryHex = "190000000D61000D0000006162006261620062616261620000"
+		verify("Read value") { read("a")?.readJavaScript() shouldBe "ab\u0000bab\u0000babab" }
 	}
-
 }

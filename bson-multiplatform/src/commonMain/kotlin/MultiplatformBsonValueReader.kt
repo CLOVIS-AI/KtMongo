@@ -162,7 +162,7 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readJavaScript(): String {
 		checkType(BsonType.JavaScript)
-		TODO("Not yet implemented")
+		return bytes.reader.readString()
 	}
 
 	@LowLevelApi
@@ -186,6 +186,7 @@ internal class MultiplatformBsonValueReader(
 		BsonType.Null -> "null"
 		BsonType.Document -> readDocument().toString()
 		BsonType.Array -> readArray().toString()
+		BsonType.JavaScript -> """{"${'$'}code": "${readJavaScript()}"}"""
 		BsonType.BinaryData -> {
 			val subType = readBinaryDataType()
 			val data = readBinaryData()

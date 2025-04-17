@@ -54,7 +54,7 @@ internal fun readField(
 		BsonType.Null -> 0
 		BsonType.RegExp -> TODO()
 		BsonType.DBPointer -> TODO()
-		BsonType.JavaScript -> TODO()
+		BsonType.JavaScript -> reader.peek().readIntLe() + 4
 		BsonType.Symbol -> TODO()
 		BsonType.JavaScriptWithScope -> TODO()
 		BsonType.Int32 -> 4
