@@ -166,6 +166,12 @@ internal class RawBsonReader(
 			.also { readCount += byteCount }
 	}
 
+	fun readBytes(length: Int): ByteArray {
+		val data = ByteArray(length)
+		source.readTo(data, 0, length)
+		return data
+	}
+
 	@OptIn(ExperimentalStdlibApi::class)
 	override fun toString(): String = buildString {
 		append('[')

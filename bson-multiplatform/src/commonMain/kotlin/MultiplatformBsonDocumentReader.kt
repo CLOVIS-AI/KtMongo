@@ -46,7 +46,7 @@ internal fun readField(
 		BsonType.String -> reader.peek().readIntLe() + 4
 		BsonType.Document -> reader.peek().readIntLe()
 		BsonType.Array -> reader.peek().readIntLe()
-		BsonType.BinaryData -> TODO()
+		BsonType.BinaryData -> reader.peek().readIntLe() + 5
 		BsonType.Undefined -> 0
 		BsonType.ObjectId -> 12
 		BsonType.Boolean -> 1
