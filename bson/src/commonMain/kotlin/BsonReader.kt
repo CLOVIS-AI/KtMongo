@@ -48,7 +48,7 @@ interface BsonDocumentReader {
 	fun read(name: String): BsonValueReader?
 
 	/**
-	 * A map allowing to go through all
+	 * A map allowing to go through all key-value pairs in the document.
 	 *
 	 * Keys of this map are names of fields.
 	 * Value of this map are the result of calling [read] for the given name.
