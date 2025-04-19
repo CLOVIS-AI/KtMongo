@@ -56,6 +56,11 @@ interface BsonDocumentReader {
 	val entries: Map<String, BsonValueReader>
 
 	/**
+	 * Reads this document into a [Bson] instance.
+	 */
+	fun toBson(): Bson
+
+	/**
 	 * JSON representation of the document this [BsonDocumentReader] is reading, as a [String].
 	 */
 	override fun toString(): String
@@ -97,6 +102,11 @@ interface BsonArrayReader {
 	 * To go through this list with its indices, see [Iterable.withIndex] or [Collection.indices].
 	 */
 	val elements: List<BsonValueReader>
+
+	/**
+	 * Reads this document into a [BsonArray] instance.
+	 */
+	fun toBson(): BsonArray
 
 	/**
 	 * JSON representation of the array this [BsonArrayReader] is reading, as a [String].

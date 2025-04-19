@@ -41,7 +41,7 @@ actual class Bson internal constructor(
 
 	@LowLevelApi
 	override fun read(): BsonDocumentReader =
-		BsonDocumentReader(raw)
+		BsonDocumentReader(raw, context)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
@@ -61,7 +61,7 @@ actual class BsonArray internal constructor(
 
 	@LowLevelApi
 	override fun read(): BsonArrayReader =
-		BsonArrayReader(raw)
+		BsonArrayReader(raw, context)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =

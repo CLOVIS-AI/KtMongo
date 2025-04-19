@@ -62,6 +62,9 @@ internal class MultiplatformBsonArrayReader(
 			return fields
 		}
 
+	override fun toBson(): BsonArray =
+		BsonArray(bytes)
+
 	override fun toString(): String = buildString {
 		append('[')
 		var isFirst = true

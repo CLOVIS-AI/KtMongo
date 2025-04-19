@@ -46,12 +46,12 @@ class BsonContext : BsonContext {
 		bsonWriter.writeInt32(size)
 		buffer.readTo(bytes, 0, 4)
 
-		return Bson(bytes)
+		return Bson(Bytes(bytes))
 	}
 
 	@LowLevelApi
 	override fun readDocument(bytes: ByteArray): Bson =
-		Bson(bytes.copyOf())
+		Bson(Bytes(bytes.copyOf()))
 
 	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray {
@@ -60,6 +60,6 @@ class BsonContext : BsonContext {
 
 	@LowLevelApi
 	override fun readArray(bytes: ByteArray): BsonArray =
-		BsonArray(bytes.copyOf())
+		BsonArray(Bytes(bytes.copyOf()))
 
 }
