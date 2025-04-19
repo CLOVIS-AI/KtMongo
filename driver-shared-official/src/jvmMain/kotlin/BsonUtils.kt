@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.options
+package opensavvy.ktmongo.official
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.command.CountOptions
-import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.ktmongo.dsl.tree.BsonNode
+import org.bson.conversions.Bson
 
 @LowLevelApi
-class OptionTest : PreparedSpec({
+fun opensavvy.ktmongo.bson.Bson.toJava(): Bson = (this as opensavvy.ktmongo.bson.official.Bson).raw
 
-	test("Validate the system") {
-		val countOptions = CountOptions<String>(testContext())
-		countOptions.toString() shouldBeBson "{}"
-
-		countOptions.limit(99)
-		countOptions.toString() shouldBeBson "{\"limit\": 99}"
-
-		check(countOptions.option<LimitOption>()?.limit == 99L)
-	}
-
-})
+@LowLevelApi
+fun BsonNode.toJava(): Bson = this.toBson().toJava()

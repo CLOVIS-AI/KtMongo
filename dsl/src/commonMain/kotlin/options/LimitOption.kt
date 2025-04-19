@@ -30,10 +30,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 class LimitOption(
 	val limit: Long,
 	context: BsonContext,
-) : AbstractBsonNode(context), Option<Long> {
-
-	override val value: Long
-		get() = limit
+) : Option, AbstractBsonNode(context) {
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) {

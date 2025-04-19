@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.dsl.options
 
-import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -41,48 +40,22 @@ import kotlin.reflect.KProperty1
  * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/cursor.sort)
  */
 class SortOption<Document : Any>(
+	config: SortOptionDsl<Document>,
 	context: BsonContext,
-) : AbstractCompoundBsonNode(context), Option<Bson>, SortOptionDsl<Document> {
-
-	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	override fun ascending(field: Field<Document, *>) {
-		accept(SortBsonNode(field.path, 1, context))
-	}
-
-	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	override fun descending(field: Field<Document, *>) {
-		accept(SortBsonNode(field.path, -1, context))
-	}
+) : Option, AbstractBsonNode(context) {
 
 	@OptIn(LowLevelApi::class)
-	override val value: Bson
-		get() = context.buildDocument {
-			for (child in children) {
-				child.writeTo(this)
-			}
-		}
+	private val config = config.simplify()
+		?.apply { freeze() }
 
 	@LowLevelApi
-	override fun simplify(children: List<BsonNode>): AbstractBsonNode? =
-		if (children.isNotEmpty()) this
-		else null
+	override fun simplify(): AbstractBsonNode? =
+		this.takeUnless { config == null }
 
 	@LowLevelApi
-	override fun write(writer: BsonFieldWriter, children: List<BsonNode>) = with(writer) {
+	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeDocument("sort") {
-			super.write(this, children)
-		}
-	}
-
-	@LowLevelApi
-	private class SortBsonNode(
-		val path: Path,
-		val value: Int,
-		context: BsonContext,
-	) : AbstractBsonNode(context) {
-
-		override fun write(writer: BsonFieldWriter) = with(writer) {
-			writeInt32(path.toString(), value)
+			config?.writeTo(this)
 		}
 	}
 }
@@ -120,9 +93,38 @@ interface WithSort<Document : Any> : Options {
 	fun sort(
 		block: SortOptionDsl<Document>.() -> Unit
 	) {
-		accept(SortOption<Document>(context).apply(block))
+		accept(SortOption(SortOptionBlockNode<Document>(context).apply(block), context))
 	}
 
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	private class SortOptionBlockNode<Document : Any>(
+		context: BsonContext,
+	) : AbstractCompoundBsonNode(context), SortOptionDsl<Document> {
+		override fun ascending(field: Field<Document, *>) {
+			accept(SortBsonIndividualNode(field.path, 1, context))
+		}
+
+		override fun descending(field: Field<Document, *>) {
+			accept(SortBsonIndividualNode(field.path, -1, context))
+		}
+
+		@LowLevelApi
+		override fun simplify(children: List<BsonNode>): AbstractBsonNode? =
+			if (children.isNotEmpty()) this
+			else null
+	}
+
+	@LowLevelApi
+	private class SortBsonIndividualNode(
+		val path: Path,
+		val value: Int,
+		context: BsonContext,
+	) : AbstractBsonNode(context) {
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeInt32(path.toString(), value)
+		}
+	}
 }
 
 /**

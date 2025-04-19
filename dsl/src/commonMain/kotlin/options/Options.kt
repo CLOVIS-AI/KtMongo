@@ -17,43 +17,31 @@
 package opensavvy.ktmongo.dsl.options
 
 import opensavvy.ktmongo.bson.BsonContext
-import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.Count
 import opensavvy.ktmongo.dsl.command.CountOptions
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
-import opensavvy.ktmongo.dsl.tree.CompoundNode
+import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 
 /**
  * Additional parameters that are passed to MongoDB operations.
  *
- * Options are usually configured with the `options {}` DSL in an operation.
+ * Options are usually configured with the `options = {}` optional parameter in a command.
  * For example, if we want to know how many notifications a user has, but can only display "99" because of UI size
- * constraints, we can use the following request:
+ * constraints, we can use the following command:
  * ```kotlin
- * notifications.count {
- *     Notification::ownedBy eq currentUser
- *
- *     options {
+ * notifications.count(
+ *     options = {
  *         limit(99)
  *     }
- * }
- * ```
- *
- * The order in which the filter and the options are declared is irrelevant; this request is strictly equivalent:
- * ```kotlin
- * notifications.count {
- *     options {
- *         limit(99)
- *     }
- *
+ * ) {
  *     Notification::ownedBy eq currentUser
  * }
  * ```
  *
- * However, if the same option is specified multiple times, only the very last one applies:
+ * If the same option is specified multiple times, only the very last one applies:
  * ```kotlin
  * notifications.count {
  *     options {
@@ -64,9 +52,9 @@ import opensavvy.ktmongo.dsl.tree.CompoundNode
  * ```
  * will only count at most 10 elements.
  *
- * ### Accessing the current value
+ * ### Accessing the current value of an option
  *
- * See [Options], [value] and [option].
+ * See [Options.allOptions] and [option].
  *
  * ### Implementing this interface
  *
@@ -75,32 +63,18 @@ import opensavvy.ktmongo.dsl.tree.CompoundNode
  *
  * Option implementations must be immutable. If the user wants to change an option, they can specify it a second time
  * (which will override the previous one).
- *
- * @param Value The [value] stored by this option.
- * For example, [LimitOption] stores an integer.
  */
-interface Option<out Value> : BsonNode {
-
-	/**
-	 * The value stored by this option, as specified by the user.
-	 *
-	 * Learn more about options: [Option].
-	 *
-	 * To access the value of a specific option, see [option].
-	 */
-	val value: Value
-}
+interface Option : BsonNode
 
 /**
  * Parent interface for all option containers.
  *
- * Option containers are types that declare a set of options. They are usually tied to a specific MongoDB operation
- * via a model.
+ * Option containers are types that declare a set of options. They are usually tied to a specific MongoDB [command].
  *
- * For example, for options related to the [Count] model, see [CountOptions].
+ * For example, for options related to the [Count] command, see [CountOptions].
  */
 @KtMongoDsl
-interface Options : BsonNode, CompoundNode<Option<*>> {
+interface Options : CompoundBsonNode {
 
 	/**
 	 * The full list of options set on this container.
@@ -108,7 +82,7 @@ interface Options : BsonNode, CompoundNode<Option<*>> {
 	 * Specific options are usually searched using the [option] extension.
 	 */
 	@LowLevelApi
-	val allOptions: List<Option<*>>
+	val allOptions: List<Option>
 
 	/**
 	 * JSON representation of this option.
@@ -117,15 +91,9 @@ interface Options : BsonNode, CompoundNode<Option<*>> {
 }
 
 internal class OptionsHolder(context: BsonContext) : AbstractCompoundBsonNode(context), Options {
-	@LowLevelApi
-	@DangerousMongoApi
-	override fun accept(node: Option<*>) {
-		this.accept(node as BsonNode)
-	}
-
 	@OptIn(LowLevelApi::class)
-	override val allOptions: List<Option<*>>
-		get() = children.filterIsInstance<Option<*>>()
+	override val allOptions: List<Option>
+		get() = children.filterIsInstance<Option>()
 }
 
 /**
@@ -144,4 +112,4 @@ internal class OptionsHolder(context: BsonContext) : AbstractCompoundBsonNode(co
  * ```
  */
 @LowLevelApi
-inline fun <reified O : Option<V>, V> Options.option(): V? = (allOptions.findLast { it is O } as O?)?.value
+inline fun <reified O : Option> Options.option(): O? = (allOptions.findLast { it is O } as O?)
