@@ -2512,7 +2512,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * Therefore, `"^S"` will match `"First line\nSecond line"`, which would not match otherwise.
 	 */
 	@KtMongoDsl
-	fun Field<T, String>.regex(
+	fun Field<T, String?>.regex(
 		@Language("JSRegexp") pattern: String,
 		caseInsensitive: Boolean = false,
 		dotAll: Boolean = false,
@@ -2570,7 +2570,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * Therefore, `"^S"` will match `"First line\nSecond line"`, which would not match otherwise.
 	 */
 	@KtMongoDsl
-	fun KProperty1<T, String>.regex(
+	fun KProperty1<T, String?>.regex(
 		@Language("JSRegexp") pattern: String,
 		caseInsensitive: Boolean = false,
 		dotAll: Boolean = false,
