@@ -32,7 +32,7 @@ class OptionTest : PreparedSpec({
 		countOptions.limit(99)
 		countOptions.toString() shouldBeBson "{\"limit\": 99}"
 
-		check(countOptions.option<LimitOption, _>() == 99L)
+		check(countOptions.option<LimitOption>()?.limit == 99L)
 	}
 
 })

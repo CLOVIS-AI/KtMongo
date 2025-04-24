@@ -30,13 +30,17 @@ import org.bson.BsonDocument as OfficialBsonDocument
 @LowLevelApi
 internal class BsonDocumentReader(
 	private val raw: OfficialBsonDocument,
+	private val context: JvmBsonContext,
 ) : BsonDocumentReader {
 	override fun read(name: String): BsonValueReader? {
-		return BsonValueReader(raw[name] ?: return null)
+		return BsonValueReader(raw[name] ?: return null, context)
 	}
 
 	override val entries: Map<String, BsonValueReader>
-		get() = raw.mapValues { (_, value) -> BsonValueReader(value) }
+		get() = raw.mapValues { (_, value) -> BsonValueReader(value, context) }
+
+	override fun toBson(): Bson =
+		Bson(raw, context)
 
 	override fun toString(): String =
 		raw.toString()
@@ -45,13 +49,17 @@ internal class BsonDocumentReader(
 @LowLevelApi
 internal class BsonArrayReader(
 	private val raw: OfficialBsonArray,
+	private val context: JvmBsonContext,
 ) : BsonArrayReader {
 	override fun read(index: Int): BsonValueReader? {
-		return BsonValueReader(raw.getOrNull(index) ?: return null)
+		return BsonValueReader(raw.getOrNull(index) ?: return null, context)
 	}
 
 	override val elements: List<BsonValueReader>
-		get() = raw.map { BsonValueReader(it) }
+		get() = raw.map { BsonValueReader(it, context) }
+
+	override fun toBson(): opensavvy.ktmongo.bson.official.BsonArray =
+		BsonArray(raw, context)
 
 	override fun toString(): String {
 		// Yes, this is very ugly, and probably inefficient.
@@ -70,6 +78,7 @@ internal class BsonArrayReader(
 @LowLevelApi
 private class BsonValueReader(
 	private val value: BsonValue,
+	private val context: JvmBsonContext,
 ) : BsonValueReader {
 
 	override val type: BsonType
@@ -216,13 +225,13 @@ private class BsonValueReader(
 	@LowLevelApi
 	override fun readDocument(): BsonDocumentReader {
 		ensureType(BsonType.Document) { value.isDocument }
-		return BsonDocumentReader(value.asDocument())
+		return BsonDocumentReader(value.asDocument(), context)
 	}
 
 	@LowLevelApi
 	override fun readArray(): BsonArrayReader {
 		ensureType(BsonType.Array) { value.isArray }
-		return BsonArrayReader(value.asArray())
+		return BsonArrayReader(value.asArray(), context)
 	}
 
 	override fun toString(): String =

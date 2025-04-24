@@ -125,7 +125,7 @@ fun SuiteDsl.testBson(
 			test("DSL → $name") {
 				context().buildDocument {
 					_documentWriter()
-				}.read().verification()
+				}.reader().verification()
 			}
 		}
 	}
@@ -134,7 +134,7 @@ fun SuiteDsl.testBson(
 		for ((name, verification) in _verifications) {
 			test("Binary → $name") {
 				context().readDocument(_expectedBinaryHex.hexToByteArray(HexFormat.UpperCase))
-					.read()
+					.reader()
 					.verification()
 			}
 		}

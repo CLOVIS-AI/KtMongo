@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.official.options
+package opensavvy.ktmongo.official
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.command.CountOptions
-import opensavvy.ktmongo.dsl.options.*
-import opensavvy.ktmongo.official.toJava
+import opensavvy.ktmongo.dsl.tree.BsonNode
+import org.bson.conversions.Bson
 
 @LowLevelApi
-fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongodb.client.model.CountOptions()
-	.limit(readLimit())
+fun opensavvy.ktmongo.bson.Bson.toJava(): Bson = (this as opensavvy.ktmongo.bson.official.Bson).raw
 
 @LowLevelApi
-fun WithLimit.readLimit() =
-	option<LimitOption>()?.limit?.toInt() ?: 0
-
-@LowLevelApi
-fun WithSort<*>.readSortDocument() =
-	option<SortOption<*>>()?.block?.toJava()
+fun BsonNode.toJava(): Bson = this.toBson().toJava()

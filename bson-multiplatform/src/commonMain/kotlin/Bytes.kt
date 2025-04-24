@@ -42,6 +42,14 @@ internal class Bytes(
 		return Bytes(data, (range.start + subrange.start)..(range.start + subrange.endInclusive))
 	}
 
+	fun toByteArray(): ByteArray {
+		val array = ByteArray(size)
+		for ((index, realIndex) in range.withIndex()) {
+			array[index] = data[realIndex]
+		}
+		return array
+	}
+
 	@OptIn(ExperimentalStdlibApi::class)
 	override fun toString(): String = buildString {
 		append('[')

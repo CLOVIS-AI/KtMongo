@@ -119,6 +119,9 @@ internal class MultiplatformBsonDocumentReader(
 			return fields
 		}
 
+	override fun toBson(): Bson =
+		Bson(bytes)
+
 	override fun toString(): String = buildString {
 		append('{')
 

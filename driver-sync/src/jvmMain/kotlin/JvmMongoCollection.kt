@@ -20,14 +20,17 @@ import com.mongodb.client.model.DeleteOptions
 import com.mongodb.client.model.DropCollectionOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOptions
-import opensavvy.ktmongo.bson.official.Bson
 import opensavvy.ktmongo.bson.official.JvmBsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
-import opensavvy.ktmongo.dsl.options.*
-import opensavvy.ktmongo.dsl.query.*
+import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.official.command.toJava
+import opensavvy.ktmongo.official.options.readLimit
+import opensavvy.ktmongo.official.options.readSortDocument
 import opensavvy.ktmongo.official.options.toJava
 
 /**
@@ -65,8 +68,8 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 		return JvmMongoIterable(
 			inner.find(context.buildDocument(model.filter).raw)
-				.limit(model.options.option<LimitOption, _>()?.toInt() ?: 0)
-				.sort((model.options.option<SortOption<*>, _>() as Bson?)?.raw),
+				.limit(model.options.readLimit())
+				.sort(model.options.readSortDocument()),
 			repr = { "$this.find($model)" }
 		)
 	}
