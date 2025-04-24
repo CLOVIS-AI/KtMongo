@@ -18,6 +18,8 @@ package opensavvy.ktmongo.bson.multiplatform
 
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.log10
@@ -138,19 +140,29 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readBinaryDataType(): UByte {
 		checkType(BsonType.BinaryData)
-		TODO("Not yet implemented")
+		return bytes.reader
+			.apply { skip(4) } // skip the length
+			.readUnsignedByte()
 	}
 
 	@LowLevelApi
 	override fun readBinaryData(): ByteArray {
 		checkType(BsonType.BinaryData)
-		TODO("Not yet implemented")
+		val reader = bytes.reader
+		val entireLength = reader.readInt32()
+		val subtype = reader.readUnsignedByte()
+
+		val dataLength = entireLength
+			.takeUnless { subtype == 2.toUByte() }
+			?: reader.readInt32() // subtype 2 has an additional length field
+
+		return reader.readBytes(dataLength)
 	}
 
 	@LowLevelApi
 	override fun readJavaScript(): String {
 		checkType(BsonType.JavaScript)
-		TODO("Not yet implemented")
+		return bytes.reader.readString()
 	}
 
 	@LowLevelApi
@@ -174,6 +186,16 @@ internal class MultiplatformBsonValueReader(
 		BsonType.Null -> "null"
 		BsonType.Document -> readDocument().toString()
 		BsonType.Array -> readArray().toString()
+		BsonType.JavaScript -> """{"${'$'}code": "${readJavaScript()}"}"""
+		BsonType.BinaryData -> {
+			val subType = readBinaryDataType()
+			val data = readBinaryData()
+
+			@OptIn(ExperimentalEncodingApi::class)
+			val base64 = Base64.encode(data)
+
+			"""{"${'$'}binary": {"base64": "$base64", "subType": "${subType.toString(16).padStart(2, '0')}"}}"""
+		}
 		else -> "{$type}: $bytes" // TODO
 	}
 
