@@ -30,6 +30,7 @@ import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.official.command.toJava
 import opensavvy.ktmongo.official.options.readLimit
+import opensavvy.ktmongo.official.options.readSkip
 import opensavvy.ktmongo.official.options.readSortDocument
 import opensavvy.ktmongo.official.options.toJava
 
@@ -69,6 +70,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		return JvmMongoIterable(
 			inner.find(context.buildDocument(model.filter).raw)
 				.limit(model.options.readLimit())
+				.skip(model.options.readSkip())
 				.sort(model.options.readSortDocument()),
 			repr = { "$this.find($model)" }
 		)
