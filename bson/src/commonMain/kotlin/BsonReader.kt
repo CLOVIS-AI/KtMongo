@@ -21,7 +21,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 /**
  * Utilities for decomposing a [Bson] document into its fields.
  *
- * To obtain an instance of this interface, see [Bson.read].
+ * To obtain an instance of this interface, see [Bson.reader].
  *
  * ### Example
  *
@@ -69,7 +69,7 @@ interface BsonDocumentReader {
 /**
  * Utilities for decomposing a [BsonArray] into its elements.
  *
- * To obtain an instance of this interface, see [BsonArray.read].
+ * To obtain an instance of this interface, see [BsonArray.reader].
  *
  * ### Example
  *

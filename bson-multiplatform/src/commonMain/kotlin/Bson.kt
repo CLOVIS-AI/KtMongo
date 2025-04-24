@@ -30,12 +30,12 @@ class Bson internal constructor(
 	override fun toByteArray(): ByteArray = data.toByteArray()
 
 	@LowLevelApi
-	override fun read(): BsonDocumentReader =
+	override fun reader(): BsonDocumentReader =
 		MultiplatformBsonDocumentReader(data)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
-		read().toString()
+		reader().toString()
 }
 
 class BsonArray internal constructor(
@@ -46,10 +46,10 @@ class BsonArray internal constructor(
 	override fun toByteArray(): ByteArray = data.toByteArray()
 
 	@LowLevelApi
-	override fun read(): BsonArrayReader =
+	override fun reader(): BsonArrayReader =
 		MultiplatformBsonArrayReader(data)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
-		read().toString()
+		reader().toString()
 }

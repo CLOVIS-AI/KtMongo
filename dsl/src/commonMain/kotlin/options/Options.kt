@@ -129,7 +129,7 @@ abstract class AbstractOption(
 
 	@LowLevelApi
 	final override fun read(): BsonValueReader =
-		this.toBson().read().read(name)!! // safe because we always write with that same name
+		this.toBson().reader().read(name)!! // safe because we always write with that same name
 }
 
 /**

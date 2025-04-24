@@ -40,12 +40,12 @@ actual class Bson internal constructor(
 		raw.toByteArray(context)
 
 	@LowLevelApi
-	override fun read(): BsonDocumentReader =
+	override fun reader(): BsonDocumentReader =
 		BsonDocumentReader(raw, context)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
-		read().toString()
+		reader().toString()
 }
 
 actual class BsonArray internal constructor(
@@ -60,12 +60,12 @@ actual class BsonArray internal constructor(
 	}
 
 	@LowLevelApi
-	override fun read(): BsonArrayReader =
+	override fun reader(): BsonArrayReader =
 		BsonArrayReader(raw, context)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
-		read().toString()
+		reader().toString()
 }
 
 // Inspired by https://gist.github.com/Koboo/ebd7c6802101e1a941ef31baca04113d

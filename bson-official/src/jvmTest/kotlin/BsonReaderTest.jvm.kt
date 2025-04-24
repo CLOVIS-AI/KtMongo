@@ -28,8 +28,8 @@ class BsonReaderTest : PreparedSpec({
 			writeInt32("a", 42)
 		}
 
-		check(output.read().read("hello")?.readString() == "world")
-		check(output.read().read("a")?.readInt32() == 42)
+		check(output.reader().read("hello")?.readString() == "world")
+		check(output.reader().read("a")?.readInt32() == 42)
 	}
 
 })

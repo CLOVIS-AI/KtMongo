@@ -35,7 +35,7 @@ interface Bson {
 	 * Reads the fields of this document.
 	 */
 	@LowLevelApi
-	fun read(): BsonDocumentReader
+	fun reader(): BsonDocumentReader
 
 	/**
 	 * JSON representation of this [Bson] object, as a [String].
@@ -59,7 +59,7 @@ interface BsonArray {
 	 * Reads the elements of this array.
 	 */
 	@LowLevelApi
-	fun read(): BsonArrayReader
+	fun reader(): BsonArrayReader
 
 	/**
 	 * JSON representation of this [BsonArray], as a [String].
