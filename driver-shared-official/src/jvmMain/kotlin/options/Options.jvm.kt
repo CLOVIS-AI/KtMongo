@@ -20,11 +20,13 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.official.toJava
+import java.util.concurrent.TimeUnit
 
 @LowLevelApi
 fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongodb.client.model.CountOptions()
 	.limit(readLimit())
 	.skip(readSkip())
+	.maxTime(readMaxTimeMS().toLong(), TimeUnit.MILLISECONDS)
 
 @LowLevelApi
 fun WithLimit.readLimit() =
@@ -33,6 +35,10 @@ fun WithLimit.readLimit() =
 @LowLevelApi
 fun WithSkip.readSkip() =
 	option<SkipOption>()?.skip?.toInt() ?: 0
+
+@LowLevelApi
+fun WithSkip.readMaxTimeMS() =
+	option<MaxTimeOption>()?.timeout?.inWholeMilliseconds?.toInt() ?: Int.MAX_VALUE
 
 @LowLevelApi
 fun WithSort<*>.readSortDocument() =
