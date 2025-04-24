@@ -19,7 +19,6 @@ package opensavvy.ktmongo.dsl.options
 import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
-import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -44,25 +43,15 @@ import kotlin.reflect.KProperty1
 class SortOption<Document : Any>(
 	config: SortOptionDsl<Document>,
 	context: BsonContext,
-) : AbstractOption("sort", context) {
+) : AbstractCompoundOption("sort", config, context) {
 
-	@OptIn(LowLevelApi::class)
-	private val config = config.simplify()
-		?.apply { freeze() }
-
+	/**
+	 * The sort option's configured block.
+	 *
+	 * In this block, each field is the declaration of a sort criterion.
+	 */
 	@OptIn(LowLevelApi::class)
 	val block: Bson get() = read().readDocument().toBson()
-
-	@LowLevelApi
-	override fun simplify(): AbstractBsonNode? =
-		this.takeUnless { config == null }
-
-	@LowLevelApi
-	override fun write(writer: BsonValueWriter) = with(writer) {
-		writeDocument {
-			config?.writeTo(this)
-		}
-	}
 }
 
 /**

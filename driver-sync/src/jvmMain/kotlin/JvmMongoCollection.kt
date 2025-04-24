@@ -24,14 +24,13 @@ import opensavvy.ktmongo.bson.official.JvmBsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
-import opensavvy.ktmongo.dsl.options.LimitOption
-import opensavvy.ktmongo.dsl.options.SortOption
-import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.official.command.toJava
+import opensavvy.ktmongo.official.options.readLimit
+import opensavvy.ktmongo.official.options.readSortDocument
 import opensavvy.ktmongo.official.options.toJava
 
 /**
@@ -69,8 +68,8 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 		return JvmMongoIterable(
 			inner.find(context.buildDocument(model.filter).raw)
-				.limit(model.options.option<LimitOption>()?.limit?.toInt() ?: 0)
-				.sort(model.options.option<SortOption<*>>()?.toBson()?.read()?.read("sort")?.readDocument()?.toBson()?.toJava()),
+				.limit(model.options.readLimit())
+				.sort(model.options.readSortDocument()),
 			repr = { "$this.find($model)" }
 		)
 	}

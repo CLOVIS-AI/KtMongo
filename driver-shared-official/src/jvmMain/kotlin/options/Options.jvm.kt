@@ -18,17 +18,17 @@ package opensavvy.ktmongo.official.options
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
-import opensavvy.ktmongo.dsl.command.FindOptions
-import opensavvy.ktmongo.dsl.options.LimitOption
-import opensavvy.ktmongo.dsl.options.SortOption
-import opensavvy.ktmongo.dsl.options.option
+import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.official.toJava
 
 @LowLevelApi
 fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongodb.client.model.CountOptions()
-	.limit(option<LimitOption>()?.limit?.toInt() ?: 0)
+	.limit(readLimit())
 
 @LowLevelApi
-fun FindOptions<*>.toJava(): com.mongodb.internal.client.model.FindOptions = com.mongodb.internal.client.model.FindOptions()
-	.limit(option<LimitOption>()?.limit?.toInt() ?: 0)
-	.sort(option<SortOption<*>>()?.toBson()?.read()?.read("sort")?.readDocument()?.toBson()?.toJava())
+fun WithLimit.readLimit() =
+	option<LimitOption>()?.limit?.toInt() ?: 0
+
+@LowLevelApi
+fun WithSort<*>.readSortDocument() =
+	option<SortOption<*>>()?.block?.toJava()

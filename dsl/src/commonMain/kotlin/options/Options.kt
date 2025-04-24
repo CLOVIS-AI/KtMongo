@@ -133,6 +133,33 @@ abstract class AbstractOption(
 }
 
 /**
+ * Utility to easily implement options that contain a document as [content].
+ */
+abstract class AbstractCompoundOption(
+	name: String,
+	content: BsonNode,
+	context: BsonContext,
+) : AbstractOption(name, context) {
+
+	@OptIn(LowLevelApi::class)
+	private val content = content.simplify()
+		?.apply { freeze() }
+
+	@LowLevelApi
+	final override fun simplify(): AbstractBsonNode? =
+		this.takeUnless { content == null }
+
+	@LowLevelApi
+	final override fun write(writer: BsonValueWriter) = with(writer) {
+		if (content != null) {
+			writeDocument {
+				content.writeTo(this)
+			}
+		}
+	}
+}
+
+/**
  * Parent interface for all option containers.
  *
  * Option containers are types that declare a set of options. They are usually tied to a specific MongoDB [command].
