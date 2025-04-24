@@ -115,6 +115,8 @@ import kotlin.reflect.KProperty1
  * Element query:
  * - [`$exists`][exists]
  * - [`$type`][hasType]
+ * - [`$in`][isOneOf]
+ * - [`$nin`][isNotOneOf]
  *
  * Array query:
  * - [`$all`][containsAll]
