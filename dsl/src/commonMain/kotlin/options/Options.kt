@@ -17,10 +17,14 @@
 package opensavvy.ktmongo.dsl.options
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueReader
+import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.Count
 import opensavvy.ktmongo.dsl.command.CountOptions
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
@@ -64,7 +68,69 @@ import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
  * Option implementations must be immutable. If the user wants to change an option, they can specify it a second time
  * (which will override the previous one).
  */
-interface Option : BsonNode
+interface Option : BsonNode {
+
+	/**
+	 * The name of this option, as it appears in the BSON representation.
+	 *
+	 * Options always have the form:
+	 * ```json
+	 * find(
+	 *     {
+	 *         "limit": 10,
+	 *         "sort": { }
+	 *     },
+	 *     { }
+	 * )
+	 * ```
+	 *
+	 * In this example, the [LimitOption] has the name `"limit"` and the [SortOption] has the name `"sort"`.
+	 *
+	 * ### Implementation notes
+	 *
+	 * This value should be immutable.
+	 */
+	val name: String
+
+	/**
+	 * Reads the value of this option.
+	 *
+	 * ### Performance
+	 *
+	 * Note that this method requires to write this option into a temporary BSON value.
+	 */
+	@OptIn(LowLevelApi::class)
+	fun read(): BsonValueReader
+
+}
+
+/**
+ * Helper to implement [Option].
+ */
+abstract class AbstractOption(
+	override val name: String,
+	context: BsonContext,
+) : AbstractBsonNode(context), Option {
+
+	init {
+		@OptIn(LowLevelApi::class)
+		freeze()
+	}
+
+	@LowLevelApi
+	protected abstract fun write(writer: BsonValueWriter)
+
+	@LowLevelApi
+	final override fun write(writer: BsonFieldWriter) = with(writer) {
+		write(name) {
+			write(this)
+		}
+	}
+
+	@LowLevelApi
+	final override fun read(): BsonValueReader =
+		this.toBson().read().read(name)!! // safe because we always write with that same name
+}
 
 /**
  * Parent interface for all option containers.

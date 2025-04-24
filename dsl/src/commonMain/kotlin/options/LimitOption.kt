@@ -17,10 +17,9 @@
 package opensavvy.ktmongo.dsl.options
 
 import opensavvy.ktmongo.bson.BsonContext
-import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Maximum number of elements analyzed by this operation.
@@ -30,11 +29,11 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 class LimitOption(
 	val limit: Long,
 	context: BsonContext,
-) : Option, AbstractBsonNode(context) {
+) : AbstractOption("limit", context) {
 
 	@LowLevelApi
-	override fun write(writer: BsonFieldWriter) {
-		writer.writeInt64("limit", limit)
+	override fun write(writer: BsonValueWriter) = with(writer) {
+		writeInt64(limit)
 	}
 }
 

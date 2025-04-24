@@ -72,7 +72,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		return JvmMongoIterable(
 			inner.find(context.buildDocument(model.filter).raw)
 				.limit(model.options.option<LimitOption>()?.limit?.toInt() ?: 0)
-				.sort((model.options.option<SortOption<*>>()?.toBson())?.read()?.read("sort")?.readDocument()?.toBson()?.toJava()),
+				.sort((model.options.option<SortOption<*>>()?.read()?.readDocument()?.toBson()?.toJava())),
 			repr = { "$this.find($model)" }
 		)
 	}
