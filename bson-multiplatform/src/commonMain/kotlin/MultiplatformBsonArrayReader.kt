@@ -23,10 +23,10 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
 internal class MultiplatformBsonArrayReader(
-	bytes: Bytes,
+	private val bytesWithHeader: Bytes,
 ) : BsonArrayReader {
 
-	private val bytes: Bytes = restrictAsDocument(bytes)
+	private val bytes: Bytes = restrictAsDocument(bytesWithHeader)
 	private val reader = this.bytes.reader
 
 	private val fields = ArrayList<MultiplatformBsonValueReader>()
@@ -64,6 +64,9 @@ internal class MultiplatformBsonArrayReader(
 
 	override fun toBson(): BsonArray =
 		BsonArray(bytes)
+
+	override fun asValue(): BsonValueReader =
+		MultiplatformBsonValueReader(BsonType.Array, bytesWithHeader)
 
 	override fun toString(): String = buildString {
 		append('[')

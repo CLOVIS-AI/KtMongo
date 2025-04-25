@@ -42,6 +42,9 @@ internal class BsonDocumentReader(
 	override fun toBson(): Bson =
 		Bson(raw, context)
 
+	override fun asValue(): BsonValueReader =
+		BsonValueReader(raw, context)
+
 	override fun toString(): String =
 		raw.toString()
 }
@@ -60,6 +63,9 @@ internal class BsonArrayReader(
 
 	override fun toBson(): opensavvy.ktmongo.bson.official.BsonArray =
 		BsonArray(raw, context)
+
+	override fun asValue(): BsonValueReader =
+		BsonValueReader(raw, context)
 
 	override fun toString(): String {
 		// Yes, this is very ugly, and probably inefficient.
