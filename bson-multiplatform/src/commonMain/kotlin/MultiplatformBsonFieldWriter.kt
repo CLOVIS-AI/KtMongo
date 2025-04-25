@@ -40,7 +40,7 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun write(name: String, block: BsonValueWriter.() -> Unit) {
-		TODO()
+		MultiplatformBsonSingleFieldWriter(this, name).block()
 	}
 
 	@LowLevelApi
