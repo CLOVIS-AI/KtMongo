@@ -16,7 +16,9 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.experimental.and
 
 /**
  * Annotation to mark types that are part of the BSON writer DSL.
@@ -85,6 +87,69 @@ interface BsonValueWriter : AnyBsonWriter {
 	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
 	 */
 	@LowLevelApi fun <T> writeObjectSafe(obj: T)
+
+	/**
+	 * Writes the arbitrary [obj] into this writer.
+	 *
+	 * Note that the object will be written as-is, with no safety checks whatsoever.
+	 * Only use this method if you are absolutely sure attackers cannot control the contents of [obj].
+	 *
+	 * If in doubt, prefer using [writeObjectSafe].
+	 */
+	@LowLevelApi
+	@DangerousMongoApi
+	fun pipe(obj: BsonValueReader) {
+		@Suppress("DEPRECATION")
+		when (obj.type) {
+			BsonType.Double -> writeDouble(obj.readDouble())
+			BsonType.String -> writeString(obj.readString())
+			BsonType.Document -> writeDocument {
+				for ((name, value) in obj.readDocument().entries) {
+					write(name) {
+						pipe(value)
+					}
+				}
+			}
+
+			BsonType.Array -> writeArray {
+				for (value in obj.readArray().elements) {
+					pipe(value)
+				}
+			}
+
+			BsonType.BinaryData -> writeBinaryData(obj.readBinaryDataType(), obj.readBinaryData())
+			BsonType.Undefined -> writeUndefined()
+			BsonType.ObjectId -> writeObjectId(obj.readObjectId())
+			BsonType.Boolean -> writeBoolean(obj.readBoolean())
+			BsonType.Datetime -> writeDateTime(obj.readDateTime())
+			BsonType.Null -> writeNull()
+			BsonType.RegExp -> writeRegularExpression(obj.readRegularExpressionPattern(), obj.readRegularExpressionOptions())
+			BsonType.DBPointer -> writeDBPointer(obj.readDBPointerNamespace(), obj.readDBPointerId())
+			BsonType.JavaScript -> writeJavaScript(obj.readJavaScript())
+			BsonType.Symbol -> writeSymbol(obj.readSymbol())
+			BsonType.JavaScriptWithScope -> writeJavaScriptWithScope(obj.readJavaScriptWithScope())
+			BsonType.Int32 -> writeInt32(obj.readInt32())
+			BsonType.Timestamp -> writeTimestamp(obj.readTimestamp())
+			BsonType.Int64 -> writeInt64(obj.readInt64())
+			BsonType.Decimal128 -> {
+				val bytes = obj.readDecimal128()
+				writeDecimal128(bytes.readLong(0), bytes.readLong(1))
+			}
+
+			BsonType.MinKey -> TODO("Will be implemented in https://gitlab.com/opensavvy/ktmongo/-/work_items/64")
+			BsonType.MaxKey -> TODO("Will be implemented in https://gitlab.com/opensavvy/ktmongo/-/work_items/64")
+		}
+	}
+}
+
+private fun ByteArray.readLong(index: Int): Long {
+	var value = 0L
+
+	for (i in (index * 8)..<(index * 8 + 8)) {
+		value = (value shl 8) + (this[i] and 0xFF.toByte())
+	}
+
+	return value
 }
 
 /**
@@ -140,4 +205,7 @@ interface BsonFieldWriter : AnyBsonWriter {
 	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
 	 */
 	@LowLevelApi fun <T> writeObjectSafe(name: String, obj: T)
+
+	// No 'pipe' overload because it would encourage people to use it.
+	// If you really must use 'pipe', use 'write("name") { pipe(…) }'
 }
