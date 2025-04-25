@@ -85,6 +85,7 @@ fun SuiteDsl.writerTests(
 		double(prepareContext)
 		string(prepareContext)
 		reprNull(prepareContext)
+		reprUndefined(prepareContext)
 		document(prepareContext)
 		array(prepareContext)
 		binary(prepareContext)
