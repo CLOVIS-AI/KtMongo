@@ -61,6 +61,11 @@ interface BsonDocumentReader {
 	fun toBson(): Bson
 
 	/**
+	 * Reads this entire document as a [BsonValueReader].
+	 */
+	fun asValue(): BsonValueReader
+
+	/**
 	 * JSON representation of the document this [BsonDocumentReader] is reading, as a [String].
 	 */
 	override fun toString(): String
@@ -107,6 +112,11 @@ interface BsonArrayReader {
 	 * Reads this document into a [BsonArray] instance.
 	 */
 	fun toBson(): BsonArray
+
+	/**
+	 * Reads this entire array as a [BsonValueReader].
+	 */
+	fun asValue(): BsonValueReader
 
 	/**
 	 * JSON representation of the array this [BsonArrayReader] is reading, as a [String].

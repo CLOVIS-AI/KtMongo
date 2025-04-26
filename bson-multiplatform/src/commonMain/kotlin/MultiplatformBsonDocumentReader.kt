@@ -77,10 +77,10 @@ internal fun readField(
 
 @LowLevelApi
 internal class MultiplatformBsonDocumentReader(
-	bytes: Bytes,
+	private val bytesWithHeader: Bytes,
 ) : BsonDocumentReader {
 
-	private val bytes: Bytes = restrictAsDocument(bytes)
+	private val bytes: Bytes = restrictAsDocument(bytesWithHeader)
 	private val reader = this.bytes.reader
 
 	/**
@@ -121,6 +121,9 @@ internal class MultiplatformBsonDocumentReader(
 
 	override fun toBson(): Bson =
 		Bson(bytes)
+
+	override fun asValue(): BsonValueReader =
+		MultiplatformBsonValueReader(BsonType.Document, bytesWithHeader)
 
 	override fun toString(): String = buildString {
 		append('{')

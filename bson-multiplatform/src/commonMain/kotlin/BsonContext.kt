@@ -27,7 +27,9 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 class BsonContext : BsonContext {
 
 	@LowLevelApi
-	override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson {
+	private inline fun buildArbitraryTopLevel(
+		block: MultiplatformBsonFieldWriter.() -> Unit,
+	): Bytes {
 		val buffer = Buffer()
 		val bsonWriter = RawBsonWriter(buffer)
 		val fieldWriter = MultiplatformBsonFieldWriter(bsonWriter)
@@ -46,17 +48,24 @@ class BsonContext : BsonContext {
 		bsonWriter.writeInt32(size)
 		buffer.readTo(bytes, 0, 4)
 
-		return Bson(Bytes(bytes))
+		return Bytes(bytes)
 	}
+
+	@LowLevelApi
+	override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson =
+		buildArbitraryTopLevel {
+			block(this)
+		}.let(::Bson)
 
 	@LowLevelApi
 	override fun readDocument(bytes: ByteArray): Bson =
 		Bson(Bytes(bytes.copyOf()))
 
 	@LowLevelApi
-	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray {
-		TODO()
-	}
+	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray =
+		buildArbitraryTopLevel {
+			block(MultiplatformBsonArrayFieldWriter(this))
+		}.let(::BsonArray)
 
 	@LowLevelApi
 	override fun readArray(bytes: ByteArray): BsonArray =
