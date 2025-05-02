@@ -37,4 +37,5 @@ class MultiplatformBsonWriterTest : PreparedSpec({
 	binary(context)
 	code(context)
 	datetime(context)
+	minMaxKey(context)
 })

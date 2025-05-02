@@ -122,6 +122,16 @@ internal class MultiplatformBsonSingleFieldWriter(
 	}
 
 	@LowLevelApi
+	override fun writeMinKey() {
+		writer.writeMinKey(name)
+	}
+
+	@LowLevelApi
+	override fun writeMaxKey() {
+		writer.writeMaxKey(name)
+	}
+
+	@LowLevelApi
 	override fun <T> writeObjectSafe(obj: T) {
 		writer.writeObjectSafe(name, obj)
 	}

@@ -77,6 +77,10 @@ interface BsonValueWriter : AnyBsonWriter {
 	@LowLevelApi
 	fun writeBinaryData(type: UByte, data: ByteArray)
 	@LowLevelApi fun writeJavaScript(code: String)
+	@LowLevelApi
+	fun writeMinKey()
+	@LowLevelApi
+	fun writeMaxKey()
 
 	@LowLevelApi fun writeDocument(block: BsonFieldWriter.() -> Unit)
 	@LowLevelApi fun writeArray(block: BsonValueWriter.() -> Unit)
@@ -136,8 +140,8 @@ interface BsonValueWriter : AnyBsonWriter {
 				writeDecimal128(bytes.readLong(0), bytes.readLong(1))
 			}
 
-			BsonType.MinKey -> TODO("Will be implemented in https://gitlab.com/opensavvy/ktmongo/-/work_items/64")
-			BsonType.MaxKey -> TODO("Will be implemented in https://gitlab.com/opensavvy/ktmongo/-/work_items/64")
+			BsonType.MinKey -> writeMinKey()
+			BsonType.MaxKey -> writeMaxKey()
 		}
 	}
 }
@@ -195,6 +199,10 @@ interface BsonFieldWriter : AnyBsonWriter {
 	@LowLevelApi
 	fun writeBinaryData(name: String, type: UByte, data: ByteArray)
 	@LowLevelApi fun writeJavaScript(name: String, code: String)
+	@LowLevelApi
+	fun writeMinKey(name: String)
+	@LowLevelApi
+	fun writeMaxKey(name: String)
 
 	@LowLevelApi fun writeDocument(name: String, block: BsonFieldWriter.() -> Unit)
 	@LowLevelApi fun writeArray(name: String, block: BsonValueWriter.() -> Unit)

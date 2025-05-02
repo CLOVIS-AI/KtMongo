@@ -229,6 +229,14 @@ interface BsonValueReader {
 
 	@LowLevelApi
 	@Throws(BsonReaderException::class)
+	fun readMinKey()
+
+	@LowLevelApi
+	@Throws(BsonReaderException::class)
+	fun readMaxKey()
+
+	@LowLevelApi
+	@Throws(BsonReaderException::class)
 	fun readDocument(): BsonDocumentReader
 
 	@LowLevelApi

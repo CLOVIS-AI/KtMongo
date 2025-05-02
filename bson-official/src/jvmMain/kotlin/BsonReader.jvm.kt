@@ -229,6 +229,16 @@ private class BsonValueReader(
 	}
 
 	@LowLevelApi
+	override fun readMinKey() {
+		ensureType(BsonType.MinKey) { value.bsonType == org.bson.BsonType.MIN_KEY }
+	}
+
+	@LowLevelApi
+	override fun readMaxKey() {
+		ensureType(BsonType.MaxKey) { value.bsonType == org.bson.BsonType.MAX_KEY }
+	}
+
+	@LowLevelApi
 	override fun readDocument(): BsonDocumentReader {
 		ensureType(BsonType.Document) { value.isDocument }
 		return BsonDocumentReader(value.asDocument(), context)
