@@ -166,6 +166,16 @@ internal class MultiplatformBsonValueReader(
 	}
 
 	@LowLevelApi
+	override fun readMinKey() {
+		checkType(BsonType.MinKey)
+	}
+
+	@LowLevelApi
+	override fun readMaxKey() {
+		checkType(BsonType.MaxKey)
+	}
+
+	@LowLevelApi
 	override fun readDocument(): BsonDocumentReader {
 		checkType(BsonType.Document)
 		return MultiplatformBsonDocumentReader(bytes)
@@ -198,6 +208,8 @@ internal class MultiplatformBsonValueReader(
 
 			"""{"${'$'}binary": {"base64": "$base64", "subType": "${subType.toString(16).padStart(2, '0')}"}}"""
 		}
+		BsonType.MinKey -> """{"${'$'}minKey": 1}"""
+		BsonType.MaxKey -> """{"${'$'}maxKey": 1}"""
 		else -> "{$type}: $bytes" // TODO
 	}
 

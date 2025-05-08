@@ -93,6 +93,7 @@ fun SuiteDsl.writerTests(
 		binary(prepareContext)
 		code(prepareContext)
 		datetime(prepareContext)
+		minMaxKey(prepareContext)
 	}
 
 	@OptIn(DangerousMongoApi::class)

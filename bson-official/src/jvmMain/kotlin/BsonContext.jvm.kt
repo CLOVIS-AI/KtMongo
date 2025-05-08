@@ -191,6 +191,14 @@ private class JavaBsonWriter(
 		writer.writeDecimal128(name, Decimal128.fromIEEE754BIDEncoding(high, low))
 	}
 
+	override fun writeMinKey(name: String) {
+		writer.writeMinKey(name)
+	}
+
+	override fun writeMaxKey(name: String) {
+		writer.writeMaxKey(name)
+	}
+
 	override fun writeBoolean(value: Boolean) {
 		writer.writeBoolean(value)
 	}
@@ -289,6 +297,14 @@ private class JavaBsonWriter(
 
 	override fun writeDecimal128(low: Long, high: Long) {
 		writer.writeDecimal128(Decimal128.fromIEEE754BIDEncoding(high, low))
+	}
+
+	override fun writeMinKey() {
+		writer.writeMinKey()
+	}
+
+	override fun writeMaxKey() {
+		writer.writeMaxKey()
 	}
 }
 
@@ -405,6 +421,16 @@ private class JavaRootArrayWriter(
 		}
 
 		array.add(document)
+	}
+
+	@LowLevelApi
+	override fun writeMinKey() {
+		array.add(BsonMinKey())
+	}
+
+	@LowLevelApi
+	override fun writeMaxKey() {
+		array.add(BsonMaxKey())
 	}
 
 }

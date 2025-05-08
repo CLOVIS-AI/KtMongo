@@ -165,6 +165,18 @@ internal class MultiplatformBsonFieldWriter(
 		writer.writeString(code)
 	}
 
+	@LowLevelApi
+	override fun writeMinKey(name: String) {
+		writeType(BsonType.MinKey)
+		writeName(name)
+	}
+
+	@LowLevelApi
+	override fun writeMaxKey(name: String) {
+		writeType(BsonType.MaxKey)
+		writeName(name)
+	}
+
 	private inline fun writeArbitraryDocument(writeTo: (BsonFieldWriter) -> Unit) {
 		// We create the entire document in a child buffer so we can measure the size.
 		// Once we know the size, we can write it entirely to the real buffer.

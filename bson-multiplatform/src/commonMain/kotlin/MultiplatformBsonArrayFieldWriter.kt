@@ -123,6 +123,16 @@ internal class MultiplatformBsonArrayFieldWriter(
 	}
 
 	@LowLevelApi
+	override fun writeMinKey() {
+		writer.writeMinKey(nextIndex())
+	}
+
+	@LowLevelApi
+	override fun writeMaxKey() {
+		writer.writeMaxKey(nextIndex())
+	}
+
+	@LowLevelApi
 	override fun writeDocument(block: BsonFieldWriter.() -> Unit) {
 		writer.writeDocument(nextIndex(), block)
 	}
