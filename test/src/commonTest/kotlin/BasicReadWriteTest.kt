@@ -58,4 +58,18 @@ class BasicReadWriteTest : PreparedSpec({
 		check(listOf(bob, alice) == users().find(options = { sort { ascending(User::age) } }, {}).toList())
 		check(listOf(alice, bob) == users().find(options = { sort { descending(User::age) } }, {}).toList())
 	}
+
+	test("Paging") {
+		val alice = User(name = "Alice", age = 22)
+		val bob = User(name = "Bob", age = 18)
+		val carol = User(name = "Carol", age = 19)
+		users().insertOne(alice)
+		users().insertOne(bob)
+		users().insertOne(carol)
+
+		check(listOf(alice, bob, carol) == users().find().toList())
+		check(listOf(alice, bob) == users().find(options = { limit(2) }, {}).toList())
+		check(listOf(bob, carol) == users().find(options = { skip(1) }, {}).toList())
+		check(listOf(bob) == users().find(options = { skip(1); limit(1) }, {}).toList())
+	}
 })

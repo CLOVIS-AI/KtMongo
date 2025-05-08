@@ -20,10 +20,7 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.Options
-import opensavvy.ktmongo.dsl.options.OptionsHolder
-import opensavvy.ktmongo.dsl.options.WithLimit
-import opensavvy.ktmongo.dsl.options.WithSort
+import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
@@ -69,4 +66,6 @@ class Find<Document : Any> private constructor(
 class FindOptions<Document : Any>(context: BsonContext) :
 	Options by OptionsHolder(context),
 	WithLimit,
+	WithSkip,
+	WithMaxTime,
 	WithSort<Document>

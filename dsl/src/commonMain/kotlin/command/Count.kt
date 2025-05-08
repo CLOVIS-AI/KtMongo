@@ -19,9 +19,7 @@ package opensavvy.ktmongo.dsl.command
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.Options
-import opensavvy.ktmongo.dsl.options.OptionsHolder
-import opensavvy.ktmongo.dsl.options.WithLimit
+import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
@@ -56,4 +54,6 @@ class Count<Document : Any> private constructor(
 @OptIn(LowLevelApi::class)
 class CountOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithLimit
+	WithLimit,
+	WithSkip,
+	WithMaxTime

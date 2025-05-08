@@ -31,9 +31,8 @@ import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.official.command.toJava
-import opensavvy.ktmongo.official.options.readLimit
-import opensavvy.ktmongo.official.options.readSortDocument
-import opensavvy.ktmongo.official.options.toJava
+import opensavvy.ktmongo.official.options.*
+import java.util.concurrent.TimeUnit
 
 /**
  * Implementation of [MongoCollection] based on [MongoDB's MongoCollection][com.mongodb.kotlin.client.coroutine.MongoCollection].
@@ -71,6 +70,8 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		return JvmMongoIterable(
 			inner.find(context.buildDocument(model.filter).raw)
 				.limit(model.options.readLimit())
+				.skip(model.options.readSkip())
+				.maxTime(model.options.readMaxTimeMS().toLong(), TimeUnit.MILLISECONDS)
 				.sort((model.options.readSortDocument())),
 			repr = { "$this.find($model)" }
 		)
