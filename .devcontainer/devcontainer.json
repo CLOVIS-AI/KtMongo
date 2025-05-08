@@ -1,6 +1,7 @@
 {
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
-	"onCreateCommand": "./gradlew projects"
+	"dockerComposeFile": [
+		"./docker-compose.yml"
+	],
+	"service": "workspace",
+	"shutdownAction": "stopCompose"
 }

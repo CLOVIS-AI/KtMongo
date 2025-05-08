@@ -1,19 +1,18 @@
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.application)
-	application
 }
 
 kotlin {
 	jvm {
-		withJava() // required by the application plugin
+		binaries {
+			executable {
+				mainClass.set("opensavvy.playground.app.MainKt")
+			}
+		}
 	}
 
 	sourceSets.commonMain.dependencies {
 		implementation(projects.gradle.templates.templateLib)
 	}
-}
-
-application {
-	mainClass.set("opensavvy.playground.app.MainKt")
 }

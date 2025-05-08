@@ -1,0 +1,10 @@
+
+include:
+  - ../docker/docker-compose.yml
+
+services:
+  workspace:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    command: /bin/sh -c "while sleep 1000; do :; done"
