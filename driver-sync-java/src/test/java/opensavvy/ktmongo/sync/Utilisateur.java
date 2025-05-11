@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-plugins {
-	alias(opensavvyConventions.plugins.base)
-	id("dev.opensavvy.dokka-mkdocs")
-}
+package opensavvy.ktmongo.sync;
 
-dependencies {
-	// List the 'library' projects
-	dokka(projects.annotations)
-	dokka(projects.bson)
-	dokka(projects.bsonOfficial)
-	dokka(projects.bsonMultiplatform)
-	dokka(projects.bsonTests)
-	dokka(projects.dsl)
-	dokka(projects.driverSharedOfficial)
-	dokka(projects.driverSync)
-	dokka(projects.driverSyncJava)
-	dokka(projects.driverCoroutines)
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.bson.types.ObjectId;
+
+public record Utilisateur(
+	@BsonId ObjectId id,
+	String name,
+	Enfant enfant
+) {
+
+	public record Enfant(
+		String name,
+		int age
+	) {
+	}
 }

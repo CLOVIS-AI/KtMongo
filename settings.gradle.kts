@@ -86,6 +86,7 @@ include(
 
 	"driver-shared-official",
 	"driver-sync",
+	"driver-sync-java",
 	"driver-coroutines",
 
 	"test",
