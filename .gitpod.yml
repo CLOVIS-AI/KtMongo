@@ -1,3 +1,0 @@
-tasks:
-  - name: Download and initialize Gradle
-    command: ./gradlew projects

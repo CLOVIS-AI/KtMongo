@@ -409,3 +409,33 @@ pages:
   interruptible: false
 
 # endregion
+# region Kotlin pipeline
+
+gitlab-ci.main.kts compile:
+  stage: .pre
+  image: registry.gitlab.com/opensavvy/automation/containers/kotlin:$ci_containers
+  needs: []
+  variables:
+    GIT_DEPTH: 1
+  script:
+    - ./.gitlab-ci.main.kts >kotlin-ci.yml
+  artifacts:
+    paths:
+      - kotlin-ci.yml
+  interruptible: true
+
+gitlab-ci.main.kts run:
+  stage: .pre
+  needs: [ "gitlab-ci.main.kts compile", "os.version" ]
+  trigger:
+    include:
+      - artifact: kotlin-ci.yml
+        job: "gitlab-ci.main.kts compile"
+    strategy: depend
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_PIPELINE_SOURCE == 'schedule'
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+# endregion

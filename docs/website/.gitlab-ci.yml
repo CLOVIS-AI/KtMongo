@@ -6,6 +6,7 @@ mkdocs:
   needs: [ os.version ]
 
   before_script:
+    - ./docs/website/verify-marker.sh
     - ./gradlew docs:website:embedDokkaIntoMkDocs -PappVersion=$project_version
     - cd docs/website
     - ls
