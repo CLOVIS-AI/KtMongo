@@ -70,7 +70,7 @@ import kotlin.reflect.KProperty1
  * @param Root The type of the document in which this field is in.
  * @param Type The type of the value stored by this field.
  */
-interface Field<@Suppress("unused") Root, @Suppress("unused") out Type> {
+interface Field<in Root, out Type> {
 
 	/**
 	 * Low-level representation of this field's path.
@@ -107,7 +107,7 @@ interface Field<@Suppress("unused") Root, @Suppress("unused") out Type> {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	operator fun <Child> div(child: Field<in Type, Child>): Field<Root, Child> =
+	operator fun <Child> div(child: Field<Type, Child>): Field<Root, Child> =
 		FieldImpl(path / child.path)
 
 	/**
