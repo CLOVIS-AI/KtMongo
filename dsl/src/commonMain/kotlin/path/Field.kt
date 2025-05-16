@@ -19,6 +19,7 @@ package opensavvy.ktmongo.dsl.path
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.path.Field.Companion.unsafe
 import kotlin.reflect.KProperty1
 
 /**
@@ -66,6 +67,8 @@ import kotlin.reflect.KProperty1
  *     User::profile / Profile::name eq "Thibault Lognaise"
  * }
  * ```
+ *
+ * To bypass type-safety, and refer to arbitrary fields without declaring them first, see [unsafe].
  *
  * @param Root The type of the document in which this field is in.
  * @param Type The type of the value stored by this field.
@@ -141,6 +144,51 @@ interface Field<in Root, out Type> {
 	@KtMongoDsl
 	operator fun <Child> div(child: KProperty1<in Type & Any, Child>): Field<Root, Child> =
 		FieldImpl(path / PathSegment.Field(child.name))
+
+	/**
+	 * Refers to a field [child] of the current field, with no compile-time safety.
+	 *
+	 * Sometimes, we must refer to a field that we don't want to add in the DTO representation.
+	 * For example, when writing complex aggregation queries that use intermediary fields that are removed
+	 * before the data is sent to the server.
+	 *
+	 * We recommend preferring the type-safe syntax when possible (see [Field]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * println(User::profile.unsafe<Int>("age")) // 'profile.age'
+	 * ```
+	 *
+	 * @see Field.Companion.unsafe Similar, but for accessing a field of the root document.
+	 */
+	@OptIn(LowLevelApi::class)
+	fun <Child> unsafe(child: String): Field<Root, Child> =
+		FieldImpl(path / PathSegment.Field(child))
+
+	companion object {
+
+		/**
+		 * Refers to a field [child] with no compile-time safety.
+		 *
+		 * Sometimes, we must refer to a field that we don't want to add in the DTO representation.
+		 * For example, when writing complex aggregation queries that use intermediary fields that are removed
+		 * before the data is sent to the server.
+		 *
+		 * We recommend preferring the type-safe syntax when possible (see [Field]).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * println(Field.unsafe<Int>("age")) // 'age'
+		 * ```
+		 *
+		 * @see Field.unsafe Similar, but for accessing a child of a document.
+		 */
+		@OptIn(LowLevelApi::class)
+		fun <T> unsafe(child: String): Field<Any, T> =
+			FieldImpl(Path(child))
+	}
 }
 
 /**
