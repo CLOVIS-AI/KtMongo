@@ -394,6 +394,69 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		this.field.plusAssign(amount)
 
 	// endregion
+	// region $mul
+
+	/**
+	 * Multiplies a field by the specified [amount].
+	 *
+	 * If the field doesn't exist (either the document doesn't have it, or the operation is an upsert and a new document is created),
+	 * the field is created with an initial value of 0.
+	 *
+	 * Use of this operator with a field with a `null` value will generate an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val price: Double,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::price mul 2.0
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/mul/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.mul(amount: V)
+
+	/**
+	 * Multiplies a field by the specified [amount].
+	 *
+	 * If the field doesn't exist (either the document doesn't have it, or the operation is an upsert and a new document is created),
+	 * the field is created with an initial value of 0.
+	 *
+	 * Use of this operator with a field with a `null` value will generate an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val price: Double,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::price mul 2.0
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/mul/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Number> KProperty1<T, V>.mul(amount: V) {
+		this.field.mul(amount)
+	}
+
+	// endregion
 	// region $unset
 
 	/**

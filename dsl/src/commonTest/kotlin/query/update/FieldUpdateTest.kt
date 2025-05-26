@@ -140,6 +140,46 @@ class FieldUpdateTest : PreparedSpec({
 		}
 	}
 
+	suite("Operator $mul") {
+		test("Single field") {
+			update {
+				User::money mul 18.0
+			} shouldBeBson """
+				{
+					"$mul": {
+						"money": 18.0
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Nested field") {
+			update {
+				User::bestFriend / Friend::money mul -12.9f
+			} shouldBeBson """
+				{
+					"$mul": {
+						"bestFriend.money": -12.899999618530273
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Multiple fields") {
+			update {
+				User::money mul 5.2
+				User::bestFriend / Friend::money mul -5.2f
+			} shouldBeBson """
+				{
+					"$mul": {
+						"money": 5.2,
+						"bestFriend.money": -5.199999809265137
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
 	suite("Operator $unset") {
 		test("Single field") {
 			update {

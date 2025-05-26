@@ -167,6 +167,33 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
+	// region $mul
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	override infix fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.mul(amount: V) {
+		accept(MultiplyBsonNodeNode(listOf(this.path to amount), context))
+	}
+
+	@LowLevelApi
+	private class MultiplyBsonNodeNode(
+		val mappings: List<Pair<Path, Number>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+		override fun simplify(): AbstractBsonNode? =
+			this.takeUnless { mappings.isEmpty() }
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument("\$mul") {
+				for ((field, value) in mappings) {
+					writeObjectSafe(field.toString(), value)
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $unset
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
@@ -233,6 +260,9 @@ private class UpdateQueryImpl<T>(
 			},
 			OperatorCombinator(IncrementBsonNodeNode::class) { sources, context ->
 				IncrementBsonNodeNode(sources.flatMap { it.mappings }, context)
+			},
+			OperatorCombinator(MultiplyBsonNodeNode::class) { sources, context ->
+				MultiplyBsonNodeNode(sources.flatMap { it.mappings }, context)
 			},
 			OperatorCombinator(UnsetBsonNodeNode::class) { sources, context ->
 				UnsetBsonNodeNode(sources.flatMap { it.fields }, context)

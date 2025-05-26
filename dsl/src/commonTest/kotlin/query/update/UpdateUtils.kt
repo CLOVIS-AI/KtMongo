@@ -28,6 +28,7 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
 val set = "\$set"
 val setOnInsert = "\$setOnInsert"
 val inc = "\$inc"
+val mul = "\$mul"
 val unset = "\$unset"
 val rename = "\$rename"
 
