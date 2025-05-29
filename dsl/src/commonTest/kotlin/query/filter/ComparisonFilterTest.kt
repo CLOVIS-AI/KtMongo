@@ -211,6 +211,50 @@ class ComparisonFilterTest : PreparedSpec({
 				}
 			""".trimIndent()
 		}
+
+		test("int isIn (end inclusive)") {
+			filter {
+				User::age isIn (12..17)
+			} shouldBeBson """
+				{
+					"$and": [
+						{
+							"age": {
+								"$gte": 12
+							}
+						},
+						{
+							"age": {
+								"$lte": 17
+							}
+						}
+					]
+				}
+			""".trimIndent()
+		}
+
+		test("int isIn (end exclusive)") {
+			filter {
+				User::age isIn (12..<17)
+				// Kotlin's .. and ..< actually return the same value, so the library sees this as a range 12..16
+				// Although the query is slightly different, the behavior is the same
+			} shouldBeBson """
+				{
+					"$and": [
+						{
+							"age": {
+								"$gte": 12
+							}
+						},
+						{
+							"age": {
+								"$lte": 16
+							}
+						}
+					]
+				}
+			""".trimIndent()
+		}
 	}
 
 })
