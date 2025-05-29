@@ -107,4 +107,62 @@ class ObjectIdTest : PreparedSpec({
 		}
 	}
 
+	suite("Working with the timestamp") {
+		test("Can compare ObjectId with timestamp") {
+			val timestamp = Instant.parse("2021-01-01T00:00:00Z")
+			val processId = 123456789012L
+			val counter = 123
+
+			val id = ObjectId(timestamp, processId, counter)
+
+			// Equality
+			check(id <= Instant.parse("2021-01-01T00:00:00Z"))
+			check(id >= Instant.parse("2021-01-01T00:00:00Z"))
+
+			// Inequality
+			check(id < Instant.parse("2021-01-01T00:00:01Z"))
+			check(id > Instant.parse("2020-12-31T23:59:59Z"))
+
+			// Symmetry
+			check(Instant.parse("2021-01-01T00:00:00Z") >= id)
+			check(Instant.parse("2021-01-01T00:00:00Z") <= id)
+			check(Instant.parse("2021-01-01T00:00:01Z") > id)
+			check(Instant.parse("2020-12-31T23:59:59Z") < id)
+		}
+
+		test("Can create an ObjectId closed range from a timestamp range") {
+			val closedRange = (Instant.parse("2020-12-31T23:59:59Z")..Instant.parse("2021-01-01T00:00:01Z"))
+				.toObjectIdRange()
+
+			// Middle instant is fully in
+			check(ObjectId.minAt(Instant.parse("2021-01-01T00:00:00Z")) in closedRange)
+			check(ObjectId.maxAt(Instant.parse("2021-01-01T00:00:00Z")) in closedRange)
+
+			// Start instant is fully in
+			check(ObjectId.minAt(Instant.parse("2020-12-31T23:59:59Z")) in closedRange)
+			check(ObjectId.maxAt(Instant.parse("2020-12-31T23:59:59Z")) in closedRange)
+
+			// End instant is fully in
+			check(ObjectId.minAt(Instant.parse("2021-01-01T00:00:01Z")) in closedRange)
+			check(ObjectId.maxAt(Instant.parse("2021-01-01T00:00:01Z")) in closedRange)
+		}
+
+		test("Can create an ObjectId open ended range from a timestamp range") {
+			val openEndRange = (Instant.parse("2020-12-31T23:59:59Z")..<Instant.parse("2021-01-01T00:00:01Z"))
+				.toObjectIdRange()
+
+			// Middle instant is fully in
+			check(ObjectId.minAt(Instant.parse("2021-01-01T00:00:00Z")) in openEndRange)
+			check(ObjectId.maxAt(Instant.parse("2021-01-01T00:00:00Z")) in openEndRange)
+
+			// Start instant is fully in
+			check(ObjectId.minAt(Instant.parse("2020-12-31T23:59:59Z")) in openEndRange)
+			check(ObjectId.maxAt(Instant.parse("2020-12-31T23:59:59Z")) in openEndRange)
+
+			// End instant is excluded
+			check(ObjectId.minAt(Instant.parse("2021-01-01T00:00:01Z")) !in openEndRange)
+			check(ObjectId.maxAt(Instant.parse("2021-01-01T00:00:01Z")) !in openEndRange)
+		}
+	}
+
 })

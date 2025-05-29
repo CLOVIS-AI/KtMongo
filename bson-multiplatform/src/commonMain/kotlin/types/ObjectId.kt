@@ -17,6 +17,8 @@
 package opensavvy.ktmongo.bson.multiplatform.types
 
 import opensavvy.ktmongo.bson.multiplatform.types.ObjectId.Companion.counterMax
+import opensavvy.ktmongo.bson.multiplatform.types.ObjectId.Companion.maxAt
+import opensavvy.ktmongo.bson.multiplatform.types.ObjectId.Companion.minAt
 import opensavvy.ktmongo.bson.multiplatform.types.ObjectId.Companion.processIdMax
 import kotlin.experimental.and
 import kotlin.time.ExperimentalTime
@@ -83,6 +85,15 @@ class ObjectId(
 		return counter.compareTo(other.counter)
 	}
 
+	operator fun compareTo(other: Instant): Int {
+		if (timestamp.epochSeconds != other.epochSeconds)
+			return timestamp.epochSeconds.compareTo(other.epochSeconds)
+
+		// They have the same seconds component, let's differentiate them with the milliseconds
+		// We deliberately ignore the milliseconds of the ObjectId
+		return (timestamp.epochSeconds * 1000).compareTo(other.toEpochMilliseconds())
+	}
+
 	override fun equals(other: Any?): Boolean {
 		if (this === other) return true
 		if (other !is ObjectId) return false
@@ -123,8 +134,64 @@ class ObjectId(
 		 * The symmetric operation is [ObjectId.bytes].
 		 */
 		fun fromBytes(bytes: ByteArray): ObjectId = arrayToParts(bytes)
+
+		/**
+		 * The minimum [ObjectId] created at [timestamp].
+		 *
+		 * It is guaranteed that:
+		 * - All [ObjectId] instances created at [timestamp] are greater or equal to the output of this function.
+		 * - All [ObjectId] instances created before [timestamp] are strictly lesser than the output of this function.
+		 * - All [ObjectId] instances created after [timestamp] are strictly greater than the output of this function.
+		 *
+		 * This function is particularly helpful to create queries against ranges of timestamps.
+		 *
+		 * @see maxAt
+		 * @see toObjectIdRange
+		 */
+		fun minAt(timestamp: Instant): ObjectId =
+			ObjectId(timestamp, 0, 0)
+
+		/**
+		 * The maximum [ObjectId] created at [timestamp].
+		 *
+		 * It is guaranteed that:
+		 * - All [ObjectId] instances created at [timestamp] are lesser or equal to the output of this function.
+		 * - All [ObjectId] instances created before [timestamp] are strictly lesser than the output of this function.
+		 * - All [ObjectId] instances created after [timestamp] are strictly greater than the output of this function.
+		 *
+		 * This function is particularly helpful to create queries against ranges of timestamps.
+		 *
+		 * @see minAt
+		 * @see toObjectIdRange
+		 */
+		fun maxAt(timestamp: Instant): ObjectId =
+			ObjectId(timestamp, processIdMax - 1, counterMax - 1)
 	}
 }
+
+@ExperimentalTime
+operator fun Instant.compareTo(objectId: ObjectId): Int =
+	-objectId.compareTo(this)
+
+/**
+ * Converts a range of [Instant] to a range of [ObjectId].
+ *
+ * @see minAt
+ * @see maxAt
+ */
+@ExperimentalTime
+fun ClosedRange<Instant>.toObjectIdRange(): ClosedRange<ObjectId> =
+	minAt(start)..maxAt(endInclusive)
+
+/**
+ * Converts a range of [Instant] to a range of [ObjectId].
+ *
+ * @see minAt
+ * @see maxAt
+ */
+@ExperimentalTime
+fun OpenEndRange<Instant>.toObjectIdRange(): OpenEndRange<ObjectId> =
+	minAt(start)..<minAt(endExclusive)
 
 @ExperimentalTime
 private fun partsToArray(
