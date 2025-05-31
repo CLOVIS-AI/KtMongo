@@ -1619,6 +1619,173 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		this.field.lteNotNull(value)
 	}
 
+	// region Ranges (isIn)
+
+	/**
+	 * Selects documents in which this field has a value included in [range].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age isIn (25..50)
+	 * }
+	 * ```
+	 *
+	 * @see gte Only specify the lower bound.
+	 * @see lte Only specify the higher bound.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.isIn(range: ClosedRange<V>) {
+		val field = this
+		and {
+			field gte range.start
+			field lte range.endInclusive
+		}
+	}
+
+	/**
+	 * Selects documents in which this field has a value included in [range].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age isIn (25..50)
+	 * }
+	 * ```
+	 *
+	 * @see gte Only specify the lower bound.
+	 * @see lte Only specify the higher bound.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.isIn(range: ClosedRange<V>) {
+		this.field isIn range
+	}
+
+	/**
+	 * Selects documents in which this field has a value included in [range].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age isIn (25..<50)
+	 * }
+	 * ```
+	 *
+	 * @see gte Only specify the lower bound.
+	 * @see lt Only specify the higher bound.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.isIn(range: OpenEndRange<V>) {
+		val field = this
+		and {
+			field gte range.start
+			field lt range.endExclusive
+		}
+	}
+
+	/**
+	 * Selects documents in which this field has a value included in [range].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age isIn (25..<50)
+	 * }
+	 * ```
+	 *
+	 * @see gte Only specify the lower bound.
+	 * @see lt Only specify the higher bound.
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.isIn(range: OpenEndRange<V>) {
+		this.field isIn range
+	}
+
+	// Some ranges are both ClosedRange and OpenEndRange
+	// e.g. IntRange, LongRange, UIntRange, ULongRange,…
+	// The following overloads exist to break the overload ambiguity
+
+	/**
+	 * Selects documents in which this field has a value included in [range].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age isIn (25..50)
+	 * }
+	 * ```
+	 *
+	 * @see gte Only specify the lower bound.
+	 * @see lte Only specify the higher bound.
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@JvmName("isInSimple")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>, R> Field<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
+		this isIn (range as ClosedRange<V>)
+	}
+
+	/**
+	 * Selects documents in which this field has a value included in [range].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age isIn (25..50)
+	 * }
+	 * ```
+	 *
+	 * @see gte Only specify the lower bound.
+	 * @see lte Only specify the higher bound.
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@JvmName("isInSimple")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>, R> KProperty1<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
+		this isIn (range as ClosedRange<V>)
+	}
+
+	// endregion
 	// endregion
 	// region $in
 
