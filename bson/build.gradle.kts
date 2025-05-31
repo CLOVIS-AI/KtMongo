@@ -52,7 +52,7 @@ kotlin {
 	sourceSets.commonTest.dependencies {
 		implementation(projects.bsonTests)
 		implementation(libs.prepared.kotest)
-		implementation(opensavvyConventions.aligned.kotlin.test)
+		implementation(libsCommon.kotlin.test)
 	}
 }
 
