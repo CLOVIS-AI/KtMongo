@@ -49,6 +49,8 @@ import kotlin.reflect.KProperty1
  *
  * On regular fields:
  * - [`$inc`][plusAssign]
+ * - [`$max`][max]
+ * - [`$min`][min]
  * - [`$rename`][renameTo]
  * - [`$set`][set]
  * - [`$setOnInsert`][UpsertQuery.setOnInsert] (only for [upserts][UpsertQuery])
@@ -515,6 +517,117 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.unset() {
 		this.field.unset()
+	}
+
+ // endregion
+	// region $min & $max
+
+	/**
+	 * Updates the value of a field to the specified [value] only if the specified [value] is less than the current value of the field.
+	 *
+	 * If the field doesn't exist, the field is set to the specified [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::score min 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/min/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.min(value: V)
+
+	/**
+	 * Updates the value of a field to the specified [value] only if the specified [value] is less than the current value of the field.
+	 *
+	 * If the field doesn't exist, the field is set to the specified [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::score min 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/min/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.min(value: V) {
+		this.field.min(value)
+	}
+
+	/**
+	 * Updates the value of a field to the specified [value] only if the specified [value] is greater than the current value of the field.
+	 *
+	 * If the field doesn't exist, the field is set to the specified [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::score max 100
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/max/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.max(value: V)
+
+	/**
+	 * Updates the value of a field to the specified [value] only if the specified [value] is greater than the current value of the field.
+	 *
+	 * If the field doesn't exist, the field is set to the specified [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::score max 100
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/max/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.max(value: V) {
+		this.field.max(value)
 	}
 
 	// endregion

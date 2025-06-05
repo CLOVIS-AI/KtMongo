@@ -31,6 +31,8 @@ val inc = "\$inc"
 val mul = "\$mul"
 val unset = "\$unset"
 val rename = "\$rename"
+val min = "\$min"
+val max = "\$max"
 
 class Friend(
 	val id: String,
