@@ -211,4 +211,16 @@ class ArrayFilterTest : PreparedSpec({
 			}
 		""".trimIndent()
 	}
+
+	test("Operator $size") {
+		filter {
+			User::grades size 3
+		} shouldBeBson """
+			{
+				"grades": {
+					"$size": 3
+				}
+			}
+		""".trimIndent()
+	}
 })

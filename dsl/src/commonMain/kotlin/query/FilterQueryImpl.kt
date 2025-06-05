@@ -230,6 +230,29 @@ private class FilterQueryImpl<T>(
 	}
 
 	// endregion
+	// region $size
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@KtMongoDsl
+	override fun Field<T, Collection<*>>.size(size: Int) {
+		accept(ArraySizeBsonNode<T>(path, size, context))
+	}
+
+	@LowLevelApi
+	private class ArraySizeBsonNode<T>(
+		val path: Path,
+		val size: Int,
+		context: BsonContext,
+	) : FilterBsonNodeNode(context) {
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument(path.toString()) {
+				writeInt32("\$size", size)
+			}
+		}
+	}
+
+	// endregion
 	// region $expr
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)

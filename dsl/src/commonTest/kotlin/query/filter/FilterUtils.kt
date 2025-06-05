@@ -42,6 +42,7 @@ val expr = "\$expr"
 val getField = "\$getField"
 val regex = "\$regex"
 val regularExpression = "\$regularExpression"
+val size = "\$size"
 
 class Pet(
 	val name: String,
