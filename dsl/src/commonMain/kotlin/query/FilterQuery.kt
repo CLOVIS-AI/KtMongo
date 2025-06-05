@@ -110,6 +110,7 @@ import kotlin.reflect.KProperty1
  * Logical query:
  * - [`$and`][and]
  * - [`$not`][not]
+ * - [`$nor`][nor]
  * - [`$or`][or]
  *
  * Element query:
@@ -158,6 +159,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/and/)
 	 *
 	 * @see or Logical `OR` operation.
+	 * @see nor Logical `NOR` operation.
 	 */
 	@KtMongoDsl
 	fun and(block: FilterQuery<T>.() -> Unit)
@@ -188,9 +190,41 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/or/)
 	 *
 	 * @see and Logical `AND` operation.
+	 * @see nor Logical `NOR` operation.
 	 */
 	@KtMongoDsl
 	fun or(block: FilterQuery<T>.() -> Unit)
+
+	/**
+	 * Performs a logical `NOR` operation on one or more expressions,
+	 * and selects the documents that *do not* satisfy *any* of the expressions.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find {
+	 *     nor {
+	 *         User::name eq "foo"
+	 *         User::name eq "bar"
+	 *         User::age eq 18
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nor/)
+	 *
+	 * @see and Logical `AND` operation.
+	 * @see or Logical `OR` operation.
+	 */
+	@KtMongoDsl
+	fun nor(block: FilterQuery<T>.() -> Unit)
 
 	// endregion
 	// region Predicate access

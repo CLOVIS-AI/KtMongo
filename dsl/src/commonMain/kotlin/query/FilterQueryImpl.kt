@@ -138,6 +138,37 @@ private class FilterQueryImpl<T>(
 		}
 	}
 
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@KtMongoDsl
+	override fun nor(block: FilterQuery<T>.() -> Unit) {
+		accept(NorFilterBsonNodeNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
+	}
+
+	@DangerousMongoApi
+	@LowLevelApi
+	private class NorFilterBsonNodeNode<T>(
+		val declaredChildren: List<BsonNode>,
+		context: BsonContext,
+	) : FilterBsonNodeNode(context) {
+
+		override fun simplify(): AbstractBsonNode? {
+			if (declaredChildren.isEmpty())
+				return null
+
+			return super.simplify()
+		}
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeArray("\$nor") {
+				for (child in declaredChildren) {
+					writeDocument {
+						child.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
 	// endregion
 	// region Predicate access
 

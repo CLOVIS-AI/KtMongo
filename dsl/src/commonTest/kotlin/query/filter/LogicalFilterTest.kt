@@ -21,7 +21,7 @@ import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 class LogicalFilterTest : PreparedSpec({
-	suite("Operators $and and $or") {
+	suite("Operators $and, $or, and $nor") {
 		test("And") {
 			filter {
 				and {
@@ -168,6 +168,58 @@ class LogicalFilterTest : PreparedSpec({
 					"name": {
 						"$eq": "foo"
 					}
+				}
+			""".trimIndent()
+		}
+
+		test("Nor") {
+			filter {
+				nor {
+					User::name eq "foo"
+					User::age eq null
+				}
+			} shouldBeBson """
+				{
+					"$nor": [
+						{
+							"name": {
+								"$eq": "foo"
+							}
+						},
+						{
+							"age": {
+								"$eq": null
+							}
+						}
+					]
+				}
+			""".trimIndent()
+		}
+
+		test("Empty $nor") {
+			filter {
+				nor {}
+			} shouldBeBson """
+				{
+				}
+			""".trimIndent()
+		}
+
+		test("An $nor with a single term isn't simplified") {
+			// Ideally, it should become a $not, but that isn't trivial to implement currently.
+			filter {
+				nor {
+					User::name eq "foo"
+				}
+			} shouldBeBson """
+				{
+					"$nor": [
+						{
+							"name": {
+								"$eq": "foo"
+							}
+						}
+					]
 				}
 			""".trimIndent()
 		}
