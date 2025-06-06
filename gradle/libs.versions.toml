@@ -2,7 +2,7 @@
 
 [versions]
 coroutines = "1.10.1"           # https://github.com/Kotlin/kotlinx.coroutines/releases
-serialization = "1.8.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
+serialization = "1.8.1"         # https://github.com/Kotlin/kotlinx.serialization/releases
 datetime = "0.6.2"              # https://github.com/Kotlin/kotlinx-datetime/releases
 io = "0.7.0"                    # https://github.com/Kotlin/kotlinx-io/releases
 prepared = "2.0.5"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
