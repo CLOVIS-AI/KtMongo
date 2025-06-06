@@ -1,0 +1,26 @@
+# List of dependencies, shared between all OpenSavvy projects
+# This file should only be modified in the repository https://gitlab.com/opensavvy/playgrounds/gradle
+# Other repositories will automatically sync themselves.
+
+[versions]
+kotlin = "2.1.20"                  # https://kotlinlang.org/docs/releases.html#release-details
+compose = "1.8.0"                  # https://github.com/JetBrains/compose-multiplatform/releases
+kotest = "5.9.1"                   # https://github.com/kotest/kotest/releases
+kotest-plugin = "6.0.0.M2"
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinx-powerAssert = { id = "org.jetbrains.kotlin.plugin.power-assert", version.ref = "kotlin" }
+
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
+
+kotest = { id = "io.kotest.multiplatform", version.ref = "kotest-plugin" }
+
+[libraries]
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
+
+[bundles]

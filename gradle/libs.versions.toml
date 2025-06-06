@@ -2,14 +2,14 @@
 
 [versions]
 coroutines = "1.10.1"           # https://github.com/Kotlin/kotlinx.coroutines/releases
-serialization = "1.8.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
+serialization = "1.8.1"         # https://github.com/Kotlin/kotlinx.serialization/releases
 datetime = "0.6.2"              # https://github.com/Kotlin/kotlinx-datetime/releases
 io = "0.7.0"                    # https://github.com/Kotlin/kotlinx-io/releases
-prepared = "1.5.2"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
-mongodb-bson-jvm = "5.3.1"      # https://central.sonatype.com/artifact/org.mongodb/bson/versions
+prepared = "2.0.5"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
+mongodb-bson-jvm = "5.5.0"      # https://central.sonatype.com/artifact/org.mongodb/bson/versions
 mongodb-bson-js = "6.10.3"      # https://www.npmjs.com/package/bson
-mongodb-driver = "5.3.1"        # https://central.sonatype.com/artifact/org.mongodb/mongodb-driver-kotlin-coroutine
-mongodb-serialization = "5.3.1" # https://central.sonatype.com/artifact/org.mongodb/bson-kotlinx
+mongodb-driver = "5.5.0"        # https://central.sonatype.com/artifact/org.mongodb/mongodb-driver-kotlin-coroutine
+mongodb-serialization = "5.5.0" # https://central.sonatype.com/artifact/org.mongodb/bson-kotlinx
 
 [plugins]
 

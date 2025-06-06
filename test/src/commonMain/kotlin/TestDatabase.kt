@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import opensavvy.ktmongo.coroutines.MongoCollection
 import opensavvy.prepared.suite.PreparedProvider
 import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.prepared
-import opensavvy.prepared.suite.randomInt
+import opensavvy.prepared.suite.random.randomInt
 import kotlin.coroutines.coroutineContext
 
 expect inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>>
