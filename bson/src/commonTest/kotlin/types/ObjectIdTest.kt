@@ -16,7 +16,7 @@
 
 @file:OptIn(ExperimentalTime::class)
 
-package opensavvy.ktmongo.bson.multiplatform.types
+package opensavvy.ktmongo.bson.types
 
 import opensavvy.prepared.runner.kotest.PreparedSpec
 import kotlin.time.ExperimentalTime

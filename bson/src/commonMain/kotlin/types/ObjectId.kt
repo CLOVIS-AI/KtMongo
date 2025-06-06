@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.multiplatform.types
+package opensavvy.ktmongo.bson.types
 
-import opensavvy.ktmongo.bson.multiplatform.types.ObjectId.Companion.counterMax
-import opensavvy.ktmongo.bson.multiplatform.types.ObjectId.Companion.maxAt
-import opensavvy.ktmongo.bson.multiplatform.types.ObjectId.Companion.minAt
-import opensavvy.ktmongo.bson.multiplatform.types.ObjectId.Companion.processIdMax
+import opensavvy.ktmongo.bson.types.ObjectId.Companion.counterMax
+import opensavvy.ktmongo.bson.types.ObjectId.Companion.maxAt
+import opensavvy.ktmongo.bson.types.ObjectId.Companion.minAt
+import opensavvy.ktmongo.bson.types.ObjectId.Companion.processIdMax
 import kotlin.experimental.and
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
