@@ -55,7 +55,6 @@ class ObjectId(
 ) : Comparable<ObjectId> {
 
 	init {
-		require(bytes.size == 12) { "ObjectId must be 12 bytes long, found ${bytes.size}" }
 		require(processId < processIdMax) { "The process identifier part of an ObjectId must fit in 5 bytes ($processIdMax), but found: $processId" }
 		require(counter >= 0) { "The counter part of an ObjectId must be positive, but found: $counter" }
 		require(counter < counterMax) { "The counter part of an ObjectId must fit in 3 bytes ($counterMax), but found: $counter" }
