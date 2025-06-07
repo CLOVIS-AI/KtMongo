@@ -70,9 +70,17 @@ class ObjectId(
 	val bytes: ByteArray
 		get() = partsToArray(timestamp, processId, counter)
 
+	/**
+	 * Generates a hex representation of this [ObjectId] instance.
+	 *
+	 * The output string can be passed to [ObjectId.fromHex] to obtain a new identical [ObjectId] instance.
+	 */
+	@OptIn(ExperimentalStdlibApi::class)
+	val hex: String by lazy(LazyThreadSafetyMode.PUBLICATION) { bytes.toHexString(HexFormat.Default) }
+
 	@OptIn(ExperimentalStdlibApi::class)
 	override fun toString(): String =
-		"ObjectId(${bytes.toHexString(HexFormat.Default)})"
+		"ObjectId($hex)"
 
 	override fun compareTo(other: ObjectId): Int {
 		if (timestamp.epochSeconds != other.timestamp.epochSeconds)
@@ -133,6 +141,17 @@ class ObjectId(
 		 * The symmetric operation is [ObjectId.bytes].
 		 */
 		fun fromBytes(bytes: ByteArray): ObjectId = arrayToParts(bytes)
+
+		/**
+		 * Reads 24 characters in hexadecimal format into an [ObjectId].
+		 *
+		 * The symmetric operation is [ObjectId.hex].
+		 */
+		@OptIn(ExperimentalStdlibApi::class)
+		fun fromHex(hex: String): ObjectId {
+			require(hex.length == 24) { "An ObjectId must be 24-characters long, found ${hex.length} characters: '$hex'" }
+			return fromBytes(hex.hexToByteArray())
+		}
 
 		/**
 		 * The minimum [ObjectId] created at [timestamp].

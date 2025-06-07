@@ -36,6 +36,11 @@ class ObjectIdTest : PreparedSpec({
 		check(id.counter == counter)
 	}
 
+	test("Construct from string") {
+		val id = ObjectId.fromHex("5fee66001cbe991a1400007b")
+		check(id.toString() == "ObjectId(5fee66001cbe991a1400007b)")
+	}
+
 	suite("Equality") {
 		test("Two ObjectId with the same data are equal") {
 			val timestamp = Instant.parse("2021-01-01T00:00:00Z")
