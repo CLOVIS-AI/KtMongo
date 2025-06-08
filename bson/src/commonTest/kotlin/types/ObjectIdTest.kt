@@ -41,6 +41,15 @@ class ObjectIdTest : PreparedSpec({
 		check(id.toString() == "ObjectId(5fee66001cbe991a1400007b)")
 	}
 
+	test("Minimum ObjectId") {
+		check(ObjectId.MIN.toString() == "ObjectId(000000000000000000000000)")
+	}
+
+	test("Maximum ObjectId") {
+		check(ObjectId.MAX.toString() == "ObjectId(ffffffffffffffffffffffff)")
+		check(ObjectId.MAX.timestamp == Instant.parse("2106-02-07T06:28:15Z"))
+	}
+
 	suite("Equality") {
 		test("Two ObjectId with the same data are equal") {
 			val timestamp = Instant.parse("2021-01-01T00:00:00Z")

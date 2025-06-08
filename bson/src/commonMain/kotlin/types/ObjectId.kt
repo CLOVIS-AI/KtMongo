@@ -16,10 +16,10 @@
 
 package opensavvy.ktmongo.bson.types
 
-import opensavvy.ktmongo.bson.types.ObjectId.Companion.counterMax
+import opensavvy.ktmongo.bson.types.ObjectId.Companion.COUNTER_BOUND
+import opensavvy.ktmongo.bson.types.ObjectId.Companion.PROCESS_ID_BOUND
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.maxAt
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.minAt
-import opensavvy.ktmongo.bson.types.ObjectId.Companion.processIdMax
 import kotlin.experimental.and
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -31,6 +31,9 @@ import kotlin.time.Instant
 class ObjectId(
 	/**
 	 * The ObjectId creation timestamp, with a resolution of one second.
+	 *
+	 * This timestamp can represent time from the UNIX epoch (Jan 1 1970) and is stored as 32 unsigned bits
+	 * (approximately Feb 2 2016, see [ObjectId.MAX]'s timestamp for an exact value).
 	 */
 	val timestamp: Instant,
 
@@ -40,7 +43,7 @@ class ObjectId(
 	 * This random value is unique to the machine and process.
 	 * If the process restarts of the primary node of the process changes, this value is re-regenerated.
 	 *
-	 * @see ObjectId.processIdMax
+	 * @see ObjectId.PROCESS_ID_BOUND
 	 */
 	val processId: Long,
 
@@ -49,15 +52,15 @@ class ObjectId(
 	 *
 	 * The counter resets when a process restarts.
 	 *
-	 * @see ObjectId.counterMax
+	 * @see ObjectId.COUNTER_BOUND
 	 */
 	val counter: Int,
 ) : Comparable<ObjectId> {
 
 	init {
-		require(processId < processIdMax) { "The process identifier part of an ObjectId must fit in 5 bytes ($processIdMax), but found: $processId" }
+		require(processId < PROCESS_ID_BOUND) { "The process identifier part of an ObjectId must fit in 5 bytes ($PROCESS_ID_BOUND), but found: $processId" }
 		require(counter >= 0) { "The counter part of an ObjectId must be positive, but found: $counter" }
-		require(counter < counterMax) { "The counter part of an ObjectId must fit in 3 bytes ($counterMax), but found: $counter" }
+		require(counter < COUNTER_BOUND) { "The counter part of an ObjectId must fit in 3 bytes ($COUNTER_BOUND), but found: $counter" }
 	}
 
 	/**
@@ -126,14 +129,24 @@ class ObjectId(
 		 *
 		 * The minimum allowed value is 0.
 		 */
-		const val processIdMax = 1.toLong() shl (5 * 8)
+		const val PROCESS_ID_BOUND = 1.toLong() shl (5 * 8)
 
 		/**
 		 * The smallest integer that is not allowed in [ObjectId.counter].
 		 *
 		 * The minimum allowed value is 0.
 		 */
-		const val counterMax = 1 shl (3 * 8)
+		const val COUNTER_BOUND = 1 shl (3 * 8)
+
+		/**
+		 * The minimum possible [ObjectId]: the one that is lesser or equal to all possible [ObjectId] instances.
+		 */
+		val MIN = ObjectId(Instant.fromEpochSeconds(0), 0, 0)
+
+		/**
+		 * The maximum possible [ObjectId]: the one that is greater or equal to all possible [ObjectId] instances.
+		 */
+		val MAX = fromHex("FFFFFFFFFFFFFFFFFFFFFFFF")
 
 		/**
 		 * Reads 12 [bytes] into an [ObjectId].
@@ -183,7 +196,7 @@ class ObjectId(
 		 * @see toObjectIdRange
 		 */
 		fun maxAt(timestamp: Instant): ObjectId =
-			ObjectId(timestamp, processIdMax - 1, counterMax - 1)
+			ObjectId(timestamp, PROCESS_ID_BOUND - 1, COUNTER_BOUND - 1)
 	}
 }
 
@@ -225,7 +238,7 @@ private fun partsToArray(
 	bytes[2] = (timestamp shr 8).toByte() and 0xFF.toByte()
 	bytes[3] = timestamp.toByte() and 0xFF.toByte()
 
-	require(processId < processIdMax) { "The process identifier part of an ObjectId must fit in 5 bytes ($processIdMax), but found: $processId" }
+	require(processId < PROCESS_ID_BOUND) { "The process identifier part of an ObjectId must fit in 5 bytes ($PROCESS_ID_BOUND), but found: $processId" }
 	bytes[4] = (processId shr 32).toByte() and 0xFF.toByte()
 	bytes[5] = (processId shr 24).toByte() and 0xFF.toByte()
 	bytes[6] = (processId shr 16).toByte() and 0xFF.toByte()
@@ -233,7 +246,7 @@ private fun partsToArray(
 	bytes[8] = processId.toByte() and 0xFF.toByte()
 
 	require(counter >= 0) { "The counter part of an ObjectId must be positive, but found: $counter" }
-	require(counter < counterMax) { "The counter part of an ObjectId must fit in 3 bytes ($counterMax), but found: $counter" }
+	require(counter < COUNTER_BOUND) { "The counter part of an ObjectId must fit in 3 bytes ($COUNTER_BOUND), but found: $counter" }
 	bytes[9] = (counter shr 16).toByte() and 0xFF.toByte()
 	bytes[10] = (counter shr 8).toByte() and 0xFF.toByte()
 	bytes[11] = counter.toByte() and 0xFF.toByte()
