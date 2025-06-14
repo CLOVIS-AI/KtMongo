@@ -21,7 +21,11 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.official.types.KotlinObjectIdCodec
+import opensavvy.ktmongo.bson.official.types.toOfficial
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.official.types.toOfficial
+import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
 import org.bson.BsonArray
@@ -139,8 +143,8 @@ private class JavaBsonWriter(
 		writer.writeString(name, value)
 	}
 
-	override fun writeTimestamp(name: String, value: Long) {
-		writer.writeTimestamp(name, BsonTimestamp(value))
+	override fun writeTimestamp(name: String, value: Timestamp) {
+		writer.writeTimestamp(name, value.toOfficial())
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
@@ -236,8 +240,8 @@ private class JavaBsonWriter(
 		writer.writeString(value)
 	}
 
-	override fun writeTimestamp(value: Long) {
-		writer.writeTimestamp(BsonTimestamp(value))
+	override fun writeTimestamp(value: Timestamp) {
+		writer.writeTimestamp(value.toOfficial())
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
@@ -369,8 +373,8 @@ private class JavaRootArrayWriter(
 	}
 
 	@LowLevelApi
-	override fun writeTimestamp(value: Long) {
-		array.add(BsonTimestamp(value))
+	override fun writeTimestamp(value: Timestamp) {
+		array.add(value.toOfficial())
 	}
 
 	@LowLevelApi

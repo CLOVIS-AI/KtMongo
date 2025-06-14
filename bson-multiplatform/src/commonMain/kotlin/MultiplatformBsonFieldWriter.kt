@@ -22,6 +22,7 @@ import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
@@ -111,7 +112,7 @@ internal class MultiplatformBsonFieldWriter(
 	}
 
 	@LowLevelApi
-	override fun writeTimestamp(name: String, value: Long) {
+	override fun writeTimestamp(name: String, value: Timestamp) {
 		TODO()
 	}
 

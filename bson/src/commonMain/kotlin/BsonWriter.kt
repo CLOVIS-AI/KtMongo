@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.experimental.and
@@ -70,7 +71,8 @@ interface BsonValueWriter : AnyBsonWriter {
 	@LowLevelApi fun writeObjectId(id: ByteArray)
 	@LowLevelApi fun writeRegularExpression(pattern: String, options: String)
 	@LowLevelApi fun writeString(value: String)
-	@LowLevelApi fun writeTimestamp(value: Long)
+	@LowLevelApi
+	fun writeTimestamp(value: Timestamp)
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi fun writeSymbol(value: String)
@@ -200,7 +202,8 @@ interface BsonFieldWriter : AnyBsonWriter {
 	@LowLevelApi fun writeObjectId(name: String, id: ByteArray)
 	@LowLevelApi fun writeRegularExpression(name: String, pattern: String, options: String)
 	@LowLevelApi fun writeString(name: String, value: String)
-	@LowLevelApi fun writeTimestamp(name: String, value: Long)
+	@LowLevelApi
+	fun writeTimestamp(name: String, value: Timestamp)
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi fun writeSymbol(name: String, value: String)

@@ -20,6 +20,8 @@ import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonArrayReader
 import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonValueReader
+import opensavvy.ktmongo.bson.official.types.toKtMongo
+import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonDocument
 import org.bson.BsonValue
@@ -166,9 +168,9 @@ private class BsonValueReader(
 	}
 
 	@LowLevelApi
-	override fun readTimestamp(): Long {
+	override fun readTimestamp(): Timestamp {
 		ensureType(BsonType.Timestamp) { value.isTimestamp }
-		return value.asTimestamp().value
+		return value.asTimestamp().toKtMongo()
 	}
 
 	@Suppress("DEPRECATION")
