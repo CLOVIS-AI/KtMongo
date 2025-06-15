@@ -5,6 +5,9 @@ mkdocs:
   extends: [ .os.gradle ]
   needs: [ os.version ]
 
+  variables:
+    GIT_DEPTH: 0
+
   before_script:
     - ./docs/website/verify-marker.sh
     - ./gradlew docs:website:embedDokkaIntoMkDocs -PappVersion=$project_version
