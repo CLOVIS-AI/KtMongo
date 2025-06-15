@@ -14,12 +14,19 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalTime::class)
+@file:OptIn(ExperimentalTime::class, ExperimentalCoroutinesApi::class, ExperimentalAtomicApi::class)
 
 package opensavvy.ktmongo.bson.types
 
 import io.kotest.assertions.throwables.shouldThrow
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import opensavvy.ktmongo.bson.types.ObjectId.Companion.COUNTER_BOUND
+import opensavvy.ktmongo.bson.types.ObjectId.Companion.PROCESS_ID_BOUND
 import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.suite.clock
+import opensavvy.prepared.suite.random.random
+import opensavvy.prepared.suite.time
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.ExperimentalTime
 
 class ObjectIdGeneratorTest : PreparedSpec({
@@ -42,4 +49,31 @@ class ObjectIdGeneratorTest : PreparedSpec({
 
 	}
 
+	suite("Default generator") {
+		test("Hunt for duplicates generated for a given instant") {
+			val generator = ObjectIdGenerator.Default(
+				clock = time.clock,
+				random = random.accessUnsafe(),
+			)
+
+			val previous = HashSet<ObjectId>()
+
+			// In theory, we should be able to generate COUNTER_BOUND * PROCESS_ID_BOUND IDs in a single instant.
+			// However, that is *way* more than what can fit in RAM via the 'previous' HashSet.
+			// Since it's not possible to actually test the algorithm completely, we settle with testing
+			// a large number of generations (still in a single instant). Since each run
+			// starts from a different offset, hopefully this should be strong enough to detect anomalies.
+			repeat(1_000_000) { index ->
+				try {
+					val id = generator.newId()
+					if (id in previous) throw AssertionError("Duplicate ID $id after generating $index IDs (counter bound: $COUNTER_BOUND, process ID bound: $PROCESS_ID_BOUND, ${index * 1.0 / COUNTER_BOUND} rounds)")
+					previous += id
+				} catch (e: Error) {
+					previous.clear() // Free the memory to ensure the next line can succeed
+					println("Failed after $index generations (counter bound: $COUNTER_BOUND, process ID bound: $PROCESS_ID_BOUND, ${index * 1.0 / COUNTER_BOUND} rounds)")
+					throw e
+				}
+			}
+		}
+	}
 })

@@ -16,6 +16,9 @@
 
 package opensavvy.ktmongo.bson.types
 
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.random.Random
+import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
 /**
@@ -36,6 +39,47 @@ interface ObjectIdGenerator {
 	 */
 	@ExperimentalTime
 	fun newId(): ObjectId
+
+	/**
+	 * The default [ObjectIdGenerator], implementing the MongoDB ObjectId generation algorithm.
+	 *
+	 * Note that it isn't guaranteed that IDs are generated monotonically: it is possible that an ID is lesser
+	 * (according to [ObjectId.compareTo]) than one generated previously, but only if both were generated
+	 * during the same second.
+	 *
+	 * However, it is guaranteed until [the year 2016][ObjectId.timestamp] that an ID
+	 * is always strictly greater than one generated in a previous second.
+	 */
+	@ExperimentalAtomicApi
+	@ExperimentalTime
+	class Default(
+		private val clock: Clock = Clock.System,
+		private val random: Random = Random,
+		private var processId: Long = random.nextLong(0, ObjectId.PROCESS_ID_BOUND),
+	) : ObjectIdGenerator {
+
+		private var counter = 0
+		private var counterOffset = random.nextInt(0, ObjectId.COUNTER_BOUND)
+
+		override fun newId(): ObjectId {
+			// TODO in #71: Make this algorithm thread-safe
+
+			val now = clock.now()
+
+			val myCounter = counter++
+			if (counter >= ObjectId.COUNTER_BOUND) {
+				counter = 0
+				processId++
+				processId %= ObjectId.PROCESS_ID_BOUND
+			}
+
+			return ObjectId(
+				timestamp = now,
+				processId = processId,
+				counter = (myCounter + counterOffset) % ObjectId.COUNTER_BOUND,
+			)
+		}
+	}
 
 	/**
 	 * Hardcoded [ObjectId] generator with a deterministic input sequence.
