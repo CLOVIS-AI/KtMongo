@@ -26,6 +26,10 @@ import kotlin.time.Instant
 
 /**
  * A 12-bytes identifier for MongoDB objects.
+ *
+ * This class allows accessing all fields of an ObjectId as well as constructing instances from existing data.
+ * However, it doesn't provide a way to generate new randomized ObjectId instances (as that depends on the database configuration).
+ * To do so, see [opensavvy.ktmongo.bson.BsonContext.newId].
  */
 @ExperimentalTime
 class ObjectId(

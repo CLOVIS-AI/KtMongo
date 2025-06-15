@@ -22,9 +22,15 @@ import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.time.ExperimentalTime
 
-class BsonContext : BsonContext {
+@OptIn(ExperimentalTime::class)
+class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
+	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Default(),
+) : BsonContext, ObjectIdGenerator by objectIdGenerator {
 
 	@LowLevelApi
 	private inline fun buildArbitraryTopLevel(

@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 /**
@@ -26,7 +27,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  *
  * For example, a platform may store its serialization configuration in this class.
  */
-interface BsonContext {
+interface BsonContext : ObjectIdGenerator {
 
 	/**
 	 * Instantiates a new [BSON document][Bson].

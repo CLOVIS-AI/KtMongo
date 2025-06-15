@@ -102,4 +102,6 @@ interface ObjectIdGenerator {
 			return ids.next()
 		}
 	}
+
+	companion object
 }
