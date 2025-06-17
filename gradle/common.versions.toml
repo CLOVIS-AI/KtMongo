@@ -3,10 +3,25 @@
 # Other repositories will automatically sync themselves.
 
 [versions]
-kotlin = "2.1.20"                  # https://kotlinlang.org/docs/releases.html#release-details
-compose = "1.8.0"                  # https://github.com/JetBrains/compose-multiplatform/releases
-kotest = "5.9.1"                   # https://github.com/kotest/kotest/releases
-kotest-plugin = "6.0.0.M2"
+
+# https://kotlinlang.org/docs/releases.html#release-details
+kotlin = "2.1.21"
+
+# https://github.com/JetBrains/compose-multiplatform/releases
+compose = "1.8.0"
+
+# https://github.com/kotest/kotest/releases
+kotest = "5.9.1"
+kotest-plugin = "6.0.0.M3"
+
+# https://github.com/infix-de/testBalloon/releases
+testBalloon = "0.3.1-K2.1.21"
+
+# https://gitlab.com/opensavvy/groundwork/pedestal/-/releases
+pedestal = "3.0.0-rc.1"
+
+# https://opensavvy.gitlab.io/groundwork/prepared/docs/news
+prepared = "2.0.5"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -19,8 +34,31 @@ compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" 
 
 kotest = { id = "io.kotest.multiplatform", version.ref = "kotest-plugin" }
 
+testBalloon = { id = "de.infix.testBalloon", version.ref = "testBalloon" }
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
+
+opensavvy-pedestal-progress = { module = "dev.opensavvy.pedestal:progress", version.ref = "pedestal" }
+opensavvy-pedestal-progress-coroutines = { module = "dev.opensavvy.pedestal:progress-coroutines", version.ref = "pedestal" }
+opensavvy-pedestal-state = { module = "dev.opensavvy.pedestal:state", version.ref = "pedestal" }
+opensavvy-pedestal-state-coroutines = { module = "dev.opensavvy.pedestal:state-coroutines", version.ref = "pedestal" }
+opensavvy-pedestal-cache = { module = "dev.opensavvy.pedestal:cache", version.ref = "pedestal" }
+opensavvy-pedestal-cache-blocking = { module = "dev.opensavvy.pedestal:cache-blocking", version.ref = "pedestal" }
+opensavvy-pedestal-weak = { module = "dev.opensavvy.pedestal:weak", version.ref = "pedestal" }
+opensavvy-pedestal-enumset = { module = "dev.opensavvy.pedestal:enumset", version.ref = "pedestal" }
+
+opensavvy-prepared = { module = "dev.opensavvy.prepared:suite", version.ref = "prepared" }
+opensavvy-prepared-kotest = { module = "dev.opensavvy.prepared:runner-kotest", version.ref = "prepared" }
+opensavvy-prepared-testBalloon = { module = "dev.opensavvy.prepared:runner-testballoon", version.ref = "prepared" }
+opensavvy-prepared-kotlin = { module = "dev.opensavvy.prepared:runner-kotlin-test", version.ref = "prepared" }
+opensavvy-prepared-arrow = { module = "dev.opensavvy.prepared:compat-arrow", version.ref = "prepared" }
+opensavvy-prepared-filesystem = { module = "dev.opensavvy.prepared:compat-filesystem", version.ref = "prepared" }
+opensavvy-prepared-gradle = { module = "dev.opensavvy.prepared:compat-gradle", version.ref = "prepared" }
+opensavvy-prepared-java-time = { module = "dev.opensavvy.prepared:compat-java-time", version.ref = "prepared" }
+opensavvy-prepared-kotlinx-datetime = { module = "dev.opensavvy.prepared:compat-kotlinx-datetime", version.ref = "prepared" }
+opensavvy-prepared-ktor = { module = "dev.opensavvy.prepared:compat-ktor", version.ref = "prepared" }
+opensavvy-prepared-parameterize = { module = "dev.opensavvy.prepared:compat-parameterize", version.ref = "prepared" }
 
 [bundles]
