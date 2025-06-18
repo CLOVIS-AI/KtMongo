@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.official
 
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.options.ReadConcern
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import org.bson.conversions.Bson
 
@@ -25,3 +26,13 @@ fun opensavvy.ktmongo.bson.Bson.toJava(): Bson = (this as opensavvy.ktmongo.bson
 
 @LowLevelApi
 fun BsonNode.toJava(): Bson = this.toBson().toJava()
+
+@LowLevelApi
+fun ReadConcern?.toJava(): com.mongodb.ReadConcern = when (this) {
+	ReadConcern.Local -> com.mongodb.ReadConcern.LOCAL
+	ReadConcern.Available -> com.mongodb.ReadConcern.AVAILABLE
+	ReadConcern.Majority -> com.mongodb.ReadConcern.MAJORITY
+	ReadConcern.Linearizable -> com.mongodb.ReadConcern.LINEARIZABLE
+	ReadConcern.Snapshot -> com.mongodb.ReadConcern.SNAPSHOT
+	null -> com.mongodb.ReadConcern.DEFAULT
+}

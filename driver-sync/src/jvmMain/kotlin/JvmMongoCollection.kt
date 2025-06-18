@@ -66,7 +66,8 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 
 		return JvmMongoIterable(
-			inner.find(context.buildDocument(model.filter).raw)
+			inner.withReadConcern(model.options.readReadConcern())
+				.find(context.buildDocument(model.filter).raw)
 				.limit(model.options.readLimit())
 				.skip(model.options.readSkip())
 				.maxTime(model.options.readMaxTimeMS().toLong(), TimeUnit.MILLISECONDS)
