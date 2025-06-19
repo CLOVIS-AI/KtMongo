@@ -49,6 +49,7 @@ dependencies {
 	dokka(projects.dsl)
 	dokka(projects.driverSharedOfficial)
 	dokka(projects.driverSync)
+	dokka(projects.driverSyncJava)
 	dokka(projects.driverCoroutines)
 
 	kover(projects.dsl)
