@@ -68,4 +68,5 @@ class FindOptions<Document : Any>(context: BsonContext) :
 	WithLimit,
 	WithSkip,
 	WithMaxTime,
-	WithSort<Document>
+	WithSort<Document>,
+	WithReadConcern

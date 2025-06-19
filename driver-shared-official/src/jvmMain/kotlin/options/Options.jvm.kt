@@ -43,3 +43,7 @@ fun WithSkip.readMaxTimeMS() =
 @LowLevelApi
 fun WithSort<*>.readSortDocument() =
 	option<SortOption<*>>()?.block?.toJava()
+
+@LowLevelApi
+fun WithReadConcern.readReadConcern() =
+	option<ReadConcernOption>()?.concern.toJava()
