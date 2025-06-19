@@ -26,6 +26,7 @@ val eq = "\$eq"
 val ne = "\$ne"
 val and = "\$and"
 val or = "\$or"
+val nor = "\$nor"
 val exists = "\$exists"
 val type = "\$type"
 val not = "\$not"
@@ -42,6 +43,7 @@ val expr = "\$expr"
 val getField = "\$getField"
 val regex = "\$regex"
 val regularExpression = "\$regularExpression"
+val size = "\$size"
 
 class Pet(
 	val name: String,

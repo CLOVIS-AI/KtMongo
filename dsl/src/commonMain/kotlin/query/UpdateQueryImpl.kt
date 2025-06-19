@@ -221,6 +221,60 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
+	// region $min
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	override infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.min(value: V) {
+		accept(MinBsonNodeNode(listOf(this.path to value), context))
+	}
+
+	@LowLevelApi
+	private class MinBsonNodeNode(
+		val mappings: List<Pair<Path, *>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+		override fun simplify(): AbstractBsonNode? =
+			this.takeUnless { mappings.isEmpty() }
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument("\$min") {
+				for ((field, value) in mappings) {
+					writeObjectSafe(field.toString(), value)
+				}
+			}
+		}
+	}
+
+	// endregion
+	// region $max
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	override infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.max(value: V) {
+		accept(MaxBsonNodeNode(listOf(this.path to value), context))
+	}
+
+	@LowLevelApi
+	private class MaxBsonNodeNode(
+		val mappings: List<Pair<Path, *>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+		override fun simplify(): AbstractBsonNode? =
+			this.takeUnless { mappings.isEmpty() }
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument("\$max") {
+				for ((field, value) in mappings) {
+					writeObjectSafe(field.toString(), value)
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $rename
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
@@ -263,6 +317,12 @@ private class UpdateQueryImpl<T>(
 			},
 			OperatorCombinator(MultiplyBsonNodeNode::class) { sources, context ->
 				MultiplyBsonNodeNode(sources.flatMap { it.mappings }, context)
+			},
+			OperatorCombinator(MinBsonNodeNode::class) { sources, context ->
+				MinBsonNodeNode(sources.flatMap { it.mappings }, context)
+			},
+			OperatorCombinator(MaxBsonNodeNode::class) { sources, context ->
+				MaxBsonNodeNode(sources.flatMap { it.mappings }, context)
 			},
 			OperatorCombinator(UnsetBsonNodeNode::class) { sources, context ->
 				UnsetBsonNodeNode(sources.flatMap { it.fields }, context)

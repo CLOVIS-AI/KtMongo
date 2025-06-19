@@ -247,4 +247,84 @@ class FieldUpdateTest : PreparedSpec({
 			""".trimIndent()
 		}
 	}
+
+	suite("Operator $min") {
+		test("Single field") {
+			update {
+				User::age min 10
+			} shouldBeBson """
+				{
+					"$min": {
+						"age": 10
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Nested field") {
+			update {
+				User::bestFriend / Friend::money min 5.0f
+			} shouldBeBson """
+				{
+					"$min": {
+						"bestFriend.money": 5.0
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Multiple fields") {
+			update {
+				User::age min 10
+				User::bestFriend / Friend::money min 5.0f
+			} shouldBeBson """
+				{
+					"$min": {
+						"age": 10,
+						"bestFriend.money": 5.0
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite("Operator $max") {
+		test("Single field") {
+			update {
+				User::age max 100
+			} shouldBeBson """
+				{
+					"$max": {
+						"age": 100
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Nested field") {
+			update {
+				User::bestFriend / Friend::money max 1000.0f
+			} shouldBeBson """
+				{
+					"$max": {
+						"bestFriend.money": 1000.0
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Multiple fields") {
+			update {
+				User::age max 100
+				User::bestFriend / Friend::money max 1000.0f
+			} shouldBeBson """
+				{
+					"$max": {
+						"age": 100,
+						"bestFriend.money": 1000.0
+					}
+				}
+			""".trimIndent()
+		}
+	}
 })

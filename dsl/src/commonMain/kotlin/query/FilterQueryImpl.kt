@@ -138,6 +138,37 @@ private class FilterQueryImpl<T>(
 		}
 	}
 
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@KtMongoDsl
+	override fun nor(block: FilterQuery<T>.() -> Unit) {
+		accept(NorFilterBsonNodeNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
+	}
+
+	@DangerousMongoApi
+	@LowLevelApi
+	private class NorFilterBsonNodeNode<T>(
+		val declaredChildren: List<BsonNode>,
+		context: BsonContext,
+	) : FilterBsonNodeNode(context) {
+
+		override fun simplify(): AbstractBsonNode? {
+			if (declaredChildren.isEmpty())
+				return null
+
+			return super.simplify()
+		}
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeArray("\$nor") {
+				for (child in declaredChildren) {
+					writeDocument {
+						child.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
 	// endregion
 	// region Predicate access
 
@@ -225,6 +256,29 @@ private class FilterQueryImpl<T>(
 						writeObjectSafe(value)
 					}
 				}
+			}
+		}
+	}
+
+	// endregion
+	// region $size
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@KtMongoDsl
+	override fun Field<T, Collection<*>>.size(size: Int) {
+		accept(ArraySizeBsonNode<T>(path, size, context))
+	}
+
+	@LowLevelApi
+	private class ArraySizeBsonNode<T>(
+		val path: Path,
+		val size: Int,
+		context: BsonContext,
+	) : FilterBsonNodeNode(context) {
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument(path.toString()) {
+				writeInt32("\$size", size)
 			}
 		}
 	}

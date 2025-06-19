@@ -110,6 +110,7 @@ import kotlin.reflect.KProperty1
  * Logical query:
  * - [`$and`][and]
  * - [`$not`][not]
+ * - [`$nor`][nor]
  * - [`$or`][or]
  *
  * Element query:
@@ -121,6 +122,7 @@ import kotlin.reflect.KProperty1
  * Array query:
  * - [`$all`][containsAll]
  * - [`$elemMatch`][any]
+ * - [`$size`][size]
  *
  * Text query:
  * - [`$regex`][regex]
@@ -157,6 +159,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/and/)
 	 *
 	 * @see or Logical `OR` operation.
+	 * @see nor Logical `NOR` operation.
 	 */
 	@KtMongoDsl
 	fun and(block: FilterQuery<T>.() -> Unit)
@@ -187,9 +190,41 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/or/)
 	 *
 	 * @see and Logical `AND` operation.
+	 * @see nor Logical `NOR` operation.
 	 */
 	@KtMongoDsl
 	fun or(block: FilterQuery<T>.() -> Unit)
+
+	/**
+	 * Performs a logical `NOR` operation on one or more expressions,
+	 * and selects the documents that *do not* satisfy *any* of the expressions.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find {
+	 *     nor {
+	 *         User::name eq "foo"
+	 *         User::name eq "bar"
+	 *         User::age eq 18
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nor/)
+	 *
+	 * @see and Logical `AND` operation.
+	 * @see or Logical `OR` operation.
+	 */
+	@KtMongoDsl
+	fun nor(block: FilterQuery<T>.() -> Unit)
 
 	// endregion
 	// region Predicate access
@@ -2595,6 +2630,67 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, Collection<V>>.containsAll(values: Collection<V>) {
 		this.field.containsAll(values)
+	}
+
+	// endregion
+	// region $size
+
+	/**
+	 * Selects documents where the value of a field is an array of size [size] (exactly).
+	 *
+	 * This operator cannot accept a range of values. To select documents based on fields with different numbers of
+	 * elements, create a counter field that you increment when you add elements to a field.
+	 *
+	 * Queries cannot use indexes for this portion of the query, but other parts of the query may use indexes if
+	 * applicable.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val grades: List<Int>,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades size 3
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/size/)
+	 */
+	@KtMongoDsl
+	infix fun Field<T, Collection<*>>.size(size: Int)
+
+	/**
+	 * Selects documents where the value of a field is an array of size [size] (exactly).
+	 *
+	 * This operator cannot accept a range of values. To select documents based on fields with different numbers of
+	 * elements, create a counter field that you increment when you add elements to a field.
+	 *
+	 * Queries cannot use indexes for this portion of the query, but other parts of the query may use indexes if
+	 * applicable.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val grades: List<Int>,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades size 3
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/size/)
+	 */
+	@KtMongoDsl
+	infix fun KProperty1<T, Collection<*>>.size(size: Int) {
+		this.field.size(size)
 	}
 
 	// endregion
