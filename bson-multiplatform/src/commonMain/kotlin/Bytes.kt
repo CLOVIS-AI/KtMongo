@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson.multiplatform
 
 import kotlinx.io.*
+import kotlinx.io.unsafe.UnsafeBufferOperations
 
 /**
  * Represents an area within a [ByteArray].
@@ -28,18 +29,27 @@ internal class Bytes(
 
 	constructor(data: ByteArray) : this(data, 0..data.lastIndex)
 
-	val size get() = range.endInclusive - range.start + 1
+	val size get() = range.last - range.first + 1
 
-	val rawSource: RawSource get() = BytesRawSource(data, range)
-
-	val source: Source get() = rawSource.buffered()
+	@OptIn(UnsafeIoApi::class) // Safe because 'data' is effectively immutable • https://github.com/Kotlin/kotlinx-io/issues/444
+	val source: Source
+		get() {
+			val buffer = Buffer()
+			UnsafeBufferOperations.moveToTail(
+				buffer,
+				data,
+				startIndex = range.first,
+				endIndex = range.last + 1, // We should never have a ByteArray large enough for this to overflow
+			)
+			return buffer
+		}
 
 	val reader: RawBsonReader get() = RawBsonReader(source)
 
 	fun subrange(subrange: IntRange): Bytes {
-		require(subrange.start >= 0) { "Cannot create a subrange that starts at a negative index, found: $subrange" }
-		require(subrange.endInclusive - subrange.start < size) { "Cannot create a subrange that ends after the end of the data, there are $size bytes, found: $subrange" }
-		return Bytes(data, (range.start + subrange.start)..(range.start + subrange.endInclusive))
+		require(subrange.first >= 0) { "Cannot create a subrange that starts at a negative index, found: $subrange" }
+		require(subrange.last - subrange.first < size) { "Cannot create a subrange that ends after the end of the data, there are $size bytes, found: $subrange" }
+		return Bytes(data, (range.first + subrange.first)..(range.first + subrange.last))
 	}
 
 	fun toByteArray(): ByteArray {
@@ -63,45 +73,6 @@ internal class Bytes(
 			isFirst = false
 		}
 		append("] [size $size]")
-	}
-}
-
-private class BytesRawSource(
-	private val data: ByteArray,
-	private var start: Int,
-	private val endInclusive: Int,
-) : RawSource {
-
-	init {
-		require(start <= data.lastIndex) { "Cannot start reading a ByteArray of size ${data.size} from index $start" }
-		require(endInclusive <= data.lastIndex) { "Cannot read a ByteArray of size ${data.size} until the index $endInclusive (inclusive)" }
-	}
-
-	private var isClosed = false
-
-	constructor(data: ByteArray, range: IntRange) : this(data, range.start, range.endInclusive)
-
-	override fun readAtMostTo(sink: Buffer, byteCount: Long): Long {
-		check(!isClosed) { "This source has been closed, reading it is now forbidden" }
-
-		if (start > endInclusive) {
-			return -1
-		}
-
-		for (i in 0..byteCount) {
-			if (start > endInclusive) {
-				return i
-			}
-
-			sink.writeByte(data[start])
-			start++
-		}
-
-		return byteCount
-	}
-
-	override fun close() {
-		isClosed = true
 	}
 }
 
