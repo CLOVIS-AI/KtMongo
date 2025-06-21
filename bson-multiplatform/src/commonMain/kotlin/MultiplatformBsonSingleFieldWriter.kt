@@ -17,12 +17,14 @@
 package opensavvy.ktmongo.bson.multiplatform
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
 internal class MultiplatformBsonSingleFieldWriter(
-	private val writer: BsonFieldWriter,
+	private val writer: MultiplatformBsonFieldWriter,
 	private val name: String,
 ) : BsonValueWriter {
 
@@ -134,5 +136,14 @@ internal class MultiplatformBsonSingleFieldWriter(
 	@LowLevelApi
 	override fun <T> writeObjectSafe(obj: T) {
 		writer.writeObjectSafe(name, obj)
+	}
+
+	@DangerousMongoApi
+	override fun pipe(obj: BsonValueReader) {
+		if (obj is MultiplatformBsonValueReader) {
+			writer.pipe(name, obj)
+		} else {
+			super.pipe(obj)
+		}
 	}
 }

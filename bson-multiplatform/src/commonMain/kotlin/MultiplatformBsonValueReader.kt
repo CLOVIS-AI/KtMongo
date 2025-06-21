@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson.multiplatform
 
 import opensavvy.ktmongo.bson.*
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -185,6 +186,11 @@ internal class MultiplatformBsonValueReader(
 	override fun readArray(): BsonArrayReader {
 		checkType(BsonType.Array)
 		return MultiplatformBsonArrayReader(bytes)
+	}
+
+	@OptIn(DangerousMongoApi::class)
+	internal fun writeTo(writer: RawBsonWriter) {
+		writer.writeArbitrary(bytes)
 	}
 
 	@Suppress("DEPRECATION")

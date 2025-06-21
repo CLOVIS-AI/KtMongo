@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson.multiplatform
 
 import kotlinx.io.*
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 
 // https://bsonspec.org/spec.html
 internal class RawBsonWriter(
@@ -61,6 +62,11 @@ internal class RawBsonWriter(
 		writeInt32(bytes.size + 1)
 		sink.write(bytes)
 		writeUnsignedByte(0u)
+	}
+
+	@DangerousMongoApi
+	internal fun writeArbitrary(bytes: Bytes) {
+		sink.write(bytes.source, bytes.size.toLong())
 	}
 
 }

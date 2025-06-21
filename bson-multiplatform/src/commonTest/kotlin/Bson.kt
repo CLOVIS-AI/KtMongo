@@ -16,7 +16,10 @@
 
 package opensavvy.ktmongo.bson.multiplatform
 
+import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.raw.*
+import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.kotest.PreparedSpec
 import opensavvy.prepared.suite.prepared
 
@@ -38,4 +41,22 @@ class MultiplatformBsonWriterTest : PreparedSpec({
 	code(context)
 	datetime(context)
 	minMaxKey(context)
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	test("Pipe objects") {
+		val pipe = context().buildDocument {
+			writeInt32("four", 2 + 2)
+			writeString("foo", "bar")
+			writeArray("grades") {
+				writeInt32(4)
+				writeInt32(7)
+			}
+		}
+
+		context().buildDocument {
+			write("root") {
+				pipe(pipe.reader().asValue())
+			}
+		}.toString() shouldBe """{"root": {"four": 4, "foo": "bar", "grades": [4, 7]}}"""
+	}
 })
