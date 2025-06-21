@@ -29,7 +29,7 @@ internal class Bytes(
 
 	constructor(data: ByteArray) : this(data, 0..data.lastIndex)
 
-	val size get() = range.endInclusive - range.start + 1
+	val size get() = range.last - range.first + 1
 
 	@OptIn(UnsafeIoApi::class) // Safe because 'data' is effectively immutable • https://github.com/Kotlin/kotlinx-io/issues/444
 	val source: Source
@@ -47,9 +47,9 @@ internal class Bytes(
 	val reader: RawBsonReader get() = RawBsonReader(source)
 
 	fun subrange(subrange: IntRange): Bytes {
-		require(subrange.start >= 0) { "Cannot create a subrange that starts at a negative index, found: $subrange" }
-		require(subrange.endInclusive - subrange.start < size) { "Cannot create a subrange that ends after the end of the data, there are $size bytes, found: $subrange" }
-		return Bytes(data, (range.start + subrange.start)..(range.start + subrange.endInclusive))
+		require(subrange.first >= 0) { "Cannot create a subrange that starts at a negative index, found: $subrange" }
+		require(subrange.last - subrange.first < size) { "Cannot create a subrange that ends after the end of the data, there are $size bytes, found: $subrange" }
+		return Bytes(data, (range.first + subrange.first)..(range.first + subrange.last))
 	}
 
 	fun toByteArray(): ByteArray {
