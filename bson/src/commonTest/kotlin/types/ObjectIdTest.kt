@@ -16,7 +16,7 @@
 
 @file:OptIn(ExperimentalTime::class)
 
-package opensavvy.ktmongo.bson.multiplatform.types
+package opensavvy.ktmongo.bson.types
 
 import opensavvy.prepared.runner.kotest.PreparedSpec
 import kotlin.time.ExperimentalTime
@@ -34,6 +34,20 @@ class ObjectIdTest : PreparedSpec({
 		check(id.timestamp == timestamp)
 		check(id.processId == processId)
 		check(id.counter == counter)
+	}
+
+	test("Construct from string") {
+		val id = ObjectId("5fee66001cbe991a1400007b")
+		check(id.toString() == "ObjectId(5fee66001cbe991a1400007b)")
+	}
+
+	test("Minimum ObjectId") {
+		check(ObjectId.MIN.toString() == "ObjectId(000000000000000000000000)")
+	}
+
+	test("Maximum ObjectId") {
+		check(ObjectId.MAX.toString() == "ObjectId(ffffffffffffffffffffffff)")
+		check(ObjectId.MAX.timestamp == Instant.parse("2106-02-07T06:28:15Z"))
 	}
 
 	suite("Equality") {

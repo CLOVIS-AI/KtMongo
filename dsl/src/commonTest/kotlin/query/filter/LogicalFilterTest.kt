@@ -16,9 +16,9 @@
 
 package opensavvy.ktmongo.dsl.query.filter
 
-import opensavvy.ktmongo.bson.official.types.ObjectId
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.prepared.runner.kotest.PreparedSpec
+import org.bson.types.ObjectId
 
 class LogicalFilterTest : PreparedSpec({
 	suite("Operators $and, $or, and $nor") {

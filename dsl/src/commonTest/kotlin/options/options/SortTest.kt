@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalTime::class)
+
 package opensavvy.ktmongo.dsl.options.options
 
-import opensavvy.ktmongo.bson.official.types.ObjectId
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.FindOptions
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.kotest.PreparedSpec
+import kotlin.time.ExperimentalTime
 
 @LowLevelApi
 class SortTest : PreparedSpec({
