@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,4 +16,35 @@
 
 package opensavvy.ktmongo.bson.official.types
 
-actual typealias ObjectId = org.bson.types.ObjectId
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import kotlin.time.ExperimentalTime
+
+private object JvmObjectIdGenerator : ObjectIdGenerator {
+	@ExperimentalTime
+	override fun newId(): ObjectId {
+		val id = org.bson.types.ObjectId()
+		return ObjectId(
+			// Yes, this byte array is wasted memory and GC pressure.
+			// It is necessary because the Java driver doesn't provide a way to access the nonce
+			// more efficiently.
+			id.toByteArray()
+		)
+	}
+}
+
+/**
+ * An [ObjectIdGenerator] instance that uses the Java driver's [org.bson.types.ObjectId]'s algorithm.
+ *
+ * This generation algorithm is slightly different from [ObjectIdGenerator.Default].
+ * Here are a few differences:
+ *
+ * |                                       | ObjectIdGenerator.Jvm        | ObjectIdGenerator.Default |
+ * |---------------------------------------|------------------------------|----|
+ * | Maximum number of ObjectId per second | ≈16 million                  | ≈1 billion billion |
+ * | Random source                         | [java.security.SecureRandom] | [kotlin.random.Random] |
+ * | Testability                           | None                         | Can inject a clock and a random source to deterministically generate tests |
+ */
+@Suppress("FunctionName", "GrazieInspection")
+fun ObjectIdGenerator.Companion.Jvm(): ObjectIdGenerator =
+	JvmObjectIdGenerator

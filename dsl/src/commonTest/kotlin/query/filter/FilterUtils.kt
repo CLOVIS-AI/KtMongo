@@ -16,11 +16,11 @@
 
 package opensavvy.ktmongo.dsl.query.filter
 
-import opensavvy.ktmongo.bson.official.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.testContext
+import org.bson.types.ObjectId
 
 val eq = "\$eq"
 val ne = "\$ne"

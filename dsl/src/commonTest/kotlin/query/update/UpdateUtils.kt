@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.dsl.query.update
 
-import opensavvy.ktmongo.bson.official.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.UpdateQuery
@@ -24,6 +23,7 @@ import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.kotest.PreparedSpec
+import org.bson.types.ObjectId
 
 val set = "\$set"
 val setOnInsert = "\$setOnInsert"
