@@ -37,7 +37,7 @@ class ObjectIdTest : PreparedSpec({
 	}
 
 	test("Construct from string") {
-		val id = ObjectId.fromHex("5fee66001cbe991a1400007b")
+		val id = ObjectId("5fee66001cbe991a1400007b")
 		check(id.toString() == "ObjectId(5fee66001cbe991a1400007b)")
 	}
 

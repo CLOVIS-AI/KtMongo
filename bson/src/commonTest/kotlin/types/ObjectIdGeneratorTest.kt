@@ -35,14 +35,14 @@ class ObjectIdGeneratorTest : PreparedSpec({
 
 		test("Generate multiple elements") {
 			val generator = ObjectIdGenerator.Hardcoded(
-				ObjectId.fromHex("68440c96dd675c605ee0e275"),
-				ObjectId.fromHex("68440cac8fd4c1c0ed08ebe2"),
-				ObjectId.fromHex("68440caf38bc1eeca63ee5a0"),
+				ObjectId("68440c96dd675c605ee0e275"),
+				ObjectId("68440cac8fd4c1c0ed08ebe2"),
+				ObjectId("68440caf38bc1eeca63ee5a0"),
 			)
 
-			check(generator.newId() == ObjectId.fromHex("68440c96dd675c605ee0e275"))
-			check(generator.newId() == ObjectId.fromHex("68440cac8fd4c1c0ed08ebe2"))
-			check(generator.newId() == ObjectId.fromHex("68440caf38bc1eeca63ee5a0"))
+			check(generator.newId() == ObjectId("68440c96dd675c605ee0e275"))
+			check(generator.newId() == ObjectId("68440cac8fd4c1c0ed08ebe2"))
+			check(generator.newId() == ObjectId("68440caf38bc1eeca63ee5a0"))
 
 			shouldThrow<NoSuchElementException> { generator.newId() }
 		}

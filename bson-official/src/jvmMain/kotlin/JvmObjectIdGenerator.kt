@@ -24,7 +24,7 @@ private object JvmObjectIdGenerator : ObjectIdGenerator {
 	@ExperimentalTime
 	override fun newId(): ObjectId {
 		val id = org.bson.types.ObjectId()
-		return ObjectId.fromBytes(
+		return ObjectId(
 			// Yes, this byte array is wasted memory and GC pressure.
 			// It is necessary because the Java driver doesn't provide a way to access the nonce
 			// more efficiently.

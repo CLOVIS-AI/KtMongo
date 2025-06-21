@@ -16,8 +16,6 @@
 
 package opensavvy.ktmongo.bson.types
 
-import opensavvy.ktmongo.bson.types.ObjectId.Companion.COUNTER_BOUND
-import opensavvy.ktmongo.bson.types.ObjectId.Companion.PROCESS_ID_BOUND
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.maxAt
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.minAt
 import kotlin.experimental.and
@@ -32,14 +30,15 @@ import kotlin.time.Instant
  * To do so, see [opensavvy.ktmongo.bson.BsonContext.newId].
  */
 @ExperimentalTime
-class ObjectId(
+class ObjectId : Comparable<ObjectId> {
+
 	/**
 	 * The ObjectId creation timestamp, with a resolution of one second.
 	 *
 	 * This timestamp can represent time from the UNIX epoch (Jan 1 1970) and is stored as 32 unsigned bits
 	 * (approximately Feb 2 2016, see [ObjectId.MAX]'s timestamp for an exact value).
 	 */
-	val timestamp: Instant,
+	val timestamp: Instant
 
 	/**
 	 * 5-byte random value generated per client-side process.
@@ -49,7 +48,7 @@ class ObjectId(
 	 *
 	 * @see ObjectId.PROCESS_ID_BOUND
 	 */
-	val processId: Long,
+	val processId: Long
 
 	/**
 	 * A 3-byte incrementing counter per client-side process, initialized to a random value. Always positive.
@@ -58,29 +57,100 @@ class ObjectId(
 	 *
 	 * @see ObjectId.COUNTER_BOUND
 	 */
-	val counter: Int,
-) : Comparable<ObjectId> {
+	val counter: Int
 
-	init {
+	/**
+	 * Constructs a new [ObjectId] from its different components.
+	 */
+	constructor(
+		timestamp: Instant,
+		processId: Long,
+		counter: Int,
+	) {
 		require(processId < PROCESS_ID_BOUND) { "The process identifier part of an ObjectId must fit in 5 bytes ($PROCESS_ID_BOUND), but found: $processId" }
 		require(counter >= 0) { "The counter part of an ObjectId must be positive, but found: $counter" }
 		require(counter < COUNTER_BOUND) { "The counter part of an ObjectId must fit in 3 bytes ($COUNTER_BOUND), but found: $counter" }
+
+		this.timestamp = timestamp
+		this.processId = processId
+		this.counter = counter
 	}
+
+	/**
+	 * Constructs a new [ObjectId] by reading a byte array.
+	 *
+	 * [bytes] should be exactly 12-bytes long.
+	 *
+	 * To access the bytes of an existing ObjectId, see [ObjectId.bytes].
+	 */
+	constructor(bytes: ByteArray) {
+		require(bytes.size == 12) { "ObjectId must be 12 bytes long, found ${bytes.size}" }
+
+		val timestampPart = (bytes[0].toUByte().toUInt() shl 24) +
+			(bytes[1].toUByte().toUInt() shl 16) +
+			(bytes[2].toUByte().toUInt() shl 8) +
+			(bytes[3].toUByte().toUInt())
+
+		timestamp = Instant.fromEpochSeconds(timestampPart.toLong())
+
+		processId = (bytes[4].toUByte().toLong() shl 32) +
+			(bytes[5].toUByte().toLong() shl 24) +
+			(bytes[6].toUByte().toLong() shl 16) +
+			(bytes[7].toUByte().toLong() shl 8) +
+			(bytes[8].toUByte().toLong())
+
+		counter = (bytes[9].toUByte().toInt() shl 16) +
+			(bytes[10].toUByte().toInt() shl 8) +
+			(bytes[11].toUByte().toInt())
+	}
+
+	/**
+	 * Constructs a new [ObjectId] by reading a hexadecimal representation.
+	 *
+	 * [hex] should be exactly 24 characters long (12 bytes).
+	 *
+	 * To access the hexadecimal representation of an existing ObjectId, see [ObjectId.hex].
+	 */
+	@OptIn(ExperimentalStdlibApi::class)
+	constructor(hex: String) : this(hexToBytes(hex))
 
 	/**
 	 * Generates a byte representation of this [ObjectId] instance.
 	 *
 	 * Because [ByteArray] is mutable, each access will generate a new array.
 	 *
-	 * The output array can be passed to [ObjectId.fromBytes] to obtain a new identical [ObjectId] instance.
+	 * The output array can be passed to the [ObjectId] constructor to obtain a new identical [ObjectId] instance.
 	 */
 	val bytes: ByteArray
-		get() = partsToArray(timestamp, processId, counter)
+		get() {
+			val bytes = ByteArray(12)
+
+			val timestamp = timestamp.epochSeconds.toUInt()
+			bytes[0] = (timestamp shr 24).toByte() and 0xFF.toByte()
+			bytes[1] = (timestamp shr 16).toByte() and 0xFF.toByte()
+			bytes[2] = (timestamp shr 8).toByte() and 0xFF.toByte()
+			bytes[3] = timestamp.toByte() and 0xFF.toByte()
+
+			require(processId < PROCESS_ID_BOUND) { "The process identifier part of an ObjectId must fit in 5 bytes ($PROCESS_ID_BOUND), but found: $processId" }
+			bytes[4] = (processId shr 32).toByte() and 0xFF.toByte()
+			bytes[5] = (processId shr 24).toByte() and 0xFF.toByte()
+			bytes[6] = (processId shr 16).toByte() and 0xFF.toByte()
+			bytes[7] = (processId shr 8).toByte() and 0xFF.toByte()
+			bytes[8] = processId.toByte() and 0xFF.toByte()
+
+			require(counter >= 0) { "The counter part of an ObjectId must be positive, but found: $counter" }
+			require(counter < COUNTER_BOUND) { "The counter part of an ObjectId must fit in 3 bytes ($COUNTER_BOUND), but found: $counter" }
+			bytes[9] = (counter shr 16).toByte() and 0xFF.toByte()
+			bytes[10] = (counter shr 8).toByte() and 0xFF.toByte()
+			bytes[11] = counter.toByte() and 0xFF.toByte()
+
+			return bytes
+		}
 
 	/**
 	 * Generates a hex representation of this [ObjectId] instance.
 	 *
-	 * The output string can be passed to [ObjectId.fromHex] to obtain a new identical [ObjectId] instance.
+	 * The output string can be passed to [ObjectId] constructor to obtain a new identical [ObjectId] instance.
 	 */
 	@OptIn(ExperimentalStdlibApi::class)
 	val hex: String by lazy(LazyThreadSafetyMode.PUBLICATION) { bytes.toHexString(HexFormat.Default) }
@@ -150,24 +220,12 @@ class ObjectId(
 		/**
 		 * The maximum possible [ObjectId]: the one that is greater or equal to all possible [ObjectId] instances.
 		 */
-		val MAX = fromHex("FFFFFFFFFFFFFFFFFFFFFFFF")
+		val MAX = ObjectId("FFFFFFFFFFFFFFFFFFFFFFFF")
 
-		/**
-		 * Reads 12 [bytes] into an [ObjectId].
-		 *
-		 * The symmetric operation is [ObjectId.bytes].
-		 */
-		fun fromBytes(bytes: ByteArray): ObjectId = arrayToParts(bytes)
-
-		/**
-		 * Reads 24 characters in hexadecimal format into an [ObjectId].
-		 *
-		 * The symmetric operation is [ObjectId.hex].
-		 */
 		@OptIn(ExperimentalStdlibApi::class)
-		fun fromHex(hex: String): ObjectId {
+		private fun hexToBytes(hex: String): ByteArray {
 			require(hex.length == 24) { "An ObjectId must be 24-characters long, found ${hex.length} characters: '$hex'" }
-			return fromBytes(hex.hexToByteArray())
+			return hex.hexToByteArray()
 		}
 
 		/**
@@ -227,59 +285,3 @@ fun ClosedRange<Instant>.toObjectIdRange(): ClosedRange<ObjectId> =
 @ExperimentalTime
 fun OpenEndRange<Instant>.toObjectIdRange(): OpenEndRange<ObjectId> =
 	minAt(start)..<minAt(endExclusive)
-
-@ExperimentalTime
-private fun partsToArray(
-	timestamp: Instant,
-	processId: Long,
-	counter: Int,
-): ByteArray {
-	val bytes = ByteArray(12)
-
-	val timestamp = timestamp.epochSeconds.toUInt()
-	bytes[0] = (timestamp shr 24).toByte() and 0xFF.toByte()
-	bytes[1] = (timestamp shr 16).toByte() and 0xFF.toByte()
-	bytes[2] = (timestamp shr 8).toByte() and 0xFF.toByte()
-	bytes[3] = timestamp.toByte() and 0xFF.toByte()
-
-	require(processId < PROCESS_ID_BOUND) { "The process identifier part of an ObjectId must fit in 5 bytes ($PROCESS_ID_BOUND), but found: $processId" }
-	bytes[4] = (processId shr 32).toByte() and 0xFF.toByte()
-	bytes[5] = (processId shr 24).toByte() and 0xFF.toByte()
-	bytes[6] = (processId shr 16).toByte() and 0xFF.toByte()
-	bytes[7] = (processId shr 8).toByte() and 0xFF.toByte()
-	bytes[8] = processId.toByte() and 0xFF.toByte()
-
-	require(counter >= 0) { "The counter part of an ObjectId must be positive, but found: $counter" }
-	require(counter < COUNTER_BOUND) { "The counter part of an ObjectId must fit in 3 bytes ($COUNTER_BOUND), but found: $counter" }
-	bytes[9] = (counter shr 16).toByte() and 0xFF.toByte()
-	bytes[10] = (counter shr 8).toByte() and 0xFF.toByte()
-	bytes[11] = counter.toByte() and 0xFF.toByte()
-
-	return bytes
-}
-
-@OptIn(ExperimentalTime::class)
-private fun arrayToParts(
-	bytes: ByteArray,
-): ObjectId {
-	require(bytes.size == 12) { "ObjectId must be 12 bytes long, found ${bytes.size}" }
-
-	val timestampPart = (bytes[0].toUByte().toUInt() shl 24) +
-		(bytes[1].toUByte().toUInt() shl 16) +
-		(bytes[2].toUByte().toUInt() shl 8) +
-		(bytes[3].toUByte().toUInt())
-
-	val timestamp = Instant.fromEpochSeconds(timestampPart.toLong())
-
-	val processId = (bytes[4].toUByte().toLong() shl 32) +
-		(bytes[5].toUByte().toLong() shl 24) +
-		(bytes[6].toUByte().toLong() shl 16) +
-		(bytes[7].toUByte().toLong() shl 8) +
-		(bytes[8].toUByte().toLong())
-
-	val counter = (bytes[9].toUByte().toInt() shl 16) +
-		(bytes[10].toUByte().toInt() shl 8) +
-		(bytes[11].toUByte().toInt())
-
-	return ObjectId(timestamp, processId, counter)
-}
