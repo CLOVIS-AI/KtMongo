@@ -20,6 +20,7 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.official.types.KotlinObjectIdCodec
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
@@ -47,6 +48,7 @@ class JvmBsonContext(
 		CodecRegistries.fromCodecs(
 			KotlinBsonCodec(this),
 			KotlinBsonArrayCodec(this),
+			KotlinObjectIdCodec()
 		)
 	)
 

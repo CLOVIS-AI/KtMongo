@@ -18,19 +18,40 @@ package opensavvy.ktmongo.bson.official.types
 
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import org.bson.BsonReader
+import org.bson.BsonWriter
+import org.bson.codecs.Codec
+import org.bson.codecs.DecoderContext
+import org.bson.codecs.EncoderContext
+import org.bson.codecs.ObjectIdCodec
 import kotlin.time.ExperimentalTime
+
+// region Conversions
+
+// Yes, this byte array is wasted memory and GC pressure.
+// It is necessary because the Java driver doesn't provide a way to access the nonce
+// more efficiently.
+
+/**
+ * Converts an ObjectId from the Java driver into a KtMongo ObjectId.
+ */
+@ExperimentalTime
+fun ObjectId.toOfficial(): org.bson.types.ObjectId =
+	org.bson.types.ObjectId(bytes)
+
+/**
+ * Converts an ObjectId from KtMongo into one from the Java driver.
+ */
+@ExperimentalTime
+fun org.bson.types.ObjectId.toKtMongo(): ObjectId =
+	ObjectId(toByteArray())
+
+// endregion
+// region Generator
 
 private object JvmObjectIdGenerator : ObjectIdGenerator {
 	@ExperimentalTime
-	override fun newId(): ObjectId {
-		val id = org.bson.types.ObjectId()
-		return ObjectId(
-			// Yes, this byte array is wasted memory and GC pressure.
-			// It is necessary because the Java driver doesn't provide a way to access the nonce
-			// more efficiently.
-			id.toByteArray()
-		)
-	}
+	override fun newId(): ObjectId = org.bson.types.ObjectId().toKtMongo()
 }
 
 /**
@@ -48,3 +69,24 @@ private object JvmObjectIdGenerator : ObjectIdGenerator {
 @Suppress("FunctionName", "GrazieInspection")
 fun ObjectIdGenerator.Companion.Jvm(): ObjectIdGenerator =
 	JvmObjectIdGenerator
+
+// endregion
+// region Codec
+
+@OptIn(ExperimentalTime::class)
+internal class KotlinObjectIdCodec : Codec<ObjectId> {
+	private val objCodec = ObjectIdCodec()
+
+	override fun encode(writer: BsonWriter?, value: ObjectId, encoderContext: EncoderContext?) {
+		objCodec.encode(writer, value.toOfficial(), encoderContext)
+	}
+
+	override fun getEncoderClass(): Class<ObjectId> =
+		ObjectId::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): ObjectId? =
+		objCodec.decode(reader, decoderContext)?.toKtMongo()
+
+}
+
+// endregion
