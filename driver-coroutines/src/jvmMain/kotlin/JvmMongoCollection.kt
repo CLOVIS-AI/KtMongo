@@ -61,7 +61,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	override fun find(
 		options: FindOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-	): MongoIterable<Document> {
+	): JvmMongoIterable<Document> {
 		val model = Find<Document>(context)
 
 		model.options.options()
