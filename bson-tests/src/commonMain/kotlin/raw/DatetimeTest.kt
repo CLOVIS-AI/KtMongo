@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalTime::class)
 
 package opensavvy.ktmongo.bson.raw
 
-import kotlinx.datetime.Instant
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Test datetime representations.
@@ -34,31 +35,31 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 fun SuiteDsl.datetime(context: Prepared<BsonContext>) = suite("Datetime") {
 	test("epoch") {
 		context().buildDocument {
-			writeDateTime("a", 0)
+			writeInstant("a", Instant.fromEpochSeconds(0))
 		} shouldBeHex "10000000096100000000000000000000"
 	}
 
 	test("positive ms") {
 		context().buildDocument {
-			writeDateTime("a", Instant.parse("2012-12-24T12:15:30.501Z").toEpochMilliseconds())
+			writeInstant("a", Instant.parse("2012-12-24T12:15:30.501Z"))
 		} shouldBeHex "10000000096100C5D8D6CC3B01000000"
 	}
 
 	test("negative") {
 		context().buildDocument {
-			writeDateTime("a", -284643869501)
+			writeInstant("a", Instant.fromEpochMilliseconds(-284643869501))
 		} shouldBeHex "10000000096100C33CE7B9BDFFFFFF00"
 	}
 
 	test("Y10K") {
 		context().buildDocument {
-			writeDateTime("a", 253402300800000)
+			writeInstant("a", Instant.fromEpochMilliseconds(253402300800000))
 		} shouldBeHex "1000000009610000DC1FD277E6000000"
 	}
 
 	test("leading zero ms") {
 		context().buildDocument {
-			writeDateTime("a", Instant.parse("2012-12-24T12:15:30.001Z").toEpochMilliseconds())
+			writeInstant("a", Instant.parse("2012-12-24T12:15:30.001Z"))
 		} shouldBeHex "10000000096100D1D6D6CC3B01000000"
 	}
 
