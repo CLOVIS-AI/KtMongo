@@ -18,11 +18,11 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
-import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -31,36 +31,54 @@ import kotlin.time.Instant
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/datetime.json.
  */
-@OptIn(ExperimentalEncodingApi::class)
 fun SuiteDsl.datetime(context: Prepared<BsonContext>) = suite("Datetime") {
-	test("epoch") {
-		context().buildDocument {
-			writeInstant("a", Instant.fromEpochSeconds(0))
-		} shouldBeHex "10000000096100000000000000000000"
+	testBson(
+		context,
+		"epoch"
+	) {
+		document { writeInstant("a", Instant.fromEpochSeconds(0)) }
+		expectedBinaryHex = "10000000096100000000000000000000"
+		expectedJson = $$"""{"a": {"$date": "1970-01-01T00:00:00Z"}}"""
+		verify("Read value") { read("a")?.readInstant() shouldBe Instant.fromEpochSeconds(0) }
 	}
 
-	test("positive ms") {
-		context().buildDocument {
-			writeInstant("a", Instant.parse("2012-12-24T12:15:30.501Z"))
-		} shouldBeHex "10000000096100C5D8D6CC3B01000000"
+	testBson(
+		context,
+		"positive ms"
+	) {
+		document { writeInstant("a", Instant.parse("2012-12-24T12:15:30.501Z")) }
+		expectedBinaryHex = "10000000096100C5D8D6CC3B01000000"
+		expectedJson = $$"""{"a": {"$date": "2012-12-24T12:15:30.501Z"}}"""
+		verify("Read value") { read("a")?.readInstant() shouldBe Instant.parse("2012-12-24T12:15:30.501Z") }
 	}
 
-	test("negative") {
-		context().buildDocument {
-			writeInstant("a", Instant.fromEpochMilliseconds(-284643869501))
-		} shouldBeHex "10000000096100C33CE7B9BDFFFFFF00"
+	testBson(
+		context,
+		"negative"
+	) {
+		document { writeInstant("a", Instant.fromEpochMilliseconds(-284643869501)) }
+		expectedBinaryHex = "10000000096100C33CE7B9BDFFFFFF00"
+		expectedJson = $$"""{"a": {"$date": {"$numberLong": "-284643869501"}}}"""
+		verify("Read value") { read("a")?.readInstant() shouldBe Instant.fromEpochMilliseconds(-284643869501) }
 	}
 
-	test("Y10K") {
-		context().buildDocument {
-			writeInstant("a", Instant.fromEpochMilliseconds(253402300800000))
-		} shouldBeHex "1000000009610000DC1FD277E6000000"
+	testBson(
+		context,
+		"Y10K"
+	) {
+		document { writeInstant("a", Instant.fromEpochMilliseconds(253402300800000)) }
+		expectedBinaryHex = "1000000009610000DC1FD277E6000000"
+		expectedJson = $$"""{"a": {"$date": {"$numberLong": "253402300800000"}}}"""
+		verify("Read value") { read("a")?.readInstant() shouldBe Instant.fromEpochMilliseconds(253402300800000) }
 	}
 
-	test("leading zero ms") {
-		context().buildDocument {
-			writeInstant("a", Instant.parse("2012-12-24T12:15:30.001Z"))
-		} shouldBeHex "10000000096100D1D6D6CC3B01000000"
+	testBson(
+		context,
+		"leading zero ms"
+	) {
+		document { writeInstant("a", Instant.parse("2012-12-24T12:15:30.001Z")) }
+		expectedBinaryHex = "10000000096100D1D6D6CC3B01000000"
+		expectedJson = $$"""{"a": {"$date": "2012-12-24T12:15:30.001Z"}}"""
+		verify("Read value") { read("a")?.readInstant() shouldBe Instant.parse("2012-12-24T12:15:30.001Z") }
 	}
-
 }

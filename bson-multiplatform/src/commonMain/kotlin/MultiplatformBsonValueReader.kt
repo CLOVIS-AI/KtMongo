@@ -25,6 +25,8 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @LowLevelApi
 internal class MultiplatformBsonValueReader(
@@ -71,7 +73,7 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readDateTime(): Long {
 		checkType(BsonType.Datetime)
-		TODO("Not yet implemented")
+		return bytes.reader.readInt64()
 	}
 
 	@LowLevelApi
@@ -193,6 +195,7 @@ internal class MultiplatformBsonValueReader(
 		writer.writeArbitrary(bytes)
 	}
 
+	@OptIn(ExperimentalTime::class)
 	@Suppress("DEPRECATION")
 	override fun toString(): String = when (type) {
 		BsonType.Boolean -> readBoolean().toString()
@@ -205,6 +208,13 @@ internal class MultiplatformBsonValueReader(
 		BsonType.Document -> readDocument().toString()
 		BsonType.Array -> readArray().toString()
 		BsonType.JavaScript -> """{"${'$'}code": "${readJavaScript()}"}"""
+		BsonType.Datetime -> {
+			val time = readDateTime()
+			if (time in 0..253402300799999) // Start of the year 1970 … End of the year 9999
+				"""{"${'$'}date": "${Instant.fromEpochMilliseconds(time)}"}"""
+			else
+				"""{"${'$'}date": {"${'$'}numberLong": "$time"}}"""
+		}
 		BsonType.BinaryData -> {
 			val subType = readBinaryDataType()
 			val data = readBinaryData()
