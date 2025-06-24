@@ -90,13 +90,15 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readRegularExpressionPattern(): String {
 		checkType(BsonType.RegExp)
-		TODO("Not yet implemented")
+		return bytes.reader.readCString()
 	}
 
 	@LowLevelApi
 	override fun readRegularExpressionOptions(): String {
 		checkType(BsonType.RegExp)
-		TODO("Not yet implemented")
+		val reader = bytes.reader
+		reader.readCString() // pattern
+		return reader.readCString() // options
 	}
 
 	@LowLevelApi
@@ -223,6 +225,15 @@ internal class MultiplatformBsonValueReader(
 			val base64 = Base64.encode(data)
 
 			"""{"${'$'}binary": {"base64": "$base64", "subType": "${subType.toString(16).padStart(2, '0')}"}}"""
+		}
+		BsonType.RegExp -> {
+			val reader = bytes.reader
+			val pattern = reader.readCString()
+			val options = reader.readCString()
+			val escapedPattern = pattern
+				.replace("\\", "\\\\")
+				.replace("\"", "\\\"")
+			"""{"${'$'}regularExpression": {"pattern": "$escapedPattern", "options": "$options"}}"""
 		}
 		BsonType.MinKey -> """{"${'$'}minKey": 1}"""
 		BsonType.MaxKey -> """{"${'$'}maxKey": 1}"""

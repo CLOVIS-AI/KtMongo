@@ -97,7 +97,10 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun writeRegularExpression(name: String, pattern: String, options: String) {
-		TODO()
+		writeType(BsonType.RegExp)
+		writeName(name)
+		writer.writeCString(pattern)
+		writer.writeCString(options.asIterable().sorted().joinToString(""))
 	}
 
 	@LowLevelApi

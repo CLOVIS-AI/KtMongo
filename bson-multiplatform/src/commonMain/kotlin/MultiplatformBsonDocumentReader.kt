@@ -52,7 +52,19 @@ internal fun readField(
 		BsonType.Boolean -> 1
 		BsonType.Datetime -> 8
 		BsonType.Null -> 0
-		BsonType.RegExp -> TODO()
+		BsonType.RegExp -> {
+			val peek = reader.peek()
+			var byteCount = 0L
+			// Read pattern (null-terminated string)
+			while (peek.request(1) && peek.readByte() != 0.toByte())
+				byteCount++
+			byteCount++ // null terminator
+			// Read options (null-terminated string)
+			while (peek.request(1) && peek.readByte() != 0.toByte())
+				byteCount++
+			byteCount++ // null terminator
+			byteCount.toInt()
+		}
 		BsonType.DBPointer -> TODO()
 		BsonType.JavaScript -> reader.peek().readIntLe() + 4
 		BsonType.Symbol -> TODO()
