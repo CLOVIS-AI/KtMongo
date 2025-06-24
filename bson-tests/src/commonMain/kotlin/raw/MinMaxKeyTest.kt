@@ -20,6 +20,10 @@ package opensavvy.ktmongo.bson.raw
 
 import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -32,21 +36,27 @@ import opensavvy.prepared.suite.SuiteDsl
 fun SuiteDsl.minMaxKey(context: Prepared<BsonContext>) = suite("MinMaxKey") {
 	testBson(
 		context,
-		name = "Minkey",
-	) {
-		document { writeMinKey("a") }
-		expectedBinaryHex = "08000000FF610000"
-		expectedJson = $$"""{"a": {"$minKey": 1}}"""
-		verify("Read value") { read("a")?.readMinKey() shouldBe Unit }
-	}
+		"Minkey",
+		document {
+			writeMinKey("a")
+		},
+		hex("08000000FF610000"),
+		json($$"""{"a": {"$minKey": 1}}"""),
+		verify("Read value") {
+			read("a")?.readMinKey() shouldBe Unit
+		}
+	)
 
 	testBson(
 		context,
-		name = "Maxkey",
-	) {
-		document { writeMaxKey("a") }
-		expectedBinaryHex = "080000007F610000"
-		expectedJson = $$"""{"a": {"$maxKey": 1}}"""
-		verify("Read value") { read("a")?.readMaxKey() shouldBe Unit }
-	}
+		"Maxkey",
+		document {
+			writeMaxKey("a")
+		},
+		hex("080000007F610000"),
+		json($$"""{"a": {"$maxKey": 1}}"""),
+		verify("Read value") {
+			read("a")?.readMaxKey() shouldBe Unit
+		}
+	)
 }

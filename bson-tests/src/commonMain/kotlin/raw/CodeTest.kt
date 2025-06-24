@@ -20,6 +20,10 @@ package opensavvy.ktmongo.bson.raw
 
 import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -34,13 +38,16 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 	testBson(
 		context,
-		name = "Empty string",
-	) {
-		document { writeJavaScript("a", "") }
-		expectedBinaryHex = "0D0000000D6100010000000000"
-		expectedJson = $$"""{"a": {"$code": ""}}"""
-		verify("Read value") { read("a")?.readJavaScript() shouldBe "" }
-	}
+		"Empty string",
+		document {
+			writeJavaScript("a", "")
+		},
+		hex("0D0000000D6100010000000000"),
+		json($$"""{"a": {"$code": ""}}"""),
+		verify("Read value") {
+			read("a")?.readJavaScript() shouldBe ""
+		}
+	)
 
 	testBson(
 		context,
