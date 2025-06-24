@@ -1,12 +1,11 @@
 package opensavvy.playground.core
 
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class HelloWorldTest {
+val HelloWorldTest by preparedSuite {
 
-	@Test
-	fun helloWorld() {
-		assertEquals("Hello World!", message)
+	test("Hello world!") {
+		@Suppress("SimplifyBooleanWithConstants") // The compiler knows this test will always succeed
+		check("Hello World!" == message)
 	}
 }

@@ -15,13 +15,13 @@ kotest = "5.9.1"
 kotest-plugin = "6.0.0.M3"
 
 # https://github.com/infix-de/testBalloon/releases
-testBalloon = "0.3.1-K2.1.21"
+testBalloon = "0.3.3-K2.1.21"
 
 # https://gitlab.com/opensavvy/groundwork/pedestal/-/releases
 pedestal = "3.0.0-rc.1"
 
 # https://opensavvy.gitlab.io/groundwork/prepared/docs/news
-prepared = "2.0.5"
+prepared = "2.0.6"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -40,6 +40,10 @@ testBalloon = { id = "de.infix.testBalloon", version.ref = "testBalloon" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-assertions-collections = { module = "io.kotest:kotest-assertions-collections", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+
 opensavvy-pedestal-progress = { module = "dev.opensavvy.pedestal:progress", version.ref = "pedestal" }
 opensavvy-pedestal-progress-coroutines = { module = "dev.opensavvy.pedestal:progress-coroutines", version.ref = "pedestal" }
 opensavvy-pedestal-state = { module = "dev.opensavvy.pedestal:state", version.ref = "pedestal" }
@@ -52,7 +56,7 @@ opensavvy-pedestal-enumset = { module = "dev.opensavvy.pedestal:enumset", versio
 opensavvy-prepared = { module = "dev.opensavvy.prepared:suite", version.ref = "prepared" }
 opensavvy-prepared-kotest = { module = "dev.opensavvy.prepared:runner-kotest", version.ref = "prepared" }
 opensavvy-prepared-testBalloon = { module = "dev.opensavvy.prepared:runner-testballoon", version.ref = "prepared" }
-opensavvy-prepared-kotlin = { module = "dev.opensavvy.prepared:runner-kotlin-test", version.ref = "prepared" }
+opensavvy-prepared-kotlinTest = { module = "dev.opensavvy.prepared:runner-kotlin-test", version.ref = "prepared" }
 opensavvy-prepared-arrow = { module = "dev.opensavvy.prepared:compat-arrow", version.ref = "prepared" }
 opensavvy-prepared-filesystem = { module = "dev.opensavvy.prepared:compat-filesystem", version.ref = "prepared" }
 opensavvy-prepared-gradle = { module = "dev.opensavvy.prepared:compat-gradle", version.ref = "prepared" }

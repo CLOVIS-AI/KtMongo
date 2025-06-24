@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(libsCommon.plugins.testBalloon)
 }
 
 kotlin {
@@ -37,11 +38,7 @@ kotlin {
 	}
 
 	sourceSets.commonTest.dependencies {
-		implementation(libsCommon.kotlin.test)
-	}
-
-	sourceSets.jvmTest.dependencies {
-		implementation(libsCommon.kotlin.test.junit5)
+		implementation(libsCommon.opensavvy.prepared.testBalloon)
 	}
 }
 
