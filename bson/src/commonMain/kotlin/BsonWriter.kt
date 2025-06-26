@@ -19,6 +19,8 @@ package opensavvy.ktmongo.bson
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.experimental.and
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Annotation to mark types that are part of the BSON writer DSL.
@@ -56,6 +58,14 @@ interface BsonValueWriter : AnyBsonWriter {
 	@LowLevelApi fun writeInt64(value: Long)
 	@LowLevelApi fun writeDecimal128(low: Long, high: Long)
 	@LowLevelApi fun writeDateTime(value: Long)
+
+	/**
+	 * Writes an [Instant]. Conversion function on top of [writeDateTime].
+	 */
+	@ExperimentalTime
+	@LowLevelApi
+	fun writeInstant(value: Instant) = writeDateTime(value.toEpochMilliseconds())
+
 	@LowLevelApi fun writeNull()
 	@LowLevelApi fun writeObjectId(id: ByteArray)
 	@LowLevelApi fun writeRegularExpression(pattern: String, options: String)
@@ -178,6 +188,14 @@ interface BsonFieldWriter : AnyBsonWriter {
 	@LowLevelApi fun writeInt64(name: String, value: Long)
 	@LowLevelApi fun writeDecimal128(name: String, low: Long, high: Long)
 	@LowLevelApi fun writeDateTime(name: String, value: Long)
+
+	/**
+	 * Writes an [Instant]. Conversion function on top of [writeDateTime].
+	 */
+	@ExperimentalTime
+	@LowLevelApi
+	fun writeInstant(name: String, value: Instant) = writeDateTime(name, value.toEpochMilliseconds())
+
 	@LowLevelApi fun writeNull(name: String)
 	@LowLevelApi fun writeObjectId(name: String, id: ByteArray)
 	@LowLevelApi fun writeRegularExpression(name: String, pattern: String, options: String)

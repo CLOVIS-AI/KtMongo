@@ -17,6 +17,8 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Utilities for decomposing a [Bson] document into its fields.
@@ -165,6 +167,15 @@ interface BsonValueReader {
 	@LowLevelApi
 	@Throws(BsonReaderException::class)
 	fun readDateTime(): Long
+
+	/**
+	 * Reads an [Instant]. Conversion function on top of [readDateTime].
+	 */
+	@ExperimentalTime
+	@LowLevelApi
+	@Throws(BsonReaderException::class)
+	fun readInstant(): Instant =
+		Instant.fromEpochMilliseconds(readDateTime())
 
 	@LowLevelApi
 	@Throws(BsonReaderException::class)

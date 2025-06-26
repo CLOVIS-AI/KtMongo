@@ -19,6 +19,10 @@
 package opensavvy.ktmongo.bson.raw
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -32,35 +36,53 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  */
 @OptIn(ExperimentalEncodingApi::class)
 fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
-	testBson(context, "subtype 0x00 (Zero-length)") {
+	testBson(
+		context,
+		"subtype 0x00 (Zero-length)",
 		document {
 			writeBinaryData("x", 0x0u, Base64.decode(""))
+		},
+		hex("0D000000057800000000000000"),
+		json($$"""{"x": {"$binary": {"base64": "", "subType": "00"}}}"""),
+		verify("Read type") {
+			read("x")?.readBinaryDataType() == 0.toUByte()
+		},
+		verify("Read data") {
+			read("x")?.readBinaryData().contentEquals(ByteArray(0))
 		}
-		expectedBinaryHex = "0D000000057800000000000000"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "", "subType": "00"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 0.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(ByteArray(0)) }
-	}
+	)
 
-	testBson(context, "subtype 0x00") {
+	testBson(
+		context,
+		"subtype 0x00",
 		document {
 			writeBinaryData("x", 0x0u, Base64.decode("//8="))
+		},
+		hex("0F0000000578000200000000FFFF00"),
+		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "00"}}}"""),
+		verify("Read type") {
+			read("x")?.readBinaryDataType() == 0.toUByte()
+		},
+		verify("Read data") {
+			read("x")?.readBinaryData().contentEquals(Base64.decode("//8="))
 		}
-		expectedBinaryHex = "0F0000000578000200000000FFFF00"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "//8=", "subType": "00"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 0.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")) }
-	}
+	)
 
-	testBson(context, "subtype 0x01") {
+	testBson(
+		context,
+		"subtype 0x01",
 		document {
 			writeBinaryData("x", 0x1u, Base64.decode("//8="))
+		},
+		hex("0F0000000578000200000001FFFF00"),
+		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "01"}}}"""),
+		verify("Read type") {
+			read("x")?.readBinaryDataType() == 1.toUByte()
+		},
+		verify("Read data") {
+			read("x")?.readBinaryData().contentEquals(Base64.decode("//8="))
 		}
-		expectedBinaryHex = "0F0000000578000200000001FFFF00"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "//8=", "subType": "01"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 1.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")) }
-	}
+	)
 
 	testBson(context, "subtype 0x02") {
 		document {

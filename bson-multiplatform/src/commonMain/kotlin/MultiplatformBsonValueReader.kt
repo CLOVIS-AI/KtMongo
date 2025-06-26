@@ -25,6 +25,8 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @LowLevelApi
 internal class MultiplatformBsonValueReader(
@@ -71,7 +73,7 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readDateTime(): Long {
 		checkType(BsonType.Datetime)
-		TODO("Not yet implemented")
+		return bytes.reader.readInt64()
 	}
 
 	@LowLevelApi
@@ -88,13 +90,15 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readRegularExpressionPattern(): String {
 		checkType(BsonType.RegExp)
-		TODO("Not yet implemented")
+		return bytes.reader.readCString()
 	}
 
 	@LowLevelApi
 	override fun readRegularExpressionOptions(): String {
 		checkType(BsonType.RegExp)
-		TODO("Not yet implemented")
+		val reader = bytes.reader
+		reader.readCString() // pattern
+		return reader.readCString() // options
 	}
 
 	@LowLevelApi
@@ -193,6 +197,7 @@ internal class MultiplatformBsonValueReader(
 		writer.writeArbitrary(bytes)
 	}
 
+	@OptIn(ExperimentalTime::class)
 	@Suppress("DEPRECATION")
 	override fun toString(): String = when (type) {
 		BsonType.Boolean -> readBoolean().toString()
@@ -205,6 +210,13 @@ internal class MultiplatformBsonValueReader(
 		BsonType.Document -> readDocument().toString()
 		BsonType.Array -> readArray().toString()
 		BsonType.JavaScript -> """{"${'$'}code": "${readJavaScript()}"}"""
+		BsonType.Datetime -> {
+			val time = readDateTime()
+			if (time in 0..253402300799999) // Start of the year 1970 … End of the year 9999
+				"""{"${'$'}date": "${Instant.fromEpochMilliseconds(time)}"}"""
+			else
+				"""{"${'$'}date": {"${'$'}numberLong": "$time"}}"""
+		}
 		BsonType.BinaryData -> {
 			val subType = readBinaryDataType()
 			val data = readBinaryData()
@@ -213,6 +225,15 @@ internal class MultiplatformBsonValueReader(
 			val base64 = Base64.encode(data)
 
 			"""{"${'$'}binary": {"base64": "$base64", "subType": "${subType.toString(16).padStart(2, '0')}"}}"""
+		}
+		BsonType.RegExp -> {
+			val reader = bytes.reader
+			val pattern = reader.readCString()
+			val options = reader.readCString()
+			val escapedPattern = pattern
+				.replace("\\", "\\\\")
+				.replace("\"", "\\\"")
+			"""{"${'$'}regularExpression": {"pattern": "$escapedPattern", "options": "$options"}}"""
 		}
 		BsonType.MinKey -> """{"${'$'}minKey": 1}"""
 		BsonType.MaxKey -> """{"${'$'}maxKey": 1}"""

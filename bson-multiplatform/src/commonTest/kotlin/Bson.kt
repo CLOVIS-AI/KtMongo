@@ -41,6 +41,7 @@ class MultiplatformBsonWriterTest : PreparedSpec({
 	code(context)
 	datetime(context)
 	minMaxKey(context)
+	regex(context)
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	test("Pipe objects") {

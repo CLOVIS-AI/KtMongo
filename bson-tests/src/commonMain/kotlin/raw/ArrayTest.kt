@@ -21,6 +21,10 @@ package opensavvy.ktmongo.bson.raw
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -33,55 +37,62 @@ import opensavvy.prepared.suite.SuiteDsl
 fun SuiteDsl.array(context: Prepared<BsonContext>) = suite("Array") {
 	testBson(
 		context,
-		"Empty"
-	) {
+		"Empty",
 		document {
 			writeArray("a") {}
+		},
+		hex("0D000000046100050000000000"),
+		json("""{"a": []}"""),
+		verify("Read value") {
+			read("a")?.readArray() shouldNotBe null
 		}
-		expectedBinaryHex = "0D000000046100050000000000"
-		expectedJson = """{"a": []}"""
-		verify("Read value") { read("a")?.readArray() shouldNotBe null }
-	}
+	)
 
 	testBson(
 		context,
-		"Single-element array"
-	) {
+		"Single-element array",
 		document {
 			writeArray("a") {
 				writeInt32(10)
 			}
+		},
+		hex("140000000461000C0000001030000A0000000000"),
+		json("""{"a": [10]}"""),
+		verify("Read value") {
+			read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10
 		}
-		expectedBinaryHex = "140000000461000C0000001030000A0000000000"
-		expectedJson = """{"a": [10]}"""
-		verify("Read value") { read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10 }
-	}
+	)
 
 	testBson(
 		context,
-		"Single Element Array with index set incorrectly to empty string"
-	) {
-		expectedBinaryHex = "130000000461000B00000010000A0000000000"
-		expectedJson = """{"a": [10]}"""
-		verify("Read value") { read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10 }
-	}
+		"Single Element Array with index set incorrectly to empty string",
+		hex("130000000461000B00000010000A0000000000"),
+		json("""{"a": [10]}"""),
+		verify("Read value") {
+			read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10
+		}
+	)
 
 	testBson(
 		context,
-		"Single Element Array with index set incorrectly to ab"
-	) {
-		expectedBinaryHex = "150000000461000D000000106162000A0000000000"
-		expectedJson = """{"a": [10]}"""
-		verify("Read value") { read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10 }
-	}
+		"Single Element Array with index set incorrectly to ab",
+		hex("150000000461000D000000106162000A0000000000"),
+		json("""{"a": [10]}"""),
+		verify("Read value") {
+			read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10
+		}
+	)
 
 	testBson(
 		context,
-		"Multi Element Array with duplicate indexes"
-	) {
-		expectedBinaryHex = "1b000000046100130000001030000a000000103000140000000000"
-		expectedJson = """{"a": [10, 20]}"""
-		verify("Read first value") { read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10 }
-		verify("Read second value") { read("a")?.readArray()?.read(1)?.readInt32() shouldBe 20 }
-	}
+		"Multi Element Array with duplicate indexes",
+		hex("1b000000046100130000001030000a000000103000140000000000"),
+		json("""{"a": [10, 20]}"""),
+		verify("Read first value") {
+			read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10
+		},
+		verify("Read second value") {
+			read("a")?.readArray()?.read(1)?.readInt32() shouldBe 20
+		}
+	)
 }
