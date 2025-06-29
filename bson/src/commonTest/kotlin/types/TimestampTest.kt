@@ -22,6 +22,7 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
 import opensavvy.prepared.suite.random.Random
 import opensavvy.prepared.suite.random.nextLong
 import opensavvy.prepared.suite.random.random
+import kotlin.random.nextULong
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -29,13 +30,14 @@ class TimestampTest : PreparedSpec({
 
 	suite("Creation and formatting") {
 		val examples = listOf(
-			0L to (Instant.parse("1970-01-01T00:00:00Z") to 0.toUInt()),
-			1L to (Instant.parse("1970-01-01T00:00:01Z") to 0.toUInt()),
-			67L to (Instant.parse("1970-01-01T00:01:07Z") to 0.toUInt()),
-			(1L shl 32) to (Instant.parse("1970-01-01T00:00:00Z") to 1.toUInt()),
-			(4L shl 32) to (Instant.parse("1970-01-01T00:00:00Z") to 4.toUInt()),
-			14588972749L to (Instant.parse("2024-01-01T01:01:01Z") to 3.toUInt()),
-			-1L to (Timestamp.MAX_INSTANT to Timestamp.MAX_COUNTER),
+			0uL to (Instant.parse("1970-01-01T00:00:00Z") to 0.toUInt()),
+			1uL to (Instant.parse("1970-01-01T00:00:00Z") to 1.toUInt()),
+			67uL to (Instant.parse("1970-01-01T00:00:00Z") to 67.toUInt()),
+			(1uL shl 32) to (Instant.parse("1970-01-01T00:00:01Z") to 0.toUInt()),
+			(4uL shl 32) to (Instant.parse("1970-01-01T00:00:04Z") to 0.toUInt()),
+			(67uL shl 32) to (Instant.parse("1970-01-01T00:01:07Z") to 0.toUInt()),
+			7318928618061561859uL to (Instant.parse("2024-01-01T01:01:01Z") to 3.toUInt()),
+			ULong.MAX_VALUE to (Timestamp.MAX_INSTANT to Timestamp.MAX_COUNTER),
 			Timestamp.MAX.value to (Timestamp.MAX_INSTANT to Timestamp.MAX_COUNTER),
 		)
 
@@ -61,7 +63,7 @@ class TimestampTest : PreparedSpec({
 		test("The maximum timestamp is greater than all others") {
 			val random = random.accessUnsafe()
 			repeat(1000) {
-				val timestamp = generateSequence { Timestamp(random.nextLong()) }
+				val timestamp = generateSequence { Timestamp(random.nextULong()) }
 					.first { it != Timestamp.MAX }
 
 				check(timestamp < Timestamp.MAX)
@@ -71,7 +73,7 @@ class TimestampTest : PreparedSpec({
 		test("The minimum timestamp is lesser than all others") {
 			val random = random.accessUnsafe()
 			repeat(1000) {
-				val timestamp = generateSequence { Timestamp(random.nextLong()) }
+				val timestamp = generateSequence { Timestamp(random.nextULong()) }
 					.first { it != Timestamp.MIN }
 
 				check(timestamp > Timestamp.MIN)

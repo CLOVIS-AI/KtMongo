@@ -14,13 +14,26 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalTime::class)
+
 package opensavvy.ktmongo.bson.official.types
 
 import opensavvy.ktmongo.bson.types.Timestamp
-import org.bson.BsonTimestamp
+import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.suite.random.nextLong
+import opensavvy.prepared.suite.random.random
+import kotlin.time.ExperimentalTime
 
-fun Timestamp.toOfficial(): BsonTimestamp =
-	BsonTimestamp(value.toLong())
+class OfficialTimestampTest : PreparedSpec({
 
-fun BsonTimestamp.toKtMongo(): Timestamp =
-	Timestamp(value.toULong())
+	test("Round-trip between official Timestamp and KtMongo Timestamp") {
+		repeat(1000) {
+			val timestamp = Timestamp(random.nextLong().toULong())
+
+			check(timestamp.toOfficial().toKtMongo() == timestamp)
+			check(timestamp.toOfficial().time == timestamp.instant.epochSeconds.toInt())
+			check(timestamp.toOfficial().inc == timestamp.counter.toInt())
+		}
+	}
+
+})

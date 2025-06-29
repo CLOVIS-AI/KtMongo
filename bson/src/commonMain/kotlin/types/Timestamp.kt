@@ -28,13 +28,15 @@ import kotlin.time.Instant
  */
 class Timestamp(
 	/**
-	 * The raw value for this timestamp.
+	 * The raw value for this [Timestamp].
 	 *
-	 * The first four bytes are an increment, the last four are a timestamp.
-	 * Note that this means sorting the timestamps by this value will not output a date-based sort.
-	 * However, the [Comparable] implementation of this class does allow sorting with a date-based order.
+	 * The first four bytes are a [timestamp][instant], the last four as an [increment][counter].
+	 *
+	 * **Note that this value is stored in big-endian representation, whereas the BSON specification
+	 * represents timestamps in little-endian.** Drivers using this type are expected to invert the endianness of this
+	 * number. This implementation choice allows better sorting performance.
 	 */
-	val value: Long,
+	val value: ULong,
 ) : Comparable<Timestamp> {
 
 	/**
@@ -42,7 +44,7 @@ class Timestamp(
 	 */
 	@ExperimentalTime
 	constructor(instant: Instant, counter: UInt) : this(
-		(counter.toULong() shl 32).toLong() + (instant.epochSeconds % (1L shl 32))
+		(instant.epochSeconds.toULong() shl 32) + (counter % (1L shl 32).toULong())
 	)
 
 	/**
@@ -52,17 +54,17 @@ class Timestamp(
 	 */
 	@ExperimentalTime
 	val instant: Instant
-		get() = Instant.fromEpochSeconds(value and UInt.MAX_VALUE.toLong())
+		get() = Instant.fromEpochSeconds((value shr 32).toLong())
 
 	/**
 	 * Incrementing counter.
 	 */
 	val counter: UInt
-		get() = (value.toULong() shr 32).toUInt()
+		get() = (value and UInt.MAX_VALUE.toULong()).toUInt()
 
 	@OptIn(ExperimentalTime::class)
 	override fun compareTo(other: Timestamp): Int =
-		chronologicalComparator.compare(this, other)
+		value.compareTo(other.value)
 
 	// region Identity
 
@@ -84,14 +86,14 @@ class Timestamp(
 		 *
 		 * This timestamp marks the UNIX epoch, Jan 1st 1970.
 		 */
-		val MIN get() = Timestamp(0)
+		val MIN get() = Timestamp(0u)
 
 		/**
 		 * The largest possible [Timestamp] instance.
 		 *
 		 * It is composed using [MAX_INSTANT] and [MAX_COUNTER].
 		 */
-		val MAX get() = Timestamp(-1)
+		val MAX get() = Timestamp(ULong.MAX_VALUE)
 
 		/**
 		 * The maximum possible instant that can be represented by a [Timestamp], which will happen during the year 2106.
@@ -103,11 +105,5 @@ class Timestamp(
 		 * The maximum possible counter for a given instant.
 		 */
 		val MAX_COUNTER get() = UInt.MAX_VALUE
-
-		@ExperimentalTime
-		val chronologicalComparator = compareBy<Timestamp>(
-			{ it.instant },
-			{ it.counter },
-		)
 	}
 }
