@@ -17,8 +17,8 @@
 package opensavvy.ktmongo.bson.multiplatform
 
 import opensavvy.ktmongo.bson.*
-import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
@@ -111,7 +111,7 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readTimestamp(): Timestamp {
 		checkType(BsonType.Timestamp)
-		TODO("Not yet implemented")
+		return Timestamp(bytes.reader.readUInt64())
 	}
 
 	@LowLevelApi
@@ -235,6 +235,11 @@ internal class MultiplatformBsonValueReader(
 				.replace("\\", "\\\\")
 				.replace("\"", "\\\"")
 			"""{"${'$'}regularExpression": {"pattern": "$escapedPattern", "options": "$options"}}"""
+		}
+		BsonType.Timestamp -> {
+			val timestamp = readTimestamp()
+
+			"""{"${'$'}timestamp": {"t": ${timestamp.instant.epochSeconds}, "i": ${timestamp.counter}}}"""
 		}
 		BsonType.MinKey -> """{"${'$'}minKey": 1}"""
 		BsonType.MaxKey -> """{"${'$'}maxKey": 1}"""
