@@ -18,8 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
@@ -44,7 +42,7 @@ fun SuiteDsl.array(context: Prepared<BsonContext>) = suite("Array") {
 		hex("0D000000046100050000000000"),
 		json("""{"a": []}"""),
 		verify("Read value") {
-			read("a")?.readArray() shouldNotBe null
+			check(read("a")?.readArray() != null)
 		}
 	)
 
@@ -59,7 +57,7 @@ fun SuiteDsl.array(context: Prepared<BsonContext>) = suite("Array") {
 		hex("140000000461000C0000001030000A0000000000"),
 		json("""{"a": [10]}"""),
 		verify("Read value") {
-			read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10
+			check(read("a")?.readArray()?.read(0)?.readInt32() == 10)
 		}
 	)
 
@@ -69,7 +67,7 @@ fun SuiteDsl.array(context: Prepared<BsonContext>) = suite("Array") {
 		hex("130000000461000B00000010000A0000000000"),
 		json("""{"a": [10]}"""),
 		verify("Read value") {
-			read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10
+			check(read("a")?.readArray()?.read(0)?.readInt32() == 10)
 		}
 	)
 
@@ -79,7 +77,7 @@ fun SuiteDsl.array(context: Prepared<BsonContext>) = suite("Array") {
 		hex("150000000461000D000000106162000A0000000000"),
 		json("""{"a": [10]}"""),
 		verify("Read value") {
-			read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10
+			check(read("a")?.readArray()?.read(0)?.readInt32() == 10)
 		}
 	)
 
@@ -89,10 +87,10 @@ fun SuiteDsl.array(context: Prepared<BsonContext>) = suite("Array") {
 		hex("1b000000046100130000001030000a000000103000140000000000"),
 		json("""{"a": [10, 20]}"""),
 		verify("Read first value") {
-			read("a")?.readArray()?.read(0)?.readInt32() shouldBe 10
+			check(read("a")?.readArray()?.read(0)?.readInt32() == 10)
 		},
 		verify("Read second value") {
-			read("a")?.readArray()?.read(1)?.readInt32() shouldBe 20
+			check(read("a")?.readArray()?.read(1)?.readInt32() == 20)
 		}
 	)
 }

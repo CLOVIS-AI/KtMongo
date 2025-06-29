@@ -18,7 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
@@ -43,7 +42,7 @@ fun SuiteDsl.reprNull(context: Prepared<BsonContext>) = suite("Null") {
 		hex("080000000A610000"),
 		json("""{"a": null}"""),
 		verify("Read value") {
-			read("a")?.readNull() shouldBe Unit
+			check(read("a")?.readNull() == Unit)
 		}
 	)
 }

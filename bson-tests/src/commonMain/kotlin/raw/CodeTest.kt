@@ -18,7 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
@@ -45,7 +44,7 @@ fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 		hex("0D0000000D6100010000000000"),
 		json($$"""{"a": {"$code": ""}}"""),
 		verify("Read value") {
-			read("a")?.readJavaScript() shouldBe ""
+			check(read("a")?.readJavaScript() == "")
 		}
 	)
 
@@ -56,7 +55,9 @@ fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 		document { writeJavaScript("a", "b") }
 		expectedBinaryHex = "0E0000000D610002000000620000"
 		expectedJson = $$"""{"a": {"$code": "b"}}"""
-		verify("Read value") { read("a")?.readJavaScript() shouldBe "b" }
+		verify("Read value") {
+			check(read("a")?.readJavaScript() == "b")
+		}
 	}
 
 	testBson(
@@ -66,7 +67,9 @@ fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 		document { writeJavaScript("a", "abababababab") }
 		expectedBinaryHex = "190000000D61000D0000006162616261626162616261620000"
 		expectedJson = $$"""{"a": {"$code": "abababababab"}}"""
-		verify("Read value") { read("a")?.readJavaScript() shouldBe "abababababab" }
+		verify("Read value") {
+			check(read("a")?.readJavaScript() == "abababababab")
+		}
 	}
 
 	testBson(
@@ -76,7 +79,9 @@ fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 		document { writeJavaScript("a", "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9") }
 		expectedBinaryHex = "190000000D61000D000000C3A9C3A9C3A9C3A9C3A9C3A90000"
 		expectedJson = $$"""{"a": {"$code": "éééééé"}}"""
-		verify("Read value") { read("a")?.readJavaScript() shouldBe "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9" }
+		verify("Read value") {
+			check(read("a")?.readJavaScript() == "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9")
+		}
 	}
 
 	testBson(
@@ -86,7 +91,9 @@ fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 		document { writeJavaScript("a", "\u2606\u2606\u2606\u2606") }
 		expectedBinaryHex = "190000000D61000D000000E29886E29886E29886E298860000"
 		expectedJson = $$"""{"a": {"$code": "☆☆☆☆"}}"""
-		verify("Read value") { read("a")?.readJavaScript() shouldBe "\u2606\u2606\u2606\u2606" }
+		verify("Read value") {
+			check(read("a")?.readJavaScript() == "\u2606\u2606\u2606\u2606")
+		}
 	}
 
 	testBson(
@@ -95,6 +102,8 @@ fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 	) {
 		document { writeJavaScript("a", "ab\u0000bab\u0000babab") }
 		expectedBinaryHex = "190000000D61000D0000006162006261620062616261620000"
-		verify("Read value") { read("a")?.readJavaScript() shouldBe "ab\u0000bab\u0000babab" }
+		verify("Read value") {
+			check(read("a")?.readJavaScript() == "ab\u0000bab\u0000babab")
+		}
 	}
 }

@@ -18,8 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -38,7 +36,9 @@ fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
 		document { writeDocument("x") {} }
 		expectedBinaryHex = "0D000000037800050000000000"
 		expectedJson = """{"x": {}}"""
-		verify("Read value") { read("x")?.readDocument() shouldNotBe null }
+		verify("Read value") {
+			check(read("x")?.readDocument() != null)
+		}
 	}
 
 	testBson(
@@ -48,7 +48,9 @@ fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
 		document { writeDocument("x") { writeString("", "b") } }
 		expectedBinaryHex = "150000000378000D00000002000200000062000000"
 		expectedJson = """{"x": {"": "b"}}"""
-		verify("Read value") { read("x")?.readDocument()?.read("")?.readString() shouldBe "b" }
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("")?.readString() == "b")
+		}
 	}
 
 	testBson(
@@ -58,7 +60,9 @@ fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
 		document { writeDocument("x") { writeString("a", "b") } }
 		expectedBinaryHex = "160000000378000E0000000261000200000062000000"
 		expectedJson = """{"x": {"a": "b"}}"""
-		verify("Read value") { read("x")?.readDocument()?.read("a")?.readString() shouldBe "b" }
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("a")?.readString() == "b")
+		}
 	}
 
 	testBson(
@@ -68,7 +72,9 @@ fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
 		document { writeDocument("x") { writeString("\$a", "b") } }
 		expectedBinaryHex = "170000000378000F000000022461000200000062000000"
 		expectedJson = $$"""{"x": {"$a": "b"}}"""
-		verify("Read value") { read("x")?.readDocument()?.read("\$a")?.readString() shouldBe "b" }
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("\$a")?.readString() == "b")
+		}
 	}
 
 	testBson(
@@ -78,7 +84,9 @@ fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
 		document { writeDocument("x") { writeString("$", "a") } }
 		expectedBinaryHex = "160000000378000E0000000224000200000061000000"
 		expectedJson = """{"x": {"$": "a"}}"""
-		verify("Read value") { read("x")?.readDocument()?.read("$")?.readString() shouldBe "a" }
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("$")?.readString() == "a")
+		}
 	}
 
 	testBson(
@@ -88,7 +96,9 @@ fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
 		document { writeDocument("x") { writeString("a.b", "c") } }
 		expectedBinaryHex = "180000000378001000000002612E62000200000063000000"
 		expectedJson = """{"x": {"a.b": "c"}}"""
-		verify("Read value") { read("x")?.readDocument()?.read("a.b")?.readString() shouldBe "c" }
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("a.b")?.readString() == "c")
+		}
 	}
 
 	testBson(
@@ -98,6 +108,8 @@ fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
 		document { writeDocument("x") { writeString(".", "a") } }
 		expectedBinaryHex = "160000000378000E000000022E000200000061000000"
 		expectedJson = """{"x": {".": "a"}}"""
-		verify("Read value") { read("x")?.readDocument()?.read(".")?.readString() shouldBe "a" }
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read(".")?.readString() == "a")
+		}
 	}
 }

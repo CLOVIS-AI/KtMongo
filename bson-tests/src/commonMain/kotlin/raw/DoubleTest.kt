@@ -18,7 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -38,7 +37,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", 1.0) }
 		expectedBinaryHex = "10000000016400000000000000F03F00"
 		expectedJson = """{"d": 1.0}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe 1.0 }
+		verify("Read value") {
+			check(read("d")?.readDouble() == 1.0)
+		}
 	}
 
 	testBson(
@@ -48,7 +49,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", -1.0) }
 		expectedBinaryHex = "10000000016400000000000000F0BF00"
 		expectedJson = """{"d": -1.0}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe -1.0 }
+		verify("Read value") {
+			check(read("d")?.readDouble() == -1.0)
+		}
 	}
 
 	testBson(
@@ -58,7 +61,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", +1.0001220703125) }
 		expectedBinaryHex = "10000000016400000000008000F03F00"
 		expectedJson = """{"d": 1.0001220703125}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe 1.0001220703125 }
+		verify("Read value") {
+			check(read("d")?.readDouble() == 1.0001220703125)
+		}
 	}
 
 	testBson(
@@ -68,7 +73,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", -1.0001220703125) }
 		expectedBinaryHex = "10000000016400000000008000F0BF00"
 		expectedJson = """{"d": -1.0001220703125}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe -1.0001220703125 }
+		verify("Read value") {
+			check(read("d")?.readDouble() == -1.0001220703125)
+		}
 	}
 
 	testBson(
@@ -78,7 +85,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", 1.2345678921232E+18) }
 		expectedBinaryHex = "100000000164002A1BF5F41022B14300"
 		expectedJson = """{"d": 1.2345678921232E18}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe 1.2345678921232E+18 }
+		verify("Read value") {
+			check(read("d")?.readDouble() == 1.2345678921232E+18)
+		}
 	}
 
 	testBson(
@@ -88,7 +97,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", -1.2345678921232E+18) }
 		expectedBinaryHex = "100000000164002A1BF5F41022B1C300"
 		expectedJson = """{"d": -1.2345678921232E18}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe -1.2345678921232E+18 }
+		verify("Read value") {
+			check(read("d")?.readDouble() == -1.2345678921232E+18)
+		}
 	}
 
 	testBson(
@@ -98,7 +109,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", 0.0) }
 		expectedBinaryHex = "10000000016400000000000000000000"
 		expectedJson = """{"d": 0.0}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe 0.0 }
+		verify("Read value") {
+			check(read("d")?.readDouble() == 0.0)
+		}
 	}
 
 	testBson(
@@ -108,7 +121,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", -0.0) }
 		expectedBinaryHex = "10000000016400000000000000008000"
 		expectedJson = """{"d": -0.0}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe -0.0 }
+		verify("Read value") {
+			check(read("d")?.readDouble() == -0.0)
+		}
 	}
 
 	testBson(
@@ -118,7 +133,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", NaN) }
 		expectedBinaryHex = "10000000016400000000000000F87F00"
 		expectedJson = $$"""{"d": {"$numberDouble": "NaN"}}"""
-		verify("Read value") { read("d")?.readDouble()?.isNaN() shouldBe true }
+		verify("Read value") {
+			check(read("d")?.readDouble()?.isNaN() == true)
+		}
 	}
 
 	testBson(
@@ -128,7 +145,9 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", Double.POSITIVE_INFINITY) }
 		expectedBinaryHex = "10000000016400000000000000F07F00"
 		expectedJson = $$"""{"d": {"$numberDouble": "Infinity"}}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe Double.POSITIVE_INFINITY }
+		verify("Read value") {
+			check(read("d")?.readDouble() == Double.POSITIVE_INFINITY)
+		}
 	}
 
 	testBson(
@@ -138,6 +157,8 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		document { writeDouble("d", Double.NEGATIVE_INFINITY) }
 		expectedBinaryHex = "10000000016400000000000000F0FF00"
 		expectedJson = $$"""{"d": {"$numberDouble": "-Infinity"}}"""
-		verify("Read value") { read("d")?.readDouble() shouldBe Double.NEGATIVE_INFINITY }
+		verify("Read value") {
+			check(read("d")?.readDouble() == Double.NEGATIVE_INFINITY)
+		}
 	}
 }

@@ -18,7 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
@@ -43,7 +42,7 @@ fun SuiteDsl.boolean(context: Prepared<BsonContext>) = suite("Boolean") {
 		hex("090000000862000100"),
 		json("""{"b": true}"""),
 		verify("Read value") {
-			read("b")?.readBoolean() shouldBe true
+			check(read("b")?.readBoolean() == true)
 		}
 	)
 
@@ -56,7 +55,7 @@ fun SuiteDsl.boolean(context: Prepared<BsonContext>) = suite("Boolean") {
 		hex("090000000862000000"),
 		json("""{"b": false}"""),
 		verify("Read value") {
-			read("b")?.readBoolean() shouldBe false
+			check(read("b")?.readBoolean() == false)
 		}
 	)
 }

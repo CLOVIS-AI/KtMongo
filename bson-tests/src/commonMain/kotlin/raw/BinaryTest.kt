@@ -45,10 +45,10 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		hex("0D000000057800000000000000"),
 		json($$"""{"x": {"$binary": {"base64": "", "subType": "00"}}}"""),
 		verify("Read type") {
-			read("x")?.readBinaryDataType() == 0.toUByte()
+			check(read("x")?.readBinaryDataType() == 0.toUByte())
 		},
 		verify("Read data") {
-			read("x")?.readBinaryData().contentEquals(ByteArray(0))
+			check(read("x")?.readBinaryData().contentEquals(ByteArray(0)))
 		}
 	)
 
@@ -61,10 +61,10 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		hex("0F0000000578000200000000FFFF00"),
 		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "00"}}}"""),
 		verify("Read type") {
-			read("x")?.readBinaryDataType() == 0.toUByte()
+			check(read("x")?.readBinaryDataType() == 0.toUByte())
 		},
 		verify("Read data") {
-			read("x")?.readBinaryData().contentEquals(Base64.decode("//8="))
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
 		}
 	)
 
@@ -77,10 +77,10 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		hex("0F0000000578000200000001FFFF00"),
 		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "01"}}}"""),
 		verify("Read type") {
-			read("x")?.readBinaryDataType() == 1.toUByte()
+			check(read("x")?.readBinaryDataType() == 1.toUByte())
 		},
 		verify("Read data") {
-			read("x")?.readBinaryData().contentEquals(Base64.decode("//8="))
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
 		}
 	)
 
@@ -90,8 +90,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "13000000057800060000000202000000FFFF00"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "//8=", "subType": "02"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 2.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 2.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
+		}
 	}
 
 	testBson(context, "subtype 0x03") {
@@ -100,8 +104,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "1D000000057800100000000373FFD26444B34C6990E8E7D1DFC035D400"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "03"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 3.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 3.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+		}
 	}
 
 	testBson(context, "subtype 0x04") {
@@ -110,8 +118,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "1D000000057800100000000473FFD26444B34C6990E8E7D1DFC035D400"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 4.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 4.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+		}
 	}
 
 	testBson(context, "subtype 0x04 UUID") {
@@ -120,8 +132,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "1D000000057800100000000473FFD26444B34C6990E8E7D1DFC035D400"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 4.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 4.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+		}
 	}
 
 	testBson(context, "subtype 0x05") {
@@ -130,8 +146,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "1D000000057800100000000573FFD26444B34C6990E8E7D1DFC035D400"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "05"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 5.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 5.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+		}
 	}
 
 	testBson(context, "subtype 0x07") {
@@ -140,8 +160,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "1D000000057800100000000773FFD26444B34C6990E8E7D1DFC035D400"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "07"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 7.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 7.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+		}
 	}
 
 	testBson(context, "subtype 0x08") {
@@ -150,8 +174,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "1D000000057800100000000873FFD26444B34C6990E8E7D1DFC035D400"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "08"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 8.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 8.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+		}
 	}
 
 	testBson(context, "subtype 0x80") {
@@ -160,8 +188,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "0F0000000578000200000080FFFF00"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "//8=", "subType": "80"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 0x80.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 0x80.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
+		}
 	}
 
 	testBson(context, $$"$type query operator (conflicts with legacy $binary form with $type field)") {
@@ -172,7 +204,9 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "1F000000037800170000000224747970650007000000737472696E67000000"
 		expectedJson = $$"""{"x": {"$type": "string"}}"""
-		verify("Read type") { read("x")?.readDocument()?.read("\$type")?.readString() == "string" }
+		verify("Read type") {
+			check(read("x")?.readDocument()?.read("\$type")?.readString() == "string")
+		}
 	}
 
 	testBson(context, $$"$type query operator (conflicts with legacy $binary form with $type field) with int") {
@@ -183,7 +217,9 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "180000000378001000000010247479706500020000000000"
 		expectedJson = $$"""{"x": {"$type": 2}}"""
-		verify("Read type") { read("x")?.readDocument()?.read("\$type")?.readInt32() == 2 }
+		verify("Read type") {
+			check(read("x")?.readDocument()?.read("\$type")?.readInt32() == 2)
+		}
 	}
 
 	testBson(context, "subtype 0x09 Vector FLOAT32") {
@@ -192,8 +228,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "170000000578000A0000000927000000FE420000E04000"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "JwAAAP5CAADgQA==", "subType": "09"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 0x09.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("JwAAAP5CAADgQA==")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("JwAAAP5CAADgQA==")))
+		}
 	}
 
 	testBson(context, "subtype 0x09 Vector INT8") {
@@ -202,8 +242,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "11000000057800040000000903007F0700"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "AwB/Bw==", "subType": "09"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 0x09.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("AwB/Bw==")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("AwB/Bw==")))
+		}
 	}
 
 	testBson(context, "subtype 0x09 Vector PACKED_BIT") {
@@ -212,8 +256,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "11000000057800040000000910007F0700"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "EAB/Bw==", "subType": "09"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 0x09.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("EAB/Bw==")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("EAB/Bw==")))
+		}
 	}
 
 	testBson(context, "subtype 0x09 Vector (Zero-length) FLOAT32") {
@@ -222,8 +270,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "0F0000000578000200000009270000"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "JwA=", "subType": "09"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 0x09.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("JwA=")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("JwA=")))
+		}
 	}
 
 	testBson(context, "subtype 0x09 Vector (Zero-length) INT8") {
@@ -232,8 +284,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "0F0000000578000200000009030000"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "AwA=", "subType": "09"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 0x09.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("AwA=")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("AwA=")))
+		}
 	}
 
 	testBson(context, "subtype 0x09 Vector (Zero-length) PACKED_BIT") {
@@ -242,8 +298,12 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 		expectedBinaryHex = "0F0000000578000200000009100000"
 		expectedJson = $$"""{"x": {"$binary": {"base64": "EAA=", "subType": "09"}}}"""
-		verify("Read type") { read("x")?.readBinaryDataType() == 0x09.toUByte() }
-		verify("Read data") { read("x")?.readBinaryData().contentEquals(Base64.decode("EAA=")) }
+		verify("Read type") {
+			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+		}
+		verify("Read data") {
+			check(read("x")?.readBinaryData().contentEquals(Base64.decode("EAA=")))
+		}
 	}
 
 }

@@ -18,7 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
@@ -43,7 +42,7 @@ fun SuiteDsl.minMaxKey(context: Prepared<BsonContext>) = suite("MinMaxKey") {
 		hex("08000000FF610000"),
 		json($$"""{"a": {"$minKey": 1}}"""),
 		verify("Read value") {
-			read("a")?.readMinKey() shouldBe Unit
+			check(read("a")?.readMinKey() == Unit)
 		}
 	)
 
@@ -56,7 +55,7 @@ fun SuiteDsl.minMaxKey(context: Prepared<BsonContext>) = suite("MinMaxKey") {
 		hex("080000007F610000"),
 		json($$"""{"a": {"$maxKey": 1}}"""),
 		verify("Read value") {
-			read("a")?.readMaxKey() shouldBe Unit
+			check(read("a")?.readMaxKey() == Unit)
 		}
 	)
 }

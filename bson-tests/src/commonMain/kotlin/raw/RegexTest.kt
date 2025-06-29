@@ -18,7 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
@@ -43,10 +42,10 @@ fun SuiteDsl.regex(context: Prepared<BsonContext>) = suite("Regex") {
 		hex("0A0000000B6100000000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "", "options": ""}}}"""),
 		verify("Read pattern") {
-			read("a")?.readRegularExpressionPattern() shouldBe ""
+			check(read("a")?.readRegularExpressionPattern() == "")
 		},
 		verify("Read options") {
-			read("a")?.readRegularExpressionOptions() shouldBe ""
+			check(read("a")?.readRegularExpressionOptions() == "")
 		}
 	)
 
@@ -59,10 +58,10 @@ fun SuiteDsl.regex(context: Prepared<BsonContext>) = suite("Regex") {
 		hex("0D0000000B6100616263000000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "abc", "options": ""}}}"""),
 		verify("Read pattern") {
-			read("a")?.readRegularExpressionPattern() shouldBe "abc"
+			check(read("a")?.readRegularExpressionPattern() == "abc")
 		},
 		verify("Read options") {
-			read("a")?.readRegularExpressionOptions() shouldBe ""
+			check(read("a")?.readRegularExpressionOptions() == "")
 		}
 	)
 
@@ -75,10 +74,10 @@ fun SuiteDsl.regex(context: Prepared<BsonContext>) = suite("Regex") {
 		hex("0F0000000B610061626300696D0000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "abc", "options": "im"}}}"""),
 		verify("Read pattern") {
-			read("a")?.readRegularExpressionPattern() shouldBe "abc"
+			check(read("a")?.readRegularExpressionPattern() == "abc")
 		},
 		verify("Read options") {
-			read("a")?.readRegularExpressionOptions() shouldBe "im"
+			check(read("a")?.readRegularExpressionOptions() == "im")
 		}
 	)
 
@@ -91,10 +90,10 @@ fun SuiteDsl.regex(context: Prepared<BsonContext>) = suite("Regex") {
 		hex("110000000B610061622F636400696D0000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "ab/cd", "options": "im"}}}"""),
 		verify("Read pattern") {
-			read("a")?.readRegularExpressionPattern() shouldBe "ab/cd"
+			check(read("a")?.readRegularExpressionPattern() == "ab/cd")
 		},
 		verify("Read options") {
-			read("a")?.readRegularExpressionOptions() shouldBe "im"
+			check(read("a")?.readRegularExpressionOptions() == "im")
 		}
 	)
 
@@ -110,10 +109,10 @@ fun SuiteDsl.regex(context: Prepared<BsonContext>) = suite("Regex") {
 		hex("100000000B610061626300696D780000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "abc", "options": "imx"}}}"""),
 		verify("Read pattern") {
-			read("a")?.readRegularExpressionPattern() shouldBe "abc"
+			check(read("a")?.readRegularExpressionPattern() == "abc")
 		},
 		verify("Read options") {
-			read("a")?.readRegularExpressionOptions() shouldBe "imx"
+			check(read("a")?.readRegularExpressionOptions() == "imx")
 		}
 	)
 
@@ -126,10 +125,10 @@ fun SuiteDsl.regex(context: Prepared<BsonContext>) = suite("Regex") {
 		hex("100000000B610061625C226162000000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "ab\\\"ab", "options": ""}}}"""),
 		verify("Read pattern") {
-			read("a")?.readRegularExpressionPattern() shouldBe "ab\\\"ab"
+			check(read("a")?.readRegularExpressionPattern() == "ab\\\"ab")
 		},
 		verify("Read options") {
-			read("a")?.readRegularExpressionOptions() shouldBe ""
+			check(read("a")?.readRegularExpressionOptions() == "")
 		}
 	)
 }
