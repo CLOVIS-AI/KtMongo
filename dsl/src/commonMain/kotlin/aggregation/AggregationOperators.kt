@@ -79,6 +79,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  *
  * Conditionally compute values:
  * - [`$cond`][ConditionalValueOperators.cond]
+ * - [`$switch`][ConditionalValueOperators.switch]
  *
  * Compare values:
  * - [`$eq`][ComparisonValueOperators.eq]
