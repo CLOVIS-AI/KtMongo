@@ -106,6 +106,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  *
  * Type operators:
  * - [`$type`][TypeValueOperators.type]
+ * - [`$isArray`][TypeValueOperators.isArray]
  *
  * Trigonometric operators and angle management:
  * - [`$acos`][TrigonometryValueOperators.acos]

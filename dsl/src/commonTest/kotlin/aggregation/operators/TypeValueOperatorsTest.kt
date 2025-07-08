@@ -29,6 +29,7 @@ import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.prepared.runner.kotest.PreparedSpec
 
 val type = "\$type"
+val isArray = "\$isArray"
 
 class TypeValueOperatorsTest : PreparedSpec({
 
@@ -55,6 +56,25 @@ class TypeValueOperatorsTest : PreparedSpec({
 									{
 										"$literal": 16
 									}
+								]
+							}
+						}
+					}
+				]
+			""".trimIndent()
+	}
+
+	test(isArray) {
+		TestPipeline<Target>()
+			.project {
+				Field.unsafe<Boolean>("r") set of(Target::foo).isArray
+			} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$isArray": [
+									"$foo"
 								]
 							}
 						}

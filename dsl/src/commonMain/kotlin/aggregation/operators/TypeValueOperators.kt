@@ -76,4 +76,47 @@ interface TypeValueOperators : ValueOperators {
 			}
 		}
 	}
+
+	/**
+	 * Determines if this value is an array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val data: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("dataIsArray") set of(User::data).isArray
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/)
+	 *
+	 * @see type Get a value's type.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <R : Any> Value<R, *>.isArray: Value<R, Boolean>
+		get() = IsArrayValue(context, this)
+
+	@LowLevelApi
+	private class IsArrayValue<Root : Any>(
+		context: BsonContext,
+		private val value: Value<Root, *>,
+	) : Value<Root, Boolean>, AbstractValue<Root, Boolean>(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$isArray") {
+					value.writeTo(this)
+				}
+			}
+		}
+	}
 }
