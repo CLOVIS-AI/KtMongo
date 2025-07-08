@@ -30,6 +30,7 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
 
 val type = "\$type"
 val isArray = "\$isArray"
+val isNumber = "\$isNumber"
 
 class TypeValueOperatorsTest : PreparedSpec({
 
@@ -76,6 +77,23 @@ class TypeValueOperatorsTest : PreparedSpec({
 								"$isArray": [
 									"$foo"
 								]
+							}
+						}
+					}
+				]
+			""".trimIndent()
+	}
+
+	test(isNumber) {
+		TestPipeline<Target>()
+			.project {
+				Field.unsafe<Boolean>("r") set of(Target::foo).isNumber
+			} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$isNumber": "$foo"
 							}
 						}
 					}

@@ -119,4 +119,53 @@ interface TypeValueOperators : ValueOperators {
 			}
 		}
 	}
+
+	/**
+	 * Determines if this value is a number.
+	 *
+	 * The following types are considered numbers:
+	 * - [BsonType.Int32]
+	 * - [BsonType.Int64]
+	 * - [BsonType.Double]
+	 * - [BsonType.Decimal128]
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val data: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("dataIsNumber") set of(User::data).isNumber
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/)
+	 *
+	 * @see type Get a value's type.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <R : Any> Value<R, *>.isNumber: Value<R, Boolean>
+		get() = IsNumberValue(context, this)
+
+	@LowLevelApi
+	private class IsNumberValue<Root : Any>(
+		context: BsonContext,
+		private val value: Value<Root, *>,
+	) : Value<Root, Boolean>, AbstractValue<Root, Boolean>(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				write("\$isNumber") {
+					value.writeTo(this)
+				}
+			}
+		}
+	}
 }
