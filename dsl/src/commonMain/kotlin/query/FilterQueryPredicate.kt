@@ -922,6 +922,55 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	fun bitsAllSet(mask: ByteArray)
 
+	/**
+	 * Matches documents where any bit position present in [mask] is clear (i.e., 0) in the current field.
+	 *
+	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
+	 * (e.g. `Decimal128`) nor ones that have a fractional component.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age {
+	 *         bitsAnyClear(UInt.MAX_VALUE)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### Performance
+	 *
+	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/)
+	 */
+	@KtMongoDsl
+	fun bitsAnyClear(mask: UInt)
+
+	/**
+	 * Matches documents where any bit position present in [mask] is clear (i.e., 0) in the current field.
+	 *
+	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
+	 * (e.g. `Decimal128`) nor ones that have a fractional component.
+	 *
+	 * ### Performance
+	 *
+	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/)
+	 */
+	@KtMongoDsl
+	fun bitsAnyClear(mask: ByteArray)
+
 	// endregion
 
 }
