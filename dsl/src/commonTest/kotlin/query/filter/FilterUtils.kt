@@ -46,6 +46,7 @@ val regularExpression = "\$regularExpression"
 val size = "\$size"
 val binary = "\$binary"
 val bitsAllClear = "\$bitsAllClear"
+val bitsAllSet = "\$bitsAllSet"
 
 class Pet(
 	val name: String,

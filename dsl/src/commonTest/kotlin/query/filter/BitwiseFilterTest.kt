@@ -56,4 +56,34 @@ class BitwiseFilterTest : PreparedSpec({
 		}
 	}
 
+	suite(bitsAllSet) {
+		test("Int mask") {
+			filter {
+				User::age bitsAllSet 0x22f8u
+			} shouldBeBson """
+				{
+					"age": {
+						"$bitsAllSet": 8952
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Complex mask") {
+			filter {
+				User::age bitsAllSet ObjectId("686d568045632c8726d01634").bytes
+			} shouldBeBson """
+				{
+					"age": {
+						"$bitsAllSet": {
+							"$binary": {
+								"base64": "aG1WgEVjLIcm0BY0",
+								"subType": "00"
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
 })

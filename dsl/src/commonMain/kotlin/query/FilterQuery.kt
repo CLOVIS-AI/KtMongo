@@ -126,6 +126,7 @@ import kotlin.reflect.KProperty1
  *
  * Bitwise query:
  * - [`$bitsAllClear`][bitsAllClear]
+ * - [`$bitsAllSet`][bitsAllSet]
  *
  * Text query:
  * - [`$regex`][regex]
@@ -2955,6 +2956,112 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	infix fun KProperty1<T, *>.bitsAllClear(mask: ByteArray) {
 		this.field bitsAllClear mask
+	}
+
+	/**
+	 * Matches documents where all bit positions present in [mask] are set (i.e., 1) in the current field.
+	 *
+	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
+	 * (e.g. `Decimal128`) nor ones that have a fractional component.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age bitsAllSet UInt.MAX_VALUE
+	 * }
+	 * ```
+	 *
+	 * ### Performance
+	 *
+	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
+	 */
+	@KtMongoDsl
+	infix fun Field<T, *>.bitsAllSet(mask: UInt) {
+		this {
+			bitsAllSet(mask)
+		}
+	}
+
+	/**
+	 * Matches documents where all bit positions present in [mask] are set (i.e., 1) in the current field.
+	 *
+	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
+	 * (e.g. `Decimal128`) nor ones that have a fractional component.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age bitsAllSet UInt.MAX_VALUE
+	 * }
+	 * ```
+	 *
+	 * ### Performance
+	 *
+	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
+	 */
+	@KtMongoDsl
+	infix fun KProperty1<T, *>.bitsAllSet(mask: UInt) {
+		this.field bitsAllSet mask
+	}
+
+	/**
+	 * Matches documents where all bit positions present in [mask] are set (i.e., 1) in the current field.
+	 *
+	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
+	 * (e.g. `Decimal128`) nor ones that have a fractional component.
+	 *
+	 * ### Performance
+	 *
+	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
+	 */
+	@KtMongoDsl
+	infix fun Field<T, *>.bitsAllSet(mask: ByteArray) {
+		this {
+			bitsAllSet(mask)
+		}
+	}
+
+	/**
+	 * Matches documents where all bit positions present in [mask] are set (i.e., 1) in the current field.
+	 *
+	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
+	 * (e.g. `Decimal128`) nor ones that have a fractional component.
+	 *
+	 * ### Performance
+	 *
+	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
+	 */
+	@KtMongoDsl
+	infix fun KProperty1<T, *>.bitsAllSet(mask: ByteArray) {
+		this.field bitsAllSet mask
 	}
 
 	// endregion

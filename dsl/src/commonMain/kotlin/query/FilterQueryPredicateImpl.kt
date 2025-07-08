@@ -341,6 +341,17 @@ private class FilterQueryPredicateImpl<T>(
 		accept(BitwiseByteArrayNode(context, mask, "bitsAllClear"))
 	}
 
+	@KtMongoDsl
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAllSet(mask: UInt) {
+		accept(BitwiseIntNode(context, mask, "bitsAllSet"))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAllSet(mask: ByteArray) {
+		accept(BitwiseByteArrayNode(context, mask, "bitsAllSet"))
+	}
+
 	@LowLevelApi
 	private class BitwiseIntNode(
 		context: BsonContext,
