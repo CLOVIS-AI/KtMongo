@@ -24,12 +24,17 @@ import opensavvy.ktmongo.bson.official.JvmBsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
+import opensavvy.ktmongo.dsl.options.WithWriteConcern
+import opensavvy.ktmongo.dsl.options.WriteConcernOption
+import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.official.command.toJava
 import opensavvy.ktmongo.official.options.*
+import opensavvy.ktmongo.official.options.toJava
+import opensavvy.ktmongo.official.toJava
 import java.util.concurrent.TimeUnit
 
 /**
@@ -116,7 +121,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateMany(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
+		inner.withWriteConcern(model.options).updateMany(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -131,7 +136,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
+		inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -146,7 +151,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions().upsert(true))
+		inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions().upsert(true))
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -161,7 +166,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		return inner.findOneAndUpdate(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, FindOneAndUpdateOptions())
+		return inner.withWriteConcern(model.options).findOneAndUpdate(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, FindOneAndUpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -175,7 +180,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.options.options()
 		model.operations()
 
-		inner.bulkWrite(
+		inner.withWriteConcern(model.options).bulkWrite(
 			model.operations.map { it.toJava() }.toList(),
 			options = com.mongodb.client.model.BulkWriteOptions()
 		)
@@ -196,7 +201,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateMany(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
+		inner.withWriteConcern(model.options).updateMany(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -211,7 +216,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
+		inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -226,7 +231,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		inner.updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions().upsert(true))
+		inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions().upsert(true))
 	}
 
 	// endregion
@@ -238,7 +243,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 		model.options.options()
 
-		inner.insertOne(
+		inner.withWriteConcern(model.options).insertOne(
 			model.document,
 			com.mongodb.client.model.InsertOneOptions()
 		)
@@ -250,7 +255,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 		model.options.options()
 
-		inner.insertMany(
+		inner.withWriteConcern(model.options).insertMany(
 			model.documents,
 			com.mongodb.client.model.InsertManyOptions()
 		)
@@ -264,11 +269,13 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: DeleteOneOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 	) {
-		DeleteOneOptions<Document>(context).apply(options)
-		val filter = FilterQuery<Document>(context).apply(filter)
+		val model = DeleteOne<Document>(context)
 
-		inner.deleteOne(
-			filter = context.buildDocument(filter).raw,
+		model.filter.filter()
+		model.options.options()
+
+		inner.withWriteConcern(model.options).deleteOne(
+			filter = context.buildDocument(model.filter).raw,
 			options = DeleteOptions()
 		)
 	}
@@ -278,11 +285,13 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: DeleteManyOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 	) {
-		DeleteManyOptions<Document>(context).apply(options)
-		val filter = FilterQuery<Document>(context).apply(filter)
+		val model = DeleteMany<Document>(context)
 
-		inner.deleteOne(
-			filter = context.buildDocument(filter).raw,
+		model.filter.filter()
+		model.options.options()
+
+		inner.withWriteConcern(model.options).deleteOne(
+			filter = context.buildDocument(model.filter).raw,
 			options = DeleteOptions()
 		)
 	}
@@ -292,9 +301,11 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun drop(options: DropOptions<Document>.() -> Unit) {
-		DropOptions<Document>(context).apply(options)
+		val model = Drop<Document>(context)
 
-		inner.drop(DropCollectionOptions())
+		model.options.options()
+
+		inner.withWriteConcern(model.options).drop(DropCollectionOptions())
 	}
 
 	// endregion
@@ -325,3 +336,11 @@ class JvmMongoCollection<Document : Any> internal constructor(
  */
 fun <Document : Any> com.mongodb.kotlin.client.MongoCollection<Document>.asKtMongo(): JvmMongoCollection<Document> =
 	JvmMongoCollection(this)
+
+@LowLevelApi
+private fun <Document : Any> com.mongodb.kotlin.client.MongoCollection<Document>.withWriteConcern(option: WithWriteConcern): com.mongodb.kotlin.client.MongoCollection<Document> {
+	val concern = option.option<WriteConcernOption>()?.concern
+		?: return this
+
+	return this.withWriteConcern(concern.toJava())
+}
