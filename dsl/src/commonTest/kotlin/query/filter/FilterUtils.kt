@@ -48,6 +48,7 @@ val binary = "\$binary"
 val bitsAllClear = "\$bitsAllClear"
 val bitsAllSet = "\$bitsAllSet"
 val bitsAnyClear = "\$bitsAnyClear"
+val bitsAnySet = "\$bitsAnySet"
 
 class Pet(
 	val name: String,
