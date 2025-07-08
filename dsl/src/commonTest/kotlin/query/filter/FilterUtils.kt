@@ -44,6 +44,8 @@ val getField = "\$getField"
 val regex = "\$regex"
 val regularExpression = "\$regularExpression"
 val size = "\$size"
+val binary = "\$binary"
+val bitsAllClear = "\$bitsAllClear"
 
 class Pet(
 	val name: String,
