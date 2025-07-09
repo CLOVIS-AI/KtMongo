@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalTime::class, ExperimentalUuidApi::class)
 
 package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.literal
@@ -27,10 +28,22 @@ import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.prepared.runner.kotest.PreparedSpec
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 val type = "\$type"
 val isArray = "\$isArray"
 val isNumber = "\$isNumber"
+val toBool = "\$toBool"
+val toDate = "\$toDate"
+val toDouble = "\$toDouble"
+val toInt = "\$toInt"
+val toLong = "\$toLong"
+val toObjectId = "\$toObjectId"
+val toString = "\$toString"
+val toUUID = "\$toUUID"
 
 class TypeValueOperatorsTest : PreparedSpec({
 
@@ -99,6 +112,144 @@ class TypeValueOperatorsTest : PreparedSpec({
 					}
 				]
 			""".trimIndent()
+	}
+
+	suite("Simple conversions") {
+		test(toBool) {
+			TestPipeline<Target>()
+				.project {
+					Field.unsafe<Boolean>("r") set of(Target::foo).toBoolean()
+				} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$toBool": "$foo"
+							}
+						}
+					}
+				]
+			""".trimIndent()
+		}
+
+		test(toDate) {
+			TestPipeline<Target>()
+				.project {
+					Field.unsafe<Instant>("r") set of(Target::foo).toInstant()
+				} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$toDate": "$foo"
+							}
+						}
+					}
+				]
+			""".trimIndent()
+		}
+
+		test(toDouble) {
+			TestPipeline<Target>()
+				.project {
+					Field.unsafe<Double>("r") set of(Target::foo).toDouble()
+				} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$toDouble": "$foo"
+							}
+						}
+					}
+				]
+			""".trimIndent()
+		}
+
+		test(toInt) {
+			TestPipeline<Target>()
+				.project {
+					Field.unsafe<Int>("r") set of(Target::foo).toInt()
+				} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$toInt": "$foo"
+							}
+						}
+					}
+				]
+			""".trimIndent()
+		}
+
+		test(toLong) {
+			TestPipeline<Target>()
+				.project {
+					Field.unsafe<Long>("r") set of(Target::foo).toLong()
+				} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$toLong": "$foo"
+							}
+						}
+					}
+				]
+			""".trimIndent()
+		}
+
+		test(toObjectId) {
+			TestPipeline<Target>()
+				.project {
+					Field.unsafe<ObjectId>("r") set of(Target::foo).toObjectId()
+				} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$toObjectId": "$foo"
+							}
+						}
+					}
+				]
+			""".trimIndent()
+		}
+
+		test(toString) {
+			TestPipeline<Target>()
+				.project {
+					Field.unsafe<String>("r") set of(Target::foo).toText()
+				} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$toString": "$foo"
+							}
+						}
+					}
+				]
+			""".trimIndent()
+		}
+
+		test(toUUID) {
+			TestPipeline<Target>()
+				.project {
+					Field.unsafe<Uuid>("r") set of(Target::foo).toUuid()
+				} shouldBeBson """
+				[
+					{
+						"$project": {
+							"r": {
+								"$toUUID": "$foo"
+							}
+						}
+					}
+				]
+			""".trimIndent()
+		}
 	}
 
 })
