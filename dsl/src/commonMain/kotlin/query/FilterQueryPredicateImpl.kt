@@ -51,7 +51,7 @@ private class FilterQueryPredicateImpl<T>(
 	}
 
 	@LowLevelApi
-	private inner class EqualityBsonNodeNode<T>(
+	private class EqualityBsonNodeNode<T>(
 		val value: T,
 		context: BsonContext,
 	) : PredicateBsonNodeNode(context) {
@@ -324,6 +324,79 @@ private class FilterQueryPredicateImpl<T>(
 						append('x')
 				}
 			)
+		}
+	}
+
+	// endregion
+	// region Bitwise operators
+
+	@KtMongoDsl
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAllClear(mask: UInt) {
+		accept(BitwiseIntNode(context, mask, "bitsAllClear"))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAllClear(mask: ByteArray) {
+		accept(BitwiseByteArrayNode(context, mask, "bitsAllClear"))
+	}
+
+	@KtMongoDsl
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAllSet(mask: UInt) {
+		accept(BitwiseIntNode(context, mask, "bitsAllSet"))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAllSet(mask: ByteArray) {
+		accept(BitwiseByteArrayNode(context, mask, "bitsAllSet"))
+	}
+
+	@KtMongoDsl
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAnyClear(mask: UInt) {
+		accept(BitwiseIntNode(context, mask, "bitsAnyClear"))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAnyClear(mask: ByteArray) {
+		accept(BitwiseByteArrayNode(context, mask, "bitsAnyClear"))
+	}
+
+	@KtMongoDsl
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAnySet(mask: UInt) {
+		accept(BitwiseIntNode(context, mask, "bitsAnySet"))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun bitsAnySet(mask: ByteArray) {
+		accept(BitwiseByteArrayNode(context, mask, "bitsAnySet"))
+	}
+
+	@LowLevelApi
+	private class BitwiseIntNode(
+		context: BsonContext,
+		private val value: UInt,
+		private val operatorName: String,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeInt64("$$operatorName", value.toULong().toLong())
+		}
+	}
+
+	@LowLevelApi
+	private class BitwiseByteArrayNode(
+		context: BsonContext,
+		private val value: ByteArray,
+		private val operatorName: String,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeBinaryData("$$operatorName", 0u.toUByte(), value)
 		}
 	}
 
