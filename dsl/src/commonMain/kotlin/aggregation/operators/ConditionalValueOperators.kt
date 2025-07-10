@@ -58,6 +58,8 @@ interface ConditionalValueOperators : ValueOperators {
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -90,6 +92,80 @@ interface ConditionalValueOperators : ValueOperators {
 
 					write("else") {
 						ifFalse.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Selects one value based on multiple conditions.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             of(User::role) eq of("GUEST") to of(5),
+	 *             of(User::role) eq of("EMPLOYEE") to of(6),
+	 *             of(User::role) eq of("ADMIN") to of(7),
+	 *             default = of(-1)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/)
+	 *
+	 * @see cond Specify a single condition.
+	 */
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class)
+	fun <R : Any, T> switch(
+		vararg cases: Pair<Value<R, Boolean>, Value<R, T>>,
+		default: Value<R, T>? = null,
+	): Value<R, T> =
+		SwitchValue(context, cases.asList(), default)
+
+	@OptIn(LowLevelApi::class)
+	private class SwitchValue<Root : Any, Type>(
+		context: BsonContext,
+		private val cases: List<Pair<Value<Root, Boolean>, Value<Root, Type>>>,
+		private val default: Value<Root, Type>?,
+	) : Value<Root, Type>, AbstractValue<Root, Type>(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeDocument("\$switch") {
+					writeArray("branches") {
+						for ((condition, value) in cases) {
+							writeDocument {
+								write("case") {
+									condition.writeTo(this)
+								}
+
+								write("then") {
+									value.writeTo(this)
+								}
+							}
+						}
+					}
+
+					if (default != null) {
+						write("default") {
+							default.writeTo(this)
+						}
 					}
 				}
 			}
