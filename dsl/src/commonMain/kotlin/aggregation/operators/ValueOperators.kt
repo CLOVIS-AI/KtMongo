@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
@@ -102,6 +103,27 @@ interface ValueOperators : FieldDsl {
 		LiteralValue(value, context)
 
 	/**
+	 * Refers to a [BsonType] within an [aggregation value][AggregationOperators].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val age: Int,
+	 * )
+	 *
+	 * val publishedBeforeAcceptance = products.find {
+	 *     expr {
+	 *         of(Product::age).type eq of(BsonType.Int32)
+	 *     }
+	 * }
+	 * ```
+	 */
+	@OptIn(LowLevelApi::class)
+	fun of(value: BsonType): Value<Any, BsonType> =
+		BsonTypeValue(value, context)
+
+	/**
 	 * Refers to [field] as a nested field of the current value.
 	 *
 	 * ### Examples
@@ -182,6 +204,20 @@ private class LiteralValue<Result>(
 	override fun write(writer: BsonValueWriter) {
 		writer.writeDocument {
 			writeObjectSafe("\$literal", value)
+		}
+	}
+}
+
+@OptIn(LowLevelApi::class)
+private class BsonTypeValue(
+	val type: BsonType,
+	context: BsonContext,
+) : AbstractValue<Any, BsonType>(context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonValueWriter) {
+		writer.writeDocument {
+			writeInt32("\$literal", type.code)
 		}
 	}
 }
