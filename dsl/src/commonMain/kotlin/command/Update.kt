@@ -21,6 +21,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
+import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
@@ -109,4 +110,5 @@ class UpdateMany<Document : Any> private constructor(
  * The options for a [UpdateOne], [UpsertOne], [UpdateMany] operation.
  */
 class UpdateOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context)
+	Options by OptionsHolder(context),
+	WithWriteConcern

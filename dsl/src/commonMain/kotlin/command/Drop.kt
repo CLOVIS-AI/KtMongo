@@ -21,6 +21,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
+import opensavvy.ktmongo.dsl.options.WithWriteConcern
 
 /**
  * Deleting an entire collection at once.
@@ -39,4 +40,5 @@ class Drop<Document : Any> private constructor(
  */
 @OptIn(LowLevelApi::class)
 class DropOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context)
+	Options by OptionsHolder(context),
+	WithWriteConcern

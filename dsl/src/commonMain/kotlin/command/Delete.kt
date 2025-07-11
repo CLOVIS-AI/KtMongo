@@ -21,6 +21,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
+import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.ImmutableNode
 import opensavvy.ktmongo.dsl.tree.Node
@@ -73,10 +74,12 @@ class DeleteMany<Document : Any> private constructor(
  * The options for a [DeleteOne] command.
  */
 class DeleteOneOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context)
+	Options by OptionsHolder(context),
+	WithWriteConcern
 
 /**
  * The options for a [DeleteMany] command.
  */
 class DeleteManyOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context)
+	Options by OptionsHolder(context),
+	WithWriteConcern

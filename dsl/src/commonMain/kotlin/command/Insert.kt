@@ -20,6 +20,7 @@ import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
+import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.tree.ImmutableNode
 import opensavvy.ktmongo.dsl.tree.Node
 
@@ -71,10 +72,12 @@ class InsertMany<Document : Any> private constructor(
  * The options for a `collection.insertOne` operation.
  */
 class InsertOneOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context)
+	Options by OptionsHolder(context),
+	WithWriteConcern
 
 /**
  * The options for a `collection.insertMany` operation.
  */
 class InsertManyOptions<Document>(context: BsonContext) :
-	Options by OptionsHolder(context)
+	Options by OptionsHolder(context),
+	WithWriteConcern
