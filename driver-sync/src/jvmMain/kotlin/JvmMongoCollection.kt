@@ -72,6 +72,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 		return JvmMongoIterable(
 			inner.withReadConcern(model.options.readReadConcern())
+				.withReadPreference(model.options.readReadPreference())
 				.find(context.buildDocument(model.filter).raw)
 				.limit(model.options.readLimit())
 				.skip(model.options.readSkip())
