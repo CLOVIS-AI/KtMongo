@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.Options
@@ -25,8 +26,7 @@ import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
-import opensavvy.ktmongo.dsl.tree.ImmutableNode
-import opensavvy.ktmongo.dsl.tree.Node
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Updating a single element in a collection.
@@ -39,19 +39,41 @@ import opensavvy.ktmongo.dsl.tree.Node
  * }
  * ```
  *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/update/)
+ *
  * @see FilterQuery Filter operators
  * @see UpdateQuery Update operators
  */
 @KtMongoDsl
 class UpdateOne<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val update: UpdateQuery<Document>,
-) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
+) : AbstractBsonNode(context), Command, AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateQuery(context))
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeArray("updates") {
+			writeDocument {
+				writeDocument("q") {
+					filter.writeTo(this)
+				}
+				writeDocument("u") {
+					update.writeTo(this)
+				}
+				writeBoolean("upsert", false)
+				writeBoolean("multi", false)
+			}
+		}
+
+		options.writeTo(this)
+	}
 }
 
 /**
@@ -65,19 +87,41 @@ class UpdateOne<Document : Any> private constructor(
  * }
  * ```
  *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/update/)
+ *
  * @see FilterQuery Filter operators
  * @see UpdateQuery Update operators
  */
 @KtMongoDsl
 class UpsertOne<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val update: UpsertQuery<Document>,
-) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
+) : Command, AbstractBsonNode(context), AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpsertQuery(context))
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeArray("updates") {
+			writeDocument {
+				writeDocument("q") {
+					filter.writeTo(this)
+				}
+				writeDocument("u") {
+					update.writeTo(this)
+				}
+				writeBoolean("upsert", true)
+				writeBoolean("multi", false)
+			}
+		}
+
+		options.writeTo(this)
+	}
 }
 
 /**
@@ -91,19 +135,41 @@ class UpsertOne<Document : Any> private constructor(
  * }
  * ```
  *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/update/)
+ *
  * @see FilterQuery Filter operators
  * @see UpdateQuery Update operators
  */
 @KtMongoDsl
 class UpdateMany<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val update: UpdateQuery<Document>,
-) : AvailableInBulkWrite<Document>, Node by ImmutableNode {
+) : Command, AbstractBsonNode(context), AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateQuery(context))
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeArray("updates") {
+			writeDocument {
+				writeDocument("q") {
+					filter.writeTo(this)
+				}
+				writeDocument("u") {
+					update.writeTo(this)
+				}
+				writeBoolean("upsert", false)
+				writeBoolean("multi", true)
+			}
+		}
+
+		options.writeTo(this)
+	}
 }
 
 /**
