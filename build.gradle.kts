@@ -52,6 +52,9 @@ dependencies {
 	dokka(projects.driverSyncJava)
 	dokka(projects.driverCoroutines)
 
+	kover(projects.bson)
+	kover(projects.bsonOfficial)
+	kover(projects.bsonMultiplatform)
 	kover(projects.dsl)
 }
 
