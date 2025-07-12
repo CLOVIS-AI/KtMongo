@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -199,7 +200,7 @@ interface BsonValueReader {
 
 	@LowLevelApi
 	@Throws(BsonReaderException::class)
-	fun readTimestamp(): Long
+	fun readTimestamp(): Timestamp
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi

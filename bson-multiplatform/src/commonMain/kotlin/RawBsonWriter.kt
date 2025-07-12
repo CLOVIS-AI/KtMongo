@@ -40,7 +40,7 @@ internal class RawBsonWriter(
 		sink.writeLongLe(value)
 	}
 
-	fun writeUInt54(value: ULong) {
+	fun writeUInt64(value: ULong) {
 		sink.writeULongLe(value)
 	}
 
