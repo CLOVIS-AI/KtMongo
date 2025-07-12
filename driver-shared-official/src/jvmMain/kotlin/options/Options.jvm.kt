@@ -47,3 +47,7 @@ fun WithSort<*>.readSortDocument() =
 @LowLevelApi
 fun WithReadConcern.readReadConcern() =
 	option<ReadConcernOption>()?.concern.toJava()
+
+@LowLevelApi
+fun WithReadPreference.readReadPreference() =
+	option<ReadPreferenceOption>()?.concern.toJava()

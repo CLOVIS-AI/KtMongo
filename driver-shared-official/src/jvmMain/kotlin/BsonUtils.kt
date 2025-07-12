@@ -18,6 +18,7 @@ package opensavvy.ktmongo.official
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.ReadConcern
+import opensavvy.ktmongo.dsl.options.ReadPreference
 import opensavvy.ktmongo.dsl.options.WriteAcknowledgment
 import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.dsl.tree.BsonNode
@@ -38,6 +39,16 @@ fun ReadConcern?.toJava(): com.mongodb.ReadConcern = when (this) {
 	ReadConcern.Linearizable -> com.mongodb.ReadConcern.LINEARIZABLE
 	ReadConcern.Snapshot -> com.mongodb.ReadConcern.SNAPSHOT
 	null -> com.mongodb.ReadConcern.DEFAULT
+}
+
+@LowLevelApi
+fun ReadPreference?.toJava(): com.mongodb.ReadPreference = when (this) {
+	ReadPreference.Primary -> com.mongodb.ReadPreference.primary()
+	ReadPreference.PrimaryPreferred -> com.mongodb.ReadPreference.primaryPreferred()
+	ReadPreference.Secondary -> com.mongodb.ReadPreference.secondary()
+	ReadPreference.SecondaryPreferred -> com.mongodb.ReadPreference.secondaryPreferred()
+	ReadPreference.Nearest -> com.mongodb.ReadPreference.nearest()
+	null -> com.mongodb.ReadPreference.primary()
 }
 
 @LowLevelApi
