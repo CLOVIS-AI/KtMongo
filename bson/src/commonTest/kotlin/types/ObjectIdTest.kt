@@ -18,11 +18,11 @@
 
 package opensavvy.ktmongo.bson.types
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-class ObjectIdTest : PreparedSpec({
+val ObjectIdTest by preparedSuite {
 
 	test("Construct from parts") {
 		val timestamp = Instant.parse("2021-01-01T00:00:00Z")
@@ -179,4 +179,4 @@ class ObjectIdTest : PreparedSpec({
 		}
 	}
 
-})
+}
