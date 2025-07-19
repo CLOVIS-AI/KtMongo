@@ -18,7 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -37,7 +36,9 @@ fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 		document { writeInt32("i", Int.MIN_VALUE) }
 		expectedBinaryHex = "0C0000001069000000008000"
 		expectedJson = """{"i": -2147483648}"""
-		verify("Read value") { read("i")?.readInt32() shouldBe Int.MIN_VALUE }
+		verify("Read value") {
+			check(read("i")?.readInt32() == Int.MIN_VALUE)
+		}
 	}
 
 	testBson(
@@ -47,7 +48,9 @@ fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 		document { writeInt32("i", Int.MAX_VALUE) }
 		expectedBinaryHex = "0C000000106900FFFFFF7F00"
 		expectedJson = """{"i": 2147483647}"""
-		verify("Read value") { read("i")?.readInt32() shouldBe Int.MAX_VALUE }
+		verify("Read value") {
+			check(read("i")?.readInt32() == Int.MAX_VALUE)
+		}
 	}
 
 	testBson(
@@ -57,7 +60,9 @@ fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 		document { writeInt32("i", -1) }
 		expectedBinaryHex = "0C000000106900FFFFFFFF00"
 		expectedJson = """{"i": -1}"""
-		verify("Read value") { read("i")?.readInt32() shouldBe -1 }
+		verify("Read value") {
+			check(read("i")?.readInt32() == -1)
+		}
 	}
 
 	testBson(
@@ -67,7 +72,9 @@ fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 		document { writeInt32("i", 0) }
 		expectedBinaryHex = "0C0000001069000000000000"
 		expectedJson = """{"i": 0}"""
-		verify("Read value") { read("i")?.readInt32() shouldBe 0 }
+		verify("Read value") {
+			check(read("i")?.readInt32() == 0)
+		}
 	}
 
 	testBson(
@@ -77,6 +84,8 @@ fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 		document { writeInt32("i", 1) }
 		expectedBinaryHex = "0C0000001069000100000000"
 		expectedJson = """{"i": 1}"""
-		verify("Read value") { read("i")?.readInt32() shouldBe 1 }
+		verify("Read value") {
+			check(read("i")?.readInt32() == 1)
+		}
 	}
 }

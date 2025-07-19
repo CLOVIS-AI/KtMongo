@@ -18,7 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -37,6 +36,6 @@ fun SuiteDsl.reprUndefined(context: Prepared<BsonContext>) = suite("Undefined") 
 		document { writeUndefined("a") }
 		expectedBinaryHex = "0800000006610000"
 		expectedJson = $$"""{"a": {"$undefined": true}}"""
-		verify("Read value") { read("a")?.readUndefined() shouldBe Unit }
+		verify("Read value") { check(read("a")?.readUndefined() == Unit) }
 	}
 }

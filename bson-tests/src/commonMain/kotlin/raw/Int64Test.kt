@@ -18,7 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -37,7 +36,9 @@ fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
 		document { writeInt64("a", Long.MIN_VALUE) }
 		expectedBinaryHex = "10000000126100000000000000008000"
 		expectedJson = """{"a": -9223372036854775808}"""
-		verify("Read value") { read("a")?.readInt64() shouldBe Long.MIN_VALUE }
+		verify("Read value") {
+			check(read("a")?.readInt64() == Long.MIN_VALUE)
+		}
 	}
 
 	testBson(
@@ -47,7 +48,9 @@ fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
 		document { writeInt64("a", Long.MAX_VALUE) }
 		expectedBinaryHex = "10000000126100FFFFFFFFFFFFFF7F00"
 		expectedJson = """{"a": 9223372036854775807}"""
-		verify("Read value") { read("a")?.readInt64() shouldBe Long.MAX_VALUE }
+		verify("Read value") {
+			check(read("a")?.readInt64() == Long.MAX_VALUE)
+		}
 	}
 
 	testBson(
@@ -57,7 +60,9 @@ fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
 		document { writeInt64("a", -1) }
 		expectedBinaryHex = "10000000126100FFFFFFFFFFFFFFFF00"
 		expectedJson = """{"a": -1}"""
-		verify("Read value") { read("a")?.readInt64() shouldBe -1 }
+		verify("Read value") {
+			check(read("a")?.readInt64() == -1L)
+		}
 	}
 
 	testBson(
@@ -67,7 +72,9 @@ fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
 		document { writeInt64("a", 0) }
 		expectedBinaryHex = "10000000126100000000000000000000"
 		expectedJson = """{"a": 0}"""
-		verify("Read value") { read("a")?.readInt64() shouldBe 0 }
+		verify("Read value") {
+			check(read("a")?.readInt64() == 0L)
+		}
 	}
 
 	testBson(
@@ -77,6 +84,8 @@ fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
 		document { writeInt64("a", 1) }
 		expectedBinaryHex = "10000000126100010000000000000000"
 		expectedJson = """{"a": 1}"""
-		verify("Read value") { read("a")?.readInt64() shouldBe 1 }
+		verify("Read value") {
+			check(read("a")?.readInt64() == 1L)
+		}
 	}
 }
