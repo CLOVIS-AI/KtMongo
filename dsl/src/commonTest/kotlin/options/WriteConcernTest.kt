@@ -20,11 +20,11 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.Duration.Companion.minutes
 
 @LowLevelApi
-class WriteConcernTest : PreparedSpec({
+val WriteConcernTest by preparedSuite {
 
 	test("Set majority acknowledgment") {
 		val options = UpdateOptions<Any>(testContext())
@@ -163,4 +163,4 @@ class WriteConcernTest : PreparedSpec({
 		""".trimIndent()
 	}
 
-})
+}

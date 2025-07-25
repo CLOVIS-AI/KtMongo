@@ -19,10 +19,10 @@ package opensavvy.ktmongo.dsl.command
 import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.Duration.Companion.minutes
 
-class FindTest : PreparedSpec({
+val FindTest by preparedSuite {
 
 	class Target(
 		val user: String,
@@ -54,4 +54,4 @@ class FindTest : PreparedSpec({
 		""".trimIndent()
 	}
 
-})
+}

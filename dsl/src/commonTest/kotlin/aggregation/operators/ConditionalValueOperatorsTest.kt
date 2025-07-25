@@ -22,9 +22,9 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.ktmongo.dsl.query.filter.gt
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class ConditionalValueOperatorsTest : PreparedSpec({
+val ConditionalValueOperatorsTest by preparedSuite {
 
 	class User(
 		val name: String,
@@ -187,4 +187,4 @@ class ConditionalValueOperatorsTest : PreparedSpec({
 					]"""
 		}
 	}
-})
+}

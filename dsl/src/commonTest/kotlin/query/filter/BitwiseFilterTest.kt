@@ -20,10 +20,10 @@ package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.ExperimentalTime
 
-class BitwiseFilterTest : PreparedSpec({
+val BitwiseFilterTest by preparedSuite {
 
 	suite(bitsAllClear) {
 		test("Int mask") {
@@ -148,4 +148,4 @@ class BitwiseFilterTest : PreparedSpec({
 			""".trimIndent()
 		}
 	}
-})
+}

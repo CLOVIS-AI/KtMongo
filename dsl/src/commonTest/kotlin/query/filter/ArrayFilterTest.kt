@@ -17,9 +17,9 @@
 package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class ArrayFilterTest : PreparedSpec({
+val ArrayFilterTest by preparedSuite {
 	test("Test on an array element") {
 		filter {
 			User::grades.any eq 12
@@ -223,4 +223,4 @@ class ArrayFilterTest : PreparedSpec({
 			}
 		""".trimIndent()
 	}
-})
+}

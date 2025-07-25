@@ -19,9 +19,9 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.aggregation.unset
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class UnsetTest : PreparedSpec({
+val UnsetTest by preparedSuite {
 
 	class Target(
 		val _id: String,
@@ -88,4 +88,4 @@ class UnsetTest : PreparedSpec({
 			""".trimIndent())
 	}
 
-})
+}

@@ -20,9 +20,9 @@ import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.match
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.query.filter.eq
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class MatchTest : PreparedSpec({
+val MatchTest by preparedSuite {
 
 	class Target(
 		val foo: String,
@@ -44,4 +44,4 @@ class MatchTest : PreparedSpec({
 			""".trimIndent())
 	}
 
-})
+}

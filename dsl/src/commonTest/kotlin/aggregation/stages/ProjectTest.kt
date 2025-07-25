@@ -20,9 +20,9 @@ import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.literal
 import opensavvy.ktmongo.dsl.aggregation.project
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class ProjectTest : PreparedSpec({
+val ProjectTest by preparedSuite {
 
 	class Target(
 		val _id: String,
@@ -84,4 +84,4 @@ class ProjectTest : PreparedSpec({
 			""".trimIndent())
 	}
 
-})
+}

@@ -27,7 +27,7 @@ import opensavvy.ktmongo.dsl.aggregation.project
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.filter.eq
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
@@ -45,7 +45,7 @@ val toObjectId = "\$toObjectId"
 val toString = "\$toString"
 val toUUID = "\$toUUID"
 
-class TypeValueOperatorsTest : PreparedSpec({
+val TypeValueOperatorsTest by preparedSuite {
 
 	class Target(
 		val name: String,
@@ -252,4 +252,4 @@ class TypeValueOperatorsTest : PreparedSpec({
 		}
 	}
 
-})
+}

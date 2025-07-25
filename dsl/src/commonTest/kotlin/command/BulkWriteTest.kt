@@ -24,10 +24,10 @@ import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.ktmongo.dsl.query.update.inc
 import opensavvy.ktmongo.dsl.query.update.set
 import opensavvy.ktmongo.dsl.query.update.setOnInsert
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.Duration.Companion.minutes
 
-class BulkWriteTest : PreparedSpec({
+val BulkWriteTest by preparedSuite {
 
 	class Target(
 		val name: String,
@@ -116,4 +116,4 @@ class BulkWriteTest : PreparedSpec({
 		""".trimIndent()
 	}
 
-})
+}

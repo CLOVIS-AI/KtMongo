@@ -17,9 +17,9 @@
 package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.dsl.aggregation.*
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class ArithmeticValueOperatorsTest : PreparedSpec({
+val ArithmeticValueOperatorsTest by preparedSuite {
 
 	class Target(
 		val score: Int,
@@ -218,4 +218,4 @@ class ArithmeticValueOperatorsTest : PreparedSpec({
 		}
 	}
 
-})
+}

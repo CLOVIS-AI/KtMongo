@@ -17,10 +17,10 @@
 package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import org.bson.types.ObjectId
 
-class LogicalFilterTest : PreparedSpec({
+val LogicalFilterTest by preparedSuite {
 	suite("Operators $and, $or, and $nor") {
 		test("And") {
 			filter {
@@ -224,4 +224,4 @@ class LogicalFilterTest : PreparedSpec({
 			""".trimIndent()
 		}
 	}
-})
+}

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.aggregation.operators.aggregation.operators
+package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.ktmongo.dsl.query.filter.getField
 import opensavvy.ktmongo.dsl.query.filter.gt
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class ArrayValueOperatorsTest : PreparedSpec({
+val ArrayValueOperatorsTest by preparedSuite {
 
 	class User(
 		val name: String,
@@ -385,4 +385,4 @@ class ArrayValueOperatorsTest : PreparedSpec({
 		}
 	}
 
-})
+}

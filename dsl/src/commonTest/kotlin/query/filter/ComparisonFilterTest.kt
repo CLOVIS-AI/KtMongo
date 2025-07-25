@@ -17,9 +17,9 @@
 package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class ComparisonFilterTest : PreparedSpec({
+val ComparisonFilterTest by preparedSuite {
 
 	suite("Operator $eq") {
 		test("Integer") {
@@ -257,4 +257,4 @@ class ComparisonFilterTest : PreparedSpec({
 		}
 	}
 
-})
+}

@@ -23,9 +23,9 @@ import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.ktmongo.dsl.query.update.set
 import opensavvy.ktmongo.dsl.query.update.unset
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class UpdateWithPipelineTest : PreparedSpec({
+val UpdateWithPipelineTest by preparedSuite {
 
 	class Target(
 		val name: String,
@@ -167,4 +167,4 @@ class UpdateWithPipelineTest : PreparedSpec({
 		""".trimIndent()
 	}
 
-})
+}

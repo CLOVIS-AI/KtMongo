@@ -22,7 +22,7 @@ import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import org.bson.types.ObjectId
 
 val set = "\$set"
@@ -59,8 +59,8 @@ fun update(block: UpdateQuery<User>.() -> Unit): String =
 fun upsert(block: UpsertQuery<User>.() -> Unit): String =
 	UpsertQuery<User>(testContext()).apply(block).toString()
 
-class EmptyUpdateTest : PreparedSpec({
+val EmptyUpdateTest by preparedSuite {
 	test("Empty update") {
 		update { } shouldBeBson "{}"
 	}
-})
+}

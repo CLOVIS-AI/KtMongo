@@ -18,10 +18,10 @@ package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.filter.eq
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
 @OptIn(LowLevelApi::class)
-class AggregationStageTest : PreparedSpec({
+val AggregationStageTest by preparedSuite {
 
 	class Target(
 		val foo: String,
@@ -48,4 +48,4 @@ class AggregationStageTest : PreparedSpec({
 			""".trimIndent())
 	}
 
-})
+}

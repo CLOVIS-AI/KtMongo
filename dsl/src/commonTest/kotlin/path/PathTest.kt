@@ -19,10 +19,10 @@ package opensavvy.ktmongo.dsl.path
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.PathSegment.*
 import opensavvy.ktmongo.dsl.path.PathSegment.Field
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
 @OptIn(LowLevelApi::class)
-class PathTest : PreparedSpec({
+val PathTest by preparedSuite {
 
 	test("Root field") {
 		check(Path("test").toString() == "test")
@@ -48,4 +48,4 @@ class PathTest : PreparedSpec({
 		check((Path("test") / AllPositional / Field("bar")).toString() == "test.$[].bar")
 	}
 
-})
+}

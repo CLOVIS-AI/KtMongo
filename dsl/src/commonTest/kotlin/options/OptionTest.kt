@@ -20,10 +20,10 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
 @LowLevelApi
-class OptionTest : PreparedSpec({
+val OptionTest by preparedSuite {
 
 	test("Validate the system") {
 		val countOptions = CountOptions<String>(testContext())
@@ -35,4 +35,4 @@ class OptionTest : PreparedSpec({
 		check(countOptions.option<LimitOption>()?.limit == 99L)
 	}
 
-})
+}

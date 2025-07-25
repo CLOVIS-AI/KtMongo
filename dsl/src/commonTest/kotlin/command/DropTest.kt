@@ -19,9 +19,9 @@ package opensavvy.ktmongo.dsl.command
 import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class DropTest : PreparedSpec({
+val DropTest by preparedSuite {
 
 	class Target(
 		val user: String,
@@ -42,4 +42,4 @@ class DropTest : PreparedSpec({
 		""".trimIndent()
 	}
 
-})
+}
