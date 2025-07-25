@@ -19,12 +19,12 @@
 package opensavvy.ktmongo.bson.official.types
 
 import opensavvy.ktmongo.bson.types.Timestamp
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.random.nextLong
 import opensavvy.prepared.suite.random.random
 import kotlin.time.ExperimentalTime
 
-class OfficialTimestampTest : PreparedSpec({
+val OfficialTimestampTest by preparedSuite {
 
 	test("Round-trip between official Timestamp and KtMongo Timestamp") {
 		repeat(1000) {
@@ -36,4 +36,4 @@ class OfficialTimestampTest : PreparedSpec({
 		}
 	}
 
-})
+}

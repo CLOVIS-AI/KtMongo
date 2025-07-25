@@ -17,10 +17,10 @@
 package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
 @OptIn(LowLevelApi::class)
-class BsonReaderTest : PreparedSpec({
+val BsonReaderTest by preparedSuite {
 
 	test("Read basic data types") {
 		val output = testContext().buildDocument {
@@ -32,4 +32,4 @@ class BsonReaderTest : PreparedSpec({
 		check(output.reader().read("a")?.readInt32() == 42)
 	}
 
-})
+}
