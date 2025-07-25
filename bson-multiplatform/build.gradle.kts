@@ -17,7 +17,7 @@
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
-	alias(libsCommon.plugins.kotest)
+	alias(libsCommon.plugins.testBalloon)
 }
 
 kotlin {
@@ -54,7 +54,8 @@ kotlin {
 
 	sourceSets.commonTest.dependencies {
 		implementation(projects.bsonTests)
-		implementation(libs.prepared.kotest)
+		implementation(libsCommon.opensavvy.prepared.testBalloon)
+		implementation(libsCommon.kotest.assertions)
 	}
 }
 
