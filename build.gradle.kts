@@ -41,21 +41,16 @@ plugins {
 
 dependencies {
 	// List the 'library' projects
-	dokka(projects.annotations)
-	dokka(projects.bson)
-	dokka(projects.bsonOfficial)
-	dokka(projects.bsonMultiplatform)
-	dokka(projects.bsonTests)
-	dokka(projects.dsl)
-	dokka(projects.driverSharedOfficial)
-	dokka(projects.driverSync)
-	dokka(projects.driverSyncJava)
-	dokka(projects.driverCoroutines)
-
-	kover(projects.bson)
-	kover(projects.bsonOfficial)
-	kover(projects.bsonMultiplatform)
-	kover(projects.dsl)
+	library(projects.annotations)
+	library(projects.bson)
+	library(projects.bsonOfficial)
+	library(projects.bsonMultiplatform)
+	library(projects.bsonTests)
+	library(projects.dsl)
+	library(projects.driverSharedOfficial)
+	library(projects.driverSync)
+	library(projects.driverSyncJava)
+	library(projects.driverCoroutines)
 }
 
 // region Check the users of the project didn't forget to rename the group
@@ -63,6 +58,15 @@ dependencies {
 val projectPath: String? = System.getenv("CI_PROJECT_PATH")
 if (projectPath != null && projectPath != "opensavvy/playgrounds/gradle" && group == "dev.opensavvy.playground") {
 	error("The project is declared to be in the group '$group', which is recognized as the Gradle Playground, but it's hosted in '$projectPath', which is not the Playground. Maybe you forgot to rename the group when importing the Playground in your own project?")
+}
+
+// endregion
+// region Enable the :lib template if we're in the playground
+
+if (group == "dev.opensavvy.playground") {
+	dependencies {
+		library(projects.gradle.templates.templateLib)
+	}
 }
 
 // endregion
