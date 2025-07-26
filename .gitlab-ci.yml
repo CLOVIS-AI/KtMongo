@@ -172,7 +172,6 @@ publish-maven:gitlab:
   script:
     - >
       ./gradlew publishAllPublicationsToGitLabRepository
-      --no-configuration-cache
       -PappVersion=$project_version
 
   interruptible: false
@@ -181,39 +180,10 @@ publish-maven:gitlab:
       when: never
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
     - if: $CI_COMMIT_TAG
+    - when: manual
+      allow_failure: true # Needed to avoid blocking the pipelines
 
-publish-maven:gitlab[ios]:
-  extends: [ .kotlin-native-iosArm64 ]
-  needs:
-    - os.version
-  stage: deploy
-
-  script:
-    - >
-      ./gradlew
-      publishIosArm64PublicationToGitLabRepository
-      publishIosSimulatorArm64PublicationToGitLabRepository
-      publishIosX64PublicationToGitLabRepository
-      publishMacosX64PublicationToGitLabRepository
-      publishMacosArm64PublicationToGitLabRepository
-      publishWatchosX64PublicationToGitLabRepository
-      publishWatchosArm32PublicationToGitLabRepository
-      publishWatchosArm64PublicationToGitLabRepository
-      publishWatchosSimulatorArm64PublicationToGitLabRepository
-      publishTvosX64PublicationToGitLabRepository
-      publishTvosArm64PublicationToGitLabRepository
-      publishTvosSimulatorArm64PublicationToGitLabRepository
-      --no-configuration-cache
-      -PappVersion=$project_version
-
-  interruptible: false
-  rules:
-    - if: $PUBLISH_MAVEN == "no" || $PUBLISH_MAVEN_GITLAB == "no" || $PUBLISH_MAVEN_IOS == "no"
-      when: never
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
-    - if: $CI_COMMIT_TAG
-
-publish-maven:central:initialize:
+publish-maven:central:snapshots:
   extends: [ .kotlin-jvm ]
   needs:
     - os.version
@@ -221,9 +191,8 @@ publish-maven:central:initialize:
 
   script:
     - >
-      ./gradlew initializeSonatypeStagingRepository
-      --no-configuration-cache
-      -PappVersion=$project_version
+      ./gradlew :publishAggregationToCentralPortalSnapshots
+      -PappVersion="${project_version}-SNAPSHOT"
 
   interruptible: false
   rules:
@@ -231,70 +200,21 @@ publish-maven:central:initialize:
       when: never
     - if: $PUBLISH_MAVEN == "no" || $PUBLISH_MAVEN_CENTRAL == "no"
       when: never
-    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+    - when: manual
+      allow_failure: true # Needed to avoid blocking the pipelines
 
 publish-maven:central:
   extends: [ .kotlin-jvm ]
   needs:
     - os.version
-    - publish-maven:central:initialize
   stage: deploy
 
   script:
     - export SIGNING_KEY_RING=$(mktemp)
     - <"$SIGNING_KEY_RING_B64" base64 -d >"$SIGNING_KEY_RING"
     - >
-      ./gradlew findSonatypeStagingRepository publishToSonatype
-      -x initializeSonatypeStagingRepository
-      --no-configuration-cache
-      -PappVersion=$project_version
-
-  interruptible: false
-  rules:
-    - if: $OSSRH_USERNAME == null || $OSSRH_PASSWORD == null
-      when: never
-    - if: $PUBLISH_MAVEN == "no" || $PUBLISH_MAVEN_CENTRAL == "no"
-      when: never
-    - if: $CI_COMMIT_TAG
-
-publish-maven:central[ios]:
-  extends: [ .kotlin-native-iosArm64 ]
-  needs:
-    - os.version
-    - publish-maven:central:initialize
-    - publish-maven:central
-  stage: deploy
-
-  script:
-    - export SIGNING_KEY_RING=$(mktemp)
-    - <"$SIGNING_KEY_RING_B64" base64 -d >"$SIGNING_KEY_RING"
-    - >
-      ./gradlew findSonatypeStagingRepository publishToSonatype
-      -x initializeSonatypeStagingRepository
-      --no-configuration-cache
-      -PappVersion=$project_version
-
-  interruptible: false
-  rules:
-    - if: $OSSRH_USERNAME == null || $OSSRH_PASSWORD == null
-      when: never
-    - if: $PUBLISH_MAVEN == "no" || $PUBLISH_MAVEN_CENTRAL == "no" || $PUBLISH_MAVEN_IOS == "no"
-      when: never
-    - if: $CI_COMMIT_TAG
-
-publish-maven:central:release:
-  extends: [ .kotlin-jvm ]
-  needs:
-    - job: os.version
-    - job: publish-maven:central
-    - job: publish-maven:central[ios]
-      optional: true
-  stage: deploy
-
-  script:
-    - >
-      ./gradlew findSonatypeStagingRepository closeAndReleaseSonatypeStagingRepository
-      --no-configuration-cache
+      ./gradlew publishAggregationToCentralPortal
       -PappVersion=$project_version
 
   interruptible: false
