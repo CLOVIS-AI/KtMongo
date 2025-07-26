@@ -123,6 +123,28 @@ Because KMongo cannot make such difference, most aggregation operators are not i
 
 Thanks to the DSL, KtMongo can check these constraints. Using a `set` operator where it is not allowed will lead to a compilation error. Therefore, KtMongo can offer both an update `$eq` and an aggregation `$eq`, with the same API but different implementations, as the correct one will be selected by the compiler. Additionally, this makes finding operators easier: each operation injects a receiver into the DSL block, which contains documentation on the different available operators.
 
+## Aggregation support
+
+Because KtMongo understands in which context operators are available, KtMongo can support aggregation operators transparently, with a similar syntax to query operators.
+Additionally, aggregation pipelines are declared with a fluent API, like streams, sequences and flows:
+
+```kotlin
+users.aggregate()
+	.match {
+		User::age gte 18
+	}
+	.limit(10)
+	.sort {
+		ascending(User::name)
+	}
+	.project {
+		excludeId()
+		include(User::name)
+		include(User::age)
+	}
+	.toList()
+```
+
 ## Avoid using expressions that do not match the current collection
 
 KMongo is typesafe in some ways, but isn't in some others. For example, KMongo correctly doesn't allow this code:
