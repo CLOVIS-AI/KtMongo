@@ -145,7 +145,6 @@ internal class UpdateWithPipelineQueryImpl<Document : Any> @LowLevelApi construc
 ) : AbstractCompoundBsonNode(context), UpdateWithPipelineQuery<Document> {
 
 	val stages get() = children
-		.map { context.buildDocument { it.writeTo(this) } }
 
 }
 

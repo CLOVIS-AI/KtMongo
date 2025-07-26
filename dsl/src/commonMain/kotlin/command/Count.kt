@@ -17,10 +17,12 @@
 package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Counting a number of documents in a collection.
@@ -33,19 +35,31 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * }
  * ```
  *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/count/)
+ *
  * @see FilterQuery Filter operators
  * @see CountOptions Options
  */
 @KtMongoDsl
 class Count<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	val options: CountOptions<Document>,
 	val filter: FilterQuery<Document>,
-) {
+) : Command, AbstractBsonNode(context) {
 
 	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, CountOptions(context), FilterQuery(context))
 
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeDocument("query") {
+			filter.writeTo(this)
+		}
+
+		options.writeTo(this)
+	}
 }
 
 /**

@@ -17,12 +17,13 @@
 package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
-import opensavvy.ktmongo.dsl.tree.ImmutableNode
-import opensavvy.ktmongo.dsl.tree.Node
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Inserting a single element in a collection.
@@ -33,17 +34,30 @@ import opensavvy.ktmongo.dsl.tree.Node
  * users.insertOne(User(name = "Bob", age = 18))
  * ```
  *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/insert/)
+ *
  * @see InsertMany
  * @see InsertOneOptions Options
  */
 @KtMongoDsl
 class InsertOne<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	val options: InsertOneOptions<Document>,
 	val document: Document,
-) : Node by ImmutableNode, AvailableInBulkWrite<Document> {
+) : Command, AbstractBsonNode(context), AvailableInBulkWrite<Document> {
 
 	constructor(context: BsonContext, document: Document) : this(context, InsertOneOptions(context), document)
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeArray("documents") {
+			writeObjectSafe(document)
+		}
+
+		options.writeTo(this)
+	}
 }
 
 /**
@@ -55,17 +69,32 @@ class InsertOne<Document : Any> private constructor(
  * users.insertMany(User(name = "Bob", age = 18), User(name = "Fred", age = 19), User(name = "Arthur", age = 22))
  * ```
  *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/insert/)
+ *
  * @see InsertOne
  * @see InsertManyOptions Options
  */
 @KtMongoDsl
 class InsertMany<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	val options: InsertManyOptions<Document>,
 	val documents: List<Document>,
-) : Node by ImmutableNode {
+) : Command, AbstractBsonNode(context) {
 
 	constructor(context: BsonContext, documents: List<Document>) : this(context, InsertManyOptions(context), documents)
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeArray("documents") {
+			for (document in documents) {
+				writeObjectSafe(document)
+			}
+		}
+
+		options.writeTo(this)
+	}
 }
 
 /**

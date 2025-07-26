@@ -17,14 +17,14 @@
 package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.tree.ImmutableNode
-import opensavvy.ktmongo.dsl.tree.Node
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
  * Deleting a single document from a collection.
@@ -36,16 +36,34 @@ import opensavvy.ktmongo.dsl.tree.Node
  *     User::name eq "Patrick"
  * }
  * ```
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/delete/)
  */
 @KtMongoDsl
 class DeleteOne<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	val options: DeleteOneOptions<Document>,
 	val filter: FilterQuery<Document>,
-) : Node by ImmutableNode, AvailableInBulkWrite<Document> {
+) : AbstractBsonNode(context), Command, AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, DeleteOneOptions(context), FilterQuery(context))
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeArray("deletes") {
+			writeDocument {
+				writeDocument("q") {
+					filter.writeTo(this)
+				}
+				writeInt32("limit", 1)
+			}
+		}
+
+		options.writeTo(this)
+	}
 }
 
 /**
@@ -58,16 +76,33 @@ class DeleteOne<Document : Any> private constructor(
  *     User::age gte 200
  * }
  * ```
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/delete/)
  */
 @KtMongoDsl
 class DeleteMany<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	val options: DeleteManyOptions<Document>,
 	val filter: FilterQuery<Document>,
-) : Node by ImmutableNode, AvailableInBulkWrite<Document> {
+) : AbstractBsonNode(context), Command, AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, DeleteManyOptions(context), FilterQuery(context))
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeArray("deletes") {
+			writeDocument {
+				writeDocument("q") {
+					filter.writeTo(this)
+				}
+			}
+		}
+
+		options.writeTo(this)
+	}
 }
 
 /**

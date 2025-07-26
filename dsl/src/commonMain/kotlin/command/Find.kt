@@ -35,6 +35,10 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
  * }
  * ```
  *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/find/)
+ *
  * @see FilterQuery Filter operators
  * @see FindOptions Options
  */
@@ -43,19 +47,18 @@ class Find<Document : Any> private constructor(
 	context: BsonContext,
 	val options: FindOptions<Document>,
 	val filter: FilterQuery<Document>,
-) : AbstractBsonNode(context) {
+) : Command, AbstractBsonNode(context) {
 
 	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, FindOptions(context), FilterQuery(context))
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
-		writeDocument("options") {
-			options.writeTo(this)
-		}
 		writeDocument("filter") {
 			filter.writeTo(this)
 		}
+
+		options.writeTo(this)
 	}
 }
 

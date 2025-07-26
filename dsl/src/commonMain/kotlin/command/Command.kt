@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,11 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.query
+package opensavvy.ktmongo.dsl.command
 
-import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.tree.BsonNode
-import org.intellij.lang.annotations.Language
 
-expect fun testContext(): BsonContext
-
-infix fun String.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
-	val expected = expected
-		.replace("\n", "")
-		.replace("\t", "")
-		.replace(",", ", ")
-		.replace("  ", " ")
-
-	check(this == expected)
-}
-
-infix fun BsonNode.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
-	this.toString() shouldBeBson expected
-}
+/**
+ * A command that can be sent to a MongoDB server.
+ */
+interface Command : BsonNode

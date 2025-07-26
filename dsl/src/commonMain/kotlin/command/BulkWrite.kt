@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -26,11 +27,12 @@ import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundNode
 import opensavvy.ktmongo.dsl.tree.Node
 import opensavvy.ktmongo.dsl.tree.acceptAll
 
-sealed interface AvailableInBulkWrite<Document> : Node
+sealed interface AvailableInBulkWrite<Document> : Node, Command
 
 /**
  * Performing multiple write operations in a single request.
@@ -76,16 +78,17 @@ sealed interface AvailableInBulkWrite<Document> : Node
  *
  * ### External resources
  *
- * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite/)
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/bulkWrite/)
  *
  * @see BulkWriteOptions Options
  */
+@OptIn(LowLevelApi::class)
 @KtMongoDsl
 class BulkWrite<Document : Any> private constructor(
-	val context: BsonContext,
+	context: BsonContext,
 	private val globalFilter: FilterQuery<Document>.() -> Unit,
 	val options: BulkWriteOptions<Document>,
-) : CompoundNode<AvailableInBulkWrite<Document>> {
+) : Command, AbstractBsonNode(context), CompoundNode<AvailableInBulkWrite<Document>> {
 
 	private val _operations = ArrayList<AvailableInBulkWrite<Document>>()
 	val operations: Sequence<AvailableInBulkWrite<Document>> get() = _operations.asSequence()
@@ -375,6 +378,80 @@ class BulkWrite<Document : Any> private constructor(
 		accept(model)
 	}
 
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeInt32("bulkWrite", 1)
+
+		writeArray("ops") {
+			for (operation in _operations) {
+				writeDocument {
+					when (operation) {
+						is InsertOne<*> -> {
+							writeInt32("insert", 0)
+							writeObjectSafe("document", operation.document)
+							operation.options.writeTo(this)
+						}
+
+						is UpdateOne<*> -> {
+							writeInt32("update", 0)
+							writeDocument("filter") {
+								operation.filter.writeTo(this)
+							}
+							writeDocument("updateMods") {
+								operation.update.writeTo(this)
+							}
+							writeBoolean("multi", false)
+							operation.options.writeTo(this)
+						}
+
+						is UpsertOne<*> -> {
+							writeInt32("update", 0)
+							writeDocument("filter") {
+								operation.filter.writeTo(this)
+							}
+							writeDocument("updateMods") {
+								operation.update.writeTo(this)
+							}
+							writeBoolean("upsert", true)
+							writeBoolean("multi", false)
+							operation.options.writeTo(this)
+						}
+
+						is UpdateMany<*> -> {
+							writeInt32("update", 0)
+							writeDocument("filter") {
+								operation.filter.writeTo(this)
+							}
+							writeDocument("updateMods") {
+								operation.update.writeTo(this)
+							}
+							writeBoolean("multi", true)
+							operation.options.writeTo(this)
+						}
+
+						is DeleteOne<*> -> {
+							writeInt32("delete", 0)
+							writeDocument("filter") {
+								operation.filter.writeTo(this)
+							}
+							writeBoolean("multi", false)
+							operation.options.writeTo(this)
+						}
+
+						is DeleteMany<*> -> {
+							writeInt32("delete", 0)
+							writeDocument("filter") {
+								operation.filter.writeTo(this)
+							}
+							writeBoolean("multi", true)
+							operation.options.writeTo(this)
+						}
+					}
+				}
+			}
+		}
+
+		options.writeTo(this)
+	}
 }
 
 /**
