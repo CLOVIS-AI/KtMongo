@@ -20,9 +20,9 @@ import io.kotest.assertions.throwables.shouldThrow
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.aggregation.skip
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class SkipTest : PreparedSpec({
+val SkipTest by preparedSuite {
 
 	test("Skip 5 elements") {
 		TestPipeline<Nothing>()
@@ -52,4 +52,4 @@ class SkipTest : PreparedSpec({
 		}
 	}
 
-})
+}

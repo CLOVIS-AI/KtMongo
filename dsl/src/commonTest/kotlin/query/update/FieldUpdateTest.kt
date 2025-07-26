@@ -17,9 +17,9 @@
 package opensavvy.ktmongo.dsl.query.update
 
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class FieldUpdateTest : PreparedSpec({
+val FieldUpdateTest by preparedSuite {
 	suite("Operator $set") {
 		test("Single field") {
 			update {
@@ -327,4 +327,4 @@ class FieldUpdateTest : PreparedSpec({
 			""".trimIndent()
 		}
 	}
-})
+}

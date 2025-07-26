@@ -14,17 +14,6 @@
     <HTMLCodeStyleSettings>
       <option name="HTML_ENFORCE_QUOTES" value="true" />
     </HTMLCodeStyleSettings>
-    <HoconCodeStyleSettings>
-      <option name="OBJECTS_WRAP" value="5" />
-      <option name="LISTS_WRAP" value="5" />
-      <option name="LISTS_ALIGN_WHEN_MULTILINE" value="true" />
-      <option name="LISTS_NEW_LINE_AFTER_LBRACKET" value="true" />
-      <option name="LISTS_RBRACKET_ON_NEXT_LINE" value="true" />
-      <option name="KEEP_BLANK_LINES_IN_OBJECTS" value="1" />
-      <option name="KEEP_BLANK_LINES_IN_LISTS" value="1" />
-      <option name="KEEP_BLANK_LINES_BEFORE_RBRACE" value="1" />
-      <option name="KEEP_BLANK_LINES_BEFORE_RBRACKET" value="1" />
-    </HoconCodeStyleSettings>
     <JSCodeStyleSettings version="0">
       <option name="USE_SEMICOLON_AFTER_STATEMENT" value="false" />
       <option name="ENFORCE_TRAILING_COMMA" value="WhenMultiline" />
@@ -103,14 +92,6 @@
         <option name="SMART_TABS" value="true" />
       </indentOptions>
     </codeStyleSettings>
-    <codeStyleSettings language="Gherkin">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="4" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </indentOptions>
-    </codeStyleSettings>
     <codeStyleSettings language="Groovy">
       <option name="LINE_COMMENT_AT_FIRST_COLUMN" value="false" />
       <option name="BLOCK_COMMENT_AT_FIRST_COLUMN" value="false" />
@@ -125,15 +106,6 @@
       <option name="KEEP_SIMPLE_CLASSES_IN_ONE_LINE" value="false" />
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="USE_TAB_CHARACTER" value="true" />
-        <option name="SMART_TABS" value="true" />
-      </indentOptions>
-    </codeStyleSettings>
-    <codeStyleSettings language="HOCON">
-      <indentOptions>
-        <option name="INDENT_SIZE" value="4" />
-        <option name="CONTINUATION_INDENT_SIZE" value="4" />
-        <option name="TAB_SIZE" value="4" />
         <option name="USE_TAB_CHARACTER" value="true" />
         <option name="SMART_TABS" value="true" />
       </indentOptions>

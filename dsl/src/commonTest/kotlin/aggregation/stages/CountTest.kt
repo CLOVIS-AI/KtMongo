@@ -20,9 +20,9 @@ import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.count
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class CountTest : PreparedSpec({
+val CountTest by preparedSuite {
 
 	class Score(
 		val score: Int,
@@ -48,4 +48,4 @@ class CountTest : PreparedSpec({
 			""".trimIndent())
 	}
 
-})
+}

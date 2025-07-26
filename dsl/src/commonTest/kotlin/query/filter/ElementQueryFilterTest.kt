@@ -18,9 +18,9 @@ package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class ElementQueryFilterTest : PreparedSpec({
+val ElementQueryFilterTest by preparedSuite {
 
 	suite("Operator $exists") {
 		test("Exists") {
@@ -126,4 +126,4 @@ class ElementQueryFilterTest : PreparedSpec({
 		}
 	}
 
-})
+}

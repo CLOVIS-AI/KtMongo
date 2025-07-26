@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalTime::class)
-
-package opensavvy.ktmongo.dsl.options.options
+package opensavvy.ktmongo.dsl.options
 
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.FindOptions
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.ExperimentalTime
 
+@OptIn(ExperimentalTime::class)
 @LowLevelApi
-class SortTest : PreparedSpec({
+val SortTest by preparedSuite {
 
 	class Target(
 		val _id: ObjectId,
@@ -99,4 +98,4 @@ class SortTest : PreparedSpec({
 		""".trimIndent()
 	}
 
-})
+}

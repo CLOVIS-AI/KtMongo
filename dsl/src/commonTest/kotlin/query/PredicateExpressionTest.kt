@@ -19,10 +19,10 @@ package opensavvy.ktmongo.dsl.query
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
 @OptIn(LowLevelApi::class)
-class PredicateExpressionTest : PreparedSpec({
+val PredicateExpressionTest by preparedSuite {
 
 	@KtMongoDsl
 	fun <T> predicate(block: FilterQueryPredicate<T>.() -> Unit): String =
@@ -161,4 +161,4 @@ class PredicateExpressionTest : PreparedSpec({
 		""".trimIndent()
 	}
 
-})
+}

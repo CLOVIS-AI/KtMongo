@@ -18,7 +18,7 @@ package opensavvy.ktmongo.bson.official
 
 import com.mongodb.MongoClientSettings
 import opensavvy.ktmongo.bson.writerTests
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 
 val testContext by prepared {
@@ -26,6 +26,6 @@ val testContext by prepared {
 }
 
 @OptIn(ExperimentalStdlibApi::class)
-class JvmBsonContextTest : PreparedSpec({
+val JvmBsonContextTest by preparedSuite {
 	writerTests(testContext)
-})
+}

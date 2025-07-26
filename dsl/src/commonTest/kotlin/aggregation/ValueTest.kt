@@ -21,13 +21,13 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
 const val literal = "\$literal"
 const val cond = "\$cond"
 
 @LowLevelApi
-class ValueTest : PreparedSpec({
+val ValueTest by preparedSuite {
 
 	val dollar = "$"
 
@@ -111,4 +111,4 @@ class ValueTest : PreparedSpec({
 			]
 		""".trimIndent()
 	}
-})
+}

@@ -16,10 +16,10 @@
 
 package opensavvy.ktmongo.dsl.path
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.reflect.KProperty1
 
-class FieldTest : PreparedSpec({
+val FieldTest by preparedSuite {
 	class Profile(
 		val name: String,
 		val age: Int,
@@ -75,4 +75,4 @@ class FieldTest : PreparedSpec({
 			}
 		}
 	}
-})
+}

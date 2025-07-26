@@ -18,10 +18,10 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.ktmongo.dsl.query.filter.gt
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.text.Typography.dollar
 
-class SetTest : PreparedSpec({
+val SetTest by preparedSuite {
 
 	class Target(
 		val foo: String,
@@ -146,4 +146,4 @@ class SetTest : PreparedSpec({
 
 	}
 
-})
+}

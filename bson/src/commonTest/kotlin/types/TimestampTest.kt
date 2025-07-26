@@ -18,7 +18,7 @@
 
 package opensavvy.ktmongo.bson.types
 
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.random.Random
 import opensavvy.prepared.suite.random.nextLong
 import opensavvy.prepared.suite.random.random
@@ -26,7 +26,7 @@ import kotlin.random.nextULong
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-class TimestampTest : PreparedSpec({
+val TimestampTest by preparedSuite {
 
 	suite("Creation and formatting") {
 		val examples = listOf(
@@ -112,7 +112,7 @@ class TimestampTest : PreparedSpec({
 		}
 	}
 
-})
+}
 
 private suspend fun Random.nextInstant(from: Long = 0, until: Long = Timestamp.MAX_INSTANT.epochSeconds) =
 	Instant.fromEpochSeconds(nextLong(from, until))

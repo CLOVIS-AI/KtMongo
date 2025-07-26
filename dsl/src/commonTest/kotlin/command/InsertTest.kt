@@ -22,9 +22,9 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class InsertTest : PreparedSpec({
+val InsertTest by preparedSuite {
 
 	test("insertOne") {
 		val context = testContext()
@@ -93,4 +93,4 @@ class InsertTest : PreparedSpec({
 		""".trimIndent()
 	}
 
-})
+}

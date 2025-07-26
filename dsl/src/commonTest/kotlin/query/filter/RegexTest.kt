@@ -17,9 +17,9 @@
 package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class RegexTest : PreparedSpec({
+val RegexTest by preparedSuite {
 	suite("Regex") {
 		test("Basic usage") {
 			filter {
@@ -129,4 +129,4 @@ class RegexTest : PreparedSpec({
 			""".trimIndent()
 		}
 	}
-})
+}

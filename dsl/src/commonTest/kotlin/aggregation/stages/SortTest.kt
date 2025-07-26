@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.aggregation.stages.aggregation.stages
+package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.aggregation.sort
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class SortTest : PreparedSpec({
+val SortTest by preparedSuite {
 
 	class Target(
 		val _id: String,
@@ -37,7 +37,7 @@ class SortTest : PreparedSpec({
 			.shouldBeBson("""
 				[
 					{
-						"$sort": {
+						"${sort}": {
 							"_id": 1
 						}
 					}
@@ -53,7 +53,7 @@ class SortTest : PreparedSpec({
 			.shouldBeBson("""
 				[
 					{
-						"$sort": {
+						"${sort}": {
 							"_id": -1
 						}
 					}
@@ -71,7 +71,7 @@ class SortTest : PreparedSpec({
 			.shouldBeBson("""
 				[
 					{
-						"$sort": {
+						"${sort}": {
 							"name": 1,
 							"_id": -1,
 							"age": 1
@@ -90,4 +90,4 @@ class SortTest : PreparedSpec({
 			""".trimIndent())
 	}
 
-})
+}

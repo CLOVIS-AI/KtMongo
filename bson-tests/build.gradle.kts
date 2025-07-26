@@ -38,6 +38,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(libsCommon.plugins.testBalloon)
 }
 
 kotlin {
@@ -70,7 +71,8 @@ kotlin {
 	sourceSets.commonMain.dependencies {
 		api(projects.bson)
 		api(libs.prepared)
-		implementation(libs.prepared.kotest)
+		implementation(libsCommon.opensavvy.prepared.testBalloon)
+		implementation(libsCommon.kotest.assertions)
 	}
 
 	compilerOptions {

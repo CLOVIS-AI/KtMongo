@@ -17,7 +17,7 @@
 package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.dsl.aggregation.*
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val cos = "\$cos"
 val cosh = "\$cosh"
@@ -35,7 +35,7 @@ val atanh = "\$atanh"
 val degreesToRadians = "\$degreesToRadians"
 val radiansToDegrees = "\$radiansToDegrees"
 
-class TrigonometryValueOperatorsTest : PreparedSpec({
+val TrigonometryValueOperatorsTest by preparedSuite {
 	class Target(
 		val a: Double,
 		val b: Double,
@@ -305,4 +305,4 @@ class TrigonometryValueOperatorsTest : PreparedSpec({
 				""".trimIndent())
 	}
 
-})
+}

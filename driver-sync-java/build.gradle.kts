@@ -19,6 +19,7 @@ plugins {
 	alias(opensavvyConventions.plugins.kotlin.abstractLibrary)
 	java
 	kotlin("jvm")
+	alias(libsCommon.plugins.testBalloon)
 }
 
 kotlin {
@@ -31,7 +32,8 @@ dependencies {
 	testImplementation(libs.junit.jupiter.api)
 	testImplementation(libs.junit.jupiter.engine)
 	testImplementation(libs.junit.platform.launcher)
-	testImplementation(libs.prepared.kotest)
+	testImplementation(libsCommon.opensavvy.prepared.testBalloon)
+	testImplementation(libsCommon.kotest.assertions)
 }
 
 library {

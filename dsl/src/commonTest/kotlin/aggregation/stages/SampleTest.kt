@@ -20,9 +20,9 @@ import io.kotest.assertions.throwables.shouldThrow
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.sample
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class SampleTest : PreparedSpec({
+val SampleTest by preparedSuite {
 
 	test(sample) {
 		TestPipeline<Nothing>()
@@ -52,4 +52,4 @@ class SampleTest : PreparedSpec({
 		}
 	}
 
-})
+}

@@ -20,9 +20,9 @@ import io.kotest.assertions.throwables.shouldThrow
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.limit
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class LimitTest : PreparedSpec({
+val LimitTest by preparedSuite{
 
 	test("Nominal $limit") {
 		TestPipeline<Nothing>()
@@ -55,4 +55,4 @@ class LimitTest : PreparedSpec({
 		}
 	}
 
-})
+}

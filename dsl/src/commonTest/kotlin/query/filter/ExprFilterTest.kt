@@ -18,10 +18,10 @@ package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.dsl.aggregation.literal
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.text.Typography.dollar
 
-class ExprFilterTest : PreparedSpec({
+val ExprFilterTest by preparedSuite {
 	test("Reading a field") {
 		filter {
 			expr {
@@ -102,4 +102,4 @@ class ExprFilterTest : PreparedSpec({
 			}
 		""".trimIndent()
 	}
-})
+}
