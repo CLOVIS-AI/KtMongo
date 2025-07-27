@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+@file:OptIn(LowLevelApi::class)
+
 package opensavvy.ktmongo.dsl.aggregation.operators
 
-import opensavvy.ktmongo.dsl.aggregation.*
-import opensavvy.ktmongo.dsl.query.filter.eq
-import opensavvy.ktmongo.dsl.query.filter.getField
-import opensavvy.ktmongo.dsl.query.filter.gt
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
+import opensavvy.ktmongo.dsl.aggregation.Value
+import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val ArrayValueOperatorsTest by preparedSuite {
@@ -35,12 +37,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 		val results: List<Any>
 	)
 
-	val numbers = "\$numbers"
-	val users = "\$users"
-	val arrayThis = "$\$this"
-	val foo = "$\$foo"
-
-	suite(filter) {
+	suite($$"$filter") {
 		test("Usage with a list of integers") {
 			TestPipeline<Target>()
 				.set {
@@ -49,7 +46,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 							it gt of(3)
 						}
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$$"""
 					[
 						{
 							"$set": {
@@ -59,7 +56,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 										"as": "this",
 										"cond": {
 											"$gt": [
-												"$arrayThis",
+												"$$this",
 												{"$literal": 3}
 											]
 										}
@@ -79,7 +76,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 							it gt of(3)
 						}
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$$"""
 					[
 						{
 							"$set": {
@@ -89,7 +86,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 										"as": "this",
 										"cond": {
 											"$gt": [
-												"$arrayThis",
+												"$$this",
 												{"$literal": 3}
 											]
 										},
@@ -110,7 +107,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 							it gt of(3)
 						}
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$$"""
 					[
 						{
 							"$set": {
@@ -120,7 +117,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 										"as": "foo",
 										"cond": {
 											"$gt": [
-												"$foo",
+												"$$foo",
 												{"$literal": 3}
 											]
 										}
@@ -133,7 +130,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 		}
 	}
 
-	suite(map) {
+	suite($$"$map") {
 		test("Usage with a list of integers") {
 			TestPipeline<Target>()
 				.set {
@@ -142,7 +139,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 							it + of(4)
 						}
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$$"""
 					[
 						{
 							"$set": {
@@ -152,7 +149,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 										"as": "this",
 										"in": {
 											"$add": [
-												"$arrayThis",
+												"$$this",
 												{"$literal": 4}
 											]
 										}
@@ -172,7 +169,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 							it + of(4)
 						}
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$$"""
 					[
 						{
 							"$set": {
@@ -182,7 +179,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 										"as": "foo",
 										"in": {
 											"$add": [
-												"$foo",
+												"$$foo",
 												{"$literal": 4}
 											]
 										}
@@ -206,7 +203,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 							val foo: Value<Target, List<Boolean>> = it // Ensure that the type doesn't change
 						}
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$$"""
 					[
 						{
 							"$set": {
@@ -216,7 +213,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 										"as": "this",
 										"in": {
 											"$eq": [
-												"$arrayThis",
+												"$$this",
 												{"$literal": 4}
 											]
 										}
@@ -240,7 +237,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 							val foo: Value<Target, List<String>> = it // Ensure that the type doesn't change
 						}
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$$"""
 					[
 						{
 							"$set": {
@@ -250,7 +247,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 										"as": "this",
 										"in": {
 											"$getField": {
-												"input": "$arrayThis",
+												"input": "$$this",
 												"field": "name"
 											}
 										}
@@ -263,14 +260,14 @@ val ArrayValueOperatorsTest by preparedSuite {
 		}
 	}
 
-	suite(firstN) {
+	suite($$"$firstN") {
 		test("Usage with a list of integers") {
 			TestPipeline<Target>()
 				.set {
 					Target::results set Target::numbers
 						.take(of(5))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -287,14 +284,14 @@ val ArrayValueOperatorsTest by preparedSuite {
 		}
 	}
 
-	suite(lastN) {
+	suite($$"$lastN") {
 		test("Usage with a list of integers") {
 			TestPipeline<Target>()
 				.set {
 					Target::results set Target::numbers
 						.takeLast(of(5))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -311,7 +308,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 		}
 	}
 
-	suite(sortArray) {
+	suite($$"$sortArray") {
 		test("Sort by field") {
 			TestPipeline<Target>()
 				.set {
@@ -321,7 +318,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 							descending(User::age)
 						}
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -346,7 +343,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 					Target::results set Target::numbers
 						.sorted()
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -368,7 +365,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 					Target::results set Target::numbers
 						.sortedDescending()
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {

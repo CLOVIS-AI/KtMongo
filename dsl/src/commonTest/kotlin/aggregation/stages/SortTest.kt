@@ -18,7 +18,6 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.ktmongo.dsl.aggregation.sort
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val SortTest by preparedSuite {
@@ -34,10 +33,10 @@ val SortTest by preparedSuite {
 			.sort {
 				ascending(Target::_id)
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
-						"${sort}": {
+						"$sort": {
 							"_id": 1
 						}
 					}
@@ -50,10 +49,10 @@ val SortTest by preparedSuite {
 			.sort {
 				descending(Target::_id)
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
-						"${sort}": {
+						"$sort": {
 							"_id": -1
 						}
 					}
@@ -68,10 +67,10 @@ val SortTest by preparedSuite {
 				descending(Target::_id)
 				ascending(Target::age)
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
-						"${sort}": {
+						"$sort": {
 							"name": 1,
 							"_id": -1,
 							"age": 1

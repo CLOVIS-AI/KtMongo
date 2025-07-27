@@ -16,10 +16,8 @@
 
 package opensavvy.ktmongo.dsl.query.filter
 
-import opensavvy.ktmongo.dsl.aggregation.literal
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
-import kotlin.text.Typography.dollar
 
 val ExprFilterTest by preparedSuite {
 	test("Reading a field") {
@@ -27,9 +25,9 @@ val ExprFilterTest by preparedSuite {
 			expr {
 				of(User::isAlive)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
-				"$expr": "${dollar}isAlive"
+				"$expr": "$isAlive"
 			}
 		""".trimIndent()
 	}
@@ -39,7 +37,7 @@ val ExprFilterTest by preparedSuite {
 			expr {
 				of(true)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"$expr": {
 					"$literal": true
@@ -53,12 +51,12 @@ val ExprFilterTest by preparedSuite {
 			expr {
 				of(User::grades[0]) ne of(User::grades[1])
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"$expr": {
 					"$ne": [
-						"${dollar}grades.0",
-						"${dollar}grades.1"
+						"$grades.0",
+						"$grades.1"
 					]
 				}
 			}
@@ -70,11 +68,11 @@ val ExprFilterTest by preparedSuite {
 			expr {
 				of(User::grades[0]) ne of(12)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"$expr": {
 					"$ne": [
-						"${dollar}grades.0",
+						"$grades.0",
 						{
 							"$literal": 12
 						}
@@ -89,14 +87,14 @@ val ExprFilterTest by preparedSuite {
 			expr {
 				of(12) ne of(User::grades[0])
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"$expr": {
 					"$ne": [
 						{
 							"$literal": 12
 						},
-						"${dollar}grades.0"
+						"$grades.0"
 					]
 				}
 			}

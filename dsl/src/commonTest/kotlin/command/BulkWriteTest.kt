@@ -17,13 +17,8 @@
 package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.dsl.options.WriteConcern
-import opensavvy.ktmongo.dsl.query.filter.eq
-import opensavvy.ktmongo.dsl.query.filter.gte
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.ktmongo.dsl.query.update.inc
-import opensavvy.ktmongo.dsl.query.update.set
-import opensavvy.ktmongo.dsl.query.update.setOnInsert
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.Duration.Companion.minutes
 
@@ -67,7 +62,7 @@ val BulkWriteTest by preparedSuite {
 			options.apply {
 				writeConcern(WriteConcern(writeTimeout = 2.minutes))
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"bulkWrite": 1,
 				"ops": [

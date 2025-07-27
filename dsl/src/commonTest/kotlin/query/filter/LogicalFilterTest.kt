@@ -21,14 +21,14 @@ import opensavvy.prepared.runner.testballoon.preparedSuite
 import org.bson.types.ObjectId
 
 val LogicalFilterTest by preparedSuite {
-	suite("Operators $and, $or, and $nor") {
+	suite($$"Operators $and, $or, and $nor") {
 		test("And") {
 			filter {
 				and {
 					User::name eq "foo"
 					User::age eq null
 				}
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$and": [
 						{
@@ -46,7 +46,7 @@ val LogicalFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("Empty $and") {
+		test($$"Empty $and") {
 			filter {
 				and {}
 			} shouldBeBson """
@@ -55,12 +55,12 @@ val LogicalFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("An $and with a single term is removed") {
+		test($$"An $and with a single term is removed") {
 			filter {
 				and {
 					User::name eq "foo"
 				}
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$eq": "foo"
@@ -69,7 +69,7 @@ val LogicalFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("Combine nested $and") {
+		test($$"Combine nested $and") {
 			filter {
 				and {
 					User::name eq "foo"
@@ -78,7 +78,7 @@ val LogicalFilterTest by preparedSuite {
 						User::id eq ObjectId("507f1f77bcf86cd799439011")
 					}
 				}
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$and": [
 						{
@@ -103,11 +103,11 @@ val LogicalFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("An automatic $and is generated when multiple filters are given") {
+		test($$"An automatic $and is generated when multiple filters are given") {
 			filter { // same example as the previous, but we didn't write the '$and'
 				User::name eq "foo"
 				User::age eq null
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$and": [
 						{
@@ -131,7 +131,7 @@ val LogicalFilterTest by preparedSuite {
 					User::name eq "foo"
 					User::age eq null
 				}
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$or": [
 						{
@@ -149,7 +149,7 @@ val LogicalFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("Empty $or") {
+		test($$"Empty $or") {
 			filter {
 				or {}
 			} shouldBeBson """
@@ -158,12 +158,12 @@ val LogicalFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("An $or with a single term is removed") {
+		test($$"An $or with a single term is removed") {
 			filter {
 				or {
 					User::name eq "foo"
 				}
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$eq": "foo"
@@ -178,7 +178,7 @@ val LogicalFilterTest by preparedSuite {
 					User::name eq "foo"
 					User::age eq null
 				}
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$nor": [
 						{
@@ -196,7 +196,7 @@ val LogicalFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("Empty $nor") {
+		test($$"Empty $nor") {
 			filter {
 				nor {}
 			} shouldBeBson """
@@ -205,13 +205,13 @@ val LogicalFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("An $nor with a single term isn't simplified") {
+		test($$"An $nor with a single term isn't simplified") {
 			// Ideally, it should become a $not, but that isn't trivial to implement currently.
 			filter {
 				nor {
 					User::name eq "foo"
 				}
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$nor": [
 						{

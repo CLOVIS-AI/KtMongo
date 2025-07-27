@@ -16,13 +16,9 @@
 
 package opensavvy.ktmongo.dsl.command
 
-import opensavvy.ktmongo.dsl.aggregation.literal
 import opensavvy.ktmongo.dsl.options.WriteConcern
-import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.ktmongo.dsl.query.update.set
-import opensavvy.ktmongo.dsl.query.update.unset
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val UpdateWithPipelineTest by preparedSuite {
@@ -48,7 +44,7 @@ val UpdateWithPipelineTest by preparedSuite {
 			options.apply {
 				writeConcern(WriteConcern.Majority)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"updates": [
 					{
@@ -93,7 +89,7 @@ val UpdateWithPipelineTest by preparedSuite {
 			options.apply {
 				writeConcern(WriteConcern.Majority)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"updates": [
 					{
@@ -138,7 +134,7 @@ val UpdateWithPipelineTest by preparedSuite {
 			options.apply {
 				writeConcern(WriteConcern.Majority)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"updates": [
 					{

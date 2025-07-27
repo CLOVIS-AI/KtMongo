@@ -19,9 +19,8 @@
 package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.*
-import opensavvy.ktmongo.dsl.query.filter.eq
-import opensavvy.ktmongo.dsl.query.filter.gt
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
+import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val ConditionalValueOperatorsTest by preparedSuite {
@@ -34,17 +33,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 		val bonus: Int?,
 	)
 
-	val score = "\$score"
-	val multiplier = "\$multiplier"
-	val role = "\$role"
-	"\$bonus"
-	val cond = "\$cond"
-	val switch = "\$switch"
-	"\$multiply"
-	"\$and"
-	"\$or"
-
-	suite(cond) {
+	suite($$"$cond") {
 		test("Basic condition") {
 			TestPipeline<User>()
 				.set {
@@ -53,7 +42,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 						ifTrue = of(User::score) + of(User::multiplier),
 						ifFalse = of(User::score)
 					)
-				} shouldBeBson """
+				} shouldBeBson $$"""
 					[
 						{
 							"$set": {
@@ -80,7 +69,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 		}
 	}
 
-	suite(switch) {
+	suite($$"$switch") {
 		test("Basic switch with multiple conditions and default") {
 			TestPipeline<User>()
 				.set {
@@ -90,7 +79,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 						of(User::role) eq of("ADMIN") to of(7),
 						default = of(-1)
 					)
-				} shouldBeBson """
+				} shouldBeBson $$"""
 					[
 						{
 							"$set": {
@@ -142,7 +131,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 					User::bonus set switch(
 						of(User::role) eq of("ADMIN") to of(100)
 					)
-				} shouldBeBson """
+				} shouldBeBson $$"""
 					[
 						{
 							"$set": {
@@ -172,7 +161,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 					User::bonus set switch(
 						default = of(0)
 					)
-				} shouldBeBson """
+				} shouldBeBson $$"""
 					[
 						{
 							"$set": {

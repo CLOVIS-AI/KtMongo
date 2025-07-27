@@ -18,13 +18,9 @@ package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.testballoon.preparedSuite
-
-const val literal = "\$literal"
-const val cond = "\$cond"
 
 @LowLevelApi
 val ValueTest by preparedSuite {
@@ -73,7 +69,7 @@ val ValueTest by preparedSuite {
 		test("Embedding a primitive integer") {
 			value {
 				of(5)
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				[
 					{
 						"$literal": 5
@@ -85,7 +81,7 @@ val ValueTest by preparedSuite {
 		test("Embedding null") {
 			value {
 				of(null)
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				[
 					{
 						"$literal": null
@@ -98,14 +94,14 @@ val ValueTest by preparedSuite {
 	test("Foo") {
 		value {
 			of(5) eq of(User::profile / Profile::age)
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			[
 				{
 					"$eq": [
 						{
 							"$literal": 5
 						},
-						"${dollar}profile.age"
+						"$profile.age"
 					]
 				}
 			]

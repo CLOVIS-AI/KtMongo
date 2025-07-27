@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.dsl.command
 
-import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.testballoon.preparedSuite
@@ -40,7 +39,7 @@ val FindTest by preparedSuite {
 					descending(Target::user)
 				}
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"filter": {
 					"user": {"$eq": "foo"}

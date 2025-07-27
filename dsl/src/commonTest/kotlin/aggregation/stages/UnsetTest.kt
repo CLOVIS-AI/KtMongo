@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+@file:OptIn(LowLevelApi::class)
+
 package opensavvy.ktmongo.dsl.aggregation.stages
 
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.ktmongo.dsl.aggregation.unset
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val UnsetTest by preparedSuite {
@@ -34,7 +36,7 @@ val UnsetTest by preparedSuite {
 			.unset {
 				exclude(Target::name)
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$unset": [
@@ -50,7 +52,7 @@ val UnsetTest by preparedSuite {
 			.unset {
 				exclude(Target::_id)
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$unset": [
@@ -67,7 +69,7 @@ val UnsetTest by preparedSuite {
 				exclude(Target::_id)
 				exclude(Target::age)
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$unset": [

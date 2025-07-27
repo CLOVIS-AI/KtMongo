@@ -24,26 +24,6 @@ import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import org.intellij.lang.annotations.Language
 
-val count = "\$count"
-val limit = "\$limit"
-val match = "\$match"
-val sample = "\$sample"
-val skip = "\$skip"
-val set = "\$set"
-val abs = "\$abs"
-val add = "\$add"
-val ceil = "\$ceil"
-val floor = "\$floor"
-val concat = "\$concat"
-val sort = "\$sort"
-val unset = "\$unset"
-val project = "\$project"
-val filter = "\$filter"
-val map = "\$map"
-val firstN = "\$firstN"
-val lastN = "\$lastN"
-val sortArray = "\$sortArray"
-
 @OptIn(LowLevelApi::class)
 class TestPipeline<Document : Any>(
 	chain: PipelineChainLink = PipelineChainLink(testContext(), null, null)

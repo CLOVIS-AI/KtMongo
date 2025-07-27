@@ -18,16 +18,15 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 
 import io.kotest.assertions.throwables.shouldThrow
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
-import opensavvy.ktmongo.dsl.aggregation.limit
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val LimitTest by preparedSuite{
 
-	test("Nominal $limit") {
+	test($$"Nominal $limit") {
 		TestPipeline<Nothing>()
 			.limit(5)
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$limit": 5
@@ -39,7 +38,7 @@ val LimitTest by preparedSuite{
 	test("Limit of 0 is kept") {
 		TestPipeline<Nothing>()
 			.limit(0)
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$limit": 0

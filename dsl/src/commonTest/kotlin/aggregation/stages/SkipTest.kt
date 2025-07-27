@@ -19,7 +19,6 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 import io.kotest.assertions.throwables.shouldThrow
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.ktmongo.dsl.aggregation.skip
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val SkipTest by preparedSuite {
@@ -27,7 +26,7 @@ val SkipTest by preparedSuite {
 	test("Skip 5 elements") {
 		TestPipeline<Nothing>()
 			.skip(5)
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$skip": 5

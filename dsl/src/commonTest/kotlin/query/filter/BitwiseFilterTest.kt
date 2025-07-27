@@ -25,11 +25,11 @@ import kotlin.time.ExperimentalTime
 
 val BitwiseFilterTest by preparedSuite {
 
-	suite(bitsAllClear) {
+	suite($$"$bitsAllClear") {
 		test("Int mask") {
 			filter {
 				User::age bitsAllClear 0x22f8u
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$bitsAllClear": 8952
@@ -41,7 +41,7 @@ val BitwiseFilterTest by preparedSuite {
 		test("Complex mask") {
 			filter {
 				User::age bitsAllClear ObjectId("686d568045632c8726d01634").bytes
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$bitsAllClear": {
@@ -56,11 +56,11 @@ val BitwiseFilterTest by preparedSuite {
 		}
 	}
 
-	suite(bitsAllSet) {
+	suite($$"$bitsAllSet") {
 		test("Int mask") {
 			filter {
 				User::age bitsAllSet 0x22f8u
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$bitsAllSet": 8952
@@ -72,7 +72,7 @@ val BitwiseFilterTest by preparedSuite {
 		test("Complex mask") {
 			filter {
 				User::age bitsAllSet ObjectId("686d568045632c8726d01634").bytes
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$bitsAllSet": {
@@ -87,11 +87,11 @@ val BitwiseFilterTest by preparedSuite {
 		}
 	}
 
-	suite(bitsAnyClear) {
+	suite($$"$bitsAnyClear") {
 		test("Int mask") {
 			filter {
 				User::age bitsAnyClear 0x22f8u
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$bitsAnyClear": 8952
@@ -103,7 +103,7 @@ val BitwiseFilterTest by preparedSuite {
 		test("Complex mask") {
 			filter {
 				User::age bitsAnyClear ObjectId("686d568045632c8726d01634").bytes
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$bitsAnyClear": {
@@ -118,11 +118,11 @@ val BitwiseFilterTest by preparedSuite {
 		}
 	}
 
-	suite(bitsAnySet) {
+	suite($$"$bitsAnySet") {
 		test("Int mask") {
 			filter {
 				User::age bitsAnySet 0x22f8u
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$bitsAnySet": 8952
@@ -134,7 +134,7 @@ val BitwiseFilterTest by preparedSuite {
 		test("Complex mask") {
 			filter {
 				User::age bitsAnySet ObjectId("686d568045632c8726d01634").bytes
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$bitsAnySet": {

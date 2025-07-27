@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.dsl.command
 
-import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.testballoon.preparedSuite
@@ -37,7 +36,7 @@ val CountTest by preparedSuite {
 				limit(2)
 				maxTime(2.minutes)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"query": {
 					"user": {"$eq": "foo"}

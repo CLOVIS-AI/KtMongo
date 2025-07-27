@@ -21,11 +21,11 @@ import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val ComparisonFilterTest by preparedSuite {
 
-	suite("Operator $eq") {
+	suite($$"Operator $eq") {
 		test("Integer") {
 			filter {
 				User::age eq 5
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$eq": 5
@@ -37,7 +37,7 @@ val ComparisonFilterTest by preparedSuite {
 		test("Null") {
 			filter {
 				User::age eq null
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$eq": null
@@ -47,11 +47,11 @@ val ComparisonFilterTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $ne") {
+	suite($$"Operator $ne") {
 		test("Integer") {
 			filter {
 				User::age ne 12
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$ne": 12
@@ -63,7 +63,7 @@ val ComparisonFilterTest by preparedSuite {
 		test("Null") {
 			filter {
 				User::age ne null
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$ne": null
@@ -73,14 +73,14 @@ val ComparisonFilterTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $isOneOf") {
+	suite($$"Operator $isOneOf") {
 		test("With 0 elements") {
 			filter {
 				User::name.isOneOf()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
-						"$isOneOf": [
+						"$in": [
 						]
 					}
 				}
@@ -90,10 +90,10 @@ val ComparisonFilterTest by preparedSuite {
 		test("With 1 element") {
 			filter {
 				User::name.isOneOf("Alfred")
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
-						"$isOneOf": [
+						"$in": [
 							"Alfred"
 						]
 					}
@@ -104,10 +104,10 @@ val ComparisonFilterTest by preparedSuite {
 		test("With multiple elements") {
 			filter {
 				User::name.isOneOf("Alfred", "Arthur", "Annabelle")
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
-						"$isOneOf": [
+						"$in": [
 							"Alfred",
 							"Arthur",
 							"Annabelle"
@@ -118,14 +118,14 @@ val ComparisonFilterTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $isNotOneOf") {
+	suite($$"Operator $isNotOneOf") {
 		test("With 0 elements") {
 			filter {
 				User::name.isNotOneOf()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
-						"$isNotOneOf": [
+						"$nin": [
 						]
 					}
 				}
@@ -135,10 +135,10 @@ val ComparisonFilterTest by preparedSuite {
 		test("With 1 element") {
 			filter {
 				User::name.isNotOneOf("Alfred")
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
-						"$isNotOneOf": [
+						"$nin": [
 							"Alfred"
 						]
 					}
@@ -149,10 +149,10 @@ val ComparisonFilterTest by preparedSuite {
 		test("With multiple elements") {
 			filter {
 				User::name.isNotOneOf("Alfred", "Arthur", "Annabelle")
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
-						"$isNotOneOf": [
+						"$nin": [
 							"Alfred",
 							"Arthur",
 							"Annabelle"
@@ -164,10 +164,10 @@ val ComparisonFilterTest by preparedSuite {
 	}
 
 	suite("Comparison operators") {
-		test("int $gt") {
+		test($$"int $gt") {
 			filter {
 				User::age gt 12
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$gt": 12
@@ -176,10 +176,10 @@ val ComparisonFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("int $gte") {
+		test($$"int $gte") {
 			filter {
 				User::age gte 12
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$gte": 12
@@ -188,10 +188,10 @@ val ComparisonFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("int $lt") {
+		test($$"int $lt") {
 			filter {
 				User::age lt 12
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$lt": 12
@@ -200,10 +200,10 @@ val ComparisonFilterTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("int $lte") {
+		test($$"int $lte") {
 			filter {
 				User::age lte 12
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$lte": 12
@@ -215,7 +215,7 @@ val ComparisonFilterTest by preparedSuite {
 		test("int isIn (end inclusive)") {
 			filter {
 				User::age isIn (12..17)
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$and": [
 						{
@@ -238,7 +238,7 @@ val ComparisonFilterTest by preparedSuite {
 				User::age isIn (12..<17)
 				// Kotlin's .. and ..< actually return the same value, so the library sees this as a range 12..16
 				// Although the query is slightly different, the behavior is the same
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$and": [
 						{
