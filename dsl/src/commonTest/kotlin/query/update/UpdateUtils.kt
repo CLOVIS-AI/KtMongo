@@ -25,15 +25,6 @@ import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import org.bson.types.ObjectId
 
-val set = "\$set"
-val setOnInsert = "\$setOnInsert"
-val inc = "\$inc"
-val mul = "\$mul"
-val unset = "\$unset"
-val rename = "\$rename"
-val min = "\$min"
-val max = "\$max"
-
 class Friend(
 	val id: String,
 	val name: String,

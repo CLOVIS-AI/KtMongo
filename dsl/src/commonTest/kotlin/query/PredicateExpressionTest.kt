@@ -31,20 +31,11 @@ val PredicateExpressionTest by preparedSuite {
 			.toBson()
 			.toString()
 
-	val eq = "\$eq"
-	val exists = "\$exists"
-	val type = "\$type"
-	val not = "\$not"
-	val gt = "\$gt"
-	"\$gte"
-	"\$lt"
-	val lte = "\$lte"
-
-	suite("Operator $eq") {
+	suite($$"Operator $eq") {
 		test("Integer") {
 			predicate {
 				eq(4)
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$eq": 4
 				}
@@ -54,7 +45,7 @@ val PredicateExpressionTest by preparedSuite {
 		test("String") {
 			predicate {
 				eq("foo")
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$eq": "foo"
 				}
@@ -64,7 +55,7 @@ val PredicateExpressionTest by preparedSuite {
 		test("Null") {
 			predicate {
 				eq(null)
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$eq": null
 				}
@@ -72,11 +63,11 @@ val PredicateExpressionTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $exists") {
+	suite($$"Operator $exists") {
 		test("Does exist") {
 			predicate<String> {
 				exists()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$exists": true
 				}
@@ -86,7 +77,7 @@ val PredicateExpressionTest by preparedSuite {
 		test("Does not exist") {
 			predicate<String> {
 				doesNotExist()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$exists": false
 				}
@@ -94,11 +85,11 @@ val PredicateExpressionTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $type") {
+	suite($$"Operator $type") {
 		test("Has a given type") {
 			predicate<String> {
 				hasType(BsonType.Double)
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$type": 1
 				}
@@ -108,7 +99,7 @@ val PredicateExpressionTest by preparedSuite {
 		test("Is null") {
 			predicate<String?> {
 				isNull()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$type": 10
 				}
@@ -116,11 +107,11 @@ val PredicateExpressionTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $not") {
+	suite($$"Operator $not") {
 		test("Is not null") {
 			predicate<String?> {
 				isNotNull()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$not": {
 						"$type": 10
@@ -129,7 +120,7 @@ val PredicateExpressionTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test("Empty $not is no-op and thus removed") {
+		test($$"Empty $not is no-op and thus removed") {
 			predicate<String> {
 				not { }
 			} shouldBeBson """
@@ -148,7 +139,7 @@ val PredicateExpressionTest by preparedSuite {
 				isNull()
 				eq(17)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"$exists": true,
 				"$gt": 15,

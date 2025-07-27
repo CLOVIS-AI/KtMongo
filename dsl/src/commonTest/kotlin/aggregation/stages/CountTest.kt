@@ -18,7 +18,6 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
-import opensavvy.ktmongo.dsl.aggregation.count
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
@@ -32,14 +31,14 @@ val CountTest by preparedSuite {
 		val passingScores: Int,
 	)
 
-	test("Nominal $count") {
+	test($$"Nominal $count") {
 		TestPipeline<Score>()
 			.countTo(Results::passingScores)
 			.also {
 				@Suppress("UnusedVariable", "unused")
 				val foo: Pipeline<Results> = it // Won't compile if the 'countTo' pipeline stops changing the pipeline type
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$count": "passingScores"

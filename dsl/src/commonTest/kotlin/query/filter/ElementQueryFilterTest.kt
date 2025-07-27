@@ -16,17 +16,18 @@
 
 package opensavvy.ktmongo.dsl.query.filter
 
+import de.infix.testBalloon.framework.TestPlatformJvm.type
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val ElementQueryFilterTest by preparedSuite {
 
-	suite("Operator $exists") {
+	suite($$"Operator $exists") {
 		test("Exists") {
 			filter {
 				User::age.exists()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$exists": true
@@ -38,7 +39,7 @@ val ElementQueryFilterTest by preparedSuite {
 		test("Does not exist") {
 			filter {
 				User::age.doesNotExist()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$exists": false
@@ -52,7 +53,7 @@ val ElementQueryFilterTest by preparedSuite {
 		test("String") {
 			filter {
 				User::age hasType BsonType.String
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$type": 2
@@ -64,7 +65,7 @@ val ElementQueryFilterTest by preparedSuite {
 		test("Null") {
 			filter {
 				User::age hasType BsonType.Null
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"age": {
 						"$type": 10
@@ -76,7 +77,7 @@ val ElementQueryFilterTest by preparedSuite {
 		test("Is null") {
 			filter {
 				User::name.isNull()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$type": 10
@@ -88,7 +89,7 @@ val ElementQueryFilterTest by preparedSuite {
 		test("Is undefined") {
 			filter {
 				User::name.isUndefined()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$type": 6
@@ -100,7 +101,7 @@ val ElementQueryFilterTest by preparedSuite {
 		test("Is not null") {
 			filter {
 				User::name.isNotNull()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$not": {
@@ -114,7 +115,7 @@ val ElementQueryFilterTest by preparedSuite {
 		test("Is not undefined") {
 			filter {
 				User::name.isNotUndefined()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$not": {

@@ -16,8 +16,6 @@
 
 package opensavvy.ktmongo.dsl.command
 
-import opensavvy.ktmongo.dsl.query.filter.eq
-import opensavvy.ktmongo.dsl.query.filter.lt
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.testballoon.preparedSuite
@@ -34,7 +32,7 @@ val DeleteTest by preparedSuite {
 			filter.apply {
 				Target::user eq "foo"
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"deletes": [
 					{
@@ -55,7 +53,7 @@ val DeleteTest by preparedSuite {
 			filter.apply {
 				Target::age lt 3
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"deletes": [
 					{

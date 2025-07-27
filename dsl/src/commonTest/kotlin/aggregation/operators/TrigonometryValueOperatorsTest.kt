@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
+@file:OptIn(LowLevelApi::class)
+
 package opensavvy.ktmongo.dsl.aggregation.operators
 
-import opensavvy.ktmongo.dsl.aggregation.*
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
+import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
-
-val cos = "\$cos"
-val cosh = "\$cosh"
-val acos = "\$acos"
-val acosh = "\$acosh"
-val sin = "\$sin"
-val sinh = "\$sinh"
-val asin = "\$asin"
-val asinh = "\$asinh"
-val tan = "\$tan"
-val tanh = "\$tanh"
-val atan = "\$atan"
-val atanh = "\$atanh"
-
-val degreesToRadians = "\$degreesToRadians"
-val radiansToDegrees = "\$radiansToDegrees"
 
 val TrigonometryValueOperatorsTest by preparedSuite {
 	class Target(
@@ -42,16 +30,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 		val c: Double,
 	)
 
-	val a = "\$a"
-	val b = "\$b"
-	val c = "\$c"
-
-	test(cos) {
+	test($$"$cos") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set cos(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -64,12 +48,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(cosh) {
+	test($$"$cosh") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set cosh(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -82,12 +66,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(acos) {
+	test($$"$acos") {
 		TestPipeline<Target>()
 			.set {
 				Target::c set acos(of(Target::a) + of(Target::b))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -105,12 +89,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(acosh) {
+	test($$"$acosh") {
 		TestPipeline<Target>()
 			.set {
 				Target::c set acosh(of(2.0))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -125,12 +109,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(sin) {
+	test($$"$sin") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set sin(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -143,12 +127,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(sinh) {
+	test($$"$sinh") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set sinh(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -161,12 +145,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(asin) {
+	test($$"$asin") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set asin(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -179,12 +163,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(asinh) {
+	test($$"$asinh") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set asinh(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -197,12 +181,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(tan) {
+	test($$"$tan") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set tan(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -215,12 +199,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(tanh) {
+	test($$"$tanh") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set tanh(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -233,12 +217,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(atan) {
+	test($$"$atan") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set atan(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -251,12 +235,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(atanh) {
+	test($$"$atanh") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set atanh(of(Target::c))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -269,12 +253,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(degreesToRadians) {
+	test($$"$degreesToRadians") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set of(Target::c).toRadians()
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -287,12 +271,12 @@ val TrigonometryValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 	}
 
-	test(radiansToDegrees) {
+	test($$"$radiansToDegrees") {
 		TestPipeline<Target>()
 			.set {
 				Target::b set of(Target::c).toDegrees()
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 					[
 						{
 							"$set": {

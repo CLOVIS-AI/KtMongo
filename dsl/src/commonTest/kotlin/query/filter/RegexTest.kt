@@ -24,7 +24,7 @@ val RegexTest by preparedSuite {
 		test("Basic usage") {
 			filter {
 				User::name.regex("foo.*")
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$regex": {
@@ -41,7 +41,7 @@ val RegexTest by preparedSuite {
 		test("Case insensitive") {
 			filter {
 				User::name.regex("^acme", caseInsensitive = true)
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$regex": {
@@ -58,7 +58,7 @@ val RegexTest by preparedSuite {
 		test("Case insensitive grouping") {
 			filter {
 				User::name.regex("(?i)a(?-i)cme")
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$regex": {
@@ -75,7 +75,7 @@ val RegexTest by preparedSuite {
 		test("Similar to SQL LIKE") {
 			filter {
 				User::name.regex("789$")
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$regex": {
@@ -92,7 +92,7 @@ val RegexTest by preparedSuite {
 		test("Multiline match") {
 			filter {
 				User::name.regex("^S", matchEachLine = true)
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$regex": {
@@ -115,7 +115,7 @@ val RegexTest by preparedSuite {
 					""".trimIndent(),
 					extended = true,
 				)
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"name": {
 						"$regex": {

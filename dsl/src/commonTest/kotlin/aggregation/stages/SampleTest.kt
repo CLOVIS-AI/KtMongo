@@ -18,16 +18,15 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 
 import io.kotest.assertions.throwables.shouldThrow
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
-import opensavvy.ktmongo.dsl.aggregation.sample
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val SampleTest by preparedSuite {
 
-	test(sample) {
+	test($$"$sample") {
 		TestPipeline<Nothing>()
 			.sample(5)
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$sample": {

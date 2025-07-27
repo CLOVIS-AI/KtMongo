@@ -16,7 +16,8 @@
 
 package opensavvy.ktmongo.dsl.aggregation.operators
 
-import opensavvy.ktmongo.dsl.aggregation.*
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
+import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val ArithmeticValueOperatorsTest by preparedSuite {
@@ -27,17 +28,13 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		val name: String,
 	)
 
-	val score = "\$score"
-	val average = "\$average"
-	val name = "\$name"
-
-	suite(abs) {
+	suite($$"$abs") {
 		test("Usage with a number") {
 			TestPipeline<Target>()
 				.set {
 					Target::average set abs(of(5.2))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -53,13 +50,13 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		}
 	}
 
-	suite(add) {
+	suite($$"$add") {
 		test("Binary usage") {
 			TestPipeline<Target>()
 				.set {
 					Target::score set (of(Target::score) + of(15))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -82,7 +79,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 				.set {
 					Target::average set (of(Target::average) + of(15.0))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -105,7 +102,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 				.set {
 					Target::score set (of(1) + of(Target::score) + of(15))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -127,13 +124,13 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		}
 	}
 
-	suite(ceil) {
+	suite($$"$ceil") {
 		test("Usage with a number") {
 			TestPipeline<Target>()
 				.set {
 					Target::average set ceil(of(Target::average))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -147,13 +144,13 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		}
 	}
 
-	suite(floor) {
+	suite($$"$floor") {
 		test("Usage with a number") {
 			TestPipeline<Target>()
 				.set {
 					Target::average set floor(of(Target::average))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -167,13 +164,13 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		}
 	}
 
-	suite(concat) {
+	suite($$"$concat") {
 		test("Binary usage") {
 			TestPipeline<Target>()
 				.set {
 					Target::name set (of(Target::name) concat of(" II"))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -196,7 +193,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 				.set {
 					Target::name set (of("[") concat of(Target::name) concat of("]"))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {

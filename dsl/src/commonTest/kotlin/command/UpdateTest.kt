@@ -17,12 +17,8 @@
 package opensavvy.ktmongo.dsl.command
 
 import opensavvy.ktmongo.dsl.options.WriteConcern
-import opensavvy.ktmongo.dsl.query.filter.eq
-import opensavvy.ktmongo.dsl.query.filter.gt
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.ktmongo.dsl.query.update.inc
-import opensavvy.ktmongo.dsl.query.update.setOnInsert
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val UpdateTest by preparedSuite {
@@ -43,7 +39,7 @@ val UpdateTest by preparedSuite {
 			options.apply {
 				writeConcern(WriteConcern.Majority)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"updates": [
 					{
@@ -79,7 +75,7 @@ val UpdateTest by preparedSuite {
 			options.apply {
 				writeConcern(WriteConcern.Majority)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"updates": [
 					{
@@ -117,7 +113,7 @@ val UpdateTest by preparedSuite {
 			options.apply {
 				writeConcern(WriteConcern.Majority)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"updates": [
 					{

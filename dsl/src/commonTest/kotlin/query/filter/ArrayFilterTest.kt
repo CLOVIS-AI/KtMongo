@@ -23,7 +23,7 @@ val ArrayFilterTest by preparedSuite {
 	test("Test on an array element") {
 		filter {
 			User::grades.any eq 12
-		} shouldBeBson """
+		} shouldBeBson $$"""
 				{
 					"grades": {
 						"$eq": 12
@@ -36,7 +36,7 @@ val ArrayFilterTest by preparedSuite {
 		filter {
 			User::grades.any gt 12
 			User::grades.any lte 15
-		} shouldBeBson """
+		} shouldBeBson $$"""
 				{
 					"$and": [
 						{
@@ -60,7 +60,7 @@ val ArrayFilterTest by preparedSuite {
 				gt(12)
 				lte(15)
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 				{
 					"grades": {
 						"$elemMatch": {
@@ -76,7 +76,7 @@ val ArrayFilterTest by preparedSuite {
 		filter {
 			User::pets.any / Pet::age gt 15
 			User::pets / Pet::age lte 18  // without 'any', the / does the same thing
-		} shouldBeBson """
+		} shouldBeBson $$"""
 				{
 					"$and": [
 						{
@@ -100,7 +100,7 @@ val ArrayFilterTest by preparedSuite {
 				Pet::age gt 15
 				Pet::age lte 18
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 				{
 					"pets": {
 						"$elemMatch": {
@@ -130,7 +130,7 @@ val ArrayFilterTest by preparedSuite {
 					lte(18)
 				}
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 				{
 					"pets": {
 						"$elemMatch": {
@@ -151,7 +151,7 @@ val ArrayFilterTest by preparedSuite {
 				Pet::age gte 1
 				Pet::name eq "Chocolat"
 			}
-		} shouldBeBson """
+		} shouldBeBson $$"""
 				{
 					"$and": [
 						{
@@ -176,10 +176,10 @@ val ArrayFilterTest by preparedSuite {
 			""".trimIndent()
 	}
 
-	test("Operator $all") {
+	test($$"Operator $all") {
 		filter {
 			User::grades containsAll listOf(1, 2, 3)
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"grades": {
 					"$all": [1, 2, 3]
@@ -191,7 +191,7 @@ val ArrayFilterTest by preparedSuite {
 	test("isEmpty") {
 		filter {
 			User::grades.isEmpty()
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"grades.0": {
 					"$exists": false
@@ -203,7 +203,7 @@ val ArrayFilterTest by preparedSuite {
 	test("isNotEmpty") {
 		filter {
 			User::grades.isNotEmpty()
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"grades.0": {
 					"$exists": true
@@ -212,10 +212,10 @@ val ArrayFilterTest by preparedSuite {
 		""".trimIndent()
 	}
 
-	test("Operator $size") {
+	test($$"Operator $size") {
 		filter {
 			User::grades size 3
-		} shouldBeBson """
+		} shouldBeBson $$"""
 			{
 				"grades": {
 					"$size": 3

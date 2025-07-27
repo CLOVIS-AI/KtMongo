@@ -17,7 +17,6 @@
 package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 @OptIn(LowLevelApi::class)
@@ -35,7 +34,7 @@ val AggregationStageTest by preparedSuite {
 	test("Single-stage pipeline") {
 		TestPipeline<Target>()
 			.match { Target::foo eq "Bob" }
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$match": {

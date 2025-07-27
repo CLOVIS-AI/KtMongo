@@ -17,9 +17,7 @@
 package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
-import opensavvy.ktmongo.dsl.aggregation.match
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val MatchTest by preparedSuite {
@@ -28,10 +26,10 @@ val MatchTest by preparedSuite {
 		val foo: String,
 	)
 
-	test("Simple $match") {
+	test($$"Simple $match") {
 		TestPipeline<Target>()
 			.match { Target::foo eq "Bob" }
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$match": {

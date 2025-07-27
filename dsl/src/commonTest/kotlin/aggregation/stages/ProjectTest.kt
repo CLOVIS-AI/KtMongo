@@ -17,8 +17,6 @@
 package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
-import opensavvy.ktmongo.dsl.aggregation.literal
-import opensavvy.ktmongo.dsl.aggregation.project
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
@@ -35,7 +33,7 @@ val ProjectTest by preparedSuite {
 			.project {
 				include(Target::name)
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$project": {
@@ -51,7 +49,7 @@ val ProjectTest by preparedSuite {
 			.project {
 				excludeId()
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$project": {
@@ -69,7 +67,7 @@ val ProjectTest by preparedSuite {
 				include(Target::name)
 				Target::age set 12
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$project": {

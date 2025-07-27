@@ -16,10 +16,9 @@
 
 package opensavvy.ktmongo.dsl.aggregation.stages
 
-import opensavvy.ktmongo.dsl.aggregation.*
-import opensavvy.ktmongo.dsl.query.filter.gt
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
+import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
-import kotlin.text.Typography.dollar
 
 val SetTest by preparedSuite {
 
@@ -29,13 +28,13 @@ val SetTest by preparedSuite {
 		val isAlive: Boolean,
 	)
 
-	test("Simple $set") {
+	test($$"Simple $set") {
 		TestPipeline<Target>()
 			.set {
 				Target::foo set "bar"
 				Target::isAlive set (of(Target::deathDate) gt of(18))
 			}
-			.shouldBeBson("""
+			.shouldBeBson($$"""
 				[
 					{
 						"$set": {
@@ -44,7 +43,7 @@ val SetTest by preparedSuite {
 							},
 							"isAlive": {
 								"$gt": [
-									"${dollar}deathDate",
+									"$deathDate",
 									{
 										"$literal": 18
 									}
@@ -63,17 +62,17 @@ val SetTest by preparedSuite {
 				.set {
 					Target::deathDate.setIf(of(Target::isAlive), of(12))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
 								"deathDate": {
 									"$cond": {
-										"if": "${dollar}isAlive",
+										"if": "$isAlive",
 										"then": {
 											"$literal": 12
 										},
-										"else": "${dollar}deathDate"
+										"else": "$deathDate"
 									}
 								}
 							}
@@ -87,17 +86,17 @@ val SetTest by preparedSuite {
 				.set {
 					Target::deathDate.setIf(of(Target::isAlive), 12)
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
 								"deathDate": {
 									"$cond": {
-										"if": "${dollar}isAlive",
+										"if": "$isAlive",
 										"then": {
 											"$literal": 12
 										},
-										"else": "${dollar}deathDate"
+										"else": "$deathDate"
 									}
 								}
 							}
@@ -112,7 +111,7 @@ val SetTest by preparedSuite {
 					Target::deathDate.setIf(true, of(12))
 					Target::deathDate.setIf(false, of(13))
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
@@ -131,7 +130,7 @@ val SetTest by preparedSuite {
 					Target::deathDate.setIf(true, 12)
 					Target::deathDate.setIf(false, 13)
 				}
-				.shouldBeBson("""
+				.shouldBeBson($$"""
 					[
 						{
 							"$set": {

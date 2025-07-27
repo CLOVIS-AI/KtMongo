@@ -22,28 +22,13 @@ import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
-import opensavvy.ktmongo.dsl.aggregation.literal
-import opensavvy.ktmongo.dsl.aggregation.project
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.path.Field
-import opensavvy.ktmongo.dsl.query.filter.eq
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
-val type = "\$type"
-val isArray = "\$isArray"
-val isNumber = "\$isNumber"
-val toBool = "\$toBool"
-val toDate = "\$toDate"
-val toDouble = "\$toDouble"
-val toInt = "\$toInt"
-val toLong = "\$toLong"
-val toObjectId = "\$toObjectId"
-val toString = "\$toString"
-val toUUID = "\$toUUID"
 
 val TypeValueOperatorsTest by preparedSuite {
 
@@ -52,13 +37,11 @@ val TypeValueOperatorsTest by preparedSuite {
 		val foo: Int,
 	)
 
-	val foo = "\$foo"
-
-	test(type) {
+	test($$"$type") {
 		TestPipeline<Target>()
 			.project {
 				Field.unsafe<Boolean>("isInt32") set (of(Target::foo).type eq of(BsonType.Int32))
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -78,11 +61,11 @@ val TypeValueOperatorsTest by preparedSuite {
 			""".trimIndent()
 	}
 
-	test(isArray) {
+	test($$"$isArray") {
 		TestPipeline<Target>()
 			.project {
 				Field.unsafe<Boolean>("r") set of(Target::foo).isArray
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -97,11 +80,11 @@ val TypeValueOperatorsTest by preparedSuite {
 			""".trimIndent()
 	}
 
-	test(isNumber) {
+	test($$"$isNumber") {
 		TestPipeline<Target>()
 			.project {
 				Field.unsafe<Boolean>("r") set of(Target::foo).isNumber
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -115,11 +98,11 @@ val TypeValueOperatorsTest by preparedSuite {
 	}
 
 	suite("Simple conversions") {
-		test(toBool) {
+		test($$"$toBool") {
 			TestPipeline<Target>()
 				.project {
 					Field.unsafe<Boolean>("r") set of(Target::foo).toBoolean()
-				} shouldBeBson """
+				} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -132,11 +115,11 @@ val TypeValueOperatorsTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test(toDate) {
+		test($$"$toDate") {
 			TestPipeline<Target>()
 				.project {
 					Field.unsafe<Instant>("r") set of(Target::foo).toInstant()
-				} shouldBeBson """
+				} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -149,11 +132,11 @@ val TypeValueOperatorsTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test(toDouble) {
+		test($$"$toDouble") {
 			TestPipeline<Target>()
 				.project {
 					Field.unsafe<Double>("r") set of(Target::foo).toDouble()
-				} shouldBeBson """
+				} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -166,11 +149,11 @@ val TypeValueOperatorsTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test(toInt) {
+		test($$"$toInt") {
 			TestPipeline<Target>()
 				.project {
 					Field.unsafe<Int>("r") set of(Target::foo).toInt()
-				} shouldBeBson """
+				} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -183,11 +166,11 @@ val TypeValueOperatorsTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test(toLong) {
+		test($$"$toLong") {
 			TestPipeline<Target>()
 				.project {
 					Field.unsafe<Long>("r") set of(Target::foo).toLong()
-				} shouldBeBson """
+				} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -200,11 +183,11 @@ val TypeValueOperatorsTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test(toObjectId) {
+		test($$"$toObjectId") {
 			TestPipeline<Target>()
 				.project {
 					Field.unsafe<ObjectId>("r") set of(Target::foo).toObjectId()
-				} shouldBeBson """
+				} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -217,11 +200,11 @@ val TypeValueOperatorsTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test(toString) {
+		test($$"$toString") {
 			TestPipeline<Target>()
 				.project {
 					Field.unsafe<String>("r") set of(Target::foo).toText()
-				} shouldBeBson """
+				} shouldBeBson $$"""
 				[
 					{
 						"$project": {
@@ -234,11 +217,11 @@ val TypeValueOperatorsTest by preparedSuite {
 			""".trimIndent()
 		}
 
-		test(toUUID) {
+		test($$"$toUUID") {
 			TestPipeline<Target>()
 				.project {
 					Field.unsafe<Uuid>("r") set of(Target::foo).toUuid()
-				} shouldBeBson """
+				} shouldBeBson $$"""
 				[
 					{
 						"$project": {

@@ -20,11 +20,11 @@ import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 val FieldUpdateTest by preparedSuite {
-	suite("Operator $set") {
+	suite($$"Operator $set") {
 		test("Single field") {
 			update {
 				User::age set 18
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$set": {
 						"age": 18
@@ -36,7 +36,7 @@ val FieldUpdateTest by preparedSuite {
 		test("Nested field") {
 			update {
 				User::bestFriend / Friend::name set "foo"
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$set": {
 						"bestFriend.name": "foo"
@@ -49,7 +49,7 @@ val FieldUpdateTest by preparedSuite {
 			update {
 				User::age set 18
 				User::name set "foo"
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$set": {
 						"age": 18,
@@ -60,11 +60,11 @@ val FieldUpdateTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $setOnInsert") {
+	suite($$"Operator $setOnInsert") {
 		test("Single field") {
 			upsert {
 				User::age setOnInsert 18
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$setOnInsert": {
 						"age": 18
@@ -76,7 +76,7 @@ val FieldUpdateTest by preparedSuite {
 		test("Nested field") {
 			upsert {
 				User::bestFriend / Friend::name setOnInsert "foo"
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$setOnInsert": {
 						"bestFriend.name": "foo"
@@ -89,7 +89,7 @@ val FieldUpdateTest by preparedSuite {
 			upsert {
 				User::age setOnInsert 18
 				User::name setOnInsert "foo"
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$setOnInsert": {
 						"age": 18,
@@ -100,11 +100,11 @@ val FieldUpdateTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $inc") {
+	suite($$"Operator $inc") {
 		test("Single field") {
 			update {
 				User::money inc 18.0
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$inc": {
 						"money": 18.0
@@ -116,7 +116,7 @@ val FieldUpdateTest by preparedSuite {
 		test("Nested field") {
 			update {
 				User::bestFriend / Friend::money inc -12.9f
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$inc": {
 						"bestFriend.money": -12.899999618530273
@@ -129,7 +129,7 @@ val FieldUpdateTest by preparedSuite {
 			update {
 				User::money += 5.2
 				User::bestFriend / Friend::money += -5.2f
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$inc": {
 						"money": 5.2,
@@ -140,11 +140,11 @@ val FieldUpdateTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $mul") {
+	suite($$"Operator $mul") {
 		test("Single field") {
 			update {
 				User::money mul 18.0
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$mul": {
 						"money": 18.0
@@ -156,7 +156,7 @@ val FieldUpdateTest by preparedSuite {
 		test("Nested field") {
 			update {
 				User::bestFriend / Friend::money mul -12.9f
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$mul": {
 						"bestFriend.money": -12.899999618530273
@@ -169,7 +169,7 @@ val FieldUpdateTest by preparedSuite {
 			update {
 				User::money mul 5.2
 				User::bestFriend / Friend::money mul -5.2f
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$mul": {
 						"money": 5.2,
@@ -180,11 +180,11 @@ val FieldUpdateTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $unset") {
+	suite($$"Operator $unset") {
 		test("Single field") {
 			update {
 				User::money.unset()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$unset": {
 						"money": true
@@ -196,7 +196,7 @@ val FieldUpdateTest by preparedSuite {
 		test("Nested field") {
 			update {
 				(User::bestFriend / Friend::money).unset()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$unset": {
 						"bestFriend.money": true
@@ -209,7 +209,7 @@ val FieldUpdateTest by preparedSuite {
 			update {
 				User::money.unset()
 				User::bestFriend.unset()
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$unset": {
 						"money": true,
@@ -220,11 +220,11 @@ val FieldUpdateTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $rename") {
+	suite($$"Operator $rename") {
 		test("Single and nested field") {
 			update {
 				User::bestFriend / Friend::name renameTo User::name
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$rename": {
 						"bestFriend.name": "name"
@@ -237,7 +237,7 @@ val FieldUpdateTest by preparedSuite {
 			update {
 				User::bestFriend / Friend::name renameTo User::name
 				User::friends[0] / Friend::name renameTo User::friends[1] / Friend::name
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$rename": {
 						"bestFriend.name": "name",
@@ -248,11 +248,11 @@ val FieldUpdateTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $min") {
+	suite($$"Operator $min") {
 		test("Single field") {
 			update {
 				User::age min 10
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$min": {
 						"age": 10
@@ -264,7 +264,7 @@ val FieldUpdateTest by preparedSuite {
 		test("Nested field") {
 			update {
 				User::bestFriend / Friend::money min 5.0f
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$min": {
 						"bestFriend.money": 5.0
@@ -277,7 +277,7 @@ val FieldUpdateTest by preparedSuite {
 			update {
 				User::age min 10
 				User::bestFriend / Friend::money min 5.0f
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$min": {
 						"age": 10,
@@ -288,11 +288,11 @@ val FieldUpdateTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $max") {
+	suite($$"Operator $max") {
 		test("Single field") {
 			update {
 				User::age max 100
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$max": {
 						"age": 100
@@ -304,7 +304,7 @@ val FieldUpdateTest by preparedSuite {
 		test("Nested field") {
 			update {
 				User::bestFriend / Friend::money max 1000.0f
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$max": {
 						"bestFriend.money": 1000.0
@@ -317,7 +317,7 @@ val FieldUpdateTest by preparedSuite {
 			update {
 				User::age max 100
 				User::bestFriend / Friend::money max 1000.0f
-			} shouldBeBson """
+			} shouldBeBson $$"""
 				{
 					"$max": {
 						"age": 100,
