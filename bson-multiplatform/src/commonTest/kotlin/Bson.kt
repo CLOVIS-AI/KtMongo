@@ -43,6 +43,7 @@ val MultiplatformBsonWriterTest by preparedSuite {
 	minMaxKey(context)
 	regex(context)
 	timestamp(context)
+	objectId(context)
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	test("Pipe objects") {
