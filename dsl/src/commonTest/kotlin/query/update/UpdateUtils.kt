@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalTime::class)
+
 package opensavvy.ktmongo.dsl.query.update
 
+import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.UpdateQuery
@@ -24,6 +27,8 @@ import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import org.bson.types.ObjectId
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 class Friend(
 	val id: String,
@@ -40,6 +45,8 @@ class User(
 	val friends: List<Friend>,
 	val tokens: List<String>,
 	val scores: List<Int>,
+	val creationInstant: Instant,
+	val modificationTimestamp: Timestamp,
 )
 
 @OptIn(LowLevelApi::class)

@@ -16,12 +16,15 @@
 
 package opensavvy.ktmongo.dsl.query
 
+import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KProperty1
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * DSL for MongoDB operators that are used to update existing values (does *not* include aggregation operators).
@@ -60,6 +63,9 @@ import kotlin.reflect.KProperty1
  * - [`$`][selected]
  * - [`$[]`][all]
  * - [`$addToSet`][addToSet]
+ *
+ * Time management:
+ * - [`$currentDate`][setToCurrentDate]
  *
  * If you can't find the operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/5).
  *
@@ -742,6 +748,141 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.renameTo(newName: KProperty1<T, V>) {
 		this.renameTo(newName.field)
+	}
+
+	// endregion
+	// region $currentDate
+
+	/**
+	 * Sets this field to the current date.
+	 *
+	 * If the field does not exist, this operator adds the field to the document.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 *     val modificationDate: Instant,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "Bob"
+	 * }.updateMany {
+	 *     User::age set 18
+	 *     User::modificationDate.setToCurrentDate()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
+	 */
+	@ExperimentalTime
+	@KtMongoDsl
+	fun Field<T, Instant?>.setToCurrentDate()
+
+	/**
+	 * Sets this field to the current date.
+	 *
+	 * If the field does not exist, this operator adds the field to the document.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 *     val modificationDate: Instant,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "Bob"
+	 * }.updateMany {
+	 *     User::age set 18
+	 *     User::modificationDate.setToCurrentDate()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
+	 */
+	@ExperimentalTime
+	@KtMongoDsl
+	fun KProperty1<T, Instant?>.setToCurrentDate() {
+		this.field.setToCurrentDate()
+	}
+
+	/**
+	 * Sets this field to the current timestamp.
+	 *
+	 * If the field does not exist, this operator adds the field to the document.
+	 *
+	 * The time [Timestamp] is internal. [Instant] should be preferred. For more information, see [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 *     val modificationDate: Timestamp,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "Bob"
+	 * }.updateMany {
+	 *     User::age set 18
+	 *     User::modificationDate.setToCurrentDate()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
+	 */
+	@ExperimentalTime
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("setToCurrentTimestamp")
+	@KtMongoDsl
+	fun Field<T, Timestamp?>.setToCurrentDate()
+
+	/**
+	 * Sets this field to the current timestamp.
+	 *
+	 * If the field does not exist, this operator adds the field to the document.
+	 *
+	 * The time [Timestamp] is internal. [Instant] should be preferred. For more information, see [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 *     val modificationDate: Timestamp,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "Bob"
+	 * }.updateMany {
+	 *     User::age set 18
+	 *     User::modificationDate.setToCurrentDate()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
+	 */
+	@ExperimentalTime
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("setToCurrentTimestamp")
+	@KtMongoDsl
+	fun KProperty1<T, Timestamp?>.setToCurrentDate() {
+		this.field.setToCurrentDate()
 	}
 
 	// endregion
