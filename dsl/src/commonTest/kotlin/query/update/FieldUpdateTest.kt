@@ -327,4 +327,69 @@ val FieldUpdateTest by preparedSuite {
 			""".trimIndent()
 		}
 	}
+
+	suite("Array operators") {
+		suite($$"$addToSet") {
+			test("Add a single field") {
+				update {
+					User::tokens addToSet "123"
+				} shouldBeBson $$"""
+					{
+						"$addToSet": {
+							"tokens": "123"
+						}
+					}
+				""".trimIndent()
+			}
+
+			test("Add multiple fields") {
+				update {
+					User::tokens addToSet "123"
+					User::scores addToSet 1
+				} shouldBeBson $$"""
+					{
+						"$addToSet": {
+							"tokens": "123",
+							"scores": 1
+						}
+					}
+				""".trimIndent()
+			}
+
+			test("Add multiple values to the same field") {
+				update {
+					User::tokens addToSet "123"
+					User::tokens addToSet "456"
+				} shouldBeBson $$"""
+					{
+						"$addToSet": {
+							"tokens": {
+								"$each": [
+									"123",
+									"456"
+								]
+							}
+						}
+					}
+				""".trimIndent()
+			}
+
+			test("Add multiple values to the same field using a list") {
+				update {
+					User::tokens addToSet listOf("123", "456")
+				} shouldBeBson $$"""
+					{
+						"$addToSet": {
+							"tokens": {
+								"$each": [
+									"123",
+									"456"
+								]
+							}
+						}
+					}
+				""".trimIndent()
+			}
+		}
+	}
 }

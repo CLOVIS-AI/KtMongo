@@ -59,6 +59,7 @@ import kotlin.reflect.KProperty1
  * On arrays:
  * - [`$`][selected]
  * - [`$[]`][all]
+ * - [`$addToSet`][addToSet]
  *
  * If you can't find the operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/5).
  *
@@ -892,6 +893,166 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	val <E> KProperty1<T, Collection<E>>.all: Field<T, E>
 		get() = this.field.all
+
+	// endregion
+	// region $addToSet
+
+	/**
+	 * Adds [value] at the end of the array, unless it is already present, in which case it does nothing.
+	 *
+	 * MongoDB detects equality if the two documents are exactly identical. All the fields must be the same _in the same order_.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens addToSet "123456789"
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123456789"` to the user's tokens only if it isn't already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addToSet(value: V)
+
+	/**
+	 * Adds [value] at the end of the array, unless it is already present, in which case it does nothing.
+	 *
+	 * MongoDB detects equality if the two documents are exactly identical. All the fields must be the same _in the same order_.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens addToSet "123456789"
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123456789"` to the user's tokens only if it isn't already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, Collection<V>>.addToSet(value: V) {
+		this.field.addToSet(value)
+	}
+
+	/**
+	 * Adds multiple [values] at the end of the array, unless they are already present.
+	 *
+	 * Each value in [values] is treated independently.
+	 * It if it is already present in the array, nothing happens.
+	 * If it is absent from the array, it is added at the end.
+	 *
+	 * MongoDB detects equality if the two documents are exactly identical. All the fields must be the same _in the same order_.
+	 *
+	 * This is a convenience function for calling [addToSet] multiple times.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens addToSet listOf("123456789", "789456123")
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123456789"` and `"789465123"` to the user's tokens only if they aren't already present.
+	 * If only one of them is present, the other is added.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addToSet(values: Iterable<V>) {
+		for (value in values)
+			this addToSet value
+	}
+
+	/**
+	 * Adds multiple [values] at the end of the array, unless they are already present.
+	 *
+	 * Each value in [values] is treated independently.
+	 * It if it is already present in the array, nothing happens.
+	 * If it is absent from the array, it is added at the end.
+	 *
+	 * MongoDB detects equality if the two documents are exactly identical. All the fields must be the same _in the same order_.
+	 *
+	 * This is a convenience function for calling [addToSet] multiple times.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens addToSet listOf("123456789", "789456123")
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123456789"` and `"789465123"` to the user's tokens only if they aren't already present.
+	 * If only one of them is present, the other is added.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, Collection<V>>.addToSet(values: Iterable<V>) {
+		this.field addToSet values
+	}
 
 	// endregion
 
