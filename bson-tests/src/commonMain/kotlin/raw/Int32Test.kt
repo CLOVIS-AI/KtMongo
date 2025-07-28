@@ -19,6 +19,10 @@
 package opensavvy.ktmongo.bson.raw
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -31,61 +35,56 @@ import opensavvy.prepared.suite.SuiteDsl
 fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 	testBson(
 		context,
-		"Min value"
-	) {
-		document { writeInt32("i", Int.MIN_VALUE) }
-		expectedBinaryHex = "0C0000001069000000008000"
-		expectedJson = """{"i": -2147483648}"""
+		"Min value",
+		document { writeInt32("i", Int.MIN_VALUE) },
+		hex("0C0000001069000000008000"),
+		json("""{"i": -2147483648}"""),
 		verify("Read value") {
 			check(read("i")?.readInt32() == Int.MIN_VALUE)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"Max value"
-	) {
-		document { writeInt32("i", Int.MAX_VALUE) }
-		expectedBinaryHex = "0C000000106900FFFFFF7F00"
-		expectedJson = """{"i": 2147483647}"""
+		"Max value",
+		document { writeInt32("i", Int.MAX_VALUE) },
+		hex("0C000000106900FFFFFF7F00"),
+		json("""{"i": 2147483647}"""),
 		verify("Read value") {
 			check(read("i")?.readInt32() == Int.MAX_VALUE)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"-1"
-	) {
-		document { writeInt32("i", -1) }
-		expectedBinaryHex = "0C000000106900FFFFFFFF00"
-		expectedJson = """{"i": -1}"""
+		"-1",
+		document { writeInt32("i", -1) },
+		hex("0C000000106900FFFFFFFF00"),
+		json("""{"i": -1}"""),
 		verify("Read value") {
 			check(read("i")?.readInt32() == -1)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"0"
-	) {
-		document { writeInt32("i", 0) }
-		expectedBinaryHex = "0C0000001069000000000000"
-		expectedJson = """{"i": 0}"""
+		"0",
+		document { writeInt32("i", 0) },
+		hex("0C0000001069000000000000"),
+		json("""{"i": 0}"""),
 		verify("Read value") {
 			check(read("i")?.readInt32() == 0)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"+1"
-	) {
-		document { writeInt32("i", 1) }
-		expectedBinaryHex = "0C0000001069000100000000"
-		expectedJson = """{"i": 1}"""
+		"+1",
+		document { writeInt32("i", 1) },
+		hex("0C0000001069000100000000"),
+		json("""{"i": 1}"""),
 		verify("Read value") {
 			check(read("i")?.readInt32() == 1)
 		}
-	}
+	)
 }
