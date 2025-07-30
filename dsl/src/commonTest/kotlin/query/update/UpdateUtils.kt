@@ -38,6 +38,8 @@ class User(
 	val money: Double,
 	val bestFriend: Friend,
 	val friends: List<Friend>,
+	val tokens: List<String>,
+	val scores: List<Int>,
 )
 
 @OptIn(LowLevelApi::class)

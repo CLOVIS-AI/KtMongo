@@ -302,6 +302,45 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
+	// region $setOnInsert
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun <V> Field<T, Collection<V>>.addToSet(value: V) {
+		accept(AddToSetBsonNode(listOf(this.path to value), context))
+	}
+
+	@LowLevelApi
+	private class AddToSetBsonNode(
+		val mappings: List<Pair<Path, *>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+
+		override fun simplify() =
+			this.takeUnless { mappings.isEmpty() }
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			val groupedMappings = mappings.groupBy(
+				keySelector = { it.first },
+				valueTransform = { it.second },
+			)
+
+			writeDocument($$"$addToSet") {
+				for ((field, values) in groupedMappings) {
+					if (values.size == 1)
+						writeObjectSafe(field.toString(), values.single())
+					else
+						writeDocument(field.toString()) {
+							writeArray($$"$each") {
+								for (value in values)
+									writeObjectSafe(value)
+							}
+						}
+				}
+			}
+		}
+	}
+
+	// endregion
 
 	companion object {
 		@OptIn(LowLevelApi::class)
@@ -329,6 +368,9 @@ private class UpdateQueryImpl<T>(
 			},
 			OperatorCombinator(RenameBsonNodeNode::class) { sources, context ->
 				RenameBsonNodeNode(sources.flatMap { it.fields }, context)
+			},
+			OperatorCombinator(AddToSetBsonNode::class) { sources, context ->
+				AddToSetBsonNode(sources.flatMap { it.mappings }, context)
 			},
 		)
 	}
