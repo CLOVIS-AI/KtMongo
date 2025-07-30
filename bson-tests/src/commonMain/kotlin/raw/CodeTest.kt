@@ -50,60 +50,55 @@ fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 
 	testBson(
 		context,
-		name = "Single character",
-	) {
-		document { writeJavaScript("a", "b") }
-		expectedBinaryHex = "0E0000000D610002000000620000"
-		expectedJson = $$"""{"a": {"$code": "b"}}"""
+		"Single character",
+		document { writeJavaScript("a", "b") },
+		hex("0E0000000D610002000000620000"),
+		json($$"""{"a": {"$code": "b"}}"""),
 		verify("Read value") {
 			check(read("a")?.readJavaScript() == "b")
 		}
-	}
+	)
 
 	testBson(
 		context,
-		name = "Multi-character",
-	) {
-		document { writeJavaScript("a", "abababababab") }
-		expectedBinaryHex = "190000000D61000D0000006162616261626162616261620000"
-		expectedJson = $$"""{"a": {"$code": "abababababab"}}"""
+		"Multi-character",
+		document { writeJavaScript("a", "abababababab") },
+		hex("190000000D61000D0000006162616261626162616261620000"),
+		json($$"""{"a": {"$code": "abababababab"}}"""),
 		verify("Read value") {
 			check(read("a")?.readJavaScript() == "abababababab")
 		}
-	}
+	)
 
 	testBson(
 		context,
-		name = "two-byte UTF-8 (\u00e9)",
-	) {
-		document { writeJavaScript("a", "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9") }
-		expectedBinaryHex = "190000000D61000D000000C3A9C3A9C3A9C3A9C3A9C3A90000"
-		expectedJson = $$"""{"a": {"$code": "éééééé"}}"""
+		"two-byte UTF-8 (\u00e9)",
+		document { writeJavaScript("a", "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9") },
+		hex("190000000D61000D000000C3A9C3A9C3A9C3A9C3A9C3A90000"),
+		json($$"""{"a": {"$code": "éééééé"}}"""),
 		verify("Read value") {
 			check(read("a")?.readJavaScript() == "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9")
 		}
-	}
+	)
 
 	testBson(
 		context,
-		name = "three-byte UTF-8 (\u2606)",
-	) {
-		document { writeJavaScript("a", "\u2606\u2606\u2606\u2606") }
-		expectedBinaryHex = "190000000D61000D000000E29886E29886E29886E298860000"
-		expectedJson = $$"""{"a": {"$code": "☆☆☆☆"}}"""
+		"three-byte UTF-8 (\u2606)",
+		document { writeJavaScript("a", "\u2606\u2606\u2606\u2606") },
+		hex("190000000D61000D000000E29886E29886E29886E298860000"),
+		json($$"""{"a": {"$code": "☆☆☆☆"}}"""),
 		verify("Read value") {
 			check(read("a")?.readJavaScript() == "\u2606\u2606\u2606\u2606")
 		}
-	}
+	)
 
 	testBson(
 		context,
-		name = "Embedded nulls",
-	) {
-		document { writeJavaScript("a", "ab\u0000bab\u0000babab") }
-		expectedBinaryHex = "190000000D61000D0000006162006261620062616261620000"
+		"Embedded nulls",
+		document { writeJavaScript("a", "ab\u0000bab\u0000babab") },
+		hex("190000000D61000D0000006162006261620062616261620000"),
 		verify("Read value") {
 			check(read("a")?.readJavaScript() == "ab\u0000bab\u0000babab")
 		}
-	}
+	)
 }

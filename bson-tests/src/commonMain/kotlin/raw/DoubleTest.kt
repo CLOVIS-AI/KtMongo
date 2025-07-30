@@ -19,6 +19,10 @@
 package opensavvy.ktmongo.bson.raw
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -32,133 +36,122 @@ import kotlin.Double.Companion.NaN
 fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 	testBson(
 		context,
-		"+1.0"
-	) {
-		document { writeDouble("d", 1.0) }
-		expectedBinaryHex = "10000000016400000000000000F03F00"
-		expectedJson = """{"d": 1.0}"""
+		"+1.0",
+		document { writeDouble("d", 1.0) },
+		hex("10000000016400000000000000F03F00"),
+		json("""{"d": 1.0}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == 1.0)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"-1.0"
-	) {
-		document { writeDouble("d", -1.0) }
-		expectedBinaryHex = "10000000016400000000000000F0BF00"
-		expectedJson = """{"d": -1.0}"""
+		"-1.0",
+		document { writeDouble("d", -1.0) },
+		hex("10000000016400000000000000F0BF00"),
+		json("""{"d": -1.0}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == -1.0)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"+1.0001220703125"
-	) {
-		document { writeDouble("d", +1.0001220703125) }
-		expectedBinaryHex = "10000000016400000000008000F03F00"
-		expectedJson = """{"d": 1.0001220703125}"""
+		"+1.0001220703125",
+		document { writeDouble("d", +1.0001220703125) },
+		hex("10000000016400000000008000F03F00"),
+		json("""{"d": 1.0001220703125}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == 1.0001220703125)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"-1.0001220703125"
-	) {
-		document { writeDouble("d", -1.0001220703125) }
-		expectedBinaryHex = "10000000016400000000008000F0BF00"
-		expectedJson = """{"d": -1.0001220703125}"""
+		"-1.0001220703125",
+		document { writeDouble("d", -1.0001220703125) },
+		hex("10000000016400000000008000F0BF00"),
+		json("""{"d": -1.0001220703125}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == -1.0001220703125)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"+1.2345678921232E+18"
-	) {
-		document { writeDouble("d", 1.2345678921232E+18) }
-		expectedBinaryHex = "100000000164002A1BF5F41022B14300"
-		expectedJson = """{"d": 1.2345678921232E18}"""
+		"+1.2345678921232E+18",
+		document { writeDouble("d", 1.2345678921232E+18) },
+		hex("100000000164002A1BF5F41022B14300"),
+		json("""{"d": 1.2345678921232E18}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == 1.2345678921232E+18)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"-1.2345678921232E+18"
-	) {
-		document { writeDouble("d", -1.2345678921232E+18) }
-		expectedBinaryHex = "100000000164002A1BF5F41022B1C300"
-		expectedJson = """{"d": -1.2345678921232E18}"""
+		"-1.2345678921232E+18",
+		document { writeDouble("d", -1.2345678921232E+18) },
+		hex("100000000164002A1BF5F41022B1C300"),
+		json("""{"d": -1.2345678921232E18}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == -1.2345678921232E+18)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"+0.0"
-	) {
-		document { writeDouble("d", 0.0) }
-		expectedBinaryHex = "10000000016400000000000000000000"
-		expectedJson = """{"d": 0.0}"""
+		"+0.0",
+		document { writeDouble("d", 0.0) },
+		hex("10000000016400000000000000000000"),
+		json("""{"d": 0.0}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == 0.0)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"-0.0"
-	) {
-		document { writeDouble("d", -0.0) }
-		expectedBinaryHex = "10000000016400000000000000008000"
-		expectedJson = """{"d": -0.0}"""
+		"-0.0",
+		document { writeDouble("d", -0.0) },
+		hex("10000000016400000000000000008000"),
+		json("""{"d": -0.0}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == -0.0)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"NaN"
-	) {
-		document { writeDouble("d", NaN) }
-		expectedBinaryHex = "10000000016400000000000000F87F00"
-		expectedJson = $$"""{"d": {"$numberDouble": "NaN"}}"""
+		"NaN",
+		document { writeDouble("d", NaN) },
+		hex("10000000016400000000000000F87F00"),
+		json($$"""{"d": {"$numberDouble": "NaN"}}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble()?.isNaN() == true)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"+Infinity"
-	) {
-		document { writeDouble("d", Double.POSITIVE_INFINITY) }
-		expectedBinaryHex = "10000000016400000000000000F07F00"
-		expectedJson = $$"""{"d": {"$numberDouble": "Infinity"}}"""
+		"+Infinity",
+		document { writeDouble("d", Double.POSITIVE_INFINITY) },
+		hex("10000000016400000000000000F07F00"),
+		json($$"""{"d": {"$numberDouble": "Infinity"}}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == Double.POSITIVE_INFINITY)
 		}
-	}
+	)
 
 	testBson(
 		context,
-		"-Infinity"
-	) {
-		document { writeDouble("d", Double.NEGATIVE_INFINITY) }
-		expectedBinaryHex = "10000000016400000000000000F0FF00"
-		expectedJson = $$"""{"d": {"$numberDouble": "-Infinity"}}"""
+		"-Infinity",
+		document { writeDouble("d", Double.NEGATIVE_INFINITY) },
+		hex("10000000016400000000000000F0FF00"),
+		json($$"""{"d": {"$numberDouble": "-Infinity"}}"""),
 		verify("Read value") {
 			check(read("d")?.readDouble() == Double.NEGATIVE_INFINITY)
 		}
-	}
+	)
 }

@@ -19,6 +19,10 @@
 package opensavvy.ktmongo.bson.raw
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -31,11 +35,10 @@ import opensavvy.prepared.suite.SuiteDsl
 fun SuiteDsl.reprUndefined(context: Prepared<BsonContext>) = suite("Undefined") {
 	testBson(
 		context,
-		"Undefined"
-	) {
-		document { writeUndefined("a") }
-		expectedBinaryHex = "0800000006610000"
-		expectedJson = $$"""{"a": {"$undefined": true}}"""
+		"Undefined",
+		document { writeUndefined("a") },
+		hex("0800000006610000"),
+		json($$"""{"a": {"$undefined": true}}"""),
 		verify("Read value") { check(read("a")?.readUndefined() == Unit) }
-	}
+	)
 }

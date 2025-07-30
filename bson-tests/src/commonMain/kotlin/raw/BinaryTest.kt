@@ -84,226 +84,258 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 	)
 
-	testBson(context, "subtype 0x02") {
+	testBson(
+		context,
+		"subtype 0x02",
 		document {
 			writeBinaryData("x", 0x2u, Base64.decode("//8="))
-		}
-		expectedBinaryHex = "13000000057800060000000202000000FFFF00"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "//8=", "subType": "02"}}}"""
+		},
+		hex("13000000057800060000000202000000FFFF00"),
+		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "02"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 2.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
 		}
-	}
+	)
 
-	testBson(context, "subtype 0x03") {
+	testBson(
+		context,
+		"subtype 0x03",
 		document {
 			writeBinaryData("x", 0x3u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
-		}
-		expectedBinaryHex = "1D000000057800100000000373FFD26444B34C6990E8E7D1DFC035D400"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "03"}}}"""
+		},
+		hex("1D000000057800100000000373FFD26444B34C6990E8E7D1DFC035D400"),
+		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "03"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 3.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
-		}
-	}
+		},
+	)
 
-	testBson(context, "subtype 0x04") {
+	testBson(
+		context,
+		"subtype 0x04",
 		document {
 			writeBinaryData("x", 0x4u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
-		}
-		expectedBinaryHex = "1D000000057800100000000473FFD26444B34C6990E8E7D1DFC035D400"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""
+		},
+		hex("1D000000057800100000000473FFD26444B34C6990E8E7D1DFC035D400"),
+		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 4.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
-		}
-	}
+		},
+	)
 
-	testBson(context, "subtype 0x04 UUID") {
+	testBson(
+		context,
+		"subtype 0x04 UUID",
 		document {
 			writeBinaryData("x", 0x4u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
-		}
-		expectedBinaryHex = "1D000000057800100000000473FFD26444B34C6990E8E7D1DFC035D400"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""
+		},
+		hex("1D000000057800100000000473FFD26444B34C6990E8E7D1DFC035D400"),
+		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 4.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
-		}
-	}
+		},
+	)
 
-	testBson(context, "subtype 0x05") {
+	testBson(
+		context,
+		"subtype 0x05",
 		document {
 			writeBinaryData("x", 0x5u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
-		}
-		expectedBinaryHex = "1D000000057800100000000573FFD26444B34C6990E8E7D1DFC035D400"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "05"}}}"""
+		},
+		hex("1D000000057800100000000573FFD26444B34C6990E8E7D1DFC035D400"),
+		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "05"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 5.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
-		}
-	}
+		},
+	)
 
-	testBson(context, "subtype 0x07") {
+	testBson(
+		context,
+		"subtype 0x07",
 		document {
 			writeBinaryData("x", 0x7u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
-		}
-		expectedBinaryHex = "1D000000057800100000000773FFD26444B34C6990E8E7D1DFC035D400"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "07"}}}"""
+		},
+		hex("1D000000057800100000000773FFD26444B34C6990E8E7D1DFC035D400"),
+		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "07"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 7.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
-		}
-	}
+		},
+	)
 
-	testBson(context, "subtype 0x08") {
+	testBson(
+		context,
+		"subtype 0x08",
 		document {
 			writeBinaryData("x", 0x8u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
-		}
-		expectedBinaryHex = "1D000000057800100000000873FFD26444B34C6990E8E7D1DFC035D400"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "08"}}}"""
+		},
+		hex("1D000000057800100000000873FFD26444B34C6990E8E7D1DFC035D400"),
+		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "08"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 8.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
 		}
-	}
+	)
 
-	testBson(context, "subtype 0x80") {
+	testBson(
+		context,
+		"subtype 0x80",
 		document {
 			writeBinaryData("x", 0x80u, Base64.decode("//8="))
-		}
-		expectedBinaryHex = "0F0000000578000200000080FFFF00"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "//8=", "subType": "80"}}}"""
+		},
+		hex("0F0000000578000200000080FFFF00"),
+		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "80"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 0x80.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
 		}
-	}
+	)
 
-	testBson(context, $$"$type query operator (conflicts with legacy $binary form with $type field)") {
+	testBson(
+		context,
+		$$"$type query operator (conflicts with legacy $binary form with $type field)",
 		document {
 			writeDocument("x") {
 				writeString("\$type", "string")
 			}
-		}
-		expectedBinaryHex = "1F000000037800170000000224747970650007000000737472696E67000000"
-		expectedJson = $$"""{"x": {"$type": "string"}}"""
+		},
+		hex("1F000000037800170000000224747970650007000000737472696E67000000"),
+		json($$"""{"x": {"$type": "string"}}"""),
 		verify("Read type") {
 			check(read("x")?.readDocument()?.read("\$type")?.readString() == "string")
 		}
-	}
+	)
 
-	testBson(context, $$"$type query operator (conflicts with legacy $binary form with $type field) with int") {
+	testBson(
+		context,
+		$$"$type query operator (conflicts with legacy $binary form with $type field) with int",
 		document {
 			writeDocument("x") {
 				writeInt32("\$type", 2)
 			}
-		}
-		expectedBinaryHex = "180000000378001000000010247479706500020000000000"
-		expectedJson = $$"""{"x": {"$type": 2}}"""
+		},
+		hex("180000000378001000000010247479706500020000000000"),
+		json($$"""{"x": {"$type": 2}}"""),
 		verify("Read type") {
 			check(read("x")?.readDocument()?.read("\$type")?.readInt32() == 2)
 		}
-	}
+	)
 
-	testBson(context, "subtype 0x09 Vector FLOAT32") {
+	testBson(
+		context,
+		"subtype 0x09 Vector FLOAT32",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("JwAAAP5CAADgQA=="))
-		}
-		expectedBinaryHex = "170000000578000A0000000927000000FE420000E04000"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "JwAAAP5CAADgQA==", "subType": "09"}}}"""
+		},
+		hex("170000000578000A0000000927000000FE420000E04000"),
+		json($$"""{"x": {"$binary": {"base64": "JwAAAP5CAADgQA==", "subType": "09"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("JwAAAP5CAADgQA==")))
 		}
-	}
+	)
 
-	testBson(context, "subtype 0x09 Vector INT8") {
+	testBson(
+		context,
+		"subtype 0x09 Vector INT8",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("AwB/Bw=="))
-		}
-		expectedBinaryHex = "11000000057800040000000903007F0700"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "AwB/Bw==", "subType": "09"}}}"""
+		},
+		hex("11000000057800040000000903007F0700"),
+		json($$"""{"x": {"$binary": {"base64": "AwB/Bw==", "subType": "09"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("AwB/Bw==")))
-		}
-	}
+		},
+	)
 
-	testBson(context, "subtype 0x09 Vector PACKED_BIT") {
+	testBson(
+		context,
+		"subtype 0x09 Vector PACKED_BIT",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("EAB/Bw=="))
-		}
-		expectedBinaryHex = "11000000057800040000000910007F0700"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "EAB/Bw==", "subType": "09"}}}"""
+		},
+		hex("11000000057800040000000910007F0700"),
+		json($$"""{"x": {"$binary": {"base64": "EAB/Bw==", "subType": "09"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("EAB/Bw==")))
-		}
-	}
+		},
+	)
 
-	testBson(context, "subtype 0x09 Vector (Zero-length) FLOAT32") {
+	testBson(
+		context,
+		"subtype 0x09 Vector (Zero-length) FLOAT32",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("JwA="))
-		}
-		expectedBinaryHex = "0F0000000578000200000009270000"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "JwA=", "subType": "09"}}}"""
+		},
+		hex("0F0000000578000200000009270000"),
+		json($$"""{"x": {"$binary": {"base64": "JwA=", "subType": "09"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("JwA=")))
 		}
-	}
+	)
 
-	testBson(context, "subtype 0x09 Vector (Zero-length) INT8") {
+	testBson(
+		context,
+		"subtype 0x09 Vector (Zero-length) INT8",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("AwA="))
-		}
-		expectedBinaryHex = "0F0000000578000200000009030000"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "AwA=", "subType": "09"}}}"""
+		},
+		hex("0F0000000578000200000009030000"),
+		json($$"""{"x": {"$binary": {"base64": "AwA=", "subType": "09"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("AwA=")))
 		}
-	}
+	)
 
-	testBson(context, "subtype 0x09 Vector (Zero-length) PACKED_BIT") {
+	testBson(
+		context,
+		"subtype 0x09 Vector (Zero-length) PACKED_BIT",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("EAA="))
-		}
-		expectedBinaryHex = "0F0000000578000200000009100000"
-		expectedJson = $$"""{"x": {"$binary": {"base64": "EAA=", "subType": "09"}}}"""
+		},
+		hex("0F0000000578000200000009100000"),
+		json($$"""{"x": {"$binary": {"base64": "EAA=", "subType": "09"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
-		}
+		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("EAA=")))
 		}
-	}
+	)
 
 }
