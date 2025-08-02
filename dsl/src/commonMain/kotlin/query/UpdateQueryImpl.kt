@@ -21,6 +21,7 @@ package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -32,6 +33,8 @@ import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.acceptAll
 import kotlin.reflect.KClass
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Implementation of [UpdateQuery].
@@ -302,6 +305,49 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
+	// region $currentDate
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@ExperimentalTime
+	override fun Field<T, Instant?>.setToCurrentDate() {
+		accept(CurrentDateBsonNode(listOf(this.path to true), context))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("setToCurrentTimestamp")
+	@ExperimentalTime
+	override fun Field<T, Timestamp?>.setToCurrentDate() {
+		accept(CurrentDateBsonNode(listOf(this.path to false), context))
+	}
+
+	@LowLevelApi
+	private class CurrentDateBsonNode(
+		// `true` = Instant, `false` = Timestamp
+		val mappings: List<Pair<Path, Boolean>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+
+		override fun simplify() =
+			this.takeUnless { mappings.isEmpty() }
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$currentDate") {
+				for ((field, isInstant) in mappings) {
+					write(field.toString()) {
+						if (isInstant)
+							writeBoolean(true)
+						else
+							writeDocument {
+								writeString($$"$type", "timestamp")
+							}
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $setOnInsert
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
@@ -371,6 +417,9 @@ private class UpdateQueryImpl<T>(
 			},
 			OperatorCombinator(AddToSetBsonNode::class) { sources, context ->
 				AddToSetBsonNode(sources.flatMap { it.mappings }, context)
+			},
+			OperatorCombinator(CurrentDateBsonNode::class) { sources, context ->
+				CurrentDateBsonNode(sources.flatMap { it.mappings }, context)
 			},
 		)
 	}

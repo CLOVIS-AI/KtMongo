@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalTime::class)
+
 package opensavvy.ktmongo.dsl.query.update
 
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import kotlin.time.ExperimentalTime
 
 val FieldUpdateTest by preparedSuite {
 	suite($$"Operator $set") {
@@ -390,6 +393,50 @@ val FieldUpdateTest by preparedSuite {
 					}
 				""".trimIndent()
 			}
+		}
+	}
+
+	suite($$"$currentDate") {
+		test("Set to instant") {
+			update {
+				User::creationInstant.setToCurrentDate()
+			} shouldBeBson $$"""
+				{
+					"$currentDate": {
+						"creationInstant": true
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Set to timestamp") {
+			update {
+				User::modificationTimestamp.setToCurrentDate()
+			} shouldBeBson $$"""
+				{
+					"$currentDate": {
+						"modificationTimestamp": {
+							"$type": "timestamp"
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Multiple usages") {
+			update {
+				User::creationInstant.setToCurrentDate()
+				User::modificationTimestamp.setToCurrentDate()
+			} shouldBeBson $$"""
+				{
+					"$currentDate": {
+						"creationInstant": true,
+						"modificationTimestamp": {
+							"$type": "timestamp"
+						}
+					}
+				}
+			""".trimIndent()
 		}
 	}
 }
