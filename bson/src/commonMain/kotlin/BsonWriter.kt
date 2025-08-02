@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -135,7 +136,7 @@ interface BsonValueWriter : AnyBsonWriter {
 
 			BsonType.BinaryData -> writeBinaryData(obj.readBinaryDataType(), obj.readBinaryData())
 			BsonType.Undefined -> writeUndefined()
-			BsonType.ObjectId -> writeObjectId(obj.readObjectId())
+			BsonType.ObjectId -> writeObjectId(obj.readObjectIdBytes())
 			BsonType.Boolean -> writeBoolean(obj.readBoolean())
 			BsonType.Datetime -> writeDateTime(obj.readDateTime())
 			BsonType.Null -> writeNull()
@@ -200,6 +201,10 @@ interface BsonFieldWriter : AnyBsonWriter {
 
 	@LowLevelApi fun writeNull(name: String)
 	@LowLevelApi fun writeObjectId(name: String, id: ByteArray)
+
+	@ExperimentalTime
+	@LowLevelApi
+	fun writeObjectId(name: String, id: ObjectId)
 	@LowLevelApi fun writeRegularExpression(name: String, pattern: String, options: String)
 	@LowLevelApi fun writeString(name: String, value: String)
 	@LowLevelApi

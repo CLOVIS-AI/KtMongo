@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
@@ -182,9 +183,14 @@ interface BsonValueReader {
 	@Throws(BsonReaderException::class)
 	fun readNull()
 
+	@ExperimentalTime
 	@LowLevelApi
 	@Throws(BsonReaderException::class)
-	fun readObjectId(): ByteArray
+	fun readObjectId(): ObjectId
+
+	@LowLevelApi
+	@Throws(BsonReaderException::class)
+	fun readObjectIdBytes(): ByteArray
 
 	@LowLevelApi
 	@Throws(BsonReaderException::class)

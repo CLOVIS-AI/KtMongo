@@ -23,8 +23,6 @@ import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.official.types.KotlinObjectIdCodec
 import opensavvy.ktmongo.bson.official.types.toOfficial
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
-import opensavvy.ktmongo.bson.official.types.Jvm
-import opensavvy.ktmongo.bson.official.types.toOfficial
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
@@ -37,6 +35,7 @@ import org.bson.codecs.configuration.CodecRegistry
 import org.bson.types.Decimal128
 import org.bson.types.ObjectId
 import java.nio.ByteBuffer
+import kotlin.time.ExperimentalTime
 
 /**
  * BSON implementation based on the official Java and Kotlin MongoDB drivers.
@@ -194,6 +193,11 @@ private class JavaBsonWriter(
 
 	override fun writeObjectId(name: String, id: ByteArray) {
 		writer.writeObjectId(name, ObjectId(id))
+	}
+
+	@ExperimentalTime
+	override fun writeObjectId(name: String, id: opensavvy.ktmongo.bson.types.ObjectId) {
+		writer.writeObjectId(name, id.toOfficial())
 	}
 
 	override fun writeDecimal128(name: String, low: Long, high: Long) {

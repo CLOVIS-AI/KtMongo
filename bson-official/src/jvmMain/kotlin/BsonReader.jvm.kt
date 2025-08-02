@@ -21,11 +21,13 @@ import opensavvy.ktmongo.bson.BsonArrayReader
 import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.official.types.toKtMongo
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonDocument
 import org.bson.BsonValue
 import java.nio.ByteBuffer
+import kotlin.time.ExperimentalTime
 import org.bson.BsonArray as OfficialBsonArray
 import org.bson.BsonDocument as OfficialBsonDocument
 
@@ -144,9 +146,15 @@ private class BsonValueReader(
 	}
 
 	@LowLevelApi
-	override fun readObjectId(): ByteArray {
+	override fun readObjectIdBytes(): ByteArray {
 		ensureType(BsonType.ObjectId) { value.isObjectId }
 		return value.asObjectId().value.toByteArray()
+	}
+
+	@ExperimentalTime
+	@LowLevelApi
+	override fun readObjectId(): ObjectId {
+		return ObjectId(readObjectIdBytes())
 	}
 
 	@LowLevelApi

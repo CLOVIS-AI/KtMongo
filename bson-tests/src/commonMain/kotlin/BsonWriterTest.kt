@@ -96,6 +96,7 @@ fun SuiteDsl.writerTests(
 		minMaxKey(prepareContext)
 		regex(prepareContext)
 		timestamp(prepareContext)
+		objectId(prepareContext)
 	}
 
 	@OptIn(DangerousMongoApi::class)

@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson.multiplatform
 
 import opensavvy.ktmongo.bson.*
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -83,9 +84,15 @@ internal class MultiplatformBsonValueReader(
 	}
 
 	@LowLevelApi
-	override fun readObjectId(): ByteArray {
+	override fun readObjectIdBytes(): ByteArray {
 		checkType(BsonType.ObjectId)
-		TODO("Not yet implemented")
+		return bytes.reader.readBytes(12)
+	}
+
+	@ExperimentalTime
+	@LowLevelApi
+	override fun readObjectId(): ObjectId {
+		return ObjectId(readObjectIdBytes())
 	}
 
 	@LowLevelApi
@@ -241,6 +248,7 @@ internal class MultiplatformBsonValueReader(
 
 			"""{"${'$'}timestamp": {"t": ${timestamp.instant.epochSeconds}, "i": ${timestamp.counter}}}"""
 		}
+		BsonType.ObjectId -> """{"${'$'}oid": "${readObjectIdBytes().toHexString()}"}"""
 		BsonType.MinKey -> """{"${'$'}minKey": 1}"""
 		BsonType.MaxKey -> """{"${'$'}maxKey": 1}"""
 		else -> "{$type}: $bytes" // TODO

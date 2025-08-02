@@ -21,9 +21,11 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.time.ExperimentalTime
 
 @LowLevelApi
 internal class MultiplatformBsonFieldWriter(
@@ -93,7 +95,16 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun writeObjectId(name: String, id: ByteArray) {
-		TODO()
+		writeType(BsonType.ObjectId)
+		writeName(name)
+		@OptIn(DangerousMongoApi::class)
+		writer.writeArbitrary(Bytes(id))
+	}
+
+	@ExperimentalTime
+	@LowLevelApi
+	override fun writeObjectId(name: String, id: ObjectId) {
+		writeObjectId(name, id.bytes)
 	}
 
 	@LowLevelApi
