@@ -39,7 +39,7 @@ dependencies {
 library {
 	name.set("MongoDB driver for Kotlin (synchronous, with Java helpers)")
 	description.set("Modern MongoDB driver for Kotlin and Java")
-	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
+	homeUrl.set("https://ktmongo.opensavvy.dev")
 
 	license.set {
 		name.set("Apache 2.0")

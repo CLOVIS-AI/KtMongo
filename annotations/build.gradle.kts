@@ -49,7 +49,7 @@ kotlin {
 library {
 	name.set("KtMongo annotations")
 	description.set("Annotations used by the KtMongo libraries.")
-	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
+	homeUrl.set("https://ktmongo.opensavvy.dev")
 
 	license.set {
 		name.set("Apache 2.0")

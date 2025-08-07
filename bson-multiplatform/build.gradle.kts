@@ -62,7 +62,7 @@ kotlin {
 library {
 	name.set("Kotlin BSON • Pure Kotlin Multiplatform implementation")
 	description.set("Kotlin-first BSON library implemented in pure Kotlin code")
-	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
+	homeUrl.set("https://ktmongo.opensavvy.dev")
 
 	license.set {
 		name.set("Apache 2.0")

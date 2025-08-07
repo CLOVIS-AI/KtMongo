@@ -60,7 +60,7 @@ kotlin {
 library {
 	name.set("Kotlin BSON • Multiplatform abstraction for different BSON implementations")
 	description.set("Interfaces and types for abstraction over different BSON implementations.")
-	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
+	homeUrl.set("https://ktmongo.opensavvy.dev")
 
 	license.set {
 		name.set("Apache 2.0")

@@ -48,7 +48,7 @@ kotlin {
 library {
 	name.set("Kotlin BSON • Based on the official MongoDB implementation")
 	description.set("Kotlin-first BSON library based on the official BSON libraries")
-	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
+	homeUrl.set("https://ktmongo.opensavvy.dev")
 
 	license.set {
 		name.set("Apache 2.0")

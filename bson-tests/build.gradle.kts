@@ -83,7 +83,7 @@ kotlin {
 library {
 	name.set("Kotlin BSON • Test suites")
 	description.set("Test suites for validating a BSON implementation on all platforms supported by Kotlin")
-	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
+	homeUrl.set("https://ktmongo.opensavvy.dev")
 
 	license.set {
 		name.set("Apache 2.0")
