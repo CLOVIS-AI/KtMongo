@@ -317,7 +317,7 @@ pages:
 
   script:
     - mkdir -p public
-    - mv docs-website public
+    - mv -T docs-website public
     - mv api-docs public
 
   artifacts:
