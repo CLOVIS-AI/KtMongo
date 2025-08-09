@@ -41,7 +41,7 @@ kotlin {
 library {
 	name.set("Shared utilities for the sync- and coroutines-based KtMongo drivers based on the official Kotlin driver")
 	description.set("This is an intermediate dependency of the driver-sync and driver-coroutines libraries. Users should not need to interact with this artifact directly.")
-	homeUrl.set("https://opensavvy.gitlab.io/ktmongo/docs")
+	homeUrl.set("https://ktmongo.opensavvy.dev")
 
 	license.set {
 		name.set("Apache 2.0")

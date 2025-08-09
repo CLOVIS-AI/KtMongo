@@ -42,7 +42,7 @@ collection.find {
 
 This project is for **everyone who works with KMongo and is worried about the future after the deprecation notice**, as well as for **everyone dissatisfied with the official Kotlin driver**.
 
-**Read more in the [documentation](https://opensavvy.gitlab.io/ktmongo/docs/).**
+**Read more in the [documentation](https://ktmongo.opensavvy.dev).**
 
 ## License
 

@@ -15,7 +15,7 @@ mkdocs:
     - ls
     - 'echo "repo_url: $CI_PROJECT_URL">>mkdocs.yml'
     - 'echo "repo_name: $CI_PROJECT_TITLE">>mkdocs.yml'
-    - 'echo "site_url: $CI_PAGES_URL">>mkdocs.yml'
+    - 'echo "site_url: \"https://ktmongo.opensavvy.dev\"">>mkdocs.yml'
 
   script:
     - pwd

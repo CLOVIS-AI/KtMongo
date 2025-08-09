@@ -35,7 +35,7 @@ Finally, run the existing tests before editing anything, to ensure they all pass
 
 Open the folder [src/commonTest/kotlin](src/commonTest/kotlin) and create a new Kotlin file. Take inspiration from other existing tests, in particular [BasicReadWriteTest](src/commonTest/kotlin/BasicReadWriteTest.kt).
 
-These tests use the [Prepared test framework](https://opensavvy.gitlab.io/groundwork/prepared/docs/). The most important things to know are:
+These tests use the [Prepared test framework](https://prepared.opensavvy.dev/). The most important things to know are:
 - Tests are declared in a class that implements `PreparedSpec`.
 - `by testCollection("collection-name")` is used to dynamically generate a new collection on each execution (to ensure parallel tests don't impact each other). The name of the collection is printed in the standard output of the test so you can go observe it afterward.
 - The `check` function is used to make assertions. Assertions should not be split into multiple lines nor intermediary variables.
