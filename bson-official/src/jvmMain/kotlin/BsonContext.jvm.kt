@@ -18,12 +18,15 @@ package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.bson.CompletableBsonFieldWriter
+import opensavvy.ktmongo.bson.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.official.types.KotlinObjectIdCodec
 import opensavvy.ktmongo.bson.official.types.toOfficial
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
 import org.bson.BsonArray
@@ -98,6 +101,33 @@ class JvmBsonContext(
 		)
 		return BsonArray(document, this)
 	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openArray(): CompletableBsonValueWriter<opensavvy.ktmongo.bson.official.BsonArray> {
+		val nativeArray = BsonArray()
+		val writer = JavaRootArrayWriter(this, nativeArray)
+		return object: CompletableBsonValueWriter<opensavvy.ktmongo.bson.official.BsonArray>, BsonValueWriter by writer {
+			override fun complete(): opensavvy.ktmongo.bson.official.BsonArray {
+				return BsonArray(nativeArray, this@JvmBsonContext)
+			}
+		}
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openDocument(): CompletableBsonFieldWriter<opensavvy.ktmongo.bson.official.Bson>  {
+		val document = BsonDocument()
+		val officialWriter = BsonDocumentWriter(document)
+		val writer = JavaBsonWriter(this, officialWriter)
+
+		return object: CompletableBsonFieldWriter<opensavvy.ktmongo.bson.official.Bson>, BsonFieldWriter by writer {
+			override fun complete(): opensavvy.ktmongo.bson.official.Bson {
+				officialWriter.close()
+				return Bson(document, this@JvmBsonContext)
+			}
+		}
+	}
 }
 
 @OptIn(LowLevelApi::class)
@@ -105,6 +135,15 @@ private class JavaBsonWriter(
 	private val context: JvmBsonContext,
 	private val writer: BsonWriter
 ) : BsonFieldWriter, BsonValueWriter {
+
+	@DangerousMongoApi
+	override fun open(name: String): CompletableBsonValueWriter<Unit> {
+		writer.writeName(name)
+		return object: CompletableBsonValueWriter<Unit>, BsonValueWriter by this {
+			override fun complete() {}
+		}
+	}
+
 	override fun write(name: String, block: BsonValueWriter.() -> Unit) {
 		writer.writeName(name)
 		block()
@@ -179,6 +218,26 @@ private class JavaBsonWriter(
 		writer.writeStartArray(name)
 		block()
 		writer.writeEndArray()
+	}
+
+	@DangerousMongoApi
+	override fun openDocument(name: String): CompletableBsonFieldWriter<Unit> {
+		writer.writeStartDocument(name)
+		return object: CompletableBsonFieldWriter<Unit>, BsonFieldWriter by this {
+			override fun complete() {
+				this@JavaBsonWriter.writer.writeEndDocument()
+			}
+		}
+	}
+
+	@DangerousMongoApi
+	override fun openArray(name: String): CompletableBsonValueWriter<Unit> {
+		writer.writeStartArray(name)
+		return object: CompletableBsonValueWriter<Unit>, BsonValueWriter by this {
+			override fun complete() {
+				this@JavaBsonWriter.writer.writeEndArray()
+			}
+		}
 	}
 
 	override fun <T> writeObjectSafe(name: String, obj: T) {
@@ -281,6 +340,28 @@ private class JavaBsonWriter(
 		writer.writeStartArray()
 		block()
 		writer.writeEndArray()
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openDocument(): CompletableBsonFieldWriter<Unit> {
+		writer.writeStartDocument()
+		return object: CompletableBsonFieldWriter<Unit>, BsonFieldWriter by this {
+			override fun complete() {
+				this@JavaBsonWriter.writer.writeEndDocument()
+			}
+		}
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openArray(): CompletableBsonValueWriter<Unit> {
+		writer.writeStartArray()
+		return object: CompletableBsonValueWriter<Unit>, BsonValueWriter by this {
+			override fun complete() {
+				this@JavaBsonWriter.writer.writeEndArray()
+			}
+		}
 	}
 
 	override fun <T> writeObjectSafe(obj: T) {
@@ -423,6 +504,28 @@ private class JavaRootArrayWriter(
 	@LowLevelApi
 	override fun writeArray(block: BsonValueWriter.() -> Unit) {
 		array.add(context.buildArray(block).raw)
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openArray(): CompletableBsonValueWriter<Unit> {
+		val root = context.openArray()
+		return object: CompletableBsonValueWriter<Unit>, BsonValueWriter by root {
+			override fun complete(): Unit {
+				this@JavaRootArrayWriter.array.add(root.complete().raw)
+			}
+		}
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openDocument(): CompletableBsonFieldWriter<Unit>  {
+		val root = context.openDocument()
+		return object: CompletableBsonFieldWriter<Unit>, BsonFieldWriter by root {
+			override fun complete(): Unit {
+				this@JavaRootArrayWriter.array.add(root.complete().raw)
+			}
+		}
 	}
 
 	@LowLevelApi

@@ -18,8 +18,11 @@ package opensavvy.ktmongo.bson.multiplatform
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.bson.CompletableBsonFieldWriter
+import opensavvy.ktmongo.bson.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
@@ -141,6 +144,18 @@ internal class MultiplatformBsonArrayFieldWriter(
 	@LowLevelApi
 	override fun writeArray(block: BsonValueWriter.() -> Unit) {
 		writer.writeArray(nextIndex(), block)
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openDocument(): CompletableBsonFieldWriter<Unit> {
+		return writer.openDocument(nextIndex())
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openArray(): CompletableBsonValueWriter<Unit> {
+		return writer.openArray(nextIndex())
 	}
 
 	@LowLevelApi

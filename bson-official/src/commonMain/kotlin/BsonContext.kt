@@ -18,6 +18,7 @@ package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 /**
@@ -38,4 +39,13 @@ interface BsonContext : BsonContext {
 	@LowLevelApi
 	override fun buildArray(instance: BsonValueWriteable): BsonArray =
 		buildArray { instance.writeTo(this) }
+
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openDocument(): CompletableBsonFieldWriter<Bson>
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openArray(): CompletableBsonValueWriter<BsonArray>
 }
