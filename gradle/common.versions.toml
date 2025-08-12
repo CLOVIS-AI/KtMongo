@@ -15,13 +15,13 @@ kotest = "5.9.1"
 kotest-plugin = "6.0.0.M4"
 
 # https://github.com/infix-de/testBalloon/releases
-testBalloon = "0.4.0-K2.2.0"
+testBalloon = "0.5.0-K2.2.0"
 
 # https://gitlab.com/opensavvy/groundwork/pedestal/-/releases
 pedestal = "3.0.0"
 
 # https://opensavvy.gitlab.io/groundwork/prepared/docs/news
-prepared = "2.0.6"
+prepared = "2.1.0"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
