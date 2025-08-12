@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, DangerousMongoApi::class)
 
 package opensavvy.ktmongo.bson.raw
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -91,6 +93,39 @@ fun SuiteDsl.array(context: Prepared<BsonContext>) = suite("Array") {
 		},
 		verify("Read second value") {
 			check(read("a")?.readArray()?.read(1)?.readInt32() == 20)
+		}
+	)
+
+	fun <T> CompletableBsonValueWriter<T>.use(block: CompletableBsonValueWriter<T>.() -> Unit): T {
+		block()
+		return complete()
+	}
+
+	testBson(
+		context,
+		"Empty (open)",
+		document {
+			openArray("a").use {}
+		},
+		hex("0D000000046100050000000000"),
+		json("""{"a": []}"""),
+		verify("Read value") {
+			check(read("a")?.readArray() != null)
+		}
+	)
+
+	testBson(
+		context,
+		"Single-element array (open)",
+		document {
+			openArray("a").use {
+				writeInt32(10)
+			}
+		},
+		hex("140000000461000C0000001030000A0000000000"),
+		json("""{"a": [10]}"""),
+		verify("Read value") {
+			check(read("a")?.readArray()?.read(0)?.readInt32() == 10)
 		}
 	)
 }

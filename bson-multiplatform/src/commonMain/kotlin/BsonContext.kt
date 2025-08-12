@@ -23,6 +23,7 @@ import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.ExperimentalTime
@@ -77,4 +78,57 @@ class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
 	override fun readArray(bytes: ByteArray): BsonArray =
 		BsonArray(Bytes(bytes.copyOf()))
 
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openDocument(): CompletableBsonFieldWriter<Bson> {
+		val buffer = Buffer()
+		val bsonWriter = RawBsonWriter(buffer)
+		val fieldWriter = MultiplatformBsonFieldWriter(bsonWriter)
+
+		bsonWriter.writeInt32(0) // Document size. 0 for now, will be overwritten later.
+		return object: CompletableBsonFieldWriter<Bson>, BsonFieldWriter by fieldWriter {
+			override fun complete(): Bson {
+				bsonWriter.writeUnsignedByte(0u)
+
+				check(buffer.size <= Int.MAX_VALUE) { "A BSON document cannot be larger than 16MiB. Found ${buffer.size} bytes." }
+				val size = buffer.size.toInt()
+				val bytes = ByteArray(size)
+				buffer.readTo(bytes)
+				// 'buffer' is now empty
+
+				// Overwrite the size at the very start of the document
+				bsonWriter.writeInt32(size)
+				buffer.readTo(bytes, 0, 4)
+
+				return Bson(Bytes(bytes))
+			}
+		}
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openArray(): CompletableBsonValueWriter<BsonArray> {
+		val buffer = Buffer()
+		val bsonWriter = RawBsonWriter(buffer)
+		val fieldWriter = MultiplatformBsonArrayFieldWriter(MultiplatformBsonFieldWriter(bsonWriter))
+
+		bsonWriter.writeInt32(0) // Document size. 0 for now, will be overwritten later.
+		return object: CompletableBsonValueWriter<BsonArray>, BsonValueWriter by fieldWriter {
+			override fun complete(): BsonArray {
+				bsonWriter.writeUnsignedByte(0u)
+
+				check(buffer.size <= Int.MAX_VALUE) { "A BSON document cannot be larger than 16MiB. Found ${buffer.size} bytes." }
+				val size = buffer.size.toInt()
+				val bytes = ByteArray(size)
+				buffer.readTo(bytes)
+				// 'buffer' is now empty
+
+				// Overwrite the size at the very start of the document
+				bsonWriter.writeInt32(size)
+				buffer.readTo(bytes, 0, 4)
+
+				return BsonArray(Bytes(bytes))
+			}
+		}
+	}
 }

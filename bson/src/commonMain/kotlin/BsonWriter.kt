@@ -98,6 +98,9 @@ interface BsonValueWriter : AnyBsonWriter {
 	@LowLevelApi fun writeDocument(block: BsonFieldWriter.() -> Unit)
 	@LowLevelApi fun writeArray(block: BsonValueWriter.() -> Unit)
 
+	@LowLevelApi @DangerousMongoApi fun openDocument(): CompletableBsonFieldWriter<Unit>
+	@LowLevelApi @DangerousMongoApi fun openArray(): CompletableBsonValueWriter<Unit>
+
 	/**
 	 * Writes an arbitrary [obj] into a BSON document.
 	 *
@@ -182,6 +185,7 @@ private fun ByteArray.readLong(index: Int): Long {
 @BsonWriterDsl
 interface BsonFieldWriter : AnyBsonWriter {
 	@LowLevelApi fun write(name: String, block: BsonValueWriter.() -> Unit)
+	@DangerousMongoApi @LowLevelApi fun open(name: String): CompletableBsonValueWriter<Unit>
 
 	@LowLevelApi fun writeBoolean(name: String, value: Boolean)
 	@LowLevelApi fun writeDouble(name: String, value: Double)
@@ -233,6 +237,9 @@ interface BsonFieldWriter : AnyBsonWriter {
 	@LowLevelApi fun writeDocument(name: String, block: BsonFieldWriter.() -> Unit)
 	@LowLevelApi fun writeArray(name: String, block: BsonValueWriter.() -> Unit)
 
+	@LowLevelApi @DangerousMongoApi fun openDocument(name: String): CompletableBsonFieldWriter<Unit>
+	@LowLevelApi @DangerousMongoApi fun openArray(name: String): CompletableBsonValueWriter<Unit>
+
 	/**
 	 * Writes an arbitrary [obj] into a BSON document.
 	 *
@@ -242,4 +249,16 @@ interface BsonFieldWriter : AnyBsonWriter {
 
 	// No 'pipe' overload because it would encourage people to use it.
 	// If you really must use 'pipe', use 'write("name") { pipe(…) }'
+}
+
+@DangerousMongoApi
+@LowLevelApi
+interface CompletableBsonFieldWriter<out OUT>: BsonFieldWriter {
+	fun complete(): OUT
+}
+
+@DangerousMongoApi
+@LowLevelApi
+interface CompletableBsonValueWriter<out OUT>: BsonValueWriter {
+	fun complete(): OUT
 }

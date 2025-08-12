@@ -80,6 +80,7 @@ include(
 	"bson",
 	"bson-official",
 	"bson-multiplatform",
+	"bson-serialization",
 	"bson-tests",
 
 	"dsl",

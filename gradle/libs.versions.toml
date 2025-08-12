@@ -14,6 +14,7 @@ junit-platform-launcher = "1.12.2" # https://central.sonatype.com/artifact/org.j
 meanmirror = "1.0.0"            # https://github.com/meanbeanlib/meanmirror/tags
 
 [plugins]
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.2.0" }  # TODO: fix however you do that
 
 [libraries]
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }

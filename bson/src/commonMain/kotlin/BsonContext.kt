@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 /**
@@ -131,4 +132,12 @@ interface BsonContext : ObjectIdGenerator {
 	@LowLevelApi
 	fun readArray(bytes: ByteArray): BsonArray
 
+
+	@LowLevelApi
+	@DangerousMongoApi
+	fun openDocument(): CompletableBsonFieldWriter<Bson>
+
+	@LowLevelApi
+	@DangerousMongoApi
+	fun openArray(): CompletableBsonValueWriter<BsonArray>
 }

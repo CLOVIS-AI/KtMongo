@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, DangerousMongoApi::class)
 
 package opensavvy.ktmongo.bson.raw
 
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.CompletableBsonFieldWriter
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -103,6 +105,88 @@ fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
 		context,
 		"Document with a dot key",
 		document { writeDocument("x") { writeString(".", "a") } },
+		hex("160000000378000E000000022E000200000061000000"),
+		json("""{"x": {".": "a"}}"""),
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read(".")?.readString() == "a")
+		}
+	)
+
+	fun <T> CompletableBsonFieldWriter<T>.use(block: CompletableBsonFieldWriter<T>.() -> Unit): T {
+		block()
+		return complete()
+	}
+
+	testBson(
+		context,
+		"Empty subdocument (using open)",
+		document { openDocument("x").use {} },
+		hex("0D000000037800050000000000"),
+		json("""{"x": {}}"""),
+		verify("Read value") {
+			check(read("x")?.readDocument() != null)
+		}
+	)
+
+	testBson(
+		context,
+		"Document with an empty string key (using open)",
+		document { openDocument("x").use { writeString("", "b") } },
+		hex("150000000378000D00000002000200000062000000"),
+		json("""{"x": {"": "b"}}"""),
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("")?.readString() == "b")
+		}
+	)
+
+	testBson(
+		context,
+		"Document with a single-character key (using open)",
+		document { openDocument("x").use { writeString("a", "b") } },
+		hex("160000000378000E0000000261000200000062000000"),
+		json("""{"x": {"a": "b"}}"""),
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("a")?.readString() == "b")
+		}
+	)
+
+	testBson(
+		context,
+		"Document with a dollar-prefixed key (using open)",
+		document { openDocument("x").use { writeString("\$a", "b") } },
+		hex("170000000378000F000000022461000200000062000000"),
+		json($$"""{"x": {"$a": "b"}}"""),
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("\$a")?.readString() == "b")
+		}
+	)
+
+	testBson(
+		context,
+		"Document with a dollar key (using open)",
+		document { openDocument("x").use { writeString("$", "a") } },
+		hex("160000000378000E0000000224000200000061000000"),
+		json("""{"x": {"$": "a"}}"""),
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("$")?.readString() == "a")
+		}
+	)
+
+	testBson(
+		context,
+		"Document with a dotted key (using open)",
+		document { openDocument("x").use { writeString("a.b", "c") } },
+		hex("180000000378001000000002612E62000200000063000000"),
+		json("""{"x": {"a.b": "c"}}"""),
+		verify("Read value") {
+			check(read("x")?.readDocument()?.read("a.b")?.readString() == "c")
+		}
+	)
+
+	testBson(
+		context,
+		"Document with a dot key (using open)",
+		document { openDocument("x").use { writeString(".", "a") } },
 		hex("160000000378000E000000022E000200000061000000"),
 		json("""{"x": {".": "a"}}"""),
 		verify("Read value") {

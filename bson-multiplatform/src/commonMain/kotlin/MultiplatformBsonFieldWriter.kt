@@ -20,6 +20,8 @@ import kotlinx.io.Buffer
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.bson.CompletableBsonFieldWriter
+import opensavvy.ktmongo.bson.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
@@ -40,6 +42,13 @@ internal class MultiplatformBsonFieldWriter(
 	@LowLevelApi
 	private fun writeName(name: String) {
 		writer.writeCString(name)
+	}
+
+	@DangerousMongoApi
+	override fun open(name: String): CompletableBsonValueWriter<Unit> {
+		return object: CompletableBsonValueWriter<Unit>, BsonValueWriter by MultiplatformBsonSingleFieldWriter(this, name) {
+			override fun complete() {}
+		}
 	}
 
 	@LowLevelApi
@@ -225,6 +234,54 @@ internal class MultiplatformBsonFieldWriter(
 		writeArbitraryDocument {
 			val writer = MultiplatformBsonArrayFieldWriter(it)
 			writer.block()
+		}
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openDocument(name: String): CompletableBsonFieldWriter<Unit> {
+		writeType(BsonType.Document)
+		writeName(name)
+
+		// We create the entire document in a child buffer so we can measure the size.
+		// Once we know the size, we can write it entirely to the real buffer.
+		val childBuffer = Buffer()
+		val childWriter = RawBsonWriter(childBuffer)
+		val childFieldWriter = MultiplatformBsonFieldWriter(childWriter)
+
+		return object: CompletableBsonFieldWriter<Unit>, BsonFieldWriter by childFieldWriter {
+			override fun complete() {
+				childWriter.writeUnsignedByte(0u)
+
+				// We now have an intermediate buffer, we can measure the size then transfer it the real writer
+				check(childBuffer.size <= Int.MAX_VALUE) { "A BSON document cannot be larger than 16MiB. Found ${childBuffer.size} bytes." }
+				this@MultiplatformBsonFieldWriter.writer.writeInt32(childBuffer.size.toInt() + 4)
+				this@MultiplatformBsonFieldWriter.writer.sink.write(childBuffer, childBuffer.size)
+			}
+		}
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun openArray(name: String): CompletableBsonValueWriter<Unit> {
+		writeType(BsonType.Array)
+		writeName(name)
+
+		// We create the entire document in a child buffer so we can measure the size.
+		// Once we know the size, we can write it entirely to the real buffer.
+		val childBuffer = Buffer()
+		val childWriter = RawBsonWriter(childBuffer)
+		val childFieldWriter = MultiplatformBsonArrayFieldWriter(MultiplatformBsonFieldWriter(childWriter))
+
+		return object: CompletableBsonValueWriter<Unit>, BsonValueWriter by childFieldWriter {
+			override fun complete() {
+				childWriter.writeUnsignedByte(0u)
+
+				// We now have an intermediate buffer, we can measure the size then transfer it the real writer
+				check(childBuffer.size <= Int.MAX_VALUE) { "A BSON document cannot be larger than 16MiB. Found ${childBuffer.size} bytes." }
+				this@MultiplatformBsonFieldWriter.writer.writeInt32(childBuffer.size.toInt() + 4)
+				this@MultiplatformBsonFieldWriter.writer.sink.write(childBuffer, childBuffer.size)
+			}
 		}
 	}
 
