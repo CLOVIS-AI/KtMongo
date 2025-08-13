@@ -20,8 +20,8 @@ import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonArrayReader
 import opensavvy.ktmongo.bson.BsonDocumentReader
-import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonArrayReader
-import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonDocumentReader
+import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformArrayReader
+import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformDocumentReader
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 class Bson internal constructor(
@@ -33,7 +33,7 @@ class Bson internal constructor(
 
 	@LowLevelApi
 	override fun reader(): BsonDocumentReader =
-		MultiplatformBsonDocumentReader(data)
+		MultiplatformDocumentReader(data)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
@@ -49,7 +49,7 @@ class BsonArray internal constructor(
 
 	@LowLevelApi
 	override fun reader(): BsonArrayReader =
-		MultiplatformBsonArrayReader(data)
+		MultiplatformArrayReader(data)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =

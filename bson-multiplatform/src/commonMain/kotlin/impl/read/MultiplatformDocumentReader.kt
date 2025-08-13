@@ -91,7 +91,7 @@ internal fun readField(
 }
 
 @LowLevelApi
-internal class MultiplatformBsonDocumentReader(
+internal class MultiplatformDocumentReader(
 	private val bytesWithHeader: Bytes,
 ) : BsonDocumentReader {
 

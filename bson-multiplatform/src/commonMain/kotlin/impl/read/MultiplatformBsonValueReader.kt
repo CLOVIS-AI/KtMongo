@@ -193,13 +193,13 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readDocument(): BsonDocumentReader {
 		checkType(BsonType.Document)
-		return MultiplatformBsonDocumentReader(bytes)
+		return MultiplatformDocumentReader(bytes)
 	}
 
 	@LowLevelApi
 	override fun readArray(): BsonArrayReader {
 		checkType(BsonType.Array)
-		return MultiplatformBsonArrayReader(bytes)
+		return MultiplatformArrayReader(bytes)
 	}
 
 	@OptIn(DangerousMongoApi::class)

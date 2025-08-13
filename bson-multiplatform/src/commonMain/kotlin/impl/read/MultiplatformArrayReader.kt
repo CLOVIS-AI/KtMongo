@@ -24,7 +24,7 @@ import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
-internal class MultiplatformBsonArrayReader(
+internal class MultiplatformArrayReader(
 	private val bytesWithHeader: Bytes,
 ) : BsonArrayReader {
 

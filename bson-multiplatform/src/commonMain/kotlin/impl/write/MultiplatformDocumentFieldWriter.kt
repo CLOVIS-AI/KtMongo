@@ -31,7 +31,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
 
 @LowLevelApi
-internal class MultiplatformBsonFieldWriter(
+internal class MultiplatformDocumentFieldWriter(
 	private val writer: RawBsonWriter,
 ) : BsonFieldWriter {
 
@@ -47,7 +47,7 @@ internal class MultiplatformBsonFieldWriter(
 
 	@LowLevelApi
 	override fun write(name: String, block: BsonValueWriter.() -> Unit) {
-		MultiplatformBsonSingleFieldWriter(this, name).block()
+		MultiplatformSingleFieldWriter(this, name).block()
 	}
 
 	@LowLevelApi
@@ -203,7 +203,7 @@ internal class MultiplatformBsonFieldWriter(
 		// Once we know the size, we can write it entirely to the real buffer.
 		val childBuffer = Buffer()
 		val childWriter = RawBsonWriter(childBuffer)
-		val childFieldWriter = MultiplatformBsonFieldWriter(childWriter)
+		val childFieldWriter = MultiplatformDocumentFieldWriter(childWriter)
 
 		writeTo(childFieldWriter)
 		childWriter.writeUnsignedByte(0u)
@@ -226,7 +226,7 @@ internal class MultiplatformBsonFieldWriter(
 		writeType(BsonType.Array)
 		writeName(name)
 		writeArbitraryDocument {
-			val writer = MultiplatformBsonArrayFieldWriter(it)
+			val writer = MultiplatformArrayFieldWriter(it)
 			writer.block()
 		}
 	}

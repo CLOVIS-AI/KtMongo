@@ -21,8 +21,8 @@ import kotlinx.io.readTo
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
-import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformBsonArrayFieldWriter
-import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformBsonFieldWriter
+import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformArrayFieldWriter
+import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformDocumentFieldWriter
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -35,11 +35,11 @@ class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
 
 	@LowLevelApi
 	private inline fun buildArbitraryTopLevel(
-		block: MultiplatformBsonFieldWriter.() -> Unit,
+		block: MultiplatformDocumentFieldWriter.() -> Unit,
 	): Bytes {
 		val buffer = Buffer()
 		val bsonWriter = RawBsonWriter(buffer)
-		val fieldWriter = MultiplatformBsonFieldWriter(bsonWriter)
+		val fieldWriter = MultiplatformDocumentFieldWriter(bsonWriter)
 
 		bsonWriter.writeInt32(0) // Document size. 0 for now, will be overwritten later.
 		fieldWriter.block()
@@ -71,7 +71,7 @@ class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
 	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray =
 		buildArbitraryTopLevel {
-			block(MultiplatformBsonArrayFieldWriter(this))
+			block(MultiplatformArrayFieldWriter(this))
 		}.let(::BsonArray)
 
 	@LowLevelApi

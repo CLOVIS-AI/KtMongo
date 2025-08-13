@@ -23,7 +23,7 @@ import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
-internal class MultiplatformBsonArrayFieldWriter(
+internal class MultiplatformArrayFieldWriter(
 	private val writer: BsonFieldWriter,
 ) : BsonValueWriter {
 	private var size = 0

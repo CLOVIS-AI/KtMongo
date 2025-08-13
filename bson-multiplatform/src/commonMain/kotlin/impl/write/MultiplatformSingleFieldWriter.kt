@@ -25,8 +25,8 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
-internal class MultiplatformBsonSingleFieldWriter(
-	private val writer: MultiplatformBsonFieldWriter,
+internal class MultiplatformSingleFieldWriter(
+	private val writer: MultiplatformDocumentFieldWriter,
 	private val name: String,
 ) : BsonValueWriter {
 
