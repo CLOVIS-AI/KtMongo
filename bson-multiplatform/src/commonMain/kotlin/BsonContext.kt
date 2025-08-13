@@ -21,9 +21,12 @@ import kotlinx.io.readTo
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonFieldWriter
+import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformArrayFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformDocumentFieldWriter
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.ExperimentalTime
@@ -33,16 +36,20 @@ class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
 	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Default(),
 ) : BsonContext, ObjectIdGenerator by objectIdGenerator {
 
-	@LowLevelApi
-	private inline fun buildArbitraryTopLevel(
-		block: MultiplatformDocumentFieldWriter.() -> Unit,
-	): Bytes {
-		val buffer = Buffer()
+	@Suppress("NOTHING_TO_INLINE")
+	private inline fun openArbitraryTopLevel(
+		buffer: Buffer,
+	): RawBsonWriter {
 		val bsonWriter = RawBsonWriter(buffer)
-		val fieldWriter = MultiplatformDocumentFieldWriter(bsonWriter)
-
 		bsonWriter.writeInt32(0) // Document size. 0 for now, will be overwritten later.
-		fieldWriter.block()
+		return bsonWriter
+	}
+
+	@Suppress("NOTHING_TO_INLINE")
+	private inline fun closeArbitraryTopLevel(
+		buffer: Buffer,
+		bsonWriter: RawBsonWriter,
+	): Bytes {
 		bsonWriter.writeUnsignedByte(0u)
 
 		check(buffer.size <= Int.MAX_VALUE) { "A BSON document cannot be larger than 16MiB. Found ${buffer.size} bytes." }
@@ -59,10 +66,32 @@ class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
 	}
 
 	@LowLevelApi
+	private inline fun buildArbitraryTopLevel(
+		block: MultiplatformDocumentFieldWriter.() -> Unit,
+	): Bytes {
+		val buffer = Buffer()
+		val bsonWriter = openArbitraryTopLevel(buffer)
+		MultiplatformDocumentFieldWriter(bsonWriter).block()
+		return closeArbitraryTopLevel(buffer, bsonWriter)
+	}
+
+	@LowLevelApi
 	override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson =
 		buildArbitraryTopLevel {
 			block(this)
 		}.let(::Bson)
+
+	@LowLevelApi
+	@DangerousMongoApi
+	internal fun openDocument(): TopCompletableBsonFieldWriter {
+		val buffer = Buffer()
+		val bsonWriter = openArbitraryTopLevel(buffer)
+
+		return object : TopCompletableBsonFieldWriter, CompletableBsonFieldWriter by MultiplatformDocumentFieldWriter(bsonWriter) {
+			override fun build(): Bson =
+				Bson(closeArbitraryTopLevel(buffer, bsonWriter))
+		}
+	}
 
 	@LowLevelApi
 	override fun readDocument(bytes: ByteArray): Bson =
@@ -75,7 +104,30 @@ class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
 		}.let(::BsonArray)
 
 	@LowLevelApi
+	@DangerousMongoApi
+	internal fun openArray(): TopCompletableBsonValueWriter {
+		val buffer = Buffer()
+		val bsonWriter = openArbitraryTopLevel(buffer)
+
+		return object : TopCompletableBsonValueWriter, CompletableBsonValueWriter by MultiplatformArrayFieldWriter(MultiplatformDocumentFieldWriter(bsonWriter)) {
+			override fun build(): BsonArray =
+				BsonArray(closeArbitraryTopLevel(buffer, bsonWriter))
+		}
+	}
+
+	@LowLevelApi
 	override fun readArray(bytes: ByteArray): BsonArray =
 		BsonArray(Bytes(bytes.copyOf()))
 
+	@LowLevelApi
+	@DangerousMongoApi
+	internal interface TopCompletableBsonFieldWriter : CompletableBsonFieldWriter {
+		fun build(): Bson
+	}
+
+	@LowLevelApi
+	@DangerousMongoApi
+	internal interface TopCompletableBsonValueWriter : CompletableBsonValueWriter {
+		fun build(): BsonArray
+	}
 }

@@ -28,7 +28,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 internal class MultiplatformSingleFieldWriter(
 	private val writer: MultiplatformDocumentFieldWriter,
 	private val name: String,
-) : BsonValueWriter {
+) : BsonValueWriter, CompletableBsonValueWriter {
 
 	@LowLevelApi
 	override fun writeBoolean(value: Boolean) {
@@ -140,12 +140,24 @@ internal class MultiplatformSingleFieldWriter(
 		writer.writeObjectSafe(name, obj)
 	}
 
+	override fun complete() {
+		error("${this::class} is not completable by itself. Ensure to wrap it in a completable wrapper using openDocument() or openArray() before using it.")
+	}
+
+	@DangerousMongoApi
+	override fun openDocument(): CompletableBsonFieldWriter =
+		writer.openDocument(name)
+
+	@DangerousMongoApi
+	override fun openArray(): CompletableBsonValueWriter =
+		writer.openArray(name)
+
 	@DangerousMongoApi
 	override fun pipe(obj: BsonValueReader) {
 		if (obj is MultiplatformBsonValueReader) {
 			writer.pipe(name, obj)
 		} else {
-			super.pipe(obj)
+			super<BsonValueWriter>.pipe(obj)
 		}
 	}
 }

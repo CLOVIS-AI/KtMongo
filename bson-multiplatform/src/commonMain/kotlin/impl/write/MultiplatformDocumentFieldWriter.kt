@@ -33,7 +33,7 @@ import kotlin.time.ExperimentalTime
 @LowLevelApi
 internal class MultiplatformDocumentFieldWriter(
 	private val writer: RawBsonWriter,
-) : BsonFieldWriter {
+) : BsonFieldWriter, CompletableBsonFieldWriter {
 
 	@LowLevelApi
 	private fun writeType(type: BsonType) {
@@ -198,20 +198,27 @@ internal class MultiplatformDocumentFieldWriter(
 		writeName(name)
 	}
 
-	private inline fun writeArbitraryDocument(writeTo: (BsonFieldWriter) -> Unit) {
+	@Suppress("NOTHING_TO_INLINE")
+	private inline fun closeArbitraryDocument(
+		childBuffer: Buffer,
+		childWriter: RawBsonWriter,
+	) {
+		childWriter.writeUnsignedByte(0u)
+
+		// We now have an intermediate buffer, we can measure the size then transfer it to the real writer
+		check(childBuffer.size <= Int.MAX_VALUE) { "A BSON document cannot be larger than 16MiB. Found ${childBuffer.size} bytes." }
+		writer.writeInt32(childBuffer.size.toInt() + 4)
+		writer.sink.write(childBuffer, childBuffer.size)
+	}
+
+	private inline fun writeArbitraryDocument(writeTo: (CompletableBsonFieldWriter) -> Unit) {
 		// We create the entire document in a child buffer so we can measure the size.
 		// Once we know the size, we can write it entirely to the real buffer.
 		val childBuffer = Buffer()
 		val childWriter = RawBsonWriter(childBuffer)
-		val childFieldWriter = MultiplatformDocumentFieldWriter(childWriter)
 
-		writeTo(childFieldWriter)
-		childWriter.writeUnsignedByte(0u)
-
-		// We now have an intermediate buffer, we can measure the size then transfer it the real writer
-		check(childBuffer.size <= Int.MAX_VALUE) { "A BSON document cannot be larger than 16MiB. Found ${childBuffer.size} bytes." }
-		writer.writeInt32(childBuffer.size.toInt() + 4)
-		writer.sink.write(childBuffer, childBuffer.size)
+		writeTo(MultiplatformDocumentFieldWriter(childWriter))
+		closeArbitraryDocument(childBuffer, childWriter)
 	}
 
 	@LowLevelApi
@@ -231,6 +238,51 @@ internal class MultiplatformDocumentFieldWriter(
 		}
 	}
 
+	override fun complete() {
+		error("${this::class} is not completable by itself. Ensure to wrap it in a completable wrapper using openDocument() or openArray() before using it.")
+	}
+
+	@DangerousMongoApi
+	override fun openDocument(name: String): CompletableBsonFieldWriter {
+		writeType(BsonType.Document)
+		writeName(name)
+
+		// We create the entire document in a child buffer so we can measure the size.
+		// Once we know the size, we can write it entirely to the real buffer.
+		val childBuffer = Buffer()
+		val childWriter = RawBsonWriter(childBuffer)
+
+		val writer = MultiplatformDocumentFieldWriter(childWriter)
+		return object : CompletableBsonFieldWriter by writer {
+			override fun complete() {
+				this@MultiplatformDocumentFieldWriter.closeArbitraryDocument(childBuffer, childWriter)
+			}
+		}
+	}
+
+	@DangerousMongoApi
+	override fun openArray(name: String): CompletableBsonValueWriter {
+		writeType(BsonType.Array)
+		writeName(name)
+
+		// We create the entire document in a child buffer so we can measure the size.
+		// Once we know the size, we can write it entirely to the real buffer.
+		val childBuffer = Buffer()
+		val childWriter = RawBsonWriter(childBuffer)
+
+		return object : CompletableBsonValueWriter by MultiplatformArrayFieldWriter(MultiplatformDocumentFieldWriter(childWriter)) {
+			override fun complete() {
+				this@MultiplatformDocumentFieldWriter.closeArbitraryDocument(childBuffer, childWriter)
+			}
+		}
+	}
+
+	@DangerousMongoApi
+	override fun open(name: String): CompletableBsonValueWriter =
+		object : CompletableBsonValueWriter by MultiplatformSingleFieldWriter(this, name) {
+			override fun complete() {} // Nothing to do. This function isn't building anything; it's just an adapter to go from FieldWriter to ValueWriter.
+		}
+
 	@LowLevelApi
 	override fun <T> writeObjectSafe(name: String, obj: T) {
 		TODO()
@@ -242,5 +294,4 @@ internal class MultiplatformDocumentFieldWriter(
 		writeName(name)
 		obj.writeTo(writer)
 	}
-
 }

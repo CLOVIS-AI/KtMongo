@@ -20,12 +20,13 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
 internal class MultiplatformArrayFieldWriter(
-	private val writer: BsonFieldWriter,
-) : BsonValueWriter {
+	private val writer: CompletableBsonFieldWriter,
+) : BsonValueWriter, CompletableBsonValueWriter {
 	private var size = 0
 
 	private fun nextIndex(): String =
@@ -142,6 +143,18 @@ internal class MultiplatformArrayFieldWriter(
 	override fun writeArray(block: BsonValueWriter.() -> Unit) {
 		writer.writeArray(nextIndex(), block)
 	}
+
+	override fun complete() {
+		error("${this::class} is not completable by itself. Ensure to wrap it in a completable wrapper using openDocument() or openArray() before using it.")
+	}
+
+	@DangerousMongoApi
+	override fun openDocument(): CompletableBsonFieldWriter =
+		writer.openDocument(nextIndex())
+
+	@DangerousMongoApi
+	override fun openArray(): CompletableBsonValueWriter =
+		writer.openArray(nextIndex())
 
 	@LowLevelApi
 	override fun <T> writeObjectSafe(obj: T) {
