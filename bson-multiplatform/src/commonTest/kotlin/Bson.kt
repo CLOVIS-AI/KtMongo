@@ -22,11 +22,11 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 
-val MultiplatformBsonWriterTest by preparedSuite {
-	val context by prepared {
-		BsonContext()
-	}
+val context by prepared {
+	BsonContext()
+}
 
+val MultiplatformBsonWriterTest by preparedSuite {
 	boolean(context)
 	int32(context)
 	int64(context)
