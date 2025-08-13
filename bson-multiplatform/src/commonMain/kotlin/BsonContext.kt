@@ -18,10 +18,9 @@ package opensavvy.ktmongo.bson.multiplatform
 
 import kotlinx.io.Buffer
 import kotlinx.io.readTo
-import opensavvy.ktmongo.bson.*
-import opensavvy.ktmongo.bson.Bson
-import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
