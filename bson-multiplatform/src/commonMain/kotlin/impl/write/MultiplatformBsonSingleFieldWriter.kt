@@ -14,137 +14,138 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.multiplatform
+package opensavvy.ktmongo.bson.multiplatform.impl.write
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.BsonValueWriter
-import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonValueReader
 import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
-internal class MultiplatformBsonArrayFieldWriter(
-	private val writer: BsonFieldWriter,
+internal class MultiplatformBsonSingleFieldWriter(
+	private val writer: MultiplatformBsonFieldWriter,
+	private val name: String,
 ) : BsonValueWriter {
-	private var size = 0
-
-	private fun nextIndex(): String =
-		(size++).toString()
 
 	@LowLevelApi
 	override fun writeBoolean(value: Boolean) {
-		writer.writeBoolean(nextIndex(), value)
+		writer.writeBoolean(name, value)
 	}
 
 	@LowLevelApi
 	override fun writeDouble(value: Double) {
-		writer.writeDouble(nextIndex(), value)
+		writer.writeDouble(name, value)
 	}
 
 	@LowLevelApi
 	override fun writeInt32(value: Int) {
-		writer.writeInt32(nextIndex(), value)
+		writer.writeInt32(name, value)
 	}
 
 	@LowLevelApi
 	override fun writeInt64(value: Long) {
-		writer.writeInt64(nextIndex(), value)
+		writer.writeInt64(name, value)
 	}
 
 	@LowLevelApi
 	override fun writeDecimal128(low: Long, high: Long) {
-		writer.writeDecimal128(nextIndex(), low, high)
+		writer.writeDecimal128(name, low, high)
 	}
 
 	@LowLevelApi
 	override fun writeDateTime(value: Long) {
-		writer.writeDateTime(nextIndex(), value)
+		writer.writeDateTime(name, value)
 	}
 
 	@LowLevelApi
 	override fun writeNull() {
-		writer.writeNull(nextIndex())
+		writer.writeNull(name)
 	}
 
 	@LowLevelApi
 	override fun writeObjectId(id: ByteArray) {
-		writer.writeObjectId(nextIndex(), id)
+		writer.writeObjectId(name, id)
 	}
 
 	@LowLevelApi
 	override fun writeRegularExpression(pattern: String, options: String) {
-		writer.writeRegularExpression(nextIndex(), pattern, options)
+		writer.writeRegularExpression(name, pattern, options)
 	}
 
 	@LowLevelApi
 	override fun writeString(value: String) {
-		writer.writeString(nextIndex(), value)
+		writer.writeString(name, value)
 	}
 
 	@LowLevelApi
 	override fun writeTimestamp(value: Timestamp) {
-		writer.writeTimestamp(nextIndex(), value)
+		writer.writeTimestamp(name, value)
 	}
 
-	@Suppress("DEPRECATION")
-	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeSymbol(value: String) {
-		writer.writeSymbol(nextIndex(), value)
+		writer.writeSymbol(name, value)
 	}
 
-	@Suppress("DEPRECATION")
-	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeUndefined() {
-		writer.writeUndefined(nextIndex())
+		writer.writeUndefined(name)
 	}
 
-	@Suppress("DEPRECATION")
-	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeDBPointer(namespace: String, id: ByteArray) {
-		writer.writeDBPointer(nextIndex(), namespace, id)
+		writer.writeDBPointer(name, namespace, id)
 	}
 
-	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeJavaScriptWithScope(code: String) {
-		writer.writeJavaScript(nextIndex(), code)
+		writer.writeJavaScriptWithScope(name, code)
 	}
 
 	@LowLevelApi
 	override fun writeBinaryData(type: UByte, data: ByteArray) {
-		writer.writeBinaryData(nextIndex(), type, data)
+		writer.writeBinaryData(name, type, data)
 	}
 
 	@LowLevelApi
 	override fun writeJavaScript(code: String) {
-		writer.writeJavaScript(nextIndex(), code)
-	}
-
-	@LowLevelApi
-	override fun writeMinKey() {
-		writer.writeMinKey(nextIndex())
-	}
-
-	@LowLevelApi
-	override fun writeMaxKey() {
-		writer.writeMaxKey(nextIndex())
+		writer.writeJavaScript(name, code)
 	}
 
 	@LowLevelApi
 	override fun writeDocument(block: BsonFieldWriter.() -> Unit) {
-		writer.writeDocument(nextIndex(), block)
+		writer.writeDocument(name, block)
 	}
 
 	@LowLevelApi
 	override fun writeArray(block: BsonValueWriter.() -> Unit) {
-		writer.writeArray(nextIndex(), block)
+		writer.writeArray(name, block)
+	}
+
+	@LowLevelApi
+	override fun writeMinKey() {
+		writer.writeMinKey(name)
+	}
+
+	@LowLevelApi
+	override fun writeMaxKey() {
+		writer.writeMaxKey(name)
 	}
 
 	@LowLevelApi
 	override fun <T> writeObjectSafe(obj: T) {
-		writer.writeObjectSafe(nextIndex(), obj)
+		writer.writeObjectSafe(name, obj)
+	}
+
+	@DangerousMongoApi
+	override fun pipe(obj: BsonValueReader) {
+		if (obj is MultiplatformBsonValueReader) {
+			writer.pipe(name, obj)
+		} else {
+			super.pipe(obj)
+		}
 	}
 }

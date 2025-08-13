@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.multiplatform
+package opensavvy.ktmongo.bson.multiplatform.impl.read
 
 import opensavvy.ktmongo.bson.*
+import opensavvy.ktmongo.bson.multiplatform.Bytes
+import opensavvy.ktmongo.bson.multiplatform.RawBsonWriter
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -225,6 +227,7 @@ internal class MultiplatformBsonValueReader(
 			else
 				"""{"${'$'}date": {"${'$'}numberLong": "$time"}}"""
 		}
+
 		BsonType.BinaryData -> {
 			val subType = readBinaryDataType()
 			val data = readBinaryData()
@@ -234,6 +237,7 @@ internal class MultiplatformBsonValueReader(
 
 			"""{"${'$'}binary": {"base64": "$base64", "subType": "${subType.toString(16).padStart(2, '0')}"}}"""
 		}
+
 		BsonType.RegExp -> {
 			val reader = bytes.reader
 			val pattern = reader.readCString()
@@ -243,11 +247,13 @@ internal class MultiplatformBsonValueReader(
 				.replace("\"", "\\\"")
 			"""{"${'$'}regularExpression": {"pattern": "$escapedPattern", "options": "$options"}}"""
 		}
+
 		BsonType.Timestamp -> {
 			val timestamp = readTimestamp()
 
 			"""{"${'$'}timestamp": {"t": ${timestamp.instant.epochSeconds}, "i": ${timestamp.counter}}}"""
 		}
+
 		BsonType.ObjectId -> """{"${'$'}oid": "${readObjectIdBytes().toHexString()}"}"""
 		BsonType.MinKey -> """{"${'$'}minKey": 1}"""
 		BsonType.MaxKey -> """{"${'$'}maxKey": 1}"""

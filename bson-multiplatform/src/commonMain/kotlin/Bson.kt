@@ -20,6 +20,8 @@ import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonArrayReader
 import opensavvy.ktmongo.bson.BsonDocumentReader
+import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonArrayReader
+import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonDocumentReader
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 class Bson internal constructor(

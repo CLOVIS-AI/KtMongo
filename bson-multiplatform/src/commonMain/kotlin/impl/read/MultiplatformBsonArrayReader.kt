@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.multiplatform
+package opensavvy.ktmongo.bson.multiplatform.impl.read
 
 import opensavvy.ktmongo.bson.BsonArrayReader
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueReader
+import opensavvy.ktmongo.bson.multiplatform.BsonArray
+import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi

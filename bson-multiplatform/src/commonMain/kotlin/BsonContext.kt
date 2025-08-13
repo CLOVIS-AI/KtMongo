@@ -21,6 +21,8 @@ import kotlinx.io.readTo
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformBsonArrayFieldWriter
+import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformBsonFieldWriter
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
