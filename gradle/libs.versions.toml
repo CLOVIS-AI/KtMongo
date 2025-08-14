@@ -2,7 +2,7 @@
 
 [versions]
 coroutines = "1.10.2"           # https://github.com/Kotlin/kotlinx.coroutines/releases
-serialization = "1.8.1"         # https://github.com/Kotlin/kotlinx.serialization/releases
+serialization = "1.9.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
 io = "0.7.0"                    # https://github.com/Kotlin/kotlinx-io/releases
 prepared = "2.0.5"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
 mongodb-bson-jvm = "5.5.0"      # https://central.sonatype.com/artifact/org.mongodb/bson/versions
