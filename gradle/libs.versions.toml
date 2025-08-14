@@ -9,8 +9,8 @@ mongodb-bson-jvm = "5.5.1"      # https://central.sonatype.com/artifact/org.mong
 mongodb-bson-js = "6.10.3"      # https://www.npmjs.com/package/bson
 mongodb-driver = "5.5.1"        # https://central.sonatype.com/artifact/org.mongodb/mongodb-driver-kotlin-coroutine
 mongodb-serialization = "5.5.1" # https://central.sonatype.com/artifact/org.mongodb/bson-kotlinx
-junit = "5.12.2"                # https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api/versions
-junit-platform-launcher = "1.12.2" # https://central.sonatype.com/artifact/org.junit.platform/junit-platform-launcher/versions
+junit = "5.13.4"                # https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api/versions
+junit-platform-launcher = "1.13.4" # https://central.sonatype.com/artifact/org.junit.platform/junit-platform-launcher/versions
 meanmirror = "1.0.0"            # https://github.com/meanbeanlib/meanmirror/tags
 
 [plugins]
