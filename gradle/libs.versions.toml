@@ -1,7 +1,7 @@
 # List of dependencies of the project
 
 [versions]
-coroutines = "1.10.1"           # https://github.com/Kotlin/kotlinx.coroutines/releases
+coroutines = "1.10.2"           # https://github.com/Kotlin/kotlinx.coroutines/releases
 serialization = "1.8.1"         # https://github.com/Kotlin/kotlinx.serialization/releases
 io = "0.7.0"                    # https://github.com/Kotlin/kotlinx-io/releases
 prepared = "2.0.5"              # https://gitlab.com/opensavvy/groundwork/prepared/-/releases
