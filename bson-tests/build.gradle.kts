@@ -74,10 +74,6 @@ kotlin {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotest.assertions)
 	}
-
-	compilerOptions {
-		freeCompilerArgs.set(listOf("-Xmulti-dollar-interpolation"))
-	}
 }
 
 library {
