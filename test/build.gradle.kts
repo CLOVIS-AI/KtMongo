@@ -28,7 +28,7 @@ kotlin {
 		api(projects.driverSync)
 		api(projects.driverCoroutines)
 
-		api(libs.prepared.kotest)
+		api(libsCommon.opensavvy.prepared.kotest)
 
 		api(libs.kotlinx.serialization)
 	}

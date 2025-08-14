@@ -70,7 +70,7 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.bson)
-		api(libs.prepared)
+		api(libsCommon.opensavvy.prepared)
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotest.assertions)
 	}
