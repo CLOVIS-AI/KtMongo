@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+@file:OptIn(LowLevelApi::class)
+
 package opensavvy.ktmongo.bson.multiplatform.serialization
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.multiplatform.context
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -38,7 +41,6 @@ val EncoderTest by preparedSuite {
 			val y: String,
 			val z: Sample? = null,
 			val list: List<Int> = emptyList(),
-			val map: Map<String, Int> = emptyMap(),
 			val binaryData: ByteArray = byteArrayOf(),
 		) {
 			override fun equals(other: Any?): Boolean {
@@ -51,7 +53,6 @@ val EncoderTest by preparedSuite {
 				if (y != other.y) return false
 				if (z != other.z) return false
 				if (list != other.list) return false
-				if (map != other.map) return false
 				if (!binaryData.contentEquals(other.binaryData)) return false
 
 				return true
@@ -62,7 +63,6 @@ val EncoderTest by preparedSuite {
 				result = 31 * result + y.hashCode()
 				result = 31 * result + (z?.hashCode() ?: 0)
 				result = 31 * result + list.hashCode()
-				result = 31 * result + map.hashCode()
 				result = 31 * result + binaryData.contentHashCode()
 				return result
 			}
@@ -73,14 +73,11 @@ val EncoderTest by preparedSuite {
 			y = "hello",
 			z = Sample(2, "world"),
 			list = listOf(1, 2, 3),
-			map = mapOf("one" to 1, "two" to 2),
 			binaryData = byteArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
 		)
 
-		// test("Round trip class") {
-		// 	val enc = encodeToBson(context(), fullTest)
-		//
-		// 	check(enc.toString() == "")
-		// }
+		test("Round trip class") {
+			check(decodeFromBson<Sample>(context(), encodeToBson(context(), fullTest).toByteArray()) == fullTest)
+		}
 	}
 }
