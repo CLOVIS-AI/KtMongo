@@ -77,7 +77,7 @@ val EncoderTest by preparedSuite {
 		)
 
 		test("Round trip class") {
-			check(decodeFromBson<Sample>(context(), encodeToBson(context(), fullTest).toByteArray()) == fullTest)
+			serializeRoundTrip(fullTest)
 		}
 	}
 }
