@@ -42,6 +42,7 @@ import opensavvy.ktmongo.dsl.aggregation.stages.*
  */
 interface AggregationPipeline<Document : Any> : Pipeline<Document>,
 	HasCount<Document>,
+	HasGroup<Document>,
 	HasLimit<Document>,
 	HasMatch<Document>,
 	HasProject<Document>,
