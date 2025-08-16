@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalTime::class)
 
 package opensavvy.ktmongo.bson.multiplatform.serialization
 
@@ -23,6 +23,8 @@ import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.multiplatform.context
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @OptIn(ExperimentalSerializationApi::class)
 val EncoderTest by preparedSuite {
@@ -79,5 +81,14 @@ val EncoderTest by preparedSuite {
 		test("Round trip class") {
 			serializeRoundTrip(fullTest)
 		}
+	}
+
+	test("Roundtrip Instant") {
+		@Serializable
+		data class Sample(
+			val at: Instant,
+		)
+
+		serializeRoundTrip(Sample(Instant.parse("2022-03-03T10:15:54.123Z")))
 	}
 }
