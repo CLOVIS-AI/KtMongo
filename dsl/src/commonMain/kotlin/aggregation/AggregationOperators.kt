@@ -105,6 +105,9 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * Document operators:
  * - [`$getField`][ValueOperators.div]
  *
+ * String operators:
+ * - [`$trim`][StringValueOperators.trim]
+ *
  * Type operators:
  * - [`$type`][TypeValueOperators.type]
  * - [`$isArray`][TypeValueOperators.isArray]
@@ -142,5 +145,6 @@ interface AggregationOperators : ValueOperators,
 	ComparisonValueOperators,
 	ConditionalValueOperators,
 	ArithmeticValueOperators,
+	StringValueOperators,
 	TrigonometryValueOperators,
 	TypeValueOperators
