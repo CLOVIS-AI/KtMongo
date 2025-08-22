@@ -338,4 +338,62 @@ val StringValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 		}
 	}
+
+	suite($$"$toUpper") {
+		test("Convert string to uppercase") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).uppercase()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$toUpper": "$description"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Convert literal string to uppercase") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("product 1").uppercase()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$toUpper": {
+										"$literal": "product 1"
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Convert field reference to uppercase") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::text).uppercase()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$toUpper": "$text"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
 }

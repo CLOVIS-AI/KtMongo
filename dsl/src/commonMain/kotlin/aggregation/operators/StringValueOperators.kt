@@ -354,6 +354,36 @@ interface StringValueOperators : ValueOperators {
 		UnaryStringValueOperator(context, "toLower", this)
 
 	// endregion
+	// region $toUpper
+
+	/**
+	 * Converts a string to uppercase, returning the result.
+	 *
+	 * If the argument resolves to `null`, `$toUpper` returns an empty string `""`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).uppercase()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.uppercase(): Value<Context, String?> =
+		UnaryStringValueOperator(context, "toUpper", this)
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryStringValueOperator<Context : Any>(
