@@ -324,6 +324,52 @@ interface StringValueOperators : ValueOperators {
 		TrimValueOperator(context, this, characters, trimStart = false, trimEnd = true)
 
 	// endregion
+	// region $toLower
+
+	/**
+	 * Converts a string to lowercase, returning the result.
+	 *
+	 * If the argument resolves to `null`, `$toLower` returns an empty string `""`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).lowercase()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.lowercase(): Value<Context, String?> =
+		UnaryStringValueOperator(context, "toLower", this)
+
+	// endregion
+
+	@LowLevelApi
+	private class UnaryStringValueOperator<Context : Any>(
+		context: BsonContext,
+		private val operator: String,
+		private val value: Value<Context, String?>,
+	) : AbstractValue<Context, String?>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				write("$$operator") {
+					value.writeTo(this)
+				}
+			}
+		}
+	}
 
 	@LowLevelApi
 	private class TrimValueOperator<Context : Any>(

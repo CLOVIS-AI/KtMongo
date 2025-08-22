@@ -280,4 +280,62 @@ val StringValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 		}
 	}
+
+	suite($$"$toLower") {
+		test("Convert string to lowercase") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).lowercase()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$toLower": "$description"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Convert literal string to lowercase") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("PRODUCT 1").lowercase()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$toLower": {
+										"$literal": "PRODUCT 1"
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Convert field reference to lowercase") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::text).lowercase()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$toLower": "$text"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
 }
