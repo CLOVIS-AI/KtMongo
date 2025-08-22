@@ -301,6 +301,55 @@ interface ArithmeticValueOperators : ValueOperators {
 	}
 
 	// endregion
+	// region $divide
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
+		DivisionValueOperator(context, this, other)
+
+	@OptIn(LowLevelApi::class)
+	private class DivisionValueOperator<Context : Any, T>(
+		context: BsonContext,
+		private val dividend: Value<Context, T>,
+		private val divisor: Value<Context, T>,
+	) : AbstractValue<Context, T>(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$divide") {
+					dividend.writeTo(this)
+					divisor.writeTo(this)
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $floor
 
 	/**

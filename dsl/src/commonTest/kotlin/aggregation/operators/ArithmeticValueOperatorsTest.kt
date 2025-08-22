@@ -241,6 +241,79 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		}
 	}
 
+	suite($$"$divide") {
+		test("Binary usage") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(Target::score) / of(2))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$divide": [
+										"$score",
+										{
+											"$literal": 2
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Binary usage with doubles") {
+			TestPipeline<Target>()
+				.set {
+					Target::average set (of(Target::average) / of(2.5))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"average": {
+									"$divide": [
+										"$average",
+										{
+											"$literal": 2.5
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Literal divided by literal") {
+			TestPipeline<Target>()
+				.set {
+					Target::average set (of(80.0) / of(8.0))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"average": {
+									"$divide": [
+										{
+											"$literal": 80.0
+										},
+										{
+											"$literal": 8.0
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
 	suite($$"$concat") {
 		test("Binary usage") {
 			TestPipeline<Target>()
