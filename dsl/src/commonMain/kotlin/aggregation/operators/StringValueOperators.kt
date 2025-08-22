@@ -60,7 +60,7 @@ interface StringValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trim(): Value<Context, String?> =
-		TrimValueOperator(context, this, null)
+		TrimValueOperator(context, this, null, trimStart = true, trimEnd = true)
 
 	/**
 	 * Removes the specified [characters] from the beginning and end of a string.
@@ -92,7 +92,7 @@ interface StringValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trim(vararg characters: Char): Value<Context, String?> =
-		TrimValueOperator(context, this, of(characters.joinToString(separator = "")))
+		TrimValueOperator(context, this, of(characters.joinToString(separator = "")), trimStart = true, trimEnd = true)
 
 	/**
 	 * Removes the specified [characters] from the beginning and end of a string.
@@ -127,18 +127,223 @@ interface StringValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trim(characters: Value<Context, String?>): Value<Context, String?> =
-		TrimValueOperator(context, this, characters)
+		TrimValueOperator(context, this, characters, trimStart = true, trimEnd = true)
+
+	// endregion
+	// region $ltrim
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the beginning of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimStart(): Value<Context, String?> =
+		TrimValueOperator(context, this, null, trimStart = true, trimEnd = false)
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimStart(vararg characters: Char): Value<Context, String?> =
+		TrimValueOperator(context, this, of(characters.joinToString(separator = "")), trimStart = true, trimEnd = false)
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimStart(characters: Value<Context, String?>): Value<Context, String?> =
+		TrimValueOperator(context, this, characters, trimStart = true, trimEnd = false)
+
+	// endregion
+	// region $rtrim
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the end of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimEnd(): Value<Context, String?> =
+		TrimValueOperator(context, this, null, trimStart = false, trimEnd = true)
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimEnd(vararg characters: Char): Value<Context, String?> =
+		TrimValueOperator(context, this, of(characters.joinToString(separator = "")), trimStart = false, trimEnd = true)
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimEnd(characters: Value<Context, String?>): Value<Context, String?> =
+		TrimValueOperator(context, this, characters, trimStart = false, trimEnd = true)
+
+	// endregion
 
 	@LowLevelApi
 	private class TrimValueOperator<Context : Any>(
 		context: BsonContext,
 		private val input: Value<Context, String?>,
 		private val chars: Value<Context, String?>?,
+		private val trimStart: Boolean = true,
+		private val trimEnd: Boolean = true,
 	) : AbstractValue<Context, String?>(context) {
 
 		override fun write(writer: BsonValueWriter) = with(writer) {
 			writeDocument {
-				writeDocument("\$trim") {
+				val operator = when {
+					trimStart && trimEnd -> "\$trim"
+					trimStart -> "\$ltrim"
+					trimEnd -> "\$rtrim"
+					else -> throw IllegalArgumentException("At least one of trimStart or trimEnd must be true")
+				}
+
+				writeDocument(operator) {
 					write("input") {
 						input.writeTo(this)
 					}

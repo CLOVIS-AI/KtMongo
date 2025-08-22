@@ -106,6 +106,8 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * - [`$getField`][ValueOperators.div]
  *
  * String operators:
+ * - [`$ltrim`][StringValueOperators.trimStart]
+ * - [`$rtrim`][StringValueOperators.trimEnd]
  * - [`$trim`][StringValueOperators.trim]
  *
  * Type operators:

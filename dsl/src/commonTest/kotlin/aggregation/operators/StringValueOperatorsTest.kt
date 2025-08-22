@@ -144,4 +144,140 @@ val StringValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 		}
 	}
+
+	suite($$"$ltrim") {
+		test("Default whitespace trimming from start") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).trimStart()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$ltrim": {
+										"input": "$description"
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Custom character trimming from start") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).trimStart(characters = of("ge"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$ltrim": {
+										"input": "$description",
+										"chars": {
+											"$literal": "ge"
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Trimming from start with vararg characters") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).trimStart('g', 'e')
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$ltrim": {
+										"input": "$description",
+										"chars": {
+											"$literal": "ge"
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite($$"$rtrim") {
+		test("Default whitespace trimming from end") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).trimEnd()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$rtrim": {
+										"input": "$description"
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Custom character trimming from end") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).trimEnd(characters = of("ge"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$rtrim": {
+										"input": "$description",
+										"chars": {
+											"$literal": "ge"
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Trimming from end with vararg characters") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).trimEnd('g', 'e')
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$rtrim": {
+										"input": "$description",
+										"chars": {
+											"$literal": "ge"
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
 }
