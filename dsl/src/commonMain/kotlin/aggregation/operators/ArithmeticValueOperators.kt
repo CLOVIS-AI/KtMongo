@@ -350,6 +350,59 @@ interface ArithmeticValueOperators : ValueOperators {
 	}
 
 	// endregion
+	// region $subtract
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (of(Sale::price) + of(Sale::fee) - of(Sale::discount))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.minus(other: Value<Context, Result>): Value<Context, Result> =
+		SubtractionValueOperator(context, this, other)
+
+	@OptIn(LowLevelApi::class)
+	private class SubtractionValueOperator<Context : Any, T>(
+		context: BsonContext,
+		private val minuend: Value<Context, T>,
+		private val subtrahend: Value<Context, T>,
+	) : AbstractValue<Context, T>(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$subtract") {
+					minuend.writeTo(this)
+					subtrahend.writeTo(this)
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $floor
 
 	/**

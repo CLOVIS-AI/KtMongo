@@ -96,6 +96,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * - [`$concat`][ArithmeticValueOperators.concat]
  * - [`$divide`][ArithmeticValueOperators.div]
  * - [`$multiply`][ArithmeticValueOperators.times]
+ * - [`$subtract`][ArithmeticValueOperators.minus]
  *
  * Array operators:
  * - [`$filter`][ArrayValueOperators.filter]

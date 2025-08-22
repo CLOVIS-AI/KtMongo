@@ -314,6 +314,109 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		}
 	}
 
+	suite($$"$subtract") {
+		test("Binary usage") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(Target::score) - of(5))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$subtract": [
+										"$score",
+										{
+											"$literal": 5
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Binary usage with doubles") {
+			TestPipeline<Target>()
+				.set {
+					Target::average set (of(Target::average) - of(2.5))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"average": {
+									"$subtract": [
+										"$average",
+										{
+											"$literal": 2.5
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Literal subtracted from literal") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(100) - of(25))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$subtract": [
+										{
+											"$literal": 100
+										},
+										{
+											"$literal": 25
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Complex expression with addition and subtraction") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(Target::score) + of(10) - of(3))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$subtract": [
+										{
+											"$add": [
+												"$score",
+												{
+													"$literal": 10
+												}
+											]
+										},
+										{
+											"$literal": 3
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
 	suite($$"$concat") {
 		test("Binary usage") {
 			TestPipeline<Target>()
