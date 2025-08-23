@@ -646,6 +646,71 @@ interface StringValueOperators : ValueOperators {
 		SubstrBytesValueOperator(context, this, of(indexes.first), of(indexes.last - indexes.first))
 
 	// endregion
+	// region $split
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+		SplitValueOperator(context, this, delimiter)
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * The string expression must be a string. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(", ")
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
+		SplitValueOperator(context, this, of(delimiter))
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryStringValueOperator<Context : Any>(
@@ -758,6 +823,23 @@ interface StringValueOperators : ValueOperators {
 			writeDocument {
 				write("\$strLenBytes") {
 					input.writeTo(this)
+				}
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class SplitValueOperator<Context : Any>(
+		context: BsonContext,
+		private val input: Value<Context, String?>,
+		private val delimiter: Value<Context, String?>,
+	) : AbstractValue<Context, List<String>?>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$split") {
+					input.writeTo(this)
+					delimiter.writeTo(this)
 				}
 			}
 		}

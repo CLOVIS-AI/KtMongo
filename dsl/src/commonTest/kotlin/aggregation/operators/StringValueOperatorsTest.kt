@@ -36,6 +36,12 @@ val StringValueOperatorsTest by preparedSuite {
 		val length: Int,
 	)
 
+	class SplitTarget(
+		val text: String,
+		val description: String,
+		val parts: List<String>,
+	)
+
 	suite($$"$trim") {
 		test("Default whitespace trimming") {
 			TestPipeline<Target>()
@@ -511,6 +517,152 @@ val StringValueOperatorsTest by preparedSuite {
 							"$set": {
 								"length": {
 									"$strLenBytes": "$text"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite($$"$split") {
+		test("Split string field with delimiter") {
+			TestPipeline<SplitTarget>()
+				.set {
+					SplitTarget::parts set of(SplitTarget::description).split(delimiter = of("-"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"parts": {
+									"$split": [
+										"$description",
+										{
+											"$literal": "-"
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Split literal string with delimiter") {
+			TestPipeline<SplitTarget>()
+				.set {
+					SplitTarget::parts set of("June-15-2013").split(delimiter = of("-"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"parts": {
+									"$split": [
+										{
+											"$literal": "June-15-2013"
+										},
+										{
+											"$literal": "-"
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Split with single character delimiter") {
+			TestPipeline<SplitTarget>()
+				.set {
+					SplitTarget::parts set of("banana split").split(delimiter = of("a"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"parts": {
+									"$split": [
+										{
+											"$literal": "banana split"
+										},
+										{
+											"$literal": "a"
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Split with space delimiter") {
+			TestPipeline<SplitTarget>()
+				.set {
+					SplitTarget::parts set of("Hello World").split(delimiter = of(" "))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"parts": {
+									"$split": [
+										{
+											"$literal": "Hello World"
+										},
+										{
+											"$literal": " "
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Split with multi-character delimiter") {
+			TestPipeline<SplitTarget>()
+				.set {
+					SplitTarget::parts set of("astronomical").split(delimiter = of("astro"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"parts": {
+									"$split": [
+										{
+											"$literal": "astronomical"
+										},
+										{
+											"$literal": "astro"
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Split with field reference as delimiter") {
+			TestPipeline<SplitTarget>()
+				.set {
+					SplitTarget::parts set of(SplitTarget::text).split(delimiter = of(SplitTarget::description))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"parts": {
+									"$split": [
+										"$text",
+										"$description"
+									]
 								}
 							}
 						}
