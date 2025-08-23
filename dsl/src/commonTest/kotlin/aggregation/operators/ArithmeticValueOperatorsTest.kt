@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+@file:OptIn(LowLevelApi::class)
+
 package opensavvy.ktmongo.dsl.aggregation.operators
 
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
@@ -156,6 +159,256 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 							"$set": {
 								"average": {
 									"$floor": "$average"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite($$"$multiply") {
+		test("Binary usage") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(Target::score) * of(2))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$multiply": [
+										"$score",
+										{
+											"$literal": 2
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Binary usage with doubles") {
+			TestPipeline<Target>()
+				.set {
+					Target::average set (of(Target::average) * of(1.5))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"average": {
+									"$multiply": [
+										"$average",
+										{
+											"$literal": 1.5
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("N-ary usage") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(2) * of(Target::score) * of(3))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$multiply": [
+										{
+											"$literal": 2
+										},
+										"$score",
+										{
+											"$literal": 3
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite($$"$divide") {
+		test("Binary usage") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(Target::score) / of(2))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$divide": [
+										"$score",
+										{
+											"$literal": 2
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Binary usage with doubles") {
+			TestPipeline<Target>()
+				.set {
+					Target::average set (of(Target::average) / of(2.5))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"average": {
+									"$divide": [
+										"$average",
+										{
+											"$literal": 2.5
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Literal divided by literal") {
+			TestPipeline<Target>()
+				.set {
+					Target::average set (of(80.0) / of(8.0))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"average": {
+									"$divide": [
+										{
+											"$literal": 80.0
+										},
+										{
+											"$literal": 8.0
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite($$"$subtract") {
+		test("Binary usage") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(Target::score) - of(5))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$subtract": [
+										"$score",
+										{
+											"$literal": 5
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Binary usage with doubles") {
+			TestPipeline<Target>()
+				.set {
+					Target::average set (of(Target::average) - of(2.5))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"average": {
+									"$subtract": [
+										"$average",
+										{
+											"$literal": 2.5
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Literal subtracted from literal") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(100) - of(25))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$subtract": [
+										{
+											"$literal": 100
+										},
+										{
+											"$literal": 25
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Complex expression with addition and subtraction") {
+			TestPipeline<Target>()
+				.set {
+					Target::score set (of(Target::score) + of(10) - of(3))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"score": {
+									"$subtract": [
+										{
+											"$add": [
+												"$score",
+												{
+													"$literal": 10
+												}
+											]
+										},
+										{
+											"$literal": 3
+										}
+									]
 								}
 							}
 						}

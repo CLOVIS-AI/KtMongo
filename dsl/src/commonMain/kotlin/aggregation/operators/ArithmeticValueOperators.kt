@@ -233,6 +233,176 @@ interface ArithmeticValueOperators : ValueOperators {
 	}
 
 	// endregion
+	// region $multiply
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (of(Sale::price) * of(Sale::quantity))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.times(other: Value<Context, Result>): Value<Context, Result> =
+		MultiplicationValueOperator(context, listOf(this, other))
+
+	@OptIn(LowLevelApi::class)
+	private class MultiplicationValueOperator<Context : Any, T>(
+		context: BsonContext,
+		private val operands: List<Value<Context, T>>,
+	) : AbstractValue<Context, T>(context) {
+
+		override fun simplify(): AbstractValue<Context, T> {
+			val flattenedOperands = ArrayList<Value<Context, T>>()
+
+			for (operand in operands) {
+				if (operand is MultiplicationValueOperator) {
+					flattenedOperands += operand.operands
+				} else {
+					flattenedOperands += operand
+				}
+			}
+
+			return if (flattenedOperands != operands) {
+				MultiplicationValueOperator(context, flattenedOperands)
+			} else {
+				this
+			}
+		}
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$multiply") {
+					for (operand in operands) {
+						operand.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
+	// region $divide
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
+		DivisionValueOperator(context, this, other)
+
+	@OptIn(LowLevelApi::class)
+	private class DivisionValueOperator<Context : Any, T>(
+		context: BsonContext,
+		private val dividend: Value<Context, T>,
+		private val divisor: Value<Context, T>,
+	) : AbstractValue<Context, T>(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$divide") {
+					dividend.writeTo(this)
+					divisor.writeTo(this)
+				}
+			}
+		}
+	}
+
+	// endregion
+	// region $subtract
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (of(Sale::price) + of(Sale::fee) - of(Sale::discount))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.minus(other: Value<Context, Result>): Value<Context, Result> =
+		SubtractionValueOperator(context, this, other)
+
+	@OptIn(LowLevelApi::class)
+	private class SubtractionValueOperator<Context : Any, T>(
+		context: BsonContext,
+		private val minuend: Value<Context, T>,
+		private val subtrahend: Value<Context, T>,
+	) : AbstractValue<Context, T>(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$subtract") {
+					minuend.writeTo(this)
+					subtrahend.writeTo(this)
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $floor
 
 	/**
