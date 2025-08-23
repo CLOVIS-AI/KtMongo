@@ -396,4 +396,117 @@ val StringValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 		}
 	}
+
+	suite($$"$substrCP") {
+		test("Extract substring with start index and length") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).substring(startIndex = of(1), length = of(2))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$substrCP": [
+										"$description",
+										{
+											"$literal": 1
+										},
+										{
+											"$literal": 2
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Extract substring with literal string") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("abcde").substring(startIndex = of(1), length = of(2))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$substrCP": [
+										{
+											"$literal": "abcde"
+										},
+										{
+											"$literal": 1
+										},
+										{
+											"$literal": 2
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+
+		test("Extract substring from field with dynamic indices") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("Hello World!").substring(startIndex = of(6), length = of(5))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$substrCP": [
+										{
+											"$literal": "Hello World!"
+										},
+										{
+											"$literal": 6
+										},
+										{
+											"$literal": 5
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Extract substring with IntRange") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("abcde").substring(1..2)
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$substrCP": [
+										{
+											"$literal": "abcde"
+										},
+										{
+											"$literal": 1
+										},
+										{
+											"$literal": 1
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
 }

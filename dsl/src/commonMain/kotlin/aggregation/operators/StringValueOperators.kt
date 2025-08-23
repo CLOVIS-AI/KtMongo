@@ -384,6 +384,87 @@ interface StringValueOperators : ValueOperators {
 		UnaryStringValueOperator(context, "toUpper", this)
 
 	// endregion
+	// region $substrCP
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: Value<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		SubstrCPValueOperator(context, this, startIndex, length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring contains the Unicode code points that are contained within [indexes].
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(1..2)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(indexes: IntRange): Value<Context, String?> =
+		SubstrCPValueOperator(context, this, of(indexes.first), of(indexes.last - indexes.first))
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryStringValueOperator<Context : Any>(
@@ -433,5 +514,22 @@ interface StringValueOperators : ValueOperators {
 		}
 	}
 
-	// endregion
+	@LowLevelApi
+	private class SubstrCPValueOperator<Context : Any>(
+		context: BsonContext,
+		private val input: Value<Context, String?>,
+		private val startIndex: Value<Context, Int>,
+		private val length: Value<Context, Int>,
+	) : AbstractValue<Context, String?>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$substrCP") {
+					input.writeTo(this)
+					startIndex.writeTo(this)
+					length.writeTo(this)
+				}
+			}
+		}
+	}
 }
