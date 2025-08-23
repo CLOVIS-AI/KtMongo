@@ -226,7 +226,7 @@ private class ProjectStageBsonNode<Document : Any>(
 	) : AbstractBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
-			writeInt32("_id", 0)
+			writeBoolean("_id", false)
 		}
 	}
 
@@ -245,7 +245,7 @@ private class ProjectStageBsonNode<Document : Any>(
 	) : AbstractBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
-			writeInt32(path.toString(), 1)
+			writeBoolean(path.toString(), true)
 		}
 	}
 

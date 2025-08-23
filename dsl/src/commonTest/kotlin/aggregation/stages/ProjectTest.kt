@@ -37,7 +37,7 @@ val ProjectTest by preparedSuite {
 				[
 					{
 						"$project": {
-							"name": 1
+							"name": true
 						}
 					}
 				]
@@ -53,7 +53,7 @@ val ProjectTest by preparedSuite {
 				[
 					{
 						"$project": {
-							"_id": 0
+							"_id": false
 						}
 					}
 				]
@@ -71,8 +71,8 @@ val ProjectTest by preparedSuite {
 				[
 					{
 						"$project": {
-							"_id": 0,
-							"name": 1,
+							"_id": false,
+							"name": true,
 							"age": {
 								"$literal": 12
 							}
