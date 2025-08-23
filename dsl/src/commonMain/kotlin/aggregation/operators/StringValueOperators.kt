@@ -419,11 +419,57 @@ interface StringValueOperators : ValueOperators {
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 *
+	 * @see lengthUTF8
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	val <Context : Any> Value<Context, String?>.length: Value<Context, Int?>
 		get() = StrLenCPValueOperator(context, this)
+
+	// endregion
+	// region $strLenBytes
+
+	/**
+	 * Returns the number of UTF-8 encoded bytes in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [length] property which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val byteLength: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::byteLength set of(Document::text).lengthUTF8
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/)
+	 *
+	 * @see length
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <Context : Any> Value<Context, String?>.lengthUTF8: Value<Context, Int?>
+		get() = StrLenBytesValueOperator(context, this)
 
 	// endregion
 	// region $substrCP
@@ -696,6 +742,21 @@ interface StringValueOperators : ValueOperators {
 		override fun write(writer: BsonValueWriter) = with(writer) {
 			writeDocument {
 				write("\$strLenCP") {
+					input.writeTo(this)
+				}
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class StrLenBytesValueOperator<Context : Any>(
+		context: BsonContext,
+		private val input: Value<Context, String?>,
+	) : AbstractValue<Context, Int?>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				write("\$strLenBytes") {
 					input.writeTo(this)
 				}
 			}

@@ -461,6 +461,64 @@ val StringValueOperatorsTest by preparedSuite {
 		}
 	}
 
+	suite($$"$strLenBytes") {
+		test("Get UTF-8 byte length of string field") {
+			TestPipeline<LengthTarget>()
+				.set {
+					LengthTarget::length set of(LengthTarget::description).lengthUTF8
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"length": {
+									"$strLenBytes": "$description"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Get UTF-8 byte length of literal string") {
+			TestPipeline<LengthTarget>()
+				.set {
+					LengthTarget::length set of("Hello World!").lengthUTF8
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"length": {
+									"$strLenBytes": {
+										"$literal": "Hello World!"
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Get UTF-8 byte length of field reference") {
+			TestPipeline<LengthTarget>()
+				.set {
+					LengthTarget::length set of(LengthTarget::text).lengthUTF8
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"length": {
+									"$strLenBytes": "$text"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
 	suite($$"$substrCP") {
 		test("Extract substring with start index and length") {
 			TestPipeline<Target>()
