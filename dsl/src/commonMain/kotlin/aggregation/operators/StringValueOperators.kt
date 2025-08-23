@@ -711,6 +711,69 @@ interface StringValueOperators : ValueOperators {
 		SplitValueOperator(context, this, of(delimiter))
 
 	// endregion
+	// region $replaceOne
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		ReplaceOneValueOperator(context, this, find, replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If the input is `null`, `null` is returned.
+	 *
+	 * The input must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = "blue paint", replacement = "red paint")
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String, replacement: String): Value<Context, String?> =
+		ReplaceOneValueOperator(context, this, of(find), of(replacement))
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryStringValueOperator<Context : Any>(
@@ -840,6 +903,31 @@ interface StringValueOperators : ValueOperators {
 				writeArray("\$split") {
 					input.writeTo(this)
 					delimiter.writeTo(this)
+				}
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class ReplaceOneValueOperator<Context : Any>(
+		context: BsonContext,
+		private val input: Value<Context, String?>,
+		private val find: Value<Context, String?>,
+		private val replacement: Value<Context, String?>,
+	) : AbstractValue<Context, String?>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeDocument("\$replaceOne") {
+					write("input") {
+						input.writeTo(this)
+					}
+					write("find") {
+						find.writeTo(this)
+					}
+					write("replacement") {
+						replacement.writeTo(this)
+					}
 				}
 			}
 		}

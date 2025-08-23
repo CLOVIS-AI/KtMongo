@@ -671,6 +671,168 @@ val StringValueOperatorsTest by preparedSuite {
 		}
 	}
 
+	suite($$"$replaceOne") {
+		test("Replace first occurrence in string field") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$replaceOne": {
+										"input": "$description",
+										"find": {
+											"$literal": "blue paint"
+										},
+										"replacement": {
+											"$literal": "red paint"
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Replace first occurrence in literal string") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("blue paint with blue paintbrush").replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$replaceOne": {
+										"input": {
+											"$literal": "blue paint with blue paintbrush"
+										},
+										"find": {
+											"$literal": "blue paint"
+										},
+										"replacement": {
+											"$literal": "red paint"
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Replace with string literals") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).replaceFirst(find = "blue paint", replacement = "red paint")
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$replaceOne": {
+										"input": "$description",
+										"find": {
+											"$literal": "blue paint"
+										},
+										"replacement": {
+											"$literal": "red paint"
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Replace single character") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("banana split").replaceFirst(find = of("a"), replacement = of("o"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$replaceOne": {
+										"input": {
+											"$literal": "banana split"
+										},
+										"find": {
+											"$literal": "a"
+										},
+										"replacement": {
+											"$literal": "o"
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Replace with empty string") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("Hello World").replaceFirst(find = of(" "), replacement = of(""))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$replaceOne": {
+										"input": {
+											"$literal": "Hello World"
+										},
+										"find": {
+											"$literal": " "
+										},
+										"replacement": {
+											"$literal": ""
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Replace with field references") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::text).replaceFirst(find = of(Target::description), replacement = of("REPLACED"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$replaceOne": {
+										"input": "$text",
+										"find": "$description",
+										"replacement": {
+											"$literal": "REPLACED"
+										}
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
 	suite($$"$substrCP") {
 		test("Extract substring with start index and length") {
 			TestPipeline<Target>()
