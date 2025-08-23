@@ -509,4 +509,116 @@ val StringValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 		}
 	}
+
+	suite($$"$substrBytes") {
+		test("Extract substring with start index and byte count") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of(Target::description).substringUTF8(startIndex = of(1), byteCount = of(2))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$substrBytes": [
+										"$description",
+										{
+											"$literal": 1
+										},
+										{
+											"$literal": 2
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Extract substring with literal string") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("abcde").substringUTF8(startIndex = of(1), byteCount = of(2))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$substrBytes": [
+										{
+											"$literal": "abcde"
+										},
+										{
+											"$literal": 1
+										},
+										{
+											"$literal": 2
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Extract substring from field with dynamic indices") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("Hello World!").substringUTF8(startIndex = of(6), byteCount = of(5))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$substrBytes": [
+										{
+											"$literal": "Hello World!"
+										},
+										{
+											"$literal": 6
+										},
+										{
+											"$literal": 5
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Extract substring with IntRange") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set of("abcde").substringUTF8(1..2)
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$substrBytes": [
+										{
+											"$literal": "abcde"
+										},
+										{
+											"$literal": 1
+										},
+										{
+											"$literal": 1
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
 }

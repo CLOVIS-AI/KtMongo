@@ -420,6 +420,8 @@ interface StringValueOperators : ValueOperators {
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -458,11 +460,102 @@ interface StringValueOperators : ValueOperators {
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.substring(indexes: IntRange): Value<Context, String?> =
 		SubstrCPValueOperator(context, this, of(indexes.first), of(indexes.last - indexes.first))
+
+	// endregion
+	// region $substrBytes
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		SubstrBytesValueOperator(context, this, startIndex, byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring contains the Unicode code points that are contained within [indexes].
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If the start or end index happens to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(1..2)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(indexes: IntRange): Value<Context, String?> =
+		SubstrBytesValueOperator(context, this, of(indexes.first), of(indexes.last - indexes.first))
 
 	// endregion
 
@@ -528,6 +621,25 @@ interface StringValueOperators : ValueOperators {
 					input.writeTo(this)
 					startIndex.writeTo(this)
 					length.writeTo(this)
+				}
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class SubstrBytesValueOperator<Context : Any>(
+		context: BsonContext,
+		private val input: Value<Context, String?>,
+		private val startIndex: Value<Context, Int>,
+		private val byteCount: Value<Context, Int>,
+	) : AbstractValue<Context, String?>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$substrBytes") {
+					input.writeTo(this)
+					startIndex.writeTo(this)
+					byteCount.writeTo(this)
 				}
 			}
 		}
