@@ -384,6 +384,48 @@ interface StringValueOperators : ValueOperators {
 		UnaryStringValueOperator(context, "toUpper", this)
 
 	// endregion
+	// region $strLenCP
+
+	/**
+	 * Returns the number of code points in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.length], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the counting behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a length of 7.
+	 * However, according to Kotlin's [String.length], it has a length of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val length: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::length set of(Document::text).length
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <Context : Any> Value<Context, String?>.length: Value<Context, Int?>
+		get() = StrLenCPValueOperator(context, this)
+
+	// endregion
 	// region $substrCP
 
 	/**
@@ -640,6 +682,21 @@ interface StringValueOperators : ValueOperators {
 					input.writeTo(this)
 					startIndex.writeTo(this)
 					byteCount.writeTo(this)
+				}
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class StrLenCPValueOperator<Context : Any>(
+		context: BsonContext,
+		private val input: Value<Context, String?>,
+	) : AbstractValue<Context, Int?>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				write("\$strLenCP") {
+					input.writeTo(this)
 				}
 			}
 		}

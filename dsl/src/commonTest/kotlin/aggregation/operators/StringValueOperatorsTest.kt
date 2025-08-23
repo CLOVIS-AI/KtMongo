@@ -30,6 +30,12 @@ val StringValueOperatorsTest by preparedSuite {
 		val description: String?,
 	)
 
+	class LengthTarget(
+		val text: String,
+		val description: String?,
+		val length: Int,
+	)
+
 	suite($$"$trim") {
 		test("Default whitespace trimming") {
 			TestPipeline<Target>()
@@ -389,6 +395,64 @@ val StringValueOperatorsTest by preparedSuite {
 							"$set": {
 								"text": {
 									"$toUpper": "$text"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite($$"$strLenCP") {
+		test("Get length of string field") {
+			TestPipeline<LengthTarget>()
+				.set {
+					LengthTarget::length set of(LengthTarget::description).length
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"length": {
+									"$strLenCP": "$description"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Get length of literal string") {
+			TestPipeline<LengthTarget>()
+				.set {
+					LengthTarget::length set of("Hello World!").length
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"length": {
+									"$strLenCP": {
+										"$literal": "Hello World!"
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Get length of field reference") {
+			TestPipeline<LengthTarget>()
+				.set {
+					LengthTarget::length set of(LengthTarget::text).length
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"length": {
+									"$strLenCP": "$text"
 								}
 							}
 						}
