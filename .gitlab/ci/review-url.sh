@@ -14,6 +14,7 @@
 # so we use a ugly rewrite.
 # https://gitlab.com/gitlab-org/gitlab/-/issues/450912
 
-root=$(echo "$CI_PAGES_URL" | sed 's // XSTARTX ;s / /-/ ;s XSTARTX // ')
+root_namespace=$(echo "$CI_PROJECT_NAMESPACE" | cut -d'/' -f1)
+remaining_path=$(echo "$CI_PROJECT_NAMESPACE" | cut -d'/' -f2- -s)
 
-echo "$root/-/jobs/$CI_JOB_ID/artifacts/$1"
+echo "https://$root_namespace.$CI_PAGES_DOMAIN/-/$remaining_path/$CI_PROJECT_NAME/-/jobs/$CI_JOB_ID/artifacts/$1"
