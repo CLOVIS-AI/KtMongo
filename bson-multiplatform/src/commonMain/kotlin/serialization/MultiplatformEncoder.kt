@@ -37,6 +37,7 @@ import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -136,6 +137,7 @@ private class BsonEncoder(override val serializersModule: SerializersModule, val
 	private val objectId = ObjectId.Serializer().descriptor
 	private val timestamp = Timestamp.Serializer().descriptor
 	private val uuid = Uuid.serializer().descriptor
+	private val instant = Instant.serializer().descriptor
 	override fun <T> encodeSerializableValue(serializer: SerializationStrategy<T>, value: T) {
 		when (serializer.descriptor) {
 			// Special cases where we provide our own encoder
@@ -143,6 +145,7 @@ private class BsonEncoder(override val serializersModule: SerializersModule, val
 			objectId -> out.writeObjectId(value as ObjectId)
 			timestamp -> out.writeTimestamp(value as Timestamp)
 			uuid -> out.writeBinaryData(4u, (value as Uuid).toByteArray())
+			instant -> out.writeInstant(value as Instant)
 
 			// General case: do what the serializer says
 			else -> serializer.serialize(this, value)

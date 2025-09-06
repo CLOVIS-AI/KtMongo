@@ -37,6 +37,7 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -143,6 +144,7 @@ internal class BsonDecoder(
 	private val objectId = ObjectId.Serializer().descriptor
 	private val timestamp = Timestamp.Serializer().descriptor
 	private val uuid = Uuid.serializer().descriptor
+	private val instant = Instant.serializer().descriptor
 	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
 		@Suppress("UNCHECKED_CAST")
 		return when (deserializer.descriptor) {
@@ -155,6 +157,7 @@ internal class BsonDecoder(
 				check(subType == 3.toUByte() || subType == 4.toUByte()) { "Uuid should be represented by the binary subtypes 3 (deprecated) or 4, found: $subType" }
 				Uuid.fromByteArray(source.readBinaryData()) as T
 			}
+			instant -> source.readInstant() as T
 
 			// General case: do what the serializer says
 			else -> deserializer.deserialize(this)

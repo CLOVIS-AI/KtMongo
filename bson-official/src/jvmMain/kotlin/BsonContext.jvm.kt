@@ -54,6 +54,7 @@ class JvmBsonContext(
 			KotlinObjectIdCodec(),
 			KotlinTimestampCodec(),
 			KotlinUuidCodec(),
+			KotlinInstantCodec(),
 		)
 	)
 
