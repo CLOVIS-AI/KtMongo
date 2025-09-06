@@ -70,6 +70,12 @@ interface BsonValueWriter : AnyBsonWriter {
 
 	@LowLevelApi fun writeNull()
 	@LowLevelApi fun writeObjectId(id: ByteArray)
+
+	@ExperimentalTime
+	@LowLevelApi
+	fun writeObjectId(id: ObjectId) {
+		writeObjectId(id.bytes)
+	}
 	@LowLevelApi fun writeRegularExpression(pattern: String, options: String)
 	@LowLevelApi fun writeString(value: String)
 	@LowLevelApi
