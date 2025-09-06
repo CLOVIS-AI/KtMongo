@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.typeOf
 
 /**
  * A BSON document.
@@ -66,3 +67,12 @@ interface BsonArray {
 	 */
 	override fun toString(): String
 }
+
+/**
+ * Reads this document into an instance of type [T].
+ *
+ * If it isn't possible to deserialize this BSON to the given type, an exception is thrown.
+ */
+@OptIn(LowLevelApi::class)
+inline fun <reified T : Any> Bson.read(): T? =
+	reader().read(typeOf<T>(), T::class)

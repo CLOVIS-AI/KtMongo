@@ -17,13 +17,19 @@
 package opensavvy.ktmongo.bson.multiplatform.impl.read
 
 import kotlinx.io.readIntLe
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.modules.EmptySerializersModule
+import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.multiplatform.Bson
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.RawBsonReader
+import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoder
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 internal fun restrictAsDocument(bytes: Bytes): Bytes {
 	println("Creating a document from:      $bytes") // TODO remove
@@ -139,6 +145,12 @@ internal class MultiplatformDocumentReader(
 
 	override fun asValue(): BsonValueReader =
 		MultiplatformBsonValueReader(BsonType.Document, bytesWithHeader)
+
+	@Suppress("UNCHECKED_CAST")
+	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
+		val decoder = BsonDecoder(EmptySerializersModule(), this.asValue())
+		return decoder.decodeSerializableValue(serializer(type) as KSerializer<T?>)
+	}
 
 	override fun toString(): String = buildString {
 		append('{')
