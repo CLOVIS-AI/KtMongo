@@ -135,7 +135,7 @@ internal class MultiplatformDocumentReader(
 		}
 
 	override fun toBson(): Bson =
-		Bson(bytes)
+		Bson(bytesWithHeader)
 
 	override fun asValue(): BsonValueReader =
 		MultiplatformBsonValueReader(BsonType.Document, bytesWithHeader)

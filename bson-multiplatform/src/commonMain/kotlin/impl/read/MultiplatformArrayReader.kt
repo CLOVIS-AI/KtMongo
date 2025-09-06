@@ -65,7 +65,7 @@ internal class MultiplatformArrayReader(
 		}
 
 	override fun toBson(): BsonArray =
-		BsonArray(bytes)
+		BsonArray(bytesWithHeader)
 
 	override fun asValue(): BsonValueReader =
 		MultiplatformBsonValueReader(BsonType.Array, bytesWithHeader)
