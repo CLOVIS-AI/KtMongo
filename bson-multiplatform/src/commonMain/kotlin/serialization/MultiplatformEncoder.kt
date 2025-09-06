@@ -19,6 +19,7 @@ package opensavvy.ktmongo.bson.multiplatform.serialization
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.builtins.ByteArraySerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.AbstractEncoder
@@ -36,6 +37,8 @@ import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @ExperimentalSerializationApi
 @LowLevelApi
@@ -69,7 +72,7 @@ private class BsonEncoderTopLevel(override val serializersModule: SerializersMod
 	}
 }
 
-@OptIn(LowLevelApi::class, DangerousMongoApi::class, ExperimentalTime::class)
+@OptIn(LowLevelApi::class, DangerousMongoApi::class, ExperimentalTime::class, ExperimentalUuidApi::class)
 private class BsonEncoder(override val serializersModule: SerializersModule, val out: CompletableBsonValueWriter) : Encoder {
 	@ExperimentalSerializationApi
 	override fun encodeNull() {
@@ -132,12 +135,14 @@ private class BsonEncoder(override val serializersModule: SerializersModule, val
 	private val bytes = ByteArraySerializer().descriptor
 	private val objectId = ObjectId.Serializer().descriptor
 	private val timestamp = Timestamp.Serializer().descriptor
+	private val uuid = Uuid.serializer().descriptor
 	override fun <T> encodeSerializableValue(serializer: SerializationStrategy<T>, value: T) {
 		when (serializer.descriptor) {
 			// Special cases where we provide our own encoder
 			bytes -> out.writeBinaryData(0U, (value as ByteArray))
 			objectId -> out.writeObjectId(value as ObjectId)
 			timestamp -> out.writeTimestamp(value as Timestamp)
+			uuid -> out.writeBinaryData(4u, (value as Uuid).toByteArray())
 
 			// General case: do what the serializer says
 			else -> serializer.serialize(this, value)
