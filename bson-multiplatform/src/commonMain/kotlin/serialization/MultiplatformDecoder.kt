@@ -32,7 +32,9 @@ import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.multiplatform.BsonContext
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.time.ExperimentalTime
 
 @ExperimentalSerializationApi
 internal class BsonDecoderTopLevel(
@@ -64,6 +66,7 @@ internal class BsonDecoderTopLevel(
 	}
 }
 
+@OptIn(ExperimentalTime::class)
 @LowLevelApi
 internal class BsonDecoder(
 	override val serializersModule: SerializersModule,
@@ -132,12 +135,16 @@ internal class BsonDecoder(
 		}
 	}
 
-	private val bytes = ByteArraySerializer()
+	private val bytes = ByteArraySerializer().descriptor
+	private val objectId = ObjectId.Serializer().descriptor
 	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
 		@Suppress("UNCHECKED_CAST")
 		return when (deserializer.descriptor) {
-			bytes.descriptor -> source.readBinaryData() as T
-			// TODO: Add more custom types here
+			// Special cases where we provide our own decoder
+			bytes -> source.readBinaryData() as T
+			objectId -> source.readObjectId() as T
+
+			// General case: do what the serializer says
 			else -> deserializer.deserialize(this)
 		}
 	}

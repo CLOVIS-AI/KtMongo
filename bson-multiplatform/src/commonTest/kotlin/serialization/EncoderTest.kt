@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class, ExperimentalTime::class)
+@file:OptIn(LowLevelApi::class, ExperimentalTime::class, ExperimentalAtomicApi::class)
 
 package opensavvy.ktmongo.bson.multiplatform.serialization
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.multiplatform.context
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -90,5 +93,14 @@ val EncoderTest by preparedSuite {
 		)
 
 		serializeRoundTrip(Sample(Instant.parse("2022-03-03T10:15:54.123Z")))
+	}
+
+	test("Roundtrip ObjectId") {
+		@Serializable
+		data class Sample(
+			val id: ObjectId,
+		)
+
+		serializeRoundTrip(Sample(ObjectIdGenerator.Default().newId()))
 	}
 }

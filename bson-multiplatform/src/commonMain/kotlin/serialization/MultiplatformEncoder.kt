@@ -31,8 +31,10 @@ import opensavvy.ktmongo.bson.multiplatform.Bson
 import opensavvy.ktmongo.bson.multiplatform.BsonContext
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWriter
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.time.ExperimentalTime
 
 @ExperimentalSerializationApi
 @LowLevelApi
@@ -66,7 +68,7 @@ private class BsonEncoderTopLevel(override val serializersModule: SerializersMod
 	}
 }
 
-@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+@OptIn(LowLevelApi::class, DangerousMongoApi::class, ExperimentalTime::class)
 private class BsonEncoder(override val serializersModule: SerializersModule, val out: CompletableBsonValueWriter) : Encoder {
 	@ExperimentalSerializationApi
 	override fun encodeNull() {
@@ -126,11 +128,15 @@ private class BsonEncoder(override val serializersModule: SerializersModule, val
 		}
 	}
 
-	private val bytes = ByteArraySerializer()
+	private val bytes = ByteArraySerializer().descriptor
+	private val objectId = ObjectId.Serializer().descriptor
 	override fun <T> encodeSerializableValue(serializer: SerializationStrategy<T>, value: T) {
 		when (serializer.descriptor) {
-			bytes.descriptor -> out.writeBinaryData(0U, (value as ByteArray))
-			// TODO: Add more custom types here
+			// Special cases where we provide our own encoder
+			bytes -> out.writeBinaryData(0U, (value as ByteArray))
+			objectId -> out.writeObjectId(value as ObjectId)
+
+			// General case: do what the serializer says
 			else -> serializer.serialize(this, value)
 		}
 	}

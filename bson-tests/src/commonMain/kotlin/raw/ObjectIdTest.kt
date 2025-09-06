@@ -18,10 +18,12 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -35,11 +37,15 @@ import kotlin.time.ExperimentalTime
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/oid.json.
  */
 fun SuiteDsl.objectId(context: Prepared<BsonContext>) = suite("ObjectId") {
+	@Serializable
+	data class A(val a: ObjectId)
+
 	testBson(
 		context,
 		"All zeroes",
 		document { writeObjectId("a", ObjectId.MIN) },
 		document { writeObjectId("a", "000000000000000000000000".hexToByteArray(HexFormat.Default)) },
+		serialize(A(ObjectId.MIN)),
 		hex("1400000007610000000000000000000000000000"),
 		json($$"""{"a": {"$oid": "000000000000000000000000"}}"""),
 		verify("Read value") {
@@ -52,6 +58,7 @@ fun SuiteDsl.objectId(context: Prepared<BsonContext>) = suite("ObjectId") {
 		"All ones",
 		document { writeObjectId("a", ObjectId.MAX) },
 		document { writeObjectId("a", "ffffffffffffffffffffffff".hexToByteArray(HexFormat.Default)) },
+		serialize(A(ObjectId.MAX)),
 		hex("14000000076100FFFFFFFFFFFFFFFFFFFFFFFF00"),
 		json($$"""{"a": {"$oid": "ffffffffffffffffffffffff"}}"""),
 		verify("Read value") {
@@ -63,6 +70,7 @@ fun SuiteDsl.objectId(context: Prepared<BsonContext>) = suite("ObjectId") {
 		context,
 		"Random",
 		document { writeObjectId("a", ObjectId("56e1fc72e0c917e9c4714161")) },
+		serialize(A(ObjectId("56e1fc72e0c917e9c4714161"))),
 		hex("1400000007610056E1FC72E0C917E9C471416100"),
 		json($$"""{"a": {"$oid": "56e1fc72e0c917e9c4714161"}}"""),
 		verify("Read value") {
