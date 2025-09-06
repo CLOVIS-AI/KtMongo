@@ -18,6 +18,9 @@ package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * Configuration for the BSON serialization.
@@ -78,6 +81,18 @@ interface BsonContext : ObjectIdGenerator {
 		buildDocument { instance.writeTo(this) }
 
 	/**
+	 * Writes an arbitrary Kotlin [obj] into a top-level BSON document.
+	 *
+	 * Prefer using [BsonContext.write].
+	 *
+	 * A top-level BSON document cannot be `null`, cannot be a primitive, and cannot be a collection.
+	 * If [obj] is not representable as a document, an exception is thrown.
+	 */
+	@LowLevelApi
+	@BsonWriterDsl
+	fun <T : Any> buildDocument(obj: T, type: KType, klass: KClass<T>): Bson
+
+	/**
 	 * Instantiates a new [BSON document][Bson] by reading its [bytes] representation.
 	 *
 	 * The reverse operation is available as [Bson.toByteArray].
@@ -132,3 +147,15 @@ interface BsonContext : ObjectIdGenerator {
 	fun readArray(bytes: ByteArray): BsonArray
 
 }
+
+/**
+ * Writes an arbitrary Kotlin [obj] into a top-level BSON document.
+ *
+ * A top-level BSON document cannot be `null`, cannot be a primitive, and cannot be a collection.
+ * If [obj] is not representable as a document, an exception is thrown.
+ *
+ * @see Bson.read The inverse operation.
+ */
+@OptIn(LowLevelApi::class)
+inline fun <reified T : Any> BsonContext.write(obj: T): Bson =
+	buildDocument(obj, typeOf<T>(), T::class)

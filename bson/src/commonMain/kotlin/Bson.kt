@@ -72,6 +72,8 @@ interface BsonArray {
  * Reads this document into an instance of type [T].
  *
  * If it isn't possible to deserialize this BSON to the given type, an exception is thrown.
+ *
+ * @see BsonContext.write The inverse operation.
  */
 @OptIn(LowLevelApi::class)
 inline fun <reified T : Any> Bson.read(): T? =

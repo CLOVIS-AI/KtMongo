@@ -35,6 +35,8 @@ import org.bson.codecs.configuration.CodecRegistry
 import org.bson.types.Decimal128
 import org.bson.types.ObjectId
 import java.nio.ByteBuffer
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.time.ExperimentalTime
 
 /**
@@ -64,6 +66,19 @@ class JvmBsonContext(
 				block()
 			}
 		}
+
+		return Bson(document, this)
+	}
+
+	@LowLevelApi
+	override fun <T : Any> buildDocument(obj: T, type: KType, klass: KClass<T>): Bson {
+		val codec = codecRegistry.get(klass.java)
+		val document = BsonDocument()
+		codec.encode(
+			BsonDocumentWriter(document),
+			obj,
+			EncoderContext.builder().isEncodingCollectibleDocument(true).build(),
+		)
 
 		return Bson(document, this)
 	}

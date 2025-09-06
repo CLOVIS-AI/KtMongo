@@ -18,6 +18,8 @@ package opensavvy.ktmongo.bson.multiplatform
 
 import kotlinx.io.Buffer
 import kotlinx.io.readTo
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
@@ -25,10 +27,13 @@ import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonFieldWrite
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformArrayFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformDocumentFieldWriter
+import opensavvy.ktmongo.bson.multiplatform.serialization.encodeToBson
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -80,6 +85,11 @@ class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
 		buildArbitraryTopLevel {
 			block(this)
 		}.let(::Bson)
+
+	@OptIn(ExperimentalSerializationApi::class)
+	@LowLevelApi
+	override fun <T : Any> buildDocument(obj: T, type: KType, klass: KClass<T>): Bson =
+		encodeToBson(this, obj, serializer(type))
 
 	@LowLevelApi
 	@DangerousMongoApi
