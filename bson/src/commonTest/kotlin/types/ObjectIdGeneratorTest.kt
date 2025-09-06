@@ -18,11 +18,11 @@
 
 package opensavvy.ktmongo.bson.types
 
-import io.kotest.assertions.throwables.shouldThrow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.COUNTER_BOUND
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.PROCESS_ID_BOUND
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.prepared.suite.assertions.checkThrows
 import opensavvy.prepared.suite.clock
 import opensavvy.prepared.suite.random.random
 import opensavvy.prepared.suite.time
@@ -44,7 +44,7 @@ val ObjectIdGeneratorTest by preparedSuite {
 			check(generator.newId() == ObjectId("68440cac8fd4c1c0ed08ebe2"))
 			check(generator.newId() == ObjectId("68440caf38bc1eeca63ee5a0"))
 
-			shouldThrow<NoSuchElementException> { generator.newId() }
+			checkThrows<NoSuchElementException> { generator.newId() }
 		}
 
 	}

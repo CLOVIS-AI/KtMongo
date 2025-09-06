@@ -72,7 +72,6 @@ kotlin {
 		api(projects.bson)
 		api(libsCommon.opensavvy.prepared)
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
-		implementation(libsCommon.kotest.assertions)
 	}
 }
 

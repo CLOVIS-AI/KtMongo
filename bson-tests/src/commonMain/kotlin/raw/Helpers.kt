@@ -18,8 +18,6 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import io.kotest.assertions.withClue
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.Bson
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonDocumentReader
@@ -31,9 +29,11 @@ import opensavvy.prepared.suite.SuiteDsl
 
 @OptIn(ExperimentalStdlibApi::class, LowLevelApi::class)
 infix fun Bson.shouldBeHex(expected: String) {
-	withClue({ "Encoding BSON object: $this" }) {
-		this.toByteArray().toHexString(HexFormat.UpperCase) shouldBe expected
-	}
+	check(this.toByteArray().toHexString(HexFormat.UpperCase) == expected)
+}
+
+infix fun Bson.shouldBeJson(expected: String) {
+	check(toString() == expected)
 }
 
 interface BsonDeclaration {
@@ -102,7 +102,7 @@ fun SuiteDsl.testBson(
 			test("Write to JSON: $json") {
 				context().buildDocument {
 					writer(this)
-				}.toString() shouldBe json
+				} shouldBeJson json
 			}
 		}
 
@@ -119,7 +119,7 @@ fun SuiteDsl.testBson(
 	for (hex in hexReprs) {
 		for (json in jsonReprs) {
 			test("Read $hex outputs the JSON $json") {
-				context().readDocument(hex.hexToByteArray(HexFormat.UpperCase)).toString() shouldBe json
+				context().readDocument(hex.hexToByteArray(HexFormat.UpperCase)) shouldBeJson json
 			}
 		}
 
