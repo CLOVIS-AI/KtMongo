@@ -18,10 +18,12 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -33,10 +35,14 @@ import opensavvy.prepared.suite.SuiteDsl
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/int32.json.
  */
 fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
+	@Serializable
+	data class I(val i: Int)
+
 	testBson(
 		context,
 		"Min value",
 		document { writeInt32("i", Int.MIN_VALUE) },
+		serialize(I(Int.MIN_VALUE)),
 		hex("0C0000001069000000008000"),
 		json("""{"i": -2147483648}"""),
 		verify("Read value") {
@@ -48,6 +54,7 @@ fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 		context,
 		"Max value",
 		document { writeInt32("i", Int.MAX_VALUE) },
+		serialize(I(Int.MAX_VALUE)),
 		hex("0C000000106900FFFFFF7F00"),
 		json("""{"i": 2147483647}"""),
 		verify("Read value") {
@@ -59,6 +66,7 @@ fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 		context,
 		"-1",
 		document { writeInt32("i", -1) },
+		serialize(I(-1)),
 		hex("0C000000106900FFFFFFFF00"),
 		json("""{"i": -1}"""),
 		verify("Read value") {
@@ -70,6 +78,7 @@ fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 		context,
 		"0",
 		document { writeInt32("i", 0) },
+		serialize(I(0)),
 		hex("0C0000001069000000000000"),
 		json("""{"i": 0}"""),
 		verify("Read value") {
@@ -81,6 +90,7 @@ fun SuiteDsl.int32(context: Prepared<BsonContext>) = suite("Int32") {
 		context,
 		"+1",
 		document { writeInt32("i", 1) },
+		serialize(I(1)),
 		hex("0C0000001069000100000000"),
 		json("""{"i": 1}"""),
 		verify("Read value") {
