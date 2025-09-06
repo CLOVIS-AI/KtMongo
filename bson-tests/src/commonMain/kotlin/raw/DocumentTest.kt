@@ -18,10 +18,12 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -33,6 +35,12 @@ import opensavvy.prepared.suite.SuiteDsl
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/document.json.
  */
 fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
+	@Serializable
+	data class A(val a: String)
+
+	@Serializable
+	data class X(val x: A)
+
 	testBson(
 		context,
 		"Empty subdocument",
@@ -60,6 +68,7 @@ fun SuiteDsl.document(context: Prepared<BsonContext>) = suite("Document") {
 		"Document with a single-character key",
 		document { writeDocument("x") { writeString("a", "b") } },
 		hex("160000000378000E0000000261000200000062000000"),
+		serialize(X(A("b"))),
 		json("""{"x": {"a": "b"}}"""),
 		verify("Read value") {
 			check(read("x")?.readDocument()?.read("a")?.readString() == "b")
