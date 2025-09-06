@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class, ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
@@ -62,9 +62,11 @@ kotlin {
 	tvosArm64()
 	tvosSimulatorArm64()
 	mingwX64()
-	@OptIn(ExperimentalWasmDsl::class)
 	wasmJs {
 		browser()
+		nodejs()
+	}
+	wasmWasi {
 		nodejs()
 	}
 
