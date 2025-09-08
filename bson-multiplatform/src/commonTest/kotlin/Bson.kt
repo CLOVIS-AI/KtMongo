@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.bson.multiplatform
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.raw.*
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -60,6 +59,6 @@ val MultiplatformBsonWriterTest by preparedSuite {
 			write("root") {
 				pipe(pipe.reader().asValue())
 			}
-		}.toString() shouldBe """{"root": {"four": 4, "foo": "bar", "grades": [4, 7]}}"""
+		} shouldBeJson """{"root": {"four": 4, "foo": "bar", "grades": [4, 7]}}"""
 	}
 }

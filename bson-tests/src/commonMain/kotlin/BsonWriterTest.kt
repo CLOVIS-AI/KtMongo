@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.bson
 
-import io.kotest.matchers.shouldBe
 import opensavvy.ktmongo.bson.raw.*
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -114,6 +113,6 @@ fun SuiteDsl.writerTests(
 			write("root") {
 				pipe(pipe.reader().asValue())
 			}
-		}.toString() shouldBe """{"root": {"four": 4, "foo": "bar", "grades": [4, 7]}}"""
+		} shouldBeJson """{"root": {"four": 4, "foo": "bar", "grades": [4, 7]}}"""
 	}
 }
