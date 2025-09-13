@@ -42,7 +42,7 @@ val GroupTest by preparedSuite {
 				Results::total sum of(Score::score)
 			}
 			.also {
-				@Suppress("UnusedVariable", "unused")
+				@Suppress("unused")
 				val foo: Pipeline<Results> = it // Won't compile if 'group' stops changing the type automatically to Results
 			}
 			.shouldBeBson($$"""
@@ -52,6 +52,29 @@ val GroupTest by preparedSuite {
 							"_id": null,
 							"total": {
 								"$sum": "$score"
+							}
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
+	test($$"Simple $group with $avg") {
+		TestPipeline<Score>()
+			.group {
+				Results::total average of(Score::score)
+			}
+			.also {
+				@Suppress("unused")
+				val foo: Pipeline<Results> = it // Won't compile if 'group' stops changing the type automatically to Results
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$group": {
+							"_id": null,
+							"total": {
+								"$avg": "$score"
 							}
 						}
 					}

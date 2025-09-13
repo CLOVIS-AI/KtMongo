@@ -104,6 +104,78 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	}
 
 	// endregion
+	// region $sum
+
+	/**
+	 * Calculates and returns the collective average of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * If all elements are non-numeric, `null` is returned.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance average of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: Value<From, Number>) {
+		accept(ArithmeticValueAccumulator("\$avg", value, this.path, context))
+	}
+
+	/**
+	 * Calculates and returns the collective average of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * If all elements are non-numeric, `null` is returned.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance average of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, T>.average(value: Value<From, Number>) {
+		this.field.average(value)
+	}
+
+	// endregion
 
 	@LowLevelApi
 	private class ArithmeticValueAccumulator(
