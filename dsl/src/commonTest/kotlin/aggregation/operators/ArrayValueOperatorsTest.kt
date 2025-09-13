@@ -34,7 +34,8 @@ val ArrayValueOperatorsTest by preparedSuite {
 	class Target(
 		val numbers: List<Int>,
 		val users: List<User>,
-		val results: List<Any>
+		val results: List<Any>,
+		val result: Double,
 	)
 
 	suite($$"$filter") {
@@ -252,6 +253,82 @@ val ArrayValueOperatorsTest by preparedSuite {
 											}
 										}
 									}
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
+
+	suite($$"$avg") {
+		test("Usage with a list of integers") {
+			TestPipeline<Target>()
+				.set {
+					Target::result set Target::numbers.average()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"result": {
+									"$avg": "$numbers"
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Usage with a Kotlin list") {
+			TestPipeline<Target>()
+				.set {
+					Target::result set listOf(of(2), of(3.54), of(Target::result)).average()
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"result": {
+									"$avg": [
+										{
+											"$literal": 2
+										},
+										{
+											"$literal": 3.54
+										},
+										"$result"
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Usage with a vararg") {
+			TestPipeline<Target>()
+				.set {
+					Target::result set average(
+						of(2),
+						of(3.54),
+						of(Target::result)
+					)
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"result": {
+									"$avg": [
+										{
+											"$literal": 2
+										},
+										{
+											"$literal": 3.54
+										},
+										"$result"
+									]
 								}
 							}
 						}
