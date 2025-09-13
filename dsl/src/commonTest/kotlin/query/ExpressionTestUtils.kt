@@ -29,7 +29,7 @@ infix fun String.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
 		.replace(",", ", ")
 		.replace("  ", " ")
 
-	check(this == expected)
+	check(this == expected) { "Expected: $expected\nActual:   $this" }
 }
 
 infix fun BsonNode.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
