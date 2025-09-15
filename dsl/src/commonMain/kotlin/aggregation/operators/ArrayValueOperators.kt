@@ -39,6 +39,201 @@ import kotlin.reflect.KProperty1
  */
 interface ArrayValueOperators : ValueOperators {
 
+	// region $avg
+
+	/**
+	 * Returns the average of the elements in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val averageScore: Double,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::averageScore set Player::scores.average()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T : Number> Value<Context, Collection<Number?>>.average(): Value<Context, T> =
+		AverageArrayValueOperator(
+			input = this,
+			context = context,
+		)
+
+	/**
+	 * Returns the average of the elements in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val averageScore: Double,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::averageScore set Player::scores.average()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T : Number> Field<Context, Collection<Number?>>.average(): Value<Context, T> =
+		AverageArrayValueOperator(
+			input = of(this),
+			context = context,
+		)
+
+	/**
+	 * Returns the average of the elements in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val averageScore: Double,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::averageScore set Player::scores.average()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T : Number> KProperty1<Context, Collection<Number?>>.average(): Value<Context, T> =
+		AverageArrayValueOperator(
+			input = of(this),
+			context = context,
+		)
+
+	@LowLevelApi
+	private class AverageArrayValueOperator<Context : Any, T>(
+		private val input: Value<Context, Collection<*>>,
+		context: BsonContext,
+	) : AbstractValue<Context, T>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				write("\$avg") {
+					input.writeTo(this)
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns the average of the elements in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val averageScore: Double,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::averageScore set Player::scores.average()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T : Number> Iterable<Value<Context, Number?>>.average(): Value<Context, T> =
+		AverageOfValueOperator(
+			input = this.toList(),
+			context = context,
+		)
+
+	/**
+	 * Returns the average of the elements in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val averageScore: Double,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::averageScore set Player::scores.average()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T : Number> average(vararg input: Value<Context, Number?>): Value<Context, T> =
+		AverageOfValueOperator(
+			input = input.asList(),
+			context = context,
+		)
+
+	@Deprecated("Computing the average of 0 elements makes no sense, you should specify the elements to average as the receiver or as arguments.", level = DeprecationLevel.ERROR)
+	@KtMongoDsl
+	fun <Context : Any, T : Number> average(): Value<Context, T> =
+		error("Computing the average of 0 elements makes no sense, did you forget to specify arguments?")
+
+	@LowLevelApi
+	private class AverageOfValueOperator<Context : Any, T>(
+		private val input: List<Value<Context, *>>,
+		context: BsonContext,
+	) : AbstractValue<Context, T>(context) {
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$avg") {
+					for (document in input) {
+						document.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $filter
 
 	/**

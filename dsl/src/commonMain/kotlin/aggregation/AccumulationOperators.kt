@@ -30,6 +30,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
  * ### Operators
  *
  * Arithmetic operators:
+ * - [`$avg`][ArithmeticValueAccumulators.average]
  * - [`$sum`][ArithmeticValueAccumulators.sum]
  *
  * @see Value Representation of an aggregation value.
