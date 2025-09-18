@@ -18,6 +18,7 @@ package opensavvy.ktmongo.sync.studies
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.coroutines.MongoAggregationPipeline
+import opensavvy.ktmongo.coroutines.toList
 import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.test.testCollection

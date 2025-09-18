@@ -318,9 +318,11 @@ class JvmMongoCollection<Document : Any> internal constructor(
 			collection = inner.namespace.collectionName,
 			context = context,
 			chain = PipelineChainLink(context),
-			iterableBuilder = { pipeline ->
+			iterableBuilder = { pipeline, documentType ->
+				@Suppress("UNCHECKED_CAST")
 				val flow = inner.aggregate(
-					pipeline.chain.toBsonList().map { it.toJava() }
+					pipeline = pipeline.chain.toBsonList().map { it.toJava() },
+					resultClass = documentType,
 				)
 
 				object : MongoIterable<Document> {
