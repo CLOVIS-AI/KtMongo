@@ -36,7 +36,7 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	private val collection: String,
 	context: BsonContext,
 	chain: PipelineChainLink,
-	private val iterableBuilder: (MongoAggregationPipeline<*>) -> MongoIterable<*>,
+	private val iterableBuilder: (MongoAggregationPipeline<*>, Class<Output>) -> MongoIterable<*>,
 ) : AbstractPipeline<Output>(context, chain), AggregationPipeline<Output>, LazyMongoIterable<Output> {
 
 	// region Pipeline methods
@@ -56,8 +56,8 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	// region Lazy iterable
 
 	@Suppress("UNCHECKED_CAST")
-	override fun asIterable(): MongoIterable<Output> =
-		iterableBuilder(this) as MongoIterable<Output>
+	override fun asIterable(documentType: Class<Output>): MongoIterable<Output> =
+		iterableBuilder(this, documentType) as MongoIterable<Output>
 
 	// endregion
 	// region Stages
