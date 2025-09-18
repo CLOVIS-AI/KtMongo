@@ -22,6 +22,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractPipeline
+import opensavvy.ktmongo.dsl.aggregation.AccumulationOperators
 import opensavvy.ktmongo.dsl.aggregation.AggregationPipeline
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWithCompatibility
@@ -36,7 +37,7 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	private val collection: String,
 	context: BsonContext,
 	chain: PipelineChainLink,
-	private val iterableBuilder: (MongoAggregationPipeline<*>) -> MongoIterable<*>,
+	private val iterableBuilder: (MongoAggregationPipeline<*>, documentType: Class<Output>) -> MongoIterable<*>,
 ) : AbstractPipeline<Output>(context, chain), AggregationPipeline<Output>, LazyMongoIterable<Output> {
 
 	// region Pipeline methods
@@ -56,8 +57,8 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	// region Lazy iterable
 
 	@Suppress("UNCHECKED_CAST")
-	override fun asIterable(): MongoIterable<Output> =
-		iterableBuilder(this) as MongoIterable<Output>
+	override fun asIterable(documentType: Class<Output>): MongoIterable<Output> =
+		iterableBuilder(this, documentType) as MongoIterable<Output>
 
 	// endregion
 	// region Stages
@@ -105,6 +106,10 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Output>): MongoAggregationPipeline<Output> =
 		super.unionWith(other) as MongoAggregationPipeline<Output>
+
+	@KtMongoDsl
+	override fun <Out : Any> group(block: AccumulationOperators<Output, Out>.() -> Unit): MongoAggregationPipeline<Out> =
+		super.group(block) as MongoAggregationPipeline<Out>
 
 	// endregion
 	// region $unionWith support

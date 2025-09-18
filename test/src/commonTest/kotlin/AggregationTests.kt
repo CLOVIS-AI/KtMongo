@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
+@file:OptIn(DangerousMongoApi::class, LowLevelApi::class)
+
 package opensavvy.ktmongo.sync
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.coroutines.filter
+import opensavvy.ktmongo.coroutines.first
+import opensavvy.ktmongo.coroutines.toList
+import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.kotest.PreparedSpec
 

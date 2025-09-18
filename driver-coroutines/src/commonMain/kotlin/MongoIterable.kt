@@ -92,15 +92,27 @@ interface MongoIterable<Document : Any> {
 	// endregion
 }
 
-internal interface LazyMongoIterable<Document : Any> : MongoIterable<Document> {
-	fun asIterable(): MongoIterable<Document>
-
-	override suspend fun firstOrNull(): Document? =
-		asIterable().firstOrNull()
-
-	override suspend fun forEach(action: suspend (Document) -> Unit) =
-		asIterable().forEach(action)
-
-	override fun asFlow(): Flow<Document> =
-		asIterable().asFlow()
+interface LazyMongoIterable<Document : Any> {
+	fun asIterable(documentType: Class<Document>): MongoIterable<Document>
 }
+
+inline fun <reified Document : Any> LazyMongoIterable<Document>.asIterable(): MongoIterable<Document> =
+	asIterable(Document::class.java)
+
+suspend inline fun <reified Document : Any> LazyMongoIterable<Document>.first(): Document =
+	asIterable().first()
+
+suspend inline fun <reified Document : Any> LazyMongoIterable<Document>.firstOrNull(): Document? =
+	asIterable().firstOrNull()
+
+suspend inline fun <reified Document : Any> LazyMongoIterable<Document>.forEach(noinline action: suspend (Document) -> Unit): Unit =
+	asIterable().forEach(action)
+
+inline fun <reified Document : Any> LazyMongoIterable<Document>.asFlow(): Flow<Document> =
+	asIterable().asFlow()
+
+suspend inline fun <reified Document : Any> LazyMongoIterable<Document>.toList(): List<Document> =
+	asIterable().toList()
+
+suspend inline fun <reified Document : Any> LazyMongoIterable<Document>.toSet(): Set<Document> =
+	asIterable().toSet()
