@@ -92,6 +92,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - toc:
       permalink: true
 
@@ -112,6 +114,9 @@ nav:
           - tutorials/from-kmongo/find.md
           - tutorials/from-kmongo/nested-fields.md
           - tutorials/from-kmongo/update.md
+
+      - Kotlin Multiplatform:
+          - tutorials/multiplatform/index.md
 
   - Features:
       - features/crud.md

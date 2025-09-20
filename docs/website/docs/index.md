@@ -134,7 +134,7 @@ Our high-level goals are as follows:
 
 **Convenience for the real world.** MongoDB is used in massive codebases in the industry. We want to facilitate real-world usage patterns, taking advantage of the power of Kotlin. [`*notNull` operator variants](features/optional-filters.md) and [filtered collections](features/filtered-collections.md) are examples of such utilities.
 
-**Keeping the door open for multiplatform.** While we are not actively developing KtMongo on other platforms than the JVM, all modules are already configured to ensure the addition of other platforms in the future is possible. In particular, we're thinking of NodeJS (for scripting) and WASM (for future backends). If you'd like to contribute in this direction, feel free to get in touch!
+**Getting ready for Wasm.** In the future, we want to use MongoDB beyond the JVM, in particular for lightweight Wasm-based environments. [Get more information here](tutorials/multiplatform/index.md).
 
 ## Where do I start?
 
