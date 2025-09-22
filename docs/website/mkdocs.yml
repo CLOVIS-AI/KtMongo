@@ -129,6 +129,9 @@ nav:
           - features/arrays.md
           - features/maps.md
 
+      - Aggregations:
+          - features/aggregations.md
+
 # !!! EMBEDDED DOKKA START, DO NOT COMMIT !!! #
 # !!! EMBEDDED DOKKA END, DO NOT COMMIT !!! #
 
