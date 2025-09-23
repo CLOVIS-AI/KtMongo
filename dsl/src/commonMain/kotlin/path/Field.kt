@@ -163,7 +163,7 @@ interface Field<in Root, out Type> {
 	 * @see Field.Companion.unsafe Similar, but for accessing a field of the root document.
 	 */
 	@OptIn(LowLevelApi::class)
-	fun <Child> unsafe(child: String): Field<Root, Child> =
+	infix fun <Child> unsafe(child: String): Field<Root, Child> =
 		FieldImpl(path / PathSegment.Field(child))
 
 	companion object {
@@ -297,7 +297,7 @@ interface FieldDsl {
 	 * @see Field.Companion.unsafe Similar, but for accessing a field of the root document.
 	 */
 	@OptIn(LowLevelApi::class)
-	fun <Root, Child> KProperty1<Root, *>.unsafe(child: String): Field<Root, Child> =
+	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: String): Field<Root, Child> =
 		this.field.unsafe(child)
 
 	/**
@@ -309,13 +309,13 @@ interface FieldDsl {
 	 *
 	 * ```kotlin
 	 * println(User::profile / Pet::name)       // ⚠ compilation error: 'profile' doesn't have the type 'Pet'
-	 * println(User::profile.unsafe(Pet::name)) // 'profile.name'
+	 * println(User::profile unsafe Pet::name)  // 'profile.name'
 	 * ```
 	 *
 	 * @see div The recommended type-safe accessor.
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	fun <Root, Child> Field<Root, *>.unsafe(child: Field<*, Child>): Field<Root, Child> =
+	infix fun <Root, Child> Field<Root, *>.unsafe(child: Field<*, Child>): Field<Root, Child> =
 		FieldImpl(this.path / child.path)
 
 	/**
@@ -327,13 +327,13 @@ interface FieldDsl {
 	 *
 	 * ```kotlin
 	 * println(User::profile / Pet::name)       // ⚠ compilation error: 'profile' doesn't have the type 'Pet'
-	 * println(User::profile.unsafe(Pet::name)) // 'profile.name'
+	 * println(User::profile unsafe Pet::name)  // 'profile.name'
 	 * ```
 	 *
 	 * @see div The recommended type-safe accessor.
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	fun <Root, Child> Field<Root, *>.unsafe(child: KProperty1<*, Child>): Field<Root, Child> =
+	infix fun <Root, Child> Field<Root, *>.unsafe(child: KProperty1<*, Child>): Field<Root, Child> =
 		this.unsafe(child.field)
 
 	/**
@@ -345,13 +345,13 @@ interface FieldDsl {
 	 *
 	 * ```kotlin
 	 * println(User::profile / Pet::name)       // ⚠ compilation error: 'profile' doesn't have the type 'Pet'
-	 * println(User::profile.unsafe(Pet::name)) // 'profile.name'
+	 * println(User::profile unsafe Pet::name)  // 'profile.name'
 	 * ```
 	 *
 	 * @see div The recommended type-safe accessor.
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	fun <Root, Child> KProperty1<Root, *>.unsafe(child: Field<*, Child>): Field<Root, Child> =
+	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: Field<*, Child>): Field<Root, Child> =
 		this.field.unsafe(child)
 
 	/**
@@ -363,13 +363,13 @@ interface FieldDsl {
 	 *
 	 * ```kotlin
 	 * println(User::profile / Pet::name)       // ⚠ compilation error: 'profile' doesn't have the type 'Pet'
-	 * println(User::profile.unsafe(Pet::name)) // 'profile.name'
+	 * println(User::profile unsafe Pet::name)  // 'profile.name'
 	 * ```
 	 *
 	 * @see div The recommended type-safe accessor.
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	fun <Root, Child> KProperty1<Root, *>.unsafe(child: KProperty1<*, Child>): Field<Root, Child> =
+	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: KProperty1<*, Child>): Field<Root, Child> =
 		this.field.unsafe(child)
 
 	/**
