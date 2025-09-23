@@ -87,6 +87,7 @@ include(
 	"driver-shared-official",
 	"driver-sync",
 	"driver-sync-java",
+	"driver-sync-kmongo",
 	"driver-coroutines",
 
 	"test",

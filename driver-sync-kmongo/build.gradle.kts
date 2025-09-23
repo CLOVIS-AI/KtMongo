@@ -16,20 +16,30 @@
 
 plugins {
 	alias(opensavvyConventions.plugins.base)
-	id("dev.opensavvy.dokka-mkdocs")
+	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(libsCommon.plugins.testBalloon)
 }
 
-dependencies {
-	// List the 'library' projects
-	dokka(projects.annotations)
-	dokka(projects.bson)
-	dokka(projects.bsonOfficial)
-	dokka(projects.bsonMultiplatform)
-	dokka(projects.bsonTests)
-	dokka(projects.dsl)
-	dokka(projects.driverSharedOfficial)
-	dokka(projects.driverSync)
-	dokka(projects.driverSyncJava)
-	dokka(projects.driverSyncKmongo)
-	dokka(projects.driverCoroutines)
+kotlin {
+	jvm()
+
+	sourceSets.commonMain.dependencies {
+		api(projects.driverSync)
+		api(libs.kmongo.sync)
+	}
+
+	sourceSets.commonTest.dependencies {
+		implementation(libsCommon.opensavvy.prepared.testBalloon)
+	}
+}
+
+library {
+	name.set("MongoDB driver for Kotlin (synchronous, compatibility for KMongo)")
+	description.set("Kotlin-first MongoDB driver")
+	homeUrl.set("https://ktmongo.opensavvy.dev/tutorials/from-kmongo/index.html")
+
+	license.set {
+		name.set("Apache 2.0")
+		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+	}
 }

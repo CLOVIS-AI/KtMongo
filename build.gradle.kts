@@ -50,6 +50,7 @@ dependencies {
 	library(projects.driverSharedOfficial)
 	library(projects.driverSync)
 	library(projects.driverSyncJava)
+	library(projects.driverSyncKmongo)
 	library(projects.driverCoroutines)
 }
 
