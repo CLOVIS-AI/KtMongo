@@ -280,6 +280,27 @@ interface FieldDsl {
 		get() = FieldImpl<Root, Type>(Path(this.name))
 
 	/**
+	 * Refers to a field [child] of the current field, with no compile-time safety.
+	 *
+	 * Sometimes, we must refer to a field that we don't want to add in the DTO representation.
+	 * For example, when writing complex aggregation queries that use intermediary fields that are removed
+	 * before the data is sent to the server.
+	 *
+	 * We recommend preferring the type-safe syntax when possible (see [Field]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * println(User::profile.unsafe<Int>("age")) // 'profile.age'
+	 * ```
+	 *
+	 * @see Field.Companion.unsafe Similar, but for accessing a field of the root document.
+	 */
+	@OptIn(LowLevelApi::class)
+	fun <Root, Child> KProperty1<Root, *>.unsafe(child: String): Field<Root, Child> =
+		this.field.unsafe(child)
+
+	/**
 	 * Refers to [child] as a nested field of the current field.
 	 *
 	 * ### Examples
