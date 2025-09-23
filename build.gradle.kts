@@ -52,6 +52,7 @@ dependencies {
 	library(projects.driverSyncJava)
 	library(projects.driverSyncKmongo)
 	library(projects.driverCoroutines)
+	library(projects.driverCoroutinesKmongo)
 }
 
 // region Check the users of the project didn't forget to rename the group

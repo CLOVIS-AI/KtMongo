@@ -27,6 +27,7 @@ mongodb-sync-jvm = { module = "org.mongodb:mongodb-driver-kotlin-sync", version.
 mongodb-kotlinx-serialization = { module = "org.mongodb:bson-kotlinx", version.ref = "mongodb-serialization" }
 
 kmongo-sync = { module = "org.litote.kmongo:kmongo", version.ref = "kmongo" }
+kmongo-coroutines = { module = "org.litote.kmongo:kmongo-coroutine", version.ref = "kmongo" }
 
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }

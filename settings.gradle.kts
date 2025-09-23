@@ -89,6 +89,7 @@ include(
 	"driver-sync-java",
 	"driver-sync-kmongo",
 	"driver-coroutines",
+	"driver-coroutines-kmongo",
 
 	"test",
 
