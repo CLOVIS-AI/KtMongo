@@ -1219,4 +1219,110 @@ val StringValueOperatorsTest by preparedSuite {
 				""".trimIndent())
 		}
 	}
+
+	suite($$"$concat") {
+		test("Concatenate two strings") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set (of(Target::text) concat of(Target::description))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$concat": [
+										"$text",
+										"$description"
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Concatenate multiple strings") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set concat(of(Target::text), of(" - "), of(Target::description), of("!"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$concat": [
+										"$text",
+										{
+											"$literal": " - "
+										},
+										"$description",
+										{
+											"$literal": "!"
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Concatenate with literal strings") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set concat(of("Hello"), of(" "), of("World"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$concat": [
+										{
+											"$literal": "Hello"
+										},
+										{
+											"$literal": " "
+										},
+										{
+											"$literal": "World"
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+
+		test("Combine nested concatenations") {
+			TestPipeline<Target>()
+				.set {
+					Target::text set (of("Hello") concat of(" ") concat of("World"))
+				}
+				.shouldBeBson($$"""
+					[
+						{
+							"$set": {
+								"text": {
+									"$concat": [
+										{
+											"$literal": "Hello"
+										},
+										{
+											"$literal": " "
+										},
+										{
+											"$literal": "World"
+										}
+									]
+								}
+							}
+						}
+					]
+				""".trimIndent())
+		}
+	}
 }

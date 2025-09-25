@@ -996,4 +996,131 @@ interface StringValueOperators : ValueOperators {
 			}
 		}
 	}
+
+	// region $concat
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> concat(strings: List<Value<Context, String?>>): Value<Context, String?> =
+		ConcatValueOperator(context, strings)
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> concat(vararg strings: Value<Context, String?>): Value<Context, String?> =
+		concat(strings.asList())
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> Value<Context, String?>.concat(other: Value<Context, String?>): Value<Context, String?> =
+		concat(listOf(this, other))
+
+	@LowLevelApi
+	private class ConcatValueOperator<Context : Any>(
+		context: BsonContext,
+		private val strings: List<Value<Context, String?>>,
+	) : AbstractValue<Context, String?>(context) {
+
+		override fun simplify(): AbstractValue<Context, String?> {
+			val flattenedOperands = ArrayList<Value<Context, String?>>()
+
+			for (operand in strings) {
+				if (operand is ConcatValueOperator) {
+					flattenedOperands += operand.strings
+				} else {
+					flattenedOperands += operand
+				}
+			}
+
+			return if (flattenedOperands != strings) {
+				ConcatValueOperator(context, flattenedOperands)
+			} else {
+				this
+			}
+		}
+
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				writeArray("\$concat") {
+					for (str in strings) {
+						str.writeTo(this)
+					}
+				}
+			}
+		}
+	}
 }
