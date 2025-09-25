@@ -82,9 +82,7 @@ val UpdateWithPipelineTest by preparedSuite {
 				set {
 					Target::age set 2
 				}
-				unset {
-					exclude(Target::name)
-				}
+				unset(Target::name)
 			}
 			options.apply {
 				writeConcern(WriteConcern.Majority)
