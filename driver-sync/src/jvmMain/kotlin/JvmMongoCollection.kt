@@ -16,14 +16,17 @@
 
 package opensavvy.ktmongo.sync
 
-import com.mongodb.client.model.DeleteOptions
-import com.mongodb.client.model.DropCollectionOptions
-import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.client.model.*
+import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.official.JvmBsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
+import opensavvy.ktmongo.dsl.command.BulkWriteOptions
+import opensavvy.ktmongo.dsl.command.CountOptions
+import opensavvy.ktmongo.dsl.command.InsertManyOptions
+import opensavvy.ktmongo.dsl.command.InsertOneOptions
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.options.WriteConcernOption
 import opensavvy.ktmongo.dsl.options.option
@@ -153,6 +156,34 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.update.update()
 
 		inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions().upsert(true))
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun replaceOne(
+		options: opensavvy.ktmongo.dsl.command.ReplaceOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		document: Document,
+	) {
+		val model = ReplaceOne(context, document)
+
+		model.options.options()
+		model.filter.filter()
+
+		inner.withWriteConcern(model.options).replaceOne(context.buildDocument(model.filter).raw, document, ReplaceOptions())
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun repsertOne(
+		options: opensavvy.ktmongo.dsl.command.ReplaceOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		document: Document,
+	) {
+		val model = RepsertOne(context, document)
+
+		model.options.options()
+		model.filter.filter()
+
+		inner.withWriteConcern(model.options).replaceOne(context.buildDocument(model.filter).raw, document, ReplaceOptions().upsert(true))
 	}
 
 	@OptIn(LowLevelApi::class)
