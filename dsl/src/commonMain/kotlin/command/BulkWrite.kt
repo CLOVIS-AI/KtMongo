@@ -378,6 +378,98 @@ class BulkWrite<Document : Any> private constructor(
 		accept(model)
 	}
 
+	/**
+	 * Replaces a document that matches [filter] by [document].
+	 *
+	 * If multiple documents match [filter], only the first one found is updated.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.bulkWrite {
+	 *     replaceOne(
+	 *         filter = { User::name eq "Patrick" },
+	 *         document = User("Bob", 15)
+	 *     )
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite/#replaceone)
+	 *
+	 * @see updateOne Update an existing document.
+	 * @see repsertOne Replace a document, or insert it if it doesn't exist.
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	fun replaceOne(
+		options: ReplaceOptions<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
+		document: Document,
+	) {
+		val model = ReplaceOne<Document>(context, document)
+
+		model.options.options()
+		model.filter.globalFilter()
+		model.filter.filter()
+
+		accept(model)
+	}
+
+	/**
+	 * Replaces a document that matches [filter] by [document].
+	 *
+	 * If multiple documents match [filter], only the first one found is updated.
+	 *
+	 * If no documents match [filter], [document] is inserted.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.bulkWrite {
+	 *     repsertOne(
+	 *         filter = { User::name eq "Patrick" },
+	 *         document = User("Bob", 15)
+	 *     )
+	 * }
+	 * ```
+	 *
+	 * If a document exists that has the `name` of "Patrick", it is replaced by the new document.
+	 * If none exist, the document is inserted.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.bulkWrite/#replaceone)
+	 * - [The behavior of upsert functions](https://www.mongodb.com/docs/manual/reference/method/db.collection.update/#insert-a-new-document-if-no-match-exists--upsert-)
+	 *
+	 * @see replaceOne Replace an existing document.
+	 * @see insertOne Always create a new document.
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	fun repsertOne(
+		options: ReplaceOptions<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
+		document: Document,
+	) {
+		val model = RepsertOne<Document>(context, document)
+
+		model.options.options()
+		model.filter.globalFilter()
+		model.filter.filter()
+
+		accept(model)
+	}
+
 	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeInt32("bulkWrite", 1)
 
