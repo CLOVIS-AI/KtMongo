@@ -403,6 +403,27 @@ class BulkWrite<Document : Any> private constructor(
 							operation.options.writeTo(this)
 						}
 
+						is ReplaceOne<*> -> {
+							writeInt32("update", 0)
+							writeDocument("filter") {
+								operation.filter.writeTo(this)
+							}
+							writeObjectSafe("updateMods", operation.document)
+							writeBoolean("multi", false)
+							operation.options.writeTo(this)
+						}
+
+						is RepsertOne<*> -> {
+							writeInt32("update", 0)
+							writeDocument("filter") {
+								operation.filter.writeTo(this)
+							}
+							writeObjectSafe("updateMods", operation.document)
+							writeBoolean("multi", false)
+							writeBoolean("upsert", true)
+							operation.options.writeTo(this)
+						}
+
 						is UpsertOne<*> -> {
 							writeInt32("update", 0)
 							writeDocument("filter") {
