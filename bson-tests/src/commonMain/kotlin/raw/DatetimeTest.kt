@@ -18,10 +18,12 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -35,12 +37,16 @@ import kotlin.time.Instant
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/datetime.json.
  */
 fun SuiteDsl.datetime(context: Prepared<BsonContext>) = suite("Datetime") {
+	@Serializable
+	data class A(val a: Instant)
+
 	testBson(
 		context,
 		"epoch",
 		document {
 			writeInstant("a", Instant.fromEpochSeconds(0))
 		},
+		serialize(A(Instant.fromEpochSeconds(0))),
 		hex("10000000096100000000000000000000"),
 		json($$"""{"a": {"$date": "1970-01-01T00:00:00Z"}}"""),
 		verify("Read value") {
@@ -54,6 +60,7 @@ fun SuiteDsl.datetime(context: Prepared<BsonContext>) = suite("Datetime") {
 		document {
 			writeInstant("a", Instant.parse("2012-12-24T12:15:30.501Z"))
 		},
+		serialize(A(Instant.parse("2012-12-24T12:15:30.501Z"))),
 		hex("10000000096100C5D8D6CC3B01000000"),
 		json($$"""{"a": {"$date": "2012-12-24T12:15:30.501Z"}}"""),
 		verify("Read value") {
@@ -67,6 +74,7 @@ fun SuiteDsl.datetime(context: Prepared<BsonContext>) = suite("Datetime") {
 		document {
 			writeInstant("a", Instant.fromEpochMilliseconds(-284643869501))
 		},
+		serialize(A(Instant.fromEpochMilliseconds(-284643869501))),
 		hex("10000000096100C33CE7B9BDFFFFFF00"),
 		json($$"""{"a": {"$date": {"$numberLong": "-284643869501"}}}"""),
 		verify("Read value") {
@@ -80,6 +88,7 @@ fun SuiteDsl.datetime(context: Prepared<BsonContext>) = suite("Datetime") {
 		document {
 			writeInstant("a", Instant.fromEpochMilliseconds(253402300800000))
 		},
+		serialize(A(Instant.fromEpochMilliseconds(253402300800000))),
 		hex("1000000009610000DC1FD277E6000000"),
 		json($$"""{"a": {"$date": {"$numberLong": "253402300800000"}}}"""),
 		verify("Read value") {
@@ -93,6 +102,7 @@ fun SuiteDsl.datetime(context: Prepared<BsonContext>) = suite("Datetime") {
 		document {
 			writeInstant("a", Instant.parse("2012-12-24T12:15:30.001Z"))
 		},
+		serialize(A(Instant.parse("2012-12-24T12:15:30.001Z"))),
 		hex("10000000096100D1D6D6CC3B01000000"),
 		json($$"""{"a": {"$date": "2012-12-24T12:15:30.001Z"}}"""),
 		verify("Read value") {

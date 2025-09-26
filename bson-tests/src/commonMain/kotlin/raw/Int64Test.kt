@@ -18,10 +18,12 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -33,10 +35,14 @@ import opensavvy.prepared.suite.SuiteDsl
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/int64.json.
  */
 fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
+	@Serializable
+	data class A(val a: Long)
+
 	testBson(
 		context,
 		"Min value",
 		document { writeInt64("a", Long.MIN_VALUE) },
+		serialize(A(Long.MIN_VALUE)),
 		hex("10000000126100000000000000008000"),
 		json("""{"a": -9223372036854775808}"""),
 		verify("Read value") {
@@ -48,6 +54,7 @@ fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
 		context,
 		"Max value",
 		document { writeInt64("a", Long.MAX_VALUE) },
+		serialize(A(Long.MAX_VALUE)),
 		hex("10000000126100FFFFFFFFFFFFFF7F00"),
 		json("""{"a": 9223372036854775807}"""),
 		verify("Read value") {
@@ -59,6 +66,7 @@ fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
 		context,
 		"-1",
 		document { writeInt64("a", -1) },
+		serialize(A(-1)),
 		hex("10000000126100FFFFFFFFFFFFFFFF00"),
 		json("""{"a": -1}"""),
 		verify("Read value") {
@@ -70,6 +78,7 @@ fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
 		context,
 		"0",
 		document { writeInt64("a", 0) },
+		serialize(A(0)),
 		hex("10000000126100000000000000000000"),
 		json("""{"a": 0}"""),
 		verify("Read value") {
@@ -81,6 +90,7 @@ fun SuiteDsl.int64(context: Prepared<BsonContext>) = suite("Int64") {
 		context,
 		"+1",
 		document { writeInt64("a", 1) },
+		serialize(A(1)),
 		hex("10000000126100010000000000000000"),
 		json("""{"a": 1}"""),
 		verify("Read value") {

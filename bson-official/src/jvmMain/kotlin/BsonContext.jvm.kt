@@ -19,9 +19,7 @@ package opensavvy.ktmongo.bson.official
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
-import opensavvy.ktmongo.bson.official.types.Jvm
-import opensavvy.ktmongo.bson.official.types.KotlinObjectIdCodec
-import opensavvy.ktmongo.bson.official.types.toOfficial
+import opensavvy.ktmongo.bson.official.types.*
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -35,6 +33,8 @@ import org.bson.codecs.configuration.CodecRegistry
 import org.bson.types.Decimal128
 import org.bson.types.ObjectId
 import java.nio.ByteBuffer
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.time.ExperimentalTime
 
 /**
@@ -51,7 +51,10 @@ class JvmBsonContext(
 		CodecRegistries.fromCodecs(
 			KotlinBsonCodec(this),
 			KotlinBsonArrayCodec(this),
-			KotlinObjectIdCodec()
+			KotlinObjectIdCodec(),
+			KotlinTimestampCodec(),
+			KotlinUuidCodec(),
+			KotlinInstantCodec(),
 		)
 	)
 
@@ -64,6 +67,19 @@ class JvmBsonContext(
 				block()
 			}
 		}
+
+		return Bson(document, this)
+	}
+
+	@LowLevelApi
+	override fun <T : Any> buildDocument(obj: T, type: KType, klass: KClass<T>): Bson {
+		val codec = codecRegistry.get(klass.java)
+		val document = BsonDocument()
+		codec.encode(
+			BsonDocumentWriter(document),
+			obj,
+			EncoderContext.builder().isEncodingCollectibleDocument(true).build(),
+		)
 
 		return Bson(document, this)
 	}

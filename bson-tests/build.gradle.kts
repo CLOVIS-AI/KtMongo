@@ -39,6 +39,7 @@ plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
 	alias(libsCommon.plugins.testBalloon)
+	alias(libsCommon.plugins.kotlinx.serialization)
 }
 
 kotlin {
@@ -74,6 +75,7 @@ kotlin {
 		api(projects.bson)
 		api(libsCommon.opensavvy.prepared)
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
+		implementation(libs.kotlinx.serialization)
 	}
 }
 

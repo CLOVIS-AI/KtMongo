@@ -16,8 +16,16 @@
 
 package opensavvy.ktmongo.bson.types
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.maxAt
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.minAt
+import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.experimental.and
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -30,6 +38,7 @@ import kotlin.time.Instant
  * To do so, see [opensavvy.ktmongo.bson.BsonContext.newId].
  */
 @ExperimentalTime
+@Serializable(with = ObjectId.Serializer::class)
 class ObjectId : Comparable<ObjectId> {
 
 	/**
@@ -259,6 +268,32 @@ class ObjectId : Comparable<ObjectId> {
 		 */
 		fun maxAt(timestamp: Instant): ObjectId =
 			ObjectId(timestamp, PROCESS_ID_BOUND - 1, COUNTER_BOUND - 1)
+	}
+
+	/**
+	 * Default serializer for [ObjectId].
+	 *
+	 * `:bson-multiplatform` and `:bson-official` both override this serializer.
+	 * This serializer exists so that `@Contextual` is not required.
+	 * It may also be used to convert the DTOs to other formats, like JSON.
+	 *
+	 * Using this serializer, [ObjectId] is represented as if it were a [String].
+	 *
+	 * Avoid interacting with this type directly.
+	 */
+	@ExperimentalTime
+	@LowLevelApi
+	class Serializer : KSerializer<ObjectId> {
+		override val descriptor: SerialDescriptor
+			get() = PrimitiveSerialDescriptor("opensavvy.ktmongo.bson.types.ObjectId", PrimitiveKind.STRING)
+
+		@LowLevelApi
+		override fun serialize(encoder: Encoder, value: ObjectId) {
+			encoder.encodeString(value.hex)
+		}
+
+		override fun deserialize(decoder: Decoder): ObjectId =
+			decoder.decodeString().let(::ObjectId)
 	}
 }
 

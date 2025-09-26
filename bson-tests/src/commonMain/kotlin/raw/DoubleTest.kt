@@ -18,10 +18,12 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -34,10 +36,14 @@ import kotlin.Double.Companion.NaN
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/double.json.
  */
 fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
+	@Serializable
+	data class D(val d: Double)
+
 	testBson(
 		context,
 		"+1.0",
 		document { writeDouble("d", 1.0) },
+		serialize(D(1.0)),
 		hex("10000000016400000000000000F03F00"),
 		json("""{"d": 1.0}"""),
 		verify("Read value") {
@@ -49,6 +55,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"-1.0",
 		document { writeDouble("d", -1.0) },
+		serialize(D(-1.0)),
 		hex("10000000016400000000000000F0BF00"),
 		json("""{"d": -1.0}"""),
 		verify("Read value") {
@@ -60,6 +67,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"+1.0001220703125",
 		document { writeDouble("d", +1.0001220703125) },
+		serialize(D(+1.0001220703125)),
 		hex("10000000016400000000008000F03F00"),
 		json("""{"d": 1.0001220703125}"""),
 		verify("Read value") {
@@ -71,6 +79,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"-1.0001220703125",
 		document { writeDouble("d", -1.0001220703125) },
+		serialize(D(-1.0001220703125)),
 		hex("10000000016400000000008000F0BF00"),
 		json("""{"d": -1.0001220703125}"""),
 		verify("Read value") {
@@ -82,6 +91,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"+1.2345678921232E+18",
 		document { writeDouble("d", 1.2345678921232E+18) },
+		serialize(D(1.2345678921232E+18)),
 		hex("100000000164002A1BF5F41022B14300"),
 		json("""{"d": 1.2345678921232E18}"""),
 		verify("Read value") {
@@ -93,6 +103,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"-1.2345678921232E+18",
 		document { writeDouble("d", -1.2345678921232E+18) },
+		serialize(D(-1.2345678921232E+18)),
 		hex("100000000164002A1BF5F41022B1C300"),
 		json("""{"d": -1.2345678921232E18}"""),
 		verify("Read value") {
@@ -104,6 +115,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"+0.0",
 		document { writeDouble("d", 0.0) },
+		serialize(D(0.0)),
 		hex("10000000016400000000000000000000"),
 		json("""{"d": 0.0}"""),
 		verify("Read value") {
@@ -115,6 +127,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"-0.0",
 		document { writeDouble("d", -0.0) },
+		serialize(D(-0.0)),
 		hex("10000000016400000000000000008000"),
 		json("""{"d": -0.0}"""),
 		verify("Read value") {
@@ -126,6 +139,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"NaN",
 		document { writeDouble("d", NaN) },
+		serialize(D(NaN)),
 		hex("10000000016400000000000000F87F00"),
 		json($$"""{"d": {"$numberDouble": "NaN"}}"""),
 		verify("Read value") {
@@ -137,6 +151,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"+Infinity",
 		document { writeDouble("d", Double.POSITIVE_INFINITY) },
+		serialize(D(Double.POSITIVE_INFINITY)),
 		hex("10000000016400000000000000F07F00"),
 		json($$"""{"d": {"$numberDouble": "Infinity"}}"""),
 		verify("Read value") {
@@ -148,6 +163,7 @@ fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
 		context,
 		"-Infinity",
 		document { writeDouble("d", Double.NEGATIVE_INFINITY) },
+		serialize(D(Double.NEGATIVE_INFINITY)),
 		hex("10000000016400000000000000F0FF00"),
 		json($$"""{"d": {"$numberDouble": "-Infinity"}}"""),
 		verify("Read value") {

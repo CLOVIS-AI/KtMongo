@@ -16,8 +16,16 @@
 
 package opensavvy.ktmongo.bson.types
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import opensavvy.ktmongo.bson.types.Timestamp.Companion.MAX_COUNTER
 import opensavvy.ktmongo.bson.types.Timestamp.Companion.MAX_INSTANT
+import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -26,6 +34,7 @@ import kotlin.time.Instant
  *
  * Use the [kotlin.time.Instant] type for operations involving dates.
  */
+@Serializable(with = Timestamp.Serializer::class)
 class Timestamp(
 	/**
 	 * The raw value for this [Timestamp].
@@ -105,5 +114,34 @@ class Timestamp(
 		 * The maximum possible counter for a given instant.
 		 */
 		val MAX_COUNTER get() = UInt.MAX_VALUE
+	}
+
+	/**
+	 * Default serializer for [Timestamp].
+	 *
+	 * `:bson-multiplatform` and `:bson-official` both override this serializer.
+	 * This serializer exists so that `@Contextual` is not required.
+	 * It may also be used to convert the DTOs to other formats, like JSON.
+	 *
+	 * Using this serializer, [Timestamp] is represented as a [String] with its [Timestamp.instant] and [Timestamp.counter] displayed.
+	 * For example, `2022-02-32T12:58:01#32`.
+	 *
+	 * Avoid interacting with this type directly.
+	 */
+	@OptIn(ExperimentalTime::class)
+	@LowLevelApi
+	class Serializer : KSerializer<Timestamp> {
+		override val descriptor: SerialDescriptor
+			get() = PrimitiveSerialDescriptor("opensavvy.ktmongo.bson.types.Timestamp", PrimitiveKind.STRING)
+
+		@LowLevelApi
+		override fun serialize(encoder: Encoder, value: Timestamp) {
+			encoder.encodeString("${value.instant}#${value.counter}")
+		}
+
+		override fun deserialize(decoder: Decoder): Timestamp {
+			val (instant, counter) = decoder.decodeString().split('#', limit = 2)
+			return Timestamp(instant = Instant.parse(instant), counter = counter.toUInt())
+		}
 	}
 }

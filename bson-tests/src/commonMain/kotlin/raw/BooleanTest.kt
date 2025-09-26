@@ -18,10 +18,12 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -33,12 +35,16 @@ import opensavvy.prepared.suite.SuiteDsl
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/boolean.json.
  */
 fun SuiteDsl.boolean(context: Prepared<BsonContext>) = suite("Boolean") {
+	@Serializable
+	data class B(val b: Boolean)
+
 	testBson(
 		context,
 		"True",
 		document {
 			writeBoolean("b", true)
 		},
+		serialize(B(true)),
 		hex("090000000862000100"),
 		json("""{"b": true}"""),
 		verify("Read value") {
@@ -52,6 +58,7 @@ fun SuiteDsl.boolean(context: Prepared<BsonContext>) = suite("Boolean") {
 		document {
 			writeBoolean("b", false)
 		},
+		serialize(B(false)),
 		hex("090000000862000000"),
 		json("""{"b": false}"""),
 		verify("Read value") {

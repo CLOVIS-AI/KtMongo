@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.multiplatform
+package opensavvy.ktmongo.bson.multiplatform.impl.write
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.BsonValueWriter
-import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonValueReader
 import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 @LowLevelApi
-internal class MultiplatformBsonSingleFieldWriter(
-	private val writer: MultiplatformBsonFieldWriter,
+internal class MultiplatformSingleFieldWriter(
+	private val writer: MultiplatformDocumentFieldWriter,
 	private val name: String,
-) : BsonValueWriter {
+) : BsonValueWriter, CompletableBsonValueWriter {
 
 	@LowLevelApi
 	override fun writeBoolean(value: Boolean) {
@@ -139,12 +140,24 @@ internal class MultiplatformBsonSingleFieldWriter(
 		writer.writeObjectSafe(name, obj)
 	}
 
+	override fun complete() {
+		error("${this::class} is not completable by itself. Ensure to wrap it in a completable wrapper using openDocument() or openArray() before using it.")
+	}
+
+	@DangerousMongoApi
+	override fun openDocument(): CompletableBsonFieldWriter =
+		writer.openDocument(name)
+
+	@DangerousMongoApi
+	override fun openArray(): CompletableBsonValueWriter =
+		writer.openArray(name)
+
 	@DangerousMongoApi
 	override fun pipe(obj: BsonValueReader) {
 		if (obj is MultiplatformBsonValueReader) {
 			writer.pipe(name, obj)
 		} else {
-			super.pipe(obj)
+			super<BsonValueWriter>.pipe(obj)
 		}
 	}
 }

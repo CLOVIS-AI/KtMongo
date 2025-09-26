@@ -26,7 +26,10 @@ import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonDocument
 import org.bson.BsonValue
+import org.bson.codecs.DecoderContext
 import java.nio.ByteBuffer
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.time.ExperimentalTime
 import org.bson.BsonArray as OfficialBsonArray
 import org.bson.BsonDocument as OfficialBsonDocument
@@ -48,6 +51,14 @@ internal class BsonDocumentReader(
 
 	override fun asValue(): BsonValueReader =
 		BsonValueReader(raw, context)
+
+	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
+		val codec = context.codecRegistry.get(klass.java)
+		return codec.decode(
+			raw.asBsonReader(),
+			DecoderContext.builder().build()
+		)
+	}
 
 	override fun toString(): String =
 		raw.toString()

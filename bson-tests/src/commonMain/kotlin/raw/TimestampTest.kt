@@ -18,10 +18,12 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -38,12 +40,16 @@ import kotlin.time.Instant
  */
 @OptIn(ExperimentalEncodingApi::class)
 fun SuiteDsl.timestamp(context: Prepared<BsonContext>) = suite("Timestamp") {
+	@Serializable
+	data class A(val a: Timestamp)
+
 	testBson(
 		context,
 		"Timestamp: (123456789, 42)",
 		document {
 			writeTimestamp("a", Timestamp(Instant.fromEpochSeconds(123456789), 42u))
 		},
+		serialize(A(Timestamp(Instant.fromEpochSeconds(123456789), 42u))),
 		hex("100000001161002A00000015CD5B0700"),
 		json($$"""{"a": {"$timestamp": {"t": 123456789, "i": 42}}}"""),
 		verify("Read the timestamp") {
@@ -60,6 +66,7 @@ fun SuiteDsl.timestamp(context: Prepared<BsonContext>) = suite("Timestamp") {
 		document {
 			writeTimestamp("a", Timestamp(Instant.fromEpochSeconds(4294967295), 4294967295u))
 		},
+		serialize(A(Timestamp(Instant.fromEpochSeconds(4294967295), 4294967295u))),
 		hex("10000000116100FFFFFFFFFFFFFFFF00"),
 		json($$"""{"a": {"$timestamp": {"t": 4294967295, "i": 4294967295}}}"""),
 		verify("Read the timestamp") {
@@ -76,6 +83,7 @@ fun SuiteDsl.timestamp(context: Prepared<BsonContext>) = suite("Timestamp") {
 		document {
 			writeTimestamp("a", Timestamp(Instant.fromEpochSeconds(4000000000), 4000000000u))
 		},
+		serialize(A(Timestamp(Instant.fromEpochSeconds(4000000000), 4000000000u))),
 		hex("1000000011610000286BEE00286BEE00"),
 		json($$"""{"a": {"$timestamp": {"t": 4000000000, "i": 4000000000}}}"""),
 		verify("Read the timestamp") {

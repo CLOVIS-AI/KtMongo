@@ -18,23 +18,28 @@
 
 package opensavvy.ktmongo.bson.raw
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlin.reflect.typeOf
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 /**
  * Test binary representations.
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/binary.json.
  */
-@OptIn(ExperimentalEncodingApi::class)
+@OptIn(ExperimentalEncodingApi::class, ExperimentalUuidApi::class)
 fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 	testBson(
 		context,
@@ -100,6 +105,9 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		}
 	)
 
+	@Serializable
+	data class U(val x: Uuid)
+
 	testBson(
 		context,
 		"subtype 0x03",
@@ -114,6 +122,9 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
 		},
+		verify("Can read as a Uuid") {
+			check(read(typeOf<U>(), U::class) == U(Uuid.parse("73ffd264-44b3-4c69-90e8-e7d1dfc035d4")))
+		}
 	)
 
 	testBson(
@@ -123,6 +134,7 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 			writeBinaryData("x", 0x4u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
 		},
 		hex("1D000000057800100000000473FFD26444B34C6990E8E7D1DFC035D400"),
+		serialize(U(Uuid.parse("73ffd264-44b3-4c69-90e8-e7d1dfc035d4"))),
 		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""),
 		verify("Read type") {
 			check(read("x")?.readBinaryDataType() == 4.toUByte())
@@ -138,6 +150,7 @@ fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
 		document {
 			writeBinaryData("x", 0x4u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
 		},
+		serialize(U(Uuid.parse("73ffd264-44b3-4c69-90e8-e7d1dfc035d4"))),
 		hex("1D000000057800100000000473FFD26444B34C6990E8E7D1DFC035D400"),
 		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""),
 		verify("Read type") {

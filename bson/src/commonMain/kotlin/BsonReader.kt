@@ -19,6 +19,8 @@ package opensavvy.ktmongo.bson
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -68,6 +70,17 @@ interface BsonDocumentReader {
 	 * Reads this entire document as a [BsonValueReader].
 	 */
 	fun asValue(): BsonValueReader
+
+	/**
+	 * Reads this document into an instance of [type] [T].
+	 *
+	 * If it isn't possible to deserialize this BSON to the given type, an exception is thrown.
+	 *
+	 * This function is a low-level implementation detail.
+	 * Prefer using the extension function of the same name, that takes no arguments.
+	 * If [type] and [klass] refer to different types, the behavior is unspecified.
+	 */
+	fun <T : Any> read(type: KType, klass: KClass<T>): T?
 
 	/**
 	 * JSON representation of the document this [BsonDocumentReader] is reading, as a [String].

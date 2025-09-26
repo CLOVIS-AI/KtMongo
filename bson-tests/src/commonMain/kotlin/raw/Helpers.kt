@@ -26,6 +26,9 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.PreparedDslMarker
 import opensavvy.prepared.suite.SuiteDsl
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 @OptIn(ExperimentalStdlibApi::class, LowLevelApi::class)
 infix fun Bson.shouldBeHex(expected: String) {
@@ -39,15 +42,27 @@ infix fun Bson.shouldBeJson(expected: String) {
 interface BsonDeclaration {
 
 	companion object {
+		@PreparedDslMarker
 		fun document(writer: BsonFieldWriter.() -> Unit): BsonDeclaration =
 			BsonBinaryDeclaration(writer)
 
+		@PreparedDslMarker
+		fun serialize(obj: Any, type: KType, klass: KClass<*>): BsonDeclaration =
+			BsonSerializeDeclaration(obj, type, klass)
+
+		@PreparedDslMarker
+		inline fun <reified T : Any> serialize(obj: T): BsonDeclaration =
+			serialize(obj, typeOf<T>(), T::class)
+
+		@PreparedDslMarker
 		fun hex(/* language=hexdump */ hex: String): BsonDeclaration =
 			BsonHexadecimalRepresentation(hex)
 
+		@PreparedDslMarker
 		fun json(/* language=mongodb-json */ json: String): BsonDeclaration =
 			BsonJsonRepresentation(json)
 
+		@PreparedDslMarker
 		fun verify(name: String, block: BsonDocumentReader.() -> Unit): BsonDeclaration =
 			BsonAssertion(name, block)
 	}
@@ -55,7 +70,28 @@ interface BsonDeclaration {
 
 private class BsonBinaryDeclaration(
 	val writer: BsonFieldWriter.() -> Unit,
-) : BsonDeclaration
+) : BsonDeclaration {
+
+	fun write(context: BsonContext): Bson =
+		context.buildDocument { writer() }
+}
+
+private class BsonSerializeDeclaration(
+	val obj: Any,
+	val type: KType,
+	val klass: KClass<*>,
+) : BsonDeclaration {
+
+	@Suppress("UNCHECKED_CAST")
+	fun write(context: BsonContext): Bson =
+		context.buildDocument(obj, type, klass as KClass<Any>)
+
+	fun toAssertion() = BsonAssertion(obj.toString()) {
+		check(this.read(type, klass) == obj)
+	}
+
+	override fun toString() = obj.toString()
+}
 
 private class BsonHexadecimalRepresentation(
 	val hex: String,
@@ -82,35 +118,29 @@ fun SuiteDsl.testBson(
 	name: String,
 	vararg declarations: BsonDeclaration,
 ) = suite(name) {
-	val writers = declarations.filterIsInstance<BsonBinaryDeclaration>().map { it.writer }
+	val writers = declarations.filterIsInstance<BsonBinaryDeclaration>().map { it::write } + declarations.filterIsInstance<BsonSerializeDeclaration>().map { it::write }
 	val hexReprs = declarations.filterIsInstance<BsonHexadecimalRepresentation>().map { it.hex }
 	val jsonReprs = declarations.filterIsInstance<BsonJsonRepresentation>().map { it.json }
-	val verifications = declarations.filterIsInstance<BsonAssertion>()
+	val verifications = declarations.filterIsInstance<BsonAssertion>() + declarations.filterIsInstance<BsonSerializeDeclaration>().map { it.toAssertion() }
 
 	require(hexReprs.isNotEmpty() || jsonReprs.isNotEmpty()) { "At least one of the 'hex()' or 'json()' functions should be part of the declarations, otherwise we do not have expected values for this test" }
 
 	for (writer in writers) {
 		for (hex in hexReprs) {
 			test("Write to binary: $hex") {
-				context().buildDocument {
-					writer(this)
-				} shouldBeHex hex
+				writer(context()) shouldBeHex hex
 			}
 		}
 
 		for (json in jsonReprs) {
 			test("Write to JSON: $json") {
-				context().buildDocument {
-					writer(this)
-				} shouldBeJson json
+				writer(context()) shouldBeJson json
 			}
 		}
 
 		for (verification in verifications) {
 			test("Write and verify that $verification") {
-				val document = context().buildDocument {
-					writer(this)
-				}
+				val document = writer(context())
 				verification.assert(document.reader())
 			}
 		}

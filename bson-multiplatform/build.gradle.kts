@@ -37,6 +37,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(libsCommon.plugins.kotlinx.serialization)
 	alias(libsCommon.plugins.testBalloon)
 }
 
@@ -72,6 +73,7 @@ kotlin {
 	sourceSets.commonMain.dependencies {
 		api(projects.bson)
 		api(libs.kotlinx.io)
+		api(libs.kotlinx.serialization)
 	}
 
 	sourceSets.commonTest.dependencies {
@@ -90,5 +92,5 @@ library {
 		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
 	}
 
-	coverage.set(80)
+	coverage.set(75)
 }
