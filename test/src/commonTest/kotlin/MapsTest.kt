@@ -18,53 +18,52 @@ package opensavvy.ktmongo.sync
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.test.testCollection
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class MapsTest : PreparedSpec({
+@Serializable
+data class MapsUser(
+	val name: String,
+	val grades: Map<String, Int> = emptyMap(),
+	val friends: Map<String, MapsUser> = emptyMap(),
+)
 
-	@Serializable
-	data class User(
-		val name: String,
-		val grades: Map<String, Int> = emptyMap(),
-		val friends: Map<String, User> = emptyMap(),
-	)
-
-	val users by testCollection<User>("maps")
+val MapsTest by preparedSuite {
+	val users by testCollection<MapsUser>("maps")
 
 	suite("Not empty map") {
 		val cases = mapOf(
-			"Map has two elements" to User("Bob", grades = mapOf("maths" to 1, "physics" to 2)),
-			"Map has one element" to User("Bob", grades = mapOf("maths" to 1)),
+			"Map has two elements" to MapsUser("Bob", grades = mapOf("maths" to 1, "physics" to 2)),
+			"Map has one element" to MapsUser("Bob", grades = mapOf("maths" to 1)),
 		)
 
 		for ((case, user) in cases) test(case) {
 			users().insertOne(user)
-			users().insertOne(User("Should not be returned"))
+			users().insertOne(MapsUser("Should not be returned"))
 
-			check(users().find { User::grades.isMapNotEmpty() }.toList() == listOf(user))
+			check(users().find { MapsUser::grades.isMapNotEmpty() }.toList() == listOf(user))
 		}
 	}
 
 	suite("Empty map") {
 		val cases = mapOf(
-			"Map is not present" to User("Marcel"),
-			"Map is empty" to User("Marcel", grades = emptyMap()),
+			"Map is not present" to MapsUser("Marcel"),
+			"Map is empty" to MapsUser("Marcel", grades = emptyMap()),
 		)
 
 		for ((case, user) in cases) test(case) {
 			users().insertOne(user)
-			users().insertOne(User("Should not be returned", grades = mapOf("maths" to 1)))
+			users().insertOne(MapsUser("Should not be returned", grades = mapOf("maths" to 1)))
 
-			check(users().find { User::grades.isMapEmpty() }.toList() == listOf(user))
+			check(users().find { MapsUser::grades.isMapEmpty() }.toList() == listOf(user))
 		}
 	}
 
 	test("Position operator: $") {
-		val user = User("Alex", friends = mapOf("alice" to User("Alice"), "bob" to User("Bob")))
+		val user = MapsUser("Alex", friends = mapOf("alice" to MapsUser("Alice"), "bob" to MapsUser("Bob")))
 		users().insertOne(user)
-		users().insertOne(User("Should not be returned", friends = mapOf("arthur" to User("Arthur"))))
+		users().insertOne(MapsUser("Should not be returned", friends = mapOf("arthur" to MapsUser("Arthur"))))
 
-		check(users().find { User::friends["bob"].exists() }.toList() == listOf(user))
+		check(users().find { MapsUser::friends["bob"].exists() }.toList() == listOf(user))
 	}
 
-})
+}

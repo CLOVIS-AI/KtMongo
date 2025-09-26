@@ -22,7 +22,42 @@ import opensavvy.ktmongo.coroutines.toList
 import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.test.testCollection
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
+
+// First, let's create the different data types & the collections
+
+@Serializable
+data class Customer(
+	val _id: String,
+	val name: String,
+	val biography: String?,
+)
+
+@Serializable
+data class Vendor(
+	val _id: String,
+	val name: String,
+)
+
+@Serializable
+data class AuditData(
+	val creationDate: Int,
+	val deletionDate: Int?,
+)
+
+@Serializable
+data class Invoice(
+	val _id: String,
+	val subject: String,
+	val metadata: String,
+	val customer: Customer,
+	val vendor: Vendor?,
+	val auditData: AuditData? = null,
+	val paymentStatus: Boolean? = null,
+	val acceptedStatus: Boolean? = null,
+	val draft: Boolean? = null,
+	val documentType: String? = null,
+)
 
 /**
  * This is a case study of a complex aggregation pipeline using $match, $set, $project, $sort, $limit and $unionWith.
@@ -116,42 +151,7 @@ import opensavvy.prepared.runner.kotest.PreparedSpec
  * ]);
  * ```
  */
-class AggregationProjectUnionWith : PreparedSpec({
-
-	// First, let's create the different data types & the collections
-
-	@Serializable
-	data class Customer(
-		val _id: String,
-		val name: String,
-		val biography: String?,
-	)
-
-	@Serializable
-	data class Vendor(
-		val _id: String,
-		val name: String,
-	)
-
-	@Serializable
-	data class AuditData(
-		val creationDate: Int,
-		val deletionDate: Int?,
-	)
-
-	@Serializable
-	data class Invoice(
-		val _id: String,
-		val subject: String,
-		val metadata: String,
-		val customer: Customer,
-		val vendor: Vendor?,
-		val auditData: AuditData? = null,
-		val paymentStatus: Boolean? = null,
-		val acceptedStatus: Boolean? = null,
-		val draft: Boolean? = null,
-		val documentType: String? = null,
-	)
+val AggregationProjectUnionWith by preparedSuite {
 
 	val drafts by testCollection<Invoice>("case-unionWith-drafts")
 	val invoiceAs by testCollection<Invoice>("case-unionWith-invoice-a")
@@ -466,4 +466,4 @@ class AggregationProjectUnionWith : PreparedSpec({
 		check(expected == results)
 	}
 
-})
+}

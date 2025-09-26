@@ -18,7 +18,7 @@ plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.internal)
 	alias(libsCommon.plugins.kotlinx.serialization)
-	alias(libsCommon.plugins.kotest)
+	alias(libsCommon.plugins.testBalloon)
 }
 
 kotlin {
@@ -28,7 +28,7 @@ kotlin {
 		api(projects.driverSync)
 		api(projects.driverCoroutines)
 
-		api(libsCommon.opensavvy.prepared.kotest)
+		api(libsCommon.opensavvy.prepared.testBalloon)
 
 		api(libs.kotlinx.serialization)
 	}

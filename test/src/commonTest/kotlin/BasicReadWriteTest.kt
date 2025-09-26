@@ -18,9 +18,9 @@ package opensavvy.ktmongo.sync
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.test.testCollection
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class BasicReadWriteTest : PreparedSpec({
+val BasicReadWriteTest by preparedSuite {
 	@Serializable
 	data class User(
 		val name: String,
@@ -72,4 +72,4 @@ class BasicReadWriteTest : PreparedSpec({
 		check(listOf(bob, carol) == users().find(options = { skip(1) }, {}).toList())
 		check(listOf(bob) == users().find(options = { skip(1); limit(1) }, {}).toList())
 	}
-})
+}
