@@ -7,12 +7,14 @@
 # https://kotlinlang.org/docs/releases.html#release-details
 kotlin = "2.2.0"
 
+# https://github.com/google/ksp/releases
+ksp = "2.2.0-2.0.2"
+
 # https://github.com/JetBrains/compose-multiplatform/releases
 compose = "1.8.2"
 
 # https://github.com/kotest/kotest/releases
-kotest = "5.9.1"
-kotest-plugin = "6.0.0.M4"
+kotest = "6.0.1"
 
 # https://github.com/infix-de/testBalloon/releases
 testBalloon = "0.5.0-K2.2.0"
@@ -29,10 +31,10 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinx-powerAssert = { id = "org.jetbrains.kotlin.plugin.power-assert", version.ref = "kotlin" }
 
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
-
-kotest = { id = "io.kotest.multiplatform", version.ref = "kotest-plugin" }
 
 testBalloon = { id = "de.infix.testBalloon", version.ref = "testBalloon" }
 

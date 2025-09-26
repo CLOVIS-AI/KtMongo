@@ -10,8 +10,6 @@ include:
   - remote: https://gitlab.com/opensavvy/ci-templates/-/raw/main/gradle.gitlab-ci.yml
   - remote: https://gitlab.com/opensavvy/ci-templates/-/raw/main/docker.gitlab-ci.yml
 
-  - local: docs/website/.gitlab-ci.yml
-
 variables:
   # https://gitlab.com/opensavvy/automation/containers
   ci_containers: 0.8.1
@@ -29,136 +27,6 @@ workflow:
   extends: [ .os.gradle ]
   image: registry.gitlab.com/opensavvy/automation/containers/java:$ci_containers
   needs: [ os.version ]
-
-.kotlin-js-browser:
-  extends: [ .os.gradle ]
-  image: registry.gitlab.com/opensavvy/automation/containers/chromium:$ci_containers
-  needs: [ os.version ]
-
-.kotlin-js-node:
-  extends: [ .os.gradle ]
-  image: registry.gitlab.com/opensavvy/automation/containers/nodejs:$ci_containers
-  needs: [ os.version ]
-
-.kotlin-native-linuxX64:
-  extends: [ .os.gradle ]
-  image: registry.gitlab.com/opensavvy/automation/containers/java:$ci_containers
-  needs: [ os.version ]
-
-.kotlin-native-iosArm64:
-  extends: [ .os.gradle ]
-  image: macos-14-xcode-15
-  needs: [ os.version ]
-
-  before_script:
-    - xcodebuild -downloadPlatform iOS
-  tags:
-    - saas-macos-medium-m1
-
-  retry:
-    max: 1
-    exit_codes:
-      - 1  # Sometimes, the runner breaks and doesn't actually run the test
-
-# endregion
-# region Check
-
-.with-mongo:
-  parallel:
-    matrix:
-      - mongodb: [ mongo:6.0.21, mongo:7.0.18, mongo:8.0.6 ]
-
-  services:
-    - name: $mongodb
-      alias: mongo
-
-  retry:
-    max: 1
-    exit_codes:
-      - 2  # Sometimes, the job fails due to timeouts?
-
-check[jvm]:
-  extends: [ .kotlin-jvm, .with-mongo ]
-  stage: test
-
-  script:
-    - >
-      ./gradlew check
-      :koverLog
-      :koverHtmlReport
-      -x jsBrowserTest
-      -x jsNodeTest
-      -x wasmJsBrowserTest
-      -x wasmJsNodeTest
-      -x wasmWasiNodeTest
-      -x linuxX64Test
-      -x mingwX64Test
-      -x macosX64Test
-      -x macosArm64Test
-      -x iosX64Test
-      -x iosSimulatorArm64Test
-      -x watchosX64Test
-      -x tvosX64Test
-      koverVerify --rerun
-      -PappVersion=$project_version
-
-  after_script:
-    - mkdir -p jvm-cover-report
-    - mv build/reports/kover/html/* jvm-cover-report
-
-  coverage: '/application line coverage: (\d+\.?\d*%)/'
-  artifacts:
-    paths:
-      - jvm-cover-report
-    expose_as: JVM code coverage
-  interruptible: true
-
-check[jsBrowser]:
-  extends: [ .kotlin-js-browser ]
-  stage: test
-
-  script:
-    - >
-      ./gradlew jsBrowserTest wasmJsBrowserTest
-      -PappVersion=$project_version
-
-  interruptible: true
-
-check[nodeJs]:
-  extends: [ .kotlin-js-node ]
-  stage: test
-
-  script:
-    - >
-      ./gradlew jsNodeTest wasmJsNodeTest wasmWasiNodeTest
-      -PappVersion=$project_version
-
-  interruptible: true
-
-check[linuxX64]:
-  extends: [ .kotlin-native-linuxX64 ]
-  stage: test
-
-  script:
-    - >
-      ./gradlew linuxX64Test mingwX64Test
-      -PappVersion=$project_version
-
-  interruptible: true
-
-check[iosArm64]:
-  extends: [ .kotlin-native-iosArm64 ]
-  stage: test
-
-  script:
-    - >
-      ./gradlew 
-      iosSimulatorArm64Test 
-      watchosSimulatorArm64Test
-      --no-configuration-cache
-      -PappVersion=$project_version
-
-  interruptible: true
 
 # endregion
 # region Publishing
@@ -226,38 +94,6 @@ publish-maven:central:
     - if: $CI_COMMIT_TAG
 
 # endregion
-# region API documentation
-
-dokka:
-  extends: [ .kotlin-jvm ]
-  stage: build
-  needs: [ os.version ]
-
-  script:
-    - >
-      ./gradlew :dokkaGeneratePublicationHtml
-      --no-configuration-cache
-      -PappVersion=$project_version
-
-  after_script:
-    - mkdir -p api-docs
-    - mv build/dokka/html/* api-docs
-    - PREFIX="$CI_PROJECT_ROOT_NAMESPACE/"
-    - echo "URL=https://$CI_PROJECT_ROOT_NAMESPACE.$CI_PAGES_DOMAIN/-/${CI_PROJECT_PATH//$PREFIX}/-/jobs/$CI_JOB_ID/artifacts/api-docs/index.html" >>deploy.env
-
-  artifacts:
-    paths:
-      - api-docs
-    reports:
-      dotenv: deploy.env
-  environment:
-    name: review/$CI_COMMIT_REF_SLUG/api-docs
-    url: $URL
-    deployment_tier: development
-
-  interruptible: true
-
-# endregion
 # region Qodana
 
 qodana[jvm]:
@@ -302,31 +138,6 @@ mirror-playground:
     - if: $CI_PIPELINE_SOURCE == 'schedule'
     - when: manual
       allow_failure: true
-
-# endregion
-# region GitLab Pages
-
-pages:
-  image: alpine:latest
-  stage: deploy
-  needs:
-    - job: mkdocs
-      artifacts: true
-    - job: dokka
-      artifacts: true
-
-  script:
-    - mkdir -p public
-    - mv -T docs-website public
-    - mv api-docs public
-
-  artifacts:
-    paths:
-      - public
-
-  rules:
-    - if: $CI_COMMIT_TAG
-  interruptible: false
 
 # endregion
 # region Kotlin pipeline
