@@ -92,6 +92,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - toc:
       permalink: true
 
@@ -113,6 +115,9 @@ nav:
           - tutorials/from-kmongo/nested-fields.md
           - tutorials/from-kmongo/update.md
 
+      - Kotlin Multiplatform:
+          - tutorials/multiplatform/index.md
+
   - Features:
       - features/crud.md
       - features/bulk-writes.md
@@ -123,6 +128,9 @@ nav:
           - features/fields.md
           - features/arrays.md
           - features/maps.md
+
+      - Aggregations:
+          - features/aggregations.md
 
 # !!! EMBEDDED DOKKA START, DO NOT COMMIT !!! #
 # !!! EMBEDDED DOKKA END, DO NOT COMMIT !!! #

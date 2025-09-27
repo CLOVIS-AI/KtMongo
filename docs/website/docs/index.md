@@ -42,10 +42,10 @@ collection.find(
 )
 ```
 
-1. The `Document::user / User::gender` syntax is expanded to `"user.gender"`. Although this syntax is slightly more verbose, it also makes it impossible to use the wrong field paths.
-2. KMongo checks the type of the passed parameters. If we tried to compare the `age` field with a string, we would get a compile error, ensuring our code stays correct.
+1. The `Document::user / User::gender` syntax is expanded to `"user.gender"`. Although this syntax is slightly more verbose, it also guarantees the path is correct, and allows "find usage" in IDE.
+2. KMongo checks the type of the passed parameters. If we tried to compare the `age` field with a string, we would get a compilation error, ensuring our code stays correct.
 
-While this example is slightly more verbose, it is also much safer, and thus more maintainable. If we want to rename a field in a document, we can use our IDE's built-in refactoring feature, and all requests are automatically kept up-to-date.
+While this example is slightly more verbose, it is also much safer, and thus more maintainable. If we want to rename a field in a document, we can use our IDE's built-in refactoring feature, and all requests are automatically kept up to date.
 
 However, KMongo doesn't verify at compile-time the coherence of requests. For example, we could use the `$set` operator in a query, which would error out at runtime. By replacing intermediary values by DSLs, we can make the above example shorter and safer:
 ```kotlin title="With KtMongo"
@@ -61,7 +61,7 @@ Additionally, this new DSL is easier to inspect: the `this` value injected into 
 
 ## Going further: optional filter parameters
 
-A pattern we very often see in the wild is the presence of some kind of optional filter. For example, if we have optional filters for a date range. These optional filters quickly make queries harder to read:
+A pattern we very often see in the wild is the presence of optional filters. For example, users can optionally select a date range. These optional filters quickly make queries harder to read:
 
 === "With list builders"
 
@@ -122,7 +122,7 @@ KtMongo provides multiple features following this trend: adding operators to fac
 
 ## Objectives of KtMongo
 
-Broadly-speaking, our objectives can be described as follows:
+Our high-level goals are as follows:
 
 **Ease of use in new projects.** Adopting KtMongo in a new project should be as simple as possible. Ideally as simple as using the official drivers.
 
@@ -132,13 +132,13 @@ Broadly-speaking, our objectives can be described as follows:
 
 **Documentation.** KtMongo is documented in depth: almost all functions have an example of usage, each operator has a link to the official MongoDB documentation, and DSL scopes list their operators with the MongoDB syntax so you can easily find the Kotlin function, even if it is named differently.
 
-**Convenience for the real world.** MongoDB is used in massive codebases in the industry. We want to facilitate real-world usage patterns, taking advantage of the power of Kotlin. `*notNull` operator variants and filtered collections are examples of such utilities.
+**Convenience for the real world.** MongoDB is used in massive codebases in the industry. We want to facilitate real-world usage patterns, taking advantage of the power of Kotlin. [`*notNull` operator variants](features/optional-filters.md) and [filtered collections](features/filtered-collections.md) are examples of such utilities.
 
-**Keeping the door open for multiplatform.** While we are not actively developing KtMongo on other platforms than the JVM, all modules are already configured to ensure the addition of other platforms in the future is possible. In particular, we're thinking of NodeJS (for scripting) and WASM (for future backends). If you'd like to contribute in this direction, feel free to get in touch!
+**Getting ready for Wasm.** In the future, we want to use MongoDB beyond the JVM, in particular for lightweight Wasm-based environments. [Get more information here](tutorials/multiplatform/index.md).
 
 ## Where do I start?
 
 - [**Configuring KtMongo in a new project**](tutorials/index.md)
 - **Using KtMongo alongside the official Kotlin driver**
 - [**Migrating from KMongo**](tutorials/from-kmongo/index.md)
-- **Discovering the new features**
+- [**Discovering the new features**](features/crud.md)
