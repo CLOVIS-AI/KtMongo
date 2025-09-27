@@ -19,7 +19,6 @@ package opensavvy.ktmongo.sync
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.*
-import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
@@ -136,6 +135,36 @@ private class FilteredCollection<Document : Any>(
 				filter()
 			},
 			update = update,
+		)
+	}
+
+	override fun replaceOne(
+		options: ReplaceOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		document: Document,
+	) {
+		upstream.replaceOne(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			},
+			document = document,
+		)
+	}
+
+	override fun repsertOne(
+		options: ReplaceOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		document: Document,
+	) {
+		upstream.repsertOne(
+			options = options,
+			filter = {
+				globalFilter()
+				filter()
+			},
+			document = document,
 		)
 	}
 

@@ -18,6 +18,7 @@ package opensavvy.ktmongo.sync.operations
 
 import opensavvy.ktmongo.dsl.command.BulkWrite
 import opensavvy.ktmongo.dsl.command.BulkWriteOptions
+import opensavvy.ktmongo.dsl.command.ReplaceOptions
 import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
@@ -181,6 +182,125 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpsertQuery<Document>.() -> Unit,
+	)
+
+	/**
+	 * Replaces a document that matches [filter] by [document].
+	 *
+	 * If multiple documents match [filter], only the first one found is updated.
+	 *
+	 * ### Data races
+	 *
+	 * This operator is often used by first reading a document, processing it, and replacing it.
+	 * This can be dangerous in distributed systems because another replica of the server could have updated
+	 * the document between the read and the write.
+	 *
+	 * If this is a concern, it is recommended to use [updateOne] with explicit operators on the data that has changed,
+	 * allowing to do the modification in a single operation. Doing the update that way, MongoDB is responsible
+	 * for ensuring the read and the write are atomic.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.replaceOne(
+	 *     filter = {
+	 *         User::name eq "Patrick"
+	 *     },
+	 *     document = User("Bob", 15)
+	 * )
+	 * ```
+	 *
+	 * ### Using filtered collections
+	 *
+	 * The following code is equivalent:
+	 * ```kotlin
+	 * collection.filter {
+	 *     User::name eq "Patrick"
+	 * }.replaceOne(User("Patrick", 15))
+	 * ```
+	 *
+	 * To learn more, see [filter][MongoCollection.filter].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/update/)
+	 *
+	 * @param filter Optional filter to select which document is updated.
+	 * If no filter is specified, the first document found is updated.
+	 * @see updateOne Updates an existing document.
+	 * @see updateMany Update more than one document.
+	 * @see repsertOne Replaces a document, or inserts it if it doesn't exist.
+	 * @see findOneAndUpdate Also returns the result of the update.
+	 */
+	fun replaceOne(
+		options: ReplaceOptions<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
+		document: Document,
+	)
+
+	/**
+	 * Replaces a document that matches [filter] by [document].
+	 *
+	 * If multiple documents match [filter], only the first one found is updated.
+	 *
+	 * If no documents match [filter], [document] is [inserted][InsertOperations.insertOne].
+	 *
+	 * ### Data races
+	 *
+	 * This operator is often used by first reading a document, processing it, and replacing it.
+	 * This can be dangerous in distributed systems because another replica of the server could have updated
+	 * the document between the read and the write.
+	 *
+	 * If this is a concern, it is recommended to use [updateOne] with explicit operators on the data that has changed,
+	 * allowing to do the modification in a single operation. Doing the update that way, MongoDB is responsible
+	 * for ensuring the read and the write are atomic.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.repsertOne(
+	 *     filter = {
+	 *         User::name eq "Patrick"
+	 *     },
+	 *     document = User("Bob", 15)
+	 * )
+	 * ```
+	 *
+	 * ### Using filtered collections
+	 *
+	 * The following code is equivalent:
+	 * ```kotlin
+	 * collection.filter {
+	 *     User::name eq "Patrick"
+	 * }.repsertOne(User("Patrick", 15))
+	 * ```
+	 *
+	 * To learn more, see [filter][MongoCollection.filter].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/update/)
+	 *
+	 * @param filter Optional filter to select which document is updated.
+	 * If no filter is specified, the first document found is updated.
+	 * @see updateOne Updates an existing document.
+	 * @see replaceOne Replaces an existing document.
+	 * @see findOneAndUpdate Also returns the result of the update.
+	 */
+	fun repsertOne(
+		options: ReplaceOptions<Document>.() -> Unit = {},
+		filter: FilterQuery<Document>.() -> Unit = {},
+		document: Document,
 	)
 
 	/**

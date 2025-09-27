@@ -21,7 +21,7 @@ import opensavvy.ktmongo.bson.official.Bson
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.*
 
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 @OptIn(LowLevelApi::class)
 fun <Document> AvailableInBulkWrite<Document>.toJava(): WriteModel<Document> = when (this) {
 	is UpdateMany<*> -> UpdateManyModel<Document>(
@@ -34,6 +34,18 @@ fun <Document> AvailableInBulkWrite<Document>.toJava(): WriteModel<Document> = w
 		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
 		/* update = */ (context.buildDocument(this.update) as Bson).raw,
 		/* options = */ com.mongodb.client.model.UpdateOptions(),
+	)
+
+	is ReplaceOne<*> -> ReplaceOneModel<Document>(
+		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* replacement = */ this.document as Document,
+		/* options = */ com.mongodb.client.model.ReplaceOptions(),
+	)
+
+	is RepsertOne<*> -> ReplaceOneModel<Document>(
+		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* replacement = */ this.document as Document,
+		/* options = */ com.mongodb.client.model.ReplaceOptions().upsert(true),
 	)
 
 	is UpsertOne<*> -> UpdateOneModel<Document>(
