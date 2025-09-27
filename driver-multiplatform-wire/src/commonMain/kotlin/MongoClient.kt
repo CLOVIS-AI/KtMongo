@@ -16,10 +16,40 @@
 
 package opensavvy.ktmongo.multiplatform.wire
 
+import io.ktor.network.selector.*
+import io.ktor.network.sockets.*
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.coroutines.CoroutineContext
 
 @LowLevelApi
-interface MongoClient {
+interface MongoClient : AutoCloseable {
 
 	companion object
+}
+
+@LowLevelApi
+private class MultiplatformMongoClient(
+	private val socket: Socket,
+) : MongoClient {
+
+	private val readChannel = socket.openReadChannel()
+	private val writeChannel = socket.openWriteChannel()
+
+	override fun close() {
+		socket.close()
+	}
+
+	override fun toString() = "MongoClient(${socket.remoteAddress})"
+}
+
+@LowLevelApi
+suspend fun MongoClient(
+	hostName: String,
+	port: Int,
+	dispatcher: CoroutineContext,
+): MongoClient {
+	val selectorManager = SelectorManager(dispatcher)
+	val socket = aSocket(selectorManager).tcp().connect(hostName, port)
+
+	return MultiplatformMongoClient(socket)
 }
