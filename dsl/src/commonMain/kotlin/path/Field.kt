@@ -163,7 +163,7 @@ interface Field<in Root, out Type> {
 	 * @see Field.Companion.unsafe Similar, but for accessing a field of the root document.
 	 */
 	@OptIn(LowLevelApi::class)
-	fun <Child> unsafe(child: String): Field<Root, Child> =
+	infix fun <Child> unsafe(child: String): Field<Root, Child> =
 		FieldImpl(path / PathSegment.Field(child))
 
 	companion object {
@@ -278,6 +278,99 @@ interface FieldDsl {
 	@OptIn(LowLevelApi::class)
 	val <Root, Type> KProperty1<Root, Type>.field: Field<Root, Type>
 		get() = FieldImpl<Root, Type>(Path(this.name))
+
+	/**
+	 * Refers to a field [child] of the current field, with no compile-time safety.
+	 *
+	 * Sometimes, we must refer to a field that we don't want to add in the DTO representation.
+	 * For example, when writing complex aggregation queries that use intermediary fields that are removed
+	 * before the data is sent to the server.
+	 *
+	 * We recommend preferring the type-safe syntax when possible (see [Field]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * println(User::profile.unsafe<Int>("age")) // 'profile.age'
+	 * ```
+	 *
+	 * @see Field.Companion.unsafe Similar, but for accessing a field of the root document.
+	 */
+	@OptIn(LowLevelApi::class)
+	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: String): Field<Root, Child> =
+		this.field.unsafe(child)
+
+	/**
+	 * Refers to a field [child] of the current field, without checking that it is a field available on the current object.
+	 *
+	 * We recommend preferring the type-safe syntax when possible (see [Field]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * println(User::profile / Pet::name)       // ⚠ compilation error: 'profile' doesn't have the type 'Pet'
+	 * println(User::profile unsafe Pet::name)  // 'profile.name'
+	 * ```
+	 *
+	 * @see div The recommended type-safe accessor.
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	infix fun <Root, Child> Field<Root, *>.unsafe(child: Field<*, Child>): Field<Root, Child> =
+		FieldImpl(this.path / child.path)
+
+	/**
+	 * Refers to a field [child] of the current field, without checking that it is a field available on the current object.
+	 *
+	 * We recommend preferring the type-safe syntax when possible (see [Field]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * println(User::profile / Pet::name)       // ⚠ compilation error: 'profile' doesn't have the type 'Pet'
+	 * println(User::profile unsafe Pet::name)  // 'profile.name'
+	 * ```
+	 *
+	 * @see div The recommended type-safe accessor.
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	infix fun <Root, Child> Field<Root, *>.unsafe(child: KProperty1<*, Child>): Field<Root, Child> =
+		this.unsafe(child.field)
+
+	/**
+	 * Refers to a field [child] of the current field, without checking that it is a field available on the current object.
+	 *
+	 * We recommend preferring the type-safe syntax when possible (see [Field]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * println(User::profile / Pet::name)       // ⚠ compilation error: 'profile' doesn't have the type 'Pet'
+	 * println(User::profile unsafe Pet::name)  // 'profile.name'
+	 * ```
+	 *
+	 * @see div The recommended type-safe accessor.
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: Field<*, Child>): Field<Root, Child> =
+		this.field.unsafe(child)
+
+	/**
+	 * Refers to a field [child] of the current field, without checking that it is a field available on the current object.
+	 *
+	 * We recommend preferring the type-safe syntax when possible (see [Field]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * println(User::profile / Pet::name)       // ⚠ compilation error: 'profile' doesn't have the type 'Pet'
+	 * println(User::profile unsafe Pet::name)  // 'profile.name'
+	 * ```
+	 *
+	 * @see div The recommended type-safe accessor.
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: KProperty1<*, Child>): Field<Root, Child> =
+		this.field.unsafe(child)
 
 	/**
 	 * Refers to [child] as a nested field of the current field.

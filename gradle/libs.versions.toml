@@ -8,6 +8,7 @@ mongodb-bson-jvm = "5.5.1"      # https://central.sonatype.com/artifact/org.mong
 mongodb-bson-js = "6.10.3"      # https://www.npmjs.com/package/bson
 mongodb-driver = "5.5.1"        # https://central.sonatype.com/artifact/org.mongodb/mongodb-driver-kotlin-coroutine
 mongodb-serialization = "5.5.1" # https://central.sonatype.com/artifact/org.mongodb/bson-kotlinx
+kmongo = "5.5.1"                # https://github.com/Litote/kmongo/releases
 junit = "5.13.4"                # https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api/versions
 junit-platform-launcher = "1.13.4" # https://central.sonatype.com/artifact/org.junit.platform/junit-platform-launcher/versions
 meanmirror = "1.0.0"            # https://github.com/meanbeanlib/meanmirror/tags
@@ -24,6 +25,9 @@ mongodb-core-jvm = { module = "org.mongodb:mongodb-driver-core", version.ref = "
 mongodb-coroutines-jvm = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb-driver" }
 mongodb-sync-jvm = { module = "org.mongodb:mongodb-driver-kotlin-sync", version.ref = "mongodb-driver" }
 mongodb-kotlinx-serialization = { module = "org.mongodb:bson-kotlinx", version.ref = "mongodb-serialization" }
+
+kmongo-sync = { module = "org.litote.kmongo:kmongo", version.ref = "kmongo" }
+kmongo-coroutines = { module = "org.litote.kmongo:kmongo-coroutine", version.ref = "kmongo" }
 
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-plugins {
-	alias(opensavvyConventions.plugins.base)
-	id("dev.opensavvy.dokka-mkdocs")
-}
+package opensavvy.ktmongo.coroutines.kmongo
 
-dependencies {
-	// List the 'library' projects
-	dokka(projects.annotations)
-	dokka(projects.bson)
-	dokka(projects.bsonOfficial)
-	dokka(projects.bsonMultiplatform)
-	dokka(projects.bsonTests)
-	dokka(projects.dsl)
-	dokka(projects.driverSharedOfficial)
-	dokka(projects.driverSync)
-	dokka(projects.driverSyncJava)
-	dokka(projects.driverSyncKmongo)
-	dokka(projects.driverCoroutines)
-	dokka(projects.driverCoroutinesKmongo)
-}
+import com.mongodb.reactivestreams.client.MongoCollection
+import opensavvy.ktmongo.coroutines.JvmMongoCollection
+import opensavvy.ktmongo.coroutines.asKtMongo
+
+/**
+ * Converts a collection from the official Java MongoDB driver into a KtMongo collection.
+ */
+fun <T : Any> MongoCollection<T>.asKtMongo(): JvmMongoCollection<T> =
+	com.mongodb.kotlin.client.coroutine.MongoCollection(this).asKtMongo()
