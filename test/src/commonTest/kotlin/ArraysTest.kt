@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,41 +18,41 @@ package opensavvy.ktmongo.sync
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.test.testCollection
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class ArraysTest : PreparedSpec({
-	@Serializable
-	data class User(
-		val name: String,
-		val grades: List<Int> = emptyList(),
-		val friends: List<User> = emptyList(),
-	)
+@Serializable
+data class ArrayUser(
+	val name: String,
+	val grades: List<Int> = emptyList(),
+	val friends: List<ArrayUser> = emptyList(),
+)
 
-	val users by testCollection<User>("arrays")
+val ArraysTest by preparedSuite {
+	val users by testCollection<ArrayUser>("arrays")
 
 	suite("Not empty array") {
 		val cases = mapOf(
-			"Array has two elements" to User("Bob", grades = listOf(1, 2)),
-			"Array has one element" to User("Bob", grades = listOf(1))
+			"Array has two elements" to ArrayUser("Bob", grades = listOf(1, 2)),
+			"Array has one element" to ArrayUser("Bob", grades = listOf(1))
 		)
 
 		for ((case, user) in cases) test(case) {
 			users().insertOne(user)
 
-			check(users().findOne { User::grades.isNotEmpty() } == user)
+			check(users().findOne { ArrayUser::grades.isNotEmpty() } == user)
 		}
 	}
 
 	suite("Empty array") {
 		val cases = mapOf(
-			"Array is not present" to User("Marcel"),
-			"Array is empty" to User("Marcel", grades = emptyList()),
+			"Array is not present" to ArrayUser("Marcel"),
+			"Array is empty" to ArrayUser("Marcel", grades = emptyList()),
 		)
 
 		for ((case, user) in cases) test(case) {
 			users().insertOne(user)
 
-			check(users().findOne { User::grades.isEmpty() } == user)
+			check(users().findOne { ArrayUser::grades.isEmpty() } == user)
 		}
 	}
 
@@ -133,4 +133,4 @@ class ArraysTest : PreparedSpec({
 		check(expected == profiles.find().toList())
 	}
 
-})
+}

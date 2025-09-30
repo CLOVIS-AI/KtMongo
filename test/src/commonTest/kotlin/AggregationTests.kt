@@ -20,14 +20,13 @@ package opensavvy.ktmongo.sync
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.coroutines.filter
-import opensavvy.ktmongo.coroutines.first
 import opensavvy.ktmongo.coroutines.toList
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.test.testCollection
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-class AggregationTests : PreparedSpec({
+val AggregationTests by preparedSuite {
 	@Serializable
 	data class Song(
 		val creationDate: Int,
@@ -142,4 +141,4 @@ class AggregationTests : PreparedSpec({
 		)
 		check(expected == second.unionWith(first).sort { ascending(Song::creationDate); ascending(Song::editionDate) }.toList())
 	}
-})
+}

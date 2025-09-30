@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package opensavvy.ktmongo.sync
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.coroutines.filter
 import opensavvy.ktmongo.test.testCollection
-import opensavvy.prepared.runner.kotest.PreparedSpec
+import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 
-class FilteredCollectionTest : PreparedSpec({
+val FilteredCollectionTest by preparedSuite {
 	@Serializable
 	data class User(
 		val name: String = "MISSING",
@@ -99,4 +99,4 @@ class FilteredCollectionTest : PreparedSpec({
 
 		check(usersAlive().find { User::name eq "Joe" }.toList().size == 1) { "There is only one user that is named Joe *and* is alive" }
 	}
-})
+}
