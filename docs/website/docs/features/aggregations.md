@@ -59,10 +59,10 @@ As you can see in the example above, we sometimes need to use the conversion fun
 
 While there are multiple ways the Kotlin language could be modified to remove this requirement, we believe the most promising is [KT-68318](https://youtrack.jetbrains.com/issue/KT-68318/Declaration-site-defined-conversions). Please vote and give your opinion.
 
-<p>
+<br/>
 
-You can find the list of implemented aggregation operators [here](../api/-mongo-d-b%20request%20-d-s-l/opensavvy.ktmongo.dsl.aggregation/-aggregation-operators/index.html).
+You can find the list of implemented aggregation operators [here](../api/-mongo-d-b%20request%20-d-s-l/opensavvy.ktmongo.dsl.aggregation/-aggregation-operators/index.md).
 
 ## Aggregation stages
 
-You can find the list of implemented aggregation stages [here](../api/-mongo-d-b%20request%20-d-s-l/opensavvy.ktmongo.dsl.aggregation/-aggregation-pipeline/index.html).
+You can find the list of implemented aggregation stages [here](../api/-mongo-d-b%20request%20-d-s-l/opensavvy.ktmongo.dsl.aggregation/-aggregation-pipeline/index.md).
