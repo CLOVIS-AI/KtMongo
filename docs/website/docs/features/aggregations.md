@@ -17,7 +17,7 @@ users.aggregate()
 Within each stage, you may combine values together.
 
 !!! note ""
-Unlike other stages, `match` uses regular find syntax and not aggregation operators. Use the `expr` operator within `match` to access aggregation operators.
+    Unlike other stages, `match` uses regular find syntax and not aggregation operators. Use the [`expr` operator](../api/-mongo-d-b%20request%20-d-s-l/opensavvy.ktmongo.dsl.query/-filter-query/expr.md) within `match` to access aggregation operators.
 
 ## Aggregation operators
 
