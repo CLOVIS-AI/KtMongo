@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import kotlinx.coroutines.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.backgroundScope
+import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.shared
 
@@ -57,7 +58,16 @@ val mongoAddress by shared {
 
 val MongoClient by prepared {
 	val socket = mongoAddress()
-	MongoClient(socket.hostname, socket.port, backgroundScope.coroutineContext)
+
+	MongoClient(
+		hostName = socket.hostname,
+		port = socket.port,
+		coroutineContext = backgroundScope.coroutineContext
+	).also {
+		cleanUp("Close $it") {
+			it.close()
+		}
+	}
 }
 
 val SocketTest by preparedSuite {

@@ -18,12 +18,12 @@
 
 package opensavvy.ktmongo.multiplatform.wire
 
+import kotlinx.coroutines.delay
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
-import opensavvy.prepared.suite.config.CoroutineTimeout
-import kotlin.time.Duration.Companion.seconds
+import opensavvy.prepared.suite.launchInBackground
 
-val ConnectTest by preparedSuite("1. Connect", preparedConfig = CoroutineTimeout(10.seconds)) {
+val ConnectTest by preparedSuite {
 
 	test("Connect to the database") {
 		val client = MongoClient()
@@ -34,4 +34,17 @@ val ConnectTest by preparedSuite("1. Connect", preparedConfig = CoroutineTimeout
 		println("Disconnected.")
 	}
 
+	test("Send a hello") {
+		val client = MongoClient()
+
+		val output = client.send(Find)
+
+		launchInBackground {
+			for (out in output) {
+				println("Received: $out 2")
+			}
+		}
+
+		delay(10)
+	}
 }
