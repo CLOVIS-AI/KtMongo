@@ -41,11 +41,46 @@ Although you could keep the request as-is, KtMongo actually allows us to simplif
 !!! tip "This migration could be automatic!"
     The growth in popularity of [OpenRewrite](https://docs.openrewrite.org/) has made it a possible solution to automate these small refactors. We're searching for someone to help us set this up—if you'd like to help, [please contact us](https://gitlab.com/opensavvy/ktmongo/-/issues/25).
 
-## Migrate at your own pace
+## Get started in minutes, migrate when you need it
 
-KtMongo and KMongo are compatible, meaning that both can be used in the same project.
+KtMongo and KMongo are compatible, meaning that both can be used in the same project. Additionally, we provide dedicated modules with simple conversion functions.
 
-Most projects are structured with one repository class per collection. We recommend migrating one such repository to KtMongo at a time, little by little over the course of multiple releases. This ensures the migration can be done at your own pace, without slowing down the rest of the development. **There is no need to feature-freeze during the migration!**
+=== "Without coroutines"
+
+	Add the dependency ([list of versions](../../news)):
+	```kotlin
+	implementation("dev.opensavvy.ktmongo:driver-sync-kmongo:VERSION")
+	```
+
+=== "With coroutines"
+
+	Add the dependency ([list of versions](../../news)):
+	```kotlin
+	implementation("dev.opensavvy.ktmongo:driver-coroutines-kmongo:VERSION")
+	```
+
+Use the conversion function anywhere in your existing codebase:
+
+```kotlin
+// Before
+users.find(
+	User::name eq "Bob"
+)
+
+// After
+users.asKtMongo().find {
+	User::name eq "Bob"
+}
+```
+
+You can start using KtMongo just for the improved DSL and aggregation support without migrating at all.
+
+If you do want to migrate, we recommend migrating each repository class to KtMongo one at a time, little by little, over the course of multiple releases. This ensures the migration can be done at your own pace, without slowing down the rest of the development. **There is no need to feature-freeze during the migration!**
+
+!!! warning "Avoid mixing both libraries in a single request"
+	KtMongo and KMongo can be used together in the same project, but not in the same request. Although both libraries use the syntax `User::profile / Profile::name` and have many similar operators, they are distinct implementations that do not understand each other.
+
+	KtMongo operators are always used within a DSL block, in which they have resolution priority.
 
 ## Query DSL and optional filters
 
