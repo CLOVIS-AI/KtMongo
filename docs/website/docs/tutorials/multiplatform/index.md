@@ -40,17 +40,17 @@ If you'd like to contribute, please get in touch.
 ## Roadmap
 
 - [x] Split `:bson` and `:bson-official`: `:bson` should only contain interfaces and be multiplatform.
-- [ ] Provide new pure Kotlin implementations of the specific MongoDB data types:
+- [ ] Provide new pure Kotlin implementations of MongoDB data types:
 	- [x] All primitive types
 	- [x] `ObjectId`
 	- [x] `Timestamp`
 	- [x] `DateTime` (using Kotlin's `Instant`)
 	- [ ] `Decimal128`
-	- [ ] Deprecated data types:
-		- [ ] `JavaScript`
-		- [ ] `JavaScriptWithScope`
-		- [ ] `DBPointer`
-		- [ ] `Symbol`
+- [ ] Provide new pure Kotlin implementations of deprecated MongoDB data types:
+	- [ ] `JavaScript`
+	- [ ] `JavaScriptWithScope`
+	- [ ] `DBPointer`
+	- [ ] `Symbol`
 - [ ] Provide a way to read/write all the BSON types to/from BSON
 	- [ ] Read all data types • [Tracking as #49](https://gitlab.com/opensavvy/ktmongo/-/issues/49)
 	- [ ] Write all data types • [Tracking as #48](https://gitlab.com/opensavvy/ktmongo/-/issues/48)
