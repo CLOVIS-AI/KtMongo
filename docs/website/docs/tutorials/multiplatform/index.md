@@ -54,7 +54,7 @@ If you'd like to contribute, please get in touch.
 - [ ] Provide a way to read/write all the BSON types to/from BSON
 	- [ ] Read all data types • [Tracking as #49](https://gitlab.com/opensavvy/ktmongo/-/issues/49)
 	- [ ] Write all data types • [Tracking as #48](https://gitlab.com/opensavvy/ktmongo/-/issues/48)
-- [ ] KotlinX.Serialization support for the multiplatform implementations
+- [x] KotlinX.Serialization support for the multiplatform implementations
 - [ ] Testing the `:dsl` module both with the official and multiplatform implementations
 - [ ] Start working on the TCP exchanges
 - [ ] Complete the protocol
