@@ -2,6 +2,9 @@ site_name: OpenSavvy KtMongo
 site_author: OpenSavvy and contributors
 site_description: >
   The next MongoDB driver for Kotlin
+copyright: >
+  KtMongo is licensed under Apache 2.0. 
+  Mokodee (our precious mascot) was created by <a href="https://bsky.app/profile/lilywhiteout.bsky.social">Lilywhiteout</a>.
 
 theme:
   name: material
