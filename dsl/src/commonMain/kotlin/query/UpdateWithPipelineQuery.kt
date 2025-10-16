@@ -21,8 +21,11 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.stages.*
+import opensavvy.ktmongo.dsl.path.Field
+import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import kotlin.reflect.KProperty1
 
 /**
  * Interface describing the DSL when declaring an update with a pipeline.
@@ -133,6 +136,134 @@ interface UpdateWithPipelineQuery<Document : Any> : CompoundBsonNode {
 		block: UnsetStageOperators<Document>.() -> Unit,
 	) {
 		accept(createUnsetStage(context, block))
+	}
+
+	/**
+	 * Deletes existing fields.
+	 *
+	 * This method is equivalent to the [`$unset` stage][HasUnset].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val oldValue: String,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     unset(User::age, User::oldValue)
+	 * }
+	 * ```
+	 *
+	 * ### Properties and fields
+	 *
+	 * Although this method can accept a vararg, it can only accept top-level properties.
+	 * An overload exists that accepts [Field] instances.
+	 * If you need to mix top-level properties and fields, use the overload that accepts a lambda, or use [FieldDsl.field] to convert properties to fields.
+	 *
+	 * For example:
+	 * ```kotlin
+	 * class Profile(
+	 *     val name: String,
+	 * )
+	 *
+	 * class User(
+	 *     val profile: Profile,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     unset(User::age.field, User::profile / Profile::name)
+	 * }
+	 * ```
+	 * or
+	 * ```kotlin
+	 * users.updateManyWithPipeline {
+	 *     unset {
+	 *         exclude(User::age)
+	 *         exclude(User::profile / Profile::name)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset)
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@KtMongoDsl
+	fun unset(vararg properties: KProperty1<Document, *>) {
+		unset {
+			for (property in properties) {
+				exclude(property)
+			}
+		}
+	}
+
+	/**
+	 * Deletes existing fields.
+	 *
+	 * This method is equivalent to the [`$unset` stage][HasUnset].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val oldValue: String,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     unset(User::age, User::oldValue)
+	 * }
+	 * ```
+	 *
+	 * ### Properties and fields
+	 *
+	 * Although this method can accept a vararg, it cannot accept top-level properties.
+	 * An overload exists that accepts [KProperty1] instances.
+	 * If you need to mix top-level properties and fields, use the overload that accepts a lambda, or use [FieldDsl.field] to convert properties to fields.
+	 *
+	 * For example:
+	 * ```kotlin
+	 * class Profile(
+	 *     val name: String,
+	 * )
+	 *
+	 * class User(
+	 *     val profile: Profile,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     unset(User::age.field, User::profile / Profile::name)
+	 * }
+	 * ```
+	 * or
+	 * ```kotlin
+	 * users.updateManyWithPipeline {
+	 *     unset {
+	 *         exclude(User::age)
+	 *         exclude(User::profile / Profile::name)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset)
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@KtMongoDsl
+	fun unset(vararg fields: Field<Document, *>) {
+		unset {
+			for (field in fields) {
+				exclude(field)
+			}
+		}
 	}
 
 	// In the future: replaceWith
