@@ -37,6 +37,10 @@ kotlin {
 		nodejs()
 	}
 
+	sourceSets.commonMain.dependencies {
+		implementation(libsCommon.jetbrains.annotations)
+	}
+
 	sourceSets.commonTest.dependencies {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 	}

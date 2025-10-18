@@ -17,7 +17,7 @@
  */
 
 // https://gitlab-ci-kts.opensavvy.dev/news/index.html
-@file:DependsOn("dev.opensavvy.gitlab:gitlab-ci-kotlin-jvm:0.7.0")
+@file:DependsOn("dev.opensavvy.gitlab:gitlab-ci-kotlin-jvm:0.7.1")
 
 import opensavvy.gitlab.ci.*
 import opensavvy.gitlab.ci.Environment.EnvironmentTier.Development

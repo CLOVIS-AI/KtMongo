@@ -20,10 +20,13 @@ kotest = "6.0.1"
 testBalloon = "0.5.0-K2.2.0"
 
 # https://gitlab.com/opensavvy/groundwork/pedestal/-/releases
-pedestal = "3.0.0"
+pedestal = "3.1.1"
 
-# https://opensavvy.gitlab.io/groundwork/prepared/docs/news
-prepared = "2.1.0"
+# https://prepared.opensavvy.dev/news
+prepared = "2.1.1"
+
+# https://github.com/JetBrains/java-annotations/releases
+jetbrains-annotations = "26.0.2-1"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -45,6 +48,8 @@ kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", versi
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-assertions-collections = { module = "io.kotest:kotest-assertions-collections", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 
 opensavvy-pedestal-progress = { module = "dev.opensavvy.pedestal:progress", version.ref = "pedestal" }
 opensavvy-pedestal-progress-coroutines = { module = "dev.opensavvy.pedestal:progress-coroutines", version.ref = "pedestal" }
