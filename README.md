@@ -51,6 +51,8 @@ Individual files may have additional copyright holders.
 
 The initial prototype was developed by 4SH, and is also licensed under the [Apache 2.0 license](prototype/LICENSE), though with different copyright holders.
 
+[Mokodee](docs/website/docs/assets/logo.svg), our precious mascot and logo, was created by [Lilywhiteout](https://bsky.app/profile/lilywhiteout.bsky.social).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
