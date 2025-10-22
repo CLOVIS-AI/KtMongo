@@ -16,6 +16,10 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KClass
+import kotlin.reflect.typeOf
+
 @RequiresOptIn("This symbol is part of the experimental BsonPath API. It may change or be removed without warnings. Please provide feedback in https://gitlab.com/opensavvy/ktmongo/-/issues/93.")
 annotation class ExperimentalBsonPathApi
 
@@ -61,11 +65,25 @@ sealed interface BsonPath {
 	operator fun get(index: Int): BsonPath =
 		Item(index, this)
 
+	@LowLevelApi
+	fun findIn(reader: BsonValueReader): Sequence<BsonValueReader>
+
 	private data class Field(val name: String, val parent: BsonPath) : BsonPath {
 
 		init {
 			require("'" !in name) { "The character ' (apostrophe) is currently forbidden in BsonPath expressions, found: \"$name\"" }
 		}
+
+		@LowLevelApi
+		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+			parent.findIn(reader)
+				.mapNotNull {
+					if (it.type == BsonType.Document) {
+						it.readDocument().read(name)
+					} else {
+						null
+					}
+				}
 
 		override fun toString() =
 			if (name matches legalCharacters) "$parent.$name"
@@ -81,10 +99,58 @@ sealed interface BsonPath {
 			require(index >= 0) { "BSON array indices start at 0, found: $index" }
 		}
 
+		@LowLevelApi
+		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+			parent.findIn(reader)
+				.mapNotNull {
+					if (it.type == BsonType.Array) {
+						it.readArray().read(index)
+					} else {
+						null
+					}
+				}
+
 		override fun toString() = "$parent[$index]"
 	}
 
 	companion object Root : BsonPath {
+		@LowLevelApi
+		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+			sequenceOf(reader)
+
 		override fun toString() = "$"
 	}
+}
+
+/**
+ * Finds all values that match [path] in a given [BSON document][Bson].
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * document.select<String>(BsonPath["foo"]["bar"]).firstOrNull()
+ * ```
+ * will return the value of the field `foo.bar`.
+ *
+ * To learn more about BSON paths, see [BsonPath].
+ */
+@OptIn(LowLevelApi::class)
+@ExperimentalBsonPathApi
+inline fun <reified T : Any?> Bson.select(path: BsonPath): Sequence<T> {
+	val type = typeOf<T>()
+
+	return path.findIn(this.reader().asValue())
+		.map {
+			@Suppress("UNCHECKED_CAST")
+			val result = it.read(type, type.classifier as KClass<T & Any>)
+
+			if (null is T) {
+				result as T
+			} else {
+				result
+					?: throw BsonReaderException("Found an unexpected 'null' when reading the path $path in document $this")
+			}
+		}
 }

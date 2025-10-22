@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson.multiplatform
 
+import opensavvy.ktmongo.bson.path.bsonPathTests
 import opensavvy.ktmongo.bson.raw.*
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -61,4 +62,6 @@ val MultiplatformBsonWriterTest by preparedSuite {
 			}
 		} shouldBeJson """{"root": {"four": 4, "foo": "bar", "grades": [4, 7]}}"""
 	}
+
+	bsonPathTests(context)
 }
