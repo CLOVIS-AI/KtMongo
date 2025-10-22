@@ -284,6 +284,13 @@ interface BsonValueReader {
 	fun readArray(): BsonArrayReader
 
 	/**
+	 * Reads this reader into an instance of [type] [T].
+	 *
+	 * If it isn't possible to deserialize this BSON to the given type, an exception is thrown.
+	 */
+	fun <T : Any> read(type: KType, klass: KClass<T>): T?
+
+	/**
 	 * JSON representation of this value.
 	 */
 	override fun toString(): String

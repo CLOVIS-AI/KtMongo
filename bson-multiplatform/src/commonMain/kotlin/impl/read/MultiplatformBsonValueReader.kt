@@ -16,9 +16,13 @@
 
 package opensavvy.ktmongo.bson.multiplatform.impl.read
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.modules.EmptySerializersModule
+import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.RawBsonWriter
+import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoder
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -29,6 +33,8 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -72,6 +78,12 @@ internal class MultiplatformBsonValueReader(
 	override fun readDecimal128(): ByteArray {
 		checkType(BsonType.Decimal128)
 		TODO("Not yet implemented")
+	}
+
+	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
+		val decoder = BsonDecoder(EmptySerializersModule(), this)
+		@Suppress("UNCHECKED_CAST")
+		return decoder.decodeSerializableValue(serializer(type) as KSerializer<T?>)
 	}
 
 	@LowLevelApi
