@@ -33,6 +33,9 @@ import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
+import opensavvy.ktmongo.bson.multiplatform.Bytes
+import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformArrayReader
+import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformDocumentReader
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -45,7 +48,7 @@ import kotlin.uuid.Uuid
 internal class BsonDecoderTopLevel(
 	override val serializersModule: SerializersModule,
 	val context: BsonFactory,
-	val bytes: ByteArray,
+	val bytesWithHeader: Bytes,
 ) : AbstractDecoder() {
 	var out: Any? = null
 
@@ -60,8 +63,8 @@ internal class BsonDecoderTopLevel(
 	@LowLevelApi
 	override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
 		return when (descriptor.kind) {
-			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, context.readDocument(bytes).reader())
-			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, context.readArray(bytes).reader())
+			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, MultiplatformDocumentReader(bytesWithHeader))
+			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, MultiplatformArrayReader(bytesWithHeader))
 			else -> TODO()
 		}
 	}
@@ -301,10 +304,18 @@ internal class BsonCompositeListDecoder(
 
 @ExperimentalSerializationApi
 fun <T : Any> decodeFromBson(context: BsonFactory, bytes: ByteArray, deserializer: DeserializationStrategy<T>): T {
-	val decoder = BsonDecoderTopLevel(EmptySerializersModule(), context, bytes)
+	val decoder = BsonDecoderTopLevel(EmptySerializersModule(), context, Bytes(bytes.copyOf()))
 	return decoder.decodeSerializableValue(deserializer)
 }
 
 @ExperimentalSerializationApi
+inline fun <reified T : Any> decodeFromBson(bytes: ByteArray): T =
+	decodeFromBson(bytes, serializer<T>())
+
+@ExperimentalSerializationApi
+fun <T : Any> decodeFromBson(context: BsonContext, bytes: ByteArray, deserializer: DeserializationStrategy<T>): T =
+	decodeFromBson(bytes, deserializer)
+
+@ExperimentalSerializationApi
 inline fun <reified T : Any> decodeFromBson(context: BsonFactory, bytes: ByteArray): T =
-	decodeFromBson(context, bytes, serializer<T>())
+	decodeFromBson(bytes, serializer<T>())

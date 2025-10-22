@@ -25,8 +25,12 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonDocument
+import org.bson.BsonReader
 import org.bson.BsonValue
+import org.bson.BsonWriter
+import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
+import org.bson.codecs.EncoderContext
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -82,6 +86,24 @@ internal class BsonArrayReader(
 	override fun asValue(): BsonValueReader =
 		BsonValueReader(raw, context)
 
+	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
+		// The Java BSON codecs expect to decode from a BsonReader positioned on the value to decode.
+		// However, there is no BsonReader implementation that reads directly from a BsonArray value.
+		// Work around this by wrapping the array in a temporary BSON document under a known field name
+		// and delegating decoding of that field to the codec for T.
+		val arrayHolder = BsonDocument("a", raw)
+		val documentReader: org.bson.BsonReader = org.bson.BsonDocumentReader(arrayHolder)
+
+		// Acquire the codec for the requested type.
+		val valueCodec: Codec<T> = context.codecRegistry.get(klass.java)
+
+		// Decode the fake document and extract its only field using a delegating codec.
+		val docCodec = FakeDocumentCodec(valueCodec)
+		val decoded = docCodec.decode(documentReader, DecoderContext.builder().build())
+		@Suppress("UNCHECKED_CAST")
+		return decoded.array as T?
+	}
+
 	override fun toString(): String {
 		// Yes, this is very ugly, and probably inefficient.
 		// The Java library doesn't provide a way to serialize arrays to JSON.
@@ -93,6 +115,34 @@ internal class BsonArrayReader(
 			document.indexOf('['),
 			document.lastIndexOf(']') + 1
 		).trim()
+	}
+
+	private class FakeDocument<T>(
+		val array: T,
+	)
+
+	private class FakeDocumentCodec<T>(
+		private val valueCodec: Codec<T>,
+	) : Codec<FakeDocument<T>> {
+		override fun decode(reader: BsonReader, decoderContext: DecoderContext): FakeDocument<T> {
+			reader.readStartDocument()
+			reader.readName("a")
+			val value = valueCodec.decode(reader, decoderContext)
+			reader.readEndDocument()
+			return FakeDocument(value)
+		}
+
+		override fun encode(writer: BsonWriter, value: FakeDocument<T>, encoderContext: EncoderContext) {
+			writer.writeStartDocument()
+			writer.writeName("a")
+			valueCodec.encode(writer, value.array, encoderContext)
+			writer.writeEndDocument()
+		}
+
+		override fun getEncoderClass(): Class<FakeDocument<T>> {
+			@Suppress("UNCHECKED_CAST")
+			return FakeDocument::class.java as Class<FakeDocument<T>>
+		}
 	}
 }
 

@@ -16,12 +16,19 @@
 
 package opensavvy.ktmongo.bson.multiplatform.impl.read
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.modules.EmptySerializersModule
+import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonArrayReader
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.multiplatform.BsonArray
 import opensavvy.ktmongo.bson.multiplatform.Bytes
+import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoderTopLevel
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 @LowLevelApi
 internal class MultiplatformArrayReader(
@@ -69,6 +76,12 @@ internal class MultiplatformArrayReader(
 
 	override fun asValue(): BsonValueReader =
 		MultiplatformBsonValueReader(BsonType.Array, bytesWithHeader)
+
+	@OptIn(ExperimentalSerializationApi::class)
+	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
+		val decoder = BsonDecoderTopLevel(EmptySerializersModule(), bytesWithHeader)
+		return decoder.decodeSerializableValue(serializer(type) as KSerializer<T?>)
+	}
 
 	override fun toString(): String = buildString {
 		append('[')
