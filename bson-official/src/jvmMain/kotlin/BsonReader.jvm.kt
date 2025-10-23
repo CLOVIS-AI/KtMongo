@@ -17,9 +17,6 @@
 package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.*
-import opensavvy.ktmongo.bson.BsonArrayReader
-import opensavvy.ktmongo.bson.BsonDocumentReader
-import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.official.types.toKtMongo
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
@@ -40,22 +37,22 @@ import org.bson.BsonArray as OfficialBsonArray
 import org.bson.BsonDocument as OfficialBsonDocument
 
 @LowLevelApi
-internal class BsonDocumentReader(
+internal class JavaBsonDocumentReader(
 	private val raw: OfficialBsonDocument,
 	private val context: JvmBsonFactory,
 ) : BsonDocumentReader {
 	override fun read(name: String): BsonValueReader? {
-		return BsonValueReader(raw[name] ?: return null, context)
+		return JavaBsonValueReader(raw[name] ?: return null, context)
 	}
 
 	override val entries: Map<String, BsonValueReader>
-		get() = raw.mapValues { (_, value) -> BsonValueReader(value, context) }
+		get() = raw.mapValues { (_, value) -> JavaBsonValueReader(value, context) }
 
 	override fun toBson(): Bson =
 		Bson(raw, context)
 
 	override fun asValue(): BsonValueReader =
-		BsonValueReader(raw, context)
+		JavaBsonValueReader(raw, context)
 
 	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
 		val codec = context.codecRegistry.get(klass.java)
@@ -70,22 +67,22 @@ internal class BsonDocumentReader(
 }
 
 @LowLevelApi
-internal class BsonArrayReader(
+internal class JavaBsonArrayReader(
 	private val raw: OfficialBsonArray,
 	private val context: JvmBsonFactory,
 ) : BsonArrayReader {
 	override fun read(index: Int): BsonValueReader? {
-		return BsonValueReader(raw.getOrNull(index) ?: return null, context)
+		return JavaBsonValueReader(raw.getOrNull(index) ?: return null, context)
 	}
 
 	override val elements: List<BsonValueReader>
-		get() = raw.map { BsonValueReader(it, context) }
+		get() = raw.map { JavaBsonValueReader(it, context) }
 
 	override fun toBson(): opensavvy.ktmongo.bson.official.BsonArray =
 		BsonArray(raw, context)
 
 	override fun asValue(): BsonValueReader =
-		BsonValueReader(raw, context)
+		JavaBsonValueReader(raw, context)
 
 	override fun <T : Any> read(type: KType, klass: KClass<T>): T? =
 		decodeValue(raw, klass, context.codecRegistry)
@@ -105,7 +102,7 @@ internal class BsonArrayReader(
 }
 
 @LowLevelApi
-private class BsonValueReader(
+private class JavaBsonValueReader(
 	private val value: BsonValue,
 	private val context: JvmBsonFactory,
 ) : BsonValueReader {
@@ -270,13 +267,13 @@ private class BsonValueReader(
 	@LowLevelApi
 	override fun readDocument(): BsonDocumentReader {
 		ensureType(BsonType.Document) { value.isDocument }
-		return BsonDocumentReader(value.asDocument(), context)
+		return JavaBsonDocumentReader(value.asDocument(), context)
 	}
 
 	@LowLevelApi
 	override fun readArray(): BsonArrayReader {
 		ensureType(BsonType.Array) { value.isArray }
-		return BsonArrayReader(value.asArray(), context)
+		return JavaBsonArrayReader(value.asArray(), context)
 	}
 
 	override fun <T : Any> read(type: KType, klass: KClass<T>): T? =
