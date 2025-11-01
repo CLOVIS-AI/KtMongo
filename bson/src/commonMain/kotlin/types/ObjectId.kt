@@ -120,7 +120,6 @@ class ObjectId : Comparable<ObjectId> {
 	 *
 	 * To access the hexadecimal representation of an existing ObjectId, see [ObjectId.hex].
 	 */
-	@OptIn(ExperimentalStdlibApi::class)
 	constructor(hex: String) : this(hexToBytes(hex))
 
 	/**
@@ -161,10 +160,8 @@ class ObjectId : Comparable<ObjectId> {
 	 *
 	 * The output string can be passed to [ObjectId] constructor to obtain a new identical [ObjectId] instance.
 	 */
-	@OptIn(ExperimentalStdlibApi::class)
 	val hex: String by lazy(LazyThreadSafetyMode.PUBLICATION) { bytes.toHexString(HexFormat.Default) }
 
-	@OptIn(ExperimentalStdlibApi::class)
 	override fun toString(): String =
 		"ObjectId($hex)"
 
@@ -231,7 +228,6 @@ class ObjectId : Comparable<ObjectId> {
 		 */
 		val MAX = ObjectId("FFFFFFFFFFFFFFFFFFFFFFFF")
 
-		@OptIn(ExperimentalStdlibApi::class)
 		private fun hexToBytes(hex: String): ByteArray {
 			require(hex.length == 24) { "An ObjectId must be 24-characters long, found ${hex.length} characters: '$hex'" }
 			return hex.hexToByteArray()
