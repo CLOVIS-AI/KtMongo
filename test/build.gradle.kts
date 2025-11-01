@@ -29,6 +29,7 @@ kotlin {
 		api(projects.driverCoroutines)
 
 		api(libsCommon.opensavvy.prepared.testBalloon)
+		implementation(libsCommon.kotlin.test)
 
 		api(libs.kotlinx.serialization)
 	}

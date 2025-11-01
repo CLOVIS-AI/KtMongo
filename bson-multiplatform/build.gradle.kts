@@ -79,6 +79,7 @@ kotlin {
 	sourceSets.commonTest.dependencies {
 		implementation(projects.bsonTests)
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
+		implementation(libsCommon.kotlin.test)
 	}
 }
 
