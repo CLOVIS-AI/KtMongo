@@ -146,6 +146,10 @@ interface BsonContext : ObjectIdGenerator {
 	@LowLevelApi
 	fun readArray(bytes: ByteArray): BsonArray
 
+	/**
+	 * The naming strategy used to generate paths.
+	 */
+	val nameStrategy: PropertyNameStrategy
 }
 
 /**
