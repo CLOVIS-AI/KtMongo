@@ -12,6 +12,7 @@ kmongo = "5.5.1"                # https://github.com/Litote/kmongo/releases
 junit = "5.13.4"                # https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api/versions
 junit-platform-launcher = "1.13.4" # https://central.sonatype.com/artifact/org.junit.platform/junit-platform-launcher/versions
 meanmirror = "1.0.0"            # https://github.com/meanbeanlib/meanmirror/tags
+slf4j = "2.0.17"                # https://central.sonatype.com/artifact/org.slf4j/slf4j-simple
 
 [plugins]
 
@@ -34,5 +35,7 @@ junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", vers
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform-launcher" }
 
 java-accessLambdaName = { module = "com.github.meanbeanlib:meanmirror", version.ref = "meanmirror" }
+
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
 [bundles]

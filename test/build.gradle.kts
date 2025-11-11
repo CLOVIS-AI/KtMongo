@@ -37,4 +37,8 @@ kotlin {
 	sourceSets.jvmMain.dependencies {
 		api(libs.mongodb.kotlinx.serialization)
 	}
+
+	sourceSets.jvmTest.dependencies {
+		runtimeOnly(libs.slf4j.simple)
+	}
 }
