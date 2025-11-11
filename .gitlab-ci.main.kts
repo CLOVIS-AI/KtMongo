@@ -79,7 +79,7 @@ fun Job.nativeIosArm64() {
 
 // endregion
 
-val supportedMongoDB = listOf("6.0.21", "7.0.18", "8.0.6")
+val supportedMongoDB = listOf("6.0.26", "7.0.25", "8.2.1")
 
 gitlabCi {
 	val build by stage()
@@ -89,7 +89,7 @@ gitlabCi {
 	// region Tests
 
 	for (mongo in supportedMongoDB) {
-		val checkJvm by job(stage = test) {
+		val checkJvm = job(name = "checkJvm[Mongo $mongo]", stage = test) {
 			jvm()
 
 			service("mongo", mongo) {
