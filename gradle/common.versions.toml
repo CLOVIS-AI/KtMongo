@@ -14,7 +14,7 @@ ksp = "2.3.2"
 compose = "1.8.2"
 
 # https://github.com/kotest/kotest/releases
-kotest = "6.0.1"
+kotest = "6.0.4"
 
 # https://github.com/infix-de/testBalloon/releases
 testBalloon = "0.6.0-K2.2.21"
@@ -35,6 +35,9 @@ kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", vers
 kotlinx-powerAssert = { id = "org.jetbrains.kotlin.plugin.power-assert", version.ref = "kotlin" }
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+# Kotest Gradle plugin for KMP (v6.0+)
+kotest = { id = "io.kotest", version.ref = "kotest" }
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
