@@ -27,6 +27,7 @@ mongodb-coroutines-jvm = { module = "org.mongodb:mongodb-driver-kotlin-coroutine
 mongodb-sync-jvm = { module = "org.mongodb:mongodb-driver-kotlin-sync", version.ref = "mongodb-driver" }
 mongodb-kotlinx-serialization = { module = "org.mongodb:bson-kotlinx", version.ref = "mongodb-serialization" }
 
+kmongo-property = { module = "org.litote.kmongo:kmongo-property", version.ref = "kmongo" }
 kmongo-sync = { module = "org.litote.kmongo:kmongo", version.ref = "kmongo" }
 kmongo-coroutines = { module = "org.litote.kmongo:kmongo-coroutine", version.ref = "kmongo" }
 

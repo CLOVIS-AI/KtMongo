@@ -25,6 +25,7 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.driverCoroutines)
+		implementation(projects.driverSharedKmongo)
 		api(libs.kmongo.coroutines)
 	}
 
