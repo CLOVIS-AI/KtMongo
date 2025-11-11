@@ -75,6 +75,7 @@ kotlin {
 		api(projects.bson)
 		api(libsCommon.opensavvy.prepared)
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
+		implementation(libsCommon.kotlin.test)
 		implementation(libs.kotlinx.serialization)
 	}
 }

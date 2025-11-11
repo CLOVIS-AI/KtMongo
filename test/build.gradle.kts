@@ -29,11 +29,16 @@ kotlin {
 		api(projects.driverCoroutines)
 
 		api(libsCommon.opensavvy.prepared.testBalloon)
+		implementation(libsCommon.kotlin.test)
 
 		api(libs.kotlinx.serialization)
 	}
 
 	sourceSets.jvmMain.dependencies {
 		api(libs.mongodb.kotlinx.serialization)
+	}
+
+	sourceSets.jvmTest.dependencies {
+		runtimeOnly(libs.slf4j.simple)
 	}
 }

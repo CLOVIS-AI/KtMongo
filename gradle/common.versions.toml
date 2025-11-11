@@ -5,10 +5,10 @@
 [versions]
 
 # https://kotlinlang.org/docs/releases.html#release-details
-kotlin = "2.2.0"
+kotlin = "2.2.20"
 
 # https://github.com/google/ksp/releases
-ksp = "2.2.0-2.0.2"
+ksp = "2.2.20-2.0.2"
 
 # https://github.com/JetBrains/compose-multiplatform/releases
 compose = "1.8.2"
@@ -17,13 +17,13 @@ compose = "1.8.2"
 kotest = "6.0.1"
 
 # https://github.com/infix-de/testBalloon/releases
-testBalloon = "0.5.0-K2.2.0"
+testBalloon = "0.6.0-K2.2.0"
 
 # https://gitlab.com/opensavvy/groundwork/pedestal/-/releases
 pedestal = "3.1.1"
 
 # https://prepared.opensavvy.dev/news
-prepared = "2.1.1"
+prepared = "2.1.2"
 
 # https://github.com/JetBrains/java-annotations/releases
 jetbrains-annotations = "26.0.2-1"

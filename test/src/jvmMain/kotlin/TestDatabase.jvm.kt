@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +27,13 @@ import opensavvy.prepared.suite.shared
 
 @PublishedApi
 internal val database by shared(CoroutineName("mongodb-establish-connection")) {
+	val options = "connectTimeoutMS=3000&serverSelectionTimeoutMS=3000"
 	val client = try {
-		MongoClient.create("mongodb://localhost:27017")
+		MongoClient.create("mongodb://localhost:27017/?$options")
 			.also { it.getDatabase("ktmongo-sync-tests").getCollection<String>("test").countDocuments() }
 	} catch (e: MongoTimeoutException) {
 		System.err.println("Cannot connect to localhost:27017. Did you start the docker-compose services? [This is normal in CI]\n${e.stackTraceToString()}")
-		MongoClient.create("mongodb://mongo:27017")
+		MongoClient.create("mongodb://mongo:27017/?$options")
 	}
 	client.getDatabase("ktmongo-sync-tests")
 }
