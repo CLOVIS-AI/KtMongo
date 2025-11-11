@@ -8,7 +8,7 @@
 kotlin = "2.2.21"
 
 # https://github.com/google/ksp/releases
-ksp = "2.2.20-2.0.2"
+ksp = "2.3.2"
 
 # https://github.com/JetBrains/compose-multiplatform/releases
 compose = "1.8.2"
