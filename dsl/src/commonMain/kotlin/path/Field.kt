@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.dsl.path
 
+import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -81,6 +82,67 @@ interface Field<in Root, out Type> {
 	@LowLevelApi
 	val path: Path
 
+	companion object {
+
+		/**
+		 * Refers to a field [child] with no compile-time safety.
+		 *
+		 * Sometimes, we must refer to a field that we don't want to add in the DTO representation.
+		 * For example, when writing complex aggregation queries that use intermediary fields that are removed
+		 * before the data is sent to the server.
+		 *
+		 * We recommend preferring the type-safe syntax when possible (see [Field]).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * println(Field.unsafe<Int>("age")) // 'age'
+		 * ```
+		 *
+		 * @see Field.unsafe Similar, but for accessing a child of a document.
+		 */
+		@OptIn(LowLevelApi::class)
+		fun <T> unsafe(child: String): Field<Any, T> =
+			FieldImpl(Path(child))
+	}
+}
+
+/**
+ * DSL to refer to [fields][Field], usually automatically added into scope by operators.
+ */
+interface FieldDsl {
+
+	/**
+	 * The context used to generate fields.
+	 */
+	@LowLevelApi
+	val context: BsonContext
+
+	/**
+	 * Converts a Kotlin property into a [Field].
+	 *
+	 * The KtMongo DSL is built on top of the [Field] interface, which represents a specific
+	 * field in a document (possibly nested).
+	 *
+	 * To help with writing requests, we provide utilities to use Kotlin property references as well:
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * println(User::name)       // KProperty1…
+	 * println(User::name.field) // Field 'name'
+	 * ```
+	 *
+	 * Most functions of the DSL have an overload that accepts a [KProperty1] and calls
+	 * [field] before calling the real operator implementation.
+	 */
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class)
+	val <Root, Type> KProperty1<Root, Type>.field: Field<Root, Type>
+		get() = FieldImpl(Path(context.nameStrategy.nameOf(this)))
+
 	/**
 	 * Refers to [child] as a nested field of the current field.
 	 *
@@ -110,7 +172,7 @@ interface Field<in Root, out Type> {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	operator fun <Child> div(child: Field<Type, Child>): Field<Root, Child> =
+	operator fun <Root, Type, Child> Field<Root, Type>.div(child: Field<Type, Child>): Field<Root, Child> =
 		FieldImpl(path / child.path)
 
 	/**
@@ -142,8 +204,8 @@ interface Field<in Root, out Type> {
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	operator fun <Child> div(child: KProperty1<in Type & Any, Child>): Field<Root, Child> =
-		FieldImpl(path / PathSegment.Field(child.name))
+	operator fun <Root, Type, Child> Field<Root, Type>.div(child: KProperty1<in Type & Any, Child>): Field<Root, Child> =
+		FieldImpl(path / PathSegment.Field(context.nameStrategy.nameOf(child)))
 
 	/**
 	 * Refers to a field [child] of the current field, with no compile-time safety.
@@ -163,121 +225,8 @@ interface Field<in Root, out Type> {
 	 * @see Field.Companion.unsafe Similar, but for accessing a field of the root document.
 	 */
 	@OptIn(LowLevelApi::class)
-	infix fun <Child> unsafe(child: String): Field<Root, Child> =
+	infix fun <Root, Type, Child> Field<Root, Type>.unsafe(child: String): Field<Root, Child> =
 		FieldImpl(path / PathSegment.Field(child))
-
-	companion object {
-
-		/**
-		 * Refers to a field [child] with no compile-time safety.
-		 *
-		 * Sometimes, we must refer to a field that we don't want to add in the DTO representation.
-		 * For example, when writing complex aggregation queries that use intermediary fields that are removed
-		 * before the data is sent to the server.
-		 *
-		 * We recommend preferring the type-safe syntax when possible (see [Field]).
-		 *
-		 * ### Example
-		 *
-		 * ```kotlin
-		 * println(Field.unsafe<Int>("age")) // 'age'
-		 * ```
-		 *
-		 * @see Field.unsafe Similar, but for accessing a child of a document.
-		 */
-		@OptIn(LowLevelApi::class)
-		fun <T> unsafe(child: String): Field<Any, T> =
-			FieldImpl(Path(child))
-	}
-}
-
-/**
- * Refers to a specific item in an array, by its index.
- *
- * ### Examples
- *
- * ```kotlin
- * class User(
- *     val name: String,
- *     val friends: List<Friend>,
- * )
- *
- * class Friend(
- *     val name: String,
- * )
- *
- * // Refer to the first friend
- * println(User::friends[0])
- * // → 'friends.$0'
- *
- * // Refer to the third friend's name
- * println(User::friends[2] / Friend::name)
- * // → 'friends.$2.name'
- * ```
- */
-@KtMongoDsl
-@OptIn(LowLevelApi::class)
-operator fun <Root, Type> Field<Root, Collection<Type>>.get(index: Int): Field<Root, Type> =
-	FieldImpl<Root, Type>(this.path / PathSegment.Indexed(index))
-
-/**
- * Refers to a specific item in a map, by its name.
- *
- * ### Examples
- *
- * ```kotlin
- * class User(
- *     val name: String,
- *     val friends: Map<String, Friend>,
- * )
- *
- * class Friend(
- *     val name: String,
- * )
- *
- * // Refer to the friend Bob
- * println(User::friends["bob"])
- * // → 'friends.bob'
- *
- * // Refer to Bob's name
- * println(User::friends["bob"] / Friend::name)
- * // → 'friends.bob.name'
- * ```
- */
-@KtMongoDsl
-@OptIn(LowLevelApi::class)
-operator fun <Root, Type> Field<Root, Map<String, Type>>.get(key: String): Field<Root, Type> =
-	FieldImpl<Root, Type>(this.path / PathSegment.Field(key))
-
-/**
- * DSL to refer to [fields][Field], usually automatically added into scope by operators.
- */
-interface FieldDsl {
-
-	/**
-	 * Converts a Kotlin property into a [Field].
-	 *
-	 * The KtMongo DSL is built on top of the [Field] interface, which represents a specific
-	 * field in a document (possibly nested).
-	 *
-	 * To help with writing requests, we provide utilities to use Kotlin property references as well:
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 * )
-	 *
-	 * println(User::name)       // KProperty1…
-	 * println(User::name.field) // Field 'name'
-	 * ```
-	 *
-	 * Most functions of the DSL have an overload that accepts a [KProperty1] and calls
-	 * [field] before calling the real operator implementation.
-	 */
-	@KtMongoDsl
-	@OptIn(LowLevelApi::class)
-	val <Root, Type> KProperty1<Root, Type>.field: Field<Root, Type>
-		get() = FieldImpl<Root, Type>(Path(this.name))
 
 	/**
 	 * Refers to a field [child] of the current field, with no compile-time safety.
@@ -432,8 +381,66 @@ interface FieldDsl {
 	 * ```
 	 */
 	@KtMongoDsl
+	@OptIn(LowLevelApi::class)
+	operator fun <Root, Type> Field<Root, Collection<Type>>.get(index: Int): Field<Root, Type> =
+		FieldImpl(this.path / PathSegment.Indexed(index))
+
+	/**
+	 * Refers to a specific item in an array, by its index.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val friends: List<Friend>,
+	 * )
+	 *
+	 * class Friend(
+	 *     val name: String,
+	 * )
+	 *
+	 * // Refer to the first friend
+	 * println(User::friends[0])
+	 * // → 'friends.$0'
+	 *
+	 * // Refer to the third friend's name
+	 * println(User::friends[2] / Friend::name)
+	 * // → 'friends.$2.name'
+	 * ```
+	 */
+	@KtMongoDsl
 	operator fun <Root, Type> KProperty1<Root, Collection<Type>>.get(index: Int): Field<Root, Type> =
 		this.field[index]
+
+	/**
+	 * Refers to a specific item in a map, by its name.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val friends: Map<String, Friend>,
+	 * )
+	 *
+	 * class Friend(
+	 *     val name: String,
+	 * )
+	 *
+	 * // Refer to the friend Bob
+	 * println(User::friends["bob"])
+	 * // → 'friends.bob'
+	 *
+	 * // Refer to Bob's name
+	 * println(User::friends["bob"] / Friend::name)
+	 * // → 'friends.bob.name'
+	 * ```
+	 */
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class)
+	operator fun <Root, Type> Field<Root, Map<String, Type>>.get(key: String): Field<Root, Type> =
+		FieldImpl(this.path / PathSegment.Field(key))
 
 	/**
 	 * Refers to a specific item in a map, by its name.
@@ -465,9 +472,12 @@ interface FieldDsl {
 
 }
 
-internal object FieldDslImpl : FieldDsl
+@OptIn(LowLevelApi::class)
+internal class FieldDslImpl(
+	override val context: BsonContext,
+) : FieldDsl
 
-@LowLevelApi
+@OptIn(LowLevelApi::class)
 internal class FieldImpl<Root, Type>(
 	override val path: Path,
 ) : Field<Root, Type> {

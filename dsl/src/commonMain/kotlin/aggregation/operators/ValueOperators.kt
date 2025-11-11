@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty1
 interface ValueOperators : FieldDsl {
 
 	@LowLevelApi
-	val context: BsonContext
+	override val context: BsonContext
 
 	/**
 	 * Refers to a [field] within an [aggregation value][AggregationOperators].
