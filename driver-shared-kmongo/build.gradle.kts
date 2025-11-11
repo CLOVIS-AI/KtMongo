@@ -25,6 +25,7 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.dsl)
+		implementation(libs.kotlinx.serialization)
 	}
 
 	sourceSets.jvmMain.dependencies {
@@ -33,6 +34,7 @@ kotlin {
 
 	sourceSets.commonTest.dependencies {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
+		implementation(projects.driverSyncKmongo)
 	}
 }
 
