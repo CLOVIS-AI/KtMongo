@@ -84,8 +84,51 @@ internal class JavaBsonArrayReader(
 	override fun asValue(): BsonValueReader =
 		JavaBsonValueReader(raw, context)
 
-	override fun <T : Any> read(type: KType, klass: KClass<T>): T? =
-		decodeValue(raw, klass, context.codecRegistry)
+	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
+		// Special-case Kotlin collections/arrays so we can preserve generic element type information
+		// (the Java codec erases generics and would otherwise decode subdocuments as org.bson.Document).
+		val typeArg = type.arguments.firstOrNull()?.type
+		val elementKClass = typeArg?.classifier as? KClass<*>
+		val elementIsNullable = typeArg?.isMarkedNullable == true
+
+		fun decodeElement(element: BsonValue): Any? {
+			if (element.isNull) {
+				if (elementIsNullable) return null
+				else throw BsonReaderException("Cannot decode null element for non-nullable element type in $type")
+			}
+
+			return decodeValue(element, elementKClass ?: (klass as KClass<*>), context.codecRegistry)
+		}
+
+		@Suppress("UNCHECKED_CAST")
+		return when {
+			klass == List::class || klass == MutableList::class || klass == Collection::class || klass == MutableCollection::class -> {
+				val out = ArrayList<Any?>()
+				for (v in raw) out.add(decodeElement(v))
+				out as T
+			}
+
+			klass == Set::class || klass == MutableSet::class -> {
+				val out = LinkedHashSet<Any?>()
+				for (v in raw) out.add(decodeElement(v))
+				out as T
+			}
+
+			klass.java.isArray && typeArg != null && elementKClass != null && !klass.java.componentType.isPrimitive -> {
+				val size = raw.size
+				val componentClass = elementKClass.java
+				val arrayObj = java.lang.reflect.Array.newInstance(componentClass, size)
+				for (i in 0 until size) {
+					val v = raw[i]
+					val decoded = decodeElement(v)
+					java.lang.reflect.Array.set(arrayObj, i, decoded)
+				}
+				arrayObj as T
+			}
+
+			else -> decodeValue(raw, klass, context.codecRegistry)
+		}
+	}
 
 	override fun toString(): String {
 		// Yes, this is very ugly, and probably inefficient.
@@ -276,8 +319,20 @@ private class JavaBsonValueReader(
 		return JavaBsonArrayReader(value.asArray(), context)
 	}
 
-	override fun <T : Any> read(type: KType, klass: KClass<T>): T? =
-		decodeValue(value, klass, context.codecRegistry)
+	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
+		// If the underlying BSON value is null, allow returning null for nullable targets
+		if (value.isNull) {
+			return if (type.isMarkedNullable) null else decodeValue(value, klass, context.codecRegistry)
+		}
+
+		// If the value is an array but a parameterized Kotlin collection/array is requested,
+		// delegate to the array-aware reader to preserve generic element type information.
+		if (value.isArray) {
+			return JavaBsonArrayReader(value.asArray(), context).read(type, klass)
+		}
+
+		return decodeValue(value, klass, context.codecRegistry)
+	}
 
 	override fun toString(): String =
 		value.toString()
