@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(libsCommon.plugins.kotlinx.serialization)
 	alias(libsCommon.plugins.testBalloon)
 }
 
