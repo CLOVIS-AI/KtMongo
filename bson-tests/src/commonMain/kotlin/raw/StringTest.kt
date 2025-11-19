@@ -82,7 +82,7 @@ fun SuiteDsl.string(context: Prepared<BsonContext>) = suite("String") {
 
 	testBson(
 		context,
-		"Two-byte UTF8 (\u00e9)",
+		"Two-byte UTF8",
 		document {
 			writeString("a", "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9")
 		},
@@ -96,7 +96,7 @@ fun SuiteDsl.string(context: Prepared<BsonContext>) = suite("String") {
 
 	testBson(
 		context,
-		"Three-byte UTF8 (\u2606)",
+		"Three-byte UTF8",
 		document {
 			writeString("a", "\u2606\u2606\u2606\u2606")
 		},
