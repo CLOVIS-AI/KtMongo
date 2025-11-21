@@ -24,9 +24,11 @@ import opensavvy.ktmongo.bson.types.ObjectId.Companion.PROCESS_ID_BOUND
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.assertions.checkThrows
 import opensavvy.prepared.suite.clock
+import opensavvy.prepared.suite.config.CoroutineTimeout
 import opensavvy.prepared.suite.random.random
 import opensavvy.prepared.suite.time
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
 val ObjectIdGeneratorTest by preparedSuite {
@@ -50,7 +52,7 @@ val ObjectIdGeneratorTest by preparedSuite {
 	}
 
 	suite("Default generator") {
-		test("Hunt for duplicates generated for a given instant") {
+		test("Hunt for duplicates generated for a given instant", CoroutineTimeout(30.seconds)) {
 			val generator = ObjectIdGenerator.Default(
 				clock = time.clock,
 				random = random.accessUnsafe(),
