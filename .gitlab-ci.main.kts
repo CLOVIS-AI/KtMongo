@@ -113,8 +113,23 @@ fun Job.nativeIosArm64() {
 }
 
 // endregion
+// region MongoDB support
 
+/**
+ * On the JVM, support the last three stable MongoDB versions.
+ */
 val supportedMongoDB = listOf("7.0.31")
+
+/**
+ * On other platforms, support only the latest stable MongoDB version.
+ */
+fun Job.latestMongoDB() {
+	service("mongo", supportedMongoDB.last()) {
+		alias = "mongo"
+	}
+}
+
+// endregion
 
 gitlabCi {
 	val build by stage()
@@ -163,6 +178,7 @@ gitlabCi {
 
 	val checkJsBrowser by job(stage = test) {
 		jsBrowser()
+		latestMongoDB()
 
 		script {
 			gradlew.tasks(
@@ -176,6 +192,7 @@ gitlabCi {
 
 	val checkJsNode by job(stage = test) {
 		jsNode()
+		latestMongoDB()
 
 		script {
 			gradlew.tasks(
@@ -191,6 +208,7 @@ gitlabCi {
 
 	val checkLinuxX64 by job(stage = test) {
 		nativeLinuxX64()
+		latestMongoDB()
 
 		script {
 			gradlew.tasks(
@@ -204,6 +222,7 @@ gitlabCi {
 
 	val checkIosArm64 by job(stage = test) {
 		nativeIosArm64()
+		latestMongoDB()
 
 		script {
 			gradlew.tasks(
