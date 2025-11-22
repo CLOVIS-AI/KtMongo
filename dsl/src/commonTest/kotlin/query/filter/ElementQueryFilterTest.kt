@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.dsl.query.filter
 
-import de.infix.testBalloon.framework.TestPlatformJvm.type
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.prepared.runner.testballoon.preparedSuite
@@ -49,7 +48,7 @@ val ElementQueryFilterTest by preparedSuite {
 		}
 	}
 
-	suite("Operator $type") {
+	suite($$"Operator $type") {
 		test("String") {
 			filter {
 				User::age hasType BsonType.String

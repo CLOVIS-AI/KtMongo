@@ -72,7 +72,7 @@ fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 
 	testBson(
 		context,
-		"two-byte UTF-8 (\u00e9)",
+		"two-byte UTF-8",
 		document { writeJavaScript("a", "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9") },
 		hex("190000000D61000D000000C3A9C3A9C3A9C3A9C3A9C3A90000"),
 		json($$"""{"a": {"$code": "éééééé"}}"""),
@@ -83,7 +83,7 @@ fun SuiteDsl.code(context: Prepared<BsonContext>) = suite("Code") {
 
 	testBson(
 		context,
-		"three-byte UTF-8 (\u2606)",
+		"three-byte UTF-8",
 		document { writeJavaScript("a", "\u2606\u2606\u2606\u2606") },
 		hex("190000000D61000D000000E29886E29886E29886E298860000"),
 		json($$"""{"a": {"$code": "☆☆☆☆"}}"""),
