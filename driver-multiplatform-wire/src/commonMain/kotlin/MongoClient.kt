@@ -43,6 +43,19 @@ interface MongoClient : AutoCloseable {
 	companion object
 }
 
+/**
+ * MongoDB client based on a [socket].
+ *
+ * ### Implementation
+ *
+ * 1. The user calls [send].
+ * 2. The request is serialized to binary and added to [requestChannel].
+ * 3. The [sendActor] sends it into the socket and tells the [triageActor].
+ * 4. When a response arrives, it is read by the [readActor].
+ * The entire response is extracted from the socket and sent to the [triageActor].
+ * 5. The [triageActor] matches the response with the initial request, then passes the result to [parserActor]s.
+ * 6. The [parserActor]s deserialize the request and give it back to the original [send] to be returned to the user.
+ */
 @LowLevelApi
 private class MultiplatformMongoClient(
 	private val socket: Socket,
@@ -55,14 +68,27 @@ private class MultiplatformMongoClient(
 		val output: Channel<Message>,
 	)
 
+	private class SentMessage(
+		val requestId: Int,
+		val output: Channel<Message>,
+	)
+
 	private class Response(
-		val length: Int,
 		val requestId: Int,
 		val responseTo: Int,
 		val data: Buffer,
+	)
+
+	private class ResponseWithHandler(
+		val response: Response,
 		val output: SendChannel<Message>,
 	)
 
+	/**
+	 * When a client calls [send], the request is serialized then is added to this channel.
+	 *
+	 * The [triageActor] reads from this channel.
+	 */
 	private val requestChannel = Channel<Request>(Channel.RENDEZVOUS)
 
 	private fun log(message: String) {
@@ -70,31 +96,59 @@ private class MultiplatformMongoClient(
 	}
 
 	init {
-		val sentChannel = Channel<Pair<Int, SendChannel<Message>>>(Channel.BUFFERED)
+		/**
+		 * When the [sendActor] has sent a message into the socket, it adds a message in here.
+		 *
+		 * The [triageActor] reads from this channel.
+		 */
+		val sentChannel = Channel<SentMessage>(Channel.BUFFERED)
+
+		/**
+		 * When the [readActor] has found a message in the socket, it adds it here.
+		 *
+		 * The [triageActor] reads from this channel.
+		 */
 		val receivedChannel = Channel<Response>(Channel.BUFFERED)
+
+		/**
+		 * When the [triageActor] has combined a response with its request handler, it adds it here.
+		 *
+		 * The [parserActor]s read from this channel.
+		 */
+		val triagedChannel = Channel<ResponseWithHandler>(Channel.BUFFERED)
 
 		coroutineScope.launch(CoroutineName("ktmongo-actor-writer")) {
 			sendActor(sentChannel)
 		}
 
 		coroutineScope.launch(CoroutineName("ktmongo-actor-reader")) {
-			readActor(sentChannel, receivedChannel)
+			readActor(receivedChannel)
+		}
+
+		coroutineScope.launch(CoroutineName("ktmongo-actor-triage")) {
+			triageActor(sentChannel, receivedChannel, triagedChannel)
 		}
 
 		repeat(3) {
 			coroutineScope.launch(CoroutineName("ktmongo-actor-parser-$it")) {
-				parserActor(receivedChannel)
+				parserActor(triagedChannel)
 			}
 		}
 	}
 
+	/**
+	 * The [sendActor]:
+	 * 1. Reads from [requestChannel].
+	 * 2. Writes into the socket.
+	 * 3. Tells the [triageActor] about the request through [sentChannel].
+	 */
 	private suspend fun sendActor(
-		sentChannel: SendChannel<Pair<Int, SendChannel<Message>>>,
+		sentChannel: SendChannel<SentMessage>,
 	) {
-		val writeChannel = socket.openWriteChannel()
+		val writeSocket = socket.openWriteChannel()
 		var nextRequestId = 1
 
-		while (currentCoroutineContext().isActive && !writeChannel.isClosedForWrite) {
+		while (currentCoroutineContext().isActive && !writeSocket.isClosedForWrite) {
 			val request = requestChannel.receive()
 			val requestId = nextRequestId++
 
@@ -102,57 +156,80 @@ private class MultiplatformMongoClient(
 			buffer.writeIntLe(request.data.size.toInt() + 8) // + the size itself (4) + the request ID (4)
 			buffer.writeIntLe(requestId)
 			buffer.write(request.data, request.data.size)
-			writeChannel.writeBuffer(buffer)
-			writeChannel.flush()
+			writeSocket.writeBuffer(buffer)
+			writeSocket.flush()
 
 			log("$requestId was sent")
-			sentChannel.send(requestId to request.output)
+			sentChannel.send(SentMessage(requestId, request.output))
 		}
 	}
 
+	/**
+	 * The [readActor]:
+	 * 1. Reads from the socket.
+	 * 2. Sends each response to the [triageActor] through [receivedChannel].
+	 */
 	private suspend fun readActor(
-		sentChannel: ReceiveChannel<Pair<Int, SendChannel<Message>>>,
 		receivedChannel: SendChannel<Response>,
-	) = coroutineScope {
-		val readChannel = socket.openReadChannel()
+	) {
+		val readSocket = socket.openReadChannel()
+
+		while (currentCoroutineContext().isActive && !readSocket.isClosedForRead) {
+			val messageLength = readSocket.readInt().asLittleEndian()
+			val requestId = readSocket.readInt().asLittleEndian()
+			val responseTo = readSocket.readInt().asLittleEndian()
+
+			log("Received message $requestId in response to $responseTo, of size $messageLength")
+
+			val data = readSocket.readBuffer(messageLength - (4 * 3)) // don't read the fields we already read
+			receivedChannel.send(Response(requestId, responseTo, data))
+		}
+	}
+
+	/**
+	 * The [triageActor]:
+	 * 1. Reads all the requests that have been sent by the [sendActor] through [sentChannel].
+	 * 2. Reads all the responses that have been received by the [readActor] through [receivedChannel].
+	 * 3. For each response, matches it with its initial request, and send them to the [parserActor]s through [triagedChannel].
+	 */
+	private suspend fun triageActor(
+		sentChannel: ReceiveChannel<SentMessage>,
+		receivedChannel: ReceiveChannel<Response>,
+		triagedChannel: SendChannel<ResponseWithHandler>,
+	) {
 		val waiting = HashMap<Int, SendChannel<Message>>()
 
-		while (currentCoroutineContext().isActive && !readChannel.isClosedForRead) {
+		while (currentCoroutineContext().isActive && socket.isActive) {
 			select {
-				sentChannel.onReceive { (requestId, output) ->
-					log("$requestId expects an answer")
-					waiting[requestId] = output
+				/*
+				 * Always give priority to the requests sent to ensure we NEVER
+				 * read a response before reading its request.
+				 */
+				sentChannel.onReceive { message ->
+					log("${message.requestId} expects an answer")
+					waiting[message.requestId] = message.output
 				}
 
-				async {
-					readChannel.awaitContent(4 * 4) // standard message header size
-				}.onAwait { isActive ->
-					if (isActive) {
-						log("Received a response from the DB.")
-						val messageLength = readChannel.readInt().asLittleEndian()
-						val requestId = readChannel.readInt().asLittleEndian()
-						val responseTo = readChannel.readInt().asLittleEndian()
-
-						log("Received message $requestId in response to $responseTo, of size $messageLength")
-
-						val data = readChannel.readBuffer(messageLength - (4 * 3)) // don't read the fields we already read
-
-						val handler = waiting[responseTo]
-							?: error("Received the message $requestId in response to $responseTo, but no known message with ID $responseTo has been sent by this client.")
-						receivedChannel.send(Response(messageLength, requestId, responseTo, data, handler))
-					} else {
-						log("MongoDB has stopped sending data to us.")
-					}
+				receivedChannel.onReceive { response ->
+					val handler = waiting[response.responseTo]
+						?: error("Received the message ${response.requestId} in response to ${response.responseTo}, but no known message with ID ${response.responseTo} has been sent by this client.\nCurrently in-flight requests: ${waiting.keys.sorted()}")
+					triagedChannel.send(ResponseWithHandler(response, handler))
 				}
 			}
 		}
 	}
 
+	/**
+	 * The [parserActor]s:
+	 * 1. Receives triaged responses from the [triageActor] through [receivedChannel].
+	 * 2. Deserializes each response.
+	 * 3. Sends it back to [send] using the response's [ResponseWithHandler.output].
+	 */
 	private suspend fun parserActor(
-		receivedChannel: ReceiveChannel<Response>,
+		receivedChannel: ReceiveChannel<ResponseWithHandler>,
 	) {
 		for (received in receivedChannel) {
-			val buffer = received.data
+			val buffer = received.response.data
 
 			buffer.readIntLe()
 			buffer.readIntLe()
@@ -170,11 +247,13 @@ private class MultiplatformMongoClient(
 						TODO()
 					}
 
-					else -> error("Unrecognized section kind $kind in message ${received.requestId} sent as response to ${received.responseTo}")
+					else -> error("Unrecognized section kind $kind in message ${received.response.requestId} sent as response to ${received.response.responseTo}")
 				}
 			}
 
 			log("Received: $sections")
+
+			// TODO: send it back to the sender
 		}
 	}
 
