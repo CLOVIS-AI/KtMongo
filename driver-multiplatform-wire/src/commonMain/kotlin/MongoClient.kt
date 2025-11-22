@@ -25,10 +25,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.selects.select
+import kotlinx.io.*
 import kotlinx.io.Buffer
-import kotlinx.io.readIntLe
-import kotlinx.io.writeIntLe
-import kotlinx.io.writeUByte
+import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.coroutines.CoroutineContext
@@ -231,20 +230,38 @@ private class MultiplatformMongoClient(
 		for (received in receivedChannel) {
 			val buffer = received.response.data
 
-			buffer.readIntLe()
-			buffer.readIntLe()
+			val opcode = buffer.readIntLe()
+			check(opcode == 2013) { "Currently, only OP_MSG is supported, but found opcode $opcode" }
+
+			buffer.readIntLe() // flag bits
 
 			val sections = ArrayList<MessageSection>()
 
 			while (buffer.canRead()) {
-				when (val kind = buffer.readByte()) {
+				when (val kind = buffer.readUByte()) {
 					MessageSection.Body.kind -> {
 						val size = buffer.peek().readIntLe()
-						sections += MessageSection.Body(factory.readDocument(buffer.readBytes(size)))
+						sections += MessageSection.Body(factory.readDocument(buffer.readBytes(size))) // TODO: avoid copy
 					}
 
 					MessageSection.DocumentSequence.kind -> {
-						TODO()
+						// • section size
+						val size = buffer.readIntLe() - 4
+						var read = 4
+
+						// • section id
+						val id = buffer.readCString()
+						read += id.length
+						read += 1 // null terminator
+
+						// • section documents
+						val documents = ArrayList<BsonDocument>()
+						while (read < size) {
+							val documentSize = buffer.peek().readIntLe()
+							documents += factory.readDocument(buffer.readBytes(documentSize)) // TODO: avoid copy
+						}
+
+						sections += MessageSection.DocumentSequence(id, documents)
 					}
 
 					else -> error("Unrecognized section kind $kind in message ${received.response.requestId} sent as response to ${received.response.responseTo}")
@@ -253,7 +270,16 @@ private class MultiplatformMongoClient(
 
 			log("Received: $sections")
 
-			// TODO: send it back to the sender
+			val body = sections.singleOrNull { it is MessageSection.Body } as? MessageSection.Body
+				?: error("An OP_MSG message must have a single body section, found: $sections")
+
+			received.output.send(
+				Message.OpMsg(
+					body,
+					sections.asSequence()
+						.filterIsInstance<MessageSection.DocumentSequence>(),
+				)
+			)
 		}
 	}
 
@@ -262,6 +288,25 @@ private class MultiplatformMongoClient(
 			((this and 0xFF00) shl 8) or
 			((this and 0xFF0000) shr 8) or
 			((this and 0xFF000000.toInt()) ushr 24)
+	}
+
+	private fun Buffer.writeCString(value: String) {
+		val text = value
+			.takeUnless { 0.toChar() in it }
+			?: value.filterNot { it == 0.toChar() }
+
+		writeString(text)
+		writeUByte(0u)
+	}
+
+	private fun Buffer.readCString(): String {
+		val peek = peek()
+		var byteCount = 0L
+		while (peek.request(1) && peek.readByte() != 0.toByte())
+			byteCount++
+
+		return readString(byteCount)
+			.also { skip(1) } // null-terminator
 	}
 
 	private fun writeMessage(message: Message): Buffer {
@@ -290,14 +335,43 @@ private class MultiplatformMongoClient(
 		// endregion
 		// region Sections
 
-		// Section kind: Body
-		buffer.writeUByte(0u)
-
-		buffer.write(message.content.toByteArray()) // TODO: avoid copy
+		when (message) {
+			is Message.OpMsg -> {
+				writeOpMsg(message, buffer)
+			}
+		}
 
 		// endregion
 
 		return buffer
+	}
+
+	private fun writeOpMsg(message: Message.OpMsg, buffer: Buffer) {
+		// First, write the body (any order is allowed in the spec)
+
+		// • body section kind
+		buffer.writeUByte(message.body.kind)
+
+		// • body content
+		buffer.write(message.body.document.toByteArray()) // TODO: avoid copy
+
+		// Next, read the sequences, if any
+		for (sequence in message.sequences) {
+			// • section kind
+			buffer.writeUByte(sequence.kind)
+
+			val payload = Buffer()
+			payload.writeCString(sequence.id)
+			for (document in sequence.documents) {
+				payload.write(document.toByteArray()) // TODO: avoid copy
+			}
+
+			// • size
+			buffer.writeIntLe(payload.size.toInt() + 4)
+
+			// • documents
+			buffer.write(payload, payload.size)
+		}
 	}
 
 	override suspend fun send(
@@ -306,7 +380,6 @@ private class MultiplatformMongoClient(
 		val output = Channel<Message>()
 		log("Preparing to write $message…")
 		val buffer = writeMessage(message)
-		log("Message to send is: ${message.content}")
 		requestChannel.send(Request(buffer, output))
 		return output
 	}

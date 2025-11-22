@@ -16,11 +16,10 @@
 
 package opensavvy.ktmongo.multiplatform.wire
 
-import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 
-interface Message {
+sealed interface Message {
 
 	/**
 	 * The message type.
@@ -29,20 +28,37 @@ interface Message {
 	 */
 	val opcode: Int
 
-	@LowLevelApi
-	val content: BsonDocument
-}
+	/**
+	 * The `OP_MSG` message, introduced in MongoDB 3.6.
+	 *
+	 * ### External resources
+	 *
+	 * - [Wire protocol documentation](https://www.mongodb.com/docs/manual/reference/mongodb-wire-protocol/)
+	 * - [Specification](https://github.com/mongodb/specifications/blob/master/source/message/OP_MSG.md)
+	 */
+	class OpMsg(
+		val body: MessageSection.Body,
+		val sequences: Sequence<MessageSection.DocumentSequence> = emptySequence(),
+	) : Message {
 
-data object Find : Message {
+		override val opcode: Int
+			get() = 2013
 
-	override val opcode: Int
-		get() = 2013
+		override fun toString() = sequenceOf(body).plus(sequences)
+			.joinToString(prefix = "OpMsg(", postfix = ")")
+	}
 
-	@LowLevelApi
-	override val content: BsonDocument
-		get() = BsonFactory().buildDocument {
-			writeString("find", "test-basic")
-			writeDocument("filter") {}
-			writeString("\$db", "java-test")
-		}
+	companion object {
+
+		@OptIn(LowLevelApi::class)
+		fun Find() = OpMsg(
+			MessageSection.Body(
+				BsonFactory().buildDocument {
+					writeString("find", "test-basic")
+					writeDocument("filter") {}
+					writeString("\$db", "test-basic")
+				}
+			)
+		)
+	}
 }

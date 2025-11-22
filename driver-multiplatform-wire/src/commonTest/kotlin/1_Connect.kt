@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,8 @@
 
 package opensavvy.ktmongo.multiplatform.wire
 
-import kotlinx.coroutines.delay
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
-import opensavvy.prepared.suite.launchInBackground
 
 val ConnectTest by preparedSuite {
 
@@ -34,17 +32,16 @@ val ConnectTest by preparedSuite {
 		println("Disconnected.")
 	}
 
-	test("Send a hello") {
+	test("Send a find on a collection that doesn't exist") {
 		val client = MongoClient()
 
-		val output = client.send(Find)
+		val output = client.send(Message.Find())
 
-		launchInBackground {
-			for (out in output) {
-				println("Received: $out 2")
-			}
-		}
+		println("Awaiting response…")
+		val response = output.receive()
 
-		delay(10)
+		check(response is Message.OpMsg)
+		check(response.body.document["ok"]?.decodeDouble() == 1.0)
+		check(response.body.document["cursor"]?.decodeDocument()?.get("ns")?.decodeString() == "test-basic.test-basic")
 	}
 }

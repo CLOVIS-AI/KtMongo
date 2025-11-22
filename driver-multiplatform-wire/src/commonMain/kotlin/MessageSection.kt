@@ -20,18 +20,18 @@ import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 
 sealed interface MessageSection {
 
-	val kind: Byte
+	val kind: UByte
 
 	class Body(
 		val document: BsonDocument,
 	) : MessageSection {
-		override val kind: Byte
+		override val kind: UByte
 			get() = Body.kind
 
-		override fun toString() = "MessageSection.Body($document)"
+		override fun toString() = "Body($document)"
 
 		companion object {
-			const val kind: Byte = 0
+			const val kind: UByte = 0u
 		}
 	}
 
@@ -39,13 +39,13 @@ sealed interface MessageSection {
 		val id: String,
 		val documents: List<BsonDocument>,
 	) : MessageSection {
-		override val kind: Byte
+		override val kind: UByte
 			get() = DocumentSequence.kind
 
-		override fun toString() = "MessageSection.DocumentSequence('$id': $documents)"
+		override fun toString() = "DocumentSequence('$id': $documents)"
 
 		companion object {
-			const val kind: Byte = 1
+			const val kind: UByte = 1u
 		}
 	}
 }
