@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.dsl.query
 
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import org.intellij.lang.annotations.Language
 

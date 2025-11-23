@@ -16,10 +16,10 @@
 
 package opensavvy.ktmongo.dsl.aggregation.operators
 
-import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue

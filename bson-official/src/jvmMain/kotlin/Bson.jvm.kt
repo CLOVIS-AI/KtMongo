@@ -32,7 +32,7 @@ import org.bson.BsonDocument as OfficialBsonDocument
 
 actual class Bson internal constructor(
 	val raw: OfficialBsonDocument,
-	val context: JvmBsonContext,
+	val context: JvmBsonFactory,
 ) : Bson {
 
 	@LowLevelApi
@@ -50,7 +50,7 @@ actual class Bson internal constructor(
 
 actual class BsonArray internal constructor(
 	val raw: OfficialBsonArray,
-	val context: JvmBsonContext,
+	val context: JvmBsonFactory,
 ) : BsonArray {
 
 	@LowLevelApi
@@ -71,7 +71,7 @@ actual class BsonArray internal constructor(
 // Inspired by https://gist.github.com/Koboo/ebd7c6802101e1a941ef31baca04113d
 // Inspired by https://stackoverflow.com/questions/49262903
 @LowLevelApi
-private fun OfficialBsonDocument.toByteArray(context: JvmBsonContext): ByteArray {
+private fun OfficialBsonDocument.toByteArray(context: JvmBsonFactory): ByteArray {
 	val buffer = BasicOutputBuffer()
 	val writer = BsonBinaryWriter(buffer)
 	val documentCodec = DocumentCodec(context.codecRegistry)
@@ -90,7 +90,7 @@ private fun OfficialBsonDocument.toByteArray(context: JvmBsonContext): ByteArray
 }
 
 internal class KotlinBsonCodec(
-	private val context: JvmBsonContext,
+	private val context: JvmBsonFactory,
 ) : Codec<opensavvy.ktmongo.bson.official.Bson> {
 	private val documentCodec = BsonDocumentCodec()
 
@@ -106,7 +106,7 @@ internal class KotlinBsonCodec(
 }
 
 internal class KotlinBsonArrayCodec(
-	private val context: JvmBsonContext,
+	private val context: JvmBsonFactory,
 ) : Codec<opensavvy.ktmongo.bson.official.BsonArray> {
 	private val arrayCodec = BsonArrayCodec()
 

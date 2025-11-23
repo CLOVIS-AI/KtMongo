@@ -20,28 +20,22 @@ import kotlinx.io.Buffer
 import kotlinx.io.readTo
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.serializer
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
-import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformArrayFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformDocumentFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.serialization.encodeToBson
-import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
-	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Default(),
-	override val nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
-) : BsonContext, ObjectIdGenerator by objectIdGenerator {
+class BsonFactory : BsonFactory {
 
 	@Suppress("NOTHING_TO_INLINE")
 	private inline fun openArbitraryTopLevel(

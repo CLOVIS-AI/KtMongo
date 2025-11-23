@@ -16,14 +16,10 @@
 
 package opensavvy.ktmongo.dsl.path
 
-import opensavvy.ktmongo.bson.*
-import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
-import kotlin.reflect.KType
-import kotlin.time.ExperimentalTime
 
 val FieldTest by preparedSuite {
 	class Profile(
@@ -45,28 +41,7 @@ val FieldTest by preparedSuite {
 	class TestFieldDsl : FieldDsl {
 
 		@LowLevelApi
-		override val context: BsonContext
-			get() = object : BsonContext {
-				@LowLevelApi
-				override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson = throw UnsupportedOperationException()
-
-				@LowLevelApi
-				override fun <T : Any> buildDocument(obj: T, type: KType, klass: KClass<T>): Bson = throw UnsupportedOperationException()
-
-				@LowLevelApi
-				override fun readDocument(bytes: ByteArray): Bson = throw UnsupportedOperationException()
-
-				@LowLevelApi
-				override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray = throw UnsupportedOperationException()
-
-				@LowLevelApi
-				override fun readArray(bytes: ByteArray): BsonArray = throw UnsupportedOperationException()
-				override val nameStrategy: PropertyNameStrategy
-					get() = PropertyNameStrategy.Default
-
-				@ExperimentalTime
-				override fun newId(): ObjectId = throw UnsupportedOperationException()
-			}
+		override val context: PropertyNameStrategy get() = PropertyNameStrategy.Default
 
 		// force 'User' to ensure all functions keep the User as the root type
 		infix fun Field<User, *>.shouldHavePath(path: String) =

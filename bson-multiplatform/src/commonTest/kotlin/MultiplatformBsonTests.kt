@@ -23,7 +23,7 @@ import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 
 val context by prepared {
-	BsonContext()
+	BsonFactory()
 }
 
 val MultiplatformBsonWriterTest by preparedSuite {

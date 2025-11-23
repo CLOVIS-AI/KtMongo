@@ -20,7 +20,9 @@ import com.mongodb.client.model.*
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.PropertyNameStrategy
-import opensavvy.ktmongo.bson.official.JvmBsonContext
+import opensavvy.ktmongo.bson.official.JvmBsonFactory
+import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
@@ -35,6 +37,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
+import opensavvy.ktmongo.official.JvmBsonContext
 import opensavvy.ktmongo.official.command.toJava
 import opensavvy.ktmongo.official.options.*
 import opensavvy.ktmongo.official.options.toJava
@@ -57,8 +60,11 @@ class JvmMongoCollection<Document : Any> internal constructor(
 	fun asKotlinClient() = inner
 
 	@LowLevelApi
-	override val context: JvmBsonContext =
-		JvmBsonContext(inner.codecRegistry, nameStrategy = nameStrategy)
+	override val context = JvmBsonContext(
+		bsonFactory = JvmBsonFactory(inner.codecRegistry),
+		objectIdGenerator = ObjectIdGenerator.Jvm(),
+		nameStrategy = nameStrategy,
+	)
 
 	// region Find
 

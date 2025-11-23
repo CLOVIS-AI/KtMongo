@@ -18,7 +18,7 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
@@ -32,7 +32,7 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from the BSON corpus tests.
  */
-fun SuiteDsl.minMaxKey(context: Prepared<BsonContext>) = suite("MinMaxKey") {
+fun SuiteDsl.minMaxKey(context: Prepared<BsonFactory>) = suite("MinMaxKey") {
 	testBson(
 		context,
 		"Minkey",

@@ -32,7 +32,7 @@ import opensavvy.ktmongo.bson.BsonArrayReader
 import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueReader
-import opensavvy.ktmongo.bson.multiplatform.BsonContext
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -44,7 +44,7 @@ import kotlin.uuid.Uuid
 @ExperimentalSerializationApi
 internal class BsonDecoderTopLevel(
 	override val serializersModule: SerializersModule,
-	val context: BsonContext,
+	val context: BsonFactory,
 	val bytes: ByteArray,
 ) : AbstractDecoder() {
 	var out: Any? = null
@@ -300,11 +300,11 @@ internal class BsonCompositeListDecoder(
 }
 
 @ExperimentalSerializationApi
-fun <T : Any> decodeFromBson(context: BsonContext, bytes: ByteArray, deserializer: DeserializationStrategy<T>): T {
+fun <T : Any> decodeFromBson(context: BsonFactory, bytes: ByteArray, deserializer: DeserializationStrategy<T>): T {
 	val decoder = BsonDecoderTopLevel(EmptySerializersModule(), context, bytes)
 	return decoder.decodeSerializableValue(deserializer)
 }
 
 @ExperimentalSerializationApi
-inline fun <reified T : Any> decodeFromBson(context: BsonContext, bytes: ByteArray): T =
+inline fun <reified T : Any> decodeFromBson(context: BsonFactory, bytes: ByteArray): T =
 	decodeFromBson(context, bytes, serializer<T>())

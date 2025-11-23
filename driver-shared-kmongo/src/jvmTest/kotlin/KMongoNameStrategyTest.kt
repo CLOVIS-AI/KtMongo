@@ -16,11 +16,9 @@
 
 package opensavvy.ktmongo.utils.kmongo
 
-import com.mongodb.MongoClientSettings
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.BsonContext
-import opensavvy.ktmongo.bson.official.JvmBsonContext
+import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.prepared.runner.testballoon.preparedSuite
@@ -33,20 +31,11 @@ data class NameStrategyProfile(val name: String)
 
 val KMongoNameStrategyTest by preparedSuite {
 
-	val context by prepared {
-		JvmBsonContext(
-			codecRegistry = MongoClientSettings.getDefaultCodecRegistry(),
-			nameStrategy = KMongoNameStrategy(),
-		)
-	}
-
 	val fieldDsl by prepared {
-		val ctx = context()
-
 		object : FieldDsl {
 			@LowLevelApi
-			override val context: BsonContext
-				get() = ctx
+			override val context: PropertyNameStrategy
+				get() = KMongoNameStrategy()
 		}
 	}
 

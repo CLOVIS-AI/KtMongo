@@ -25,6 +25,7 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.dsl)
+		implementation(projects.driverSharedOfficial)
 		implementation(libs.kotlinx.serialization)
 	}
 

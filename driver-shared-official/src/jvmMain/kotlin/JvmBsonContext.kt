@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.official
 
+import opensavvy.ktmongo.bson.PropertyNameStrategy
+import opensavvy.ktmongo.bson.official.JvmBsonFactory
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.BsonContext
 
-/**
- * Configuration for the BSON serialization.
- *
- * Instances of this class are platform-specific and are used to create BSON documents.
- * Platforms can thus parameterize the behavior of writers and readers.
- *
- * For example, a platform may store its serialization configuration in this class.
- */
-interface BsonContext : ObjectIdGenerator, BsonFactory {
-
-	/**
-	 * The naming strategy used to generate paths.
-	 */
-	val nameStrategy: PropertyNameStrategy
-}
+class JvmBsonContext(
+	bsonFactory: JvmBsonFactory,
+	objectIdGenerator: ObjectIdGenerator,
+	nameStrategy: PropertyNameStrategy,
+) : BsonContext,
+	JvmBsonFactory by bsonFactory,
+	ObjectIdGenerator by objectIdGenerator,
+	PropertyNameStrategy by nameStrategy

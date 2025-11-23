@@ -19,9 +19,7 @@ package opensavvy.ktmongo.bson.official
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
-import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.bson.official.types.*
-import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.*
@@ -41,14 +39,37 @@ import kotlin.time.ExperimentalTime
 /**
  * BSON implementation based on the official Java and Kotlin MongoDB drivers.
  */
-class JvmBsonContext(
-	codecRegistry: CodecRegistry,
-	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
-	override val nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
-) : BsonContext, ObjectIdGenerator by objectIdGenerator {
+interface JvmBsonFactory : BsonFactory {
 
 	@LowLevelApi
-	val codecRegistry: CodecRegistry = CodecRegistries.fromRegistries(
+	val codecRegistry: CodecRegistry
+
+	@LowLevelApi
+	override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson
+
+	@LowLevelApi
+	override fun <T : Any> buildDocument(obj: T, type: KType, klass: KClass<T>): Bson
+
+	@LowLevelApi
+	override fun readDocument(bytes: ByteArray): Bson
+
+	@LowLevelApi
+	override fun buildArray(block: BsonValueWriter.() -> Unit): opensavvy.ktmongo.bson.official.BsonArray
+
+	@LowLevelApi
+	override fun readArray(bytes: ByteArray): opensavvy.ktmongo.bson.official.BsonArray
+
+}
+
+/**
+ * BSON implementation based on the official Java and Kotlin MongoDB drivers.
+ */
+private class JvmBsonFactoryImpl(
+	codecRegistry: CodecRegistry,
+) : JvmBsonFactory {
+
+	@LowLevelApi
+	override val codecRegistry: CodecRegistry = CodecRegistries.fromRegistries(
 		codecRegistry,
 		CodecRegistries.fromCodecs(
 			KotlinBsonCodec(this),
@@ -118,10 +139,13 @@ class JvmBsonContext(
 	}
 }
 
+fun JvmBsonFactory(codecRegistry: CodecRegistry): JvmBsonFactory =
+	JvmBsonFactoryImpl(codecRegistry)
+
 @OptIn(LowLevelApi::class)
 private class JavaBsonWriter(
-	private val context: JvmBsonContext,
-	private val writer: BsonWriter
+	private val context: JvmBsonFactory,
+	private val writer: BsonWriter,
 ) : BsonFieldWriter, BsonValueWriter {
 	override fun write(name: String, block: BsonValueWriter.() -> Unit) {
 		writer.writeName(name)
@@ -341,7 +365,7 @@ private class JavaBsonWriter(
 
 @LowLevelApi
 private class JavaRootArrayWriter(
-	private val context: JvmBsonContext,
+	private val context: JvmBsonFactory,
 	private val array: BsonArray,
 ) : BsonValueWriter {
 	@LowLevelApi

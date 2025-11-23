@@ -19,7 +19,7 @@
 package opensavvy.ktmongo.bson.raw
 
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
@@ -36,7 +36,7 @@ import kotlin.time.ExperimentalTime
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/oid.json.
  */
-fun SuiteDsl.objectId(context: Prepared<BsonContext>) = suite("ObjectId") {
+fun SuiteDsl.objectId(context: Prepared<BsonFactory>) = suite("ObjectId") {
 	@Serializable
 	data class A(val a: ObjectId)
 
