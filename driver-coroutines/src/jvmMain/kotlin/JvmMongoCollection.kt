@@ -21,7 +21,6 @@ import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
-import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.bson.official.JvmBsonFactory
 import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
@@ -35,6 +34,7 @@ import opensavvy.ktmongo.dsl.command.InsertOneOptions
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.options.WriteConcernOption
 import opensavvy.ktmongo.dsl.options.option
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery

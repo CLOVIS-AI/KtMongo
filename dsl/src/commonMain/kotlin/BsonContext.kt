@@ -17,8 +17,8 @@
 package opensavvy.ktmongo.dsl
 
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.ExperimentalTime
 

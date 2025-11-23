@@ -18,9 +18,9 @@ package opensavvy.ktmongo.utils.kmongo
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.FieldDsl
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 import org.bson.codecs.pojo.annotations.BsonId

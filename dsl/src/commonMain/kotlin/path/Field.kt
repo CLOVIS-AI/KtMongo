@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.dsl.path
 
-import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl

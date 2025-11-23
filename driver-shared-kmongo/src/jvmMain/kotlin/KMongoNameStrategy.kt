@@ -17,8 +17,8 @@
 package opensavvy.ktmongo.utils.kmongo
 
 import kotlinx.serialization.SerialName
-import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.property.KPropertyPath
 import kotlin.reflect.KProperty1

@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.dsl.path
 
-import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.reflect.KProperty1

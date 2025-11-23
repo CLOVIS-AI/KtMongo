@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.dsl.path
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KProperty1
