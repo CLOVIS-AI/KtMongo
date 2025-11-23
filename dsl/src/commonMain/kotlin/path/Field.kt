@@ -141,7 +141,7 @@ interface FieldDsl {
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	val <Root, Type> KProperty1<Root, Type>.field: Field<Root, Type>
-		get() = FieldImpl(Path(context.nameOf(this)))
+		get() = FieldImpl(context.pathOf(this))
 
 	/**
 	 * Refers to [child] as a nested field of the current field.
@@ -202,10 +202,10 @@ interface FieldDsl {
 	 *
 	 * @see get Access a specific element of an array
 	 */
-	@OptIn(LowLevelApi::class)
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	operator fun <Root, Type, Child> Field<Root, Type>.div(child: KProperty1<in Type & Any, Child>): Field<Root, Child> =
-		FieldImpl(path / PathSegment.Field(context.nameOf(child)))
+		FieldImpl(path / context.pathOf(child))
 
 	/**
 	 * Refers to a field [child] of the current field, with no compile-time safety.
