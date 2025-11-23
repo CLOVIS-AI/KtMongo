@@ -17,10 +17,6 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
-import opensavvy.ktmongo.dsl.LowLevelApi
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 /**
  * Configuration for the BSON serialization.
@@ -30,136 +26,10 @@ import kotlin.reflect.typeOf
  *
  * For example, a platform may store its serialization configuration in this class.
  */
-interface BsonContext : ObjectIdGenerator {
-
-	/**
-	 * Instantiates a new [BSON document][Bson].
-	 *
-	 * ### Example
-	 *
-	 * To create the following BSON document:
-	 * ```json
-	 * {
-	 *     "name": "Bob",
-	 *     "isAlive": true,
-	 *     "children": [
-	 *         {
-	 *             "name": "Alice"
-	 *         },
-	 *         {
-	 *             "name": "Charles"
-	 *         }
-	 *     ]
-	 * }
-	 * ```
-	 * use the code:
-	 * ```kotlin
-	 * buildDocument {
-	 *     writeString("name", "Alice")
-	 *     writeBoolean("isAlive", true)
-	 *     writeArray("children") {
-	 *         writeDocument {
-	 *             writeString("name", "Alice")
-	 *         }
-	 *         writeDocument {
-	 *             writeString("name", "Charles")
-	 *         }
-	 *     }
-	 * }
-	 * ```
-	 */
-	@LowLevelApi
-	@BsonWriterDsl
-	fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson
-
-	/**
-	 * Instantiates a new [BSON document][Bson] representing the provided [instance].
-	 */
-	@LowLevelApi
-	@BsonWriterDsl
-	fun buildDocument(instance: BsonFieldWriteable): Bson =
-		buildDocument { instance.writeTo(this) }
-
-	/**
-	 * Writes an arbitrary Kotlin [obj] into a top-level BSON document.
-	 *
-	 * Prefer using [BsonContext.write].
-	 *
-	 * A top-level BSON document cannot be `null`, cannot be a primitive, and cannot be a collection.
-	 * If [obj] is not representable as a document, an exception is thrown.
-	 */
-	@LowLevelApi
-	@BsonWriterDsl
-	fun <T : Any> buildDocument(obj: T, type: KType, klass: KClass<T>): Bson
-
-	/**
-	 * Instantiates a new [BSON document][Bson] by reading its [bytes] representation.
-	 *
-	 * The reverse operation is available as [Bson.toByteArray].
-	 */
-	@LowLevelApi
-	fun readDocument(bytes: ByteArray): Bson
-
-	/**
-	 * Instantiates a new [BSON array][BsonArray].
-	 *
-	 * ### Example
-	 *
-	 * To create the following BSON array:
-	 * ```json
-	 * [
-	 *     12,
-	 *     null,
-	 *     {
-	 *         "name": "Barry"
-	 *     }
-	 * ]
-	 * ```
-	 * use the code:
-	 * ```kotlin
-	 * buildArray {
-	 *     writeInt32(12)
-	 *     writeNull()
-	 *     writeDocument {
-	 *         writeString("name", "Barry")
-	 *     }
-	 * }
-	 * ```
-	 */
-	@LowLevelApi
-	@BsonWriterDsl
-	fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray
-
-	/**
-	 * Instantiates a new [BSON array][BsonArray] representing the provided [instance].
-	 */
-	@LowLevelApi
-	@BsonWriterDsl
-	fun buildArray(instance: BsonValueWriteable): BsonArray =
-		buildArray { instance.writeTo(this) }
-
-	/**
-	 * Instantiates a new [BSON array][BsonArray] by reading its [bytes] representation.
-	 *
-	 * The reverse operation is available as [BsonArray.toByteArray].
-	 */
-	@LowLevelApi
-	fun readArray(bytes: ByteArray): BsonArray
+interface BsonContext : ObjectIdGenerator, BsonFactory {
 
 	/**
 	 * The naming strategy used to generate paths.
 	 */
 	val nameStrategy: PropertyNameStrategy
 }
-
-/**
- * Writes an arbitrary Kotlin [obj] into a top-level BSON document.
- *
- * A top-level BSON document cannot be `null`, cannot be a primitive, and cannot be a collection.
- * If [obj] is not representable as a document, an exception is thrown.
- *
- * @see Bson.read The inverse operation.
- */
-@OptIn(LowLevelApi::class)
-inline fun <reified T : Any> BsonContext.write(obj: T): Bson =
-	buildDocument(obj, typeOf<T>(), T::class)
