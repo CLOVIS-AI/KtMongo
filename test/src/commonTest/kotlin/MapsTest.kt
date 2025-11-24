@@ -19,6 +19,8 @@ package opensavvy.ktmongo.sync
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.prepared.suite.config.CoroutineTimeout
+import kotlin.time.Duration.Companion.seconds
 
 @Serializable
 data class MapsUser(
@@ -27,7 +29,7 @@ data class MapsUser(
 	val friends: Map<String, MapsUser> = emptyMap(),
 )
 
-val MapsTest by preparedSuite {
+val MapsTest by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
 	val users by testCollection<MapsUser>("maps")
 
 	suite("Not empty map") {

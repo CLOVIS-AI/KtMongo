@@ -19,6 +19,8 @@ package opensavvy.ktmongo.sync
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.prepared.suite.config.CoroutineTimeout
+import kotlin.time.Duration.Companion.seconds
 
 @Serializable
 data class ArrayUser(
@@ -27,7 +29,7 @@ data class ArrayUser(
 	val friends: List<ArrayUser> = emptyList(),
 )
 
-val ArraysTest by preparedSuite {
+val ArraysTest by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
 	val users by testCollection<ArrayUser>("arrays")
 
 	suite("Not empty array") {
