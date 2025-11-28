@@ -279,7 +279,7 @@ class ObjectId : Comparable<ObjectId> {
 	 */
 	@ExperimentalTime
 	@LowLevelApi
-	class Serializer : KSerializer<ObjectId> {
+	object Serializer : KSerializer<ObjectId> {
 		override val descriptor: SerialDescriptor
 			get() = PrimitiveSerialDescriptor("opensavvy.ktmongo.bson.types.ObjectId", PrimitiveKind.STRING)
 

@@ -144,8 +144,8 @@ internal class BsonDecoder(
 	}
 
 	private val bytes = ByteArraySerializer().descriptor
-	private val objectId = ObjectId.Serializer().descriptor
-	private val timestamp = Timestamp.Serializer().descriptor
+	private val objectId = ObjectId.Serializer.descriptor
+	private val timestamp = Timestamp.Serializer.descriptor
 	private val uuid = Uuid.serializer().descriptor
 	private val instant = Instant.serializer().descriptor
 	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
