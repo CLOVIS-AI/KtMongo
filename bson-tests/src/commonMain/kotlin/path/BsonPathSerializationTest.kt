@@ -23,6 +23,7 @@ import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.suite.assertions.checkThrows
 import opensavvy.prepared.suite.prepared
 import kotlin.time.ExperimentalTime
 
@@ -73,6 +74,18 @@ fun SuiteDsl.bsonPathTests(
 
 	test("Select a simple field") {
 		check(bobDoc().select<ObjectId>(BsonPath["_id"]).firstOrNull() == ObjectId("68f93c04a7b4c7c3fc6bff38"))
+	}
+
+	test("Select a simple field, with the 'at' syntax") {
+		val id: ObjectId = bobDoc() at BsonPath["_id"]
+		check(id == ObjectId("68f93c04a7b4c7c3fc6bff38"))
+	}
+
+	@Suppress("UNUSED", "UnusedVariable")
+	test("Select a simple field that doesn't exist") {
+		checkThrows<NoSuchElementException> {
+			val age: String = bobDoc() at BsonPath["age"]
+		}
 	}
 
 	test("Select a nested field") {

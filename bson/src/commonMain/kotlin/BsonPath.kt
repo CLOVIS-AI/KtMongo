@@ -26,12 +26,48 @@ annotation class ExperimentalBsonPathApi
 /**
  * Access specific fields in arbitrary BSON documents using a [JSONPath](https://www.rfc-editor.org/rfc/rfc9535.html)-like API.
  *
- * ### Example
+ * To access fields of a [BSON document][Bson], use [select] or [at].
+ *
+ * ### Why BSON paths?
+ *
+ * Most of the time, users want to deserialize documents, which they can do with [opensavvy.ktmongo.bson.read].
+ *
+ * However, sometimes, we receive large BSON payloads but only care about a few fields (for example, an explain plan).
+ * Writing an entire DTO for such payloads is time-consuming and complex.
+ *
+ * Deserializing only a few specific fields can be much faster than deserializing the entire payload, as BSON is designed
+ * to allow skipping unwanted fields.
+ *
+ * We may also face a payload that is too dynamic to easily deserialize, or with so much nesting that accessing fields becomes boilerplate.
+ *
+ * In these situations, it may be easier (and often, more performant) to only deserialize a few specific fields,
+ * which is what [BsonPath] is useful for.
+ *
+ * ### Syntax
  *
  * ```kotlin
  * BsonPath["foo"]    // Refer to the field 'foo': $.foo
  * BsonPath[0]        // Refer to the item at index 0: $[0]
  * BsonPath["foo"][0] // Refer to the item at index 0 in the array named 'foo': $.foo[0]
+ * ```
+ *
+ * ### Accessing data
+ *
+ * Find the first value for a given BSON path using [at]:
+ *
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * val name = document at BsonPath["profile"]["name"]
+ * ```
+ *
+ * Find all values for a given BSON path using [select]:
+ *
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * document.select(BsonPath["profile"])
+ *     .forEach { println("Found $it") }
  * ```
  */
 @ExperimentalBsonPathApi
@@ -113,6 +149,14 @@ sealed interface BsonPath {
 		override fun toString() = "$parent[$index]"
 	}
 
+	/**
+	 * The root of a [BsonPath] expression.
+	 *
+	 * All BSON paths start at the root.
+	 * For example, `BsonPath["foo"]` refers to the field `"foo"`.
+	 *
+	 * For more information, see [BsonPath].
+	 */
 	companion object Root : BsonPath {
 		@LowLevelApi
 		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
@@ -134,7 +178,8 @@ sealed interface BsonPath {
  * ```
  * will return the value of the field `foo.bar`.
  *
- * To learn more about BSON paths, see [BsonPath].
+ * @see BsonPath Learn more about BSON paths.
+ * @see selectFirst If you're only interested about a single element. See also [at].
  */
 @OptIn(LowLevelApi::class)
 @ExperimentalBsonPathApi
@@ -154,3 +199,66 @@ inline fun <reified T : Any?> Bson.select(path: BsonPath): Sequence<T> {
 			}
 		}
 }
+
+/**
+ * Finds the first value that matches [path] in a given [BSON document][Bson].
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * document.selectFirst<String>(BsonPath["foo"]["bar"])
+ * ```
+ * will return the value of the field `foo.bar`.
+ *
+ * ### Alternatives
+ *
+ * Depending on your situation, you can also use the equivalent function [at]:
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * val bar: String = document at BsonPath["foo"]["bar"]
+ * ```
+ *
+ * @see BsonPath Learn more about BSON paths.
+ * @see select Select multiple values with a BSON path.
+ * @throws NoSuchElementException If no element is found matching the path.
+ */
+@ExperimentalBsonPathApi
+inline fun <reified T : Any?> Bson.selectFirst(path: BsonPath): T {
+	val iter = select<T>(path).iterator()
+
+	if (iter.hasNext()) {
+		return iter.next()
+	} else {
+		throw NoSuchElementException("Could not find any value at path $path for document $this")
+	}
+}
+
+/**
+ * Finds the first value that matches [path] in a given [BSON document][Bson].
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * val bar: String = document at BsonPath["foo"]["bar"]
+ * ```
+ * will return the value of the field `foo.bar`.
+ *
+ * Depending on your situation, you can also use the equivalent function [selectFirst]:
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * document.selectFirst<String>(BsonPath["foo"]["bar"])
+ * ```
+ *
+ * @see BsonPath Learn more about BSON paths.
+ * @see select Select multiple values with a BSON path.
+ * @throws NoSuchElementException If no element is found matching the path.
+ */
+@ExperimentalBsonPathApi
+inline infix fun <reified T : Any?> Bson.at(path: BsonPath): T =
+	selectFirst(path)
