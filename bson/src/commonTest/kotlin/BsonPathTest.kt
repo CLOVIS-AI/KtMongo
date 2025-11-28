@@ -19,6 +19,7 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.prepared.suite.assertions.checkThrows
 
 val BsonPathTest by preparedSuite {
 
@@ -44,6 +45,36 @@ val BsonPathTest by preparedSuite {
 		test("Chaining") {
 			check(BsonPath["store"]["book"][0]["title"].toString() == "$.store.book[0].title")
 		}
+	}
+
+	suite("Parsing") {
+
+		test("A BsonPath expression must start with a $") {
+			checkThrows<IllegalArgumentException> {
+				BsonPath.parse("foo")
+			}
+		}
+
+		test("Parse a simple field with dot notation") {
+			check(BsonPath.parse("$.book").toString() == "$.book")
+		}
+
+		test("Parse a simple field with bracket notation") {
+			check(BsonPath.parse("$['book']").toString() == "$.book")
+		}
+
+		test("Parse a simple field with bracket notation and double quotes") {
+			check(BsonPath.parse("$[\"book\"]").toString() == "$.book")
+		}
+
+		test("Parse a combined field names") {
+			check(BsonPath.parse("$.foo['bar'][\"baz\"]").toString() == "$.foo.bar.baz")
+		}
+
+		test("Parse a simple array index") {
+			check(BsonPath.parse("$[0]").toString() == "$[0]")
+		}
+
 	}
 
 }

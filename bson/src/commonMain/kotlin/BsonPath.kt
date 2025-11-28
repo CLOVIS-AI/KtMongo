@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.dsl.LowLevelApi
+import org.intellij.lang.annotations.Language
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
@@ -163,6 +164,161 @@ sealed interface BsonPath {
 			sequenceOf(reader)
 
 		override fun toString() = "$"
+
+		/**
+		 * Parses an [RFC-9535 compliant](https://www.rfc-editor.org/rfc/rfc9535.html) string expression into a [BsonPath] instance.
+		 *
+		 * This function is the mirror of the [BsonPath.toString] methods.
+		 *
+		 * **Warning.** Not everything from the RFC is implemented at the moment.
+		 * As a rule of thumb, if [text] can be returned by the [BsonPath.toString] function of a segment,
+		 * then it can be parsed by this function.
+		 *
+		 * | Syntax                | Description                                                  |
+		 * | --------------------- | ------------------------------------------------------------ |
+		 * | `$`                   | The root identifier. See [BsonPath.Root].                    |
+		 * | `['foo']` or `.foo`   | Accessor for a field named `foo`. See [BsonPath.get].        |
+		 * | `[0]`                 | Accessor for the first item of an array. See [BsonPath.get]. |
+		 *
+		 * ### Examples
+		 *
+		 * ```kotlin
+		 * val document: Bson = …
+		 *
+		 * val id: Uuid = document at BsonPath.parse("$.profile.id")
+		 *
+		 * for (user in document.select<User>("$.friends")) {
+		 *     println("User: $user")
+		 * }
+		 * ```
+		 *
+		 * @see BsonPath Learn more about BSON paths.
+		 * @see at Access one field by its BSON path.
+		 * @see select Access multiple fields by their BSON path.
+		 */
+		fun parse(@Language("JSONPath") text: String): BsonPath {
+			require(text.startsWith("$")) { "A BsonPath expression must start with a dollar sign: $text\nDid you mean to create a BsonPath to access a specific field? If so, see BsonPath[\"foo\"]" }
+
+			var expr: BsonPath = BsonPath
+
+			for (segment in splitSegments(text)) {
+				expr = when {
+					// .foo
+					segment.startsWith(".") ->
+						expr[segment.removePrefix(".")]
+
+					// ['foo']
+					segment.startsWith("['") && segment.endsWith("']") ->
+						expr[segment.removePrefix("['").removeSuffix("']")]
+
+					// ["foo"]
+					segment.startsWith("[\"") && segment.endsWith("\"]") ->
+						expr[segment.removePrefix("[\"").removeSuffix("\"]")]
+
+					// [0]
+					segment.startsWith("[") && segment.endsWith("]") ->
+						expr[segment.removePrefix("[").removeSuffix("]").toInt()]
+
+					else -> throw IllegalArgumentException("Could not parse the segment “$segment” in BsonPath expression “$text”.")
+				}
+			}
+
+			return expr
+		}
+
+		private fun splitSegments(text: String): Sequence<String> = sequence {
+			val accumulator = StringBuilder()
+			var i = 1 // skip the $ sign
+
+			// Helper for nicer error messages
+			fun fail(msg: String, cause: Throwable? = null): Nothing {
+				val excerpt =
+					if (i + 5 > text.length) text.substring(i, text.length)
+					else text.substring(i, i + 5) + "…"
+
+				throw IllegalArgumentException("Could not parse the BSON path expression “$text” at index $i (“${excerpt}”): $msg", cause)
+			}
+
+			fun accumulate() {
+				accumulator.append(text[i])
+				i++
+			}
+
+			fun accumulateWhile(predicate: (Char) -> Boolean) {
+				while (i < text.length && predicate(text[i])) {
+					accumulate()
+				}
+			}
+
+			try {
+				while (i < text.length) {
+					val c = text[i]
+
+					when (c) {
+						'.' if accumulator.isEmpty() -> {
+							// .foo
+							accumulate()
+
+							if (text[i].isNameFirst()) {
+								accumulateWhile { it.isNameChar() }
+							} else {
+								fail("A name segment should start with a non-digit character, found: ${text[i]}")
+							}
+
+							yield(accumulator.toString())
+							accumulator.clear()
+						}
+
+						'[' if accumulator.isEmpty() -> {
+							val c2 = text[i + 1]
+
+							when (c2) {
+								'\'', '"' -> {
+									accumulate() // opening bracket
+									accumulate() // opening quote
+									accumulateWhile { it != '\'' && it != '"' }
+									accumulate() // closing quote
+									accumulate() // closing bracket
+									yield(accumulator.toString())
+									accumulator.clear()
+								}
+
+								in Char(0x30)..Char(0x39) -> {
+									accumulate() // opening bracket
+									accumulateWhile { it.isDigit() }
+									accumulate() // closing bracket
+									yield(accumulator.toString())
+									accumulator.clear()
+								}
+
+								else -> fail("Unrecognized selector")
+							}
+						}
+
+						else -> {
+							fail("Unrecognized syntax")
+						}
+					}
+				}
+			} catch (e: Exception) {
+				if (e is IllegalArgumentException)
+					throw e
+				else
+					fail("An exception was thrown: ${e.message}", e)
+			}
+		}
+
+		private inline fun Char.isAlpha() =
+			this.code in 0x41..0x51 || this.code in 0x61..0x7A
+
+		private inline fun Char.isDigit() =
+			this.code in 0x30..0x39
+
+		private inline fun Char.isNameFirst() =
+			isAlpha() || this == '_' || this.code in 0x80..0xD7FF || this.code in 0xE000..0x10FFFF
+
+		private inline fun Char.isNameChar() =
+			isNameFirst() || isDigit()
 	}
 }
 

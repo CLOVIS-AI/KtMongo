@@ -57,6 +57,7 @@ kotlin {
 	sourceSets.commonMain.dependencies {
 		api(projects.annotations)
 		implementation(libs.kotlinx.serialization)
+		implementation(libsCommon.jetbrains.annotations)
 	}
 
 	sourceSets.commonTest.dependencies {
