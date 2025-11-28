@@ -25,9 +25,7 @@ import opensavvy.gitlab.ci.plugins.Gradle.Companion.gradlew
 import opensavvy.gitlab.ci.plugins.Gradle.Companion.useGradle
 import opensavvy.gitlab.ci.script.shell
 
-/**
- * The version of images downloaded from https://gitlab.com/opensavvy/automation/containers
- */
+// https://gitlab.com/opensavvy/automation/containers/-/releases
 val ciContainers = "0.8.2"
 
 /**

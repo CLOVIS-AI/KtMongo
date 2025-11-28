@@ -70,14 +70,17 @@ plugins:
       post_excerpt: optional
       authors: false
       blog_dir: news
-  - tags:
-      tag_file: news/tags.md
+  - tags
   - rss:
       match_path: 'news/posts/.*'
       date_from_meta:
         as_creation: date.created
         as_update: date.updated
       use_git: false
+
+extra:
+  analytics:
+    provider: custom
 
 markdown_extensions:
   - admonition
