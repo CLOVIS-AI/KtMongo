@@ -151,6 +151,8 @@ gitlabCi {
 			)
 		}
 
+		retry(2)
+
 		interruptible(true)
 	}
 
