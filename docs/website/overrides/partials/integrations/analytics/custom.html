@@ -1,0 +1,32 @@
+<!-- Privacy-friendly analytics by Plausible -->
+<script>
+	// Load Plausible dynamically so MkDocs Material's privacy plugin can't internalize it.
+	window.plausible = window.plausible || function () {
+		(plausible.q = plausible.q || []).push(arguments)
+	};
+	plausible.init = plausible.init || function (i) {
+		plausible.o = i || {}
+	};
+	// Configure endpoint before the library loads • https://plausible.io/docs/script-extensions#plausibleinit-configuration
+	plausible.init({
+		endpoint: 'https://p.opensavvy.dev/event',
+		customProperties: function(eventname) {
+			return {
+				host: window.location.host,
+				project: '{{ config.site_name }}',
+				area: 'site',
+			}
+		},
+		transformRequest: function(request) {
+			request.u = request.u.replace(/.*\/jobs\/[0-9]+\/artifacts\/[^\/]*/g, ''); // Remove review app URL prefix
+			return request;
+		}
+	});
+	// Append the external script dynamically
+	(function () {
+		var s = document.createElement('script');
+		s.defer = true;
+		s.src = 'https://p.opensavvy.dev/script.js';
+		(document.head || document.getElementsByTagName('head')[0]).appendChild(s);
+	})();
+</script>
