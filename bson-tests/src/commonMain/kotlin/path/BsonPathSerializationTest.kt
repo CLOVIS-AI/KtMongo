@@ -89,36 +89,36 @@ fun SuiteDsl.bsonPathTests(
 	}
 
 	test("Select a nested field") {
-		check(bobDoc().select<String>(BsonPath["profile"]["name"]).firstOrNull() == "Bob")
+		check(bobDoc().select<String>(BsonPath.parse("$.profile.name")).firstOrNull() == "Bob")
 	}
 
 	test("Select a document") {
-		check(bobDoc().select<Profile>(BsonPath["profile"]).firstOrNull() == Profile("Bob", 46))
+		check(bobDoc().select<Profile>(BsonPath.parse("$.profile")).firstOrNull() == Profile("Bob", 46))
 	}
 
 	test("Select a list") {
-		check(bobDoc().select<List<Pet>>(BsonPath["pets"]).first()[0].name == "Barbie")
+		check(bobDoc().select<List<Pet>>(BsonPath.parse("$.pets")).first()[0].name == "Barbie")
 	}
 
 	test("Select a list item") {
-		check(bobDoc().select<Pet>(BsonPath["pets"][1]).firstOrNull() == Pet("Poupette", 1, Species.Bird))
+		check(bobDoc().select<Pet>(BsonPath.parse("$.pets[1]")).firstOrNull() == Pet("Poupette", 1, Species.Bird))
 	}
 
 	test("Select a list item's field") {
-		check(bobDoc().select<String>(BsonPath["pets"][1]["name"]).firstOrNull() == "Poupette")
+		check(bobDoc().select<String>(BsonPath.parse("$.pets[1].name")).firstOrNull() == "Poupette")
 	}
 
 	test("Select an enum") {
-		check(bobDoc().select<Species>(BsonPath["pets"][1]["species"]).firstOrNull() == Species.Bird)
+		check(bobDoc().select<Species>(BsonPath.parse("$.pets[1].species")).firstOrNull() == Species.Bird)
 	}
 
 	test("Select a nullable field") {
-		check(bobDoc().select<Int?>(BsonPath["pets"][1]["age"]).firstOrNull() == 1)
-		check(bobDoc().select<Int?>(BsonPath["pets"][2]["age"]).firstOrNull() == null)
+		check(bobDoc().select<Int?>(BsonPath.parse("$.pets[1].age")).firstOrNull() == 1)
+		check(bobDoc().select<Int?>(BsonPath.parse("$.pets[2].age")).firstOrNull() == null)
 	}
 
 	test("Select all pet names") {
-		check(bobDoc().select<String>(BsonPath["pets"].all["name"]).toList() == listOf("Barbie", "Poupette", "Michael"))
+		check(bobDoc().select<String>(BsonPath.parse("$.pets.*.name")).toList() == listOf("Barbie", "Poupette", "Michael"))
 	}
 
 }
