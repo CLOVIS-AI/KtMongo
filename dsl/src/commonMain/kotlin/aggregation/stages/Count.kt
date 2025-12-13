@@ -88,9 +88,10 @@ interface HasCount<Document : Any> : Pipeline<Document> {
 	 *     .countTo(Results::passingScores)
 	 * ```
 	 */
+	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Output : Any> countTo(field: KProperty1<Output, Number>): Pipeline<Output> =
-		countTo(with(FieldDslImpl) { field.field })
+		countTo(with(FieldDslImpl(context)) { field.field })
 
 }
 

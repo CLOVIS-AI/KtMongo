@@ -19,6 +19,7 @@ package opensavvy.ktmongo.bson.official
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.bson.official.types.*
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.bson.types.Timestamp
@@ -43,6 +44,7 @@ import kotlin.time.ExperimentalTime
 class JvmBsonContext(
 	codecRegistry: CodecRegistry,
 	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
+	override val nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
 ) : BsonContext, ObjectIdGenerator by objectIdGenerator {
 
 	@LowLevelApi

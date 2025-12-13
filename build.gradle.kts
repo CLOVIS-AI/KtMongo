@@ -48,6 +48,7 @@ dependencies {
 	library(projects.bsonTests)
 	library(projects.dsl)
 	library(projects.driverSharedOfficial)
+	library(projects.driverSharedKmongo)
 	library(projects.driverSync)
 	library(projects.driverSyncJava)
 	library(projects.driverSyncKmongo)

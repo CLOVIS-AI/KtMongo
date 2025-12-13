@@ -25,8 +25,10 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.prepared.suite.config.CoroutineTimeout
+import kotlin.time.Duration.Companion.seconds
 
-val AggregationTests by preparedSuite {
+val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
 	@Serializable
 	data class Song(
 		val creationDate: Int,

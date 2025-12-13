@@ -19,6 +19,7 @@ package opensavvy.ktmongo.sync
 import com.mongodb.client.model.*
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOptions
+import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.bson.official.JvmBsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
@@ -49,14 +50,15 @@ import java.util.concurrent.TimeUnit
  */
 class JvmMongoCollection<Document : Any> internal constructor(
 	private val inner: com.mongodb.kotlin.client.MongoCollection<Document>,
+	nameStrategy: PropertyNameStrategy,
 ) : MongoCollection<Document> {
 
 	@LowLevelApi
 	fun asKotlinClient() = inner
 
 	@LowLevelApi
-	override val context: JvmBsonContext
-		get() = JvmBsonContext(inner.codecRegistry)
+	override val context: JvmBsonContext =
+		JvmBsonContext(inner.codecRegistry, nameStrategy = nameStrategy)
 
 	// region Find
 
@@ -367,8 +369,11 @@ class JvmMongoCollection<Document : Any> internal constructor(
 /**
  * Converts a [MongoDB collection][com.mongodb.kotlin.client.MongoCollection] into a [KtMongo collection][JvmMongoCollection].
  */
-fun <Document : Any> com.mongodb.kotlin.client.MongoCollection<Document>.asKtMongo(): JvmMongoCollection<Document> =
-	JvmMongoCollection(this)
+@JvmOverloads
+fun <Document : Any> com.mongodb.kotlin.client.MongoCollection<Document>.asKtMongo(
+	nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+): JvmMongoCollection<Document> =
+	JvmMongoCollection(this, nameStrategy)
 
 @LowLevelApi
 private fun <Document : Any> com.mongodb.kotlin.client.MongoCollection<Document>.withWriteConcern(option: WithWriteConcern): com.mongodb.kotlin.client.MongoCollection<Document> {

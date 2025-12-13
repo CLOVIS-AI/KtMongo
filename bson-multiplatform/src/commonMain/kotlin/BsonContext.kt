@@ -23,6 +23,7 @@ import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformArrayFieldWriter
@@ -39,6 +40,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(ExperimentalTime::class)
 class BsonContext @OptIn(ExperimentalAtomicApi::class) constructor(
 	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Default(),
+	override val nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
 ) : BsonContext, ObjectIdGenerator by objectIdGenerator {
 
 	@Suppress("NOTHING_TO_INLINE")
