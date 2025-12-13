@@ -25,7 +25,7 @@ import opensavvy.prepared.suite.SuiteDsl
 @OptIn(LowLevelApi::class, ExperimentalStdlibApi::class)
 @Suppress("DEPRECATION")
 fun SuiteDsl.writerTests(
-	prepareContext: Prepared<BsonContext>,
+	prepareContext: Prepared<BsonFactory>,
 ) = suite("BsonPrimitiveWriter") {
 
 	test("An Int in a root document") {

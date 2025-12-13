@@ -17,9 +17,9 @@
 package opensavvy.ktmongo.dsl.tree
 
 import opensavvy.ktmongo.bson.Bson
-import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriteable
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQueryPredicate
 

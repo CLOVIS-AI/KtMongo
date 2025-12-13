@@ -29,7 +29,7 @@ import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.multiplatform.Bson
-import opensavvy.ktmongo.bson.multiplatform.BsonContext
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.types.ObjectId
@@ -43,7 +43,7 @@ import kotlin.uuid.Uuid
 
 @ExperimentalSerializationApi
 @LowLevelApi
-private class BsonEncoderTopLevel(override val serializersModule: SerializersModule, val context: BsonContext) : AbstractEncoder() {
+private class BsonEncoderTopLevel(override val serializersModule: SerializersModule, val context: BsonFactory) : AbstractEncoder() {
 	lateinit var out: Bson
 
 	override fun encodeNull() {
@@ -274,7 +274,7 @@ private class BsonCompositeEncoderList(override val serializersModule: Serialize
  */
 @ExperimentalSerializationApi
 @OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <T : Any> encodeToBson(context: BsonContext, value: T, serializer: SerializationStrategy<T>): Bson {
+fun <T : Any> encodeToBson(context: BsonFactory, value: T, serializer: SerializationStrategy<T>): Bson {
 	val encoder = BsonEncoderTopLevel(EmptySerializersModule(), context)
 	encoder.encodeSerializableValue(serializer, value)
 	return encoder.out
@@ -286,5 +286,5 @@ fun <T : Any> encodeToBson(context: BsonContext, value: T, serializer: Serializa
  * [value] must be serializable using KotlinX.Serialization. For example, using the `@Serializable` annotation.
  */
 @ExperimentalSerializationApi
-inline fun <reified T : Any> encodeToBson(context: BsonContext, value: T): Bson =
+inline fun <reified T : Any> encodeToBson(context: BsonFactory, value: T): Bson =
 	encodeToBson(context, value, serializer())

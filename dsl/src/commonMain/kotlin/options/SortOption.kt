@@ -17,8 +17,8 @@
 package opensavvy.ktmongo.dsl.options
 
 import opensavvy.ktmongo.bson.Bson
-import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi

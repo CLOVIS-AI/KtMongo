@@ -19,7 +19,7 @@
 package opensavvy.ktmongo.bson.raw
 
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
@@ -35,7 +35,7 @@ import kotlin.Double.Companion.NaN
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/double.json.
  */
-fun SuiteDsl.double(context: Prepared<BsonContext>) = suite("Double") {
+fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	@Serializable
 	data class D(val d: Double)
 

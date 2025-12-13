@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.dsl.aggregation
 
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.aggregation.accumulators.ArithmeticValueAccumulators
 import opensavvy.ktmongo.dsl.aggregation.accumulators.ValueAccumulators

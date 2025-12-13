@@ -19,7 +19,7 @@
 package opensavvy.ktmongo.bson.raw
 
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
@@ -39,7 +39,7 @@ import kotlin.time.Instant
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/timestamp.json.
  */
 @OptIn(ExperimentalEncodingApi::class)
-fun SuiteDsl.timestamp(context: Prepared<BsonContext>) = suite("Timestamp") {
+fun SuiteDsl.timestamp(context: Prepared<BsonFactory>) = suite("Timestamp") {
 	@Serializable
 	data class A(val a: Timestamp)
 

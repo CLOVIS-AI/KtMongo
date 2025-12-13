@@ -37,7 +37,7 @@ import org.bson.BsonDocument as OfficialBsonDocument
 @LowLevelApi
 internal class BsonDocumentReader(
 	private val raw: OfficialBsonDocument,
-	private val context: JvmBsonContext,
+	private val context: JvmBsonFactory,
 ) : BsonDocumentReader {
 	override fun read(name: String): BsonValueReader? {
 		return BsonValueReader(raw[name] ?: return null, context)
@@ -67,7 +67,7 @@ internal class BsonDocumentReader(
 @LowLevelApi
 internal class BsonArrayReader(
 	private val raw: OfficialBsonArray,
-	private val context: JvmBsonContext,
+	private val context: JvmBsonFactory,
 ) : BsonArrayReader {
 	override fun read(index: Int): BsonValueReader? {
 		return BsonValueReader(raw.getOrNull(index) ?: return null, context)
@@ -99,7 +99,7 @@ internal class BsonArrayReader(
 @LowLevelApi
 private class BsonValueReader(
 	private val value: BsonValue,
-	private val context: JvmBsonContext,
+	private val context: JvmBsonFactory,
 ) : BsonValueReader {
 
 	override val type: BsonType

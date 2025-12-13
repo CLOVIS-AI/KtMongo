@@ -19,7 +19,7 @@
 package opensavvy.ktmongo.bson.raw
 
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
@@ -34,7 +34,7 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/string.json.
  */
-fun SuiteDsl.string(context: Prepared<BsonContext>) = suite("String") {
+fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 	@Serializable
 	data class A(val a: String)
 

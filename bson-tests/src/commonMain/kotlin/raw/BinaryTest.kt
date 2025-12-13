@@ -19,7 +19,7 @@
 package opensavvy.ktmongo.bson.raw
 
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
@@ -40,7 +40,7 @@ import kotlin.uuid.Uuid
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/binary.json.
  */
 @OptIn(ExperimentalEncodingApi::class, ExperimentalUuidApi::class)
-fun SuiteDsl.binary(context: Prepared<BsonContext>) = suite("Binary") {
+fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	testBson(
 		context,
 		"subtype 0x00 (Zero-length)",

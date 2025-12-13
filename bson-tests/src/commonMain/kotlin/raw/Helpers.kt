@@ -19,8 +19,8 @@
 package opensavvy.ktmongo.bson.raw
 
 import opensavvy.ktmongo.bson.Bson
-import opensavvy.ktmongo.bson.BsonContext
 import opensavvy.ktmongo.bson.BsonDocumentReader
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -72,7 +72,7 @@ private class BsonBinaryDeclaration(
 	val writer: BsonFieldWriter.() -> Unit,
 ) : BsonDeclaration {
 
-	fun write(context: BsonContext): Bson =
+	fun write(context: BsonFactory): Bson =
 		context.buildDocument { writer() }
 }
 
@@ -83,7 +83,7 @@ private class BsonSerializeDeclaration(
 ) : BsonDeclaration {
 
 	@Suppress("UNCHECKED_CAST")
-	fun write(context: BsonContext): Bson =
+	fun write(context: BsonFactory): Bson =
 		context.buildDocument(obj, type, klass as KClass<Any>)
 
 	fun toAssertion() = BsonAssertion(obj.toString()) {
@@ -114,7 +114,7 @@ private class BsonAssertion(
 
 @PreparedDslMarker
 fun SuiteDsl.testBson(
-	context: Prepared<BsonContext>,
+	context: Prepared<BsonFactory>,
 	name: String,
 	vararg declarations: BsonDeclaration,
 ) = suite(name) {

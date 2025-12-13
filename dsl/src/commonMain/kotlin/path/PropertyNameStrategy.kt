@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson
+package opensavvy.ktmongo.dsl.path
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KProperty1
@@ -34,7 +34,7 @@ interface PropertyNameStrategy {
 	 * the field `_id`.
 	 */
 	@LowLevelApi
-	fun nameOf(property: KProperty1<*, *>): String
+	fun pathOf(property: KProperty1<*, *>): Path
 
 	/**
 	 * Default implementation of [PropertyNameStrategy], which always uses the property name.
@@ -42,7 +42,7 @@ interface PropertyNameStrategy {
 	object Default : PropertyNameStrategy {
 
 		@LowLevelApi
-		override fun nameOf(property: KProperty1<*, *>): String =
-			property.name
+		override fun pathOf(property: KProperty1<*, *>): Path =
+			Path(property.name)
 	}
 }

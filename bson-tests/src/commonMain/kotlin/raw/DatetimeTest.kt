@@ -19,7 +19,7 @@
 package opensavvy.ktmongo.bson.raw
 
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
@@ -36,7 +36,7 @@ import kotlin.time.Instant
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/datetime.json.
  */
-fun SuiteDsl.datetime(context: Prepared<BsonContext>) = suite("Datetime") {
+fun SuiteDsl.datetime(context: Prepared<BsonFactory>) = suite("Datetime") {
 	@Serializable
 	data class A(val a: Instant)
 

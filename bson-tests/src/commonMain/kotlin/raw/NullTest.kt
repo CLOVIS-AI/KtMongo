@@ -18,7 +18,7 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
@@ -32,7 +32,7 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/null.json.
  */
-fun SuiteDsl.reprNull(context: Prepared<BsonContext>) = suite("Null") {
+fun SuiteDsl.reprNull(context: Prepared<BsonFactory>) = suite("Null") {
 	testBson(
 		context,
 		"Null",

@@ -16,21 +16,18 @@
 
 package opensavvy.ktmongo.bson
 
-import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
- * Configuration for the BSON serialization.
+ * Entrypoint for creating [Bson] and [BsonArray] instances.
  *
- * Instances of this class are platform-specific and are used to create BSON documents.
- * Platforms can thus parameterize the behavior of writers and readers.
- *
- * For example, a platform may store its serialization configuration in this class.
+ * Instances of this interface are platform-specific and are used to create BSON documents.
+ * Each instance may allow parameterization of some behaviors.
  */
-interface BsonContext : ObjectIdGenerator {
+interface BsonFactory {
 
 	/**
 	 * Instantiates a new [BSON document][Bson].
@@ -146,10 +143,6 @@ interface BsonContext : ObjectIdGenerator {
 	@LowLevelApi
 	fun readArray(bytes: ByteArray): BsonArray
 
-	/**
-	 * The naming strategy used to generate paths.
-	 */
-	val nameStrategy: PropertyNameStrategy
 }
 
 /**
@@ -161,5 +154,5 @@ interface BsonContext : ObjectIdGenerator {
  * @see Bson.read The inverse operation.
  */
 @OptIn(LowLevelApi::class)
-inline fun <reified T : Any> BsonContext.write(obj: T): Bson =
+inline fun <reified T : Any> BsonFactory.write(obj: T): Bson =
 	buildDocument(obj, typeOf<T>(), T::class)

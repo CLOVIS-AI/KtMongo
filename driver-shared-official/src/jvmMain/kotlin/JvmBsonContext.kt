@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2025, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.query
+package opensavvy.ktmongo.official
 
+import opensavvy.ktmongo.bson.official.JvmBsonFactory
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
-import opensavvy.ktmongo.dsl.tree.BsonNode
-import org.intellij.lang.annotations.Language
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 
-expect fun testContext(): BsonContext
-
-infix fun String.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
-	val expected = expected
-		.replace("\n", "")
-		.replace("\t", "")
-		.replace(",", ", ")
-		.replace("  ", " ")
-
-	check(this == expected) { "Expected: $expected\nActual:   $this" }
-}
-
-infix fun BsonNode.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
-	this.toString() shouldBeBson expected
-}
+class JvmBsonContext(
+	bsonFactory: JvmBsonFactory,
+	objectIdGenerator: ObjectIdGenerator,
+	nameStrategy: PropertyNameStrategy,
+) : BsonContext,
+	JvmBsonFactory by bsonFactory,
+	ObjectIdGenerator by objectIdGenerator,
+	PropertyNameStrategy by nameStrategy

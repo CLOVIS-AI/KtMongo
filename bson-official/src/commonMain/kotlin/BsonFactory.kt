@@ -17,13 +17,13 @@
 package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.*
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 /**
  * BSON implementation based on the official MongoDB drivers.
  */
-interface BsonContext : BsonContext {
+interface BsonFactory : BsonFactory {
 
 	@LowLevelApi
 	override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson

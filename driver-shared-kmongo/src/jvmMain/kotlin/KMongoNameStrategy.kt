@@ -17,8 +17,9 @@
 package opensavvy.ktmongo.utils.kmongo
 
 import kotlinx.serialization.SerialName
-import opensavvy.ktmongo.bson.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import org.bson.codecs.pojo.annotations.BsonId
 import org.litote.kmongo.property.KPropertyPath
 import kotlin.reflect.KProperty1
@@ -29,18 +30,18 @@ class KMongoNameStrategy(
 	private val default: PropertyNameStrategy = PropertyNameStrategy.Default,
 ) : PropertyNameStrategy {
 	@LowLevelApi
-	override fun nameOf(property: KProperty1<*, *>): String {
+	override fun pathOf(property: KProperty1<*, *>): Path {
 		require(property !is KPropertyPath) { "Attempted to generate a KtMongo Field from a KMongo KPropertyPath instance, which is not supported yet. Please avoid mixing KtMongo and KMongo property syntax (/).\nProperty: $property" }
 
 		val bsonId = property.javaField?.annotations?.filterIsInstance<BsonId>()?.firstOrNull()
 		val serialName = property.findAnnotation<SerialName>()
 
 		if (serialName != null)
-			return serialName.value
+			return Path(serialName.value)
 
 		if (bsonId != null)
-			return "_id"
+			return Path("_id")
 
-		return default.nameOf(property)
+		return default.pathOf(property)
 	}
 }

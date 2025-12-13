@@ -18,7 +18,7 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import opensavvy.ktmongo.bson.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
@@ -32,7 +32,7 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/undefined.json.
  */
-fun SuiteDsl.reprUndefined(context: Prepared<BsonContext>) = suite("Undefined") {
+fun SuiteDsl.reprUndefined(context: Prepared<BsonFactory>) = suite("Undefined") {
 	testBson(
 		context,
 		"Undefined",
