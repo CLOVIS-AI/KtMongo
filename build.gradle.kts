@@ -81,3 +81,12 @@ plugins.withType(org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin::class.j
 }
 
 // endregion
+// region Configure Dokka overrides
+
+dokka {
+	pluginsConfiguration.html {
+		templatesDir.set(file("docs/dokka/overrides"))
+	}
+}
+
+// endregion
