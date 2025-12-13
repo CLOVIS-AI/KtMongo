@@ -80,7 +80,7 @@ class BsonFactory : BsonFactory {
 	override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson =
 		buildArbitraryTopLevel {
 			block(this)
-		}.let(::Bson)
+		}.let { Bson(this, it) }
 
 	@OptIn(ExperimentalSerializationApi::class)
 	@LowLevelApi
@@ -95,19 +95,19 @@ class BsonFactory : BsonFactory {
 
 		return object : TopCompletableBsonFieldWriter, CompletableBsonFieldWriter by MultiplatformDocumentFieldWriter(bsonWriter) {
 			override fun build(): Bson =
-				Bson(closeArbitraryTopLevel(buffer, bsonWriter))
+				Bson(this@BsonFactory, closeArbitraryTopLevel(buffer, bsonWriter))
 		}
 	}
 
 	@LowLevelApi
 	override fun readDocument(bytes: ByteArray): Bson =
-		Bson(Bytes(bytes.copyOf()))
+		Bson(this, Bytes(bytes.copyOf()))
 
 	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray =
 		buildArbitraryTopLevel {
 			block(MultiplatformArrayFieldWriter(this))
-		}.let(::BsonArray)
+		}.let { BsonArray(this, it) }
 
 	@LowLevelApi
 	@DangerousMongoApi
@@ -117,13 +117,13 @@ class BsonFactory : BsonFactory {
 
 		return object : TopCompletableBsonValueWriter, CompletableBsonValueWriter by MultiplatformArrayFieldWriter(MultiplatformDocumentFieldWriter(bsonWriter)) {
 			override fun build(): BsonArray =
-				BsonArray(closeArbitraryTopLevel(buffer, bsonWriter))
+				BsonArray(this@BsonFactory, closeArbitraryTopLevel(buffer, bsonWriter))
 		}
 	}
 
 	@LowLevelApi
 	override fun readArray(bytes: ByteArray): BsonArray =
-		BsonArray(Bytes(bytes.copyOf()))
+		BsonArray(this, Bytes(bytes.copyOf()))
 
 	@LowLevelApi
 	@DangerousMongoApi

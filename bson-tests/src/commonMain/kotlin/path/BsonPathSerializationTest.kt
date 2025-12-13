@@ -55,7 +55,7 @@ data class User(
 )
 
 fun SuiteDsl.bsonPathTests(
-	context: Prepared<BsonContext>,
+	context: Prepared<BsonFactory>,
 ) = suite("BsonPath") {
 
 	val bob = User(

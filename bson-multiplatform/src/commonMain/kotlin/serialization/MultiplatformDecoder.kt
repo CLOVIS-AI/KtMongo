@@ -47,7 +47,7 @@ import kotlin.uuid.Uuid
 @ExperimentalSerializationApi
 internal class BsonDecoderTopLevel(
 	override val serializersModule: SerializersModule,
-	val context: BsonFactory,
+	private val factory: BsonFactory,
 	val bytesWithHeader: Bytes,
 ) : AbstractDecoder() {
 	var out: Any? = null
@@ -63,8 +63,8 @@ internal class BsonDecoderTopLevel(
 	@LowLevelApi
 	override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
 		return when (descriptor.kind) {
-			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, MultiplatformDocumentReader(bytesWithHeader))
-			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, MultiplatformArrayReader(bytesWithHeader))
+			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, MultiplatformDocumentReader(factory, bytesWithHeader))
+			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, MultiplatformArrayReader(factory, bytesWithHeader))
 			else -> TODO()
 		}
 	}
@@ -303,19 +303,11 @@ internal class BsonCompositeListDecoder(
 }
 
 @ExperimentalSerializationApi
-fun <T : Any> decodeFromBson(context: BsonFactory, bytes: ByteArray, deserializer: DeserializationStrategy<T>): T {
-	val decoder = BsonDecoderTopLevel(EmptySerializersModule(), context, Bytes(bytes.copyOf()))
+fun <T : Any> decodeFromBson(factory: BsonFactory, bytes: ByteArray, deserializer: DeserializationStrategy<T>): T {
+	val decoder = BsonDecoderTopLevel(EmptySerializersModule(), factory, Bytes(bytes.copyOf()))
 	return decoder.decodeSerializableValue(deserializer)
 }
 
 @ExperimentalSerializationApi
-inline fun <reified T : Any> decodeFromBson(bytes: ByteArray): T =
-	decodeFromBson(bytes, serializer<T>())
-
-@ExperimentalSerializationApi
-fun <T : Any> decodeFromBson(context: BsonContext, bytes: ByteArray, deserializer: DeserializationStrategy<T>): T =
-	decodeFromBson(bytes, deserializer)
-
-@ExperimentalSerializationApi
-inline fun <reified T : Any> decodeFromBson(context: BsonFactory, bytes: ByteArray): T =
-	decodeFromBson(bytes, serializer<T>())
+inline fun <reified T : Any> decodeFromBson(factory: BsonFactory, bytes: ByteArray): T =
+	decodeFromBson(factory, bytes, serializer<T>())

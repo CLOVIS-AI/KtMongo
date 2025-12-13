@@ -20,6 +20,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.*
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.RawBsonWriter
 import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoder
@@ -40,6 +41,7 @@ import kotlin.time.Instant
 
 @LowLevelApi
 internal class MultiplatformBsonValueReader(
+	private val factory: BsonFactory,
 	override val type: BsonType,
 	private val bytes: Bytes,
 ) : BsonValueReader {
@@ -205,13 +207,13 @@ internal class MultiplatformBsonValueReader(
 	@LowLevelApi
 	override fun readDocument(): BsonDocumentReader {
 		checkType(BsonType.Document)
-		return MultiplatformDocumentReader(bytes)
+		return MultiplatformDocumentReader(factory, bytes)
 	}
 
 	@LowLevelApi
 	override fun readArray(): BsonArrayReader {
 		checkType(BsonType.Array)
-		return MultiplatformArrayReader(bytes)
+		return MultiplatformArrayReader(factory, bytes)
 	}
 
 	@OptIn(DangerousMongoApi::class)

@@ -24,6 +24,7 @@ import opensavvy.ktmongo.bson.BsonArrayReader
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.multiplatform.BsonArray
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoderTopLevel
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -32,6 +33,7 @@ import kotlin.reflect.KType
 
 @LowLevelApi
 internal class MultiplatformArrayReader(
+	private val factory: BsonFactory,
 	private val bytesWithHeader: Bytes,
 ) : BsonArrayReader {
 
@@ -46,7 +48,7 @@ internal class MultiplatformArrayReader(
 			println("Left to read: $reader") // TODO remove
 			val type = BsonType.fromCode(reader.readSignedByte())
 			reader.skipCString() // We ignore the field name
-			val field = readField(bytes, reader, "${fields.lastIndex + 1}", type)
+			val field = readField(bytes, reader, "${fields.lastIndex + 1}", type, factory)
 
 			fields += field
 
@@ -72,14 +74,14 @@ internal class MultiplatformArrayReader(
 		}
 
 	override fun toBson(): BsonArray =
-		BsonArray(bytesWithHeader)
+		BsonArray(factory, bytesWithHeader)
 
 	override fun asValue(): BsonValueReader =
-		MultiplatformBsonValueReader(BsonType.Array, bytesWithHeader)
+		MultiplatformBsonValueReader(factory, BsonType.Array, bytesWithHeader)
 
 	@OptIn(ExperimentalSerializationApi::class)
 	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
-		val decoder = BsonDecoderTopLevel(EmptySerializersModule(), bytesWithHeader)
+		val decoder = BsonDecoderTopLevel(EmptySerializersModule(), factory, bytesWithHeader)
 		return decoder.decodeSerializableValue(serializer(type) as KSerializer<T?>)
 	}
 
