@@ -102,6 +102,21 @@ sealed interface BsonPath {
 	operator fun get(index: Int): BsonPath =
 		Item(index, this)
 
+	/**
+	 * Points to all children of a document.
+	 *
+	 * - The children of a [BsonArray] are its elements.
+	 * - The children of a [Bson] document are the values of its fields.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * BsonPath["foo"].all   // $.foo.*
+	 * ```
+	 */
+	val all: BsonPath
+		get() = All(this)
+
 	@LowLevelApi
 	fun findIn(reader: BsonValueReader): Sequence<BsonValueReader>
 
@@ -150,6 +165,22 @@ sealed interface BsonPath {
 		override fun toString() = "$parent[$index]"
 	}
 
+	private data class All(val parent: BsonPath) : BsonPath {
+
+		@LowLevelApi
+		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+			parent.findIn(reader)
+				.flatMap {
+					when (it.type) {
+						BsonType.Document -> it.readDocument().entries.values.asSequence()
+						BsonType.Array -> it.readArray().elements.asSequence()
+						else -> emptySequence()
+					}
+				}
+
+		override fun toString() = "$parent.*"
+	}
+
 	/**
 	 * The root of a [BsonPath] expression.
 	 *
@@ -179,6 +210,7 @@ sealed interface BsonPath {
 		 * | `$`                   | The root identifier. See [BsonPath.Root].                    |
 		 * | `['foo']` or `.foo`   | Accessor for a field named `foo`. See [BsonPath.get].        |
 		 * | `[0]`                 | Accessor for the first item of an array. See [BsonPath.get]. |
+		 * | `.*` or `[*]`         | Accessor for all direct children. See [BsonPath.all].        |
 		 *
 		 * ### Examples
 		 *
@@ -203,6 +235,10 @@ sealed interface BsonPath {
 
 			for (segment in splitSegments(text)) {
 				expr = when {
+					// .*
+					segment == ".*" || segment == "[*]" ->
+						expr.all
+
 					// .foo
 					segment.startsWith(".") ->
 						expr[segment.removePrefix(".")]
@@ -259,10 +295,10 @@ sealed interface BsonPath {
 							// .foo
 							accumulate()
 
-							if (text[i].isNameFirst()) {
-								accumulateWhile { it.isNameChar() }
-							} else {
-								fail("A name segment should start with a non-digit character, found: ${text[i]}")
+							when {
+								text[i].isNameFirst() -> accumulateWhile { it.isNameChar() }
+								text[i] == '*' -> accumulate()
+								else -> fail("A name segment should start with a non-digit character, found: ${text[i]}")
 							}
 
 							yield(accumulator.toString())
@@ -286,6 +322,14 @@ sealed interface BsonPath {
 								in Char(0x30)..Char(0x39) -> {
 									accumulate() // opening bracket
 									accumulateWhile { it.isDigit() }
+									accumulate() // closing bracket
+									yield(accumulator.toString())
+									accumulator.clear()
+								}
+
+								'*' -> {
+									accumulate() // opening bracket
+									accumulate() // start
 									accumulate() // closing bracket
 									yield(accumulator.toString())
 									accumulator.clear()

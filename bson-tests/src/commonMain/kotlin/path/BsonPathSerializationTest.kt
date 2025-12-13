@@ -117,4 +117,8 @@ fun SuiteDsl.bsonPathTests(
 		check(bobDoc().select<Int?>(BsonPath["pets"][2]["age"]).firstOrNull() == null)
 	}
 
+	test("Select all pet names") {
+		check(bobDoc().select<String>(BsonPath["pets"].all["name"]).toList() == listOf("Barbie", "Poupette", "Michael"))
+	}
+
 }

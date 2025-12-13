@@ -45,6 +45,10 @@ val BsonPathTest by preparedSuite {
 		test("Chaining") {
 			check(BsonPath["store"]["book"][0]["title"].toString() == "$.store.book[0].title")
 		}
+
+		test("All fields") {
+			check(BsonPath["foo"].all.toString() == "$.foo.*")
+		}
 	}
 
 	suite("Parsing") {
@@ -73,6 +77,11 @@ val BsonPathTest by preparedSuite {
 
 		test("Parse a simple array index") {
 			check(BsonPath.parse("$[0]").toString() == "$[0]")
+		}
+
+		test("Parse all fields") {
+			check(BsonPath.parse("$.foo[*]").toString() == "$.foo.*")
+			check(BsonPath.parse("$.foo.*").toString() == "$.foo.*")
 		}
 
 	}
