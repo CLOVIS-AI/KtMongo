@@ -61,27 +61,37 @@ val BsonPathTest by preparedSuite {
 
 		test("Parse a simple field with dot notation") {
 			check(BsonPath.parse("$.book").toString() == "$.book")
+			check(BsonPath.parse("$.book") == BsonPath["book"])
 		}
 
 		test("Parse a simple field with bracket notation") {
 			check(BsonPath.parse("$['book']").toString() == "$.book")
+			check(BsonPath.parse("$['book']") == BsonPath["book"])
 		}
 
 		test("Parse a simple field with bracket notation and double quotes") {
 			check(BsonPath.parse("$[\"book\"]").toString() == "$.book")
+			check(BsonPath.parse("$[\"book\"]") == BsonPath["book"])
 		}
 
 		test("Parse a combined field names") {
 			check(BsonPath.parse("$.foo['bar'][\"baz\"]").toString() == "$.foo.bar.baz")
+			check(BsonPath.parse("$.foo['bar'][\"baz\"]") == BsonPath["foo"]["bar"]["baz"])
 		}
 
 		test("Parse a simple array index") {
 			check(BsonPath.parse("$[0]").toString() == "$[0]")
+			check(BsonPath.parse("$[0]") == BsonPath[0])
 		}
 
 		test("Parse all fields") {
 			check(BsonPath.parse("$.foo[*]").toString() == "$.foo.*")
+			check(BsonPath.parse("$.foo[*]") == BsonPath["foo"].all)
+		}
+
+		test("Parse all fields, with dot notation") {
 			check(BsonPath.parse("$.foo.*").toString() == "$.foo.*")
+			check(BsonPath.parse("$.foo.*") == BsonPath["foo"].all)
 		}
 
 	}
