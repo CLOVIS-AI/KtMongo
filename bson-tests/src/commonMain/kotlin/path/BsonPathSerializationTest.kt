@@ -92,40 +92,40 @@ fun SuiteDsl.bsonPathTests(
 	}
 
 	test("Select a nested field") {
-		check(bobDoc().select<String>(BsonPath.parse("$.profile.name")).firstOrNull() == "Bob")
+		check(bobDoc().select<String>(BsonPath("$.profile.name")).firstOrNull() == "Bob")
 	}
 
 	test("Select a document") {
-		check(bobDoc().select<Profile>(BsonPath.parse("$.profile")).firstOrNull() == Profile("Bob", 46))
+		check(bobDoc().select<Profile>(BsonPath("$.profile")).firstOrNull() == Profile("Bob", 46))
 	}
 
 	test("Select a list") {
-		check(bobDoc().select<List<Pet>>(BsonPath.parse("$.pets")).first()[0].name == "Barbie")
+		check(bobDoc().select<List<Pet>>(BsonPath("$.pets")).first()[0].name == "Barbie")
 	}
 
 	test("Select a list item") {
-		check(bobDoc().select<Pet>(BsonPath.parse("$.pets[1]")).firstOrNull() == Pet("Poupette", 1, Species.Bird))
+		check(bobDoc().select<Pet>(BsonPath("$.pets[1]")).firstOrNull() == Pet("Poupette", 1, Species.Bird))
 	}
 
 	test("Select a list item's field") {
-		check(bobDoc().select<String>(BsonPath.parse("$.pets[1].name")).firstOrNull() == "Poupette")
+		check(bobDoc().select<String>(BsonPath("$.pets[1].name")).firstOrNull() == "Poupette")
 	}
 
 	test("Select a list item's field from the end") {
-		check(bobDoc().select<String>(BsonPath.parse("$.pets[-1].name")).firstOrNull() == "Michael")
+		check(bobDoc().select<String>(BsonPath("$.pets[-1].name")).firstOrNull() == "Michael")
 	}
 
 	test("Select an enum") {
-		check(bobDoc().select<Species>(BsonPath.parse("$.pets[1].species")).firstOrNull() == Species.Bird)
+		check(bobDoc().select<Species>(BsonPath("$.pets[1].species")).firstOrNull() == Species.Bird)
 	}
 
 	test("Select a nullable field") {
-		check(bobDoc().select<Int?>(BsonPath.parse("$.pets[1].age")).firstOrNull() == 1)
-		check(bobDoc().select<Int?>(BsonPath.parse("$.pets[2].age")).firstOrNull() == null)
+		check(bobDoc().select<Int?>(BsonPath("$.pets[1].age")).firstOrNull() == 1)
+		check(bobDoc().select<Int?>(BsonPath("$.pets[2].age")).firstOrNull() == null)
 	}
 
 	test("Select all pet names") {
-		check(bobDoc().select<String>(BsonPath.parse("$.pets.*.name")).toList() == listOf("Barbie", "Poupette", "Michael"))
+		check(bobDoc().select<String>(BsonPath("$.pets.*.name")).toList() == listOf("Barbie", "Poupette", "Michael"))
 	}
 
 	suite("Slices") {
@@ -135,44 +135,44 @@ fun SuiteDsl.bsonPathTests(
 			}
 
 			test("Default step") {
-				check(sliceDoc().select<Int>(BsonPath.parse("$.items[1:3]")).toList() == listOf(1, 2))
+				check(sliceDoc().select<Int>(BsonPath("$.items[1:3]")).toList() == listOf(1, 2))
 			}
 
 			test("Slice with no end index") {
-				check(sliceDoc().select<Int>(BsonPath.parse("$.items[5:]")).toList() == listOf(5, 6))
+				check(sliceDoc().select<Int>(BsonPath("$.items[5:]")).toList() == listOf(5, 6))
 			}
 
 			test("Slice with step 2") {
-				check(sliceDoc().select<Int>(BsonPath.parse("$.items[1:5:2]")).toList() == listOf(1, 3))
+				check(sliceDoc().select<Int>(BsonPath("$.items[1:5:2]")).toList() == listOf(1, 3))
 			}
 
 			test("Slice with negative step") {
-				check(sliceDoc().select<Int>(BsonPath.parse("$.items[5:1:-2]")).toList() == listOf(5, 3))
+				check(sliceDoc().select<Int>(BsonPath("$.items[5:1:-2]")).toList() == listOf(5, 3))
 			}
 
 			test("Slice in reverse order") {
-				check(sliceDoc().select<Int>(BsonPath.parse("$.items[::-1]")).toList() == listOf(6, 5, 4, 3, 2, 1, 0))
+				check(sliceDoc().select<Int>(BsonPath("$.items[::-1]")).toList() == listOf(6, 5, 4, 3, 2, 1, 0))
 			}
 		}
 
 		test("Simple bounds") {
-			check(bobDoc().select<String>(BsonPath.parse("$.pets[1:3].name")).toList() == listOf("Poupette", "Michael"))
+			check(bobDoc().select<String>(BsonPath("$.pets[1:3].name")).toList() == listOf("Poupette", "Michael"))
 		}
 
 		test("No bounds") {
-			check(bobDoc().select<String>(BsonPath.parse("$.pets[:].name")).toList() == listOf("Barbie", "Poupette", "Michael"))
+			check(bobDoc().select<String>(BsonPath("$.pets[:].name")).toList() == listOf("Barbie", "Poupette", "Michael"))
 		}
 
 		test("Positive step") {
-			check(bobDoc().select<String>(BsonPath.parse("$.pets[::2].name")).toList() == listOf("Barbie", "Michael"))
+			check(bobDoc().select<String>(BsonPath("$.pets[::2].name")).toList() == listOf("Barbie", "Michael"))
 		}
 
 		test("Negative step") {
-			check(bobDoc().select<String>(BsonPath.parse("$.pets[::-2].name")).toList() == listOf("Michael", "Barbie"))
+			check(bobDoc().select<String>(BsonPath("$.pets[::-2].name")).toList() == listOf("Michael", "Barbie"))
 		}
 
 		test("Reversed") {
-			check(bobDoc().select<String>(BsonPath.parse("$.pets[::-1].name")).toList() == listOf("Michael", "Poupette", "Barbie"))
+			check(bobDoc().select<String>(BsonPath("$.pets[::-1].name")).toList() == listOf("Michael", "Poupette", "Barbie"))
 		}
 	}
 

@@ -349,217 +349,227 @@ sealed interface BsonPath {
 		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
 			sequenceOf(reader)
 
+		@Deprecated("This function has been renamed to BsonPath(text).", ReplaceWith("BsonPath(text)", "opensavvy.ktmongo.bson.BsonPath"))
+		fun parse(text: String): BsonPath =
+			BsonPath(text)
+
 		override fun toString() = "$"
+	}
+}
 
-		/**
-		 * Parses an [RFC-9535 compliant](https://www.rfc-editor.org/rfc/rfc9535.html) string expression into a [BsonPath] instance.
-		 *
-		 * This function is the mirror of the [BsonPath.toString] methods.
-		 *
-		 * **Warning.** Not everything from the RFC is implemented at the moment.
-		 * As a rule of thumb, if [text] can be returned by the [BsonPath.toString] function of a segment,
-		 * then it can be parsed by this function.
-		 *
-		 * | Syntax                | Description                                                  |
-		 * | --------------------- | ------------------------------------------------------------ |
-		 * | `$`                   | The root identifier. See [BsonPath.Root].                    |
-		 * | `['foo']` or `.foo`   | Accessor for a field named `foo`. See [BsonPath.get].        |
-		 * | `[0]`                 | Accessor for the first item of an array. See [BsonPath.get]. |
-		 * | `.*` or `[*]`         | Accessor for all direct children. See [BsonPath.all].        |
-		 * | `[1:3]`               | Accessor for elements at index 1..<3. See [BsonPath.sliced]. |
-		 *
-		 * ### Examples
-		 *
-		 * ```kotlin
-		 * val document: Bson = …
-		 *
-		 * val id: Uuid = document at BsonPath.parse("$.profile.id")
-		 *
-		 * for (user in document.select<User>("$.friends")) {
-		 *     println("User: $user")
-		 * }
-		 * ```
-		 *
-		 * @see BsonPath Learn more about BSON paths.
-		 * @see at Access one field by its BSON path.
-		 * @see select Access multiple fields by their BSON path.
-		 */
-		fun parse(@Language("JSONPath") text: String): BsonPath {
-			require(text.startsWith("$")) { "A BsonPath expression must start with a dollar sign: $text\nDid you mean to create a BsonPath to access a specific field? If so, see BsonPath[\"foo\"]" }
+// region Parsing
 
-			var expr: BsonPath = BsonPath
+/**
+ * Parses an [RFC-9535 compliant](https://www.rfc-editor.org/rfc/rfc9535.html) string expression into a [BsonPath] instance.
+ *
+ * This function is the mirror of the [BsonPath.toString] methods.
+ *
+ * **Warning.** Not everything from the RFC is implemented at the moment.
+ * As a rule of thumb, if [text] can be returned by the [BsonPath.toString] function of a segment,
+ * then it can be parsed by this function.
+ *
+ * | Syntax                | Description                                                  |
+ * | --------------------- | ------------------------------------------------------------ |
+ * | `$`                   | The root identifier. See [BsonPath.Root].                    |
+ * | `['foo']` or `.foo`   | Accessor for a field named `foo`. See [BsonPath.get].        |
+ * | `[0]`                 | Accessor for the first item of an array. See [BsonPath.get]. |
+ * | `.*` or `[*]`         | Accessor for all direct children. See [BsonPath.all].        |
+ * | `[1:3]`               | Accessor for elements at index 1..<3. See [BsonPath.sliced]. |
+ *
+ * ### Examples
+ *
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * val id: Uuid = document at BsonPath("$.profile.id")
+ *
+ * for (user in document.select<User>(BsonPath("$.friends"))) {
+ *     println("User: $user")
+ * }
+ * ```
+ *
+ * @see BsonPath Learn more about BSON paths.
+ * @see at Access one field by its BSON path.
+ * @see select Access multiple fields by their BSON path.
+ */
+@ExperimentalBsonPathApi
+fun BsonPath(@Language("JSONPath") text: String): BsonPath {
+	require(text.startsWith("$")) { "A BsonPath expression must start with a dollar sign: $text\nDid you mean to create a BsonPath to access a specific field? If so, see BsonPath[\"foo\"]" }
 
-			for (segment in splitSegments(text)) {
-				expr = when {
-					// .*
-					segment == ".*" || segment == "[*]" ->
-						expr.all
+	var expr: BsonPath = BsonPath
 
+	for (segment in splitSegments(text)) {
+		expr = when {
+			// .*
+			segment == ".*" || segment == "[*]" ->
+				expr.all
+
+			// .foo
+			segment.startsWith(".") ->
+				expr[segment.removePrefix(".")]
+
+			// ['foo']
+			segment.startsWith("['") && segment.endsWith("']") ->
+				expr[segment.removePrefix("['").removeSuffix("']")]
+
+			// ["foo"]
+			segment.startsWith("[\"") && segment.endsWith("\"]") ->
+				expr[segment.removePrefix("[\"").removeSuffix("\"]")]
+
+			// [0] or [0:1:2]
+			segment.startsWith("[") && segment.endsWith("]") -> {
+				val content = segment.removePrefix("[").removeSuffix("]")
+				if (':' in content) {
+					val bounds = content.split(':')
+					val start = bounds.getIntNotEmpty(0, default = -1)
+					val end = bounds.getIntNotEmpty(1, default = -1)
+					val step = bounds.getIntNotEmpty(2, default = 1)
+					expr.sliced(start.takeIf { it != -1 }, end.takeIf { it != -1 }, step)
+				} else {
+					expr[content.toInt()]
+				}
+			}
+
+			else -> throw IllegalArgumentException("Could not parse the segment “$segment” in BsonPath expression “$text”.")
+		}
+	}
+
+	return expr
+}
+
+private fun splitSegments(text: String): Sequence<String> = sequence {
+	val accumulator = StringBuilder()
+	var i = 1 // skip the $ sign
+
+	// Helper for nicer error messages
+	fun fail(msg: String, cause: Throwable? = null): Nothing {
+		val excerpt =
+			if (i + 5 > text.length) text.substring(i, text.length)
+			else text.substring(i, i + 5) + "…"
+
+		throw IllegalArgumentException("Could not parse the BSON path expression “$text” at index $i (“${excerpt}”): $msg", cause)
+	}
+
+	fun accumulate() {
+		accumulator.append(text[i])
+		i++
+	}
+
+	fun accumulateWhile(predicate: (Char) -> Boolean) {
+		while (i < text.length && predicate(text[i])) {
+			accumulate()
+		}
+	}
+
+	try {
+		while (i < text.length) {
+			val c = text[i]
+
+			when (c) {
+				'.' if accumulator.isEmpty() -> {
 					// .foo
-					segment.startsWith(".") ->
-						expr[segment.removePrefix(".")]
+					accumulate()
 
-					// ['foo']
-					segment.startsWith("['") && segment.endsWith("']") ->
-						expr[segment.removePrefix("['").removeSuffix("']")]
-
-					// ["foo"]
-					segment.startsWith("[\"") && segment.endsWith("\"]") ->
-						expr[segment.removePrefix("[\"").removeSuffix("\"]")]
-
-					// [0] or [0:1:2]
-					segment.startsWith("[") && segment.endsWith("]") -> {
-						val content = segment.removePrefix("[").removeSuffix("]")
-						if (':' in content) {
-							val bounds = content.split(':')
-							val start = bounds.getIntNotEmpty(0, default = -1)
-							val end = bounds.getIntNotEmpty(1, default = -1)
-							val step = bounds.getIntNotEmpty(2, default = 1)
-							Slice(start, end, step, expr)
-						} else {
-							expr[content.toInt()]
-						}
+					when {
+						text[i].isNameFirst() -> accumulateWhile { it.isNameChar() }
+						text[i] == '*' -> accumulate()
+						else -> fail("A name segment should start with a non-digit character, found: ${text[i]}")
 					}
 
-					else -> throw IllegalArgumentException("Could not parse the segment “$segment” in BsonPath expression “$text”.")
+					yield(accumulator.toString())
+					accumulator.clear()
 				}
-			}
 
-			return expr
-		}
+				'[' if accumulator.isEmpty() -> {
+					val c2 = text[i + 1]
 
-		private fun splitSegments(text: String): Sequence<String> = sequence {
-			val accumulator = StringBuilder()
-			var i = 1 // skip the $ sign
-
-			// Helper for nicer error messages
-			fun fail(msg: String, cause: Throwable? = null): Nothing {
-				val excerpt =
-					if (i + 5 > text.length) text.substring(i, text.length)
-					else text.substring(i, i + 5) + "…"
-
-				throw IllegalArgumentException("Could not parse the BSON path expression “$text” at index $i (“${excerpt}”): $msg", cause)
-			}
-
-			fun accumulate() {
-				accumulator.append(text[i])
-				i++
-			}
-
-			fun accumulateWhile(predicate: (Char) -> Boolean) {
-				while (i < text.length && predicate(text[i])) {
-					accumulate()
-				}
-			}
-
-			try {
-				while (i < text.length) {
-					val c = text[i]
-
-					when (c) {
-						'.' if accumulator.isEmpty() -> {
-							// .foo
-							accumulate()
-
-							when {
-								text[i].isNameFirst() -> accumulateWhile { it.isNameChar() }
-								text[i] == '*' -> accumulate()
-								else -> fail("A name segment should start with a non-digit character, found: ${text[i]}")
-							}
-
+					when (c2) {
+						'\'', '"' -> {
+							accumulate() // opening bracket
+							accumulate() // opening quote
+							accumulateWhile { it != '\'' && it != '"' }
+							accumulate() // closing quote
+							accumulate() // closing bracket
 							yield(accumulator.toString())
 							accumulator.clear()
 						}
 
-						'[' if accumulator.isEmpty() -> {
-							val c2 = text[i + 1]
+						in Char(0x30)..Char(0x39), '-', ':' -> {
+							accumulate() // opening bracket
 
-							when (c2) {
-								'\'', '"' -> {
-									accumulate() // opening bracket
-									accumulate() // opening quote
-									accumulateWhile { it != '\'' && it != '"' }
-									accumulate() // closing quote
-									accumulate() // closing bracket
-									yield(accumulator.toString())
-									accumulator.clear()
-								}
-
-								in Char(0x30)..Char(0x39), '-', ':' -> {
-									accumulate() // opening bracket
-
-									if (text[i] == '-') {
-										accumulate()
-									}
-
-									accumulateWhile { it.isDigit() }
-
-									if (text[i] == ':') {
-										accumulate()
-										accumulateWhile { it.isDigit() }
-
-										if (text[i] == ':') {
-											accumulate()
-											accumulateWhile { it.isDigit() || it == '-' }
-										}
-									}
-
-									accumulate() // closing bracket
-									yield(accumulator.toString())
-									accumulator.clear()
-								}
-
-								'*' -> {
-									accumulate() // opening bracket
-									accumulate() // start
-									accumulate() // closing bracket
-									yield(accumulator.toString())
-									accumulator.clear()
-								}
-
-								else -> fail("Unrecognized selector")
+							if (text[i] == '-') {
+								accumulate()
 							}
+
+							accumulateWhile { it.isDigit() }
+
+							if (text[i] == ':') {
+								accumulate()
+								accumulateWhile { it.isDigit() }
+
+								if (text[i] == ':') {
+									accumulate()
+									accumulateWhile { it.isDigit() || it == '-' }
+								}
+							}
+
+							accumulate() // closing bracket
+							yield(accumulator.toString())
+							accumulator.clear()
 						}
 
-						else -> {
-							fail("Unrecognized syntax")
+						'*' -> {
+							accumulate() // opening bracket
+							accumulate() // start
+							accumulate() // closing bracket
+							yield(accumulator.toString())
+							accumulator.clear()
 						}
+
+						else -> fail("Unrecognized selector")
 					}
 				}
-			} catch (e: Exception) {
-				if (e is IllegalArgumentException)
-					throw e
-				else
-					fail("An exception was thrown: ${e.message}", e)
+
+				else -> {
+					fail("Unrecognized syntax")
+				}
 			}
 		}
-
-		private fun List<String>.getIntNotEmpty(index: Int, default: Int): Int {
-			if (index !in this.indices) {
-				return default
-			}
-
-			val value = this[index]
-
-			if (value.isEmpty())
-				return default
-
-			return value.toInt()
-		}
-
-		private inline fun Char.isAlpha() =
-			this.code in 0x41..0x51 || this.code in 0x61..0x7A
-
-		private inline fun Char.isDigit() =
-			this.code in 0x30..0x39
-
-		private inline fun Char.isNameFirst() =
-			isAlpha() || this == '_' || this.code in 0x80..0xD7FF || this.code in 0xE000..0x10FFFF
-
-		private inline fun Char.isNameChar() =
-			isNameFirst() || isDigit()
+	} catch (e: Exception) {
+		if (e is IllegalArgumentException)
+			throw e
+		else
+			fail("An exception was thrown: ${e.message}", e)
 	}
 }
+
+private fun List<String>.getIntNotEmpty(index: Int, default: Int): Int {
+	if (index !in this.indices) {
+		return default
+	}
+
+	val value = this[index]
+
+	if (value.isEmpty())
+		return default
+
+	return value.toInt()
+}
+
+private inline fun Char.isAlpha() =
+	this.code in 0x41..0x51 || this.code in 0x61..0x7A
+
+private inline fun Char.isDigit() =
+	this.code in 0x30..0x39
+
+private inline fun Char.isNameFirst() =
+	isAlpha() || this == '_' || this.code in 0x80..0xD7FF || this.code in 0xE000..0x10FFFF
+
+private inline fun Char.isNameChar() =
+	isNameFirst() || isDigit()
+
+// endregion
+// region Execution/selection
 
 /**
  * Finds all values that match [path] in a given [BSON document][Bson].
@@ -657,3 +667,5 @@ inline fun <reified T : Any?> Bson.selectFirst(path: BsonPath): T {
 @ExperimentalBsonPathApi
 inline infix fun <reified T : Any?> Bson.at(path: BsonPath): T =
 	selectFirst(path)
+
+// endregion
