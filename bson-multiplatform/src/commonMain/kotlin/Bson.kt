@@ -24,6 +24,14 @@ import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformArrayReader
 import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformDocumentReader
 import opensavvy.ktmongo.dsl.LowLevelApi
 
+/**
+ * Pure Kotlin BSON document implementation.
+ *
+ * ### Implementation
+ *
+ * Instead of decoding the BSON document into subdocuments, this class stores the raw bytes in BSON representation.
+ * Fields are decoded lazily when searched via the [reader].
+ */
 class Bson internal constructor(
 	private val factory: BsonFactory,
 	private val data: Bytes,
@@ -41,6 +49,14 @@ class Bson internal constructor(
 		reader().toString()
 }
 
+/**
+ * Pure Kotlin BSON array implementation.
+ *
+ * ### Implementation
+ *
+ * Instead of decoding the BSON array into subdocuments, this class stores the raw bytes in BSON representation.
+ * Fields are decoded lazily when searched via the [reader].
+ */
 class BsonArray internal constructor(
 	private val factory: BsonFactory,
 	private val data: Bytes,
