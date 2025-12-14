@@ -54,6 +54,9 @@ data class User(
 	val pets: List<Pet>,
 )
 
+@Serializable
+data class IntList(val items: List<Int>)
+
 fun SuiteDsl.bsonPathTests(
 	context: Prepared<BsonFactory>,
 ) = suite("BsonPath") {
@@ -119,6 +122,54 @@ fun SuiteDsl.bsonPathTests(
 
 	test("Select all pet names") {
 		check(bobDoc().select<String>(BsonPath.parse("$.pets.*.name")).toList() == listOf("Barbie", "Poupette", "Michael"))
+	}
+
+	suite("Slices") {
+		suite("Indices") {
+			val sliceDoc by prepared {
+				context().write(IntList(listOf(0, 1, 2, 3, 4, 5, 6)))
+			}
+
+			test("Default step") {
+				check(sliceDoc().select<Int>(BsonPath.parse("$.items[1:3]")).toList() == listOf(1, 2))
+			}
+
+			test("Slice with no end index") {
+				check(sliceDoc().select<Int>(BsonPath.parse("$.items[5:]")).toList() == listOf(5, 6))
+			}
+
+			test("Slice with step 2") {
+				check(sliceDoc().select<Int>(BsonPath.parse("$.items[1:5:2]")).toList() == listOf(1, 3))
+			}
+
+			test("Slice with negative step") {
+				check(sliceDoc().select<Int>(BsonPath.parse("$.items[5:1:-2]")).toList() == listOf(5, 3))
+			}
+
+			test("Slice in reverse order") {
+				check(sliceDoc().select<Int>(BsonPath.parse("$.items[::-1]")).toList() == listOf(6, 5, 4, 3, 2, 1, 0))
+			}
+		}
+
+		test("Simple bounds") {
+			check(bobDoc().select<String>(BsonPath.parse("$.pets[1:3].name")).toList() == listOf("Poupette", "Michael"))
+		}
+
+		test("No bounds") {
+			check(bobDoc().select<String>(BsonPath.parse("$.pets[:].name")).toList() == listOf("Barbie", "Poupette", "Michael"))
+		}
+
+		test("Positive step") {
+			check(bobDoc().select<String>(BsonPath.parse("$.pets[::2].name")).toList() == listOf("Barbie", "Michael"))
+		}
+
+		test("Negative step") {
+			check(bobDoc().select<String>(BsonPath.parse("$.pets[::-2].name")).toList() == listOf("Michael", "Barbie"))
+		}
+
+		test("Reversed") {
+			check(bobDoc().select<String>(BsonPath.parse("$.pets[::-1].name")).toList() == listOf("Michael", "Poupette", "Barbie"))
+		}
 	}
 
 }

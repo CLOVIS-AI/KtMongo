@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.BsonPath.Root.toString
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.intellij.lang.annotations.Language
 import kotlin.reflect.KClass
@@ -103,6 +104,105 @@ sealed interface BsonPath {
 		Item(index, this)
 
 	/**
+	 * Points to the elements of a [BsonArray] at the indices selected by [range].
+	 *
+	 * If the node is not an array, nothing is returned.
+	 *
+	 * To create an open-ended range, use the overload that accepts integers.
+	 *
+	 * To reverse an array, see [reversed].
+	 *
+	 * ### Range normalization
+	 *
+	 * When a range has a step, the [IntProgression] class can reduce the closing bound
+	 * if the step does not reach it. For example, `1 .. 6 step 2` becomes `1 .. 5 step 2`
+	 * because both ranges cover the values `[1, 3, 5]` and `6` could not have been included.
+	 * This doesn't impact the outputs, but may impact the [toString] representation of this path.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * BsonPath.sliced(1..<5)         // $[1:5]: Items at indices 1 (inclusive) to 5 (exclusive)
+	 * BsonPath.sliced(1..5]          // $[1:6]: Items at indices 1 (inclusive) to 5 (inclusive)
+	 * BsonPath.sliced(1..5 step 2)   // $[1:6:2]: Items at indices 1 (inclusive) to 5 (inclusive), skipping every other item
+	 * BsonPath.sliced(5 downTo 1)    // $[1:6:2]: Items at indices 1 (inclusive) to 5 (inclusive), in reverse order
+	 * ```
+	 *
+	 * @see reversed Shorthand to reverse an array.
+	 */
+	fun sliced(range: IntProgression): BsonPath {
+		require(range.first >= 0) { "BsonPath.sliced() only supports positive indices, found: $range" }
+		require(range.last >= 0) { "BsonPath.sliced() only supports positive indices, found: $range" }
+		return Slice(
+			start = if (range.step >= 0 && range.first == 0) -1 else range.first,
+			end = when {
+				range.step >= 0 && range.last == Int.MAX_VALUE -> -1
+				range.step >= 0 -> range.last + 1
+				range.step < 0 && range.last == 0 -> -1
+				else -> range.last - 1
+			},
+			step = range.step,
+			parent = this,
+		)
+	}
+
+	/**
+	 * Points to the elements of a [BsonArray] at the indices selected by [start] and [end], with an optional [step].
+	 *
+	 * If the node is not an array, nothing is returned.
+	 *
+	 * Elements can be iterated in the reversed order by having a [start] greater than the [end] and having a negative [step].
+	 *
+	 * If the smaller bound is `null`, it means "the first element of the array, inclusive".
+	 * If the larger bound is `null`, it means "the last element of the array, **inclusive**".
+	 *
+	 * ### Examples
+	 *
+	 * ```json
+	 * [0, 1, 2, 3, 4, 5, 6]
+	 * ```
+	 *
+	 * - `BsonPath.sliced(1, 3)` returns `[1, 2]`
+	 * - `BsonPath.sliced(start = 5)` returns `[5, 6]`
+	 * - `BsonPath.sliced(1, 5, 2)` returns `[1, 3]`
+	 * - `BsonPath.sliced(5, 1, -2)` returns `[5, 3]`
+	 * - `BsonPath.sliced(step = -1)` returns `[6, 5, 4, 3, 2, 1, 0]`
+	 *
+	 * @param start The index at which the slice should start, **inclusive**.
+	 * @param end The index at which the slice should end, **exclusive**.
+	 * @param step How many elements should be skipped between found elements.
+	 * - With [step] of 1, all elements are returned.
+	 * - With [step] of 2, every other element is returned.
+	 * - With [step] of 0, no elements are returned at all.
+	 *
+	 * @see reversed Shorthand for reversing an array.
+	 */
+	fun sliced(start: Int? = null, end: Int? = null, step: Int = 1): BsonPath {
+		require(start == null || start >= 0) { "BsonPath.sliced(start=) cannot be negative, found: $start" }
+		require(end == null || end >= 0) { "BsonPath.sliced(end=) cannot be negative, found: $end" }
+
+		if (step >= 0) {
+			require((start ?: 0) <= (end
+				?: Int.MAX_VALUE)) { "BsonPath.sliced()'s start should be lesser than its end when the step is positive. Found start=$start, end=$end and step=$step" }
+		} else {
+			require((start ?: Int.MAX_VALUE) >= (end
+				?: 0)) { "BsonPath.sliced()'s start should be greater than its end when the step is negative. Found start=$start, end=$end and step=$step" }
+		}
+
+		return Slice(start ?: -1, end ?: -1, step, this)
+	}
+
+	/**
+	 * Iterates a [BsonArray] in the reversed order, starting from the end.
+	 *
+	 * If the node is not an array, nothing is returned.
+	 *
+	 * This is a shorthand syntax for a [slice][sliced] of `[::-1]`.
+	 */
+	fun reversed(): BsonPath =
+		Slice(-1, -1, -1, this)
+
+	/**
 	 * Points to all children of a document.
 	 *
 	 * - The children of a [BsonArray] are its elements.
@@ -181,6 +281,63 @@ sealed interface BsonPath {
 		override fun toString() = "$parent.*"
 	}
 
+	private data class Slice(
+		val start: Int, // inclusive, -1 for open-ended
+		val end: Int, // exclusive, -1 for open-ended
+		val step: Int,
+		val parent: BsonPath,
+	) : BsonPath {
+
+		@LowLevelApi
+		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+			parent.findIn(reader)
+				.flatMap {
+					if (step == 0) {
+						emptySequence()
+					} else if (it.type == BsonType.Array) {
+						sequence {
+							val elements = it.readArray().elements
+
+							if (step >= 0) {
+								val start = if (start == -1) 0 else start
+								val end = if (end == -1 || end > elements.size) elements.size else end
+								for (index in start..<end step step) {
+									yield(elements[index])
+								}
+							} else {
+								val start = if (start == -1 || start > elements.lastIndex) elements.lastIndex else start
+								val end = if (end == -1) 0 else end + 1
+								for (index in start downTo end step -step) {
+									yield(elements[index])
+								}
+							}
+						}
+					} else {
+						emptySequence()
+					}
+				}
+
+		override fun toString(): String = buildString {
+			append(parent.toString())
+			append('[')
+
+			if (start != -1)
+				append(start)
+
+			append(':')
+
+			if (end != -1)
+				append(end)
+
+			if (step != 1) {
+				append(':')
+				append(step)
+			}
+
+			append(']')
+		}
+	}
+
 	/**
 	 * The root of a [BsonPath] expression.
 	 *
@@ -211,6 +368,7 @@ sealed interface BsonPath {
 		 * | `['foo']` or `.foo`   | Accessor for a field named `foo`. See [BsonPath.get].        |
 		 * | `[0]`                 | Accessor for the first item of an array. See [BsonPath.get]. |
 		 * | `.*` or `[*]`         | Accessor for all direct children. See [BsonPath.all].        |
+		 * | `[1:3]`               | Accessor for elements at index 1..<3. See [BsonPath.sliced]. |
 		 *
 		 * ### Examples
 		 *
@@ -251,9 +409,19 @@ sealed interface BsonPath {
 					segment.startsWith("[\"") && segment.endsWith("\"]") ->
 						expr[segment.removePrefix("[\"").removeSuffix("\"]")]
 
-					// [0]
-					segment.startsWith("[") && segment.endsWith("]") ->
-						expr[segment.removePrefix("[").removeSuffix("]").toInt()]
+					// [0] or [0:1:2]
+					segment.startsWith("[") && segment.endsWith("]") -> {
+						val content = segment.removePrefix("[").removeSuffix("]")
+						if (':' in content) {
+							val bounds = content.split(':')
+							val start = bounds.getIntNotEmpty(0, default = -1)
+							val end = bounds.getIntNotEmpty(1, default = -1)
+							val step = bounds.getIntNotEmpty(2, default = 1)
+							Slice(start, end, step, expr)
+						} else {
+							expr[content.toInt()]
+						}
+					}
 
 					else -> throw IllegalArgumentException("Could not parse the segment “$segment” in BsonPath expression “$text”.")
 				}
@@ -319,9 +487,20 @@ sealed interface BsonPath {
 									accumulator.clear()
 								}
 
-								in Char(0x30)..Char(0x39) -> {
+								in Char(0x30)..Char(0x39), ':' -> {
 									accumulate() // opening bracket
 									accumulateWhile { it.isDigit() }
+
+									if (text[i] == ':') {
+										accumulate()
+										accumulateWhile { it.isDigit() }
+
+										if (text[i] == ':') {
+											accumulate()
+											accumulateWhile { it.isDigit() || it == '-' }
+										}
+									}
+
 									accumulate() // closing bracket
 									yield(accumulator.toString())
 									accumulator.clear()
@@ -350,6 +529,19 @@ sealed interface BsonPath {
 				else
 					fail("An exception was thrown: ${e.message}", e)
 			}
+		}
+
+		private fun List<String>.getIntNotEmpty(index: Int, default: Int): Int {
+			if (index !in this.indices) {
+				return default
+			}
+
+			val value = this[index]
+
+			if (value.isEmpty())
+				return default
+
+			return value.toInt()
 		}
 
 		private inline fun Char.isAlpha() =
