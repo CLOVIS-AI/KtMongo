@@ -37,6 +37,10 @@ val BsonPathTest by preparedSuite {
 			check(BsonPath[0].toString() == "$[0]")
 		}
 
+		test("An array item from the end") {
+			check(BsonPath[-1].toString() == "$[-1]")
+		}
+
 		test("Fields that require escaping") {
 			check(BsonPath["foo bar"].toString() == "$['foo bar']")
 			check(BsonPath["baz.foo"].toString() == "$['baz.foo']")
@@ -100,6 +104,11 @@ val BsonPathTest by preparedSuite {
 		test("Parse a simple array index") {
 			check(BsonPath.parse("$[0]").toString() == "$[0]")
 			check(BsonPath.parse("$[0]") == BsonPath[0])
+		}
+
+		test("Parse a negative array index") {
+			check(BsonPath.parse("$[-1]").toString() == "$[-1]")
+			check(BsonPath.parse("$[-1]") == BsonPath[-1])
 		}
 
 		test("Parse all fields") {

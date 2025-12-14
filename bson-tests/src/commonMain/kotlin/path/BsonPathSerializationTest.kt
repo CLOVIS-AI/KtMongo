@@ -111,6 +111,10 @@ fun SuiteDsl.bsonPathTests(
 		check(bobDoc().select<String>(BsonPath.parse("$.pets[1].name")).firstOrNull() == "Poupette")
 	}
 
+	test("Select a list item's field from the end") {
+		check(bobDoc().select<String>(BsonPath.parse("$.pets[-1].name")).firstOrNull() == "Michael")
+	}
+
 	test("Select an enum") {
 		check(bobDoc().select<Species>(BsonPath.parse("$.pets[1].species")).firstOrNull() == Species.Bird)
 	}

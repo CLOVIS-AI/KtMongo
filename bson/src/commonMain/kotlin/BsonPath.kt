@@ -120,29 +120,27 @@ sealed interface BsonPath {
 	/**
 	 * Points to the element at [index] in a [BsonArray].
 	 *
-	 * BSON indices start at 0.
-	 *
 	 * ### Example
 	 *
 	 * ```kotlin
 	 * BsonPath[0]         // $[0]
-	 * BsonPath["foo"][1]  // $.foo[1]
+	 * BsonPath["foo"][1]  // $.foo[1], the first element
+	 * BsonPath["foo"][-1] // $.foo[-1], the very least element
 	 * ```
 	 */
 	operator fun get(index: Int): BsonPath =
 		Item(index, this)
 
 	private data class Item(val index: Int, val parent: BsonPath) : BsonPath {
-		init {
-			require(index >= 0) { "BSON array indices start at 0, found: $index" }
-		}
 
 		@LowLevelApi
 		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
 			parent.findIn(reader)
 				.mapNotNull {
 					if (it.type == BsonType.Array) {
-						it.readArray().read(index)
+						val array = it.readArray()
+						val readingIndex = if (index >= 0) index else array.elements.size + index
+						array.read(readingIndex)
 					} else {
 						null
 					}
@@ -487,8 +485,13 @@ sealed interface BsonPath {
 									accumulator.clear()
 								}
 
-								in Char(0x30)..Char(0x39), ':' -> {
+								in Char(0x30)..Char(0x39), '-', ':' -> {
 									accumulate() // opening bracket
+
+									if (text[i] == '-') {
+										accumulate()
+									}
+
 									accumulateWhile { it.isDigit() }
 
 									if (text[i] == ':') {
