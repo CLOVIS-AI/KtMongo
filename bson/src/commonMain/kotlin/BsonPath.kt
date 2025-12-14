@@ -75,6 +75,9 @@ annotation class ExperimentalBsonPathApi
 @ExperimentalBsonPathApi
 sealed interface BsonPath {
 
+	@LowLevelApi
+	fun findIn(reader: BsonValueReader): Sequence<BsonValueReader>
+
 	/**
 	 * Points to a [field] in a [Bson] document.
 	 *
@@ -87,6 +90,32 @@ sealed interface BsonPath {
 	 */
 	operator fun get(field: String): BsonPath =
 		Field(field, this)
+
+	private data class Field(val name: String, val parent: BsonPath) : BsonPath {
+
+		init {
+			require("'" !in name) { "The character ' (apostrophe) is currently forbidden in BsonPath expressions, found: \"$name\"" }
+		}
+
+		@LowLevelApi
+		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+			parent.findIn(reader)
+				.mapNotNull {
+					if (it.type == BsonType.Document) {
+						it.readDocument().read(name)
+					} else {
+						null
+					}
+				}
+
+		override fun toString() =
+			if (name matches legalCharacters) "$parent.$name"
+			else "$parent['$name']"
+
+		companion object {
+			private val legalCharacters = Regex("[a-zA-Z0-9]*")
+		}
+	}
 
 	/**
 	 * Points to the element at [index] in a [BsonArray].
@@ -102,6 +131,56 @@ sealed interface BsonPath {
 	 */
 	operator fun get(index: Int): BsonPath =
 		Item(index, this)
+
+	private data class Item(val index: Int, val parent: BsonPath) : BsonPath {
+		init {
+			require(index >= 0) { "BSON array indices start at 0, found: $index" }
+		}
+
+		@LowLevelApi
+		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+			parent.findIn(reader)
+				.mapNotNull {
+					if (it.type == BsonType.Array) {
+						it.readArray().read(index)
+					} else {
+						null
+					}
+				}
+
+		override fun toString() = "$parent[$index]"
+	}
+
+	/**
+	 * Points to all children of a document.
+	 *
+	 * - The children of a [BsonArray] are its elements.
+	 * - The children of a [Bson] document are the values of its fields.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * BsonPath["foo"].all   // $.foo.*
+	 * ```
+	 */
+	val all: BsonPath
+		get() = All(this)
+
+	private data class All(val parent: BsonPath) : BsonPath {
+
+		@LowLevelApi
+		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+			parent.findIn(reader)
+				.flatMap {
+					when (it.type) {
+						BsonType.Document -> it.readDocument().entries.values.asSequence()
+						BsonType.Array -> it.readArray().elements.asSequence()
+						else -> emptySequence()
+					}
+				}
+
+		override fun toString() = "$parent.*"
+	}
 
 	/**
 	 * Points to the elements of a [BsonArray] at the indices selected by [range].
@@ -201,85 +280,6 @@ sealed interface BsonPath {
 	 */
 	fun reversed(): BsonPath =
 		Slice(-1, -1, -1, this)
-
-	/**
-	 * Points to all children of a document.
-	 *
-	 * - The children of a [BsonArray] are its elements.
-	 * - The children of a [Bson] document are the values of its fields.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * BsonPath["foo"].all   // $.foo.*
-	 * ```
-	 */
-	val all: BsonPath
-		get() = All(this)
-
-	@LowLevelApi
-	fun findIn(reader: BsonValueReader): Sequence<BsonValueReader>
-
-	private data class Field(val name: String, val parent: BsonPath) : BsonPath {
-
-		init {
-			require("'" !in name) { "The character ' (apostrophe) is currently forbidden in BsonPath expressions, found: \"$name\"" }
-		}
-
-		@LowLevelApi
-		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
-			parent.findIn(reader)
-				.mapNotNull {
-					if (it.type == BsonType.Document) {
-						it.readDocument().read(name)
-					} else {
-						null
-					}
-				}
-
-		override fun toString() =
-			if (name matches legalCharacters) "$parent.$name"
-			else "$parent['$name']"
-
-		companion object {
-			private val legalCharacters = Regex("[a-zA-Z0-9]*")
-		}
-	}
-
-	private data class Item(val index: Int, val parent: BsonPath) : BsonPath {
-		init {
-			require(index >= 0) { "BSON array indices start at 0, found: $index" }
-		}
-
-		@LowLevelApi
-		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
-			parent.findIn(reader)
-				.mapNotNull {
-					if (it.type == BsonType.Array) {
-						it.readArray().read(index)
-					} else {
-						null
-					}
-				}
-
-		override fun toString() = "$parent[$index]"
-	}
-
-	private data class All(val parent: BsonPath) : BsonPath {
-
-		@LowLevelApi
-		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
-			parent.findIn(reader)
-				.flatMap {
-					when (it.type) {
-						BsonType.Document -> it.readDocument().entries.values.asSequence()
-						BsonType.Array -> it.readArray().elements.asSequence()
-						else -> emptySequence()
-					}
-				}
-
-		override fun toString() = "$parent.*"
-	}
 
 	private data class Slice(
 		val start: Int, // inclusive, -1 for open-ended
