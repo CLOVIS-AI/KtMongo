@@ -136,6 +136,15 @@ interface BsonArrayReader {
 	fun asValue(): BsonValueReader
 
 	/**
+	 * Reads this document into an instance of [type] [T].
+	 *
+	 * [T] should be a type that can contain elements, such as `List<Int>` or `Set<User>`.
+	 *
+	 * If it isn't possible to deserialize this BSON to the given type, an exception is thrown.
+	 */
+	fun <T : Any> read(type: KType, klass: KClass<T>): T?
+
+	/**
 	 * JSON representation of the array this [BsonArrayReader] is reading, as a [String].
 	 */
 	override fun toString(): String
@@ -273,6 +282,13 @@ interface BsonValueReader {
 	@LowLevelApi
 	@Throws(BsonReaderException::class)
 	fun readArray(): BsonArrayReader
+
+	/**
+	 * Reads this reader into an instance of [type] [T].
+	 *
+	 * If it isn't possible to deserialize this BSON to the given type, an exception is thrown.
+	 */
+	fun <T : Any> read(type: KType, klass: KClass<T>): T?
 
 	/**
 	 * JSON representation of this value.

@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(libsCommon.plugins.kotlinx.serialization)
 	alias(libsCommon.plugins.testBalloon)
 }
 
@@ -56,6 +57,7 @@ kotlin {
 	sourceSets.commonMain.dependencies {
 		api(projects.annotations)
 		implementation(libs.kotlinx.serialization)
+		implementation(libsCommon.jetbrains.annotations)
 	}
 
 	sourceSets.commonTest.dependencies {

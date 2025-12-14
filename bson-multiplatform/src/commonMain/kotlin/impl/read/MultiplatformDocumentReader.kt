@@ -24,6 +24,7 @@ import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.multiplatform.Bson
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.RawBsonReader
 import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoder
@@ -44,6 +45,7 @@ internal fun readField(
 	reader: RawBsonReader,
 	name: String,
 	type: BsonType,
+	factory: BsonFactory,
 ): MultiplatformBsonValueReader {
 	val fieldStart = reader.readCount
 
@@ -93,11 +95,12 @@ internal fun readField(
 
 	println("Found field '$name' in range $fieldRange: $fieldBytes")
 
-	return MultiplatformBsonValueReader(type, fieldBytes)
+	return MultiplatformBsonValueReader(factory, type, fieldBytes)
 }
 
 @LowLevelApi
 internal class MultiplatformDocumentReader(
+	private val factory: BsonFactory,
 	private val bytesWithHeader: Bytes,
 ) : BsonDocumentReader {
 
@@ -116,7 +119,7 @@ internal class MultiplatformDocumentReader(
 			println("Left to read: $reader")
 			val type = BsonType.fromCode(reader.readSignedByte())
 			val name = reader.readCString()
-			val field = readField(bytes, reader, name, type)
+			val field = readField(bytes, reader, name, type, factory)
 
 			fields[name] = field
 
@@ -141,10 +144,10 @@ internal class MultiplatformDocumentReader(
 		}
 
 	override fun toBson(): Bson =
-		Bson(bytesWithHeader)
+		Bson(factory, bytesWithHeader)
 
 	override fun asValue(): BsonValueReader =
-		MultiplatformBsonValueReader(BsonType.Document, bytesWithHeader)
+		MultiplatformBsonValueReader(factory, BsonType.Document, bytesWithHeader)
 
 	@Suppress("UNCHECKED_CAST")
 	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {

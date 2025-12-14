@@ -134,8 +134,8 @@ private class BsonEncoder(override val serializersModule: SerializersModule, val
 	}
 
 	private val bytes = ByteArraySerializer().descriptor
-	private val objectId = ObjectId.Serializer().descriptor
-	private val timestamp = Timestamp.Serializer().descriptor
+	private val objectId = ObjectId.Serializer.descriptor
+	private val timestamp = Timestamp.Serializer.descriptor
 	private val uuid = Uuid.serializer().descriptor
 	private val instant = Instant.serializer().descriptor
 	override fun <T> encodeSerializableValue(serializer: SerializationStrategy<T>, value: T) {

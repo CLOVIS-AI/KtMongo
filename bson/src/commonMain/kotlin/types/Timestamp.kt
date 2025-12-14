@@ -130,7 +130,7 @@ class Timestamp(
 	 */
 	@OptIn(ExperimentalTime::class)
 	@LowLevelApi
-	class Serializer : KSerializer<Timestamp> {
+	object Serializer : KSerializer<Timestamp> {
 		override val descriptor: SerialDescriptor
 			get() = PrimitiveSerialDescriptor("opensavvy.ktmongo.bson.types.Timestamp", PrimitiveKind.STRING)
 

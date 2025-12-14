@@ -17,16 +17,18 @@
 package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.*
-import opensavvy.ktmongo.bson.BsonArrayReader
-import opensavvy.ktmongo.bson.BsonDocumentReader
-import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.official.types.toKtMongo
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonDocument
+import org.bson.BsonReader
 import org.bson.BsonValue
+import org.bson.BsonWriter
+import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
+import org.bson.codecs.EncoderContext
+import org.bson.codecs.configuration.CodecRegistry
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -35,22 +37,22 @@ import org.bson.BsonArray as OfficialBsonArray
 import org.bson.BsonDocument as OfficialBsonDocument
 
 @LowLevelApi
-internal class BsonDocumentReader(
+internal class JavaBsonDocumentReader(
 	private val raw: OfficialBsonDocument,
 	private val context: JvmBsonFactory,
 ) : BsonDocumentReader {
 	override fun read(name: String): BsonValueReader? {
-		return BsonValueReader(raw[name] ?: return null, context)
+		return JavaBsonValueReader(raw[name] ?: return null, context)
 	}
 
 	override val entries: Map<String, BsonValueReader>
-		get() = raw.mapValues { (_, value) -> BsonValueReader(value, context) }
+		get() = raw.mapValues { (_, value) -> JavaBsonValueReader(value, context) }
 
 	override fun toBson(): Bson =
 		Bson(raw, context)
 
 	override fun asValue(): BsonValueReader =
-		BsonValueReader(raw, context)
+		JavaBsonValueReader(raw, context)
 
 	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
 		val codec = context.codecRegistry.get(klass.java)
@@ -65,22 +67,68 @@ internal class BsonDocumentReader(
 }
 
 @LowLevelApi
-internal class BsonArrayReader(
+internal class JavaBsonArrayReader(
 	private val raw: OfficialBsonArray,
 	private val context: JvmBsonFactory,
 ) : BsonArrayReader {
 	override fun read(index: Int): BsonValueReader? {
-		return BsonValueReader(raw.getOrNull(index) ?: return null, context)
+		return JavaBsonValueReader(raw.getOrNull(index) ?: return null, context)
 	}
 
 	override val elements: List<BsonValueReader>
-		get() = raw.map { BsonValueReader(it, context) }
+		get() = raw.map { JavaBsonValueReader(it, context) }
 
 	override fun toBson(): opensavvy.ktmongo.bson.official.BsonArray =
 		BsonArray(raw, context)
 
 	override fun asValue(): BsonValueReader =
-		BsonValueReader(raw, context)
+		JavaBsonValueReader(raw, context)
+
+	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
+		// Special-case Kotlin collections/arrays so we can preserve generic element type information
+		// (the Java codec erases generics and would otherwise decode subdocuments as org.bson.Document).
+		val typeArg = type.arguments.firstOrNull()?.type
+		val elementKClass = typeArg?.classifier as? KClass<*>
+		val elementIsNullable = typeArg?.isMarkedNullable == true
+
+		fun decodeElement(element: BsonValue): Any? {
+			if (element.isNull) {
+				if (elementIsNullable) return null
+				else throw BsonReaderException("Cannot decode null element for non-nullable element type in $type")
+			}
+
+			return decodeValue(element, elementKClass ?: (klass as KClass<*>), context.codecRegistry)
+		}
+
+		@Suppress("UNCHECKED_CAST")
+		return when {
+			klass == List::class || klass == MutableList::class || klass == Collection::class || klass == MutableCollection::class -> {
+				val out = ArrayList<Any?>()
+				for (v in raw) out.add(decodeElement(v))
+				out as T
+			}
+
+			klass == Set::class || klass == MutableSet::class -> {
+				val out = LinkedHashSet<Any?>()
+				for (v in raw) out.add(decodeElement(v))
+				out as T
+			}
+
+			klass.java.isArray && typeArg != null && elementKClass != null && !klass.java.componentType.isPrimitive -> {
+				val size = raw.size
+				val componentClass = elementKClass.java
+				val arrayObj = java.lang.reflect.Array.newInstance(componentClass, size)
+				for (i in 0 until size) {
+					val v = raw[i]
+					val decoded = decodeElement(v)
+					java.lang.reflect.Array.set(arrayObj, i, decoded)
+				}
+				arrayObj as T
+			}
+
+			else -> decodeValue(raw, klass, context.codecRegistry)
+		}
+	}
 
 	override fun toString(): String {
 		// Yes, this is very ugly, and probably inefficient.
@@ -97,7 +145,7 @@ internal class BsonArrayReader(
 }
 
 @LowLevelApi
-private class BsonValueReader(
+private class JavaBsonValueReader(
 	private val value: BsonValue,
 	private val context: JvmBsonFactory,
 ) : BsonValueReader {
@@ -262,15 +310,80 @@ private class BsonValueReader(
 	@LowLevelApi
 	override fun readDocument(): BsonDocumentReader {
 		ensureType(BsonType.Document) { value.isDocument }
-		return BsonDocumentReader(value.asDocument(), context)
+		return JavaBsonDocumentReader(value.asDocument(), context)
 	}
 
 	@LowLevelApi
 	override fun readArray(): BsonArrayReader {
 		ensureType(BsonType.Array) { value.isArray }
-		return BsonArrayReader(value.asArray(), context)
+		return JavaBsonArrayReader(value.asArray(), context)
+	}
+
+	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
+		// If the underlying BSON value is null, allow returning null for nullable targets
+		if (value.isNull) {
+			return if (type.isMarkedNullable) null else decodeValue(value, klass, context.codecRegistry)
+		}
+
+		// If the value is an array but a parameterized Kotlin collection/array is requested,
+		// delegate to the array-aware reader to preserve generic element type information.
+		if (value.isArray) {
+			return JavaBsonArrayReader(value.asArray(), context).read(type, klass)
+		}
+
+		return decodeValue(value, klass, context.codecRegistry)
 	}
 
 	override fun toString(): String =
 		value.toString()
+}
+
+private fun <T : Any> decodeValue(
+	value: BsonValue,
+	kClass: KClass<T>,
+	codecRegistry: CodecRegistry,
+): T? {
+	// At the top-level, only BSON documents exist. Therefore, the Java driver only provides ways
+	// to decode BSON documents, and not arrays or other values.
+	// In KtMongo, we need to be able to decode arbitrary values, even if they are not top-level.
+	// To work around this, we use a temporary BSON document with a single field 'a'.
+	val valueHolder = BsonDocument("a", value)
+	val documentReader: BsonReader = org.bson.BsonDocumentReader(valueHolder)
+
+	// Acquire the codec for the requested type.
+	val valueCodec: Codec<T> = codecRegistry.get(kClass.java)
+
+	// Decode the fake document and extract its only field using a delegating codec.
+	val docCodec = FakeDocumentCodec(valueCodec)
+	val decoded = docCodec.decode(documentReader, DecoderContext.builder().build())
+	@Suppress("UNCHECKED_CAST")
+	return decoded.a as T?
+}
+
+private class FakeDocument<T>(
+	val a: T,
+)
+
+private class FakeDocumentCodec<T>(
+	private val valueCodec: Codec<T>,
+) : Codec<FakeDocument<T>> {
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): FakeDocument<T> {
+		reader.readStartDocument()
+		reader.readName("a")
+		val value = valueCodec.decode(reader, decoderContext)
+		reader.readEndDocument()
+		return FakeDocument(value)
+	}
+
+	override fun encode(writer: BsonWriter, value: FakeDocument<T>, encoderContext: EncoderContext) {
+		writer.writeStartDocument()
+		writer.writeName("a")
+		valueCodec.encode(writer, value.a, encoderContext)
+		writer.writeEndDocument()
+	}
+
+	override fun getEncoderClass(): Class<FakeDocument<T>> {
+		@Suppress("UNCHECKED_CAST")
+		return FakeDocument::class.java as Class<FakeDocument<T>>
+	}
 }

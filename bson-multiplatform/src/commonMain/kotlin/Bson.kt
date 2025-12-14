@@ -25,6 +25,7 @@ import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformDocumentReade
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 class Bson internal constructor(
+	private val factory: BsonFactory,
 	private val data: Bytes,
 ) : Bson {
 
@@ -33,7 +34,7 @@ class Bson internal constructor(
 
 	@LowLevelApi
 	override fun reader(): BsonDocumentReader =
-		MultiplatformDocumentReader(data)
+		MultiplatformDocumentReader(factory, data)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
@@ -41,6 +42,7 @@ class Bson internal constructor(
 }
 
 class BsonArray internal constructor(
+	private val factory: BsonFactory,
 	private val data: Bytes,
 ) : BsonArray {
 
@@ -49,7 +51,7 @@ class BsonArray internal constructor(
 
 	@LowLevelApi
 	override fun reader(): BsonArrayReader =
-		MultiplatformArrayReader(data)
+		MultiplatformArrayReader(factory, data)
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
