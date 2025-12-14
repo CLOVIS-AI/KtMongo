@@ -31,6 +31,9 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  *
  * Instead of decoding the BSON document into subdocuments, this class stores the raw bytes in BSON representation.
  * Fields are decoded lazily when searched via the [reader].
+ *
+ * Because the reader is lazy, it is not thread-safe.
+ * If you want to use this instance without external synchronization, call [eager].
  */
 class Bson internal constructor(
 	private val factory: BsonFactory,
@@ -48,6 +51,21 @@ class Bson internal constructor(
 	@LowLevelApi
 	override fun reader(): BsonDocumentReader = reader
 
+	/**
+	 * Scans this entire document recursively to find all the fields.
+	 *
+	 * By default, [Bson] lazily scans for fields.
+	 * This is particularly beneficial if there is more data than you are interested in.
+	 * However, this means the [reader] may discover fields as it is being used, which is not thread-safe.
+	 *
+	 * Instead, you can call this function to force a scan of the entire hierarchy.
+	 * After this function returns, [reader] and all the values returned by it are thread-safe and immutable.
+	 */
+	@OptIn(LowLevelApi::class)
+	fun eager() {
+		reader.eager()
+	}
+
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
 		reader().toString()
@@ -60,6 +78,9 @@ class Bson internal constructor(
  *
  * Instead of decoding the BSON array into subdocuments, this class stores the raw bytes in BSON representation.
  * Fields are decoded lazily when searched via the [reader].
+ *
+ * Because the reader is lazy, it is not thread-safe.
+ * If you want to use this instance without external synchronization, call [eager].
  */
 class BsonArray internal constructor(
 	private val factory: BsonFactory,
@@ -76,6 +97,21 @@ class BsonArray internal constructor(
 
 	@LowLevelApi
 	override fun reader(): BsonArrayReader = reader
+
+	/**
+	 * Scans this entire array recursively to find all the fields.
+	 *
+	 * By default, [BsonArray] lazily scans for items.
+	 * This is particularly beneficial if there is more data than you are interested in.
+	 * However, this means the [reader] may discover items as it is being used, which is not thread-safe.
+	 *
+	 * Instead, you can call this function to force a scan of the entire hierarchy.
+	 * After this function returns, [reader] and all the values returned by it are thread-safe and immutable.
+	 */
+	@OptIn(LowLevelApi::class)
+	fun eager() {
+		reader.eager()
+	}
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =

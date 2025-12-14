@@ -79,6 +79,14 @@ internal class MultiplatformArrayReader(
 	override fun asValue(): BsonValueReader =
 		MultiplatformBsonValueReader(factory, BsonType.Array, bytesWithHeader)
 
+	internal fun eager() {
+		scanUntil(null)
+
+		for (field in fields) {
+			field.eager()
+		}
+	}
+
 	@OptIn(ExperimentalSerializationApi::class)
 	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
 		val decoder = BsonDecoderTopLevel(EmptySerializersModule(), factory, bytesWithHeader)
