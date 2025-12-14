@@ -351,7 +351,7 @@ private fun <T : Any> decodeValue(
 	val documentReader: BsonReader = org.bson.BsonDocumentReader(valueHolder)
 
 	// Acquire the codec for the requested type.
-	val valueCodec: Codec<T> = codecRegistry.get(kClass.java)
+	val valueCodec: Codec<T> = codecRegistry.get(unprimitive(kClass).java)
 
 	// Decode the fake document and extract its only field using a delegating codec.
 	val docCodec = FakeDocumentCodec(valueCodec)
@@ -386,4 +386,17 @@ private class FakeDocumentCodec<T>(
 		@Suppress("UNCHECKED_CAST")
 		return FakeDocument::class.java as Class<FakeDocument<T>>
 	}
+}
+
+@Suppress("UNCHECKED_CAST") // safe because it's an equality check
+private fun <T : Any> unprimitive(kClass: KClass<T>): KClass<T> = when (kClass) {
+	Byte::class -> java.lang.Byte::class as KClass<T>
+	Short::class -> java.lang.Short::class as KClass<T>
+	Int::class -> java.lang.Integer::class as KClass<T>
+	Long::class -> java.lang.Long::class as KClass<T>
+	Float::class -> java.lang.Float::class as KClass<T>
+	Double::class -> java.lang.Double::class as KClass<T>
+	Char::class -> java.lang.Character::class as KClass<T>
+	Boolean::class -> java.lang.Boolean::class as KClass<T>
+	else -> kClass
 }
