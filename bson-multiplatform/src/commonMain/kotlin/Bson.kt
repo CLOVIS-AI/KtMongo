@@ -41,8 +41,12 @@ class Bson internal constructor(
 	override fun toByteArray(): ByteArray = data.toByteArray()
 
 	@LowLevelApi
-	override fun reader(): BsonDocumentReader =
+	private val reader by lazy(LazyThreadSafetyMode.PUBLICATION) {
 		MultiplatformDocumentReader(factory, data)
+	}
+
+	@LowLevelApi
+	override fun reader(): BsonDocumentReader = reader
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
@@ -66,8 +70,12 @@ class BsonArray internal constructor(
 	override fun toByteArray(): ByteArray = data.toByteArray()
 
 	@LowLevelApi
-	override fun reader(): BsonArrayReader =
+	private val reader by lazy(LazyThreadSafetyMode.PUBLICATION) {
 		MultiplatformArrayReader(factory, data)
+	}
+
+	@LowLevelApi
+	override fun reader(): BsonArrayReader = reader
 
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
