@@ -44,4 +44,17 @@ val ConnectTest by preparedSuite {
 		check(response.body.document["ok"]?.decodeDouble() == 1.0)
 		check(response.body.document["cursor"]?.decodeDocument()?.get("ns")?.decodeString() == "test-basic.test-basic")
 	}
+
+	test("Insert an element") {
+		val client = MongoClient()
+
+		val output = client.send(Message.Insert())
+
+		println("Awaiting response…")
+		val response = output.receive()
+
+		check(response is Message.OpMsg)
+		check(response.body.document["ok"]?.decodeDouble() == 1.0)
+		check(response.body.document["writeErrors"] == null)
+	}
 }
