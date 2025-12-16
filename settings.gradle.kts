@@ -93,6 +93,7 @@ include(
 	"driver-coroutines",
 	"driver-coroutines-kmongo",
 	"driver-multiplatform-wire",
+	"driver-multiplatform",
 
 	"test",
 
