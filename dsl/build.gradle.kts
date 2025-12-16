@@ -26,7 +26,7 @@ kotlin {
 	jvm()
 
 	sourceSets.commonMain.dependencies {
-		api(projects.bsonOfficial)
+		api(projects.bson)
 		api(projects.annotations)
 	}
 
@@ -36,6 +36,10 @@ kotlin {
 		implementation(libsCommon.kotlin.test)
 		implementation(libs.kotlinx.serialization)
 		implementation(libs.mongodb.kotlin.reflection)
+	}
+
+	sourceSets.jvmTest.dependencies {
+		implementation(projects.bsonOfficial)
 	}
 }
 
