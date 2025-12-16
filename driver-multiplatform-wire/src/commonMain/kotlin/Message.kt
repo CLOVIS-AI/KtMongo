@@ -93,5 +93,15 @@ sealed interface Message {
 				)
 			)
 		)
+
+		@OptIn(LowLevelApi::class)
+		fun Drop() = OpMsg(
+			MessageSection.Body(
+				BsonFactory().buildDocument {
+					writeString("drop", "test-basic")
+					writeString("\$db", "test-basic")
+				}
+			)
+		)
 	}
 }

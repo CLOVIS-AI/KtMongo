@@ -57,4 +57,16 @@ val ConnectTest by preparedSuite {
 		check(response.body.document["ok"]?.decodeDouble() == 1.0)
 		check(response.body.document["writeErrors"] == null)
 	}
+
+	test("Drop a collection") {
+		val client = MongoClient()
+
+		val output = client.send(Message.Drop())
+
+		println("Awaiting response…")
+		val response = output.receive()
+
+		check(response is Message.OpMsg)
+		check(response.body.document["ok"]?.decodeDouble() == 1.0)
+	}
 }
