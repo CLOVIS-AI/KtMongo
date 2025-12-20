@@ -19,7 +19,9 @@ package opensavvy.ktmongo.bson.multiplatform.impl.read
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
-import opensavvy.ktmongo.bson.*
+import opensavvy.ktmongo.bson.BsonReaderException
+import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.RawBsonWriter
@@ -205,13 +207,13 @@ internal class MultiplatformBsonValueReader(
 	}
 
 	@LowLevelApi
-	override fun readDocument(): BsonDocumentReader {
+	override fun readDocument(): MultiplatformDocumentReader {
 		checkType(BsonType.Document)
 		return MultiplatformDocumentReader(factory, bytes)
 	}
 
 	@LowLevelApi
-	override fun readArray(): BsonArrayReader {
+	override fun readArray(): MultiplatformArrayReader {
 		checkType(BsonType.Array)
 		return MultiplatformArrayReader(factory, bytes)
 	}
@@ -219,6 +221,14 @@ internal class MultiplatformBsonValueReader(
 	@OptIn(DangerousMongoApi::class)
 	internal fun writeTo(writer: RawBsonWriter) {
 		writer.writeArbitrary(bytes)
+	}
+
+	internal fun eager() {
+		when (type) {
+			BsonType.Document -> readDocument().eager()
+			BsonType.Array -> readArray().eager()
+			else -> {}
+		}
 	}
 
 	@OptIn(ExperimentalTime::class)

@@ -149,6 +149,14 @@ internal class MultiplatformDocumentReader(
 	override fun asValue(): BsonValueReader =
 		MultiplatformBsonValueReader(factory, BsonType.Document, bytesWithHeader)
 
+	internal fun eager() {
+		scanUntil(null)
+
+		for (field in fields.values) {
+			field.eager()
+		}
+	}
+
 	@Suppress("UNCHECKED_CAST")
 	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
 		val decoder = BsonDecoder(EmptySerializersModule(), this.asValue())
