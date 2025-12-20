@@ -21,9 +21,9 @@ package opensavvy.ktmongo.dsl.aggregation.operators
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.multiContextSuite
 
-val StringValueOperatorsTest by preparedSuite {
+val StringValueOperatorsTest by multiContextSuite {
 
 	class Target(
 		val text: String,

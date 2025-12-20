@@ -16,10 +16,10 @@
 
 package opensavvy.ktmongo.dsl.query.filter
 
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
 
-val ComparisonFilterTest by preparedSuite {
+val ComparisonFilterTest by multiContextSuite {
 
 	suite($$"Operator $eq") {
 		test("Integer") {

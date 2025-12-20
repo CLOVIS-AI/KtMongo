@@ -18,9 +18,9 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.multiContextSuite
 
-val SetTest by preparedSuite {
+val SetTest by multiContextSuite {
 
 	class Target(
 		val foo: String,

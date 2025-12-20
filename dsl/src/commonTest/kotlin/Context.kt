@@ -14,37 +14,19 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.command
+@file:OptIn(ExperimentalAtomicApi::class, ExperimentalTime::class)
 
-import opensavvy.ktmongo.dsl.multiContextSuite
-import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.ktmongo.dsl.testContext
-import kotlin.time.Duration.Companion.minutes
+package opensavvy.ktmongo.dsl
 
-val CountTest by multiContextSuite {
+import opensavvy.prepared.suite.prepared
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.time.ExperimentalTime
 
-	class Target(
-		val user: String,
+/**
+ * An instance of [BsonContext] usable for configuring DSL tests.
+ */
+val testContext by prepared {
+	BsonContext(
+		bsonFactory = testBsonFactory(),
 	)
-
-	test("count") {
-		Count<Target>(testContext()).apply {
-			filter.apply {
-				Target::user eq "foo"
-			}
-			options.apply {
-				limit(2)
-				maxTime(2.minutes)
-			}
-		} shouldBeBson $$"""
-			{
-				"query": {
-					"user": {"$eq": "foo"}
-				},
-				"limit": 2,
-				"maxTimeMS": 120000
-			}
-		""".trimIndent()
-	}
-
 }

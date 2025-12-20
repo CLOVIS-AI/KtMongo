@@ -18,22 +18,23 @@
 
 package opensavvy.ktmongo.dsl.command
 
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.testContext
 import kotlin.reflect.typeOf
 
-val InsertTest by preparedSuite {
+val InsertTest by multiContextSuite {
 
 	test("insertOne") {
 		val context = testContext()
 		val daniel = context.buildDocument {
 			writeString("name", "Daniel")
-		} as opensavvy.ktmongo.bson.official.BsonDocument
+		}
 
-		InsertOne(testContext(), daniel.raw, typeOf<org.bson.BsonDocument>()).apply {
+		InsertOne(testContext(), daniel, typeOf<BsonDocument>()).apply {
 			options.apply {
 				writeConcern(WriteConcern.FireAndForget)
 			}
@@ -57,18 +58,18 @@ val InsertTest by preparedSuite {
 
 		val daniel = context.buildDocument {
 			writeString("name", "Daniel")
-		} as opensavvy.ktmongo.bson.official.BsonDocument
+		}
 
 		val fred = context.buildDocument {
 			writeString("name", "Fred")
 			writeInt32("age", 24)
-		} as opensavvy.ktmongo.bson.official.BsonDocument
+		}
 
 		val alice = context.buildDocument {
 			writeString("name", "Alice")
-		} as opensavvy.ktmongo.bson.official.BsonDocument
+		}
 
-		InsertMany(testContext(), listOf(daniel.raw, fred.raw, alice.raw), typeOf<org.bson.BsonDocument>()).apply {
+		InsertMany(testContext(), listOf(daniel, fred, alice), typeOf<BsonDocument>()).apply {
 			options.apply {
 				writeConcern(WriteConcern.Primary)
 			}

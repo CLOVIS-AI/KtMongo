@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,20 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.query
+package opensavvy.ktmongo.dsl
 
-import opensavvy.ktmongo.bson.official.BsonFactory
-import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.bson.BsonFactory
 import org.bson.codecs.*
 import org.bson.codecs.configuration.CodecRegistries
 import org.bson.codecs.jsr310.InstantCodec
 import org.bson.codecs.jsr310.LocalDateCodec
 import org.bson.codecs.jsr310.LocalDateTimeCodec
 import org.bson.codecs.jsr310.LocalTimeCodec
-import org.bson.codecs.kotlin.DataClassCodecProvider
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.time.ExperimentalTime
 
-@OptIn(ExperimentalAtomicApi::class, ExperimentalTime::class)
-actual fun testContext(): BsonContext = BsonContext(
-	bsonFactory = BsonFactory(
-		codecRegistry = CodecRegistries.fromProviders(
-			DataClassCodecProvider(),
-			CodecRegistries.fromCodecs(
+actual val testFactories: Map<String, () -> BsonFactory> = mapOf(
+	"JVM Official" to {
+		opensavvy.ktmongo.bson.official.BsonFactory(
+			codecRegistry = CodecRegistries.fromCodecs(
 				AtomicBooleanCodec(),
 				AtomicIntegerCodec(),
 				AtomicLongCodec(),
@@ -89,5 +83,5 @@ actual fun testContext(): BsonContext = BsonContext(
 				UuidCodec(),
 			)
 		)
-	)
+	},
 )

@@ -16,8 +16,8 @@
 
 package opensavvy.ktmongo.dsl.query.filter
 
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
 
 /**
  * The examples [in the documentation](https://www.mongodb.com/docs/manual/reference/operator/query/regex/) use syntax:
@@ -58,7 +58,7 @@ import opensavvy.prepared.runner.testballoon.preparedSuite
  * However, this is misleading because it looks like a nested object, when it isn't, it's the JSON representation of the native type.
  * Copy-pasting this JSON request into a MongoDB editor will not work.
  */
-val RegexTest by preparedSuite {
+val RegexTest by multiContextSuite {
 	suite("Regex") {
 		test("Basic usage") {
 			filter {

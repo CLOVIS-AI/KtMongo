@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalTime::class)
+
 package opensavvy.ktmongo.dsl.query.filter
 
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
-import org.bson.types.ObjectId
+import kotlin.time.ExperimentalTime
 
-val LogicalFilterTest by preparedSuite {
+val LogicalFilterTest by multiContextSuite {
 	suite($$"Operators $and, $or, and $nor") {
 		test("And") {
 			filter {

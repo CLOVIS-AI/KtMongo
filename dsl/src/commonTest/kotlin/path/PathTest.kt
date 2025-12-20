@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,12 +17,12 @@
 package opensavvy.ktmongo.dsl.path
 
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.path.PathSegment.*
 import opensavvy.ktmongo.dsl.path.PathSegment.Field
-import opensavvy.prepared.runner.testballoon.preparedSuite
 
 @OptIn(LowLevelApi::class)
-val PathTest by preparedSuite {
+val PathTest by multiContextSuite {
 
 	test("Root field") {
 		check(Path("test").toString() == "test")

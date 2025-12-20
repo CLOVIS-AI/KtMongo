@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,32 @@
  * limitations under the License.
  */
 
+@file:OptIn(LowLevelApi::class)
+
 package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.ktmongo.dsl.query.testContext
+import opensavvy.ktmongo.dsl.testContext
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import opensavvy.prepared.suite.TestDsl
 import org.intellij.lang.annotations.Language
 
-@OptIn(LowLevelApi::class)
 class TestPipeline<Document : Any>(
-	chain: PipelineChainLink = PipelineChainLink(testContext(), null, null)
+	context: BsonContext,
+	chain: PipelineChainLink,
 ) : AbstractPipeline<Document>(
-	testContext(),
+	context,
 	chain,
 ), AggregationPipeline<Document>, UpdatePipeline<Document> {
 
 	@DangerousMongoApi
 	@LowLevelApi
 	override fun withStage(stage: BsonNode): TestPipeline<Document> =
-		TestPipeline(chain.withStage(stage))
+		TestPipeline(context, chain.withStage(stage))
 
 	@Suppress("UNCHECKED_CAST")
 	@DangerousMongoApi
@@ -51,6 +55,9 @@ class TestPipeline<Document : Any>(
 	}
 
 }
+
+suspend fun <Document : Any> TestDsl.TestPipeline(): TestPipeline<Document> =
+	TestPipeline(testContext(), PipelineChainLink(testContext(), null, null))
 
 infix fun Pipeline<*>.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
 	this.toString() shouldBeBson expected

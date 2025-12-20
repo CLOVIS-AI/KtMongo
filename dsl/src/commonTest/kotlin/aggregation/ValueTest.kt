@@ -18,18 +18,15 @@ package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.testContext
+import opensavvy.prepared.suite.TestDsl
 
 @LowLevelApi
-val ValueTest by preparedSuite {
+val ValueTest by multiContextSuite {
 
 	val dollar = "$"
-
-	class AggregationOperatorsImpl : AggregationOperators {
-		override val context: BsonContext = testContext()
-	}
 
 	class Profile(
 		val age: Int,
@@ -40,8 +37,13 @@ val ValueTest by preparedSuite {
 		val profile: Profile,
 	)
 
-	fun value(block: AggregationOperators.() -> Value<User, *>) =
-		AggregationOperatorsImpl().block().toString()
+	suspend fun TestDsl.value(block: AggregationOperators.() -> Value<User, *>): String {
+		val context = testContext()
+		return object : AggregationOperators {
+			override val context: BsonContext
+				get() = context
+		}.block().toString()
+	}
 
 	suite("Referring to fields with of") {
 		test("Referring to a top-level field") {

@@ -14,37 +14,9 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.dsl.command
+package opensavvy.ktmongo.dsl
 
-import opensavvy.ktmongo.dsl.multiContextSuite
-import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.ktmongo.dsl.testContext
-import kotlin.time.Duration.Companion.minutes
+import opensavvy.ktmongo.bson.BsonFactory
 
-val CountTest by multiContextSuite {
-
-	class Target(
-		val user: String,
-	)
-
-	test("count") {
-		Count<Target>(testContext()).apply {
-			filter.apply {
-				Target::user eq "foo"
-			}
-			options.apply {
-				limit(2)
-				maxTime(2.minutes)
-			}
-		} shouldBeBson $$"""
-			{
-				"query": {
-					"user": {"$eq": "foo"}
-				},
-				"limit": 2,
-				"maxTimeMS": 120000
-			}
-		""".trimIndent()
-	}
-
-}
+// TODO: For now, we don't have any implementations for this platform, so no tests run
+actual val testFactories: Map<String, () -> BsonFactory> = emptyMap()

@@ -18,11 +18,11 @@
 
 package opensavvy.ktmongo.dsl.query.update
 
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.ExperimentalTime
 
-val FieldUpdateTest by preparedSuite {
+val FieldUpdateTest by multiContextSuite {
 	suite($$"Operator $set") {
 		test("Single field") {
 			update {

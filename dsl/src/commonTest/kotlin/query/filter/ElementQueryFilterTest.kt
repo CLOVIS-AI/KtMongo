@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
 
-val ElementQueryFilterTest by preparedSuite {
+val ElementQueryFilterTest by multiContextSuite {
 
 	suite($$"Operator $exists") {
 		test("Exists") {
