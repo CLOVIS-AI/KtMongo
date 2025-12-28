@@ -17,8 +17,7 @@
 package opensavvy.ktmongo.bson.official
 
 import com.mongodb.MongoClientSettings
-import opensavvy.ktmongo.bson.path.bsonPathTests
-import opensavvy.ktmongo.bson.writerTests
+import opensavvy.ktmongo.bson.validateBsonFactory
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 
@@ -28,6 +27,5 @@ val testContext by prepared {
 
 @OptIn(ExperimentalStdlibApi::class)
 val JvmBsonContextTest by preparedSuite {
-	writerTests(testContext)
-	bsonPathTests(testContext)
+	validateBsonFactory(testContext)
 }
