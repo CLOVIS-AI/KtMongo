@@ -588,7 +588,7 @@ private inline fun Char.isNameChar() =
  */
 @OptIn(LowLevelApi::class)
 @ExperimentalBsonPathApi
-inline fun <reified T : Any?> Bson.select(path: BsonPath): Sequence<T> {
+inline fun <reified T> Bson.select(path: BsonPath): Sequence<T> {
 	val type = typeOf<T>()
 
 	return path.findIn(this.reader().asValue())
@@ -604,6 +604,26 @@ inline fun <reified T : Any?> Bson.select(path: BsonPath): Sequence<T> {
 			}
 		}
 }
+
+/**
+ * Finds all values that match [path] in a given [BSON document][Bson].
+ *
+ * To learn more about the syntax, see [BsonPath].
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * document.select<String>("$.foo.bar")
+ * ```
+ * will return a sequence of all values matching the path `foo.bar`.
+ *
+ * @see at Select a single value.
+ */
+@ExperimentalBsonPathApi
+inline fun <reified T> Bson.select(@Language("JSONPath") path: String): Sequence<T> =
+	select(BsonPath(path))
 
 /**
  * Finds the first value that matches [path] in a given [BSON document][Bson].
@@ -631,7 +651,7 @@ inline fun <reified T : Any?> Bson.select(path: BsonPath): Sequence<T> {
  * @throws NoSuchElementException If no element is found matching the path.
  */
 @ExperimentalBsonPathApi
-inline fun <reified T : Any?> Bson.selectFirst(path: BsonPath): T {
+inline fun <reified T> Bson.selectFirst(path: BsonPath): T {
 	val iter = select<T>(path).iterator()
 
 	if (iter.hasNext()) {
@@ -640,6 +660,28 @@ inline fun <reified T : Any?> Bson.selectFirst(path: BsonPath): T {
 		throw NoSuchElementException("Could not find any value at path $path for document $this")
 	}
 }
+
+/**
+ * Finds the first value that matches [path] in a given [BSON document][Bson].
+ *
+ * To learn more about the syntax, see [BsonPath].
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * val document: Bson = …
+ *
+ * document.selectFirst<String>("$.foo.bar")
+ * ```
+ * will return the value of the field `foo.bar`.
+ *
+ * @see BsonPath Learn more about BSON paths.
+ * @see select Select multiple values with a BSON path.
+ * @see at Select a single value using infix notation.
+ */
+@ExperimentalBsonPathApi
+inline fun <reified T> Bson.selectFirst(@Language("JSONPath") path: String): T =
+	selectFirst(BsonPath(path))
 
 /**
  * Finds the first value that matches [path] in a given [BSON document][Bson].
