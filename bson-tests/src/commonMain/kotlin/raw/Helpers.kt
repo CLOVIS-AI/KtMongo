@@ -26,18 +26,22 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.PreparedDslMarker
 import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.suite.assertions.log
 import org.intellij.lang.annotations.Language
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+private val Bson.hex: String
+	get() = this.toByteArray().toHexString(HexFormat.UpperCase)
+
 @OptIn(ExperimentalStdlibApi::class, LowLevelApi::class)
 infix fun Bson.shouldBeHex(@Language("HEXDUMP") expected: String) {
-	check(this.toByteArray().toHexString(HexFormat.UpperCase) == expected)
+	check(this.hex == expected) { "Difference in the resulting hexadecimal representation\nExpected: $expected\nActual:   ${this.hex}" }
 }
 
 infix fun Bson.shouldBeJson(@Language("MongoDB-JSON") expected: String) {
-	check(toString() == expected)
+	check(toString() == expected) { "Difference in the resulting JSON representation\nExpected: $expected\nActual:   $this" }
 }
 
 interface BsonDeclaration {
@@ -141,22 +145,24 @@ fun SuiteDsl.testBson(
 
 		for (verification in verifications) {
 			test("Write and verify that $verification") {
-				val document = writer(context())
+				val document = log(writer(context()))
 				verification.assert(document.reader())
 			}
 		}
 	}
 
 	for (hex in hexReprs) {
+		val hexArray = hex.hexToByteArray(HexFormat.UpperCase)
+
 		for (json in jsonReprs) {
 			test("Read $hex outputs the JSON $json") {
-				context().readDocument(hex.hexToByteArray(HexFormat.UpperCase)) shouldBeJson json
+				log(context().readDocument(hexArray)) shouldBeJson json
 			}
 		}
 
 		for (verification in verifications) {
 			test("Read $hex and verify that $verification") {
-				val document = context().readDocument(hex.hexToByteArray(HexFormat.UpperCase))
+				val document = log(context().readDocument(hexArray))
 				verification.assert(document.reader())
 			}
 		}
