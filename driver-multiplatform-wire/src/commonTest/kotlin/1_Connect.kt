@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalBsonPathApi::class)
 
 package opensavvy.ktmongo.multiplatform.wire
 
+import opensavvy.ktmongo.bson.ExperimentalBsonPathApi
+import opensavvy.ktmongo.bson.selectFirst
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
@@ -68,5 +70,25 @@ val ConnectTest by preparedSuite {
 
 		check(response is Message.OpMsg)
 		check(response.body.document["ok"]?.decodeDouble() == 1.0)
+	}
+
+	test("Find an element that was just inserted") {
+		val client = MongoClient()
+
+		val insertOutput = client.send(Message.Insert())
+		val findOutput = client.send(Message.Find())
+
+		println("Awaiting response…")
+		val insertResponse = insertOutput.receive()
+		val findResponse = findOutput.receive()
+
+		check(insertResponse is Message.OpMsg)
+		check(insertResponse.body.document["ok"]?.decodeDouble() == 1.0)
+
+		check(findResponse is Message.OpMsg)
+		check(findResponse.body.document["ok"]?.decodeDouble() == 1.0)
+		check(findResponse.body.document.selectFirst<String>("$.cursor.firstBatch[0].name") == "Bob")
+
+		val _ = client.send(Message.Drop())
 	}
 }
