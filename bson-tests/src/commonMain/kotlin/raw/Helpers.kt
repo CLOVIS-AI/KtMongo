@@ -26,16 +26,17 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.PreparedDslMarker
 import opensavvy.prepared.suite.SuiteDsl
+import org.intellij.lang.annotations.Language
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 @OptIn(ExperimentalStdlibApi::class, LowLevelApi::class)
-infix fun Bson.shouldBeHex(expected: String) {
+infix fun Bson.shouldBeHex(@Language("HEXDUMP") expected: String) {
 	check(this.toByteArray().toHexString(HexFormat.UpperCase) == expected)
 }
 
-infix fun Bson.shouldBeJson(expected: String) {
+infix fun Bson.shouldBeJson(@Language("MongoDB-JSON") expected: String) {
 	check(toString() == expected)
 }
 
@@ -55,11 +56,11 @@ interface BsonDeclaration {
 			serialize(obj, typeOf<T>(), T::class)
 
 		@PreparedDslMarker
-		fun hex(/* language=hexdump */ hex: String): BsonDeclaration =
+		fun hex(@Language("HEXDUMP") hex: String): BsonDeclaration =
 			BsonHexadecimalRepresentation(hex)
 
 		@PreparedDslMarker
-		fun json(/* language=mongodb-json */ json: String): BsonDeclaration =
+		fun json(@Language("MongoDB-JSON") json: String): BsonDeclaration =
 			BsonJsonRepresentation(json)
 
 		@PreparedDslMarker
