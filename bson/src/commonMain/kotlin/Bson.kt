@@ -22,7 +22,7 @@ import kotlin.reflect.typeOf
 /**
  * A BSON document.
  *
- * To create instances of this class, see [BsonContext.buildDocument].
+ * To create instances of this class, see [BsonFactory].
  */
 interface Bson {
 
@@ -47,7 +47,7 @@ interface Bson {
 /**
  * A BSON array.
  *
- * To create instances of this class, see [BsonContext.buildArray].
+ * To create instances of this class, see [BsonFactory].
  */
 interface BsonArray {
 
