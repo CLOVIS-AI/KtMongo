@@ -334,8 +334,13 @@ private class JavaBsonValueReader(
 		return decodeValue(value, klass, context.codecRegistry)
 	}
 
-	override fun toString(): String =
-		value.toString()
+	override fun toString(): String {
+		// Not as efficient as it could be, but it's the simplest way to guarantee
+		// that the representation will be the same as within BSON documents.
+		val fakeDoc = OfficialBsonDocument()
+		fakeDoc.append("a", value)
+		return fakeDoc.toJson().removePrefix("{\"a\":").removeSuffix("}").trim()
+	}
 }
 
 private fun <T : Any> decodeValue(
