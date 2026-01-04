@@ -16,10 +16,7 @@
 
 package opensavvy.ktmongo.bson.multiplatform
 
-import opensavvy.ktmongo.bson.path.bsonPathTests
-import opensavvy.ktmongo.bson.raw.*
-import opensavvy.ktmongo.dsl.DangerousMongoApi
-import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.bson.validateBsonFactory
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 
@@ -28,40 +25,5 @@ val context by prepared {
 }
 
 val MultiplatformBsonWriterTest by preparedSuite {
-	boolean(context)
-	int32(context)
-	int64(context)
-	double(context)
-	string(context)
-	reprNull(context)
-	reprUndefined(context)
-	document(context)
-	array(context)
-	binary(context)
-	code(context)
-	datetime(context)
-	minMaxKey(context)
-	regex(context)
-	timestamp(context)
-	objectId(context)
-
-	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	test("Pipe objects") {
-		val pipe = context().buildDocument {
-			writeInt32("four", 2 + 2)
-			writeString("foo", "bar")
-			writeArray("grades") {
-				writeInt32(4)
-				writeInt32(7)
-			}
-		}
-
-		context().buildDocument {
-			write("root") {
-				pipe(pipe.reader().asValue())
-			}
-		} shouldBeJson """{"root": {"four": 4, "foo": "bar", "grades": [4, 7]}}"""
-	}
-
-	bsonPathTests(context)
+	validateBsonFactory(context)
 }

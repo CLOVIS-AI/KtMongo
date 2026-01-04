@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.path.bsonPathTests
 import opensavvy.ktmongo.bson.raw.*
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -24,20 +25,19 @@ import opensavvy.prepared.suite.SuiteDsl
 
 @OptIn(LowLevelApi::class, ExperimentalStdlibApi::class)
 @Suppress("DEPRECATION")
-fun SuiteDsl.writerTests(
-	prepareContext: Prepared<BsonFactory>,
-) = suite("BsonPrimitiveWriter") {
+fun SuiteDsl.validateBsonFactory(
+	prepareFactory: Prepared<BsonFactory>,
+) {
 
 	test("An Int in a root document") {
-		val result = prepareContext().buildDocument {
+		val result = prepareFactory().buildDocument {
 			writeInt32("foo", 42)
 		}
 		check(result.toString() == """{"foo": 42}""")
 	}
 
 	test("More complex example") {
-		val result = prepareContext().buildDocument {
-			writeDBPointer("user", "myproject.users", "67d43dbc64b52e612b1b2f7b".hexToByteArray())// (0x67d43dbc), 0x67d43dbc, 0x64b52e612b1b2f7b)
+		val result = prepareFactory().buildDocument {
 			writeInt64("age", 18)
 			writeBoolean("isAlive", true)
 
@@ -50,24 +50,21 @@ fun SuiteDsl.writerTests(
 				}
 			}
 		}
-		val ref = "\$ref"
-		val id = "\$id"
-		val oid = "\$oid"
-		check(result.toString() == """{"user": {"$ref": "myproject.users", "$id": {"$oid": "67d43dbc64b52e612b1b2f7b"}}, "age": 18, "isAlive": true, "children": [{"name": "Paul"}, {"name": "Alice"}]}""")
+		check(result.toString() == """{"age": 18, "isAlive": true, "children": [{"name": "Paul"}, {"name": "Alice"}]}""")
 	}
 
 	test("An empty document") {
-		val result = prepareContext().buildDocument {}
+		val result = prepareFactory().buildDocument {}
 		check(result.toString() == """{}""")
 	}
 
 	test("An empty array") {
-		val result = prepareContext().buildArray {}
+		val result = prepareFactory().buildArray {}
 		check(result.toString() == """[]""")
 	}
 
 	test("An array with multiple elements") {
-		val result = prepareContext().buildArray {
+		val result = prepareFactory().buildArray {
 			writeInt32(123)
 			writeBoolean(false)
 			writeDocument {
@@ -80,27 +77,27 @@ fun SuiteDsl.writerTests(
 	}
 
 	suite("BSON corpus") {
-		boolean(prepareContext)
-		int32(prepareContext)
-		int64(prepareContext)
-		double(prepareContext)
-		string(prepareContext)
-		reprNull(prepareContext)
-		reprUndefined(prepareContext)
-		document(prepareContext)
-		array(prepareContext)
-		binary(prepareContext)
-		code(prepareContext)
-		datetime(prepareContext)
-		minMaxKey(prepareContext)
-		regex(prepareContext)
-		timestamp(prepareContext)
-		objectId(prepareContext)
+		boolean(prepareFactory)
+		int32(prepareFactory)
+		int64(prepareFactory)
+		double(prepareFactory)
+		string(prepareFactory)
+		reprNull(prepareFactory)
+		reprUndefined(prepareFactory)
+		document(prepareFactory)
+		array(prepareFactory)
+		binary(prepareFactory)
+		code(prepareFactory)
+		datetime(prepareFactory)
+		minMaxKey(prepareFactory)
+		regex(prepareFactory)
+		timestamp(prepareFactory)
+		objectId(prepareFactory)
 	}
 
 	@OptIn(DangerousMongoApi::class)
 	test("Pipe objects") {
-		val pipe = prepareContext().buildDocument {
+		val pipe = prepareFactory().buildDocument {
 			writeInt32("four", 2 + 2)
 			writeString("foo", "bar")
 			writeArray("grades") {
@@ -109,10 +106,12 @@ fun SuiteDsl.writerTests(
 			}
 		}
 
-		prepareContext().buildDocument {
+		prepareFactory().buildDocument {
 			write("root") {
 				pipe(pipe.reader().asValue())
 			}
 		} shouldBeJson """{"root": {"four": 4, "foo": "bar", "grades": [4, 7]}}"""
 	}
+
+	bsonPathTests(prepareFactory)
 }
