@@ -23,6 +23,7 @@ import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformArrayReader
 import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformDocumentReader
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.concurrent.Volatile
 
 /**
  * Pure Kotlin BSON document implementation.
@@ -48,8 +49,23 @@ class Bson internal constructor(
 		MultiplatformDocumentReader(factory, data)
 	}
 
+	/**
+	 * Memory fence: the volatility is used to force publication of prior changes.
+	 *
+	 * - 0: not eager yet
+	 * - non-0: 'eager' has been called
+	 */
+	@Volatile
+	private var readerMemoryVisibilityMarker = 0
+
 	@LowLevelApi
-	override fun reader(): BsonDocumentReader = reader
+	override fun reader(): BsonDocumentReader {
+		// Unused but acts as a memory fence because it's volatile
+		@Suppress("UnusedVariable", "unused")
+		val x = readerMemoryVisibilityMarker
+
+		return reader
+	}
 
 	/**
 	 * Scans this entire document recursively to find all the fields.
@@ -64,6 +80,9 @@ class Bson internal constructor(
 	@OptIn(LowLevelApi::class)
 	fun eager() {
 		reader.eager()
+
+		if (readerMemoryVisibilityMarker == 0)
+			readerMemoryVisibilityMarker++
 	}
 
 	@OptIn(LowLevelApi::class)
