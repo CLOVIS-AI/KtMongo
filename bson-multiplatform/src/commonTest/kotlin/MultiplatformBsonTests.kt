@@ -60,4 +60,31 @@ val MultiplatformBsonWriterTest by preparedSuite {
 
 		document.eager() // Allowed, does nothing
 	}
+
+	test("BsonArray.eager()") {
+		val document = context().buildArray {
+			writeDocument {
+				writeString("foo", "foo")
+			}
+			writeInt32(12)
+			writeDocument {
+				writeString("bar", "bar")
+			}
+		}
+
+		val lazyTime = measureTime {
+			check(document.reader().read(0)?.readDocument()?.read("foo")?.readString() == "foo")
+		}
+
+		println("*** Initializing everything eagerly ***")
+		document.eager()
+
+		val eagerTime = measureTime {
+			check(document.reader().read(2)?.readDocument()?.read("bar")?.readString() == "bar")
+		}
+
+		check(eagerTime < lazyTime)
+
+		document.eager() // Allowed, does nothing
+	}
 }

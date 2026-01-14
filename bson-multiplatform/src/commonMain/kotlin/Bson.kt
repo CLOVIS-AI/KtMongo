@@ -122,8 +122,23 @@ class BsonArray internal constructor(
 		MultiplatformArrayReader(factory, data)
 	}
 
+	/**
+	 * Memory fence: the volatility is used to force publication of prior changes.
+	 *
+	 * - 0: not eager yet
+	 * - non-0: 'eager' has been called
+	 */
+	@Volatile
+	private var readerMemoryVisibilityMarker = 0
+
 	@LowLevelApi
-	override fun reader(): BsonArrayReader = reader
+	override fun reader(): BsonArrayReader {
+		// Unused but acts as a memory fence because it's volatile
+		@Suppress("UnusedVariable", "unused")
+		val x = readerMemoryVisibilityMarker
+
+		return reader
+	}
 
 	/**
 	 * Scans this entire array recursively to find all the fields.
@@ -138,6 +153,9 @@ class BsonArray internal constructor(
 	@OptIn(LowLevelApi::class)
 	fun eager() {
 		reader.eager()
+
+		if (readerMemoryVisibilityMarker == 0)
+			readerMemoryVisibilityMarker++
 	}
 
 	@OptIn(LowLevelApi::class)
