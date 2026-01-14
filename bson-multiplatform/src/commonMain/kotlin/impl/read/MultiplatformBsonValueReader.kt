@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -311,4 +311,10 @@ internal class MultiplatformBsonValueReader(
 
 		return str
 	}
+
+	override fun equals(other: Any?): Boolean =
+		(other is MultiplatformBsonValueReader && bytes == other.bytes) || (other is BsonValueReader && BsonValueReader.equals(this, other))
+
+	override fun hashCode(): Int =
+		BsonValueReader.hashCode(this)
 }

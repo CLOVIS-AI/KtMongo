@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,12 @@ import kotlin.time.Instant
  *     println("Field: $name • ${field.type}")
  * }
  * ```
+ *
+ * ### Implementation constraints
+ *
+ * Different implementations of [BsonDocumentReader] should be considered equal if they have the same fields
+ * which each have the same values. The methods [BsonDocumentReader.Companion.equals] and
+ * [BsonDocumentReader.Companion.hashCode] are provided to facilitate implementation.
  */
 @LowLevelApi
 interface BsonDocumentReader {
@@ -86,6 +92,34 @@ interface BsonDocumentReader {
 	 * JSON representation of the document this [BsonDocumentReader] is reading, as a [String].
 	 */
 	override fun toString(): String
+
+	companion object {
+
+		@LowLevelApi
+		fun equals(a: BsonDocumentReader, b: BsonDocumentReader): Boolean {
+			// Start by comparing fields one by one to keep the lazy initialization property of
+			// some implementations.
+			for ((name, aReader) in a.entries) {
+				val bReader = b.read(name)
+
+				if (bReader == null || aReader != bReader)
+					return false
+			}
+
+			// At this point we know that we have accessed all fields at least once, so this should be inexpensive.
+			return a.entries.keys == b.entries.keys
+		}
+
+		@LowLevelApi
+		fun hashCode(a: BsonDocumentReader): Int {
+			var hashCode = 1
+			for ((name, reader) in a.entries) {
+				hashCode = 31 * hashCode + name.hashCode()
+				hashCode = 31 * hashCode + reader.hashCode()
+			}
+			return hashCode
+		}
+	}
 }
 
 /**
@@ -102,6 +136,12 @@ interface BsonDocumentReader {
  *     println("[$index] • ${field.type}")
  * }
  * ```
+ *
+ * ### Implementation constraints
+ *
+ * Different implementations of [BsonArrayReader] should be considered equal if they have the same elements
+ * in the same order. The methods [BsonArrayReader.Companion.equals] and
+ * [BsonArrayReader.Companion.hashCode] are provided to facilitate implementation.
  */
 @LowLevelApi
 interface BsonArrayReader {
@@ -148,6 +188,32 @@ interface BsonArrayReader {
 	 * JSON representation of the array this [BsonArrayReader] is reading, as a [String].
 	 */
 	override fun toString(): String
+
+	companion object {
+
+		@LowLevelApi
+		fun equals(a: BsonArrayReader, b: BsonArrayReader): Boolean {
+			// Compare fields one by one to keep the lazy properties
+			for ((i, aReader) in a.elements.withIndex()) {
+				val bReader = b.read(i)
+
+				if (bReader == null || aReader != bReader)
+					return false
+			}
+
+			// At this point we have already gone through all items, so this is inexpensive.
+			return a.elements.size == b.elements.size
+		}
+
+		@LowLevelApi
+		fun hashCode(a: BsonArrayReader): Int {
+			var hashCode = 1
+			for (reader in a.elements) {
+				hashCode = 31 * hashCode + reader.hashCode()
+			}
+			return hashCode
+		}
+	}
 }
 
 /**
@@ -156,6 +222,13 @@ interface BsonArrayReader {
  * See the [type] to know which accessor to use. All other accessors will fail with a [BsonReaderException].
  *
  * To obtain instances of this interface, see [BsonDocumentReader.read] and [BsonArrayReader.read].
+ *
+ * ### Implementation constraints
+ *
+ * Different implementations of [BsonValueReader] should be considered equal if they represent the same value,
+ * with the same type. That is, both values would result in the exact same BSON sent over the wire.
+ * The methods [BsonValueReader.Companion.equals] and
+ * [BsonValueReader.Companion.hashCode] are provided to facilitate implementation.
  */
 @LowLevelApi
 interface BsonValueReader {
@@ -294,6 +367,89 @@ interface BsonValueReader {
 	 * JSON representation of this value.
 	 */
 	override fun toString(): String
+
+	companion object {
+
+		@OptIn(ExperimentalTime::class)
+		@LowLevelApi
+		fun equals(a: BsonValueReader, b: BsonValueReader): Boolean {
+			if (a.type != b.type)
+				return false
+
+			return when (a.type) {
+				BsonType.Double -> a.readDouble() == b.readDouble()
+				BsonType.String -> a.readString() == b.readString()
+				BsonType.Document -> a.readDocument() == b.readDocument()
+				BsonType.Array -> a.readArray() == b.readArray()
+				BsonType.BinaryData -> a.readBinaryDataType() == b.readBinaryDataType() &&
+					a.readBinaryData().contentEquals(b.readBinaryData())
+
+				BsonType.Undefined -> a.readUndefined() == b.readUndefined()
+				BsonType.ObjectId -> a.readObjectId() == b.readObjectId()
+				BsonType.Boolean -> a.readBoolean() == b.readBoolean()
+				BsonType.Datetime -> a.readDateTime() == b.readDateTime()
+				BsonType.Null -> a.readNull() == b.readNull()
+				BsonType.RegExp -> a.readRegularExpressionOptions() == b.readRegularExpressionOptions() &&
+					a.readRegularExpressionPattern() == b.readRegularExpressionPattern()
+
+				BsonType.DBPointer -> a.readDBPointerNamespace() == b.readDBPointerNamespace() &&
+					a.readDBPointerId().contentEquals(b.readDBPointerId())
+
+				BsonType.JavaScript -> a.readJavaScript() == b.readJavaScript()
+				BsonType.Symbol -> a.readSymbol() == b.readSymbol()
+				BsonType.JavaScriptWithScope -> a.readJavaScriptWithScope() == b.readJavaScriptWithScope()
+				BsonType.Int32 -> a.readInt32() == b.readInt32()
+				BsonType.Timestamp -> a.readTimestamp() == b.readTimestamp()
+				BsonType.Int64 -> a.readInt64() == b.readInt64()
+				BsonType.Decimal128 -> a.readDecimal128().contentEquals(b.readDecimal128())
+				BsonType.MinKey -> a.readMinKey() == b.readMinKey()
+				BsonType.MaxKey -> a.readMaxKey() == b.readMaxKey()
+			}
+		}
+
+		@OptIn(ExperimentalTime::class)
+		@LowLevelApi
+		fun hashCode(a: BsonValueReader): Int {
+			return when (a.type) {
+				BsonType.Double -> a.readDouble().hashCode()
+				BsonType.String -> a.readString().hashCode()
+				BsonType.Document -> a.readDocument().hashCode()
+				BsonType.Array -> a.readArray().hashCode()
+				BsonType.BinaryData -> {
+					var hashCode = 1
+					hashCode = 31 * hashCode + a.readBinaryDataType().toInt()
+					for (byte in a.readBinaryData()) {
+						hashCode = 31 * hashCode + byte.toInt()
+					}
+					hashCode
+				}
+
+				BsonType.Undefined -> a.readUndefined().hashCode()
+				BsonType.ObjectId -> a.readObjectId().hashCode()
+				BsonType.Boolean -> a.readBoolean().hashCode()
+				BsonType.Datetime -> a.readDateTime().hashCode()
+				BsonType.Null -> a.readNull().hashCode()
+				BsonType.RegExp -> a.readRegularExpressionOptions().hashCode() * 31 + a.readRegularExpressionPattern().hashCode()
+				BsonType.DBPointer -> a.readDBPointerNamespace().hashCode() * 31 + a.readDBPointerId().hashCode()
+				BsonType.JavaScript -> a.readJavaScript().hashCode()
+				BsonType.Symbol -> a.readSymbol().hashCode()
+				BsonType.JavaScriptWithScope -> a.readJavaScriptWithScope().hashCode()
+				BsonType.Int32 -> a.readInt32().hashCode()
+				BsonType.Timestamp -> a.readTimestamp().hashCode()
+				BsonType.Int64 -> a.readInt64().hashCode()
+				BsonType.Decimal128 -> {
+					var hashCode = 1
+					for (byte in a.readDecimal128()) {
+						hashCode = 31 * hashCode + byte.toInt()
+					}
+					hashCode
+				}
+
+				BsonType.MinKey -> a.readMinKey().hashCode()
+				BsonType.MaxKey -> a.readMaxKey().hashCode()
+			}
+		}
+	}
 }
 
 /**
