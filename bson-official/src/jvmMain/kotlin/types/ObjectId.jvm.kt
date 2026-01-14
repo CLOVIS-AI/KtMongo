@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,15 +58,8 @@ private object JvmObjectIdGenerator : ObjectIdGenerator {
  * An [ObjectIdGenerator] instance that uses the Java driver's [org.bson.types.ObjectId]'s algorithm.
  *
  * This generation algorithm is slightly different from [ObjectIdGenerator.Default].
- * Here are a few differences:
- *
- * |                                       | ObjectIdGenerator.Jvm        | ObjectIdGenerator.Default |
- * |---------------------------------------|------------------------------|----|
- * | Maximum number of ObjectId per second | ≈16 million                  | ≈1 billion billion |
- * | Random source                         | [java.security.SecureRandom] | [kotlin.random.Random] |
- * | Testability                           | None                         | Can inject a clock and a random source to deterministically generate tests |
  */
-@Suppress("FunctionName", "GrazieInspection")
+@Suppress("FunctionName")
 fun ObjectIdGenerator.Companion.Jvm(): ObjectIdGenerator =
 	JvmObjectIdGenerator
 

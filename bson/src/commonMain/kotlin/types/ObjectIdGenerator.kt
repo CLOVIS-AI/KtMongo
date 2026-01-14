@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,9 @@
 
 package opensavvy.ktmongo.bson.types
 
+import kotlin.concurrent.atomics.AtomicInt
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.fetchAndIncrement
 import kotlin.random.Random
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
@@ -58,25 +60,17 @@ interface ObjectIdGenerator {
 		private var processId: Long = random.nextLong(0, ObjectId.PROCESS_ID_BOUND),
 	) : ObjectIdGenerator {
 
-		private var counter = 0
-		private var counterOffset = random.nextInt(0, ObjectId.COUNTER_BOUND)
+		private val counter = AtomicInt(random.nextInt(0, ObjectId.COUNTER_BOUND))
 
 		override fun newId(): ObjectId {
-			// TODO in #71: Make this algorithm thread-safe
-
 			val now = clock.now()
 
-			val myCounter = counter++
-			if (counter >= ObjectId.COUNTER_BOUND) {
-				counter = 0
-				processId++
-				processId %= ObjectId.PROCESS_ID_BOUND
-			}
+			val currentCounter = counter.fetchAndIncrement() % ObjectId.COUNTER_BOUND
 
 			return ObjectId(
 				timestamp = now,
 				processId = processId,
-				counter = (myCounter + counterOffset) % ObjectId.COUNTER_BOUND,
+				counter = currentCounter,
 			)
 		}
 	}
