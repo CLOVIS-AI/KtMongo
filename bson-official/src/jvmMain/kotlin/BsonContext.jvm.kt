@@ -364,8 +364,8 @@ private class JavaBsonWriter(
 		writer.writeDBPointer(BsonDbPointer(namespace, ObjectId(id)))
 	}
 
-	override fun writeObjectId(value: ByteArray) {
-		writer.writeObjectId(ObjectId(value))
+	override fun writeObjectId(id: ByteArray) {
+		writer.writeObjectId(ObjectId(id))
 	}
 
 	override fun writeDecimal128(low: Long, high: Long) {
