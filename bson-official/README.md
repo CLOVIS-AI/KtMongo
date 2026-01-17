@@ -7,3 +7,5 @@ Kotlin-first BSON library, based on the official MongoDB implementations.
 <a href="https://javadoc.io/doc/dev.opensavvy.ktmongo/bson-official"><img src="https://badgen.net/static/Other%20versions/javadoc.io/blue"></a>
 
 BSON API for Kotlin, implemented on top of the [official `org.mongodb:bson` library](https://javadoc.io/doc/org.mongodb/bson/latest/index.html).
+
+The method [`JvmBsonFactory`][opensavvy.ktmongo.bson.official.JvmBsonFactory] is the entry point to all types in the module. It allows creating a new BSON factory using the same configuration as the official library (via the `CodecRegistry`).
