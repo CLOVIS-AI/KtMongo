@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -183,6 +183,32 @@ val BsonPathTest by preparedSuite {
 			check(BsonPath.sliced(7 downTo 1 step 2) == BsonPath.sliced(7 downTo 0 step 2))
 		}
 
+		test("Parse a segment with two simple fields") {
+			check(BsonPath("$['a', 'b']").toString() == "$['a', 'b']")
+			check(BsonPath("$['a', 'b']") == BsonPath.any(BsonPath["a"], BsonPath["b"]))
+		}
+
+		test("Parse a segment with two simple fields using double-quotes") {
+			check(BsonPath("$[\"a\", \"b\"]").toString() == "$['a', 'b']")
+			check(BsonPath("$[\"a\", \"b\"]") == BsonPath.any(BsonPath["a"], BsonPath["b"]))
+		}
+
+		test("Parse a segment with multiple index syntaxes") {
+			check(BsonPath("$[0, 1, 2:3]").toString() == "$[0, 1, 2:3]")
+			check(BsonPath("$[0, 1, 2:3]") == BsonPath.any(BsonPath[0], BsonPath[1], BsonPath.sliced(2, 3)))
+
+			check(BsonPath("$[1:6:2, ::-1]").toString() == "$[1:6:2, ::-1]")
+			check(BsonPath("$[1:6:2, ::-1]") == BsonPath.any(BsonPath.sliced(1..<7 step 2), BsonPath.reversed()))
+		}
+
+		test("Parse a segment with a simple field and a wildcard") {
+			check(BsonPath("$['a', *]").toString() == "$['a', *]")
+			check(BsonPath("$['a', *]") == BsonPath.any(BsonPath["a"], BsonPath.all))
+		}
+
+		test("Parse a complex multi-selector expression") {
+			check(BsonPath("$['address', 'phoneNumbers']['streetAddress', ::]") == BsonPath.any(BsonPath["address"], BsonPath["phoneNumbers"]).any(BsonPath["streetAddress"], BsonPath.sliced()))
+		}
 	}
 
 }

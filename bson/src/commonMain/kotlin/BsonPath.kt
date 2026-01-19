@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,13 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.BsonPath.PathOrSelector
+import opensavvy.ktmongo.bson.BsonPath.Root.findIn
+import opensavvy.ktmongo.bson.BsonPath.Root.parent
+import opensavvy.ktmongo.bson.BsonPath.Root.reversed
+import opensavvy.ktmongo.bson.BsonPath.Root.sliced
 import opensavvy.ktmongo.bson.BsonPath.Root.toString
+import opensavvy.ktmongo.bson.BsonPath.Selector
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.intellij.lang.annotations.Language
 import kotlin.reflect.KClass
@@ -75,8 +81,56 @@ annotation class ExperimentalBsonPathApi
 @ExperimentalBsonPathApi
 sealed interface BsonPath {
 
+	/**
+	 * Applies the filters described by this path on the [reader].
+	 *
+	 * ### Implementation notes
+	 *
+	 * The [reader] is the root data.
+	 * The path should recursively search by applying the [parent]'s [findIn] first.
+	 */
 	@LowLevelApi
 	fun findIn(reader: BsonValueReader): Sequence<BsonValueReader>
+
+	/**
+	 * The parent path of this path: the same path without the last segment.
+	 *
+	 * For example, the path `$.foo.bar` has the parent `$.foo`.
+	 *
+	 * The root path has the parent `null`.
+	 * All other paths have a non-null parent.
+	 */
+	@ExperimentalBsonPathApi
+	val parent: BsonPath?
+
+	/**
+	 * Represents a unique selector in a [multi-selector segment][BsonPath.any].
+	 *
+	 * Selectors are generally obtained using the methods on [BsonPath.Root] that return a [PathOrSelector].
+	 */
+	@ExperimentalBsonPathApi
+	sealed interface Selector {
+
+		/**
+		 * Applies the filters described by this path on the [reader].
+		 *
+		 * ### Implementation notes
+		 *
+		 * The [reader] is the **parent node**: one of the results of matching the parent path to the root node.
+		 * It is not the root node itself, unlike with [findIn].
+		 */
+		@LowLevelApi
+		fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader>
+
+	}
+
+	/**
+	 * Marker interface for types that implement both [BsonPath] and [Selector].
+	 *
+	 * These types are mainly found as return types in the [BsonPath.Root] object.
+	 */
+	@ExperimentalBsonPathApi
+	sealed interface PathOrSelector : BsonPath, Selector
 
 	/**
 	 * Points to a [field] in a [Bson] document.
@@ -89,33 +143,7 @@ sealed interface BsonPath {
 	 * ```
 	 */
 	operator fun get(field: String): BsonPath =
-		Field(field, this)
-
-	private data class Field(val name: String, val parent: BsonPath) : BsonPath {
-
-		init {
-			require("'" !in name) { "The character ' (apostrophe) is currently forbidden in BsonPath expressions, found: \"$name\"" }
-		}
-
-		@LowLevelApi
-		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
-			parent.findIn(reader)
-				.mapNotNull {
-					if (it.type == BsonType.Document) {
-						it.readDocument().read(name)
-					} else {
-						null
-					}
-				}
-
-		override fun toString() =
-			if (name matches legalCharacters) "$parent.$name"
-			else "$parent['$name']"
-
-		companion object {
-			private val legalCharacters = Regex("[a-zA-Z0-9]*")
-		}
-	}
+		SingleSelectorSegment(FieldSelector(field), this)
 
 	/**
 	 * Points to the element at [index] in a [BsonArray].
@@ -129,25 +157,7 @@ sealed interface BsonPath {
 	 * ```
 	 */
 	operator fun get(index: Int): BsonPath =
-		Item(index, this)
-
-	private data class Item(val index: Int, val parent: BsonPath) : BsonPath {
-
-		@LowLevelApi
-		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
-			parent.findIn(reader)
-				.mapNotNull {
-					if (it.type == BsonType.Array) {
-						val array = it.readArray()
-						val readingIndex = if (index >= 0) index else array.elements.size + index
-						array.read(readingIndex)
-					} else {
-						null
-					}
-				}
-
-		override fun toString() = "$parent[$index]"
-	}
+		SingleSelectorSegment(IndexSelector(index), this)
 
 	/**
 	 * Points to all children of a document.
@@ -162,23 +172,7 @@ sealed interface BsonPath {
 	 * ```
 	 */
 	val all: BsonPath
-		get() = All(this)
-
-	private data class All(val parent: BsonPath) : BsonPath {
-
-		@LowLevelApi
-		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
-			parent.findIn(reader)
-				.flatMap {
-					when (it.type) {
-						BsonType.Document -> it.readDocument().entries.values.asSequence()
-						BsonType.Array -> it.readArray().elements.asSequence()
-						else -> emptySequence()
-					}
-				}
-
-		override fun toString() = "$parent.*"
-	}
+		get() = SingleSelectorSegment(AllSelector, this)
 
 	/**
 	 * Points to the elements of a [BsonArray] at the indices selected by [range].
@@ -207,21 +201,8 @@ sealed interface BsonPath {
 	 *
 	 * @see reversed Shorthand to reverse an array.
 	 */
-	fun sliced(range: IntProgression): BsonPath {
-		require(range.first >= 0) { "BsonPath.sliced() only supports positive indices, found: $range" }
-		require(range.last >= 0) { "BsonPath.sliced() only supports positive indices, found: $range" }
-		return Slice(
-			start = if (range.step >= 0 && range.first == 0) -1 else range.first,
-			end = when {
-				range.step >= 0 && range.last == Int.MAX_VALUE -> -1
-				range.step >= 0 -> range.last + 1
-				range.step < 0 && range.last == 0 -> -1
-				else -> range.last - 1
-			},
-			step = range.step,
-			parent = this,
-		)
-	}
+	fun sliced(range: IntProgression): BsonPath =
+		SingleSelectorSegment(SliceSelector.of(range), this)
 
 	/**
 	 * Points to the elements of a [BsonArray] at the indices selected by [start] and [end], with an optional [step].
@@ -254,20 +235,8 @@ sealed interface BsonPath {
 	 *
 	 * @see reversed Shorthand for reversing an array.
 	 */
-	fun sliced(start: Int? = null, end: Int? = null, step: Int = 1): BsonPath {
-		require(start == null || start >= 0) { "BsonPath.sliced(start=) cannot be negative, found: $start" }
-		require(end == null || end >= 0) { "BsonPath.sliced(end=) cannot be negative, found: $end" }
-
-		if (step >= 0) {
-			require((start ?: 0) <= (end
-				?: Int.MAX_VALUE)) { "BsonPath.sliced()'s start should be lesser than its end when the step is positive. Found start=$start, end=$end and step=$step" }
-		} else {
-			require((start ?: Int.MAX_VALUE) >= (end
-				?: 0)) { "BsonPath.sliced()'s start should be greater than its end when the step is negative. Found start=$start, end=$end and step=$step" }
-		}
-
-		return Slice(start ?: -1, end ?: -1, step, this)
-	}
+	fun sliced(start: Int? = null, end: Int? = null, step: Int = 1): BsonPath =
+		SingleSelectorSegment(SliceSelector.of(start, end, step), this)
 
 	/**
 	 * Iterates a [BsonArray] in the reversed order, starting from the end.
@@ -277,64 +246,37 @@ sealed interface BsonPath {
 	 * This is a shorthand syntax for a [slice][sliced] of `[::-1]`.
 	 */
 	fun reversed(): BsonPath =
-		Slice(-1, -1, -1, this)
+		SingleSelectorSegment(SliceSelector.reversed(), this)
 
-	private data class Slice(
-		val start: Int, // inclusive, -1 for open-ended
-		val end: Int, // exclusive, -1 for open-ended
-		val step: Int,
-		val parent: BsonPath,
-	) : BsonPath {
-
-		@LowLevelApi
-		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
-			parent.findIn(reader)
-				.flatMap {
-					if (step == 0) {
-						emptySequence()
-					} else if (it.type == BsonType.Array) {
-						sequence {
-							val elements = it.readArray().elements
-
-							if (step >= 0) {
-								val start = if (start == -1) 0 else start
-								val end = if (end == -1 || end > elements.size) elements.size else end
-								for (index in start..<end step step) {
-									yield(elements[index])
-								}
-							} else {
-								val start = if (start == -1 || start > elements.lastIndex) elements.lastIndex else start
-								val end = if (end == -1) 0 else end + 1
-								for (index in start downTo end step -step) {
-									yield(elements[index])
-								}
-							}
-						}
-					} else {
-						emptySequence()
-					}
-				}
-
-		override fun toString(): String = buildString {
-			append(parent.toString())
-			append('[')
-
-			if (start != -1)
-				append(start)
-
-			append(':')
-
-			if (end != -1)
-				append(end)
-
-			if (step != 1) {
-				append(':')
-				append(step)
-			}
-
-			append(']')
-		}
-	}
+	/**
+	 * Allows specifying multiple [selectors].
+	 *
+	 * All elements that match a selector are returned, in the order of the selectors.
+	 * For example, the path `$[0, 3]` returns the elements at index 0 and at index 3.
+	 *
+	 * The same element may be returned multiple times if it matches multiple [selectors].
+	 *
+	 * The [Selector] type is obtained by the top-level functions on [BsonPath.Root].
+	 * Non-top-level paths are not allowed by the JSONPath specification.
+	 *
+	 * ### Examples
+	 *
+	 * ```json
+	 * ["a", "b", "c", "d", "e", "f", "g"]
+	 * ```
+	 *
+	 * - `BsonPath.any(BsonPath[0], BsonPath[3])` returns `["a", "d"]`
+	 * - `BsonPath.any(BsonPath.sliced(0, 2), BsonPath[5])` returns `["a", "b", "f"]`
+	 * - `BsonPath.any(BsonPath[0], BsonPath[0])` returns `["a", "a"]`
+	 */
+	fun any(vararg selectors: Selector): BsonPath =
+		MultiSelectorSegment(
+			selectors.map {
+				if (it is SingleSelectorSegment) it.selector
+				else it
+			},
+			this,
+		)
 
 	/**
 	 * The root of a [BsonPath] expression.
@@ -353,10 +295,247 @@ sealed interface BsonPath {
 		fun parse(text: String): BsonPath =
 			BsonPath(text)
 
+		override fun get(field: String): PathOrSelector =
+			SingleSelectorSegment(FieldSelector(field), this)
+
+		override fun get(index: Int): PathOrSelector =
+			SingleSelectorSegment(IndexSelector(index), this)
+
+		override fun sliced(start: Int?, end: Int?, step: Int): PathOrSelector =
+			SingleSelectorSegment(SliceSelector.of(start, end, step), this)
+
+		override fun sliced(range: IntProgression): PathOrSelector =
+			SingleSelectorSegment(SliceSelector.of(range), this)
+
+		override fun reversed(): PathOrSelector =
+			SingleSelectorSegment(SliceSelector.reversed(), this)
+
+		override val all: PathOrSelector
+			get() = SingleSelectorSegment(AllSelector, this)
+
+		/**
+		 * Always returns `null`.
+		 */
+		override val parent: Nothing? get() = null
+
 		override fun toString() = "$"
 	}
 }
 
+// region Segments
+
+@ExperimentalBsonPathApi
+private data class SingleSelectorSegment(
+	val selector: Selector,
+	override val parent: BsonPath,
+) : BsonPath,
+	Selector by selector,
+	PathOrSelector {
+
+	// This class implements Selector to power the BsonPath.any(BsonPath["foo"], BsonPath["bar"]) syntax.
+	// It doesn't otherwise make sense to use as a selector.
+
+	init {
+		require(selector !is SingleSelectorSegment) { "A segment cannot contain a selector that is another ${SingleSelectorSegment::class}. Please report this to the maintainers of BSONPath: $selector" }
+	}
+
+	@LowLevelApi
+	override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+		parent.findIn(reader)
+			.flatMap { selector.findInParent(it) }
+
+	override fun toString() =
+		when (selector) {
+			is FieldSelector if selector.name matches FieldSelector.legalDotNotationCharacters -> "$parent.${selector.name}"
+			is AllSelector -> "$parent.*"
+			else -> "$parent[$selector]"
+		}
+}
+
+@ExperimentalBsonPathApi
+private data class MultiSelectorSegment(
+	val selectors: List<Selector>,
+	override val parent: BsonPath,
+) : BsonPath {
+
+	init {
+		require(selectors.size > 1) { "BsonPath.any() should have at least two options, found: $selectors" }
+		for (selector in selectors) {
+			require(selector !is SingleSelectorSegment) { "A multi-selector segment cannot contain a ${SingleSelectorSegment::class} selector. Please report this to the maintainers of BSONPath: $selector" }
+		}
+	}
+
+	@LowLevelApi
+	override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> {
+		val values = parent.findIn(reader).toList()
+
+		return selectors
+			.asSequence()
+			.flatMap { selector ->
+				values.asSequence().flatMap { value ->
+					selector.findInParent(value)
+				}
+			}
+	}
+
+	override fun toString() = buildString {
+		append(parent)
+		append('[')
+		for (selector in selectors) {
+			append(selector)
+			append(", ")
+		}
+		setLength(length - 2)
+		append(']')
+	}
+}
+
+// endregion
+// region Selectors
+
+@ExperimentalBsonPathApi
+private data class FieldSelector(val name: String) : Selector {
+
+	init {
+		require("'" !in name) { "The character ' (apostrophe) is currently forbidden in BsonPath expressions, found: \"$name\"" }
+	}
+
+	@LowLevelApi
+	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> {
+		return if (reader.type == BsonType.Document) {
+			val value = reader.readDocument().read(name)
+
+			if (value != null)
+				sequenceOf(value)
+			else
+				emptySequence()
+		} else
+			emptySequence()
+	}
+
+	override fun toString() = "'$name'"
+
+	companion object {
+		val legalDotNotationCharacters = Regex("[a-zA-Z0-9]*")
+	}
+}
+
+@ExperimentalBsonPathApi
+private data class IndexSelector(val index: Int) : Selector {
+	@LowLevelApi
+	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> {
+		return if (reader.type == BsonType.Array) {
+			val array = reader.readArray()
+			val readingIndex = if (index >= 0) index else array.elements.size + index
+			val value = array.read(readingIndex)
+			if (value != null)
+				sequenceOf(value)
+			else
+				emptySequence()
+		} else {
+			emptySequence()
+		}
+	}
+
+	override fun toString() = "$index"
+}
+
+@ExperimentalBsonPathApi
+private object AllSelector : Selector {
+	@LowLevelApi
+	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> =
+		when (reader.type) {
+			BsonType.Document -> reader.readDocument().entries.values.asSequence()
+			BsonType.Array -> reader.readArray().elements.asSequence()
+			else -> emptySequence()
+		}
+
+	override fun toString() = "*"
+}
+
+@ExperimentalBsonPathApi
+private data class SliceSelector(
+	val start: Int, // inclusive, -1 for open-ended
+	val end: Int, // exclusive, -1 for open-ended
+	val step: Int,
+) : Selector {
+
+	companion object {
+		fun of(start: Int? = null, end: Int? = null, step: Int = 1): SliceSelector {
+			require(start == null || start >= 0) { "BsonPath.sliced(start=) cannot be negative, found: $start" }
+			require(end == null || end >= 0) { "BsonPath.sliced(end=) cannot be negative, found: $end" }
+
+			if (step >= 0) {
+				require((start ?: 0) <= (end
+					?: Int.MAX_VALUE)) { "BsonPath.sliced()'s start should be lesser than its end when the step is positive. Found start=$start, end=$end and step=$step" }
+			} else {
+				require((start ?: Int.MAX_VALUE) >= (end
+					?: 0)) { "BsonPath.sliced()'s start should be greater than its end when the step is negative. Found start=$start, end=$end and step=$step" }
+			}
+
+			return SliceSelector(start ?: -1, end ?: -1, step)
+		}
+
+		fun of(range: IntProgression): SliceSelector {
+			require(range.first >= 0) { "BsonPath.sliced() only supports positive indices, found: $range" }
+			require(range.last >= 0) { "BsonPath.sliced() only supports positive indices, found: $range" }
+			return SliceSelector(
+				start = if (range.step >= 0 && range.first == 0) -1 else range.first,
+				end = when {
+					range.step >= 0 && range.last == Int.MAX_VALUE -> -1
+					range.step >= 0 -> range.last + 1
+					range.step < 0 && range.last == 0 -> -1
+					else -> range.last - 1
+				},
+				step = range.step,
+			)
+		}
+
+		fun reversed(): SliceSelector =
+			SliceSelector(-1, -1, -1)
+	}
+
+	@LowLevelApi
+	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> = when {
+		step == 0 -> emptySequence()
+		reader.type == BsonType.Array -> sequence {
+			val elements = reader.readArray().elements
+
+			if (step >= 0) {
+				val start = if (start == -1) 0 else start
+				val end = if (end == -1 || end > elements.size) elements.size else end
+				for (index in start..<end step step) {
+					yield(elements[index])
+				}
+			} else {
+				val start = if (start == -1 || start > elements.lastIndex) elements.lastIndex else start
+				val end = if (end == -1) 0 else end + 1
+				for (index in start downTo end step -step) {
+					yield(elements[index])
+				}
+			}
+		}
+
+		else -> emptySequence()
+	}
+
+	override fun toString(): String = buildString {
+		if (start != -1)
+			append(start)
+
+		append(':')
+
+		if (end != -1)
+			append(end)
+
+		if (step != 1) {
+			append(':')
+			append(step)
+		}
+	}
+}
+
+// endregion
 // region Parsing
 
 /**
@@ -375,6 +554,11 @@ sealed interface BsonPath {
  * | `[0]`                 | Accessor for the first item of an array. See [BsonPath.get]. |
  * | `.*` or `[*]`         | Accessor for all direct children. See [BsonPath.all].        |
  * | `[1:3]`               | Accessor for elements at index 1..<3. See [BsonPath.sliced]. |
+ *
+ * Multiple selectors can be defined in the same brackets.
+ * When this is the case, all nodes that match any of the selectors are returned.
+ * For example, `['foo', 'bar', 'baz']` will return the values of the fields `foo`, `bar` and `baz`.
+ * See [BsonPath.any].
  *
  * ### Examples
  *
@@ -397,149 +581,204 @@ fun BsonPath(@Language("JSONPath") text: String): BsonPath {
 	require(text.startsWith("$")) { "A BsonPath expression must start with a dollar sign: $text\nDid you mean to create a BsonPath to access a specific field? If so, see BsonPath[\"foo\"]" }
 
 	var expr: BsonPath = BsonPath
+	val parser = BsonPathParserUtils(text, startIndex = 1) // skip the '$'
 
-	for (segment in splitSegments(text)) {
-		expr = when {
-			// .*
-			segment == ".*" || segment == "[*]" ->
-				expr.all
-
-			// .foo
-			segment.startsWith(".") ->
-				expr[segment.removePrefix(".")]
-
-			// ['foo']
-			segment.startsWith("['") && segment.endsWith("']") ->
-				expr[segment.removePrefix("['").removeSuffix("']")]
-
-			// ["foo"]
-			segment.startsWith("[\"") && segment.endsWith("\"]") ->
-				expr[segment.removePrefix("[\"").removeSuffix("\"]")]
-
-			// [0] or [0:1:2]
-			segment.startsWith("[") && segment.endsWith("]") -> {
-				val content = segment.removePrefix("[").removeSuffix("]")
-				if (':' in content) {
-					val bounds = content.split(':')
-					val start = bounds.getIntNotEmpty(0, default = -1)
-					val end = bounds.getIntNotEmpty(1, default = -1)
-					val step = bounds.getIntNotEmpty(2, default = 1)
-					expr.sliced(start.takeIf { it != -1 }, end.takeIf { it != -1 }, step)
-				} else {
-					expr[content.toInt()]
-				}
+	while (parser.hasNext()) {
+		when (val segmentStart = parser.peek()) {
+			'.' -> {
+				parser.skip() // '.'
+				expr = parseDotSegment(expr, parser)
 			}
 
-			else -> throw IllegalArgumentException("Could not parse the segment “$segment” in BsonPath expression “$text”.")
+			'[' -> {
+				parser.skip('[')
+				expr = parseBracketSegment(expr, parser)
+				parser.skip(']')
+			}
+
+			else -> {
+				parser.fail("Unrecognized segment start: '$segmentStart'. Expected '.' or '['.")
+			}
 		}
 	}
 
 	return expr
 }
 
-private fun splitSegments(text: String): Sequence<String> = sequence {
-	val accumulator = StringBuilder()
-	var i = 1 // skip the $ sign
-
-	// Helper for nicer error messages
-	fun fail(msg: String, cause: Throwable? = null): Nothing {
-		val excerpt =
-			if (i + 5 > text.length) text.substring(i, text.length)
-			else text.substring(i, i + 5) + "…"
-
-		throw IllegalArgumentException("Could not parse the BSON path expression “$text” at index $i (“${excerpt}”): $msg", cause)
-	}
-
-	fun accumulate() {
-		accumulator.append(text[i])
-		i++
-	}
-
-	fun accumulateWhile(predicate: (Char) -> Boolean) {
-		while (i < text.length && predicate(text[i])) {
-			accumulate()
+/**
+ * Parses the `.*` or `.field-name` notations.
+ */
+@ExperimentalBsonPathApi
+private fun parseDotSegment(
+	parent: BsonPath,
+	parser: BsonPathParserUtils,
+): BsonPath {
+	when (val selectorType = parser.peek()) {
+		'*' -> {
+			// .*
+			parser.skip() // '*'
+			return parent.all
 		}
+
+		else if selectorType.isNameChar() -> {
+			// .foo
+			parser.accumulateWhile { it.isNameChar() }
+			return parent[parser.extract()]
+		}
+
+		else -> parser.fail("Unexpected character after dot: '$selectorType'")
 	}
+}
 
-	try {
-		while (i < text.length) {
-			val c = text[i]
+@ExperimentalBsonPathApi
+private fun parseBracketSegment(
+	parent: BsonPath,
+	parser: BsonPathParserUtils,
+): BsonPath {
+	val selectors = ArrayList<Selector>()
 
-			when (c) {
-				'.' if accumulator.isEmpty() -> {
-					// .foo
-					accumulate()
+	do {
+		parser.skipIf(',')
+		parser.skipIf(' ')
 
-					when {
-						text[i].isNameFirst() -> accumulateWhile { it.isNameChar() }
-						text[i] == '*' -> accumulate()
-						else -> fail("A name segment should start with a non-digit character, found: ${text[i]}")
-					}
+		val selectorType = parser.peek()
 
-					yield(accumulator.toString())
-					accumulator.clear()
+		when (selectorType) {
+			'\'' -> {
+				parser.skip() // '
+				parser.accumulateWhile { it != '\'' }
+				parser.skip('\'')
+				selectors += FieldSelector(parser.extract())
+			}
+
+			'"' -> {
+				parser.skip() // "
+				parser.accumulateWhile { it != '"' }
+				parser.skip('"')
+				selectors += FieldSelector(parser.extract())
+			}
+
+			'*' -> {
+				parser.skip('*')
+				parser.extract() // ignore whatever there is
+				selectors += AllSelector
+			}
+
+			in Char(0x30)..Char(0x39), '-', ':' -> {
+				if (parser.peek() == '-') {
+					parser.accumulate()
 				}
 
-				'[' if accumulator.isEmpty() -> {
-					val c2 = text[i + 1]
+				parser.accumulateWhile { it.isDigit() }
 
-					when (c2) {
-						'\'', '"' -> {
-							accumulate() // opening bracket
-							accumulate() // opening quote
-							accumulateWhile { it != '\'' && it != '"' }
-							accumulate() // closing quote
-							accumulate() // closing bracket
-							yield(accumulator.toString())
-							accumulator.clear()
-						}
+				if (parser.peek() == ':') {
+					parser.accumulate()
+					parser.accumulateWhile { it.isDigit() }
 
-						in Char(0x30)..Char(0x39), '-', ':' -> {
-							accumulate() // opening bracket
-
-							if (text[i] == '-') {
-								accumulate()
-							}
-
-							accumulateWhile { it.isDigit() }
-
-							if (text[i] == ':') {
-								accumulate()
-								accumulateWhile { it.isDigit() }
-
-								if (text[i] == ':') {
-									accumulate()
-									accumulateWhile { it.isDigit() || it == '-' }
-								}
-							}
-
-							accumulate() // closing bracket
-							yield(accumulator.toString())
-							accumulator.clear()
-						}
-
-						'*' -> {
-							accumulate() // opening bracket
-							accumulate() // start
-							accumulate() // closing bracket
-							yield(accumulator.toString())
-							accumulator.clear()
-						}
-
-						else -> fail("Unrecognized selector")
+					if (parser.peek() == ':') {
+						parser.accumulate()
+						parser.accumulateWhile { it.isDigit() || it == '-' }
 					}
 				}
 
-				else -> {
-					fail("Unrecognized syntax")
+				val content = parser.extract()
+				if (':' in content) {
+					val bounds = content.split(':')
+					val start = bounds.getIntNotEmpty(0, default = -1)
+					val end = bounds.getIntNotEmpty(1, default = -1)
+					val step = bounds.getIntNotEmpty(2, default = 1)
+					selectors += SliceSelector(start, end, step)
+				} else {
+					selectors += IndexSelector(content.toInt())
 				}
 			}
+
+			else -> {
+				parser.fail("Unrecognized selector type: '$selectorType'")
+			}
 		}
-	} catch (e: Exception) {
-		if (e is IllegalArgumentException)
-			throw e
+	} while (parser.peek() == ',')
+
+	return when {
+		selectors.isEmpty() -> parser.fail("At least one selector should be specified between the brackets")
+		selectors.size == 1 -> SingleSelectorSegment(selectors.first(), parent)
+		else -> MultiSelectorSegment(selectors, parent)
+	}
+}
+
+/**
+ * Helper to extract specific substrings from [text], with nice contextual error messages on failure.
+ */
+private class BsonPathParserUtils(
+	private val text: String,
+	startIndex: Int = 0,
+) {
+	val accumulator = StringBuilder()
+	var index = startIndex
+
+	fun fail(msg: String, cause: Throwable? = null): Nothing {
+		val excerpt =
+			if (index + 5 > text.length) text.substring(index, text.length)
+			else text.substring(index, index + 5) + "…"
+
+		throw IllegalArgumentException("Could not parse the BSON path expression “$text” at index $index (“${excerpt}”): $msg", cause)
+	}
+
+	fun skip() {
+		index++
+	}
+
+	/**
+	 * Skips the next character but only if it's [c]. Otherwise, fails parsing.
+	 */
+	fun skip(c: Char) {
+		if (text[index] == c)
+			skip()
 		else
-			fail("An exception was thrown: ${e.message}", e)
+			fail("Expected '$c' but found '${text[index]}'")
+	}
+
+	/**
+	 * Skips the next character but only if it's [c]. Otherwise, does nothing.
+	 */
+	fun skipIf(c: Char) {
+		if (text[index] == c)
+			skip()
+	}
+
+	fun hasNext() =
+		index < text.length
+
+	fun peek(): Char =
+		text[index]
+
+	fun peek(offset: Int): Char =
+		text[index + offset]
+
+	/**
+	 * Accumulates the current character.
+	 */
+	fun accumulate() {
+		accumulator.append(text[index])
+		index++
+	}
+
+	/**
+	 * Accumulates all characters until [predicate] becomes false or we reach the end of [text].
+	 *
+	 * The first character for which [predicate] returns `false` is not included.
+	 */
+	inline fun accumulateWhile(predicate: (Char) -> Boolean) {
+		while (index < text.length && predicate(text[index]))
+			accumulate()
+	}
+
+	/**
+	 * Returns a [String] that contains all the characters previously accumulated.
+	 */
+	fun extract(): String {
+		return accumulator.toString()
+			.also { accumulator.clear() }
 	}
 }
 
