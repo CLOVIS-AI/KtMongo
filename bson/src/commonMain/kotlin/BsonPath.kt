@@ -665,32 +665,7 @@ private fun parseBracketSegment(
 			}
 
 			in Char(0x30)..Char(0x39), '-', ':' -> {
-				if (parser.peek() == '-') {
-					parser.accumulate()
-				}
-
-				parser.accumulateWhile { it.isDigit() }
-
-				if (parser.peek() == ':') {
-					parser.accumulate()
-					parser.accumulateWhile { it.isDigit() }
-
-					if (parser.peek() == ':') {
-						parser.accumulate()
-						parser.accumulateWhile { it.isDigit() || it == '-' }
-					}
-				}
-
-				val content = parser.extract()
-				if (':' in content) {
-					val bounds = content.split(':')
-					val start = bounds.getIntNotEmpty(0, default = -1)
-					val end = bounds.getIntNotEmpty(1, default = -1)
-					val step = bounds.getIntNotEmpty(2, default = 1)
-					selectors += SliceSelector(start, end, step)
-				} else {
-					selectors += IndexSelector(content.toInt())
-				}
+				selectors += parseIndexOrSlice(parser)
 			}
 
 			else -> {
@@ -703,6 +678,38 @@ private fun parseBracketSegment(
 		selectors.isEmpty() -> parser.fail("At least one selector should be specified between the brackets")
 		selectors.size == 1 -> SingleSelectorSegment(selectors.first(), parent)
 		else -> MultiSelectorSegment(selectors, parent)
+	}
+}
+
+@ExperimentalBsonPathApi
+private fun parseIndexOrSlice(
+	parser: BsonPathParserUtils,
+): Selector {
+	if (parser.peek() == '-') {
+		parser.accumulate()
+	}
+
+	parser.accumulateWhile { it.isDigit() }
+
+	if (parser.peek() == ':') {
+		parser.accumulate()
+		parser.accumulateWhile { it.isDigit() }
+
+		if (parser.peek() == ':') {
+			parser.accumulate()
+			parser.accumulateWhile { it.isDigit() || it == '-' }
+		}
+	}
+
+	val content = parser.extract()
+	if (':' in content) {
+		val bounds = content.split(':')
+		val start = bounds.getIntNotEmpty(0, default = -1)
+		val end = bounds.getIntNotEmpty(1, default = -1)
+		val step = bounds.getIntNotEmpty(2, default = 1)
+		return SliceSelector(start, end, step)
+	} else {
+		return IndexSelector(content.toInt())
 	}
 }
 
