@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,11 @@ import kotlin.reflect.typeOf
 /**
  * A BSON document.
  *
- * To create instances of this class, see [BsonContext.buildDocument].
+ * To create instances of this class, see [BsonFactory].
+ *
+ * ### Implementation constraints
+ *
+ * [equals] and [hashCode] should follow the same constraints as [BsonDocumentReader]'s implementations.
  */
 interface Bson {
 
@@ -47,7 +51,11 @@ interface Bson {
 /**
  * A BSON array.
  *
- * To create instances of this class, see [BsonContext.buildArray].
+ * To create instances of this class, see [BsonFactory].
+ *
+ * ### Implementation constraints
+ *
+ * [equals] and [hashCode] should follow the same constraints as [BsonArrayReader]'s implementations.
  */
 interface BsonArray {
 

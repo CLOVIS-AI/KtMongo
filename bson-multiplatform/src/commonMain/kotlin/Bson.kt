@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,6 +69,14 @@ class Bson internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
 		reader().toString()
+
+	@OptIn(LowLevelApi::class)
+	override fun equals(other: Any?): Boolean =
+		other is Bson && reader() == other.reader()
+
+	@OptIn(LowLevelApi::class)
+	override fun hashCode(): Int =
+		reader().hashCode()
 }
 
 /**
@@ -116,4 +124,12 @@ class BsonArray internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
 		reader().toString()
+
+	@OptIn(LowLevelApi::class)
+	override fun equals(other: Any?): Boolean =
+		other is BsonArray && reader() == other.reader()
+
+	@OptIn(LowLevelApi::class)
+	override fun hashCode(): Int =
+		reader().hashCode()
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,12 @@ internal class JavaBsonDocumentReader(
 
 	override fun toString(): String =
 		raw.toString()
+
+	override fun equals(other: Any?): Boolean =
+		(other is JavaBsonDocumentReader && raw == other.raw) || (other is BsonDocumentReader && BsonDocumentReader.equals(this, other))
+
+	override fun hashCode(): Int =
+		BsonDocumentReader.hashCode(this)
 }
 
 @LowLevelApi
@@ -142,6 +148,12 @@ internal class JavaBsonArrayReader(
 			document.lastIndexOf(']') + 1
 		).trim()
 	}
+
+	override fun equals(other: Any?): Boolean =
+		(other is JavaBsonArrayReader && raw == other.raw) || (other is BsonArrayReader && BsonArrayReader.equals(this, other))
+
+	override fun hashCode(): Int =
+		BsonArrayReader.hashCode(this)
 }
 
 @LowLevelApi
@@ -334,8 +346,19 @@ private class JavaBsonValueReader(
 		return decodeValue(value, klass, context.codecRegistry)
 	}
 
-	override fun toString(): String =
-		value.toString()
+	override fun toString(): String {
+		// Not as efficient as it could be, but it's the simplest way to guarantee
+		// that the representation will be the same as within BSON documents.
+		val fakeDoc = OfficialBsonDocument()
+		fakeDoc.append("a", value)
+		return fakeDoc.toJson().removePrefix("{\"a\":").removeSuffix("}").trim()
+	}
+
+	override fun equals(other: Any?): Boolean =
+		(other is JavaBsonValueReader && value == other.value) || (other is BsonValueReader && BsonValueReader.equals(this, other))
+
+	override fun hashCode(): Int =
+		BsonValueReader.hashCode(this)
 }
 
 private fun <T : Any> decodeValue(

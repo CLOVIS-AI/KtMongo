@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -181,4 +181,10 @@ internal class MultiplatformDocumentReader(
 
 		append('}')
 	}
+
+	override fun equals(other: Any?): Boolean =
+		(other is MultiplatformDocumentReader && bytes == other.bytes) || (other is BsonDocumentReader && BsonDocumentReader.equals(this, other))
+
+	override fun hashCode(): Int =
+		BsonDocumentReader.hashCode(this)
 }
