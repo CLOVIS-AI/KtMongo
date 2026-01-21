@@ -165,4 +165,5 @@ fun SuiteDsl.validateBsonFactory(
 	}
 
 	bsonPathTests(prepareFactory)
+	validateDiffAlgorithms(prepareFactory)
 }
