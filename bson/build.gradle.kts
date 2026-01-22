@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,10 @@ kotlin {
 		implementation(projects.bsonTests)
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotlin.test)
+	}
+
+	sourceSets.jvmMain.dependencies {
+		compileOnly(libs.mongodb.kotlinx.serialization)
 	}
 }
 
