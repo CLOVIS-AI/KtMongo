@@ -87,6 +87,9 @@ internal class JavaBsonArrayReader(
 	override val elements: List<BsonValueReader>
 		get() = raw.map { JavaBsonValueReader(it, context) }
 
+	override val indices: IntRange
+		get() = raw.indices
+
 	override fun toBson(): opensavvy.ktmongo.bson.official.BsonArray =
 		BsonArray(raw, context)
 

@@ -172,6 +172,12 @@ interface BsonArrayReader {
 	val elements: List<BsonValueReader>
 
 	/**
+	 * A range of the valid indices in this array.
+	 */
+	val indices: IntRange
+		get() = elements.indices
+
+	/**
 	 * Reads this document into a [BsonArray] instance.
 	 */
 	fun toBson(): BsonArray
