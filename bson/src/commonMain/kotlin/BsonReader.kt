@@ -172,6 +172,14 @@ interface BsonArrayReader {
 	val elements: List<BsonValueReader>
 
 	/**
+	 * The number of elements in this array.
+	 *
+	 * To iterate over the elements by index, see [indices].
+	 */
+	val size: Int
+		get() = elements.size
+
+	/**
 	 * A range of the valid indices in this array.
 	 */
 	val indices: IntRange
