@@ -68,6 +68,12 @@ interface BsonDocumentReader {
 	val entries: Map<String, BsonValueReader>
 
 	/**
+	 * A set of the field names in the document.
+	 */
+	val names: Set<String>
+		get() = entries.keys
+
+	/**
 	 * Reads this document into a [Bson] instance.
 	 */
 	fun toBson(): Bson
@@ -107,7 +113,7 @@ interface BsonDocumentReader {
 			}
 
 			// At this point we know that we have accessed all fields at least once, so this should be inexpensive.
-			return a.entries.keys == b.entries.keys
+			return a.names == b.names
 		}
 
 		@LowLevelApi

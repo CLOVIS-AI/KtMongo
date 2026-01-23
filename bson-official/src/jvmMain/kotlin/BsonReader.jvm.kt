@@ -48,6 +48,9 @@ internal class JavaBsonDocumentReader(
 	override val entries: Map<String, BsonValueReader>
 		get() = raw.mapValues { (_, value) -> JavaBsonValueReader(value, context) }
 
+	override val names: Set<String>
+		get() = raw.keys
+
 	override fun toBson(): Bson =
 		Bson(raw, context)
 
