@@ -23,21 +23,21 @@ import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.ExperimentalBsonDiffApi
 import opensavvy.ktmongo.bson.diff
 import opensavvy.ktmongo.bson.read
+import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.bson.write
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
-import kotlin.io.encoding.Base64
 import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 // Not annotated with @Serializable: can only be serialized with :bson-kotlin
 data class SerializableWithDataClass(
 	val a: String,
 	val b: org.bson.types.ObjectId,
 	val c: opensavvy.ktmongo.bson.types.ObjectId,
-	val d: Uuid,
+	val d: Timestamp,
 )
 
 // Not a data class: can only be serialized with :bson-kotlinx
@@ -46,8 +46,33 @@ class SerializableWithKxS(
 	val a: String,
 	val b: @Contextual org.bson.types.ObjectId,
 	val c: opensavvy.ktmongo.bson.types.ObjectId,
-	val d: Uuid,
-)
+	val d: Timestamp,
+) {
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (other !is SerializableWithKxS) return false
+
+		if (a != other.a) return false
+		if (b != other.b) return false
+		if (c != other.c) return false
+		if (d != other.d) return false
+
+		return true
+	}
+
+	override fun hashCode(): Int {
+		var result = a.hashCode()
+		result = 31 * result + b.hashCode()
+		result = 31 * result + c.hashCode()
+		result = 31 * result + d.hashCode()
+		return result
+	}
+
+	override fun toString(): String {
+		return "SerializableWithKxS(a='$a', b=$b, c=$c, d=$d)"
+	}
+
+}
 
 val SerializationOptionsCompatibility by preparedSuite {
 
@@ -56,7 +81,7 @@ val SerializationOptionsCompatibility by preparedSuite {
 			writeString("a", "Bob")
 			writeObjectId("b", opensavvy.ktmongo.bson.types.ObjectId("640180000000000000000000"))
 			writeObjectId("c", opensavvy.ktmongo.bson.types.ObjectId("640180000000000000000000"))
-			writeBinaryData("d", 0x4u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
+			writeTimestamp("d", Timestamp(Instant.parse("2023-03-01T00:00:00Z"), 12u))
 		}
 	}
 
@@ -65,7 +90,7 @@ val SerializationOptionsCompatibility by preparedSuite {
 			a = "Bob",
 			b = org.bson.types.ObjectId("640180000000000000000000"),
 			c = opensavvy.ktmongo.bson.types.ObjectId("640180000000000000000000"),
-			d = Uuid.parse("73ffd264-44b3-4c69-90e8-e7d1dfc035d4"),
+			d = Timestamp(Instant.parse("2023-03-01T00:00:00Z"), 12u),
 		)
 	}
 
@@ -74,7 +99,7 @@ val SerializationOptionsCompatibility by preparedSuite {
 			a = "Bob",
 			b = org.bson.types.ObjectId("640180000000000000000000"),
 			c = opensavvy.ktmongo.bson.types.ObjectId("640180000000000000000000"),
-			d = Uuid.parse("73ffd264-44b3-4c69-90e8-e7d1dfc035d4"),
+			d = Timestamp(Instant.parse("2023-03-01T00:00:00Z"), 12u),
 		)
 	}
 

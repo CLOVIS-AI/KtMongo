@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -136,12 +136,37 @@ class Timestamp(
 
 		@LowLevelApi
 		override fun serialize(encoder: Encoder, value: Timestamp) {
-			encoder.encodeString("${value.instant}#${value.counter}")
+			serializeTimestampPlatformSpecific(encoder, value)
 		}
 
-		override fun deserialize(decoder: Decoder): Timestamp {
-			val (instant, counter) = decoder.decodeString().split('#', limit = 2)
-			return Timestamp(instant = Instant.parse(instant), counter = counter.toUInt())
-		}
+		override fun deserialize(decoder: Decoder): Timestamp =
+			deserializeTimestampPlatformSpecific(decoder)
 	}
 }
+
+@OptIn(ExperimentalTime::class)
+internal fun serializeTimestampAsString(encoder: Encoder, value: Timestamp) {
+	encoder.encodeString("${value.instant}#${value.counter}")
+}
+
+@OptIn(ExperimentalTime::class)
+internal fun deserializeTimestampAsString(decoder: Decoder): Timestamp {
+	val (instant, counter) = decoder.decodeString().split('#', limit = 2)
+	return Timestamp(instant = Instant.parse(instant), counter = counter.toUInt())
+}
+
+/**
+ * On the JVM, when using KotlinX.Serialization with the official driver, we must hard-code a different behavior.
+ *
+ * All non-JVM platforms implement this function by calling [serializeTimestampAsString].
+ * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
+ */
+internal expect fun serializeTimestampPlatformSpecific(encoder: Encoder, value: Timestamp)
+
+/**
+ * On the JVM, when using KotlinX.Serialization with the official driver, we must hard-code a different behavior.
+ *
+ * All non-JVM platforms implement this function by calling [deserializeTimestampAsString].
+ * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
+ */
+internal expect fun deserializeTimestampPlatformSpecific(decoder: Decoder): Timestamp
