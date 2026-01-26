@@ -19,6 +19,9 @@ package opensavvy.ktmongo.bson
 /**
  * The different data types supported in BSON documents.
  *
+ * Note that the BSON type is available as the property [code].
+ * **The property [ordinal] is meaningless on this type, and may change over time.**
+ *
  * ### External resources
  *
  * - [BSON spec](https://bsonspec.org/spec.html)
