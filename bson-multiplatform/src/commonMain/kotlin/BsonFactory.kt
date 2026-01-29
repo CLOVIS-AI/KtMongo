@@ -34,6 +34,9 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.time.ExperimentalTime
 
+/**
+ * The entry point for creating and reading BSON documents.
+ */
 @OptIn(ExperimentalTime::class)
 class BsonFactory : BsonFactory {
 
