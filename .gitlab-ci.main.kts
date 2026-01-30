@@ -26,7 +26,7 @@ import opensavvy.gitlab.ci.plugins.Gradle.Companion.useGradle
 import opensavvy.gitlab.ci.script.shell
 
 // https://gitlab.com/opensavvy/automation/containers/-/releases
-val ciContainers = "0.8.2"
+val ciContainers = "0.8.4"
 
 /**
  * The URL of the website built by /docs/website.

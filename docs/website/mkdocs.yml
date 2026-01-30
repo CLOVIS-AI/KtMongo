@@ -16,16 +16,18 @@ theme:
     - content.code.annotate
     - content.code.copy
     - content.code.select
-    # - content.footnote.tooltips
+    - content.footnote.tooltips
     - content.tabs.link
     - content.tooltips
     # - header.autohide
     # - navigation.expand
     - navigation.footer
     - navigation.indexes
-    # - navigation.instant
-    # - navigation.instant.prefetch
-    # - navigation.instant.progress
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.instant.progress
+    - navigation.instant.preview
+    - navigation.path
     # - navigation.prune
     - navigation.sections
     - navigation.tabs
@@ -63,14 +65,16 @@ theme:
         name: "Dark theme (click to switch to system)"
 
 plugins:
-  # - social # https://github.com/squidfunk/mkdocs-material/issues/7818
+  - social
   - search
   - privacy
+  - optimize
   - blog:
       post_excerpt: optional
       authors: false
       blog_dir: news
-  - tags
+  - tags:
+      tags_hierarchy: true
   - rss:
       match_path: 'news/posts/.*'
       date_from_meta:
