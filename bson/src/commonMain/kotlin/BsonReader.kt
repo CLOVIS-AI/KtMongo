@@ -68,6 +68,12 @@ interface BsonDocumentReader {
 	val entries: Map<String, BsonValueReader>
 
 	/**
+	 * A set of the field names in the document.
+	 */
+	val names: Set<String>
+		get() = entries.keys
+
+	/**
 	 * Reads this document into a [Bson] instance.
 	 */
 	fun toBson(): Bson
@@ -107,7 +113,7 @@ interface BsonDocumentReader {
 			}
 
 			// At this point we know that we have accessed all fields at least once, so this should be inexpensive.
-			return a.entries.keys == b.entries.keys
+			return a.names == b.names
 		}
 
 		@LowLevelApi
@@ -164,6 +170,20 @@ interface BsonArrayReader {
 	 * To go through this list with its indices, see [Iterable.withIndex] or [Collection.indices].
 	 */
 	val elements: List<BsonValueReader>
+
+	/**
+	 * The number of elements in this array.
+	 *
+	 * To iterate over the elements by index, see [indices].
+	 */
+	val size: Int
+		get() = elements.size
+
+	/**
+	 * A range of the valid indices in this array.
+	 */
+	val indices: IntRange
+		get() = elements.indices
 
 	/**
 	 * Reads this document into a [BsonArray] instance.

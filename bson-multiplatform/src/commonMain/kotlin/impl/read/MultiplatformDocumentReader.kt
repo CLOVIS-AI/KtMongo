@@ -143,6 +143,12 @@ internal class MultiplatformDocumentReader(
 			return fields
 		}
 
+	override val names: Set<String>
+		get() {
+			scanUntil(null)
+			return fields.keys
+		}
+
 	override fun toBson(): Bson =
 		Bson(factory, bytesWithHeader)
 

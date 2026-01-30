@@ -73,6 +73,18 @@ internal class MultiplatformArrayReader(
 			return fields
 		}
 
+	override val size: Int
+		get() {
+			scanUntil(null)
+			return fields.size
+		}
+
+	override val indices: IntRange
+		get() {
+			scanUntil(null)
+			return fields.indices
+		}
+
 	override fun toBson(): BsonArray =
 		BsonArray(factory, bytesWithHeader)
 
