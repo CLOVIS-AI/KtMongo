@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalTime::class, ExperimentalBsonPathApi::class)
+@file:OptIn(ExperimentalTime::class, ExperimentalBsonPathApi::class, LowLevelApi::class)
 
 package opensavvy.ktmongo.bson.path
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
 import opensavvy.prepared.suite.assertions.checkThrows
@@ -173,6 +174,34 @@ fun SuiteDsl.bsonPathTests(
 
 		test("Reversed") {
 			check(bobDoc().select<String>("$.pets[::-1].name").toList() == listOf("Michael", "Poupette", "Barbie"))
+		}
+	}
+
+	suite("Multi-selector segments") {
+		val multiDoc by prepared {
+			context().buildDocument {
+				writeArray("a") {
+					writeString("a")
+					writeString("b")
+					writeString("c")
+					writeString("d")
+					writeString("e")
+					writeString("f")
+					writeString("g")
+				}
+			}
+		}
+
+		test("Multiple indices") {
+			check(multiDoc().select<String>("$.a[0, 3]").toList() == listOf("a", "d"))
+		}
+
+		test("Slice and index") {
+			check(multiDoc().select<String>("$.a[0:2, 5]").toList() == listOf("a", "b", "f"))
+		}
+
+		test("Same selector twice") {
+			check(multiDoc().select<String>("$.a[0, 0]").toList() == listOf("a", "a"))
 		}
 	}
 

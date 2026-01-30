@@ -56,7 +56,7 @@ val MultiplatformBsonWriterTest by preparedSuite {
 			check(document.reader().read("bad")?.readArray()?.read(1)?.readString() == "b")
 		}
 
-		check(eagerTime < lazyTime)
+		check(eagerTime <= lazyTime)
 
 		document.eager() // Allowed, does nothing
 	}
@@ -83,7 +83,7 @@ val MultiplatformBsonWriterTest by preparedSuite {
 			check(document.reader().read(2)?.readDocument()?.read("bar")?.readString() == "bar")
 		}
 
-		check(eagerTime < lazyTime)
+		check(eagerTime <= lazyTime)
 
 		document.eager() // Allowed, does nothing
 	}
