@@ -22,6 +22,10 @@ plugins {
 	alias(libsCommon.plugins.testBalloon)
 }
 
+java {
+	withSourcesJar()
+}
+
 kotlin {
 	jvmToolchain(opensavvyConventions.versions.java.compat.get().toInt())
 }
