@@ -18,6 +18,7 @@ package opensavvy.ktmongo.bson.types
 
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.math.min
 
 /**
  * A dense array of numeric values stored in a binary storage efficient for storage and retrieval.
@@ -92,5 +93,62 @@ interface Vector {
 				else -> r[index - 2]
 			}
 		}
+	}
+
+	companion object {
+		@LowLevelApi
+		fun fromBinaryData(content: ByteArray): Vector =
+			UnknownVector(content)
+	}
+}
+
+private class UnknownVector(
+	private val binaryData: ByteArray,
+) : Vector {
+	@LowLevelApi
+	override val type: Byte
+		get() = binaryData[0]
+
+	@LowLevelApi
+	override val raw: ByteArray
+		get() = binaryData.copyOfRange(2, binaryData.size)
+
+	@LowLevelApi
+	override val padding: Byte
+		get() = binaryData[1]
+
+	@LowLevelApi
+	override fun toBinaryData(): ByteArray =
+		binaryData.copyOf()
+
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (other !is UnknownVector) return false
+
+		if (!binaryData.contentEquals(other.binaryData)) return false
+
+		return true
+	}
+
+	override fun hashCode(): Int {
+		return binaryData.contentHashCode()
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String = buildString {
+		append("Vector(type=")
+		append(type)
+		append(", padding=")
+		append(padding)
+		append(", content=[")
+		for (index in 2..min(34, binaryData.size - 1)) {
+			append(binaryData[index])
+			append(" ")
+		}
+		if (binaryData.size > 34)
+			append("…")
+		else
+			deleteAt(this.length - 1)
+		append("])")
 	}
 }

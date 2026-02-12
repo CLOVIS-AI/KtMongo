@@ -25,6 +25,7 @@ import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.Vector
 import opensavvy.ktmongo.bson.types.UuidAsBsonBinarySerializer
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -260,6 +261,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("JwAAAP5CAADgQA=="))
 		},
+		document {
+			writeVector("x", Vector.fromBinaryData(Base64.decode("JwAAAP5CAADgQA==")))
+		},
 		hex("170000000578000A0000000927000000FE420000E04000"),
 		json($$"""{"x": {"$binary": {"base64": "JwAAAP5CAADgQA==", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -267,7 +271,16 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("JwAAAP5CAADgQA==")))
-		}
+		},
+		verify("Read vector type") {
+			check(read("x")?.readVector()?.type == 0x27.toByte())
+		},
+		verify("Read vector padding") {
+			check(read("x")?.readVector()?.padding == 0x0.toByte())
+		},
+		verify("Read vector content") {
+			check(read("x")?.readVector()?.raw.contentEquals(byteArrayOf(0, 0, -2, 66, 0, 0, -32, 64)))
+		},
 	)
 
 	testBson(
@@ -275,6 +288,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		"subtype 0x09 Vector INT8",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("AwB/Bw=="))
+		},
+		document {
+			writeVector("x", Vector.fromBinaryData(Base64.decode("AwB/Bw==")))
 		},
 		hex("11000000057800040000000903007F0700"),
 		json($$"""{"x": {"$binary": {"base64": "AwB/Bw==", "subType": "09"}}}"""),
@@ -284,6 +300,15 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("AwB/Bw==")))
 		},
+		verify("Read vector type") {
+			check(read("x")?.readVector()?.type == 0x03.toByte())
+		},
+		verify("Read vector padding") {
+			check(read("x")?.readVector()?.padding == 0x0.toByte())
+		},
+		verify("Read vector content") {
+			check(read("x")?.readVector()?.raw.contentEquals(byteArrayOf(127, 7)))
+		},
 	)
 
 	testBson(
@@ -291,6 +316,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		"subtype 0x09 Vector PACKED_BIT",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("EAB/Bw=="))
+		},
+		document {
+			writeVector("x", Vector.fromBinaryData(Base64.decode("EAB/Bw==")))
 		},
 		hex("11000000057800040000000910007F0700"),
 		json($$"""{"x": {"$binary": {"base64": "EAB/Bw==", "subType": "09"}}}"""),
@@ -300,6 +328,15 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("EAB/Bw==")))
 		},
+		verify("Read vector type") {
+			check(read("x")?.readVector()?.type == 0x10.toByte())
+		},
+		verify("Read vector padding") {
+			check(read("x")?.readVector()?.padding == 0x0.toByte())
+		},
+		verify("Read vector content") {
+			check(read("x")?.readVector()?.raw.contentEquals(byteArrayOf(127, 7)))
+		},
 	)
 
 	testBson(
@@ -308,6 +345,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("JwA="))
 		},
+		document {
+			writeVector("x", Vector.fromBinaryData(Base64.decode("JwA=")))
+		},
 		hex("0F0000000578000200000009270000"),
 		json($$"""{"x": {"$binary": {"base64": "JwA=", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -315,7 +355,16 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("JwA=")))
-		}
+		},
+		verify("Read vector type") {
+			check(read("x")?.readVector()?.type == 0x27.toByte())
+		},
+		verify("Read vector padding") {
+			check(read("x")?.readVector()?.padding == 0x0.toByte())
+		},
+		verify("Read vector content") {
+			check(read("x")?.readVector()?.raw?.size == 0)
+		},
 	)
 
 	testBson(
@@ -324,6 +373,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("AwA="))
 		},
+		document {
+			writeVector("x", Vector.fromBinaryData(Base64.decode("AwA=")))
+		},
 		hex("0F0000000578000200000009030000"),
 		json($$"""{"x": {"$binary": {"base64": "AwA=", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -331,7 +383,16 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("AwA=")))
-		}
+		},
+		verify("Read vector type") {
+			check(read("x")?.readVector()?.type == 0x03.toByte())
+		},
+		verify("Read vector padding") {
+			check(read("x")?.readVector()?.padding == 0x0.toByte())
+		},
+		verify("Read vector content") {
+			check(read("x")?.readVector()?.raw?.size == 0)
+		},
 	)
 
 	testBson(
@@ -340,6 +401,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("EAA="))
 		},
+		document {
+			writeVector("x", Vector.fromBinaryData(Base64.decode("EAA=")))
+		},
 		hex("0F0000000578000200000009100000"),
 		json($$"""{"x": {"$binary": {"base64": "EAA=", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -347,7 +411,16 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("EAA=")))
-		}
+		},
+		verify("Read vector type") {
+			check(read("x")?.readVector()?.type == 0x10.toByte())
+		},
+		verify("Read vector padding") {
+			check(read("x")?.readVector()?.padding == 0x0.toByte())
+		},
+		verify("Read vector content") {
+			check(read("x")?.readVector()?.raw?.size == 0)
+		},
 	)
 
 }

@@ -18,6 +18,7 @@ package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.bson.types.Vector
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -353,6 +354,15 @@ interface BsonValueReader {
 	@LowLevelApi
 	@Throws(BsonReaderException::class)
 	fun readBinaryData(): ByteArray
+
+	@LowLevelApi
+	@Throws(BsonReaderException::class)
+	fun readVector(): Vector {
+		val type = readBinaryDataType()
+		if (type != 0x09u.toUByte())
+			throw BsonReaderException("Vectors use the BSON binary subtype 0x09, but found: $type")
+		return Vector.fromBinaryData(readBinaryData())
+	}
 
 	@LowLevelApi
 	@Throws(BsonReaderException::class)
