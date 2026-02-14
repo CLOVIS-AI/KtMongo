@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.UuidAsBsonBinarySerializer
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -106,7 +107,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	@Serializable
-	data class U(val x: Uuid)
+	data class U(
+		val x: @Serializable(with = UuidAsBsonBinarySerializer::class) Uuid,
+	)
 
 	testBson(
 		context,
