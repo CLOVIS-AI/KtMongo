@@ -77,7 +77,6 @@ private class JvmBsonFactoryImpl(
 
 	@LowLevelApi
 	override val codecRegistry: CodecRegistry = CodecRegistries.fromRegistries(
-		codecRegistry,
 		CodecRegistries.fromCodecs(
 			KotlinBsonCodec(this),
 			KotlinBsonArrayCodec(this),
@@ -85,7 +84,8 @@ private class JvmBsonFactoryImpl(
 			KotlinTimestampCodec(),
 			KotlinUuidCodec(),
 			KotlinInstantCodec(),
-		)
+		),
+		codecRegistry,
 	)
 
 	@LowLevelApi

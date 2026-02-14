@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.InstantAsBsonDatetimeSerializer
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -38,7 +39,9 @@ import kotlin.time.Instant
  */
 fun SuiteDsl.datetime(context: Prepared<BsonFactory>) = suite("Datetime") {
 	@Serializable
-	data class A(val a: Instant)
+	data class A(
+		val a: @Serializable(with = InstantAsBsonDatetimeSerializer::class) Instant,
+	)
 
 	testBson(
 		context,

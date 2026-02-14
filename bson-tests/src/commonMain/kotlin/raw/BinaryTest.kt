@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,12 +25,12 @@ import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.UuidAsBsonBinarySerializer
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
-import kotlin.reflect.typeOf
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -106,7 +106,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	@Serializable
-	data class U(val x: Uuid)
+	data class U(
+		val x: @Serializable(with = UuidAsBsonBinarySerializer::class) Uuid,
+	)
 
 	testBson(
 		context,
@@ -121,9 +123,6 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 		verify("Read data") {
 			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
-		},
-		verify("Can read as a Uuid") {
-			check(read(typeOf<U>(), U::class) == U(Uuid.parse("73ffd264-44b3-4c69-90e8-e7d1dfc035d4")))
 		}
 	)
 

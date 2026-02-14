@@ -17,6 +17,7 @@
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(libsCommon.plugins.kotlinx.serialization)
 	alias(libsCommon.plugins.testBalloon)
 }
 
@@ -42,6 +43,8 @@ kotlin {
 
 	sourceSets.jvmTest.dependencies {
 		implementation(libs.mongodb.sync.jvm)
+		implementation(libs.mongodb.kotlinx.serialization)
+		implementation(libs.kotlinx.serialization)
 	}
 }
 

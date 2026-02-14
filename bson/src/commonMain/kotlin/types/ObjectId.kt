@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -285,13 +285,40 @@ class ObjectId : Comparable<ObjectId> {
 
 		@LowLevelApi
 		override fun serialize(encoder: Encoder, value: ObjectId) {
-			encoder.encodeString(value.hex)
+			serializeObjectIdPlatformSpecific(encoder, value)
 		}
 
 		override fun deserialize(decoder: Decoder): ObjectId =
-			decoder.decodeString().let(::ObjectId)
+			deserializeObjectIdPlatformSpecific(decoder)
 	}
 }
+
+@ExperimentalTime
+internal fun serializeObjectIdAsString(encoder: Encoder, value: ObjectId) {
+	encoder.encodeString(value.hex)
+}
+
+@ExperimentalTime
+internal fun deserializeObjectIdAsString(decoder: Decoder): ObjectId =
+	decoder.decodeString().let(::ObjectId)
+
+/**
+ * On the JVM, when using KotlinX.Serialization with the official driver, we must hard-code a different behavior.
+ *
+ * All non-JVM platforms implement this function by calling [serializeObjectIdAsString].
+ * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
+ */
+@ExperimentalTime
+internal expect fun serializeObjectIdPlatformSpecific(encoder: Encoder, value: ObjectId)
+
+/**
+ * On the JVM, when using KotlinX.Serialization with the official driver, we must hard-code a different behavior.
+ *
+ * All non-JVM platforms implement this function by calling [deserializeObjectIdAsString].
+ * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
+ */
+@ExperimentalTime
+internal expect fun deserializeObjectIdPlatformSpecific(decoder: Decoder): ObjectId
 
 @ExperimentalTime
 operator fun Instant.compareTo(objectId: ObjectId): Int =
