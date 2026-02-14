@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,27 +14,35 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalTime::class, ExperimentalAtomicApi::class)
+
 package opensavvy.ktmongo.sync
 
-import kotlinx.serialization.Serializable
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.config.CoroutineTimeout
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
+
+data class User(
+	val _id: ObjectId,
+	val name: String,
+	val age: Int,
+)
 
 val BasicReadWriteTest by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
-	@Serializable
-	data class User(
-		val name: String,
-		val age: Int,
-	)
+	val id1 = ObjectId("69908384e10bb0a5f7d17c5b")
+	val id2 = ObjectId("699083ade6e89e315640258c")
+	val id3 = ObjectId("699083c9e493dd6c2e60c664")
 
 	val users by testCollection<User>("basic-users")
 
 	test("Simple insert and read") {
-		users().insertOne(User(name = "Bob", age = 18))
+		users().insertOne(User(_id = id1, name = "Bob", age = 18))
 
-		check(User("Bob", age = 18) in users().find().toList())
+		check(User(_id = id1, "Bob", age = 18) in users().find().toList())
 	}
 
 	test("Simple upsert and read") {
@@ -45,15 +53,16 @@ val BasicReadWriteTest by preparedSuite(preparedConfig = CoroutineTimeout(30.sec
 			update = {
 				User::name set "Bad"
 				User::age setOnInsert 0
+				User::_id setOnInsert id1
 			}
 		)
 
-		check(User("Bad", 0) in users().find().toList())
+		check(User(_id = id1, "Bad", 0) in users().find().toList())
 	}
 
 	test("Read ordered by age") {
-		val bob = User(name = "Bob", age = 18)
-		val alice = User(name = "Alice", age = 19)
+		val bob = User(_id = id1, name = "Bob", age = 18)
+		val alice = User(_id = id2, name = "Alice", age = 19)
 		users().insertOne(bob)
 		users().insertOne(alice)
 
@@ -62,9 +71,9 @@ val BasicReadWriteTest by preparedSuite(preparedConfig = CoroutineTimeout(30.sec
 	}
 
 	test("Paging") {
-		val alice = User(name = "Alice", age = 22)
-		val bob = User(name = "Bob", age = 18)
-		val carol = User(name = "Carol", age = 19)
+		val alice = User(_id = id1, name = "Alice", age = 22)
+		val bob = User(_id = id2, name = "Bob", age = 18)
+		val carol = User(_id = id3, name = "Carol", age = 19)
 		users().insertOne(alice)
 		users().insertOne(bob)
 		users().insertOne(carol)
