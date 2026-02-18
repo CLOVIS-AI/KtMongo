@@ -5,37 +5,37 @@
 [versions]
 
 # https://kotlinlang.org/docs/releases.html#release-details
-kotlin = "2.2.21"
+kotlin = "2.3.0"
 
 # https://github.com/google/ksp/releases
-ksp = "2.3.2"
+ksp = "2.3.4"
 
 # https://github.com/JetBrains/compose-multiplatform/releases
-compose = "1.8.2"
+compose = "1.10.0"
 
 # https://github.com/kotest/kotest/releases
-kotest = "6.0.4"
+kotest = "6.1.3"
 
 # https://github.com/infix-de/testBalloon/releases
-testBalloon = "0.7.1-K2.2.21"
+testBalloon = "0.8.2-K2.3.0"
 
 # https://gitlab.com/opensavvy/groundwork/pedestal/-/releases
-pedestal = "3.1.1"
+pedestal = "3.2.0"
 
 # https://prepared.opensavvy.dev/news
-prepared = "2.2.0"
+prepared = "2.3.1"
 
 # https://spine.opensavvy.dev/news
-spine = "0.9.0"
+spine = "0.9.1"
 
 # https://ktmongo.opensavvy.dev/news
-ktmongo = "0.25.1"
+ktmongo = "0.26.1"
 
 # https://github.com/JetBrains/java-annotations/releases
 jetbrains-annotations = "26.0.2-1"
 
 # https://nodejs.org/en/download
-nodejs = "24.12.0"
+nodejs = "24.13.0"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
@@ -57,9 +57,12 @@ testBalloon = { id = "de.infix.testBalloon", version.ref = "testBalloon" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 
+kotest-framework = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
 kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 kotest-assertions-collections = { module = "io.kotest:kotest-assertions-collections", version.ref = "kotest" }
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+
+testBalloon = { module = "de.infix.testBalloon:testBalloon-framework-core", version.ref = "testBalloon" }
 
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 
@@ -103,3 +106,18 @@ opensavvy-ktmongo-driver-coroutines = { module = "dev.opensavvy.ktmongo:driver-c
 opensavvy-ktmongo-driver-coroutines-kmongo = { module = "dev.opensavvy.ktmongo:driver-coroutines-kmongo", version.ref = "ktmongo" }
 
 [bundles]
+# A bundle of dependencies to use Prepared with the TestBalloon runner.
+# Requires applying the plugin 'libsCommon.plugins.testBalloon'.
+testBalloon = [
+	"opensavvy-prepared-testBalloon",
+	"testBalloon", # Force the version of the TestBalloon accompanying library to match the plugin's
+	"kotlin-test", # Force the Kotlin stdlib to match the KGP version, important on JS
+]
+
+# A bundle of dependencies to use Prepared with the Kotest runner.
+# Requires applying the plugins 'libsCommon.plugins.kotest' and 'libsCommon.plugins.ksp'.
+kotest = [
+	"opensavvy-prepared-kotest",
+	"kotest-framework",
+	"kotest-assertions",
+]

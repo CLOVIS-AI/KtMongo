@@ -25,8 +25,10 @@ import opensavvy.gitlab.ci.plugins.Gradle.Companion.gradlew
 import opensavvy.gitlab.ci.plugins.Gradle.Companion.useGradle
 import opensavvy.gitlab.ci.script.shell
 
-// https://gitlab.com/opensavvy/automation/containers/-/releases
-val ciContainers = "0.8.4"
+/**
+ * [OpenSavvy's CI container images](https://gitlab.com/opensavvy/automation/containers/-/releases)
+ */
+val ciContainers = "0.8.5"
 
 /**
  * The URL of the website built by /docs/website.
@@ -38,6 +40,33 @@ val siteUrl = "https://ktmongo.opensavvy.dev"
 fun Job.opensavvyImage(name: String) =
 	image("registry.gitlab.com/opensavvy/automation/containers/$name", ciContainers)
 
+// region GitLab
+
+/**
+ * Renames all JUnit XML test reports to remove non-latin-1 characters, because GitLab crashes in their presence.
+ *
+ * See [GITLAB-580885](https://gitlab.com/gitlab-org/gitlab/-/issues/580885).
+ */
+fun Job.stripUnicodeTestReports() {
+	afterScript {
+		// language="Shell Script"
+		shell($$"""
+			find . -path '*/build/test-results/*/TEST-*.xml' -print0 |
+			  grep -zP '[^\x00-\x{00FF}]' |
+			  while IFS= read -r -d '' f; do
+			    d="$(dirname "$f")"
+			    b="$(basename "$f")"
+			    nb=$(printf '%s' "$b" | LC_ALL=C sed -E \
+			      -e 's/[\xc4-\xdf][\x80-\xbf]/-/g' \
+			      -e 's/[\xe0-\xef][\x80-\xbf]{2}/-/g' \
+			      -e 's/[\xf0-\xf4][\x80-\xbf]{3}/-/g')
+			    mv -- "$f" "$d/$nb"
+			  done
+		""".trimIndent())
+	}
+}
+
+// endregion
 // region Kotlin Multiplatform
 
 fun Job.jvm() {
@@ -48,16 +77,22 @@ fun Job.jvm() {
 fun Job.jsBrowser() {
 	useGradle()
 	opensavvyImage("chromium")
+
+	stripUnicodeTestReports()
 }
 
 fun Job.jsNode() {
 	useGradle()
 	opensavvyImage("nodejs")
+
+	stripUnicodeTestReports()
 }
 
 fun Job.nativeLinuxX64() {
 	useGradle()
 	opensavvyImage("java")
+
+	stripUnicodeTestReports()
 }
 
 fun Job.nativeIosArm64() {
