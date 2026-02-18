@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block htmltitle %}
+	{% if page.toc | first is defined %}
+		<title>{{ page.toc.items[0].title }} - {{ config.site_name }}</title>
+	{% else %}
+		{{ super() }}
+	{% endif %}
+{% endblock %}

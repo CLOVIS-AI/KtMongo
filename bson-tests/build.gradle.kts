@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,4 +79,10 @@ library {
 powerAssert {
 	functions = listOf("kotlin.check")
 	includedSourceSets = listOf("commonMain", "jvmMain", "jsMain", "iosArm64Main", "iosSimulatorArm64Main", "iosX64Main", "linuxArm64Main", "linuxX64Main", "macosArm64Main", "macosX64Main", "mingwX64Main", "tvosArm64Main", "tvosSimulatorArm64Main", "tvosX64Main", "wasmJsMain", "watchosArm32Main", "watchosArm64Main", "watchosSimulatorArm64Main", "watchosX64Main")
+}
+
+tasks.withType<AbstractTestTask> {
+	// There are no tests in this module anyway;
+	// This module contains tests in commonMain that are used by other modules. It doesn't have a commonTest folder.
+	failOnNoDiscoveredTests = false
 }
