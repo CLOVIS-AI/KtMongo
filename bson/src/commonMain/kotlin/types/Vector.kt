@@ -18,6 +18,7 @@ package opensavvy.ktmongo.bson.types
 
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -99,6 +100,7 @@ interface Vector {
 		@LowLevelApi
 		fun fromBinaryData(content: ByteArray): Vector = when (content[0]) {
 			0x03.toByte() -> ByteVector(content.sliceArray(2 until content.size), Unit)
+			0x27.toByte() -> FloatVector(content.sliceArray(2 until content.size))
 			else -> UnknownVector(content)
 		}
 	}
@@ -256,4 +258,188 @@ class ByteVector internal constructor(
 
 	override fun toString(): String =
 		joinToString(separator = ", ", prefix = "ByteVector[", postfix = "]")
+}
+
+private fun floatsToBytes(floats: Collection<Float>): ByteArray {
+	val array = ByteArray(floats.size * 4)
+	floats.forEachIndexed { index, float ->
+		val bits = float.toBits()
+
+		// Little-endian byte order (LSB first)
+		array[index * 4] = (bits and 0xFF).toByte()
+		array[index * 4 + 1] = ((bits shr 8) and 0xFF).toByte()
+		array[index * 4 + 2] = ((bits shr 16) and 0xFF).toByte()
+		array[index * 4 + 3] = ((bits shr 24) and 0xFF).toByte()
+	}
+	return array
+}
+
+/**
+ * A [Vector] of [Float] elements (BSON's `Float32Vector`).
+ *
+ * The different bytes can be extracted with [toArray].
+ *
+ * Alternatively, this class implements [List].
+ */
+class FloatVector internal constructor(
+	/**
+	 * The underlying byte storage. **Do not mutate this array!**
+	 *
+	 * Note that this storage does NOT include the type nor the padding.
+	 */
+	private val rawUnsafe: ByteArray,
+) : Vector, Iterable<Float>, Collection<Float>, List<Float> {
+
+	init {
+		require(rawUnsafe.size % 4 == 0) { "Each float takes 4 bytes, so the underlying byte array should have a size divisible by 4, found: ${rawUnsafe.size}" }
+	}
+
+	constructor(floats: Collection<Float>) : this(floatsToBytes(floats))
+
+	constructor(vararg floats: Float) : this(floats.asList())
+
+	@LowLevelApi
+	override val type: Byte
+		get() = 0x27
+
+	@LowLevelApi
+	override val raw: ByteArray
+		get() = rawUnsafe.copyOf()
+
+	@LowLevelApi
+	override val padding: Byte
+		get() = 0
+
+	override fun iterator(): Iterator<Float> =
+		IteratorImpl()
+
+	private inner class IteratorImpl : Iterator<Float> {
+		private var index = 0
+
+		override fun hasNext(): Boolean =
+			index < size
+
+		override fun next(): Float =
+			get(index++)
+	}
+
+	override val size: Int
+		get() = rawUnsafe.size / 4
+
+	override fun isEmpty(): Boolean =
+		rawUnsafe.isEmpty()
+
+	override fun contains(element: Float): Boolean {
+		for (i in indices) {
+			if (get(i) == element)
+				return true
+		}
+		return false
+	}
+
+	override fun containsAll(elements: Collection<Float>): Boolean =
+		elements.all { contains(it) }
+
+	override fun get(index: Int): Float {
+		val startIndex = index * 4
+
+		val bits = (rawUnsafe[startIndex].toUByte().toUInt()) or
+			(rawUnsafe[startIndex + 1].toUByte().toUInt() shl 8) or
+			(rawUnsafe[startIndex + 2].toUByte().toUInt() shl 16) or
+			(rawUnsafe[startIndex + 3].toUByte().toUInt() shl 24)
+
+		return Float.fromBits(bits.toInt())
+	}
+
+	override fun indexOf(element: Float): Int {
+		for (i in indices) {
+			if (get(i) == element)
+				return i
+		}
+		return -1
+	}
+
+	override fun lastIndexOf(element: Float): Int {
+		for (i in size - 1 downTo 0) {
+			if (get(i) == element) return i
+		}
+		return -1
+	}
+
+	override fun listIterator(): ListIterator<Float> =
+		ListIteratorImpl(0)
+
+	override fun listIterator(index: Int): ListIterator<Float> =
+		ListIteratorImpl(index)
+
+	private inner class ListIteratorImpl(
+		private var index: Int = 0,
+	) : ListIterator<Float> {
+		override fun next(): Float =
+			get(index++)
+
+		override fun hasNext(): Boolean =
+			index < size
+
+		override fun hasPrevious(): Boolean =
+			index > 0
+
+		override fun previous(): Float =
+			get(--index)
+
+		override fun nextIndex(): Int =
+			min(index + 1, size)
+
+		override fun previousIndex(): Int =
+			max(index - 1, 0)
+	}
+
+	override fun subList(fromIndex: Int, toIndex: Int): List<Float> {
+		if (fromIndex < 0)
+			throw IndexOutOfBoundsException("fromIndex must be non-negative, found: $fromIndex")
+
+		if (toIndex > size)
+			throw IndexOutOfBoundsException("toIndex must be less than size ($size), found: $toIndex")
+
+		if (toIndex < fromIndex)
+			throw IllegalArgumentException("toIndex must be greater than or equal to fromIndex, found: toIndex=$toIndex, fromIndex=$fromIndex")
+
+		val list = ArrayList<Float>(toIndex - fromIndex)
+
+		for (i in fromIndex until toIndex) {
+			list += get(i)
+		}
+
+		return list
+	}
+
+	fun toArray(): FloatArray =
+		FloatArray(size) { get(it) }
+
+	override fun equals(other: Any?): Boolean {
+		return when {
+			this === other -> true
+			other === null -> false
+			other is FloatVector -> rawUnsafe.contentEquals(other.rawUnsafe)
+			other is List<*> -> {
+				if (size != other.size) return false
+				for (i in indices) {
+					if (get(i) != other[i]) return false
+				}
+				true
+			}
+
+			else -> false
+		}
+	}
+
+	override fun hashCode(): Int {
+		var hashCode = 1
+		for (e in this)
+			hashCode = 31 * hashCode + e.hashCode()
+		return hashCode
+	}
+
+	override fun toString(): String =
+		joinToString(separator = ", ", prefix = "FloatVector[", postfix = "]")
 }

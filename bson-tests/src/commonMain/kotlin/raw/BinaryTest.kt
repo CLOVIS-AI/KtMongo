@@ -26,6 +26,7 @@ import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.bson.types.ByteVector
+import opensavvy.ktmongo.bson.types.FloatVector
 import opensavvy.ktmongo.bson.types.UuidAsBsonBinarySerializer
 import opensavvy.ktmongo.bson.types.Vector
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -265,6 +266,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", Vector.fromBinaryData(Base64.decode("JwAAAP5CAADgQA==")))
 		},
+		document {
+			writeVector("x", FloatVector(127f, 7f))
+		},
 		hex("170000000578000A0000000927000000FE420000E04000"),
 		json($$"""{"x": {"$binary": {"base64": "JwAAAP5CAADgQA==", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -281,6 +285,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 		verify("Read vector content") {
 			check(read("x")?.readVector()?.raw.contentEquals(byteArrayOf(0, 0, -2, 66, 0, 0, -32, 64)))
+		},
+		verify("Read vector content as list") {
+			check(read("x")?.readVector() == listOf(127f, 7f))
 		},
 	)
 
@@ -355,6 +362,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", Vector.fromBinaryData(Base64.decode("JwA=")))
 		},
+		document {
+			writeVector("x", FloatVector())
+		},
 		hex("0F0000000578000200000009270000"),
 		json($$"""{"x": {"$binary": {"base64": "JwA=", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -371,6 +381,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 		verify("Read vector content") {
 			check(read("x")?.readVector()?.raw?.size == 0)
+		},
+		verify("Read vector content as list") {
+			check(read("x")?.readVector() == emptyList<Float>())
 		},
 	)
 
