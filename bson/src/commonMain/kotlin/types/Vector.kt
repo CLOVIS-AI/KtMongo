@@ -97,8 +97,10 @@ interface Vector {
 
 	companion object {
 		@LowLevelApi
-		fun fromBinaryData(content: ByteArray): Vector =
-			UnknownVector(content)
+		fun fromBinaryData(content: ByteArray): Vector = when (content[0]) {
+			0x03.toByte() -> ByteVector(content.sliceArray(2 until content.size), Unit)
+			else -> UnknownVector(content)
+		}
 	}
 }
 
@@ -151,4 +153,107 @@ private class UnknownVector(
 			deleteAt(this.length - 1)
 		append("])")
 	}
+}
+
+/**
+ * A [Vector] of [Byte] elements (BSON's `Int8Vector`).
+ *
+ * The different bytes can be extracted with [toArray].
+ *
+ * Alternatively, this class implements [List].
+ */
+@OptIn(LowLevelApi::class)
+class ByteVector internal constructor(
+	/**
+	 * The underlying byte storage. **Do not mutate this array!**
+	 *
+	 * Note that this storage does NOT include the type nor the padding.
+	 */
+	private val rawUnsafe: ByteArray,
+	@Suppress("unused") unused: Unit, // avoid platform declaration clash with the vararg overload
+) : Vector, Iterable<Byte>, Collection<Byte>, List<Byte> {
+
+	/**
+	 * Constructs a [ByteVector] from a collection of bytes.
+	 */
+	constructor(bytes: Collection<Byte>) : this(bytes.toByteArray(), Unit)
+
+	/**
+	 * Constructs a [ByteVector] from multiple bytes.
+	 */
+	constructor(vararg bytes: Byte) : this(bytes.asList())
+
+	override val type: Byte
+		get() = 0x03
+
+	@LowLevelApi
+	override val raw: ByteArray
+		get() = rawUnsafe.copyOf()
+
+	@LowLevelApi
+	override val padding: Byte
+		get() = 0
+
+	override val size: Int
+		get() = rawUnsafe.size
+
+	override fun isEmpty(): Boolean =
+		rawUnsafe.size == 0
+
+	override fun contains(element: Byte): Boolean =
+		rawUnsafe.contains(element)
+
+	override fun containsAll(elements: Collection<Byte>): Boolean =
+		elements.all { rawUnsafe.contains(it) }
+
+	override fun get(index: Int): Byte =
+		rawUnsafe[index]
+
+	override fun indexOf(element: Byte): Int =
+		rawUnsafe.indexOf(element)
+
+	override fun lastIndexOf(element: Byte): Int =
+		rawUnsafe.lastIndexOf(element)
+
+	override fun listIterator(): ListIterator<Byte> =
+		rawUnsafe.asList().listIterator()
+
+	override fun listIterator(index: Int): ListIterator<Byte> =
+		rawUnsafe.asList().listIterator(index)
+
+	override fun subList(fromIndex: Int, toIndex: Int): List<Byte> =
+		rawUnsafe.slice(fromIndex until toIndex)
+
+	override fun iterator(): ByteIterator =
+		rawUnsafe.iterator()
+
+	fun toArray(): ByteArray =
+		raw // 'raw' is cloned on access
+
+	override fun equals(other: Any?): Boolean {
+		return when {
+			this === other -> true
+			other === null -> false
+			other is ByteVector -> rawUnsafe.contentEquals(other.rawUnsafe)
+			other is List<*> -> {
+				if (size != other.size) return false
+				for (i in indices) {
+					if (rawUnsafe[i] != other[i]) return false
+				}
+				true
+			}
+
+			else -> false
+		}
+	}
+
+	override fun hashCode(): Int {
+		var hashCode = 1
+		for (e in this)
+			hashCode = 31 * hashCode + e.hashCode()
+		return hashCode
+	}
+
+	override fun toString(): String =
+		joinToString(separator = ", ", prefix = "ByteVector[", postfix = "]")
 }
