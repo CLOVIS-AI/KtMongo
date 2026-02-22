@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ import java.util.concurrent.TimeUnit
  * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongo].
  */
 class JvmMongoCollection<Document : Any> internal constructor(
-	private val inner: com.mongodb.kotlin.client.coroutine.MongoCollection<Document>,
+	inner: com.mongodb.kotlin.client.coroutine.MongoCollection<Document>,
 	nameStrategy: PropertyNameStrategy,
 ) : MongoCollection<Document> {
 
@@ -67,6 +67,9 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		objectIdGenerator = ObjectIdGenerator.Jvm(),
 		nameStrategy = nameStrategy,
 	)
+
+	@OptIn(LowLevelApi::class)
+	private val inner = inner.withCodecRegistry(context.codecRegistry)
 
 	// region Find
 
