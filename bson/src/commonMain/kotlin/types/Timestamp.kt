@@ -23,6 +23,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.types.Timestamp.Companion.MAX_COUNTER
 import opensavvy.ktmongo.bson.types.Timestamp.Companion.MAX_INSTANT
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -113,14 +114,20 @@ class Timestamp(
 	/**
 	 * Default serializer for [Timestamp].
 	 *
-	 * `:bson-multiplatform` and `:bson-official` both override this serializer.
-	 * This serializer exists so that `@Contextual` is not required.
-	 * It may also be used to convert the DTOs to other formats, like JSON.
+	 * ### When serializing to BSON
 	 *
-	 * Using this serializer, [Timestamp] is represented as a [String] with its [Timestamp.instant] and [Timestamp.counter] displayed.
+	 * [Timestamp] instances are encoded using MongoDB's native [BsonType.Timestamp] BSON type.
+	 *
+	 * Supported drivers:
+	 * - The official `:bson-kotlinx` serialization library.
+	 * - The KtMongo Multiplatform driver.
+	 *
+	 * ### When serializing to other formats
+	 *
+	 * When serializing to other formats, like JSON, [Timestamp] instances are represented as a string that contains
+	 * the [instant] in ISO 8601 format followed by a hash symbol (`#`) and the [counter] as a decimal number.
+	 *
 	 * For example, `2022-02-32T12:58:01#32`.
-	 *
-	 * Avoid interacting with this type directly.
 	 */
 	@LowLevelApi
 	object Serializer : KSerializer<Timestamp> {
