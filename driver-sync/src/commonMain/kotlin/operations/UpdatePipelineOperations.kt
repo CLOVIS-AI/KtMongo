@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package opensavvy.ktmongo.sync.operations
 import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
+import opensavvy.ktmongo.sync.operations.UpdateOperations.UpdateResult
+import opensavvy.ktmongo.sync.operations.UpdateOperations.UpsertResult
 
 /**
  * Interface grouping MongoDB operations allowing to update existing information using aggregation pipelines.
@@ -55,11 +57,12 @@ interface UpdatePipelineOperations<Document : Any> : BaseOperations {
 	 * If no filter is specified, all documents are updated.
 	 * @see updateOneWithPipeline Update a single document.
 	 */
+	@IgnorableReturnValue
 	fun updateManyWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
-	)
+	): UpdateResult
 
 	/**
 	 * Updates a single document that matches [filter] according to the [update] pipeline.
@@ -94,11 +97,12 @@ interface UpdatePipelineOperations<Document : Any> : BaseOperations {
 	 * @see updateManyWithPipeline Update multiple documents.
 	 * @see upsertOneWithPipeline Update a document, creating it if it doesn't exist.
 	 */
+	@IgnorableReturnValue
 	fun updateOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
-	)
+	): UpdateResult
 
 	/**
 	 * Updates a single document that matches [filter] according to the [update] pipeline.
@@ -132,10 +136,11 @@ interface UpdatePipelineOperations<Document : Any> : BaseOperations {
 	 *
 	 * @see updateOneWithPipeline Do nothing if the document doesn't already exist.
 	 */
+	@IgnorableReturnValue
 	fun upsertOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
-	)
+	): UpsertResult
 
 }
