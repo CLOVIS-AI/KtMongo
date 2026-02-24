@@ -21,15 +21,16 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.fetchAndIncrement
 import kotlin.random.Random
 import kotlin.time.Clock
+import kotlin.time.Instant
 
 /**
  * An object responsible for generating new [ObjectId] instances.
  *
- * This object is similar to [kotlin.time.Clock]: a `Clock` is a way to generate `Instant` instances, and services
+ * This object is similar to [Clock]: a [Clock] is a way to generate [Instant] instances, and services
  * that need to generate instants should receive a clock via dependency injection.
  * Similarly, services that generate IDs should get a generator via dependency injection.
  *
- * To get the real generator instance, see the database's [opensavvy.ktmongo.bson.BsonContext].
+ * Each collection has its own [ObjectIdGenerator] instance, set by default by the driver.
  */
 interface ObjectIdGenerator {
 
@@ -53,9 +54,13 @@ interface ObjectIdGenerator {
 	@ExperimentalAtomicApi
 	class Default(
 		private val clock: Clock = Clock.System,
-		private val random: Random = Random,
+		random: Random = Random,
 		private var processId: Long = random.nextLong(0, ObjectId.PROCESS_ID_BOUND),
 	) : ObjectIdGenerator {
+
+		// Possible non-monotonic situations:
+		// - Multiple generators have the same 'processId'
+		// - The counter overflows, so the next ID has a smaller counter than the previous one (since the counter doesn't reset to 0 each second)
 
 		private val counter = AtomicInt(random.nextInt(0, ObjectId.COUNTER_BOUND))
 
@@ -81,8 +86,18 @@ interface ObjectIdGenerator {
 		private val ids: Iterator<ObjectId>,
 	) : ObjectIdGenerator {
 
+		/**
+		 * Each call to [newId] will return the next ID in order of [ids].
+		 *
+		 * If [newId] is called once more than the number of IDs in [ids], a [NoSuchElementException] will be thrown.
+		 */
 		constructor(ids: Iterable<ObjectId>) : this(ids.iterator())
 
+		/**
+		 * Each call to [newId] will return the next ID in order of [ids].
+		 *
+		 * If [newId] is called once more than the number of IDs in [ids], a [NoSuchElementException] will be thrown.
+		 */
 		constructor(vararg ids: ObjectId) : this(ids.asIterable())
 
 		override fun newId(): ObjectId {
