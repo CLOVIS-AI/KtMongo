@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,11 +77,15 @@ val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.secon
 			}
 		}
 
-		anomalies.updateOneWithPipeline {
+		val result = anomalies.updateOneWithPipeline {
 			set {
 				Song::creationDate set 12
 			}
 		}
+
+		check(result.acknowledged)
+		check(result.matchedCount == 1L)
+		check(result.modifiedCount == 1L)
 
 		check(Song(creationDate = 12, editionDate = 1) in anomalies.find().toList())
 	}

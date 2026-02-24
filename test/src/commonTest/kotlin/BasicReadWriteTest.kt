@@ -46,7 +46,7 @@ val BasicReadWriteTest by preparedSuite(preparedConfig = CoroutineTimeout(30.sec
 	}
 
 	test("Simple upsert and read") {
-		users().upsertOne(
+		val result = users().upsertOne(
 			filter = {
 				User::name eq "Foo"
 			},
@@ -56,6 +56,10 @@ val BasicReadWriteTest by preparedSuite(preparedConfig = CoroutineTimeout(30.sec
 				User::_id setOnInsert id1
 			}
 		)
+
+		check(result.upsertedCount == 1)
+		check(result.matchedCount == 0L)
+		check(result.modifiedCount == 0L)
 
 		check(User(_id = id1, "Bad", 0) in users().find().toList())
 	}
