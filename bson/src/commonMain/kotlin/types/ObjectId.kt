@@ -43,7 +43,7 @@ class ObjectId : Comparable<ObjectId> {
 	 * The ObjectId creation timestamp, with a resolution of one second.
 	 *
 	 * This timestamp can represent time from the UNIX epoch (Jan 1 1970) and is stored as 32 unsigned bits
-	 * (approximately Feb 2 2016, see [ObjectId.MAX]'s timestamp for an exact value).
+	 * (approximately Feb 2 2106, see [ObjectId.MAX]'s timestamp for an exact value).
 	 */
 	val timestamp: Instant
 

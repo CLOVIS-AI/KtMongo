@@ -47,7 +47,7 @@ interface ObjectIdGenerator {
 	 * (according to [ObjectId.compareTo]) than one generated previously, but only if both were generated
 	 * during the same second.
 	 *
-	 * However, it is guaranteed until [the year 2016][ObjectId.timestamp] that an ID
+	 * However, it is guaranteed until [the year 2106][ObjectId.timestamp] that an ID
 	 * is always strictly greater than one generated in a previous second.
 	 */
 	@ExperimentalAtomicApi
