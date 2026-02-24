@@ -23,6 +23,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.maxAt
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.minAt
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -267,13 +268,17 @@ class ObjectId : Comparable<ObjectId> {
 	/**
 	 * Default serializer for [ObjectId].
 	 *
-	 * `:bson-multiplatform` and `:bson-official` both override this serializer.
-	 * This serializer exists so that `@Contextual` is not required.
-	 * It may also be used to convert the DTOs to other formats, like JSON.
+	 * ### When serializing to BSON
 	 *
-	 * Using this serializer, [ObjectId] is represented as if it were a [String].
+	 * [ObjectId] instances are encoded using MongoDB's native [BsonType.ObjectId] BSON type.
 	 *
-	 * Avoid interacting with this type directly.
+	 * Supported drivers:
+	 * - The official `:bson-kotlinx` serialization library.
+	 * - The KtMongo Multiplatform driver.
+	 *
+	 * ### When serializing to other formats
+	 *
+	 * When serializing to other formats, like JSON, [ObjectId] instances are represented as 24-characters [hex] strings.
 	 */
 	@LowLevelApi
 	object Serializer : KSerializer<ObjectId> {
