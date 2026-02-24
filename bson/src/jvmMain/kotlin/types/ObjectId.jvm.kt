@@ -21,12 +21,11 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import org.bson.codecs.kotlinx.BsonDecoder
 import org.bson.codecs.kotlinx.BsonEncoder
-import kotlin.time.ExperimentalTime
 
 private val isOfficialKotlinSerializationEnabled =
 	ClassLoader.getSystemClassLoader().loadClass("org.bson.codecs.kotlinx.BsonEncoder") != null
 
-@OptIn(ExperimentalTime::class, ExperimentalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class)
 internal actual fun serializeObjectIdPlatformSpecific(encoder: Encoder, value: ObjectId) {
 	if (isOfficialKotlinSerializationEnabled && encoder is BsonEncoder) {
 		encoder.encodeObjectId(org.bson.types.ObjectId(value.bytes))
@@ -36,7 +35,6 @@ internal actual fun serializeObjectIdPlatformSpecific(encoder: Encoder, value: O
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-@ExperimentalTime
 internal actual fun deserializeObjectIdPlatformSpecific(decoder: Decoder): ObjectId =
 	if (isOfficialKotlinSerializationEnabled && decoder is BsonDecoder)
 		ObjectId(decoder.decodeObjectId().toByteArray())

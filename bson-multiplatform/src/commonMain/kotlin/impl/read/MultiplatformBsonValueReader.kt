@@ -107,7 +107,6 @@ internal class MultiplatformBsonValueReader(
 		return bytes.reader.readBytes(12)
 	}
 
-	@ExperimentalTime
 	@LowLevelApi
 	override fun readObjectId(): ObjectId {
 		return ObjectId(readObjectIdBytes())

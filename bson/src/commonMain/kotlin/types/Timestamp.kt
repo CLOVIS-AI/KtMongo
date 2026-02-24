@@ -26,7 +26,6 @@ import kotlinx.serialization.encoding.Encoder
 import opensavvy.ktmongo.bson.types.Timestamp.Companion.MAX_COUNTER
 import opensavvy.ktmongo.bson.types.Timestamp.Companion.MAX_INSTANT
 import opensavvy.ktmongo.dsl.LowLevelApi
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /**
@@ -51,7 +50,6 @@ class Timestamp(
 	/**
 	 * Constructs a timestamp from its [Timestamp.instant] and [Timestamp.counter] components.
 	 */
-	@ExperimentalTime
 	constructor(instant: Instant, counter: UInt) : this(
 		(instant.epochSeconds.toULong() shl 32) + (counter % (1L shl 32).toULong())
 	)
@@ -61,7 +59,6 @@ class Timestamp(
 	 *
 	 * A [Timestamp] can represent seconds between the UNIX epoch (Jan 1st 1970) and [MAX_INSTANT].
 	 */
-	@ExperimentalTime
 	val instant: Instant
 		get() = Instant.fromEpochSeconds((value shr 32).toLong())
 
@@ -71,7 +68,6 @@ class Timestamp(
 	val counter: UInt
 		get() = (value and UInt.MAX_VALUE.toULong()).toUInt()
 
-	@OptIn(ExperimentalTime::class)
 	override fun compareTo(other: Timestamp): Int =
 		value.compareTo(other.value)
 
@@ -82,7 +78,6 @@ class Timestamp(
 
 	override fun hashCode(): Int = value.hashCode()
 
-	@OptIn(ExperimentalTime::class)
 	override fun toString(): String =
 		"Timestamp($instant, #$counter)"
 
@@ -107,7 +102,6 @@ class Timestamp(
 		/**
 		 * The maximum possible instant that can be represented by a [Timestamp], which will happen during the year 2106.
 		 */
-		@ExperimentalTime
 		val MAX_INSTANT get() = Instant.fromEpochSeconds(UInt.MAX_VALUE.toLong())
 
 		/**
@@ -128,7 +122,6 @@ class Timestamp(
 	 *
 	 * Avoid interacting with this type directly.
 	 */
-	@OptIn(ExperimentalTime::class)
 	@LowLevelApi
 	object Serializer : KSerializer<Timestamp> {
 		override val descriptor: SerialDescriptor
@@ -144,12 +137,10 @@ class Timestamp(
 	}
 }
 
-@OptIn(ExperimentalTime::class)
 internal fun serializeTimestampAsString(encoder: Encoder, value: Timestamp) {
 	encoder.encodeString("${value.instant}#${value.counter}")
 }
 
-@OptIn(ExperimentalTime::class)
 internal fun deserializeTimestampAsString(decoder: Decoder): Timestamp {
 	val (instant, counter) = decoder.decodeString().split('#', limit = 2)
 	return Timestamp(instant = Instant.parse(instant), counter = counter.toUInt())

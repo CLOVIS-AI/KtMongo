@@ -18,13 +18,10 @@ package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlin.time.ExperimentalTime
 
-@ExperimentalTime
 internal actual fun serializeObjectIdPlatformSpecific(encoder: Encoder, value: ObjectId) {
 	serializeObjectIdAsString(encoder, value)
 }
 
-@ExperimentalTime
 internal actual fun deserializeObjectIdPlatformSpecific(decoder: Decoder): ObjectId =
 	deserializeObjectIdAsString(decoder)

@@ -27,7 +27,6 @@ import opensavvy.ktmongo.bson.types.ObjectId.Companion.maxAt
 import opensavvy.ktmongo.bson.types.ObjectId.Companion.minAt
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.experimental.and
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /**
@@ -37,7 +36,6 @@ import kotlin.time.Instant
  * However, it doesn't provide a way to generate new randomized ObjectId instances (as that depends on the database configuration).
  * To do so, see [opensavvy.ktmongo.bson.BsonContext.newId].
  */
-@ExperimentalTime
 @Serializable(with = ObjectId.Serializer::class)
 class ObjectId : Comparable<ObjectId> {
 
@@ -277,7 +275,6 @@ class ObjectId : Comparable<ObjectId> {
 	 *
 	 * Avoid interacting with this type directly.
 	 */
-	@ExperimentalTime
 	@LowLevelApi
 	object Serializer : KSerializer<ObjectId> {
 		override val descriptor: SerialDescriptor
@@ -293,12 +290,10 @@ class ObjectId : Comparable<ObjectId> {
 	}
 }
 
-@ExperimentalTime
 internal fun serializeObjectIdAsString(encoder: Encoder, value: ObjectId) {
 	encoder.encodeString(value.hex)
 }
 
-@ExperimentalTime
 internal fun deserializeObjectIdAsString(decoder: Decoder): ObjectId =
 	decoder.decodeString().let(::ObjectId)
 
@@ -308,7 +303,6 @@ internal fun deserializeObjectIdAsString(decoder: Decoder): ObjectId =
  * All non-JVM platforms implement this function by calling [serializeObjectIdAsString].
  * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
  */
-@ExperimentalTime
 internal expect fun serializeObjectIdPlatformSpecific(encoder: Encoder, value: ObjectId)
 
 /**
@@ -317,10 +311,8 @@ internal expect fun serializeObjectIdPlatformSpecific(encoder: Encoder, value: O
  * All non-JVM platforms implement this function by calling [deserializeObjectIdAsString].
  * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
  */
-@ExperimentalTime
 internal expect fun deserializeObjectIdPlatformSpecific(decoder: Decoder): ObjectId
 
-@ExperimentalTime
 operator fun Instant.compareTo(objectId: ObjectId): Int =
 	-objectId.compareTo(this)
 
@@ -330,7 +322,6 @@ operator fun Instant.compareTo(objectId: ObjectId): Int =
  * @see minAt
  * @see maxAt
  */
-@ExperimentalTime
 fun ClosedRange<Instant>.toObjectIdRange(): ClosedRange<ObjectId> =
 	minAt(start)..maxAt(endInclusive)
 
@@ -340,6 +331,5 @@ fun ClosedRange<Instant>.toObjectIdRange(): ClosedRange<ObjectId> =
  * @see minAt
  * @see maxAt
  */
-@ExperimentalTime
 fun OpenEndRange<Instant>.toObjectIdRange(): OpenEndRange<ObjectId> =
 	minAt(start)..<minAt(endExclusive)

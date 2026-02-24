@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,6 @@ import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.acceptAll
 import kotlin.reflect.KClass
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /**
@@ -308,7 +307,6 @@ private class UpdateQueryImpl<T>(
 	// region $currentDate
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@ExperimentalTime
 	override fun Field<T, Instant?>.setToCurrentDate() {
 		accept(CurrentDateBsonNode(listOf(this.path to true), context))
 	}
@@ -316,7 +314,6 @@ private class UpdateQueryImpl<T>(
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("setToCurrentTimestamp")
-	@ExperimentalTime
 	override fun Field<T, Timestamp?>.setToCurrentDate() {
 		accept(CurrentDateBsonNode(listOf(this.path to false), context))
 	}

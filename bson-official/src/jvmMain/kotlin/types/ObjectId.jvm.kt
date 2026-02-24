@@ -35,14 +35,12 @@ import kotlin.time.ExperimentalTime
 /**
  * Converts an ObjectId from the Java driver into a KtMongo ObjectId.
  */
-@ExperimentalTime
 fun ObjectId.toOfficial(): org.bson.types.ObjectId =
 	org.bson.types.ObjectId(bytes)
 
 /**
  * Converts an ObjectId from KtMongo into one from the Java driver.
  */
-@ExperimentalTime
 fun org.bson.types.ObjectId.toKtMongo(): ObjectId =
 	ObjectId(toByteArray())
 
@@ -50,7 +48,6 @@ fun org.bson.types.ObjectId.toKtMongo(): ObjectId =
 // region Generator
 
 private object JvmObjectIdGenerator : ObjectIdGenerator {
-	@ExperimentalTime
 	override fun newId(): ObjectId = org.bson.types.ObjectId().toKtMongo()
 }
 

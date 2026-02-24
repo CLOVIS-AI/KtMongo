@@ -22,13 +22,12 @@ import kotlinx.serialization.encoding.Encoder
 import org.bson.BsonDateTime
 import org.bson.codecs.kotlinx.BsonDecoder
 import org.bson.codecs.kotlinx.BsonEncoder
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 private val isOfficialKotlinSerializationEnabled =
 	ClassLoader.getSystemClassLoader().loadClass("org.bson.codecs.kotlinx.BsonEncoder") != null
 
-@OptIn(ExperimentalTime::class, ExperimentalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class)
 internal actual fun serializeInstantPlatformSpecific(encoder: Encoder, value: Instant) {
 	if (isOfficialKotlinSerializationEnabled && encoder is BsonEncoder) {
 		encoder.encodeBsonValue(BsonDateTime(value.toEpochMilliseconds()))
@@ -38,7 +37,6 @@ internal actual fun serializeInstantPlatformSpecific(encoder: Encoder, value: In
 }
 
 @OptIn(ExperimentalSerializationApi::class)
-@ExperimentalTime
 internal actual fun deserializeInstantPlatformSpecific(decoder: Decoder): Instant =
 	if (isOfficialKotlinSerializationEnabled && decoder is BsonDecoder) {
 		val bsonDateTime = decoder.decodeBsonValue() as BsonDateTime

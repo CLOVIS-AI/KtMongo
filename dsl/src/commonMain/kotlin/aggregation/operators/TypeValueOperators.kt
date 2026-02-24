@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -263,7 +262,6 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@ExperimentalTime
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toInstant(): Value<R, Instant> =
@@ -453,7 +451,6 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@ExperimentalTime
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toObjectId(): Value<R, ObjectId> =

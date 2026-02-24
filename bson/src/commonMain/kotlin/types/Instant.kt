@@ -77,12 +77,10 @@ object InstantAsBsonDatetimeSerializer : KSerializer<Instant> {
 		deserializeInstantPlatformSpecific(decoder)
 }
 
-@ExperimentalTime
 internal fun serializeInstantAsString(encoder: Encoder, value: Instant) {
 	encoder.encodeString(value.toString())
 }
 
-@ExperimentalTime
 internal fun deserializeInstantAsString(decoder: Decoder): Instant =
 	Instant.parse(decoder.decodeString())
 
@@ -92,7 +90,6 @@ internal fun deserializeInstantAsString(decoder: Decoder): Instant =
  * All non-JVM platforms implement this function by calling [serializeInstantAsString].
  * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
  */
-@ExperimentalTime
 internal expect fun serializeInstantPlatformSpecific(encoder: Encoder, value: Instant)
 
 /**
@@ -101,5 +98,4 @@ internal expect fun serializeInstantPlatformSpecific(encoder: Encoder, value: In
  * All non-JVM platforms implement this function by calling [deserializeInstantAsString].
  * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
  */
-@ExperimentalTime
 internal expect fun deserializeInstantPlatformSpecific(decoder: Decoder): Instant

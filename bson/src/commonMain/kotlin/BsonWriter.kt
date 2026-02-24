@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.experimental.and
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /**
@@ -64,14 +63,12 @@ interface BsonValueWriter : AnyBsonWriter {
 	/**
 	 * Writes an [Instant]. Conversion function on top of [writeDateTime].
 	 */
-	@ExperimentalTime
 	@LowLevelApi
 	fun writeInstant(value: Instant) = writeDateTime(value.toEpochMilliseconds())
 
 	@LowLevelApi fun writeNull()
 	@LowLevelApi fun writeObjectId(id: ByteArray)
 
-	@ExperimentalTime
 	@LowLevelApi
 	fun writeObjectId(id: ObjectId) {
 		writeObjectId(id.bytes)
@@ -201,14 +198,12 @@ interface BsonFieldWriter : AnyBsonWriter {
 	/**
 	 * Writes an [Instant]. Conversion function on top of [writeDateTime].
 	 */
-	@ExperimentalTime
 	@LowLevelApi
 	fun writeInstant(name: String, value: Instant) = writeDateTime(name, value.toEpochMilliseconds())
 
 	@LowLevelApi fun writeNull(name: String)
 	@LowLevelApi fun writeObjectId(name: String, id: ByteArray)
 
-	@ExperimentalTime
 	@LowLevelApi
 	fun writeObjectId(name: String, id: ObjectId)
 	@LowLevelApi fun writeRegularExpression(name: String, pattern: String, options: String)

@@ -21,7 +21,6 @@ import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.concurrent.atomics.fetchAndIncrement
 import kotlin.random.Random
 import kotlin.time.Clock
-import kotlin.time.ExperimentalTime
 
 /**
  * An object responsible for generating new [ObjectId] instances.
@@ -39,7 +38,6 @@ interface ObjectIdGenerator {
 	 *
 	 * @throws NoSuchElementException If the generator is not able to generate more IDs.
 	 */
-	@ExperimentalTime
 	fun newId(): ObjectId
 
 	/**
@@ -53,7 +51,6 @@ interface ObjectIdGenerator {
 	 * is always strictly greater than one generated in a previous second.
 	 */
 	@ExperimentalAtomicApi
-	@ExperimentalTime
 	class Default(
 		private val clock: Clock = Clock.System,
 		private val random: Random = Random,
@@ -80,7 +77,6 @@ interface ObjectIdGenerator {
 	 *
 	 * Mostly useful as a fake when testing algorithms that must generate IDs.
 	 */
-	@ExperimentalTime
 	class Hardcoded(
 		private val ids: Iterator<ObjectId>,
 	) : ObjectIdGenerator {

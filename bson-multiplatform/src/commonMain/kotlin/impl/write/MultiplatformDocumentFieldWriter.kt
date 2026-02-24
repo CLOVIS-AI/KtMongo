@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,6 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
-import kotlin.time.ExperimentalTime
 
 @LowLevelApi
 internal class MultiplatformDocumentFieldWriter(
@@ -104,7 +103,6 @@ internal class MultiplatformDocumentFieldWriter(
 		writer.writeArbitrary(Bytes(id))
 	}
 
-	@ExperimentalTime
 	@LowLevelApi
 	override fun writeObjectId(name: String, id: ObjectId) {
 		writeObjectId(name, id.bytes)
