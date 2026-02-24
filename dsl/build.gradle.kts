@@ -65,8 +65,7 @@ kotlin {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotest.assertions)
 		implementation(libsCommon.kotlin.test)
-		implementation(libs.kotlinx.serialization)
-		implementation(libs.mongodb.kotlin.reflection)
+		implementation(projects.bsonMultiplatform)
 	}
 
 	sourceSets.jvmTest.dependencies {

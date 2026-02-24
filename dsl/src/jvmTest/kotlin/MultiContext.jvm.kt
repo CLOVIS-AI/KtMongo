@@ -73,4 +73,8 @@ actual val testFactories: Map<String, () -> BsonFactory> = mapOf(
 			)
 		)
 	},
+
+	"Multiplatform" to {
+		opensavvy.ktmongo.bson.multiplatform.BsonFactory()
+	},
 )

@@ -18,5 +18,6 @@ package opensavvy.ktmongo.dsl
 
 import opensavvy.ktmongo.bson.BsonFactory
 
-// TODO: For now, we don't have any implementations for this platform, so no tests run
-actual val testFactories: Map<String, () -> BsonFactory> = emptyMap()
+actual val testFactories: Map<String, () -> BsonFactory> = mapOf(
+	"Multiplatform" to { opensavvy.ktmongo.bson.multiplatform.BsonFactory() },
+)
