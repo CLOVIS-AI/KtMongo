@@ -25,10 +25,7 @@ import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
 import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
-import opensavvy.ktmongo.bson.types.ByteVector
-import opensavvy.ktmongo.bson.types.FloatVector
-import opensavvy.ktmongo.bson.types.UuidAsBsonBinarySerializer
-import opensavvy.ktmongo.bson.types.Vector
+import opensavvy.ktmongo.bson.types.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -334,6 +331,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", Vector.fromBinaryData(Base64.decode("EAB/Bw==")))
 		},
+		document {
+			writeVector("x", BooleanVector(true, true, true, true, true, true, true, false, true, true, true, false, false, false, false, false))
+		},
 		hex("11000000057800040000000910007F0700"),
 		json($$"""{"x": {"$binary": {"base64": "EAB/Bw==", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -350,6 +350,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 		verify("Read vector content") {
 			check(read("x")?.readVector()?.raw.contentEquals(byteArrayOf(127, 7)))
+		},
+		verify("Read vector content as list") {
+			check(read("x")?.readVector() == listOf(true, true, true, true, true, true, true, false, true, true, true, false, false, false, false, false))
 		},
 	)
 
@@ -430,6 +433,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", Vector.fromBinaryData(Base64.decode("EAA=")))
 		},
+		document {
+			writeVector("x", BooleanVector())
+		},
 		hex("0F0000000578000200000009100000"),
 		json($$"""{"x": {"$binary": {"base64": "EAA=", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -446,6 +452,9 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 		verify("Read vector content") {
 			check(read("x")?.readVector()?.raw?.size == 0)
+		},
+		verify("Read vector content as list") {
+			check(read("x")?.readVector() == emptyList<Boolean>())
 		},
 	)
 
