@@ -16,6 +16,13 @@
 
 package opensavvy.ktmongo.bson.types
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.experimental.or
@@ -45,6 +52,7 @@ import kotlin.math.min
  * - [Atlas Vector Search](https://www.mongodb.com/docs/atlas/atlas-vector-search/vector-search-overview/)
  * - [Specification](https://github.com/mongodb/specifications/blob/master/source/bson-binary-vector/bson-binary-vector.md)
  */
+@Serializable(with = Vector.Serializer::class)
 interface Vector {
 
 	/**
@@ -107,6 +115,55 @@ interface Vector {
 			else -> UnknownVector(content)
 		}
 	}
+
+	/**
+	 * Default serializer for [Vector].
+	 *
+	 * When serializing into BSON, this serializer uses the efficient [`Vector`](https://bsonspec.org/spec.html#more-vector) binary subtype.
+	 *
+	 * When serializing to other formats (e.g. JSON…), this serializer uses a base64-encoded string.
+	 *
+	 * Avoid interacting with this type directly.
+	 */
+	@LowLevelApi
+	object Serializer : KSerializer<Vector> {
+		override val descriptor: SerialDescriptor
+			get() = PrimitiveSerialDescriptor("opensavvy.ktmongo.bson.types.Vector", PrimitiveKind.STRING)
+
+		override fun serialize(encoder: Encoder, value: Vector) {
+			serializeVectorPlatformSpecific(encoder, value)
+		}
+
+		override fun deserialize(decoder: Decoder): Vector =
+			deserializeVectorPlatformSpecific(decoder)
+	}
+}
+
+/**
+ * On the JVM, when using KotlinX.Serialization with the official driver, we must hard-code a different behavior.
+ *
+ * All non-JVM platforms implement this function by calling [serializeVectorAsString].
+ * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
+ */
+internal expect fun serializeVectorPlatformSpecific(encoder: Encoder, value: Vector)
+
+/**
+ * On the JVM, when using KotlinX.Serialization with the official driver, we must hard-code a different behavior.
+ *
+ * All non-JVM platforms implement this function by calling [deserializeVectorAsString].
+ * This could be simplified with [KT-20427](https://youtrack.jetbrains.com/projects/KT/issues/KT-20427).
+ */
+internal expect fun deserializeVectorPlatformSpecific(decoder: Decoder): Vector
+
+@OptIn(LowLevelApi::class)
+internal fun serializeVectorAsString(encoder: Encoder, value: Vector) {
+	encoder.encodeString(Base64.encode(value.toBinaryData()))
+}
+
+@OptIn(LowLevelApi::class)
+internal fun deserializeVectorAsString(decoder: Decoder): Vector {
+	val binaryData = Base64.decode(decoder.decodeString())
+	return Vector.fromBinaryData(binaryData)
 }
 
 private class UnknownVector(
@@ -168,6 +225,7 @@ private class UnknownVector(
  * Alternatively, this class implements [List].
  */
 @OptIn(LowLevelApi::class)
+@Serializable(with = ByteVector.Serializer::class)
 class ByteVector internal constructor(
 	/**
 	 * The underlying byte storage. **Do not mutate this array!**
@@ -261,6 +319,19 @@ class ByteVector internal constructor(
 
 	override fun toString(): String =
 		joinToString(separator = ", ", prefix = "ByteVector[", postfix = "]")
+
+	@LowLevelApi
+	object Serializer : KSerializer<ByteVector> {
+		override val descriptor: SerialDescriptor
+			get() = Vector.serializer().descriptor
+
+		override fun serialize(encoder: Encoder, value: ByteVector) {
+			encoder.encodeSerializableValue(Vector.serializer(), value)
+		}
+
+		override fun deserialize(decoder: Decoder): ByteVector =
+			decoder.decodeSerializableValue(Vector.serializer()) as ByteVector
+	}
 }
 
 private fun floatsToBytes(floats: Collection<Float>): ByteArray {
@@ -284,6 +355,7 @@ private fun floatsToBytes(floats: Collection<Float>): ByteArray {
  *
  * Alternatively, this class implements [List].
  */
+@Serializable(with = FloatVector.Serializer::class)
 class FloatVector internal constructor(
 	/**
 	 * The underlying byte storage. **Do not mutate this array!**
@@ -445,6 +517,19 @@ class FloatVector internal constructor(
 
 	override fun toString(): String =
 		joinToString(separator = ", ", prefix = "FloatVector[", postfix = "]")
+
+	@LowLevelApi
+	object Serializer : KSerializer<FloatVector> {
+		override val descriptor: SerialDescriptor
+			get() = Vector.serializer().descriptor
+
+		override fun serialize(encoder: Encoder, value: FloatVector) {
+			encoder.encodeSerializableValue(Vector.serializer(), value)
+		}
+
+		override fun deserialize(decoder: Decoder): FloatVector =
+			decoder.decodeSerializableValue(Vector.serializer()) as FloatVector
+	}
 }
 
 private fun booleansToBytes(booleans: Collection<Boolean>): ByteArray {
@@ -466,6 +551,7 @@ private fun booleansToBytes(booleans: Collection<Boolean>): ByteArray {
  *
  * Alternatively, this class implements [List].
  */
+@Serializable(with = BooleanVector.Serializer::class)
 class BooleanVector internal constructor(
 	/**
 	 * The underlying byte storage. **Do not mutate this array!**
@@ -649,4 +735,17 @@ class BooleanVector internal constructor(
 
 	override fun toString(): String =
 		joinToString(separator = ", ", prefix = "BooleanVector[", postfix = "]")
+
+	@LowLevelApi
+	object Serializer : KSerializer<BooleanVector> {
+		override val descriptor: SerialDescriptor
+			get() = Vector.serializer().descriptor
+
+		override fun serialize(encoder: Encoder, value: BooleanVector) {
+			encoder.encodeSerializableValue(Vector.serializer(), value)
+		}
+
+		override fun deserialize(decoder: Decoder): BooleanVector =
+			decoder.decodeSerializableValue(Vector.serializer()) as BooleanVector
+	}
 }

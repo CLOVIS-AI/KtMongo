@@ -23,11 +23,13 @@ import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.ExperimentalBsonDiffApi
 import opensavvy.ktmongo.bson.diff
 import opensavvy.ktmongo.bson.read
-import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.bson.types.*
+import opensavvy.ktmongo.bson.types.Vector
 import opensavvy.ktmongo.bson.write
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
+import java.util.*
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlin.uuid.ExperimentalUuidApi
@@ -36,8 +38,12 @@ import kotlin.uuid.ExperimentalUuidApi
 data class SerializableWithDataClass(
 	val a: String,
 	val b: org.bson.types.ObjectId,
-	val c: opensavvy.ktmongo.bson.types.ObjectId,
+	val c: ObjectId,
 	val d: Timestamp,
+	val e: Vector,
+	val f: FloatVector,
+	val g: ByteVector,
+	val h: BooleanVector,
 )
 
 // Not a data class: can only be serialized with :bson-kotlinx
@@ -45,8 +51,12 @@ data class SerializableWithDataClass(
 class SerializableWithKxS(
 	val a: String,
 	val b: @Contextual org.bson.types.ObjectId,
-	val c: opensavvy.ktmongo.bson.types.ObjectId,
+	val c: ObjectId,
 	val d: Timestamp,
+	val e: Vector,
+	val f: FloatVector,
+	val g: ByteVector,
+	val h: BooleanVector,
 ) {
 	override fun equals(other: Any?): Boolean {
 		if (this === other) return true
@@ -56,6 +66,10 @@ class SerializableWithKxS(
 		if (b != other.b) return false
 		if (c != other.c) return false
 		if (d != other.d) return false
+		if (e != other.e) return false
+		if (f != other.f) return false
+		if (g != other.g) return false
+		if (h != other.h) return false
 
 		return true
 	}
@@ -65,11 +79,15 @@ class SerializableWithKxS(
 		result = 31 * result + b.hashCode()
 		result = 31 * result + c.hashCode()
 		result = 31 * result + d.hashCode()
+		result = 31 * result + e.hashCode()
+		result = 31 * result + f.hashCode()
+		result = 31 * result + g.hashCode()
+		result = 31 * result + h.hashCode()
 		return result
 	}
 
 	override fun toString(): String {
-		return "SerializableWithKxS(a='$a', b=$b, c=$c, d=$d)"
+		return "SerializableWithKxS(a='$a', b=$b, c=$c, d=$d, e=$e, f=$f, g=$g, h=$h)"
 	}
 
 }
@@ -79,9 +97,13 @@ val SerializationOptionsCompatibility by preparedSuite {
 	val expectedBson by prepared {
 		testContext().buildDocument {
 			writeString("a", "Bob")
-			writeObjectId("b", opensavvy.ktmongo.bson.types.ObjectId("640180000000000000000000"))
-			writeObjectId("c", opensavvy.ktmongo.bson.types.ObjectId("640180000000000000000000"))
+			writeObjectId("b", ObjectId("640180000000000000000000"))
+			writeObjectId("c", ObjectId("640180000000000000000000"))
 			writeTimestamp("d", Timestamp(Instant.parse("2023-03-01T00:00:00Z"), 12u))
+			writeVector("e", Vector.fromBinaryData(Base64.getDecoder().decode("EAA=")))
+			writeVector("f", FloatVector(127f, 7f))
+			writeVector("g", ByteVector(127, 7))
+			writeVector("h", BooleanVector(true, false))
 		}
 	}
 
@@ -89,8 +111,12 @@ val SerializationOptionsCompatibility by preparedSuite {
 		SerializableWithDataClass(
 			a = "Bob",
 			b = org.bson.types.ObjectId("640180000000000000000000"),
-			c = opensavvy.ktmongo.bson.types.ObjectId("640180000000000000000000"),
+			c = ObjectId("640180000000000000000000"),
 			d = Timestamp(Instant.parse("2023-03-01T00:00:00Z"), 12u),
+			e = Vector.fromBinaryData(Base64.getDecoder().decode("EAA=")),
+			f = FloatVector(127f, 7f),
+			g = ByteVector(127, 7),
+			h = BooleanVector(true, false),
 		)
 	}
 
@@ -98,8 +124,12 @@ val SerializationOptionsCompatibility by preparedSuite {
 		SerializableWithKxS(
 			a = "Bob",
 			b = org.bson.types.ObjectId("640180000000000000000000"),
-			c = opensavvy.ktmongo.bson.types.ObjectId("640180000000000000000000"),
+			c = ObjectId("640180000000000000000000"),
 			d = Timestamp(Instant.parse("2023-03-01T00:00:00Z"), 12u),
+			e = Vector.fromBinaryData(Base64.getDecoder().decode("EAA=")),
+			f = FloatVector(127f, 7f),
+			g = ByteVector(127, 7),
+			h = BooleanVector(true, false),
 		)
 	}
 
