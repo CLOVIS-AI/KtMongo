@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KProperty1
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /**
@@ -779,7 +778,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
 	 */
-	@ExperimentalTime
 	@KtMongoDsl
 	fun Field<T, Instant?>.setToCurrentDate()
 
@@ -809,7 +807,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
 	 */
-	@ExperimentalTime
 	@KtMongoDsl
 	fun KProperty1<T, Instant?>.setToCurrentDate() {
 		this.field.setToCurrentDate()
@@ -843,7 +840,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
 	 */
-	@ExperimentalTime
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("setToCurrentTimestamp")
 	@KtMongoDsl
@@ -877,7 +873,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
 	 */
-	@ExperimentalTime
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("setToCurrentTimestamp")
 	@KtMongoDsl

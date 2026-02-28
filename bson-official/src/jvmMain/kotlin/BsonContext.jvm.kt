@@ -34,7 +34,6 @@ import org.bson.types.ObjectId
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.time.ExperimentalTime
 
 /**
  * BSON implementation based on the official Java and Kotlin MongoDB drivers.
@@ -255,7 +254,6 @@ private class JavaBsonWriter(
 		writer.writeObjectId(name, ObjectId(id))
 	}
 
-	@ExperimentalTime
 	override fun writeObjectId(name: String, id: opensavvy.ktmongo.bson.types.ObjectId) {
 		writer.writeObjectId(name, id.toOfficial())
 	}

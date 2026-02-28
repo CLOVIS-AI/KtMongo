@@ -17,14 +17,11 @@ package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-@ExperimentalTime
 internal actual fun serializeInstantPlatformSpecific(encoder: Encoder, value: Instant) {
 	serializeInstantAsString(encoder, value)
 }
 
-@ExperimentalTime
 internal actual fun deserializeInstantPlatformSpecific(decoder: Decoder): Instant =
 	deserializeInstantAsString(decoder)

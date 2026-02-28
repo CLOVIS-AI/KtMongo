@@ -32,7 +32,6 @@ import org.bson.codecs.configuration.CodecRegistry
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.time.ExperimentalTime
 import org.bson.BsonArray as OfficialBsonArray
 import org.bson.BsonDocument as OfficialBsonDocument
 
@@ -231,7 +230,6 @@ private class JavaBsonValueReader(
 		return value.asObjectId().value.toByteArray()
 	}
 
-	@ExperimentalTime
 	@LowLevelApi
 	override fun readObjectId(): ObjectId {
 		return ObjectId(readObjectIdBytes())

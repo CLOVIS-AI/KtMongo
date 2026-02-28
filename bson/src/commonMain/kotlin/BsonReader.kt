@@ -288,7 +288,6 @@ interface BsonValueReader {
 	/**
 	 * Reads an [Instant]. Conversion function on top of [readDateTime].
 	 */
-	@ExperimentalTime
 	@LowLevelApi
 	@Throws(BsonReaderException::class)
 	fun readInstant(): Instant =
@@ -298,7 +297,6 @@ interface BsonValueReader {
 	@Throws(BsonReaderException::class)
 	fun readNull()
 
-	@ExperimentalTime
 	@LowLevelApi
 	@Throws(BsonReaderException::class)
 	fun readObjectId(): ObjectId
