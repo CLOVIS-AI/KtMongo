@@ -30,11 +30,48 @@ import kotlin.experimental.and
 import kotlin.time.Instant
 
 /**
- * A 12-bytes identifier for MongoDB objects.
+ * Small, likely unique, fast to generate, ordered identifier.
  *
- * This class allows accessing all fields of an ObjectId as well as constructing instances from existing data.
- * However, it doesn't provide a way to generate new randomized ObjectId instances (as that depends on the database configuration).
- * To do so, see [opensavvy.ktmongo.bson.BsonContext.newId].
+ * - **Small**: Each `ObjectId` is 12 bytes long, shorter than a UUID's 16 bytes.
+ * - **Likely unique**: Each driver randomly selects a generation range, so conflicts are unlikely.
+ * - **Fast to generate**: Depending on the [generation strategy][ObjectIdGenerator], generating a new `ObjectId` may
+ * be as simple as querying the time and incrementing a counter.
+ * - **Ordered**: All `ObjectId` instances can be sorted by creating date, with a precision of one second.
+ * Two `ObjectId` instances created by the same driver are sorted with even more precision.
+ *
+ * ### Composition
+ *
+ * An `ObjectId` is composed of:
+ * - A 4-byte [timestamp], representing the `ObjectId`'s creation date, with a precision of one second,
+ * - A 5-byte random [processId], unique to each machine and process, to decrease conflicts,
+ * - A 3-byte incrementing [counter], initialized at a random value.
+ *
+ * `ObjectId` instances are generally represented as 24-characters hexadecimal strings:
+ * ```kotlin
+ * ObjectId("699dfad90ca573f85c0eec1c").hex // 699dfad90ca573f85c0eec1c
+ * ```
+ *
+ * ### Generating new ObjectIds
+ *
+ * There are different strategies to generate new `ObjectId` instances; they are encoded by the [ObjectIdGenerator] interface.
+ *
+ * The [ObjectIdGenerator] used by each driver is available directly on each collection:
+ * ```kotlin
+ * users.insert(
+ *     User(
+ *         _id = users.newId(), // Generate an ObjectId using the configuration specific to that collection
+ *         name = "Bob",
+ *     )
+ * )
+ * ```
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-objectid)
+ *
+ * ### Thread safety
+ *
+ * Instances of this class are immutable and thread-safe.
  */
 @Serializable(with = ObjectId.Serializer::class)
 class ObjectId : Comparable<ObjectId> {
@@ -43,7 +80,13 @@ class ObjectId : Comparable<ObjectId> {
 	 * The ObjectId creation timestamp, with a resolution of one second.
 	 *
 	 * This timestamp can represent time from the UNIX epoch (Jan 1 1970) and is stored as 32 unsigned bits
-	 * (approximately Feb 2 2016, see [ObjectId.MAX]'s timestamp for an exact value).
+	 * (approximately Feb 2 2106, see [ObjectId.MAX]'s timestamp for an exact value).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * ObjectId("699dfad90ca573f85c0eec1c").timestamp // 2026-02-24T19:24:09Z
+	 * ```
 	 */
 	val timestamp: Instant
 
@@ -53,6 +96,12 @@ class ObjectId : Comparable<ObjectId> {
 	 * This random value is unique to the machine and process.
 	 * If the process restarts of the primary node of the process changes, this value is re-regenerated.
 	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * ObjectId("699dfad90ca573f85c0eec1c").processId // 54315448412
+	 * ```
+	 *
 	 * @see ObjectId.PROCESS_ID_BOUND
 	 */
 	val processId: Long
@@ -61,6 +110,12 @@ class ObjectId : Comparable<ObjectId> {
 	 * A 3-byte incrementing counter per client-side process, initialized to a random value. Always positive.
 	 *
 	 * The counter resets when a process restarts.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * ObjectId("699dfad90ca573f85c0eec1c").counter // 977948
+	 * ```
 	 *
 	 * @see ObjectId.COUNTER_BOUND
 	 */
