@@ -218,6 +218,12 @@ sealed class Geo {
 		 */
 		constructor(vararg points: Point) : this(points.asList())
 
+		/**
+		 * Returns `true` if this line string is closed, i.e. the first and last points are the same.
+		 */
+		val isClosed: Boolean
+			get() = points.first() == points.last()
+
 		override fun toString() = "LineString(${points.joinToString(", ")})"
 
 		@Serializable

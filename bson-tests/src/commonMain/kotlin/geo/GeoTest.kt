@@ -84,6 +84,9 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 			check(decode<Geo.LineString>().points[0] == Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)))
 			check(decode<Geo.LineString>().points[1] == Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)))
 		},
+		verify("The string is not closed") {
+			check(!decode<Geo.LineString>().isClosed)
+		},
 	)
 
 	testBson(
@@ -93,7 +96,8 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 			Geo.LineString(
 				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
 				Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)),
-				Geo.Point(Geo.Longitude(41.5), Geo.Latitude(6.0))
+				Geo.Point(Geo.Longitude(41.5), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
 			)
 		),
 		document {
@@ -111,13 +115,21 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 					writeDouble(41.5)
 					writeDouble(6.0)
 				}
+				writeArray {
+					writeDouble(40.0)
+					writeDouble(5.0)
+				}
 			}
 		},
-		json("""{"type": "LineString", "coordinates": [[40.0, 5.0], [41.0, 6.0], [41.5, 6.0]]}"""),
+		json("""{"type": "LineString", "coordinates": [[40.0, 5.0], [41.0, 6.0], [41.5, 6.0], [40.0, 5.0]]}"""),
 		verify("The coordinates are correct") {
 			check(decode<Geo.LineString>().points[0] == Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)))
 			check(decode<Geo.LineString>().points[1] == Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)))
 			check(decode<Geo.LineString>().points[2] == Geo.Point(Geo.Longitude(41.5), Geo.Latitude(6.0)))
+			check(decode<Geo.LineString>().points[3] == Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)))
+		},
+		verify("The string is closed") {
+			check(decode<Geo.LineString>().isClosed)
 		},
 	)
 
