@@ -33,6 +33,7 @@ import opensavvy.prepared.suite.SuiteDsl
 
 fun SuiteDsl.validateGeo(factory: Prepared<BsonFactory>) = suite("Geo") {
 	geoPoint(factory)
+	geoLineString(factory)
 }
 
 private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
@@ -54,6 +55,69 @@ private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
 		},
 		verify("The latitude is correct") {
 			check(decode<Geo.Point>().y == Geo.Latitude(3.5))
+		},
+	)
+
+}
+
+private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("LineString") {
+
+	testBson(
+		factory,
+		"Serialize simple linestring",
+		serialize(Geo.LineString(Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)), Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)))),
+		document {
+			writeString("type", "LineString")
+			writeArray("coordinates") {
+				writeArray {
+					writeDouble(40.0)
+					writeDouble(5.0)
+				}
+				writeArray {
+					writeDouble(41.0)
+					writeDouble(6.0)
+				}
+			}
+		},
+		json("""{"type": "LineString", "coordinates": [[40.0, 5.0], [41.0, 6.0]]}"""),
+		verify("The coordinates are correct") {
+			check(decode<Geo.LineString>().points[0] == Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)))
+			check(decode<Geo.LineString>().points[1] == Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)))
+		},
+	)
+
+	testBson(
+		factory,
+		"Serialize simple linestring with three points",
+		serialize(
+			Geo.LineString(
+				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
+				Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(41.5), Geo.Latitude(6.0))
+			)
+		),
+		document {
+			writeString("type", "LineString")
+			writeArray("coordinates") {
+				writeArray {
+					writeDouble(40.0)
+					writeDouble(5.0)
+				}
+				writeArray {
+					writeDouble(41.0)
+					writeDouble(6.0)
+				}
+				writeArray {
+					writeDouble(41.5)
+					writeDouble(6.0)
+				}
+			}
+		},
+		json("""{"type": "LineString", "coordinates": [[40.0, 5.0], [41.0, 6.0], [41.5, 6.0]]}"""),
+		verify("The coordinates are correct") {
+			check(decode<Geo.LineString>().points[0] == Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)))
+			check(decode<Geo.LineString>().points[1] == Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)))
+			check(decode<Geo.LineString>().points[2] == Geo.Point(Geo.Longitude(41.5), Geo.Latitude(6.0)))
 		},
 	)
 

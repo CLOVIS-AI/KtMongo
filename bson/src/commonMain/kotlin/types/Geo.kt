@@ -167,4 +167,88 @@ sealed class Geo {
 			}
 		}
 	}
+
+	/**
+	 * A GeoJSON line string.
+	 *
+	 * The simplest line string is just a line: joining two points together.
+	 *
+	 * ```kotlin
+	 * Geo.LineString(
+	 *     Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+	 *     Geo.Point(Geo.Longitude(5.0), Geo.Latitude(0.2)),
+	 * )
+	 * ```
+	 *
+	 * A more complex line string represents a path between multiple points, drawing a straight line
+	 * between each two points.
+	 *
+	 * ```kotlin
+	 * Geo.LineString(
+	 *     Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+	 *     Geo.Point(Geo.Longitude(5.0), Geo.Latitude(0.2)),
+	 *     Geo.Point(Geo.Longitude(6.0), Geo.Latitude(0.3)),
+	 *     Geo.Point(Geo.Longitude(6.1), Geo.Latitude(0.9)),
+	 * )
+	 * ```
+	 *
+	 * A line string can represent the outline of a polygon with any number of points.
+	 *
+	 * ### External resources
+	 *
+	 * - [MongoDB documentation](https://www.mongodb.com/docs/manual/reference/geojson/#linestring)
+	 * - [GeoJSON RFC](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.4)
+	 */
+	@Serializable(with = LineString.Serializer::class)
+	@ExperimentalGeoBsonApi
+	data class LineString(
+		/**
+		 * The points that make up the line string.
+		 *
+		 * At least 2 points must be present.
+		 */
+		val points: List<Point>,
+	) : Geo() {
+		init {
+			require(points.size >= 2) { "LineString must have at least 2 points, got ${points.size}" }
+		}
+
+		/**
+		 * Constructs a [LineString] instance from multiple [Point] instances.
+		 */
+		constructor(vararg points: Point) : this(points.asList())
+
+		override fun toString() = "LineString(${points.joinToString(", ")})"
+
+		@Serializable
+		private data class Surrogate(
+			val type: String,
+			val coordinates: List<List<Double>>,
+		)
+
+		@LowLevelApi
+		object Serializer : KSerializer<LineString> {
+			private val surrogateSerializer = Surrogate.serializer()
+			override val descriptor: SerialDescriptor = surrogateSerializer.descriptor
+
+			override fun serialize(encoder: Encoder, value: LineString) {
+				val coordinates = value.points.map { listOf(it.x.degrees, it.y.degrees) }
+				surrogateSerializer.serialize(encoder, Surrogate("LineString", coordinates))
+			}
+
+			override fun deserialize(decoder: Decoder): LineString {
+				val surrogate = surrogateSerializer.deserialize(decoder)
+				require(surrogate.coordinates.size >= 2) {
+					"LineString must have at least 2 coordinates, got ${surrogate.coordinates.size}"
+				}
+				val points = surrogate.coordinates.map { coords ->
+					require(coords.size == 2) {
+						"Each LineString coordinate must have exactly 2 elements, got ${coords.size}"
+					}
+					Point(Longitude(coords[0]), Latitude(coords[1]))
+				}
+				return LineString(points)
+			}
+		}
+	}
 }
