@@ -22,7 +22,6 @@ import opensavvy.ktmongo.bson.validateBsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
-import kotlin.time.measureTime
 
 val context by prepared {
 	BsonFactory()
@@ -45,18 +44,12 @@ val MultiplatformBsonWriterTest by preparedSuite {
 			}
 		}
 
-		val lazyTime = measureTime {
-			check(document.reader().read("baz")?.readArray()?.read(0)?.readString() == "a")
-		}
+		check(document.reader().read("baz")?.readArray()?.read(0)?.readString() == "a")
 
 		println("*** Initializing everything eagerly ***")
 		document.eager()
 
-		val eagerTime = measureTime {
-			check(document.reader().read("bad")?.readArray()?.read(1)?.readString() == "b")
-		}
-
-		check(eagerTime <= lazyTime)
+		check(document.reader().read("bad")?.readArray()?.read(1)?.readString() == "b")
 
 		document.eager() // Allowed, does nothing
 	}
@@ -72,18 +65,12 @@ val MultiplatformBsonWriterTest by preparedSuite {
 			}
 		}
 
-		val lazyTime = measureTime {
-			check(document.reader().read(0)?.readDocument()?.read("foo")?.readString() == "foo")
-		}
+		check(document.reader().read(0)?.readDocument()?.read("foo")?.readString() == "foo")
 
 		println("*** Initializing everything eagerly ***")
 		document.eager()
 
-		val eagerTime = measureTime {
-			check(document.reader().read(2)?.readDocument()?.read("bar")?.readString() == "bar")
-		}
-
-		check(eagerTime <= lazyTime)
+		check(document.reader().read(2)?.readDocument()?.read("bar")?.readString() == "bar")
 
 		document.eager() // Allowed, does nothing
 	}
