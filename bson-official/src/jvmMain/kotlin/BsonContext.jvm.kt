@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.official.types.*
@@ -59,11 +60,36 @@ interface JvmBsonFactory : BsonFactory {
 	@LowLevelApi
 	override fun readDocument(bytes: ByteArray): Bson
 
+	/**
+	 * Instantiates a new [Bson] instance by wrapping the official driver's [BsonDocument].
+	 *
+	 * The opposite operation is [Bson.raw].
+	 */
+	@LowLevelApi
+	fun readDocument(value: BsonDocument): Bson =
+		Bson(value, this)
+
 	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): opensavvy.ktmongo.bson.official.BsonArray
 
 	@LowLevelApi
 	override fun readArray(bytes: ByteArray): opensavvy.ktmongo.bson.official.BsonArray
+
+	/**
+	 * Instantiates a new [BsonArray][opensavvy.ktmongo.bson.official.BsonArray] instance by wrapping the official driver's [BsonArray].
+	 *
+	 * The opposite operation is [opensavvy.ktmongo.bson.official.BsonArray.raw].
+	 */
+	@LowLevelApi
+	fun readArray(value: BsonArray): opensavvy.ktmongo.bson.official.BsonArray =
+		BsonArray(value, this)
+
+	/**
+	 * Instantiates a new [BsonValueReader] instance by wrapping the official driver's [BsonValue].
+	 */
+	@LowLevelApi
+	fun readValue(value: BsonValue): BsonValueReader =
+		JavaBsonValueReader(value, this)
 
 }
 

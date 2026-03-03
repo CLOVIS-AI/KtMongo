@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 
 package opensavvy.ktmongo.coroutines.operations
 
+import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.coroutines.MongoCollection
 import opensavvy.ktmongo.coroutines.filter
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.BulkWrite
 import opensavvy.ktmongo.dsl.command.BulkWriteOptions
 import opensavvy.ktmongo.dsl.command.ReplaceOptions
@@ -73,11 +75,12 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * If no filter is specified, all documents are updated.
 	 * @see updateOne
 	 */
+	@IgnorableReturnValue
 	suspend fun updateMany(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateQuery<Document>.() -> Unit,
-	)
+	): UpdateResult
 
 	/**
 	 * Updates a single document that matches [filter] according to [update].
@@ -124,11 +127,12 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @see updateMany Update more than one document.
 	 * @see findOneAndUpdate Also returns the result of the update.
 	 */
+	@IgnorableReturnValue
 	suspend fun updateOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpdateQuery<Document>.() -> Unit,
-	)
+	): UpdateResult
 
 	/**
 	 * Updates a single document that matches [filter] according to [update].
@@ -178,11 +182,12 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 *
 	 * @see updateOne
 	 */
+	@IgnorableReturnValue
 	suspend fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit = {},
 		filter: FilterQuery<Document>.() -> Unit = {},
 		update: UpsertQuery<Document>.() -> Unit,
-	)
+	): UpsertResult
 
 	/**
 	 * Replaces a document that matches [filter] by [document].
@@ -422,5 +427,58 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 		operations: BulkWrite<Document>.() -> Unit,
 	)
 
+	/**
+	 * The return value of [updateMany] and [updateOne].
+	 */
+	interface UpdateResult {
 
+		/**
+		 * `true` if the update was acknowledged.
+		 *
+		 * To control whether the update is acknowledged, see [UpdateOptions.writeConcern].
+		 *
+		 * If the update was not acknowledged, this property returns `false` and all properties throw [UnsupportedOperationException].
+		 */
+		val acknowledged: Boolean
+
+		/**
+		 * The number of matched documents.
+		 *
+		 * @throws UnsupportedOperationException If the update was not [acknowledged].
+		 */
+		val matchedCount: Long
+
+		/**
+		 * The number of modified documents.
+		 *
+		 * If this update created new documents (e.g., with [upsertOne]), they are not counted
+		 * by this field: they did not already exist, so they were not modified.
+		 *
+		 * @throws UnsupportedOperationException If the update was not [acknowledged].
+		 */
+		val modifiedCount: Long
+	}
+
+	/**
+	 * The return value of [upsertOne].
+	 */
+	interface UpsertResult : UpdateResult {
+
+		/**
+		 * The `_id` of the upserted document, if any.
+		 *
+		 * If this request modified an existing document, contains `null`.
+		 *
+		 * @throws UnsupportedOperationException If the update was not [acknowledged].
+		 */
+		@OptIn(LowLevelApi::class)
+		val upsertedId: BsonValueReader?
+
+		/**
+		 * The number of upserted documents.
+		 *
+		 * @throws UnsupportedOperationException If the update was not [acknowledged].
+		 */
+		val upsertedCount: Int
+	}
 }

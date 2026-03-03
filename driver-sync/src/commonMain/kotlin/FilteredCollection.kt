@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
+import opensavvy.ktmongo.sync.operations.UpdateOperations.UpdateResult
+import opensavvy.ktmongo.sync.operations.UpdateOperations.UpsertResult
 
 private class FilteredCollection<Document : Any>(
 	private val upstream: MongoCollection<Document>,
@@ -67,8 +69,8 @@ private class FilteredCollection<Document : Any>(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateQuery<Document>.() -> Unit,
-	) {
-		upstream.updateMany(
+	): UpdateResult {
+		return upstream.updateMany(
 			options = options,
 			filter = {
 				globalFilter()
@@ -82,8 +84,8 @@ private class FilteredCollection<Document : Any>(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
-	) {
-		upstream.updateManyWithPipeline(
+	): UpdateResult {
+		return upstream.updateManyWithPipeline(
 			options = options,
 			filter = {
 				globalFilter()
@@ -97,8 +99,8 @@ private class FilteredCollection<Document : Any>(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateQuery<Document>.() -> Unit,
-	) {
-		upstream.updateOne(
+	): UpdateResult {
+		return upstream.updateOne(
 			options = options,
 			filter = {
 				globalFilter()
@@ -112,8 +114,8 @@ private class FilteredCollection<Document : Any>(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
-	) {
-		upstream.updateOneWithPipeline(
+	): UpdateResult {
+		return upstream.updateOneWithPipeline(
 			options = options,
 			filter = {
 				globalFilter()
@@ -127,8 +129,8 @@ private class FilteredCollection<Document : Any>(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpsertQuery<Document>.() -> Unit,
-	) {
-		upstream.upsertOne(
+	): UpsertResult {
+		return upstream.upsertOne(
 			options = options,
 			filter = {
 				globalFilter()
@@ -172,8 +174,8 @@ private class FilteredCollection<Document : Any>(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
-	) {
-		upstream.upsertOneWithPipeline(
+	): UpsertResult {
+		return upstream.upsertOneWithPipeline(
 			options = options,
 			filter = {
 				globalFilter()

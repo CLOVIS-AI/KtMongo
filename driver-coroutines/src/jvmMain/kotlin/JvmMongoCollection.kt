@@ -21,9 +21,12 @@ import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
+import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.official.JvmBsonFactory
 import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.coroutines.operations.UpdateOperations.UpdateResult
+import opensavvy.ktmongo.coroutines.operations.UpdateOperations.UpsertResult
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
@@ -131,14 +134,15 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateQuery<Document>.() -> Unit,
-	) {
+	): UpdateResult {
 		val model = UpdateMany<Document>(context)
 
 		model.options.options()
 		model.filter.filter()
 		model.update.update()
 
-		inner.withWriteConcern(model.options).updateMany(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
+		val result = inner.withWriteConcern(model.options).updateMany(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
+		return JvmUpdateResult(result, context)
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -146,14 +150,15 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateQuery<Document>.() -> Unit,
-	) {
+	): UpdateResult {
 		val model = UpdateOne<Document>(context)
 
 		model.options.options()
 		model.filter.filter()
 		model.update.update()
 
-		inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
+		val result = inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
+		return JvmUpdateResult(result, context)
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -189,14 +194,15 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpsertQuery<Document>.() -> Unit,
-	) {
+	): UpsertResult {
 		val model = UpsertOne<Document>(context)
 
 		model.options.options()
 		model.filter.filter()
 		model.update.update()
 
-		inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions().upsert(true))
+		val result = inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions().upsert(true))
+		return JvmUpdateResult(result, context)
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -239,14 +245,15 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
-	) {
+	): UpdateResult {
 		val model = UpdateManyWithPipeline<Document>(context)
 
 		model.options.options()
 		model.filter.filter()
 		model.update.update()
 
-		inner.withWriteConcern(model.options).updateMany(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
+		val result = inner.withWriteConcern(model.options).updateMany(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
+		return JvmUpdateResult(result, context)
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -254,14 +261,15 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
-	) {
+	): UpdateResult {
 		val model = UpdateOneWithPipeline<Document>(context)
 
 		model.options.options()
 		model.filter.filter()
 		model.update.update()
 
-		inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
+		val result = inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
+		return JvmUpdateResult(result, context)
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -269,14 +277,15 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		options: opensavvy.ktmongo.dsl.command.UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
-	) {
+	): UpsertResult {
 		val model = UpsertOneWithPipeline<Document>(context)
 
 		model.options.options()
 		model.filter.filter()
 		model.update.update()
 
-		inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions().upsert(true))
+		val result = inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions().upsert(true))
+		return JvmUpdateResult(result, context)
 	}
 
 	// endregion
@@ -402,4 +411,43 @@ private fun <Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection
 		?: return this
 
 	return this.withWriteConcern(concern.toJava())
+}
+
+private class JvmUpdateResult(
+	private val inner: com.mongodb.client.result.UpdateResult,
+	private val context: JvmBsonContext,
+) : UpsertResult { // The official driver doesn't differentiate between UpdateResult & UpsertResult
+	override val acknowledged: Boolean
+		get() = inner.wasAcknowledged()
+	override val matchedCount: Long
+		get() = inner.matchedCount
+	override val modifiedCount: Long
+		get() = inner.modifiedCount
+
+	@OptIn(LowLevelApi::class)
+	override val upsertedId: BsonValueReader?
+		get() = inner.upsertedId?.let { context.readValue(it) }
+	override val upsertedCount: Int
+		get() = if (inner.upsertedId == null) 0 else 1
+
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (other !is JvmUpdateResult) return false
+
+		if (inner != other.inner) return false
+		if (context != other.context) return false
+
+		return true
+	}
+
+	override fun hashCode(): Int {
+		var result = inner.hashCode()
+		result = 31 * result + context.hashCode()
+		return result
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String =
+		if (acknowledged) "UpdateResult(acknowledged=true, matchedCount=$matchedCount, modifiedCount=$modifiedCount, upsertedCount=$upsertedCount, upsertedId=$upsertedId)"
+		else "UpdateResult(acknowledged=false)"
 }

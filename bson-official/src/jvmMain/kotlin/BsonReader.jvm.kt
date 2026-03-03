@@ -165,7 +165,7 @@ internal class JavaBsonArrayReader(
 }
 
 @LowLevelApi
-private class JavaBsonValueReader(
+internal class JavaBsonValueReader(
 	private val value: BsonValue,
 	private val context: JvmBsonFactory,
 ) : BsonValueReader {
