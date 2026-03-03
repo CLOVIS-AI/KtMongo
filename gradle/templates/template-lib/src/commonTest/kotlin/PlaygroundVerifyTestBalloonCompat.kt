@@ -2,15 +2,15 @@ package opensavvy.playground.core
 
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
-val HelloWorldTestBalloonTest by preparedSuite {
+val PlaygroundVerifyTestBalloonCompat by preparedSuite {
 
-	test("Hello world!") {
+	test("Simplest possible test") {
 		@Suppress("SimplifyBooleanWithConstants") // The compiler knows this test will always succeed
 		check("Hello World!" == message)
 	}
 
-	suite("Nested suite with Unicode \u2606") {
-		test("Yay • \u2606\u2606\u2606\u2606 Unicode!") {
+	suite("Verify that unicode is supported in suite names: \u2606") {
+		test("Verify that unicode is supported in test names: \u2606\u2606\u2606\u2606") {
 			// This test verifies that our CI is able to handle Unicode characters in test names.
 			// See https://gitlab.com/gitlab-org/gitlab/-/issues/580885
 		}
