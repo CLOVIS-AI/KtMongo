@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.sync
 
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.*
@@ -259,6 +260,9 @@ private class FilteredCollection<Document : Any>(
 
 		return "$upstream.filter $filter"
 	}
+
+	override fun newId(): ObjectId =
+		upstream.newId()
 }
 
 /**

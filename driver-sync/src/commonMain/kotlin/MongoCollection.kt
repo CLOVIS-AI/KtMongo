@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.sync
 
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.sync.operations.*
 
 /**
@@ -44,6 +45,7 @@ import opensavvy.ktmongo.sync.operations.*
  * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-documents)
  */
 interface MongoCollection<Document : Any> :
+	ObjectIdGenerator,
 	FindOperations<Document>,
 	CountOperations<Document>,
 	UpdateOperations<Document>,
