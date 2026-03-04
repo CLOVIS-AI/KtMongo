@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: Value<From, Number>) {
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: Value<From, Number?>) {
 		accept(ArithmeticValueAccumulator("\$sum", value, this.path, context))
 	}
 
@@ -99,12 +99,12 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, T>.sum(value: Value<From, Number>) {
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, T>.sum(value: Value<From, Number?>) {
 		this.field.sum(value)
 	}
 
 	// endregion
-	// region $sum
+	// region $avg
 
 	/**
 	 * Calculates and returns the collective average of numeric values.
@@ -137,7 +137,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: Value<From, Number>) {
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: Value<From, Number?>) {
 		accept(ArithmeticValueAccumulator("\$avg", value, this.path, context))
 	}
 
@@ -171,7 +171,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, T>.average(value: Value<From, Number>) {
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, T>.average(value: Value<From, Number?>) {
 		this.field.average(value)
 	}
 
