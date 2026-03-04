@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
 
 /**
  * Implementation of [FilterQueryPredicate].
@@ -40,6 +41,11 @@ private class FilterQueryPredicateImpl<T>(
 
 	@LowLevelApi
 	private sealed class PredicateBsonNodeNode(context: BsonContext) : AbstractBsonNode(context)
+
+	@LowLevelApi
+	override fun simplify(children: List<BsonNode>): AbstractBsonNode? =
+		if (children.isEmpty()) null
+		else this
 
 	// endregion
 	// region $eq
