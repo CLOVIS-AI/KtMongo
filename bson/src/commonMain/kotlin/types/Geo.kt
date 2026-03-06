@@ -466,4 +466,78 @@ sealed class Geo {
 		}
 	}
 
+	/**
+	 * A GeoJSON MultiLineString.
+	 *
+	 * A MultiLineString is a list of multiple [LineString] instances that are grouped together.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * Geo.MultiLineString(
+	 *     Geo.LineString(
+	 *         Geo.Point(Geo.Longitude(-73.96943), Geo.Latitude(40.78519)),
+	 *         Geo.Point(Geo.Longitude(-73.96082), Geo.Latitude(40.78095)),
+	 *     ),
+	 *     Geo.LineString(
+	 *         Geo.Point(Geo.Longitude(-73.96415), Geo.Latitude(40.79229)),
+	 *         Geo.Point(Geo.Longitude(-73.95544), Geo.Latitude(40.78854)),
+	 *     ),
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [MongoDB documentation](https://www.mongodb.com/docs/manual/reference/geojson/#multilinestring)
+	 * - [GeoJSON RFC](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.5)
+	 */
+	@Serializable(with = MultiLineString.Serializer::class)
+	@ExperimentalGeoBsonApi
+	data class MultiLineString(
+		/**
+		 * The line strings that make up this [MultiLineString].
+		 */
+		val lineStrings: List<LineString>,
+	) : Geo() {
+
+		/**
+		 * Constructs a [MultiLineString] instance from multiple [LineString] instances.
+		 */
+		constructor(vararg lineStrings: LineString) : this(lineStrings.asList())
+
+		override fun toString() = "MultiLineString(${lineStrings.joinToString(", ")})"
+
+		@Serializable
+		private data class Surrogate(
+			val type: String,
+			val coordinates: List<List<List<Double>>>,
+		)
+
+		@LowLevelApi
+		object Serializer : KSerializer<MultiLineString> {
+			private val surrogateSerializer = Surrogate.serializer()
+			override val descriptor: SerialDescriptor = surrogateSerializer.descriptor
+
+			override fun serialize(encoder: Encoder, value: MultiLineString) {
+				val coordinates = value.lineStrings.map { lineString ->
+					lineString.points.map { listOf(it.x.degrees, it.y.degrees) }
+				}
+				surrogateSerializer.serialize(encoder, Surrogate("MultiLineString", coordinates))
+			}
+
+			override fun deserialize(decoder: Decoder): MultiLineString {
+				val surrogate = surrogateSerializer.deserialize(decoder)
+				val lineStrings = surrogate.coordinates.map { line ->
+					require(line.size >= 2) { "Each MultiLineString line must have at least 2 coordinates, got ${line.size}" }
+					val points = line.map { coords ->
+						require(coords.size == 2) { "Each MultiLineString coordinate must have exactly 2 elements, got ${coords.size}" }
+						Point(Longitude(coords[0]), Latitude(coords[1]))
+					}
+					LineString(points)
+				}
+				return MultiLineString(lineStrings)
+			}
+		}
+	}
+
 }

@@ -36,6 +36,7 @@ fun SuiteDsl.validateGeo(factory: Prepared<BsonFactory>) = suite("Geo") {
 	geoLineString(factory)
 	geoPolygon(factory)
 	geoMultiPoint(factory)
+	geoMultiLineString(factory)
 }
 
 private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
@@ -331,6 +332,94 @@ private fun SuiteDsl.geoMultiPoint(factory: Prepared<BsonFactory>) = suite("Mult
 			check(multiPoint.points[1] == Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)))
 			check(multiPoint.points[2] == Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)))
 			check(multiPoint.points[3] == Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)))
+		},
+	)
+}
+
+private fun SuiteDsl.geoMultiLineString(factory: Prepared<BsonFactory>) = suite("MultiLineString") {
+
+	testBson(
+		factory,
+		"Serialize multilinestring",
+		serialize(
+			Geo.MultiLineString(
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.96943), Geo.Latitude(40.78519)),
+					Geo.Point(Geo.Longitude(-73.96082), Geo.Latitude(40.78095)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.96415), Geo.Latitude(40.79229)),
+					Geo.Point(Geo.Longitude(-73.95544), Geo.Latitude(40.78854)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.97162), Geo.Latitude(40.78205)),
+					Geo.Point(Geo.Longitude(-73.96374), Geo.Latitude(40.77715)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.97880), Geo.Latitude(40.77247)),
+					Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)),
+				),
+			)
+		),
+		document {
+			writeString("type", "MultiLineString")
+			writeArray("coordinates") {
+				writeArray {
+					writeArray {
+						writeDouble(-73.96943)
+						writeDouble(40.78519)
+					}
+					writeArray {
+						writeDouble(-73.96082)
+						writeDouble(40.78095)
+					}
+				}
+				writeArray {
+					writeArray {
+						writeDouble(-73.96415)
+						writeDouble(40.79229)
+					}
+					writeArray {
+						writeDouble(-73.95544)
+						writeDouble(40.78854)
+					}
+				}
+				writeArray {
+					writeArray {
+						writeDouble(-73.97162)
+						writeDouble(40.78205)
+					}
+					writeArray {
+						writeDouble(-73.96374)
+						writeDouble(40.77715)
+					}
+				}
+				writeArray {
+					writeArray {
+						writeDouble(-73.97880)
+						writeDouble(40.77247)
+					}
+					writeArray {
+						writeDouble(-73.97036)
+						writeDouble(40.76811)
+					}
+				}
+			}
+		},
+		json("""{"type": "MultiLineString", "coordinates": [[[-73.96943, 40.78519], [-73.96082, 40.78095]], [[-73.96415, 40.79229], [-73.95544, 40.78854]], [[-73.97162, 40.78205], [-73.96374, 40.77715]], [[-73.9788, 40.77247], [-73.97036, 40.76811]]]}"""),
+		verify("The number of line strings is correct") {
+			check(decode<Geo.MultiLineString>().lineStrings.size == 4)
+		},
+		verify("The coordinates are correct") {
+			val multiLineString = decode<Geo.MultiLineString>()
+			check(multiLineString.lineStrings[0].points[0] == Geo.Point(Geo.Longitude(-73.96943), Geo.Latitude(40.78519)))
+			check(multiLineString.lineStrings[0].points[1] == Geo.Point(Geo.Longitude(-73.96082), Geo.Latitude(40.78095)))
+			check(multiLineString.lineStrings[1].points[0] == Geo.Point(Geo.Longitude(-73.96415), Geo.Latitude(40.79229)))
+			check(multiLineString.lineStrings[1].points[1] == Geo.Point(Geo.Longitude(-73.95544), Geo.Latitude(40.78854)))
+			check(multiLineString.lineStrings[2].points[0] == Geo.Point(Geo.Longitude(-73.97162), Geo.Latitude(40.78205)))
+			check(multiLineString.lineStrings[2].points[1] == Geo.Point(Geo.Longitude(-73.96374), Geo.Latitude(40.77715)))
+			check(multiLineString.lineStrings[3].points[0] == Geo.Point(Geo.Longitude(-73.97880), Geo.Latitude(40.77247)))
+			check(multiLineString.lineStrings[3].points[1] == Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)))
 		},
 	)
 }
