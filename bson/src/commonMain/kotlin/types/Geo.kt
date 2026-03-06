@@ -257,4 +257,145 @@ sealed class Geo {
 			}
 		}
 	}
+
+	/**
+	 * A GeoJSON polygon.
+	 *
+	 * A polygon is a shape that may have holes.
+	 *
+	 * A simple polygon has a single ring (e.g., a triangle, a square).
+	 * More complex polygons can have multiple rings that represent holes (e.g., a doughnut shape).
+	 *
+	 * To learn more about the different kinds of polygons, see the constructors.
+	 *
+	 * ### External resources
+	 *
+	 * - [MongoDB documentation](https://www.mongodb.com/docs/manual/reference/geojson/#polygon)
+	 * - [GeoJSON RFC](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6)
+	 */
+	@Serializable(with = Polygon.Serializer::class)
+	@ExperimentalGeoBsonApi
+	data class Polygon(
+		/**
+		 * The various rings of this polygon.
+		 *
+		 * A polygon must have at least one ring.
+		 *
+		 * Each ring must have at least 4 points, be [closed][LineString.isClosed], and must not self-intersect.
+		 * For the complete rules on rings, see the constructor that takes a vararg of [LineString].
+		 */
+		val rings: List<LineString>,
+	) : Geo() {
+
+		/**
+		 * Constructs a [Polygon] instance from multiple [LineString] instances.
+		 *
+		 * Each [LineString] instance represents a ring.
+		 * - Each ring must have at least 4 points, be [closed][LineString.isClosed], and must not self-intersect.
+		 * - The first described ring must be the exterior ring.
+		 * - The exterior ring cannot self-intersect.
+		 * - Any interior ring must be entirely contained by the outer ring.
+		 * - Interior rings cannot intersect or overlap each other. Interior rings cannot share an edge.
+		 *
+		 * Interior rings represent holes in the external ring.
+		 *
+		 * ### Example
+		 *
+		 * A square within another square. Note that the exterior square is described first.
+		 * ```kotlin
+		 * Geo.Polygon(
+		 *     Geo.LineString(
+		 *         Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+		 *         Geo.Point(Geo.Longitude(10.0), Geo.Latitude(0.0)),
+		 *         Geo.Point(Geo.Longitude(10.0), Geo.Latitude(10.0)),
+		 *         Geo.Point(Geo.Longitude(0.0), Geo.Latitude(10.0)),
+		 *         Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+		 *     ),
+		 *     Geo.LineString(
+		 *         Geo.Point(Geo.Longitude(2.0), Geo.Latitude(2.0)),
+		 *         Geo.Point(Geo.Longitude(8.0), Geo.Latitude(2.0)),
+		 *         Geo.Point(Geo.Longitude(8.0), Geo.Latitude(8.0)),
+		 *         Geo.Point(Geo.Longitude(2.0), Geo.Latitude(8.0)),
+		 *         Geo.Point(Geo.Longitude(2.0), Geo.Latitude(2.0)),
+		 *     ),
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [MongoDB documentation](https://www.mongodb.com/docs/manual/reference/geojson/#polygons-with-multiple-rings)
+		 * - [GeoJSON RFC](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6)
+		 */
+		constructor(vararg rings: LineString) : this(rings.asList())
+
+		/**
+		 * Constructs a single-ring [Geo.Polygon] instance from multiple [Point] instances.
+		 *
+		 * The polygon must have at least 4 points, be [closed][LineString.isClosed], and must not self-intersect.
+		 *
+		 * ### Example
+		 *
+		 * A square:
+		 * ```kotlin
+		 * Geo.Polygon(
+		 *     Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+		 *     Geo.Point(Geo.Longitude(1.0), Geo.Latitude(0.0)),
+		 *     Geo.Point(Geo.Longitude(1.0), Geo.Latitude(1.0)),
+		 *     Geo.Point(Geo.Longitude(0.0), Geo.Latitude(1.0)),
+		 *     Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [MongoDB documentation](https://www.mongodb.com/docs/manual/reference/geojson/#polygons-with-a-single-ring)
+		 * - [GeoJSON RFC](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6)
+		 */
+		constructor(vararg points: Point) : this(listOf(LineString(points.asList())))
+
+		init {
+			require(rings.isNotEmpty()) { "A polygon must have at least one ring" }
+			for (ring in rings) {
+				require(ring.isClosed) { "All rings in a polygon must be closed (start and end at the same point), found: $ring" }
+				require(ring.points.size >= 4) { "All rings in a polygon must have at least 4 points, got ${ring.points.size}: $ring" }
+			}
+		}
+
+		override fun toString() = "Polygon(${rings.joinToString(", ")})"
+
+		@Serializable
+		private data class Surrogate(
+			val type: String,
+			val coordinates: List<List<List<Double>>>,
+		)
+
+		@LowLevelApi
+		object Serializer : KSerializer<Polygon> {
+			private val surrogateSerializer = Surrogate.serializer()
+			override val descriptor: SerialDescriptor = surrogateSerializer.descriptor
+
+			override fun serialize(encoder: Encoder, value: Polygon) {
+				val coordinates = value.rings.map { ring ->
+					ring.points.map { point ->
+						listOf(point.x.degrees, point.y.degrees)
+					}
+				}
+				surrogateSerializer.serialize(encoder, Surrogate("Polygon", coordinates))
+			}
+
+			override fun deserialize(decoder: Decoder): Polygon {
+				val surrogate = surrogateSerializer.deserialize(decoder)
+				require(surrogate.coordinates.isNotEmpty()) { "Polygon must have at least 1 ring, got ${surrogate.coordinates.size}" }
+				val rings = surrogate.coordinates.map { ringCoords ->
+					require(ringCoords.size >= 4) { "Each Polygon ring must have at least 4 coordinates, got ${ringCoords.size}" }
+					val points = ringCoords.map { coords ->
+						require(coords.size == 2) { "Each Polygon coordinate must have exactly 2 elements, got ${coords.size}" }
+						Point(Longitude(coords[0]), Latitude(coords[1]))
+					}
+					LineString(points)
+				}
+				return Polygon(rings)
+			}
+		}
+	}
 }

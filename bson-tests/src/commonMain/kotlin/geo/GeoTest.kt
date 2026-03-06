@@ -34,6 +34,7 @@ import opensavvy.prepared.suite.SuiteDsl
 fun SuiteDsl.validateGeo(factory: Prepared<BsonFactory>) = suite("Geo") {
 	geoPoint(factory)
 	geoLineString(factory)
+	geoPolygon(factory)
 }
 
 private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
@@ -130,6 +131,156 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 		},
 		verify("The string is closed") {
 			check(decode<Geo.LineString>().isClosed)
+		},
+	)
+
+}
+
+private fun SuiteDsl.geoPolygon(factory: Prepared<BsonFactory>) = suite("Polygon") {
+
+	testBson(
+		factory,
+		"Serialize simple polygon (triangle)",
+		serialize(
+			Geo.Polygon(
+				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+				Geo.Point(Geo.Longitude(3.0), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(6.0), Geo.Latitude(1.0)),
+				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+			)
+		),
+		document {
+			writeString("type", "Polygon")
+			writeArray("coordinates") {
+				writeArray {
+					writeArray {
+						writeDouble(0.0)
+						writeDouble(0.0)
+					}
+					writeArray {
+						writeDouble(3.0)
+						writeDouble(6.0)
+					}
+					writeArray {
+						writeDouble(6.0)
+						writeDouble(1.0)
+					}
+					writeArray {
+						writeDouble(0.0)
+						writeDouble(0.0)
+					}
+				}
+			}
+		},
+		json("""{"type": "Polygon", "coordinates": [[[0.0, 0.0], [3.0, 6.0], [6.0, 1.0], [0.0, 0.0]]]}"""),
+		verify("The polygon has one ring") {
+			check(decode<Geo.Polygon>().rings.size == 1)
+		},
+		verify("The ring is closed") {
+			check(decode<Geo.Polygon>().rings[0].isClosed)
+		},
+		verify("The coordinates are correct") {
+			val polygon = decode<Geo.Polygon>()
+			check(polygon.rings[0].points[0] == Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)))
+			check(polygon.rings[0].points[1] == Geo.Point(Geo.Longitude(3.0), Geo.Latitude(6.0)))
+			check(polygon.rings[0].points[2] == Geo.Point(Geo.Longitude(6.0), Geo.Latitude(1.0)))
+			check(polygon.rings[0].points[3] == Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)))
+		},
+	)
+
+	testBson(
+		factory,
+		"Serialize polygon with hole (doughnut)",
+		serialize(
+			Geo.Polygon(
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+					Geo.Point(Geo.Longitude(10.0), Geo.Latitude(0.0)),
+					Geo.Point(Geo.Longitude(10.0), Geo.Latitude(10.0)),
+					Geo.Point(Geo.Longitude(0.0), Geo.Latitude(10.0)),
+					Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(2.0), Geo.Latitude(2.0)),
+					Geo.Point(Geo.Longitude(8.0), Geo.Latitude(2.0)),
+					Geo.Point(Geo.Longitude(8.0), Geo.Latitude(8.0)),
+					Geo.Point(Geo.Longitude(2.0), Geo.Latitude(8.0)),
+					Geo.Point(Geo.Longitude(2.0), Geo.Latitude(2.0)),
+				),
+			)
+		),
+		document {
+			writeString("type", "Polygon")
+			writeArray("coordinates") {
+				writeArray {
+					writeArray {
+						writeDouble(0.0)
+						writeDouble(0.0)
+					}
+					writeArray {
+						writeDouble(10.0)
+						writeDouble(0.0)
+					}
+					writeArray {
+						writeDouble(10.0)
+						writeDouble(10.0)
+					}
+					writeArray {
+						writeDouble(0.0)
+						writeDouble(10.0)
+					}
+					writeArray {
+						writeDouble(0.0)
+						writeDouble(0.0)
+					}
+				}
+				writeArray {
+					writeArray {
+						writeDouble(2.0)
+						writeDouble(2.0)
+					}
+					writeArray {
+						writeDouble(8.0)
+						writeDouble(2.0)
+					}
+					writeArray {
+						writeDouble(8.0)
+						writeDouble(8.0)
+					}
+					writeArray {
+						writeDouble(2.0)
+						writeDouble(8.0)
+					}
+					writeArray {
+						writeDouble(2.0)
+						writeDouble(2.0)
+					}
+				}
+			}
+		},
+		json("""{"type": "Polygon", "coordinates": [[[0.0, 0.0], [10.0, 0.0], [10.0, 10.0], [0.0, 10.0], [0.0, 0.0]], [[2.0, 2.0], [8.0, 2.0], [8.0, 8.0], [2.0, 8.0], [2.0, 2.0]]]}"""),
+		verify("The polygon has two rings") {
+			check(decode<Geo.Polygon>().rings.size == 2)
+		},
+		verify("Both rings are closed") {
+			check(decode<Geo.Polygon>().rings[0].isClosed)
+			check(decode<Geo.Polygon>().rings[1].isClosed)
+		},
+		verify("The exterior ring coordinates are correct") {
+			val polygon = decode<Geo.Polygon>()
+			check(polygon.rings[0].points[0] == Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)))
+			check(polygon.rings[0].points[1] == Geo.Point(Geo.Longitude(10.0), Geo.Latitude(0.0)))
+			check(polygon.rings[0].points[2] == Geo.Point(Geo.Longitude(10.0), Geo.Latitude(10.0)))
+			check(polygon.rings[0].points[3] == Geo.Point(Geo.Longitude(0.0), Geo.Latitude(10.0)))
+			check(polygon.rings[0].points[4] == Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)))
+		},
+		verify("The interior ring coordinates are correct") {
+			val polygon = decode<Geo.Polygon>()
+			check(polygon.rings[1].points[0] == Geo.Point(Geo.Longitude(2.0), Geo.Latitude(2.0)))
+			check(polygon.rings[1].points[1] == Geo.Point(Geo.Longitude(8.0), Geo.Latitude(2.0)))
+			check(polygon.rings[1].points[2] == Geo.Point(Geo.Longitude(8.0), Geo.Latitude(8.0)))
+			check(polygon.rings[1].points[3] == Geo.Point(Geo.Longitude(2.0), Geo.Latitude(8.0)))
+			check(polygon.rings[1].points[4] == Geo.Point(Geo.Longitude(2.0), Geo.Latitude(2.0)))
 		},
 	)
 
