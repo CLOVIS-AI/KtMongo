@@ -398,4 +398,72 @@ sealed class Geo {
 			}
 		}
 	}
+
+	/**
+	 * A GeoJSON MultiPoint.
+	 *
+	 * A MultiPoint is a list of multiple [Point] instances that are grouped together.
+	 *
+	 * Unlike [LineString], which implies that the points are connected in order,
+	 * the points in [Geo.MultiPoint] are in no particular order and are not meant to be connected.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * Geo.MultiPoint(
+	 *     Geo.Point(Geo.Longitude(-73.9580), Geo.Latitude(40.8003)),
+	 *     Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+	 *     Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+	 *     Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [MongoDB documentation](https://www.mongodb.com/docs/manual/reference/geojson/#multipoint)
+	 * - [GeoJSON RFC](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.3)
+	 */
+	@Serializable(with = MultiPoint.Serializer::class)
+	@ExperimentalGeoBsonApi
+	data class MultiPoint(
+		/**
+		 * The points that make up this [MultiPoint].
+		 */
+		val points: List<Point>,
+	) : Geo() {
+
+		/**
+		 * Constructs a [MultiPoint] instance from multiple [Point] instances.
+		 */
+		constructor(vararg points: Point) : this(points.asList())
+
+		override fun toString() = "MultiPoint(${points.joinToString(", ")})"
+
+		@Serializable
+		private data class Surrogate(
+			val type: String,
+			val coordinates: List<List<Double>>,
+		)
+
+		@LowLevelApi
+		object Serializer : KSerializer<MultiPoint> {
+			private val surrogateSerializer = Surrogate.serializer()
+			override val descriptor: SerialDescriptor = surrogateSerializer.descriptor
+
+			override fun serialize(encoder: Encoder, value: MultiPoint) {
+				val coordinates = value.points.map { listOf(it.x.degrees, it.y.degrees) }
+				surrogateSerializer.serialize(encoder, Surrogate("MultiPoint", coordinates))
+			}
+
+			override fun deserialize(decoder: Decoder): MultiPoint {
+				val surrogate = surrogateSerializer.deserialize(decoder)
+				val points = surrogate.coordinates.map { coords ->
+					require(coords.size == 2) { "Each MultiPoint coordinate must have exactly 2 elements, got ${coords.size}" }
+					Point(Longitude(coords[0]), Latitude(coords[1]))
+				}
+				return MultiPoint(points)
+			}
+		}
+	}
+
 }

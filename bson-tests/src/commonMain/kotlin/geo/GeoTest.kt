@@ -35,6 +35,7 @@ fun SuiteDsl.validateGeo(factory: Prepared<BsonFactory>) = suite("Geo") {
 	geoPoint(factory)
 	geoLineString(factory)
 	geoPolygon(factory)
+	geoMultiPoint(factory)
 }
 
 private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
@@ -284,4 +285,52 @@ private fun SuiteDsl.geoPolygon(factory: Prepared<BsonFactory>) = suite("Polygon
 		},
 	)
 
+}
+
+private fun SuiteDsl.geoMultiPoint(factory: Prepared<BsonFactory>) = suite("MultiPoint") {
+
+	testBson(
+		factory,
+		"Serialize multipoint",
+		serialize(
+			Geo.MultiPoint(
+				Geo.Point(Geo.Longitude(-73.9580), Geo.Latitude(40.8003)),
+				Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+				Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+				Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+			)
+		),
+		document {
+			writeString("type", "MultiPoint")
+			writeArray("coordinates") {
+				writeArray {
+					writeDouble(-73.9580)
+					writeDouble(40.8003)
+				}
+				writeArray {
+					writeDouble(-73.9498)
+					writeDouble(40.7968)
+				}
+				writeArray {
+					writeDouble(-73.9737)
+					writeDouble(40.7648)
+				}
+				writeArray {
+					writeDouble(-73.9814)
+					writeDouble(40.7681)
+				}
+			}
+		},
+		json("""{"type": "MultiPoint", "coordinates": [[-73.958, 40.8003], [-73.9498, 40.7968], [-73.9737, 40.7648], [-73.9814, 40.7681]]}"""),
+		verify("The number of points is correct") {
+			check(decode<Geo.MultiPoint>().points.size == 4)
+		},
+		verify("The coordinates are correct") {
+			val multiPoint = decode<Geo.MultiPoint>()
+			check(multiPoint.points[0] == Geo.Point(Geo.Longitude(-73.9580), Geo.Latitude(40.8003)))
+			check(multiPoint.points[1] == Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)))
+			check(multiPoint.points[2] == Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)))
+			check(multiPoint.points[3] == Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)))
+		},
+	)
 }
