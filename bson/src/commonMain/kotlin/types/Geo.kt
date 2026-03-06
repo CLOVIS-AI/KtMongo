@@ -540,4 +540,85 @@ sealed class Geo {
 		}
 	}
 
+	/**
+	 * A GeoJSON MultiPolygon.
+	 *
+	 * A MultiPolygon is a list of multiple [Polygon] instances that are grouped together.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * Geo.MultiPolygon(
+	 *     Geo.Polygon(
+	 *         Geo.LineString(
+	 *             Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+	 *             Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+	 *             Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+	 *             Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+	 *             Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+	 *         ),
+	 *     ),
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [MongoDB documentation](https://www.mongodb.com/docs/manual/reference/geojson/#multipolygon)
+	 * - [GeoJSON RFC](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.7)
+	 */
+	@Serializable(with = MultiPolygon.Serializer::class)
+	@ExperimentalGeoBsonApi
+	data class MultiPolygon(
+		/**
+		 * The polygons that make up this [MultiPolygon].
+		 */
+		val polygons: List<Polygon>,
+	) : Geo() {
+
+		/**
+		 * Constructs a [MultiPolygon] instance from multiple [Polygon] instances.
+		 */
+		constructor(vararg polygons: Polygon) : this(polygons.asList())
+
+		override fun toString() = "MultiPolygon(${polygons.joinToString(", ")})"
+
+		@Serializable
+		private data class Surrogate(
+			val type: String,
+			val coordinates: List<List<List<List<Double>>>>,
+		)
+
+		@LowLevelApi
+		object Serializer : KSerializer<MultiPolygon> {
+			private val surrogateSerializer = Surrogate.serializer()
+			override val descriptor: SerialDescriptor = surrogateSerializer.descriptor
+
+			override fun serialize(encoder: Encoder, value: MultiPolygon) {
+				val coordinates = value.polygons.map { polygon ->
+					polygon.rings.map { ring ->
+						ring.points.map { listOf(it.x.degrees, it.y.degrees) }
+					}
+				}
+				surrogateSerializer.serialize(encoder, Surrogate("MultiPolygon", coordinates))
+			}
+
+			override fun deserialize(decoder: Decoder): MultiPolygon {
+				val surrogate = surrogateSerializer.deserialize(decoder)
+				val polygons = surrogate.coordinates.map { polygonCoords ->
+					require(polygonCoords.isNotEmpty()) { "Each MultiPolygon polygon must have at least 1 ring, got ${polygonCoords.size}" }
+					val rings = polygonCoords.map { ringCoords ->
+						require(ringCoords.size >= 4) { "Each MultiPolygon ring must have at least 4 coordinates, got ${ringCoords.size}" }
+						val points = ringCoords.map { coords ->
+							require(coords.size == 2) { "Each MultiPolygon coordinate must have exactly 2 elements, got ${coords.size}" }
+							Point(Longitude(coords[0]), Latitude(coords[1]))
+						}
+						LineString(points)
+					}
+					Polygon(rings)
+				}
+				return MultiPolygon(polygons)
+			}
+		}
+	}
+
 }

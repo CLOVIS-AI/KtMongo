@@ -37,6 +37,7 @@ fun SuiteDsl.validateGeo(factory: Prepared<BsonFactory>) = suite("Geo") {
 	geoPolygon(factory)
 	geoMultiPoint(factory)
 	geoMultiLineString(factory)
+	geoMultiPolygon(factory)
 }
 
 private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
@@ -420,6 +421,100 @@ private fun SuiteDsl.geoMultiLineString(factory: Prepared<BsonFactory>) = suite(
 			check(multiLineString.lineStrings[2].points[1] == Geo.Point(Geo.Longitude(-73.96374), Geo.Latitude(40.77715)))
 			check(multiLineString.lineStrings[3].points[0] == Geo.Point(Geo.Longitude(-73.97880), Geo.Latitude(40.77247)))
 			check(multiLineString.lineStrings[3].points[1] == Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)))
+		},
+	)
+}
+
+private fun SuiteDsl.geoMultiPolygon(factory: Prepared<BsonFactory>) = suite("MultiPolygon") {
+
+	testBson(
+		factory,
+		"Serialize multipolygon",
+		serialize(
+			Geo.MultiPolygon(
+				Geo.Polygon(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+						Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+						Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+						Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+					),
+				),
+				Geo.Polygon(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+						Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+						Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+					),
+				),
+			)
+		),
+		document {
+			writeString("type", "MultiPolygon")
+			writeArray("coordinates") {
+				writeArray {
+					writeArray {
+						writeArray {
+							writeDouble(-73.958)
+							writeDouble(40.8003)
+						}
+						writeArray {
+							writeDouble(-73.9498)
+							writeDouble(40.7968)
+						}
+						writeArray {
+							writeDouble(-73.9737)
+							writeDouble(40.7648)
+						}
+						writeArray {
+							writeDouble(-73.9814)
+							writeDouble(40.7681)
+						}
+						writeArray {
+							writeDouble(-73.958)
+							writeDouble(40.8003)
+						}
+					}
+				}
+				writeArray {
+					writeArray {
+						writeArray {
+							writeDouble(-73.958)
+							writeDouble(40.8003)
+						}
+						writeArray {
+							writeDouble(-73.9498)
+							writeDouble(40.7968)
+						}
+						writeArray {
+							writeDouble(-73.9737)
+							writeDouble(40.7648)
+						}
+						writeArray {
+							writeDouble(-73.958)
+							writeDouble(40.8003)
+						}
+					}
+				}
+			}
+		},
+		json("""{"type": "MultiPolygon", "coordinates": [[[[-73.958, 40.8003], [-73.9498, 40.7968], [-73.9737, 40.7648], [-73.9814, 40.7681], [-73.958, 40.8003]]], [[[-73.958, 40.8003], [-73.9498, 40.7968], [-73.9737, 40.7648], [-73.958, 40.8003]]]]}"""),
+		verify("The number of polygons is correct") {
+			check(decode<Geo.MultiPolygon>().polygons.size == 2)
+		},
+		verify("The coordinates are correct") {
+			val multiPolygon = decode<Geo.MultiPolygon>()
+			check(multiPolygon.polygons[0].rings[0].points[0] == Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)))
+			check(multiPolygon.polygons[0].rings[0].points[1] == Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)))
+			check(multiPolygon.polygons[0].rings[0].points[2] == Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)))
+			check(multiPolygon.polygons[0].rings[0].points[3] == Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)))
+			check(multiPolygon.polygons[0].rings[0].points[4] == Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)))
+			check(multiPolygon.polygons[1].rings[0].points[0] == Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)))
+			check(multiPolygon.polygons[1].rings[0].points[1] == Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)))
+			check(multiPolygon.polygons[1].rings[0].points[2] == Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)))
+			check(multiPolygon.polygons[1].rings[0].points[3] == Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)))
 		},
 	)
 }
