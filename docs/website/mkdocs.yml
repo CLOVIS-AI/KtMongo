@@ -116,31 +116,31 @@ nav:
 
   - Getting started:
       - tutorials/index.md
-      - tutorials/find.md
-      - tutorials/update.md
+      - Finding data: tutorials/find.md
+      - Updating data: tutorials/update.md
 
       - Migrating from KMongo:
           - tutorials/from-kmongo/index.md
-          - tutorials/from-kmongo/find.md
-          - tutorials/from-kmongo/nested-fields.md
-          - tutorials/from-kmongo/update.md
+          - Finding data: tutorials/from-kmongo/find.md
+          - Nested documents: tutorials/from-kmongo/nested-fields.md
+          - Updating data: tutorials/from-kmongo/update.md
 
       - Kotlin Multiplatform:
           - tutorials/multiplatform/index.md
 
   - Features:
-      - features/crud.md
-      - features/bulk-writes.md
-      - features/optional-filters.md
-      - features/filtered-collections.md
+      - CRUD operations: features/crud.md
+      - Bulk writes: features/bulk-writes.md
+      - Optional filters: features/optional-filters.md
+      - Filtered collections: features/filtered-collections.md
 
       - Data types:
-          - features/fields.md
-          - features/arrays.md
-          - features/maps.md
+          - Nested documents: features/fields.md
+          - Arrays: features/arrays.md
+          - Maps: features/maps.md
 
       - Aggregations:
-          - features/aggregations.md
+          - Introduction: features/aggregations.md
 
 # !!! EMBEDDED DOKKA START, DO NOT COMMIT !!! #
 # !!! EMBEDDED DOKKA END, DO NOT COMMIT !!! #

@@ -1,4 +1,4 @@
-# Updating data
+# Converting your KMongo updates to KtMongo
 
 Much like [find variants](find.md), update operations use a DSL instead of passing raw BSON values.
 

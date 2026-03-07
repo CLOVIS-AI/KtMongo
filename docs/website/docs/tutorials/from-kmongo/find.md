@@ -1,4 +1,4 @@
-# Finding data
+# Converting your KMongo queries to KtMongo
 
 KMongo operators primarily work by accepting varargs which are combined into `Bson` documents.
 

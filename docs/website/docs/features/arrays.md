@@ -1,4 +1,4 @@
-# Arrays
+# Querying MongoDB arrays in Kotlin
 
 Documents can also be stored in arrays. In Kotlin, BSON arrays can be represented using any collection type, like `List` or `Set`.
 

@@ -1,4 +1,4 @@
-# Getting started
+# Get started with the KtMongo MongoDB driver for Kotlin
 
 KtMongo is a modern DSL for interacting with MongoDB in Kotlin. On the JVM, KtMongo is built on top of the official Kotlin driver.
 

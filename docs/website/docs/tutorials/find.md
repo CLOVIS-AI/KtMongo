@@ -1,4 +1,4 @@
-# Finding data
+# Finding data in MongoDB with the KtMongo driver
 
 !!! note ""
     Before retrieving data, you must [connect to the database and obtain a collection](index.md).
