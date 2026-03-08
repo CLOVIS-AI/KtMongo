@@ -254,6 +254,17 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		}
 	)
 
+	@Serializable
+	data class V(
+		val x: Vector,
+	)
+
+	@Serializable
+	data class VFloat(
+		val x: FloatVector,
+	)
+
+
 	testBson(
 		context,
 		"subtype 0x09 Vector FLOAT32",
@@ -266,6 +277,8 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", FloatVector(127f, 7f))
 		},
+		serialize(V(FloatVector(127f, 7f))),
+		serialize(VFloat(FloatVector(127f, 7f))),
 		hex("170000000578000A0000000927000000FE420000E04000"),
 		json($$"""{"x": {"$binary": {"base64": "JwAAAP5CAADgQA==", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -288,6 +301,11 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 	)
 
+	@Serializable
+	data class VByte(
+		val x: ByteVector,
+	)
+
 	testBson(
 		context,
 		"subtype 0x09 Vector INT8",
@@ -300,6 +318,8 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", ByteVector(127, 7))
 		},
+		serialize(V(ByteVector(127, 7))),
+		serialize(VByte(ByteVector(127, 7))),
 		hex("11000000057800040000000903007F0700"),
 		json($$"""{"x": {"$binary": {"base64": "AwB/Bw==", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -322,6 +342,11 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		},
 	)
 
+	@Serializable
+	data class VBoolean(
+		val x: BooleanVector,
+	)
+
 	testBson(
 		context,
 		"subtype 0x09 Vector PACKED_BIT",
@@ -334,6 +359,8 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", BooleanVector(true, true, true, true, true, true, true, false, true, true, true, false, false, false, false, false))
 		},
+		serialize(V(BooleanVector(true, true, true, true, true, true, true, false, true, true, true, false, false, false, false, false))),
+		serialize(VBoolean(BooleanVector(true, true, true, true, true, true, true, false, true, true, true, false, false, false, false, false))),
 		hex("11000000057800040000000910007F0700"),
 		json($$"""{"x": {"$binary": {"base64": "EAB/Bw==", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -368,6 +395,8 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", FloatVector())
 		},
+		serialize(V(FloatVector())),
+		serialize(VFloat(FloatVector())),
 		hex("0F0000000578000200000009270000"),
 		json($$"""{"x": {"$binary": {"base64": "JwA=", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -402,6 +431,8 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", ByteVector())
 		},
+		serialize(V(ByteVector())),
+		serialize(VByte(ByteVector())),
 		hex("0F0000000578000200000009030000"),
 		json($$"""{"x": {"$binary": {"base64": "AwA=", "subType": "09"}}}"""),
 		verify("Read type") {
@@ -436,6 +467,8 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		document {
 			writeVector("x", BooleanVector())
 		},
+		serialize(V(BooleanVector())),
+		serialize(VBoolean(BooleanVector())),
 		hex("0F0000000578000200000009100000"),
 		json($$"""{"x": {"$binary": {"base64": "EAA=", "subType": "09"}}}"""),
 		verify("Read type") {
