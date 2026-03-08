@@ -476,6 +476,9 @@ class BooleanVector internal constructor(
 
 	@property:LowLevelApi
 	override val padding: Byte,
+
+	// Unused parameter, to allow us to have a public constructor with the same signature
+	@Suppress("unused") marker: Unit,
 ) : Vector, Iterable<Boolean>, Collection<Boolean>, List<Boolean> {
 
 	init {
@@ -486,9 +489,23 @@ class BooleanVector internal constructor(
 	constructor(booleans: Collection<Boolean>) : this(
 		rawUnsafe = booleansToBytes(booleans),
 		padding = (booleans.size % 8).toByte(),
+		marker = Unit,
 	)
 
 	constructor(vararg booleans: Boolean) : this(booleans.asList())
+
+	/**
+	 * Constructs a [BooleanVector] from the [raw] byte contents with a given [padding].
+	 *
+	 * Note that [raw] is only the data part of the vector. It is not the entire binary data.
+	 * To construct a [BooleanVector] from binary data, see [Vector.fromBinaryData].
+	 */
+	@LowLevelApi
+	constructor(raw: ByteArray, padding: Byte) : this(
+		rawUnsafe = raw.copyOf(),
+		padding = padding,
+		marker = Unit,
+	)
 
 	@LowLevelApi
 	override val type: Byte
