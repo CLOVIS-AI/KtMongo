@@ -27,9 +27,6 @@ import kotlin.uuid.Uuid
 import kotlin.uuid.toJavaUuid
 import kotlin.uuid.toKotlinUuid
 
-private val isOfficialKotlinSerializationEnabled =
-	ClassLoader.getSystemClassLoader().loadClass("org.bson.codecs.kotlinx.BsonEncoder") != null
-
 @OptIn(ExperimentalUuidApi::class, ExperimentalSerializationApi::class)
 internal actual fun serializeUuidPlatformSpecific(encoder: Encoder, value: Uuid) {
 	if (isOfficialKotlinSerializationEnabled && encoder is BsonEncoder) {

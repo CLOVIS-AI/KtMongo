@@ -24,9 +24,6 @@ import org.bson.codecs.kotlinx.BsonDecoder
 import org.bson.codecs.kotlinx.BsonEncoder
 import kotlin.time.Instant
 
-private val isOfficialKotlinSerializationEnabled =
-	ClassLoader.getSystemClassLoader().loadClass("org.bson.codecs.kotlinx.BsonEncoder") != null
-
 @OptIn(ExperimentalSerializationApi::class)
 internal actual fun serializeInstantPlatformSpecific(encoder: Encoder, value: Instant) {
 	if (isOfficialKotlinSerializationEnabled && encoder is BsonEncoder) {

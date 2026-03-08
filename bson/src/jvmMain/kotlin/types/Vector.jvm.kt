@@ -24,9 +24,6 @@ import org.bson.BsonBinarySubType
 import org.bson.codecs.kotlinx.BsonDecoder
 import org.bson.codecs.kotlinx.BsonEncoder
 
-private val isOfficialKotlinSerializationEnabled =
-	ClassLoader.getSystemClassLoader().loadClass("org.bson.codecs.kotlinx.BsonEncoder") != null
-
 @OptIn(ExperimentalSerializationApi::class, LowLevelApi::class)
 internal actual fun serializeVectorPlatformSpecific(encoder: Encoder, value: Vector) {
 	if (isOfficialKotlinSerializationEnabled && encoder is BsonEncoder) {
