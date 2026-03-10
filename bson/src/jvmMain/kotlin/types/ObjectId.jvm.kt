@@ -22,9 +22,6 @@ import kotlinx.serialization.encoding.Encoder
 import org.bson.codecs.kotlinx.BsonDecoder
 import org.bson.codecs.kotlinx.BsonEncoder
 
-private val isOfficialKotlinSerializationEnabled =
-	ClassLoader.getSystemClassLoader().loadClass("org.bson.codecs.kotlinx.BsonEncoder") != null
-
 @OptIn(ExperimentalSerializationApi::class)
 internal actual fun serializeObjectIdPlatformSpecific(encoder: Encoder, value: ObjectId) {
 	if (isOfficialKotlinSerializationEnabled && encoder is BsonEncoder) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,7 @@ import opensavvy.ktmongo.bson.multiplatform.Bson
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWriter
-import opensavvy.ktmongo.bson.types.ObjectId
-import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.bson.types.*
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
@@ -138,6 +137,10 @@ private class BsonEncoder(override val serializersModule: SerializersModule, val
 	private val timestamp = Timestamp.Serializer.descriptor
 	private val uuid = Uuid.serializer().descriptor
 	private val instant = Instant.serializer().descriptor
+	private val vector = Vector.serializer().descriptor
+	private val floatVector = FloatVector.serializer().descriptor
+	private val booleanVector = BooleanVector.serializer().descriptor
+	private val byteVector = ByteVector.serializer().descriptor
 	override fun <T> encodeSerializableValue(serializer: SerializationStrategy<T>, value: T) {
 		when (serializer.descriptor) {
 			// Special cases where we provide our own encoder
@@ -146,6 +149,7 @@ private class BsonEncoder(override val serializersModule: SerializersModule, val
 			timestamp -> out.writeTimestamp(value as Timestamp)
 			uuid -> out.writeBinaryData(4u, (value as Uuid).toByteArray())
 			instant -> out.writeInstant(value as Instant)
+			vector, floatVector, booleanVector, byteVector -> out.writeBinaryData(0x09u, (value as Vector).toBinaryData())
 
 			// General case: do what the serializer says
 			else -> serializer.serialize(this, value)

@@ -45,6 +45,7 @@ If you'd like to contribute, please get in touch.
 	- [x] `ObjectId`
 	- [x] `Timestamp`
 	- [x] `DateTime` (using Kotlin's `Instant`)
+	- [x] `Vector`
 	- [ ] `Decimal128`
 - [ ] Provide new pure Kotlin implementations of deprecated MongoDB data types:
 	- [ ] `JavaScript`

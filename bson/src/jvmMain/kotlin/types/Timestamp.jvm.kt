@@ -25,9 +25,6 @@ import org.bson.codecs.kotlinx.BsonEncoder
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-private val isOfficialKotlinSerializationEnabled =
-	ClassLoader.getSystemClassLoader().loadClass("org.bson.codecs.kotlinx.BsonEncoder") != null
-
 @OptIn(ExperimentalTime::class, ExperimentalSerializationApi::class)
 internal actual fun serializeTimestampPlatformSpecific(encoder: Encoder, value: Timestamp) {
 	if (isOfficialKotlinSerializationEnabled && encoder is BsonEncoder) {

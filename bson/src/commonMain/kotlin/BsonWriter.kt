@@ -18,6 +18,7 @@ package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.bson.types.Vector
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.experimental.and
@@ -92,6 +93,10 @@ interface BsonValueWriter : AnyBsonWriter {
 
 	@LowLevelApi
 	fun writeBinaryData(type: UByte, data: ByteArray)
+
+	@LowLevelApi
+	fun writeVector(vector: Vector) =
+		writeBinaryData(0x09u, vector.toBinaryData())
 	@LowLevelApi fun writeJavaScript(code: String)
 	@LowLevelApi
 	fun writeMinKey()
@@ -225,6 +230,10 @@ interface BsonFieldWriter : AnyBsonWriter {
 
 	@LowLevelApi
 	fun writeBinaryData(name: String, type: UByte, data: ByteArray)
+
+	@LowLevelApi
+	fun writeVector(name: String, vector: Vector) =
+		writeBinaryData(name, 0x09u, vector.toBinaryData())
 	@LowLevelApi fun writeJavaScript(name: String, code: String)
 	@LowLevelApi
 	fun writeMinKey(name: String)

@@ -13,31 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import org.bson.BsonDateTime
+import opensavvy.ktmongo.dsl.LowLevelApi
+import org.bson.BsonBinary
+import org.bson.BsonBinarySubType
 import org.bson.codecs.kotlinx.BsonDecoder
 import org.bson.codecs.kotlinx.BsonEncoder
-import kotlin.time.Instant
 
-@OptIn(ExperimentalSerializationApi::class)
-internal actual fun serializeInstantPlatformSpecific(encoder: Encoder, value: Instant) {
+@OptIn(ExperimentalSerializationApi::class, LowLevelApi::class)
+internal actual fun serializeVectorPlatformSpecific(encoder: Encoder, value: Vector) {
 	if (isOfficialKotlinSerializationEnabled && encoder is BsonEncoder) {
-		encoder.encodeBsonValue(BsonDateTime(value.toEpochMilliseconds()))
+		encoder.encodeBsonValue(BsonBinary(BsonBinarySubType.VECTOR, value.toBinaryData()))
 	} else {
-		serializeInstantAsString(encoder, value)
+		serializeVectorAsString(encoder, value)
 	}
 }
 
-@OptIn(ExperimentalSerializationApi::class)
-internal actual fun deserializeInstantPlatformSpecific(decoder: Decoder): Instant =
+@OptIn(ExperimentalSerializationApi::class, LowLevelApi::class)
+internal actual fun deserializeVectorPlatformSpecific(decoder: Decoder): Vector =
 	if (isOfficialKotlinSerializationEnabled && decoder is BsonDecoder) {
-		val bsonDateTime = decoder.decodeBsonValue() as BsonDateTime
-		Instant.fromEpochMilliseconds(bsonDateTime.value)
+		val bsonBinary = decoder.decodeBsonValue() as BsonBinary
+		Vector.fromBinaryData(bsonBinary.data)
 	} else {
-		deserializeInstantAsString(decoder)
+		deserializeVectorAsString(decoder)
 	}

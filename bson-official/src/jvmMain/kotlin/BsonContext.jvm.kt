@@ -109,6 +109,10 @@ private class JvmBsonFactoryImpl(
 			KotlinTimestampCodec(),
 			KotlinUuidCodec(),
 			KotlinInstantCodec(),
+			KotlinVectorCodec(),
+			KotlinFloatVectorCodec(),
+			KotlinBooleanVectorCodec(),
+			KotlinByteVectorCodec(),
 		),
 		codecRegistry,
 	)

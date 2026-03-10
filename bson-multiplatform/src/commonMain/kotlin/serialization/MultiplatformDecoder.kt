@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,7 @@ import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformArrayReader
 import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformDocumentReader
-import opensavvy.ktmongo.bson.types.ObjectId
-import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.bson.types.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
@@ -148,6 +147,10 @@ internal class BsonDecoder(
 	private val timestamp = Timestamp.Serializer.descriptor
 	private val uuid = Uuid.serializer().descriptor
 	private val instant = Instant.serializer().descriptor
+	private val vector = Vector.serializer().descriptor
+	private val floatVector = FloatVector.serializer().descriptor
+	private val booleanVector = BooleanVector.serializer().descriptor
+	private val byteVector = ByteVector.serializer().descriptor
 	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
 		@Suppress("UNCHECKED_CAST")
 		return when (deserializer.descriptor) {
@@ -161,6 +164,7 @@ internal class BsonDecoder(
 				Uuid.fromByteArray(source.readBinaryData()) as T
 			}
 			instant -> source.readInstant() as T
+			vector, floatVector, booleanVector, byteVector -> Vector.fromBinaryData(source.readBinaryData()) as T
 
 			// General case: do what the serializer says
 			else -> deserializer.deserialize(this)
