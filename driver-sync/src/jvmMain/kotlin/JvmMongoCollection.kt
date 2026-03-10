@@ -22,6 +22,7 @@ import com.mongodb.client.model.UpdateOptions
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.official.JvmBsonFactory
 import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
@@ -71,6 +72,10 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	private val inner = inner.withCodecRegistry(context.codecRegistry)
+
+	@OptIn(LowLevelApi::class)
+	override fun newId(): ObjectId =
+		context.newId()
 
 	// region Find
 

@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import opensavvy.ktmongo.bson.BsonValueReader
 import opensavvy.ktmongo.bson.official.JvmBsonFactory
 import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.coroutines.operations.UpdateOperations.UpdateResult
 import opensavvy.ktmongo.coroutines.operations.UpdateOperations.UpsertResult
@@ -73,6 +74,10 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	private val inner = inner.withCodecRegistry(context.codecRegistry)
+
+	@OptIn(LowLevelApi::class)
+	override fun newId(): ObjectId =
+		context.newId()
 
 	// region Find
 
