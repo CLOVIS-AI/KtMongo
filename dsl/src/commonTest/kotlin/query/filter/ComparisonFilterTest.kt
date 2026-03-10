@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -257,4 +257,25 @@ val ComparisonFilterTest by preparedSuite {
 		}
 	}
 
+	suite("Optionals variants") {
+		test($$"$lte not present") {
+			filter {
+				User::age gteNotNull null
+			} shouldBeBson """
+				{}
+			""".trimIndent()
+		}
+
+		test($$"$lte present") {
+			filter {
+				User::age gteNotNull 12
+			} shouldBeBson $$"""
+				{
+					"age": {
+						"$gte": 12
+					}
+				}
+			""".trimIndent()
+		}
+	}
 }
