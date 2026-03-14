@@ -1,4 +1,4 @@
-# Module MongoDB driver for Kotlin (coroutines, compatibility for KMongo)
+# Module KtMongo: MongoDB driver for Kotlin • Coroutines with KMongo compatibility
 
 Asynchronous coroutines-based driver for MongoDB, using a rich Kotlin DSL, with KMongo compatibility.
 

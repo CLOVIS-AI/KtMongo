@@ -72,7 +72,7 @@ kotlin {
 }
 
 library {
-	name.set("Kotlin BSON • Multiplatform abstraction for different BSON implementations")
+	name.set("Kotlin BSON")
 	description.set("Interfaces and types for abstraction over different BSON implementations.")
 	homeUrl.set("https://ktmongo.opensavvy.dev")
 

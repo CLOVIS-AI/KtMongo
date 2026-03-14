@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ kotlin {
 }
 
 library {
-	name.set("MongoDB request DSL")
+	name.set("KtMongo: MongoDB request DSL")
 	description.set("Kotlin-first DSL for writing expressive and typesafe MongoDB queries")
 	homeUrl.set("https://ktmongo.opensavvy.dev")
 
