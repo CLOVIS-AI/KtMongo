@@ -18,10 +18,6 @@ package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.BsonPath.PathOrSelector
 import opensavvy.ktmongo.bson.BsonPath.Root.findIn
-import opensavvy.ktmongo.bson.BsonPath.Root.parent
-import opensavvy.ktmongo.bson.BsonPath.Root.reversed
-import opensavvy.ktmongo.bson.BsonPath.Root.sliced
-import opensavvy.ktmongo.bson.BsonPath.Root.toString
 import opensavvy.ktmongo.bson.BsonPath.Selector
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.intellij.lang.annotations.Language
@@ -1201,7 +1197,7 @@ private fun parseBracketSegment(
 
 			'*' -> {
 				parser.skip('*')
-				parser.extract() // ignore whatever there is
+				val _ = parser.extract() // ignore whatever there is
 				selectors += AllSelector
 			}
 
