@@ -176,6 +176,79 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	}
 
 	// endregion
+	// region $median
+
+	/**
+	 * Returns an approximation of the median, the 50th percentile, as a scalar value.
+	 *
+	 * The median is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The result may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val medianBalance: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::medianBalance median of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: Value<From, Number?>) {
+		accept(MedianValueAccumulator(value, this.path, context))
+	}
+
+	/**
+	 * Returns an approximation of the median, the 50th percentile, as a scalar value.
+	 *
+	 * The median is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The result may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val medianBalance: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::medianBalance median of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, T>.median(value: Value<From, Number?>) {
+		this.field median value
+	}
+
+	// endregion
 
 	@LowLevelApi
 	private class ArithmeticValueAccumulator(
@@ -189,6 +262,26 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 			writeDocument(into.toString()) {
 				write(operator) {
 					value.writeTo(this)
+				}
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class MedianValueAccumulator(
+		val value: Value<*, *>,
+		val into: Path,
+		context: BsonContext,
+	) : AbstractBsonNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument(into.toString()) {
+				writeDocument($$"$median") {
+					write("input") {
+						value.writeTo(this)
+					}
+					writeString("method", "approximate")
 				}
 			}
 		}

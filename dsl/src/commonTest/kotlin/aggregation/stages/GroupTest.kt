@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,6 +75,32 @@ val GroupTest by preparedSuite {
 							"_id": null,
 							"total": {
 								"$avg": "$score"
+							}
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
+	test($$"Simple $group with $median") {
+		TestPipeline<Score>()
+			.group {
+				Results::total median of(Score::score)
+			}
+			.also {
+				@Suppress("unused")
+				val foo: Pipeline<Results> = it // Won't compile if 'group' stops changing the type automatically to Results
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$group": {
+							"_id": null,
+							"total": {
+								"$median": {
+									"input": "$score",
+									"method": "approximate"
+								}
 							}
 						}
 					}
