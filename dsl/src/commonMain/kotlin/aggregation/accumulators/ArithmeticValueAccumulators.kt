@@ -249,6 +249,85 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	}
 
 	// endregion
+	// region $percentile
+
+	/**
+	 * Returns an approximation of the specified [percentiles].
+	 *
+	 * Each percentile is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The results may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val percentiles: List<Double>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::percentiles.percentiles(of(User::balance), 0.5, 0.75, 0.9, 0.95)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
+		value: Value<From, Number?>,
+		vararg percentiles: Double,
+	) {
+		accept(PercentileValueAccumulator(value, this.path, percentiles.asList(), context))
+	}
+
+	/**
+	 * Returns an approximation of the specified [percentiles].
+	 *
+	 * Each percentile is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The results may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val percentiles: List<Double>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::percentiles.percentiles(of(User::balance), 0.5, 0.75, 0.9, 0.95)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, List<T>>.percentiles(
+		value: Value<From, Number?>,
+		vararg percentiles: Double,
+	) {
+		this.field.percentiles(value, percentiles = percentiles)
+	}
+
+	// endregion
 
 	@LowLevelApi
 	private class ArithmeticValueAccumulator(
@@ -282,6 +361,32 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 						value.writeTo(this)
 					}
 					writeString("method", "approximate")
+				}
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class PercentileValueAccumulator(
+		val value: Value<*, *>,
+		val into: Path,
+		val percentiles: List<Double>,
+		context: BsonContext,
+	) : AbstractBsonNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument(into.toString()) {
+				writeDocument($$"$percentile") {
+					write("input") {
+						value.writeTo(this)
+					}
+					writeString("method", "approximate")
+					writeArray("p") {
+						percentiles.forEach { percentile ->
+							writeDouble(percentile)
+						}
+					}
 				}
 			}
 		}

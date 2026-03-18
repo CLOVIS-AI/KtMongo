@@ -154,6 +154,7 @@ val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.secon
 		val total: Int,
 		val average: Double,
 		val median: Double,
+		val percentiles: List<Double>,
 	)
 
 	test("Statistics with grouping") {
@@ -169,11 +170,13 @@ val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.secon
 				Statistics::total sum of(Song::editionDate)
 				Statistics::average average of(Song::editionDate)
 				Statistics::median median of(Song::editionDate)
+				Statistics::percentiles.percentiles(of(Song::editionDate), 0.5, 0.75, 0.9, 0.95)
 			}
 			.first()
 
 		check(statistics.total == 8)
 		check(statistics.average == 1.6)
 		check(statistics.median == 1.0)
+		check(statistics.percentiles == listOf(1.0, 2.0, 3.0, 3.0))
 	}
 }

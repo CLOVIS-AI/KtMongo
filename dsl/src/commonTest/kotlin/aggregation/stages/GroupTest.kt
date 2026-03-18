@@ -34,6 +34,7 @@ val GroupTest by preparedSuite {
 		val average: Int,
 		val max: Int,
 		val total: Int,
+		val totals: List<Double>,
 	)
 
 	test($$"Simple $group without _id") {
@@ -100,6 +101,36 @@ val GroupTest by preparedSuite {
 								"$median": {
 									"input": "$score",
 									"method": "approximate"
+								}
+							}
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
+	test($$"Simple $group with $percentile") {
+		TestPipeline<Score>()
+			.group {
+				Results::totals.percentiles(of(Score::score), 0.5, 0.99)
+			}
+			.also {
+				@Suppress("unused")
+				val foo: Pipeline<Results> = it // Won't compile if 'group' stops changing the type automatically to Results
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$group": {
+							"_id": null,
+							"totals": {
+								"$percentile": {
+									"input": "$score",
+									"method": "approximate",
+									"p": [
+										0.5,
+										0.99
+									]
 								}
 							}
 						}
