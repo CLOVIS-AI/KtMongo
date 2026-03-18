@@ -3,6 +3,7 @@
     <deployment type="docker-image">
       <settings>
         <option name="imageTag" value="squidfunk/mkdocs-material" />
+        <option name="command" value="serve --livereload -a 0.0.0.0:8000 --watch overrides" />
         <option name="containerName" value="" />
         <option name="portBindings">
           <list>
