@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,7 +108,38 @@ interface Field<in Root, out Type> {
 }
 
 /**
- * DSL to refer to [fields][Field], usually automatically added into scope by operators.
+ * Operators to construct MongoDB field references from Kotlin code.
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * class User(
+ *     val name: String,
+ *     val age: Int,
+ *     val profile: Profile,
+ * )
+ *
+ * class Profile(
+ *     val id: ObjectId,
+ *     val friends: List<ObjectId>,
+ * )
+ *
+ * with(FieldDsl(users.context)) {
+ *     // 'name'
+ *     User::name
+ *
+ *     // 'age'
+ *     User::age
+ *
+ *     // 'profile.id'
+ *     User::profile / Profile::id
+ *
+ *     // 'profile.friends'
+ *     User::profile / Profile::friends
+ * }
+ * ```
+ *
+ * In most situations, an instance of this interface should be provided in all operations that require it.
  */
 interface FieldDsl {
 
@@ -471,6 +502,28 @@ interface FieldDsl {
 		this.field[index]
 
 }
+
+/**
+ * Creates an instance of [FieldDsl].
+ *
+ * In most situations, users shouldn't need to call this method, as an instance is often provided
+ * by operations:
+ *
+ * ```kotlin
+ * users.find {
+ *     // the 'this' receiver already implements the [FieldDsl] interface.
+ * }
+ * ```
+ *
+ * However, in some cases you may want to create fields outside operations. You can do so with:
+ * ```kotlin
+ * with(FieldDsl(users.context)) {
+ *     User::profile / Profile::name
+ * }
+ * ```
+ */
+fun FieldDsl(context: BsonContext): FieldDsl =
+	FieldDslImpl(context)
 
 @OptIn(LowLevelApi::class)
 internal class FieldDslImpl(
