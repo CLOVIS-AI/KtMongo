@@ -1,4 +1,4 @@
-# Maps
+# Querying Kotlin maps in MongoDB
 
 Kotlin has the `Map` type, which doesn't exist in BSON. Most serialization libraries treat `Map<String, V>` specially, and serialize it as an object (the keys become fields and the value their value).
 

@@ -1,4 +1,4 @@
-# Nested documents
+# Querying nested MongoDB documents in Kotlin
 
 As we have seen in the [CRUD operations](crud.md) article, KtMongo operators apply to specific fields in a document. This article describes the different ways in which we can refer to these fields.
 

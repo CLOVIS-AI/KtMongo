@@ -1,4 +1,4 @@
-# Optional criteria
+# Ergonomically managing optional filters in MongoDB queries in Kotlin
 
 When developing user interfaces, we often expose ways to query data that the user can control. In some cases, we know exactly what the user is searching for and can thus write a dedicated query. In some other cases, we provide multiple filters to the user that they can enable or disable.
 

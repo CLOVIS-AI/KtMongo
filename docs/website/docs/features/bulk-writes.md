@@ -1,4 +1,4 @@
-# Bulk writes
+# Updating multiple MongoDB documents in a single request with Kotlin
 
 Changing one document at a time can be quite expensive because of the high network activity and high latencies. Instead, when we know we want to edit multiple documents, we prefer to do so in a single request.
 

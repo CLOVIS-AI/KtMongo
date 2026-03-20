@@ -1,4 +1,4 @@
-# Filtered collections
+# Filtered collections: client-side logical views for MongoDB in Kotlin
 
 Filtered collections are logical views that exist purely in the driver and are never sent to MongoDB.
 Unlike [native MongoDB views](https://www.mongodb.com/docs/manual/core/views/) that are proper MongoDB objects and have a number of limitations (for example, they do not support write operations), KtMongo filtered collections are purely syntax sugar and are thus free to create and use, with fewer limitations.

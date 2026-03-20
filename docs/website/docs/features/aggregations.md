@@ -1,4 +1,4 @@
-# Introduction to aggregations
+# Introduction to MongoDB aggregations in Kotlin
 
 MongoDB aggregations are a way to declare a pipeline of operations that MongoDB will execute on your data. Unlike in regular queries, aggregation allow complex operators to better control your data. For example, you can compare two fields of the same document, sort based on a computed value, or combine multiple documents.
 
