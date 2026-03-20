@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ kotlin {
 }
 
 library {
-	name.set("Kotlin BSON • Based on the official MongoDB implementation")
+	name.set("Kotlin BSON • Compatibility with the official MongoDB implementation")
 	description.set("Kotlin-first BSON library based on the official BSON libraries")
 	homeUrl.set("https://ktmongo.opensavvy.dev")
 

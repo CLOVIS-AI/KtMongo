@@ -1,4 +1,4 @@
-# Module Kotlin BSON • Based on the official MongoDB implementation
+# Module Kotlin BSON • Compatibility with the official MongoDB implementation
 
 Kotlin-first BSON library, based on the official MongoDB implementations.
 

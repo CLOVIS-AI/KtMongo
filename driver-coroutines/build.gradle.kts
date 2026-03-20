@@ -40,7 +40,7 @@ kotlin {
 }
 
 library {
-	name.set("MongoDB driver for Kotlin (coroutines)")
+	name.set("KtMongo: MongoDB driver for Kotlin • Coroutines")
 	description.set("Kotlin-first MongoDB driver")
 	homeUrl.set("https://ktmongo.opensavvy.dev")
 

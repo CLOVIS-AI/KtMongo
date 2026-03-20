@@ -35,7 +35,7 @@ kotlin {
 }
 
 library {
-	name.set("MongoDB driver for Kotlin (synchronous, compatibility for KMongo)")
+	name.set("KtMongo: MongoDB driver for Kotlin • Synchronous with KMongo compatibility")
 	description.set("Kotlin-first MongoDB driver")
 	homeUrl.set("https://ktmongo.opensavvy.dev/tutorials/from-kmongo/index.html")
 

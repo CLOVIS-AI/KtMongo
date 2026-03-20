@@ -1,4 +1,4 @@
-# Module MongoDB driver for Kotlin (synchronous)
+# Module KtMongo: MongoDB driver for Kotlin • Synchronous
 
 Blocking/synchronous driver for MongoDB, using a rich Kotlin DSL.
 

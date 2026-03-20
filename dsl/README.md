@@ -1,4 +1,4 @@
-# Module MongoDB request DSL
+# Module KtMongo: MongoDB request DSL
 
 Pure Kotlin DSL targeting all MongoDB operators. 
 
