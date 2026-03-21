@@ -21,6 +21,10 @@ plugins {
 	antlr
 }
 
+dependencies {
+	antlr(libs.antlr)
+}
+
 tasks.generateGrammarSource {
 	arguments = arguments + listOf("-package", "opensavvy.ktmongo.build.kotlin", "-visitor")
 }
