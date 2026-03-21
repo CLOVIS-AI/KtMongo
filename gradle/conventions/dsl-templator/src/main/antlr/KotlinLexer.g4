@@ -24,7 +24,7 @@ DelimitedComment: '/*' ( DelimitedComment | .)*? '*/' -> channel(HIDDEN);
 
 LineComment: '//' ~[\u000A\u000D]* -> channel(HIDDEN);
 
-WS: [\u0020\u0009\u000C] -> skip;
+WS: [\u0020\u0009\u000C] -> channel(HIDDEN);
 
 NL: '\u000A' | '\u000D' '\u000A';
 
@@ -47,6 +47,8 @@ SUB              : '-';
 INCR             : '++';
 DECR             : '--';
 CONJ             : '&&';
+AMP              : '&';
+DOLLAR           : '$';
 DISJ             : '||';
 EXCL             : '!';
 COLON            : ':';
@@ -298,6 +300,8 @@ Inside_SUB              : SUB              -> type(SUB);
 Inside_INCR             : INCR             -> type(INCR);
 Inside_DECR             : DECR             -> type(DECR);
 Inside_CONJ             : CONJ             -> type(CONJ);
+Inside_AMP              : AMP              -> type(AMP);
+Inside_DOLLAR           : DOLLAR           -> type(DOLLAR);
 Inside_DISJ             : DISJ             -> type(DISJ);
 Inside_EXCL             : EXCL             -> type(EXCL);
 Inside_COLON            : COLON            -> type(COLON);
@@ -408,8 +412,8 @@ Inside_Identifier      : Identifier                       -> type(Identifier);
 Inside_LabelReference  : LabelReference                   -> type(LabelReference);
 Inside_LabelDefinition : LabelDefinition                  -> type(LabelDefinition);
 Inside_Comment         : (LineComment | DelimitedComment) -> channel(HIDDEN);
-Inside_WS              : WS                               -> skip;
-Inside_NL              : NL                               -> skip;
+Inside_WS              : WS                               -> channel(HIDDEN);
+Inside_NL              : NL                               -> channel(HIDDEN);
 
 mode LineString;
 
@@ -437,7 +441,7 @@ MultiLineStrEscapedChar: '\\' .;
 
 MultiLineStrExprStart: '${' -> pushMode(StringExpression);
 
-MultiLineNL: NL -> skip;
+MultiLineNL: NL -> channel(HIDDEN);
 
 mode StringExpression;
 
@@ -459,6 +463,8 @@ StrExpr_SUB              : SUB              -> type(SUB);
 StrExpr_INCR             : INCR             -> type(INCR);
 StrExpr_DECR             : DECR             -> type(DECR);
 StrExpr_CONJ             : CONJ             -> type(CONJ);
+StrExpr_AMP              : AMP              -> type(AMP);
+StrExpr_DOLLAR           : DOLLAR           -> type(DOLLAR);
 StrExpr_DISJ             : DISJ             -> type(DISJ);
 StrExpr_EXCL             : EXCL             -> type(EXCL);
 StrExpr_COLON            : COLON            -> type(COLON);
@@ -512,5 +518,5 @@ StrExpr_Identifier      : Identifier                       -> type(Identifier);
 StrExpr_LabelReference  : LabelReference                   -> type(LabelReference);
 StrExpr_LabelDefinition : LabelDefinition                  -> type(LabelDefinition);
 StrExpr_Comment         : (LineComment | DelimitedComment) -> channel(HIDDEN);
-StrExpr_WS              : WS                               -> skip;
-StrExpr_NL              : NL                               -> skip;
+StrExpr_WS              : WS                               -> channel(HIDDEN);
+StrExpr_NL              : NL                               -> channel(HIDDEN);
