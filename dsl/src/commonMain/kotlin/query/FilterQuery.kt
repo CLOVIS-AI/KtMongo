@@ -29,7 +29,6 @@ import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import org.intellij.lang.annotations.Language
-import kotlin.reflect.KProperty1
 
 /**
  * DSL for MongoDB operators that are used as predicates in conditions.
@@ -298,8 +297,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	operator fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit) {
-		this.field.invoke(block)
+	operator fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit) {
+		return this.field.invoke(block)
 	}
 
 	// endregion
@@ -361,8 +360,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.not(expression: FilterQueryPredicate<V>.() -> Unit) {
-		this.field.not(expression)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.not(expression: FilterQueryPredicate<V>.() -> Unit) {
+		return this.field.not(expression)
 	}
 
 	// endregion
@@ -416,8 +415,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.eq(value: V) {
-		this.field.eq(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.eq(value: V) {
+		return this.field.eq(value)
 	}
 
 	/**
@@ -484,8 +483,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.eqNotNull(value: V?) {
-		this.field.eqNotNull(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.eqNotNull(value: V?) {
+		return this.field.eqNotNull(value)
 	}
 
 	// endregion
@@ -547,8 +546,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.ne(value: V) {
-		this.field.ne(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.ne(value: V) {
+		return this.field.ne(value)
 	}
 
 	// endregion
@@ -608,8 +607,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isNotNull Identical, but does not match elements where the field is `null`.
 	 */
 	@KtMongoDsl
-	fun KProperty1<T, *>.exists() {
-		this.field.exists()
+	fun kotlin.reflect.KProperty1<T, *>.exists() {
+		return this.field.exists()
 	}
 
 	/**
@@ -666,8 +665,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isNull Only matches documents that are specifically `null`.
 	 */
 	@KtMongoDsl
-	fun KProperty1<T, *>.doesNotExist() {
-		this.field.doesNotExist()
+	fun kotlin.reflect.KProperty1<T, *>.doesNotExist() {
+		return this.field.doesNotExist()
 	}
 
 	/**
@@ -720,9 +719,10 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isNull
 	 * @see isNotEmpty
 	 */
+	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun KProperty1<T, Collection<*>>.isEmpty() {
-		this.field.isEmpty()
+	fun kotlin.reflect.KProperty1<T, Collection<*>>.isEmpty() {
+		return this.field.isEmpty()
 	}
 
 	/**
@@ -780,8 +780,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun KProperty1<T, Map<String, *>>.isMapEmpty() {
-		this.field.isMapEmpty()
+	fun kotlin.reflect.KProperty1<T, Map<String, *>>.isMapEmpty() {
+		return this.field.isMapEmpty()
 	}
 
 	/**
@@ -834,9 +834,10 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isNotNull
 	 * @see isEmpty
 	 */
+	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun KProperty1<T, Collection<*>>.isNotEmpty() {
-		this.field.isNotEmpty()
+	fun kotlin.reflect.KProperty1<T, Collection<*>>.isNotEmpty() {
+		return this.field.isNotEmpty()
 	}
 
 	/**
@@ -893,8 +894,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun KProperty1<T, Map<String, *>>.isMapNotEmpty() {
-		this.field.isMapNotEmpty()
+	fun kotlin.reflect.KProperty1<T, Map<String, *>>.isMapNotEmpty() {
+		return this.field.isMapNotEmpty()
 	}
 
 	// endregion
@@ -958,8 +959,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isUndefined Checks if a value has the type [BsonType.Undefined].
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, *>.hasType(type: BsonType) {
-		this.field.hasType(type)
+	infix fun kotlin.reflect.KProperty1<T, *>.hasType(type: BsonType) {
+		return this.field.hasType(type)
 	}
 
 	/**
@@ -1014,8 +1015,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isNotNull Opposite.
 	 */
 	@KtMongoDsl
-	fun KProperty1<T, *>.isNull() {
-		this.field.isNull()
+	fun kotlin.reflect.KProperty1<T, *>.isNull() {
+		return this.field.isNull()
 	}
 
 	/**
@@ -1068,8 +1069,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isNull Opposite.
 	 */
 	@KtMongoDsl
-	fun KProperty1<T, *>.isNotNull() {
-		this.field.isNotNull()
+	fun kotlin.reflect.KProperty1<T, *>.isNotNull() {
+		return this.field.isNotNull()
 	}
 
 	/**
@@ -1126,8 +1127,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@Suppress("DEPRECATION")
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@KtMongoDsl
-	fun KProperty1<T, *>.isUndefined() {
-		this.field.isUndefined()
+	fun kotlin.reflect.KProperty1<T, *>.isUndefined() {
+		return this.field.isUndefined()
 	}
 
 	/**
@@ -1184,8 +1185,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@Suppress("DEPRECATION")
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@KtMongoDsl
-	fun KProperty1<T, *>.isNotUndefined() {
-		this.field.isNotUndefined()
+	fun kotlin.reflect.KProperty1<T, *>.isNotUndefined() {
+		return this.field.isNotUndefined()
 	}
 
 	// endregion
@@ -1243,8 +1244,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gt(value: V) {
-		this.field.gt(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.gt(value: V) {
+		return this.field.gt(value)
 	}
 
 	/**
@@ -1305,8 +1306,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gtNotNull(value: V?) {
-		this.field.gtNotNull(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.gtNotNull(value: V?) {
+		return this.field.gtNotNull(value)
 	}
 
 	/**
@@ -1361,8 +1362,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gte(value: V) {
-		this.field.gte(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.gte(value: V) {
+		return this.field.gte(value)
 	}
 
 	/**
@@ -1423,8 +1424,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gteNotNull(value: V?) {
-		this.field.gteNotNull(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.gteNotNull(value: V?) {
+		return this.field.gteNotNull(value)
 	}
 
 	/**
@@ -1479,8 +1480,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.lt(value: V) {
-		this.field.lt(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.lt(value: V) {
+		return this.field.lt(value)
 	}
 
 	/**
@@ -1541,8 +1542,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.ltNotNull(value: V?) {
-		this.field.ltNotNull(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.ltNotNull(value: V?) {
+		return this.field.ltNotNull(value)
 	}
 
 	/**
@@ -1597,8 +1598,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.lte(value: V) {
-		this.field.lte(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.lte(value: V) {
+		return this.field.lte(value)
 	}
 
 	/**
@@ -1659,8 +1660,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.lteNotNull(value: V?) {
-		this.field.lteNotNull(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.lteNotNull(value: V?) {
+		return this.field.lteNotNull(value)
 	}
 
 	// region Ranges (isIn)
@@ -1715,8 +1716,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.isIn(range: ClosedRange<V>) {
-		this.field isIn range
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.isIn(range: ClosedRange<V>) {
+		return this.field.isIn(range)
 	}
 
 	/**
@@ -1769,8 +1770,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.isIn(range: OpenEndRange<V>) {
-		this.field isIn range
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.isIn(range: OpenEndRange<V>) {
+		return this.field.isIn(range)
 	}
 
 	// Some ranges are both ClosedRange and OpenEndRange
@@ -1825,8 +1826,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@JvmName("isInSimple")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>, R> KProperty1<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
-		this isIn (range as ClosedRange<V>)
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>, R> kotlin.reflect.KProperty1<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
+		return this.field.isIn(range)
 	}
 
 	// endregion
@@ -1887,8 +1888,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isOneOf(values: List<V>) {
-		this.field.isOneOf(values)
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.isOneOf(values: List<V>) {
+		return this.field.isOneOf(values)
 	}
 
 	/**
@@ -1945,8 +1946,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isOneOf(vararg values: V) {
-		isOneOf(values.asList())
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.isOneOf(vararg values: V) {
+		return this.field.isOneOf(*values)
 	}
 
 	/**
@@ -2007,8 +2008,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isNotOneOf(values: List<V>) {
-		this.field.isNotOneOf(values)
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.isNotOneOf(values: List<V>) {
+		return this.field.isNotOneOf(values)
 	}
 
 	/**
@@ -2069,8 +2070,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isNotOneOf(vararg values: V) {
-		isNotOneOf(values.asList())
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.isNotOneOf(vararg values: V) {
+		return this.field.isNotOneOf(*values)
 	}
 
 	// endregion
@@ -2231,8 +2232,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	val <V> KProperty1<T, Collection<V>>.any: Field<T, V>
-		get() = FieldImpl<T, V>(field.path)
+	val <V> kotlin.reflect.KProperty1<T, Collection<V>>.any: Field<T, V>
+		get() = this.field.any
 
 	/**
 	 * Combines Kotlin properties into a path usable to point to any item in an array.
@@ -2294,12 +2295,43 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * }
 	 * ```
 	 */
-	// DO NOT REIMPLEMENT THIS METHOD, THIS IS A HACK TO AVOID PLATFORM DECLARATION CLASHES,
-	// IT WILL NOT WORK IF YOU USE ANY OTHER IMPLEMENTATION THAN THE DEFAULT ONE.
 	@KtMongoDsl
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("divAny")
-	operator fun <V, V2> KProperty1<T, Collection<V>>.div(other: Field<V, V2>): Field<T, V2> =
+	operator fun <V, V2> kotlin.reflect.KProperty1<T, Collection<V>>.div(other: Field<V, V2>): Field<T, V2> {
+		return this.field.div(other)
+	}
+
+	/**
+	 * Combines Kotlin properties into a path usable to point to any item in an array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val grades: List<Grade>
+	 * )
+	 *
+	 * class Grade(
+	 *     val name: Int
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades / Grade::name eq 19
+	 * }
+	 * ```
+	 *
+	 * This function is a shorthand for [any]:
+	 * ```kotlin
+	 * collection.find {
+	 *     User::grades.any / Gradle::name eq 19
+	 * }
+	 * ```
+	 */
+	@KtMongoDsl
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("divAny")
+	operator fun <V, V2> Field<T, Collection<V>>.div(other: kotlin.reflect.KProperty1<V, V2>): Field<T, V2> =
 		this.any / other
 
 	/**
@@ -2328,47 +2360,12 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * }
 	 * ```
 	 */
-	// DO NOT REIMPLEMENT THIS METHOD, THIS IS A HACK TO AVOID PLATFORM DECLARATION CLASHES,
-	// IT WILL NOT WORK IF YOU USE ANY OTHER IMPLEMENTATION THAN THE DEFAULT ONE.
 	@KtMongoDsl
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("divAny")
-	operator fun <V, V2> Field<T, Collection<V>>.div(other: KProperty1<V, V2>): Field<T, V2> =
-		this.any / other
-
-	/**
-	 * Combines Kotlin properties into a path usable to point to any item in an array.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val grades: List<Grade>
-	 * )
-	 *
-	 * class Grade(
-	 *     val name: Int
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades / Grade::name eq 19
-	 * }
-	 * ```
-	 *
-	 * This function is a shorthand for [any]:
-	 * ```kotlin
-	 * collection.find {
-	 *     User::grades.any / Gradle::name eq 19
-	 * }
-	 * ```
-	 */
-	// DO NOT REIMPLEMENT THIS METHOD, THIS IS A HACK TO AVOID PLATFORM DECLARATION CLASHES,
-	// IT WILL NOT WORK IF YOU USE ANY OTHER IMPLEMENTATION THAN THE DEFAULT ONE.
-	@KtMongoDsl
-	@Suppress("INAPPLICABLE_JVM_NAME")
-	@JvmName("divAny")
-	operator fun <V, V2> KProperty1<T, Collection<V>>.div(other: KProperty1<V, V2>): Field<T, V2> =
-		this.any / other
+	operator fun <V, V2> kotlin.reflect.KProperty1<T, Collection<V>>.div(other: kotlin.reflect.KProperty1<V, V2>): Field<T, V2> {
+		return this.field.div(other)
+	}
 
 	/**
 	 * Specify multiple operators on a single array element.
@@ -2470,9 +2467,10 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/)
 	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	fun <V> KProperty1<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit) {
-		this.field.anyValue(block)
+	fun <V> kotlin.reflect.KProperty1<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit) {
+		return this.field.anyValue(block)
 	}
 
 	/**
@@ -2587,8 +2585,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	fun <V> KProperty1<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit) {
-		this.field.any(block)
+	fun <V> kotlin.reflect.KProperty1<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit) {
+		return this.field.any(block)
 	}
 
 	// endregion
@@ -2635,10 +2633,9 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/all/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, Collection<V>>.containsAll(values: Collection<V>) {
-		this.field.containsAll(values)
+	infix fun <V> kotlin.reflect.KProperty1<T, Collection<V>>.containsAll(values: Collection<V>) {
+		return this.field.containsAll(values)
 	}
 
 	// endregion
@@ -2698,8 +2695,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/size/)
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, Collection<*>>.size(size: Int) {
-		this.field.size(size)
+	infix fun kotlin.reflect.KProperty1<T, Collection<*>>.size(size: Int) {
+		return this.field.size(size)
 	}
 
 	// endregion
@@ -2844,14 +2841,14 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * Therefore, `"^S"` will match `"First line\nSecond line"`, which would not match otherwise.
 	 */
 	@KtMongoDsl
-	fun KProperty1<T, String?>.regex(
+	fun kotlin.reflect.KProperty1<T, String?>.regex(
 		@Language("JSRegexp") pattern: String,
 		caseInsensitive: Boolean = false,
 		dotAll: Boolean = false,
 		extended: Boolean = false,
 		matchEachLine: Boolean = false,
 	) {
-		this { regex(pattern, caseInsensitive, dotAll, extended, matchEachLine) }
+		return this.field.regex(pattern, caseInsensitive, dotAll, extended, matchEachLine)
 	}
 
 	// endregion
@@ -2919,8 +2916,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/)
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAllClear(mask: UInt) {
-		this.field bitsAllClear mask
+	infix fun kotlin.reflect.KProperty1<T, *>.bitsAllClear(mask: UInt) {
+		return this.field.bitsAllClear(mask)
 	}
 
 	/**
@@ -2959,8 +2956,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/)
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAllClear(mask: ByteArray) {
-		this.field bitsAllClear mask
+	infix fun kotlin.reflect.KProperty1<T, *>.bitsAllClear(mask: ByteArray) {
+		return this.field.bitsAllClear(mask)
 	}
 
 	/**
@@ -3025,8 +3022,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAllSet(mask: UInt) {
-		this.field bitsAllSet mask
+	infix fun kotlin.reflect.KProperty1<T, *>.bitsAllSet(mask: UInt) {
+		return this.field.bitsAllSet(mask)
 	}
 
 	/**
@@ -3065,8 +3062,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAllSet(mask: ByteArray) {
-		this.field bitsAllSet mask
+	infix fun kotlin.reflect.KProperty1<T, *>.bitsAllSet(mask: ByteArray) {
+		return this.field.bitsAllSet(mask)
 	}
 
 	/**
@@ -3131,8 +3128,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/)
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAnyClear(mask: UInt) {
-		this.field bitsAnyClear mask
+	infix fun kotlin.reflect.KProperty1<T, *>.bitsAnyClear(mask: UInt) {
+		return this.field.bitsAnyClear(mask)
 	}
 
 	/**
@@ -3171,8 +3168,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/)
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAnyClear(mask: ByteArray) {
-		this.field bitsAnyClear mask
+	infix fun kotlin.reflect.KProperty1<T, *>.bitsAnyClear(mask: ByteArray) {
+		return this.field.bitsAnyClear(mask)
 	}
 
 	/**
@@ -3237,8 +3234,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/)
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAnySet(mask: UInt) {
-		this.field bitsAnySet mask
+	infix fun kotlin.reflect.KProperty1<T, *>.bitsAnySet(mask: UInt) {
+		return this.field.bitsAnySet(mask)
 	}
 
 	/**
@@ -3277,8 +3274,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/)
 	 */
 	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAnySet(mask: ByteArray) {
-		this.field bitsAnySet mask
+	infix fun kotlin.reflect.KProperty1<T, *>.bitsAnySet(mask: ByteArray) {
+		return this.field.bitsAnySet(mask)
 	}
 
 	// endregion

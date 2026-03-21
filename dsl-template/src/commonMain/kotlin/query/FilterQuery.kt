@@ -26,7 +26,6 @@ import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import org.intellij.lang.annotations.Language
-import kotlin.reflect.KProperty1
 
 /**
  * DSL for MongoDB operators that are used as predicates in conditions.
@@ -266,39 +265,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit)
 
-	/**
-	 * Targets a single field to execute a [targeted predicate][FilterQueryPredicate].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::name {
-	 *         eq("foo")
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * Note that many operators available this way have a convenience function directly in this class to
-	 * shorten this. For this example, see [eq]:
-	 *
-	 * ```kotlin
-	 * collection.find {
-	 *     User::name eq "foo"
-	 * }
-	 * ```
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	operator fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit) {
-		this.field.invoke(block)
-	}
-
 	// endregion
 	// region $not
 
@@ -332,36 +298,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		this { not(expression) }
 	}
 
-	/**
-	 * Performs a logical `NOT` operation on the specified [expression] and selects the
-	 * documents that *do not* match the expression. This includes the elements
-	 * that do not contain the field.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age not {
-	 *         hasType(BsonType.STRING)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/not/)
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.not(expression: FilterQueryPredicate<V>.() -> Unit) {
-		this.field.not(expression)
-	}
-
 	// endregion
 	// region $eq
 
@@ -389,32 +325,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.eq(value: V) {
 		this { eq(value) }
-	}
-
-	/**
-	 * Matches documents where the value of a field equals the [value].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::name eq "foo"
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/eq/)
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.eq(value: V) {
-		this.field.eq(value)
 	}
 
 	/**
@@ -451,40 +361,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		this { eqNotNull(value) }
 	}
 
-	/**
-	 * Matches documents where the value of a field equals [value].
-	 *
-	 * If [value] is `null`, the operator is not added (all documents are matched).
-	 *
-	 * ### Example
-	 *
-	 * This operator is useful to simplify searches when the criteria are optional.
-	 * For example, instead of writing:
-	 * ```kotlin
-	 * collection.find {
-	 *     if (criteria.name != null)
-	 *         User::name eq criteria.name
-	 * }
-	 * ```
-	 * this operator can be used instead:
-	 * ```kotlin
-	 * collection.find {
-	 *     User::name eqNotNull criteria.name
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/eq/)
-	 *
-	 * @see eq Equality filter.
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.eqNotNull(value: V?) {
-		this.field.eqNotNull(value)
-	}
-
 	// endregion
 	// region $ne
 
@@ -516,36 +392,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.ne(value: V) {
 		this { ne(value) }
-	}
-
-	/**
-	 * Matches documents where the value of a field does not equal the [value].
-	 *
-	 * The result includes documents which do not contain the specified field.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::name ne "foo"
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/ne/)
-	 *
-	 * @see eq
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.ne(value: V) {
-		this.field.ne(value)
 	}
 
 	// endregion
@@ -581,35 +427,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	/**
-	 * Matches documents that contain the specified field, including
-	 * values where the field value is `null`.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age.exists()
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/exists/)
-	 *
-	 * @see doesNotExist Opposite.
-	 * @see isNotNull Identical, but does not match elements where the field is `null`.
-	 */
-	@KtMongoDsl
-	fun KProperty1<T, *>.exists() {
-		this.field.exists()
-	}
-
-	/**
 	 * Matches documents that do not contain the specified field.
 	 * Documents where the field if `null` are not matched.
 	 *
@@ -639,35 +456,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	/**
-	 * Matches documents that do not contain the specified field.
-	 * Documents where the field if `null` are not matched.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val age: Int,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age.doesNotExist()
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/exists/)
-	 *
-	 * @see exists Opposite.
-	 * @see isNull Only matches documents that are specifically `null`.
-	 */
-	@KtMongoDsl
-	fun KProperty1<T, *>.doesNotExist() {
-		this.field.doesNotExist()
-	}
-
-	/**
 	 * Matches documents in which an array is empty or absent.
 	 *
 	 * ### Example
@@ -693,33 +481,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	fun Field<T, Collection<*>>.isEmpty() {
 		FieldImpl<T, Any>(path / PathSegment.Indexed(0)).doesNotExist()
-	}
-
-	/**
-	 * Matches documents in which an array is empty or absent.
-	 *
-	 * ### Example
-	 *
-	 * Return all users that have no grades (either an empty array, or the `grades` field is absent):
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val grades: List<Int>
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades.isEmpty()
-	 * }
-	 * ```
-	 *
-	 * @see exists
-	 * @see isNull
-	 * @see isNotEmpty
-	 */
-	@KtMongoDsl
-	fun KProperty1<T, Collection<*>>.isEmpty() {
-		this.field.isEmpty()
 	}
 
 	/**
@@ -754,34 +515,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	/**
-	 * Matches documents in which a map is empty or absent.
-	 *
-	 * ### Example
-	 *
-	 * Return all users that have no grades (either an empty map, or the `grades` field is absent):
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val grades: Map<String, Int>
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades.isMapEmpty()
-	 * }
-	 * ```
-	 *
-	 * @see exists
-	 * @see isNull
-	 * @see isNotEmpty
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun KProperty1<T, Map<String, *>>.isMapEmpty() {
-		this.field.isMapEmpty()
-	}
-
-	/**
 	 * Matches documents in which an array is not empty.
 	 *
 	 * ### Example
@@ -807,33 +540,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	fun Field<T, Collection<*>>.isNotEmpty() {
 		FieldImpl<T, Any>(path / PathSegment.Indexed(0)).exists()
-	}
-
-	/**
-	 * Matches documents in which an array is not empty.
-	 *
-	 * ### Example
-	 *
-	 * Return all users that have one or more grades.
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val grades: List<Int>
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades.isNotEmpty()
-	 * }
-	 * ```
-	 *
-	 * @see exists
-	 * @see isNotNull
-	 * @see isEmpty
-	 */
-	@KtMongoDsl
-	fun KProperty1<T, Collection<*>>.isNotEmpty() {
-		this.field.isNotEmpty()
 	}
 
 	/**
@@ -864,34 +570,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	fun Field<T, Map<String, *>>.isMapNotEmpty() {
 		FieldImpl<T, Any>(path) gt context.buildDocument { }
-	}
-
-	/**
-	 * Matches documents in which a map is not empty.
-	 *
-	 * ### Example
-	 *
-	 * Return all users that have one or more grades.
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String?,
-	 *     val grades: Map<String, Int>
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades.isMapNotEmpty()
-	 * }
-	 * ```
-	 *
-	 * @see exists
-	 * @see isNotNull
-	 * @see isEmpty
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun KProperty1<T, Map<String, *>>.isMapNotEmpty() {
-		this.field.isMapNotEmpty()
 	}
 
 	// endregion
@@ -929,37 +607,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	/**
-	 * Selects documents where the value of the field is an instance of the specified BSON [type].
-	 *
-	 * Querying by data type is useful when dealing with highly unstructured data where data types
-	 * are not predictable.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Any,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age hasType BsonType.STRING
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/type/)
-	 *
-	 * @see isNull Checks if a value has the type [BsonType.Null].
-	 * @see isUndefined Checks if a value has the type [BsonType.Undefined].
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, *>.hasType(type: BsonType) {
-		this.field.hasType(type)
-	}
-
-	/**
 	 * Selects documents for which the field is `null`.
 	 *
 	 * ### Example
@@ -988,34 +635,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	/**
-	 * Selects documents for which the field is `null`.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age.isNull()
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/#type-check)
-	 *
-	 * @see doesNotExist Checks if the value is not set.
-	 * @see isNotNull Opposite.
-	 */
-	@KtMongoDsl
-	fun KProperty1<T, *>.isNull() {
-		this.field.isNull()
-	}
-
-	/**
 	 * Selects documents for which the field is not `null`.
 	 *
 	 * ### Example
@@ -1040,33 +659,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	fun Field<T, *>.isNotNull() {
 		this { isNotNull() }
-	}
-
-	/**
-	 * Selects documents for which the field is not `null`.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age.isNotNull()
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/#type-check)
-	 *
-	 * @see isNull Opposite.
-	 */
-	@KtMongoDsl
-	fun KProperty1<T, *>.isNotNull() {
-		this.field.isNotNull()
 	}
 
 	/**
@@ -1099,35 +691,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	/**
-	 * Selects documents for which the field is `undefined`.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age.isUndefined()
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/#type-check)
-	 *
-	 * @see isNotUndefined Opposite.
-	 */
-	@Suppress("DEPRECATION")
-	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	@KtMongoDsl
-	fun KProperty1<T, *>.isUndefined() {
-		this.field.isUndefined()
-	}
-
-	/**
 	 * Selects documents for which the field is not `undefined`.
 	 *
 	 * ### Example
@@ -1154,35 +717,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	fun Field<T, *>.isNotUndefined() {
 		this { isNotUndefined() }
-	}
-
-	/**
-	 * Selects documents for which the field is not `undefined`.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age.isNotUndefined()
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/tutorial/query-for-null-fields/#type-check)
-	 *
-	 * @see isUndefined Opposite.
-	 */
-	@Suppress("DEPRECATION")
-	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	@KtMongoDsl
-	fun KProperty1<T, *>.isNotUndefined() {
-		this.field.isNotUndefined()
 	}
 
 	// endregion
@@ -1219,34 +753,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	/**
 	 * Selects documents for which this field has a value strictly greater than [value].
 	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age gt 18
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gt/)
-	 *
-	 * @see gtNotNull
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gt(value: V) {
-		this.field.gt(value)
-	}
-
-	/**
-	 * Selects documents for which this field has a value strictly greater than [value].
-	 *
 	 * If [value] is `null`, the operator is not added (all elements are matched).
 	 *
 	 * ### Example
@@ -1276,37 +782,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	/**
-	 * Selects documents for which this field has a value strictly greater than [value].
-	 *
-	 * If [value] is `null`, the operator is not added (all elements are matched).
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age gtNotNull 10
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gt/)
-	 *
-	 * @see gt
-	 * @see eqNotNull Learn more about the 'notNull' variants
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gtNotNull(value: V?) {
-		this.field.gtNotNull(value)
-	}
-
-	/**
 	 * Selects documents for which this field has a value greater or equal to [value].
 	 *
 	 * ### Example
@@ -1332,34 +807,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gte(value: V) {
 		this { gte(value) }
-	}
-
-	/**
-	 * Selects documents for which this field has a value greater or equal to [value].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age gte 18
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gte/)
-	 *
-	 * @see gteNotNull
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gte(value: V) {
-		this.field.gte(value)
 	}
 
 	/**
@@ -1394,37 +841,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	/**
-	 * Selects documents for which this field has a value greater or equal to [value].
-	 *
-	 * If [value] is `null`, the operator is not added (all elements are matched).
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age gteNotNull 10
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gte/)
-	 *
-	 * @see gte
-	 * @see eqNotNull Learn more about the 'notNull' variants
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.gteNotNull(value: V?) {
-		this.field.gteNotNull(value)
-	}
-
-	/**
 	 * Selects documents for which this field has a value strictly lesser than [value].
 	 *
 	 * ### Example
@@ -1450,34 +866,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lt(value: V) {
 		this { lt(value) }
-	}
-
-	/**
-	 * Selects documents for which this field has a value strictly lesser than [value].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age lt 18
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lt/)
-	 *
-	 * @see ltNotNull
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.lt(value: V) {
-		this.field.lt(value)
 	}
 
 	/**
@@ -1512,37 +900,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	/**
-	 * Selects documents for which this field has a value strictly lesser than [value].
-	 *
-	 * If [value] is `null`, the operator is not added (all elements are matched).
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age ltNotNull 10
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lt/)
-	 *
-	 * @see lt
-	 * @see eqNotNull Learn more about the 'notNull' variants
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.ltNotNull(value: V?) {
-		this.field.ltNotNull(value)
-	}
-
-	/**
 	 * Selects documents for which this field has a value lesser or equal to [value].
 	 *
 	 * ### Example
@@ -1568,34 +925,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lte(value: V) {
 		this { lte(value) }
-	}
-
-	/**
-	 * Selects documents for which this field has a value lesser or equal to [value].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age lte 18
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lte/)
-	 *
-	 * @see lteNotNull
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.lte(value: V) {
-		this.field.lte(value)
 	}
 
 	/**
@@ -1627,37 +956,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lteNotNull(value: V?) {
 		this { lteNotNull(value) }
-	}
-
-	/**
-	 * Selects documents for which this field has a value lesser or equal to [value].
-	 *
-	 * If [value] is `null`, the operator is not added (all elements are matched).
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age lteNotNull 10
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lte/)
-	 *
-	 * @see lte
-	 * @see eqNotNull Learn more about the 'notNull' variants
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.lteNotNull(value: V?) {
-		this.field.lteNotNull(value)
 	}
 
 	// region Ranges (isIn)
@@ -1703,31 +1001,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     User::age isIn (25..50)
-	 * }
-	 * ```
-	 *
-	 * @see gte Only specify the lower bound.
-	 * @see lte Only specify the higher bound.
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.isIn(range: ClosedRange<V>) {
-		this.field isIn range
-	}
-
-	/**
-	 * Selects documents in which this field has a value included in [range].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?
-	 * )
-	 *
-	 * collection.find {
 	 *     User::age isIn (25..<50)
 	 * }
 	 * ```
@@ -1743,31 +1016,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 			field gte range.start
 			field lt range.endExclusive
 		}
-	}
-
-	/**
-	 * Selects documents in which this field has a value included in [range].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age isIn (25..<50)
-	 * }
-	 * ```
-	 *
-	 * @see gte Only specify the lower bound.
-	 * @see lt Only specify the higher bound.
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.isIn(range: OpenEndRange<V>) {
-		this.field isIn range
 	}
 
 	// Some ranges are both ClosedRange and OpenEndRange
@@ -1797,32 +1045,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@JvmName("isInSimple")
 	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>, R> Field<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
-		this isIn (range as ClosedRange<V>)
-	}
-
-	/**
-	 * Selects documents in which this field has a value included in [range].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age isIn (25..50)
-	 * }
-	 * ```
-	 *
-	 * @see gte Only specify the lower bound.
-	 * @see lte Only specify the higher bound.
-	 */
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
-	@JvmName("isInSimple")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>, R> KProperty1<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
 		this isIn (range as ClosedRange<V>)
 	}
 
@@ -1871,35 +1093,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     User::name.isOneOf(listOf("Alfred", "Arthur"))
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/in/)
-	 *
-	 * @see or
-	 * @see eq
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isOneOf(values: List<V>) {
-		this.field.isOneOf(values)
-	}
-
-	/**
-	 * Selects documents for which this field is equal to one of the given [values].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
 	 *     User::name.isOneOf("Alfred", "Arthur")
 	 * }
 	 * ```
@@ -1914,35 +1107,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isOneOf(vararg values: V) {
-		isOneOf(values.asList())
-	}
-
-	/**
-	 * Selects documents for which this field is equal to one of the given [values].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::name.isOneOf("Alfred", "Arthur")
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/in/)
-	 *
-	 * @see or
-	 * @see eq
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isOneOf(vararg values: V) {
 		isOneOf(values.asList())
 	}
 
@@ -1991,37 +1155,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     User::name.isNotOneOf(listOf("Alfred", "Arthur"))
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
-	 *
-	 * @see isOneOf
-	 * @see ne
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isNotOneOf(values: List<V>) {
-		this.field.isNotOneOf(values)
-	}
-
-	/**
-	 * Selects documents for which this field is not equal to any of the given [values].
-	 *
-	 * This operator will also select documents for which the field doesn't exist.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
 	 *     User::name.isNotOneOf("Alfred", "Arthur")
 	 * }
 	 * ```
@@ -2036,37 +1169,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isNotOneOf(vararg values: V) {
-		isNotOneOf(values.asList())
-	}
-
-	/**
-	 * Selects documents for which this field is not equal to any of the given [values].
-	 *
-	 * This operator will also select documents for which the field doesn't exist.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::name.isNotOneOf("Alfred", "Arthur")
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
-	 *
-	 * @see isOneOf
-	 * @see ne
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.isNotOneOf(vararg values: V) {
 		isNotOneOf(values.asList())
 	}
 
@@ -2153,85 +1255,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		get() = FieldImpl(path)
 
 	/**
-	 * Specify operators on array elements.
-	 *
-	 * ### Example
-	 *
-	 * Find any user who has 12 as one of their favorite numbers.
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val favoriteNumbers: List<Int>
-	 * )
-	 *
-	 * collection.find {
-	 *     User::favoriteNumbers.any eq 12
-	 * }
-	 * ```
-	 *
-	 * ### Repeated usages will match different items
-	 *
-	 * Note that if `any` is used multiple times, it may test different items.
-	 * For example, the following request will match the following document:
-	 * ```kotlin
-	 * collection.find {
-	 *     User::favoriteNumbers.any gt 2
-	 *     User::favoriteNumbers.any lte 7
-	 * }
-	 * ```
-	 * ```json
-	 * {
-	 *     "name": "Nicolas",
-	 *     "favoriteNumbers": [ 1, 9 ]
-	 * }
-	 * ```
-	 * Because 1 is less than 7, and 9 is greater than 2, the document is returned.
-	 *
-	 * If you want to apply multiple filters to the same item, use the [any] function.
-	 *
-	 * ### Arrays don't exist in finds!
-	 *
-	 * MongoDB operators do not discriminate between scalars and arrays.
-	 * When an array is encountered, all operators attempt to match on the array itself.
-	 * If the match fails, the operators attempt to match array elements.
-	 *
-	 * It is not possible to mimic this behavior in KtMongo while still keeping type-safety,
-	 * so KtMongo has different operators to filter a collection itself or its elements.
-	 *
-	 * As a consequence, the request:
-	 * ```kotlin
-	 * collection.find {
-	 *     User::favoriteNumbers.any eq 5
-	 * }
-	 * ```
-	 * will, as expected, match the following document:
-	 * ```json
-	 * {
-	 *     favoriteNumbers: [1, 4, 5, 10]
-	 * }
-	 * ```
-	 *
-	 * It is important to note that it WILL also match this document:
-	 * ```json
-	 * {
-	 *     favoriteNumbers: 5
-	 * }
-	 * ```
-	 *
-	 * Since this document doesn't conform to the Kotlin declared type `List<Int>`,
-	 * it is unlikely that such an element exists, but developers should keep it in mind.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official document](https://www.mongodb.com/docs/manual/tutorial/query-arrays/)
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	val <V> KProperty1<T, Collection<V>>.any: Field<T, V>
-		get() = FieldImpl<T, V>(field.path)
-
-	/**
 	 * Combines Kotlin properties into a path usable to point to any item in an array.
 	 *
 	 * ### Example
@@ -2263,108 +1286,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("divAny")
 	operator fun <V, V2> Field<T, Collection<V>>.div(other: Field<V, V2>): Field<T, V2> =
-		this.any / other
-
-	/**
-	 * Combines Kotlin properties into a path usable to point to any item in an array.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val grades: List<Grade>
-	 * )
-	 *
-	 * class Grade(
-	 *     val name: Int
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades / Grade::name eq 19
-	 * }
-	 * ```
-	 *
-	 * This function is a shorthand for [any]:
-	 * ```kotlin
-	 * collection.find {
-	 *     User::grades.any / Gradle::name eq 19
-	 * }
-	 * ```
-	 */
-	// DO NOT REIMPLEMENT THIS METHOD, THIS IS A HACK TO AVOID PLATFORM DECLARATION CLASHES,
-	// IT WILL NOT WORK IF YOU USE ANY OTHER IMPLEMENTATION THAN THE DEFAULT ONE.
-	@KtMongoDsl
-	@Suppress("INAPPLICABLE_JVM_NAME")
-	@JvmName("divAny")
-	operator fun <V, V2> KProperty1<T, Collection<V>>.div(other: Field<V, V2>): Field<T, V2> =
-		this.any / other
-
-	/**
-	 * Combines Kotlin properties into a path usable to point to any item in an array.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val grades: List<Grade>
-	 * )
-	 *
-	 * class Grade(
-	 *     val name: Int
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades / Grade::name eq 19
-	 * }
-	 * ```
-	 *
-	 * This function is a shorthand for [any]:
-	 * ```kotlin
-	 * collection.find {
-	 *     User::grades.any / Gradle::name eq 19
-	 * }
-	 * ```
-	 */
-	// DO NOT REIMPLEMENT THIS METHOD, THIS IS A HACK TO AVOID PLATFORM DECLARATION CLASHES,
-	// IT WILL NOT WORK IF YOU USE ANY OTHER IMPLEMENTATION THAN THE DEFAULT ONE.
-	@KtMongoDsl
-	@Suppress("INAPPLICABLE_JVM_NAME")
-	@JvmName("divAny")
-	operator fun <V, V2> Field<T, Collection<V>>.div(other: KProperty1<V, V2>): Field<T, V2> =
-		this.any / other
-
-	/**
-	 * Combines Kotlin properties into a path usable to point to any item in an array.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val grades: List<Grade>
-	 * )
-	 *
-	 * class Grade(
-	 *     val name: Int
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades / Grade::name eq 19
-	 * }
-	 * ```
-	 *
-	 * This function is a shorthand for [any]:
-	 * ```kotlin
-	 * collection.find {
-	 *     User::grades.any / Gradle::name eq 19
-	 * }
-	 * ```
-	 */
-	// DO NOT REIMPLEMENT THIS METHOD, THIS IS A HACK TO AVOID PLATFORM DECLARATION CLASHES,
-	// IT WILL NOT WORK IF YOU USE ANY OTHER IMPLEMENTATION THAN THE DEFAULT ONE.
-	@KtMongoDsl
-	@Suppress("INAPPLICABLE_JVM_NAME")
-	@JvmName("divAny")
-	operator fun <V, V2> KProperty1<T, Collection<V>>.div(other: KProperty1<V, V2>): Field<T, V2> =
 		this.any / other
 
 	/**
@@ -2418,59 +1339,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	fun <V> Field<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit)
-
-	/**
-	 * Specify multiple operators on a single array element.
-	 *
-	 * ### Example
-	 *
-	 * Find students with a grade between 8 and 10, that may be eligible to perform
-	 * an exam a second time.
-	 *
-	 * ```kotlin
-	 * class Student(
-	 *     val name: String,
-	 *     val grades: List<Int>
-	 * )
-	 *
-	 * collection.find {
-	 *     Student::grades.anyValue {
-	 *         gte(8)
-	 *         lte(10)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * The following document will match because the grade 9 is in the interval.
-	 * ```json
-	 * {
-	 *     "name": "John",
-	 *     "grades": [9, 3]
-	 * }
-	 * ```
-	 *
-	 * The following document will NOT match, because none of the grades are in the interval.
-	 * ```json
-	 * {
-	 *     "name": "Lea",
-	 *     "grades": [18, 19]
-	 * }
-	 * ```
-	 *
-	 * If you want to perform multiple checks on different elements of an array,
-	 * see the [any] property.
-	 *
-	 * This function only allows specifying operators on array elements directly.
-	 * To specify operators on sub-fields of array elements, see [any].
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/)
-	 */
-	@KtMongoDsl
-	fun <V> KProperty1<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit) {
-		this.field.anyValue(block)
-	}
 
 	/**
 	 * Specify multiple operators on fields of a single array element.
@@ -2529,65 +1397,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	fun <V> Field<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit)
 
-	/**
-	 * Specify multiple operators on fields of a single array element.
-	 *
-	 * ### Example
-	 *
-	 * Find customers who have a pet that is born this month, as they may be eligible for a discount.
-	 *
-	 * ```kotlin
-	 * class Customer(
-	 *     val name: String,
-	 *     val pets: List<Pet>,
-	 * )
-	 *
-	 * class Pet(
-	 *     val name: String,
-	 *     val birthMonth: Int
-	 * )
-	 *
-	 * val currentMonth = 3
-	 *
-	 * collection.find {
-	 *     Customer::pets.any {
-	 *         Pet::birthMonth gte currentMonth
-	 *         Pet::birthMonth lte (currentMonth + 1)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * The following document will match:
-	 * ```json
-	 * {
-	 *     "name": "Fred",
-	 *     "pets": [
-	 *         {
-	 *             "name": "Arthur",
-	 *             "birthMonth": 5
-	 *         },
-	 *         {
-	 *             "name": "Gwen",
-	 *             "birthMonth": 3
-	 *         }
-	 *     ]
-	 * }
-	 * ```
-	 * because the pet "Gwen" has a matching birth month.
-	 *
-	 * If you want to perform operators on the elements directly (not on their fields), use
-	 * [anyValue] instead.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/)
-	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
-	fun <V> KProperty1<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit) {
-		this.field.any(block)
-	}
-
 	// endregion
 	// region $all
 
@@ -2612,31 +1421,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@KtMongoDsl
 	infix fun <V> Field<T, Collection<V>>.containsAll(values: Collection<V>)
-
-	/**
-	 * Selects documents where the value of a field is an array that contains all the specified [values].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val grades: List<Int>
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades containsAll listOf(2, 3, 7)
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/all/)
-	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, Collection<V>>.containsAll(values: Collection<V>) {
-		this.field.containsAll(values)
-	}
 
 	// endregion
 	// region $size
@@ -2668,36 +1452,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@KtMongoDsl
 	infix fun Field<T, Collection<*>>.size(size: Int)
-
-	/**
-	 * Selects documents where the value of a field is an array of size [size] (exactly).
-	 *
-	 * This operator cannot accept a range of values. To select documents based on fields with different numbers of
-	 * elements, create a counter field that you increment when you add elements to a field.
-	 *
-	 * Queries cannot use indexes for this portion of the query, but other parts of the query may use indexes if
-	 * applicable.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val grades: List<Int>,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::grades size 3
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/size/)
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, Collection<*>>.size(size: Int) {
-		this.field.size(size)
-	}
 
 	// endregion
 	// region $expr
@@ -2793,64 +1547,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		this { regex(pattern, caseInsensitive, dotAll, extended, matchEachLine) }
 	}
 
-	/**
-	 * Matches documents where the field corresponds to a given regex expression.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::name.regex("John .*")
-	 * }
-	 * ```
-	 *
-	 * ### Indexing
-	 *
-	 * If possible, prefer using a `"^"` prefix. For example, if we know that a pattern will only be present
-	 * at the start of a string, `"^foo"` will use indexes, whereas `"foo"` will not.
-	 *
-	 * Avoid using `.*` at the start and end of a pattern. `"foo"` is identical to `"foo.*"`, but the former
-	 * can use indexes and the latter cannot.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/regex)
-	 * - [Syntax sheet](https://www.pcre.org/current/doc/html/pcre2syntax.html)
-	 *
-	 * @param caseInsensitive If `true`, the result is matched even if its case doesn't match.
-	 * Note that this also disables index usage (even case-insensitive indexes) and ignores collation.
-	 * @param dotAll If `true`, the dot character (`.`) can match newlines.
-	 * @param extended If `true`, whitespace (except in character classes) is ignored,
-	 * and segments starting from an unescaped pound (`#`) until a newline are ignored, similarly to a Python comment.
-	 * ```kotlin
-	 * User::name.regex(
-	 *     pattern = """
-	 *         abc # This is a comment, it's not part of the pattern
-	 *         123
-	 *     """.trimIndent(),
-	 *     extended = true,
-	 * )
-	 * ```
-	 * which is identical to the non-extended pattern `"abc123"`.
-	 * @param matchEachLine If `true`, the special characters `^` and `$` match the beginning and end
-	 * of each line, instead of matching the beginning and end of the entire string.
-	 * Therefore, `"^S"` will match `"First line\nSecond line"`, which would not match otherwise.
-	 */
-	@KtMongoDsl
-	fun KProperty1<T, String?>.regex(
-		@Language("JSRegexp") pattern: String,
-		caseInsensitive: Boolean = false,
-		dotAll: Boolean = false,
-		extended: Boolean = false,
-		matchEachLine: Boolean = false,
-	) {
-		this { regex(pattern, caseInsensitive, dotAll, extended, matchEachLine) }
-	}
-
 	// endregion
 	// region Bitwise operators
 
@@ -2894,38 +1590,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
 	 * (e.g. `Decimal128`) nor ones that have a fractional component.
 	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age bitsAllClear UInt.MAX_VALUE
-	 * }
-	 * ```
-	 *
-	 * ### Performance
-	 *
-	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/)
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAllClear(mask: UInt) {
-		this.field bitsAllClear mask
-	}
-
-	/**
-	 * Matches documents where all bit positions present in [mask] are clear (i.e., 0) in the current field.
-	 *
-	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
-	 * (e.g. `Decimal128`) nor ones that have a fractional component.
-	 *
 	 * ### Performance
 	 *
 	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
@@ -2939,25 +1603,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		this {
 			bitsAllClear(mask)
 		}
-	}
-
-	/**
-	 * Matches documents where all bit positions present in [mask] are clear (i.e., 0) in the current field.
-	 *
-	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
-	 * (e.g. `Decimal128`) nor ones that have a fractional component.
-	 *
-	 * ### Performance
-	 *
-	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/)
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAllClear(mask: ByteArray) {
-		this.field bitsAllClear mask
 	}
 
 	/**
@@ -3000,38 +1645,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
 	 * (e.g. `Decimal128`) nor ones that have a fractional component.
 	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age bitsAllSet UInt.MAX_VALUE
-	 * }
-	 * ```
-	 *
-	 * ### Performance
-	 *
-	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAllSet(mask: UInt) {
-		this.field bitsAllSet mask
-	}
-
-	/**
-	 * Matches documents where all bit positions present in [mask] are set (i.e., 1) in the current field.
-	 *
-	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
-	 * (e.g. `Decimal128`) nor ones that have a fractional component.
-	 *
 	 * ### Performance
 	 *
 	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
@@ -3045,25 +1658,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		this {
 			bitsAllSet(mask)
 		}
-	}
-
-	/**
-	 * Matches documents where all bit positions present in [mask] are set (i.e., 1) in the current field.
-	 *
-	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
-	 * (e.g. `Decimal128`) nor ones that have a fractional component.
-	 *
-	 * ### Performance
-	 *
-	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAllSet(mask: ByteArray) {
-		this.field bitsAllSet mask
 	}
 
 	/**
@@ -3106,38 +1700,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
 	 * (e.g. `Decimal128`) nor ones that have a fractional component.
 	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age bitsAnyClear UInt.MAX_VALUE
-	 * }
-	 * ```
-	 *
-	 * ### Performance
-	 *
-	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/)
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAnyClear(mask: UInt) {
-		this.field bitsAnyClear mask
-	}
-
-	/**
-	 * Matches documents where any bit position present in [mask] is clear (i.e., 0) in the current field.
-	 *
-	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
-	 * (e.g. `Decimal128`) nor ones that have a fractional component.
-	 *
 	 * ### Performance
 	 *
 	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
@@ -3151,25 +1713,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		this {
 			bitsAnyClear(mask)
 		}
-	}
-
-	/**
-	 * Matches documents where any bit position present in [mask] is clear (i.e., 0) in the current field.
-	 *
-	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
-	 * (e.g. `Decimal128`) nor ones that have a fractional component.
-	 *
-	 * ### Performance
-	 *
-	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/)
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAnyClear(mask: ByteArray) {
-		this.field bitsAnyClear mask
 	}
 
 	/**
@@ -3212,38 +1755,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
 	 * (e.g. `Decimal128`) nor ones that have a fractional component.
 	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val name: String,
-	 *     val age: Int?,
-	 * )
-	 *
-	 * collection.find {
-	 *     User::age bitsAnySet UInt.MAX_VALUE
-	 * }
-	 * ```
-	 *
-	 * ### Performance
-	 *
-	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/)
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAnySet(mask: UInt) {
-		this.field bitsAnySet mask
-	}
-
-	/**
-	 * Matches documents where any bit position present in [mask] is set (i.e., 1) in the current field.
-	 *
-	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
-	 * (e.g. `Decimal128`) nor ones that have a fractional component.
-	 *
 	 * ### Performance
 	 *
 	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
@@ -3257,25 +1768,6 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		this {
 			bitsAnySet(mask)
 		}
-	}
-
-	/**
-	 * Matches documents where any bit position present in [mask] is set (i.e., 1) in the current field.
-	 *
-	 * This operator will not match numerical values that cannot be represented as a signed 64-bit integer
-	 * (e.g. `Decimal128`) nor ones that have a fractional component.
-	 *
-	 * ### Performance
-	 *
-	 * Queries cannot use indexes for this operator, but they can use indexes for other operators.
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/)
-	 */
-	@KtMongoDsl
-	infix fun KProperty1<T, *>.bitsAnySet(mask: ByteArray) {
-		this.field bitsAnySet mask
 	}
 
 	// endregion
