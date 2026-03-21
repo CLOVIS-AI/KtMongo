@@ -100,7 +100,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	private class AdditionValueOperator<Context : Any, T>(
 		context: BsonContext,
-		private val operands: List<Value<Context, T>>
+		private val operands: List<Value<Context, T>>,
 	) : AbstractValue<Context, T>(context) {
 
 		override fun simplify(): AbstractValue<Context, T> {

@@ -56,7 +56,7 @@ interface HasSort<Document : Any> : Pipeline<Document> {
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun sort(
-		block: SortOptionDsl<Document>.() -> Unit
+		block: SortOptionDsl<Document>.() -> Unit,
 	): Pipeline<Document> =
 		withStage(SortStage<Document>(context).apply(block))
 }

@@ -17,7 +17,7 @@
 package opensavvy.ktmongo.dsl.utils
 
 internal class ImmutableWrapperList<T>(
-	private val wrapped: List<T>
+	private val wrapped: List<T>,
 ) : List<T> by wrapped {
 
 	override fun hashCode(): Int = wrapped.hashCode()

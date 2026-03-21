@@ -71,7 +71,7 @@ interface ConditionalValueOperators : ValueOperators {
 		ConditionalValue(context, condition, ifTrue, ifFalse)
 
 	@OptIn(LowLevelApi::class)
-	private class ConditionalValue<Root: Any, Type>(
+	private class ConditionalValue<Root : Any, Type>(
 		context: BsonContext,
 		private val condition: Value<Root, Boolean>,
 		private val ifTrue: Value<Root, Type>,

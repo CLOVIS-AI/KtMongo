@@ -85,7 +85,7 @@ interface WithSort<Document : Any> : Options {
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun sort(
-		block: SortOptionDsl<Document>.() -> Unit
+		block: SortOptionDsl<Document>.() -> Unit,
 	) {
 		accept(SortOption(SortOptionBlockNode<Document>(context).apply(block), context))
 	}

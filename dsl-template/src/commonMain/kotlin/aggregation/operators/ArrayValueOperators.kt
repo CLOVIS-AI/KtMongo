@@ -1399,7 +1399,7 @@ interface ArrayValueOperators : ValueOperators {
 	private class SortValueOperator<Context : Any, T>(
 		private val input: Value<Context, Collection<T>>,
 		private val sortOrder: Value<T & Any, Nothing>,
-		context: BsonContext
+		context: BsonContext,
 	) : AbstractValue<Context, List<T>>(context) {
 
 		init {

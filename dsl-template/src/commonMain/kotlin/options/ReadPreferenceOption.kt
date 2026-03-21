@@ -20,7 +20,6 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.ReadPreference.Primary
 
 /**
  * Specifies the read preference for an operation.

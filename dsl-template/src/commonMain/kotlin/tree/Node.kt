@@ -84,5 +84,6 @@ internal class NodeImpl : Node {
  */
 internal object ImmutableNode : Node {
 	@LowLevelApi
-	override fun freeze() {}
+	override fun freeze() {
+	}
 }

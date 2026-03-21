@@ -264,7 +264,7 @@ private class ProjectStageBsonNode<Document : Any>(
 		context: BsonContext,
 	) : AbstractBsonNode(context) {
 
-		override fun write(writer: BsonFieldWriter) =  with(writer) {
+		override fun write(writer: BsonFieldWriter) = with(writer) {
 			write(path.toString()) {
 				value.writeTo(this)
 			}

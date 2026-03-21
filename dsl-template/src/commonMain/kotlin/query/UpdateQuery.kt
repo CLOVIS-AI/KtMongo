@@ -525,7 +525,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		this.field.unset()
 	}
 
- // endregion
+	// endregion
 	// region $min & $max
 
 	/**

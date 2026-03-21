@@ -468,7 +468,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	private class UnaryTrigonometryOperator<Context : Any, T>(
 		context: BsonContext,
 		private val operatorName: String,
-		private val value: Value<Context, T>
+		private val value: Value<Context, T>,
 	) : AbstractValue<Context, T>(context) {
 
 		override fun write(writer: BsonValueWriter) = with(writer) {

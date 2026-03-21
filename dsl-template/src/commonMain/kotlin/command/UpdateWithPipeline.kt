@@ -58,8 +58,9 @@ class UpdateOneWithPipeline<Document : Any> private constructor(
 	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateWithPipelineQuery(context))
 
 	@LowLevelApi
-	val updates get() = (update as UpdateWithPipelineQueryImpl<*>).stages
-		.map { context.buildDocument { it.writeTo(this) } }
+	val updates
+		get() = (update as UpdateWithPipelineQueryImpl<*>).stages
+			.map { context.buildDocument { it.writeTo(this) } }
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -116,8 +117,9 @@ class UpsertOneWithPipeline<Document : Any> private constructor(
 	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateWithPipelineQuery(context))
 
 	@LowLevelApi
-	val updates get() = (update as UpdateWithPipelineQueryImpl<*>).stages
-		.map { context.buildDocument { it.writeTo(this) } }
+	val updates
+		get() = (update as UpdateWithPipelineQueryImpl<*>).stages
+			.map { context.buildDocument { it.writeTo(this) } }
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -174,8 +176,9 @@ class UpdateManyWithPipeline<Document : Any> private constructor(
 	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateWithPipelineQuery(context))
 
 	@LowLevelApi
-	val updates get() = (update as UpdateWithPipelineQueryImpl<*>).stages
-		.map { context.buildDocument { it.writeTo(this) } }
+	val updates
+		get() = (update as UpdateWithPipelineQueryImpl<*>).stages
+			.map { context.buildDocument { it.writeTo(this) } }
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {

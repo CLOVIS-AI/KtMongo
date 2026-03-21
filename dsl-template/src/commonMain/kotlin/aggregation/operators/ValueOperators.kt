@@ -149,7 +149,7 @@ interface ValueOperators : FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
 	 */
 	@OptIn(LowLevelApi::class)
-	operator fun <Context: Any, Root, Child> Value<Context, Root>.div(field: Field<Root, Child>): Value<Context, Child> =
+	operator fun <Context : Any, Root, Child> Value<Context, Root>.div(field: Field<Root, Child>): Value<Context, Child> =
 		GetFieldValue(this, field.path, context)
 
 	/**
@@ -177,7 +177,7 @@ interface ValueOperators : FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
 	 */
-	operator fun <Context: Any, Root, Child> Value<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
+	operator fun <Context : Any, Root, Child> Value<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
 		this / field.field
 
 }
