@@ -21,6 +21,22 @@ import org.gradle.api.Project
 
 class KtMongoDslTemplatorPlugin : Plugin<Project> {
 	override fun apply(target: Project) {
-		println("Applying the templator plugin to ${target.path}")
+		val templateTask = target.tasks.register("applyTemplate", ApplyTemplateTask::class.java) {
+			group = "build"
+			description = "Generate the sources of this module by templating the :dsl-template module. For more information, read dsl-template/README.md"
+
+			sourceDir.set(project.rootProject.file("dsl-template/src/commonMain"))
+			outputDir.set(project.file("src/commonMain"))
+			projectRootDir.set(project.rootDir)
+		}
+
+		target.tasks.configureEach {
+			if (name.contains("compileKotlin", ignoreCase = true) ||
+				name.contains("sourcesJar", ignoreCase = true) ||
+				name.contains("processResources", ignoreCase = true) ||
+				name.contains("dokkaGenerate", ignoreCase = true)) {
+				dependsOn(templateTask)
+			}
+		}
 	}
 }
