@@ -53,7 +53,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline(filter = { Sensor::diffTemp.isNull() }) {
 	 *     set {
-	 *         Sensor::diffTemp set abs(of(Sensor::startTemp) - of(Sensor::endTemp))
+	 *         Sensor::diffTemp set abs(Sensor::startTemp - Sensor::endTemp)
 	 *     }
 	 * }
 	 * ```
@@ -67,6 +67,105 @@ interface ArithmeticValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> abs(value: Value<Context, Result>): Value<Context, Result> =
 		UnarySameTypeValueOperator(context, "abs", value)
+
+	/**
+	 * The absolute value of a number.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val name: String,
+	 *     val startTemp: Int,
+	 *     val endTemp: Int,
+	 *     val diffTemp: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline(filter = { Sensor::diffTemp.isNull() }) {
+	 *     set {
+	 *         Sensor::diffTemp set abs(Sensor::startTemp - Sensor::endTemp)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/)
+	 */
+	@JvmName("absByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> abs(value: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		abs(of(value))
+
+	/**
+	 * The absolute value of a number.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val name: String,
+	 *     val startTemp: Int,
+	 *     val endTemp: Int,
+	 *     val diffTemp: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline(filter = { Sensor::diffTemp.isNull() }) {
+	 *     set {
+	 *         Sensor::diffTemp set abs(Sensor::startTemp - Sensor::endTemp)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/)
+	 */
+	@JvmName("absByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> abs(value: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		abs(of(value))
+
+	/**
+	 * The absolute value of a number.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val name: String,
+	 *     val startTemp: Int,
+	 *     val endTemp: Int,
+	 *     val diffTemp: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline(filter = { Sensor::diffTemp.isNull() }) {
+	 *     set {
+	 *         Sensor::diffTemp set abs(Sensor::startTemp - Sensor::endTemp)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> abs(value: Result): Value<Context, Result> =
+		abs(of(value))
 
 	// endregion
 	// region $add
@@ -85,7 +184,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         Product::price set (of(Product::price) + of(Product::dailyPriceIncrease))
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
 	 *     }
 	 * }
 	 * ```
@@ -99,6 +198,462 @@ interface ArithmeticValueOperators : ValueOperators {
 	@KtMongoDsl
 	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.plus(other: Value<Context, Result>): Value<Context, Result> =
 		AdditionValueOperator(context, listOf(this, other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@JvmName("plusByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.plus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		this.plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@JvmName("plusByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.plus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		this.plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.plus(other: Result): Value<Context, Result> =
+		this.plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@JvmName("plusFieldReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.plus(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).plus(other)
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@JvmName("plusFieldReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.plus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@JvmName("plusFieldReceiverByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.plus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		of(this).plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("plusFieldReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.plus(other: Result): Value<Context, Result> =
+		of(this).plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@JvmName("plusPropertyReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.plus(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).plus(other)
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@JvmName("plusPropertyReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.plus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@JvmName("plusPropertyReceiverByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.plus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		of(this).plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("plusPropertyReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.plus(other: Result): Value<Context, Result> =
+		of(this).plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("plusResultReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.plus(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).plus(other)
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("plusResultReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.plus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("plusResultReceiverByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.plus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		of(this).plus(of(other))
+
+	/**
+	 * Sums two aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val price: Int,
+	 *     val dailyPriceIncrease: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("plusResultReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.plus(other: Result): Value<Context, Result> =
+		of(this).plus(of(other))
 
 	@OptIn(LowLevelApi::class)
 	private class AdditionValueOperator<Context : Any, T>(
@@ -154,7 +709,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.aggregate()
 	 *     .set {
-	 *         Sensor::maxBound set ceil(of(Sensor::value))
+	 *         Sensor::maxBound set ceil(Sensor::value)
 	 *     }.toList()
 	 * ```
 	 *
@@ -167,6 +722,96 @@ interface ArithmeticValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> ceil(value: Value<Context, Result>): Value<Context, Result> =
 		UnarySameTypeValueOperator(context, "ceil", value)
+
+	/**
+	 * The smallest integer greater than or equal to the specified [value].
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val value: Double,
+	 *     val maxBound: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Sensor::maxBound set ceil(Sensor::value)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/)
+	 */
+	@JvmName("ceilByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> ceil(value: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		ceil(of(value))
+
+	/**
+	 * The smallest integer greater than or equal to the specified [value].
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val value: Double,
+	 *     val maxBound: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Sensor::maxBound set ceil(Sensor::value)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/)
+	 */
+	@JvmName("ceilByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> ceil(value: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		ceil(of(value))
+
+	/**
+	 * The smallest integer greater than or equal to the specified [value].
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val value: Double,
+	 *     val maxBound: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Sensor::maxBound set ceil(Sensor::value)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> ceil(value: Result): Value<Context, Result> =
+		ceil(of(value))
 
 	// endregion
 	// region $multiply
@@ -185,7 +830,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         Sale::total set (of(Sale::price) * of(Sale::quantity))
+	 *         Sale::total set (Sale::price * Sale::quantity)
 	 *     }
 	 * }
 	 * ```
@@ -199,6 +844,462 @@ interface ArithmeticValueOperators : ValueOperators {
 	@KtMongoDsl
 	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.times(other: Value<Context, Result>): Value<Context, Result> =
 		MultiplicationValueOperator(context, listOf(this, other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@JvmName("timesByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.times(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		this.times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@JvmName("timesByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.times(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		this.times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.times(other: Result): Value<Context, Result> =
+		this.times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@JvmName("timesFieldReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.times(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).times(other)
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@JvmName("timesFieldReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.times(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@JvmName("timesFieldReceiverByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.times(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		of(this).times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("timesFieldReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.times(other: Result): Value<Context, Result> =
+		of(this).times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@JvmName("timesPropertyReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.times(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).times(other)
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@JvmName("timesPropertyReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.times(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@JvmName("timesPropertyReceiverByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.times(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		of(this).times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("timesPropertyReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.times(other: Result): Value<Context, Result> =
+		of(this).times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("timesResultReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.times(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).times(other)
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("timesResultReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.times(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("timesResultReceiverByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.times(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		of(this).times(of(other))
+
+	/**
+	 * Multiplies two or more aggregation values.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Double,
+	 *     val quantity: Int,
+	 *     val total: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price * Sale::quantity)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("timesResultReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.times(other: Result): Value<Context, Result> =
+		of(this).times(of(other))
 
 	@OptIn(LowLevelApi::class)
 	private class MultiplicationValueOperator<Context : Any, T>(
@@ -257,6 +1358,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * }
 	 * ```
 	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
@@ -266,6 +1370,266 @@ interface ArithmeticValueOperators : ValueOperators {
 	@KtMongoDsl
 	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
 		DivisionValueOperator(context, this, other)
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@JvmName("divByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		this.div(of(other))
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Result): Value<Context, Result> =
+		this.div(of(other))
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@JvmName("divFieldReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).div(other)
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@JvmName("divFieldReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).div(of(other))
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("divFieldReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: Result): Value<Context, Result> =
+		of(this).div(of(other))
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("divResultReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.div(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).div(other)
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("divResultReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).div(of(other))
+
+	/**
+	 * Divides one aggregation value by another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class ConferencePlanning(
+	 *     val hours: Int,
+	 *     val workdays: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("divResultReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.div(other: Result): Value<Context, Result> =
+		of(this).div(of(other))
 
 	@OptIn(LowLevelApi::class)
 	private class DivisionValueOperator<Context : Any, T>(
@@ -305,7 +1669,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         Sale::total set (of(Sale::price) + of(Sale::fee) - of(Sale::discount))
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
 	 *     }
 	 * }
 	 * ```
@@ -319,6 +1683,507 @@ interface ArithmeticValueOperators : ValueOperators {
 	@KtMongoDsl
 	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.minus(other: Value<Context, Result>): Value<Context, Result> =
 		SubtractionValueOperator(context, this, other)
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@JvmName("minusByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.minus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		this.minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@JvmName("minusByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.minus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		this.minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.minus(other: Result): Value<Context, Result> =
+		this.minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@JvmName("minusFieldReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.minus(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).minus(other)
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@JvmName("minusFieldReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.minus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@JvmName("minusFieldReceiverByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.minus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		of(this).minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("minusFieldReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.minus(other: Result): Value<Context, Result> =
+		of(this).minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@JvmName("minusPropertyReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.minus(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).minus(other)
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@JvmName("minusPropertyReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.minus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@JvmName("minusPropertyReceiverByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.minus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		of(this).minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("minusPropertyReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.minus(other: Result): Value<Context, Result> =
+		of(this).minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("minusResultReceiverByValue")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.minus(other: Value<Context, Result>): Value<Context, Result> =
+		of(this).minus(other)
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("minusResultReceiverByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.minus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		of(this).minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("minusResultReceiverByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.minus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		of(this).minus(of(other))
+
+	/**
+	 * Subtracts one aggregation value from another.
+	 *
+	 * The second argument is subtracted from the first argument.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sale(
+	 *     val price: Int,
+	 *     val fee: Int,
+	 *     val discount: Int,
+	 *     val total: Int,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("minusResultReceiverByResult")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.minus(other: Result): Value<Context, Result> =
+		of(this).minus(of(other))
 
 	@OptIn(LowLevelApi::class)
 	private class SubtractionValueOperator<Context : Any, T>(
@@ -356,7 +2221,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.aggregate()
 	 *     .set {
-	 *         Sensor::minBound set floor(of(Sensor::value))
+	 *         Sensor::minBound set floor(Sensor::value)
 	 *     }.toList()
 	 * ```
 	 *
@@ -369,6 +2234,96 @@ interface ArithmeticValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> floor(value: Value<Context, Result>): Value<Context, Result> =
 		UnarySameTypeValueOperator(context, "floor", value)
+
+	/**
+	 * The largest integer less than or equal to the specified [value].
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val value: Double,
+	 *     val minBound: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Sensor::minBound set floor(Sensor::value)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/)
+	 */
+	@JvmName("floorByField")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> floor(value: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+		floor(of(value))
+
+	/**
+	 * The largest integer less than or equal to the specified [value].
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val value: Double,
+	 *     val minBound: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Sensor::minBound set floor(Sensor::value)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/)
+	 */
+	@JvmName("floorByProperty")
+	@OptIn(LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> floor(value: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+		floor(of(value))
+
+	/**
+	 * The largest integer less than or equal to the specified [value].
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Sensor(
+	 *     val value: Double,
+	 *     val minBound: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Sensor::minBound set floor(Sensor::value)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> floor(value: Result): Value<Context, Result> =
+		floor(of(value))
 
 	// endregion
 

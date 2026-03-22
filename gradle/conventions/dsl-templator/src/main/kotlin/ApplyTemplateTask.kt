@@ -78,6 +78,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 		val rewriter = org.antlr.v4.runtime.TokenStreamRewriter(tokens)
 
+		val isValueOverloadTarget = sourceFile.path.replace('\\', '/').endsWith("aggregation/operators/ArithmeticValueOperators.kt")
+
 		// Pre-scan: collect existing KProperty1 receiver functions/properties to avoid duplicates
 		val existingKPropFunctions = mutableSetOf<Pair<String, Int>>() // (name, paramCount)
 		val existingKPropProperties = mutableSetOf<String>() // property names
@@ -105,6 +107,169 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		val walker = org.antlr.v4.runtime.tree.ParseTreeWalker()
 		val listener = object : opensavvy.ktmongo.build.kotlin.KotlinParserBaseListener() {
 			override fun exitFunctionDeclaration(ctx: opensavvy.ktmongo.build.kotlin.KotlinParser.FunctionDeclarationContext) {
+				// region Value<...> overload generation (combinatorial: receiver × params)
+				if (isValueOverloadTarget) {
+					val vFuncStart0 = ctx.start.startIndex
+					val vFunKeywordStart = ctx.FUN().symbol.startIndex
+					if (!source.substring(vFuncStart0, vFunKeywordStart).contains("override")) {
+						val vFuncName = ctx.identifier()?.text
+						if (vFuncName != null) {
+							val vFuncStart = ctx.start.startIndex
+							val vFuncText = source.substring(vFuncStart, ctx.stop.stopIndex + 1)
+							val vParamCtxList = ctx.functionValueParameters()?.functionValueParameter() ?: emptyList()
+
+							// Collect all "Value<...>" positions: receiver first, then each param
+							data class ValuePos(
+								val isReceiver: Boolean,
+								val paramIdx: Int, // -1 for receiver
+								val contextType: String,
+								val resultType: String,
+								val typeStartInFunc: Int,
+								val typeEndInFunc: Int,
+							)
+
+							val valuePositions = mutableListOf<ValuePos>()
+
+							val receiverCtx = ctx.receiverType()
+							if (receiverCtx != null) {
+								val recText = source.substring(receiverCtx.start.startIndex, receiverCtx.stop.stopIndex + 1)
+								extractValueTypeArgs(recText)?.let { (c, r) ->
+									valuePositions.add(ValuePos(true, -1, c, r,
+										receiverCtx.start.startIndex - vFuncStart,
+										receiverCtx.stop.stopIndex + 1 - vFuncStart))
+								}
+							}
+
+							for ((idx, paramCtx) in vParamCtxList.withIndex()) {
+								val paramType = paramCtx.parameter()?.type() ?: continue
+								val paramTypeText = source.substring(paramType.start.startIndex, paramType.stop.stopIndex + 1)
+								extractValueTypeArgs(paramTypeText)?.let { (c, r) ->
+									valuePositions.add(ValuePos(false, idx, c, r,
+										paramType.start.startIndex - vFuncStart,
+										paramType.stop.stopIndex + 1 - vFuncStart))
+								}
+							}
+
+							if (valuePositions.isNotEmpty()) {
+								// Alternatives per position:
+								// - Receiver: [null=keep, Field, KProperty1, Result]
+								// - Params:   [null=keep, Field, KProperty1, Result]
+								val alternatives: List<List<String?>> = valuePositions.map { pos ->
+									listOf(
+										null,
+										"opensavvy.ktmongo.dsl.path.Field<${pos.contextType}, ${pos.resultType}>",
+										"kotlin.reflect.KProperty1<${pos.contextType}, ${pos.resultType}>",
+										pos.resultType,
+									)
+								}
+
+								// Cartesian product of alternatives
+								val combinations = alternatives.fold(listOf(listOf<String?>())) { acc, alts ->
+									acc.flatMap { prev -> alts.map { prev + it } }
+								}
+
+								val bodyStartInFunc = ctx.functionBody()?.start?.startIndex?.minus(vFuncStart) ?: -1
+								val recPosIdx = valuePositions.indexOfFirst { it.isReceiver }
+								val hasValueReceiver = recPosIdx >= 0
+
+								val valueOverloadBuilder = StringBuilder()
+
+								for (combination in combinations) {
+									if (combination.all { it == null }) continue // skip original
+
+									// For 'div', skip KProperty1 overloads: they conflict with the
+									// navigation operator KProperty1<Root,Parent>.div(KProperty1<Parent,Child>).
+									if (vFuncName == "div" && combination.any { it != null && it.startsWith("kotlin.reflect.KProperty1") }) continue
+
+									// Build the new signature by replacing positions in reverse order
+									val replacements = valuePositions.zip(combination)
+										.filter { (_, t) -> t != null }
+										.sortedByDescending { (pos, _) -> pos.typeStartInFunc }
+									val sigEnd = if (bodyStartInFunc >= 0) bodyStartInFunc else vFuncText.length
+									var newSignature = vFuncText.substring(0, sigEnd)
+									for ((pos, newType) in replacements) {
+										newSignature = newSignature.substring(0, pos.typeStartInFunc) +
+											newType!! +
+											newSignature.substring(pos.typeEndInFunc)
+									}
+
+									// Build the delegation call
+									val receiverReplaced = hasValueReceiver && combination[recPosIdx] != null
+									val receiverPrefix = when {
+										receiverReplaced -> "of(this)."
+										hasValueReceiver -> "this."
+										else -> ""
+									}
+									val delegationArgs = vParamCtxList.mapIndexed { idx, fp ->
+										val name = fp.parameter()?.simpleIdentifier()?.text ?: return@mapIndexed ""
+										val paramPosIdx = valuePositions.indexOfFirst { !it.isReceiver && it.paramIdx == idx }
+										val replaced = paramPosIdx >= 0 && combination[paramPosIdx] != null
+										if (replaced) "of($name)" else name
+									}.joinToString(", ")
+									val delegationCall = "$receiverPrefix$vFuncName($delegationArgs)"
+
+									val newFuncText = if (bodyStartInFunc >= 0) {
+										newSignature + "=\n\t\t$delegationCall"
+									} else {
+										newSignature + " =\n\t\t$delegationCall"
+									}
+
+									// Build @JvmName suffix — added when field/kprop/result types are involved
+									// to avoid JVM signature clashes from erasure
+									val receiverSuffix = if (hasValueReceiver) {
+										when {
+											combination[recPosIdx] == null -> ""
+											combination[recPosIdx]!!.startsWith("opensavvy") -> "FieldReceiver"
+											combination[recPosIdx]!!.startsWith("kotlin.reflect.KProperty1") -> "PropertyReceiver"
+											else -> "ResultReceiver"
+										}
+									} else ""
+									val paramSuffix = valuePositions.zip(combination)
+										.filter { (pos, _) -> !pos.isReceiver }
+										.joinToString("") { (_, t) ->
+											when {
+												t == null -> "ByValue"
+												t.startsWith("opensavvy") -> "ByField"
+												t.startsWith("kotlin.reflect.KProperty1") -> "ByProperty"
+												else -> "ByResult"
+											}
+										}
+
+									val needsJvmName = receiverReplaced ||
+										combination.any { it != null && (it.startsWith("opensavvy") || it.startsWith("kotlin.reflect.KProperty1")) }
+
+									// Overloads where Result (raw type parameter) appears in any position
+									// are given low priority so navigation operators win on ambiguity.
+									val hasResultAlternative = valuePositions.zip(combination).any { (_, t) ->
+										t != null && !t.startsWith("opensavvy") && !t.startsWith("kotlin.reflect.KProperty1")
+									}
+
+									// Merge INAPPLICABLE_JVM_NAME into the existing @Suppress rather than
+									// adding a second (non-repeatable) @Suppress annotation.
+									val annotatedFuncText = if (needsJvmName) {
+										if (newFuncText.contains("@Suppress(\"")) {
+											newFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
+										} else {
+											"@Suppress(\"INAPPLICABLE_JVM_NAME\")\n\t" + newFuncText
+										}
+									} else newFuncText
+									val jvmNameAnnotation = if (needsJvmName) "@JvmName(\"$vFuncName$receiverSuffix$paramSuffix\")\n\t" else ""
+									val lowPriorityAnnotation = if (hasResultAlternative) "@kotlin.internal.LowPriorityInOverloadResolution\n\t" else ""
+
+									val docComment = findDocCommentBefore(source, vFuncStart)
+									val docPart = if (docComment.isNotEmpty()) "\t$docComment\n" else ""
+									valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(lowPriorityAnnotation).append(jvmNameAnnotation).append(annotatedFuncText)
+								}
+
+								if (valueOverloadBuilder.isNotEmpty()) {
+									rewriter.insertAfter(ctx.stop, valueOverloadBuilder.toString())
+								}
+							}
+						}
+					}
+				}
+				// endregion
+
 				// The receiver type is stored in different places depending on whether type parameters are present:
 				// - With type params (e.g. fun <V> Field<T,V>.foo()): receiverType() after typeParameters()
 				// - Without type params (e.g. fun Field<T,*>.foo()): type() before typeParameters() (grammar quirk)
@@ -289,6 +454,46 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		} else {
 			null
 		}
+	}
+
+	/**
+	 * Extracts the two type arguments from a `Value<Context, Result>` type string.
+	 * Returns a pair `(contextType, resultType)`, or null if the input doesn't match.
+	 */
+	private fun extractValueTypeArgs(valueTypeText: String): Pair<String, String>? {
+		if (!valueTypeText.startsWith("Value<")) return null
+		var depth = 0
+		var openIdx = -1
+		var closeIdx = -1
+		for (i in valueTypeText.indices) {
+			when (valueTypeText[i]) {
+				'<' -> {
+					if (depth == 0) openIdx = i
+					depth++
+				}
+
+				'>' -> {
+					depth--
+					if (depth == 0) {
+						closeIdx = i
+						break
+					}
+				}
+			}
+		}
+		if (openIdx == -1 || closeIdx == -1) return null
+		val content = valueTypeText.substring(openIdx + 1, closeIdx)
+		var innerDepth = 0
+		for (i in content.indices) {
+			when (content[i]) {
+				'<' -> innerDepth++
+				'>' -> innerDepth--
+				',' -> if (innerDepth == 0) {
+					return Pair(content.substring(0, i).trim(), content.substring(i + 1).trim())
+				}
+			}
+		}
+		return null
 	}
 
 	/**

@@ -50,7 +50,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline(filter = { Sensor::diffTemp.isNull() }) {
 	 *     set {
-	 *         Sensor::diffTemp set abs(of(Sensor::startTemp) - of(Sensor::endTemp))
+	 *         Sensor::diffTemp set abs(Sensor::startTemp - Sensor::endTemp)
 	 *     }
 	 * }
 	 * ```
@@ -82,7 +82,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         Product::price set (of(Product::price) + of(Product::dailyPriceIncrease))
+	 *         Product::price set (Product::price + Product::dailyPriceIncrease)
 	 *     }
 	 * }
 	 * ```
@@ -151,7 +151,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.aggregate()
 	 *     .set {
-	 *         Sensor::maxBound set ceil(of(Sensor::value))
+	 *         Sensor::maxBound set ceil(Sensor::value)
 	 *     }.toList()
 	 * ```
 	 *
@@ -182,7 +182,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         Sale::total set (of(Sale::price) * of(Sale::quantity))
+	 *         Sale::total set (Sale::price * Sale::quantity)
 	 *     }
 	 * }
 	 * ```
@@ -254,6 +254,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * }
 	 * ```
 	 *
+	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
+	 * required for at least one of the arguments.
+	 *
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
@@ -302,7 +305,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         Sale::total set (of(Sale::price) + of(Sale::fee) - of(Sale::discount))
+	 *         Sale::total set (Sale::price + Sale::fee - Sale::discount)
 	 *     }
 	 * }
 	 * ```
@@ -353,7 +356,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.aggregate()
 	 *     .set {
-	 *         Sensor::minBound set floor(of(Sensor::value))
+	 *         Sensor::minBound set floor(Sensor::value)
 	 *     }.toList()
 	 * ```
 	 *
