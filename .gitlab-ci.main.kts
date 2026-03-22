@@ -1,7 +1,7 @@
 #!/usr/bin/env kotlin
 
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ fun Job.nativeIosArm64() {
 
 // endregion
 
-val supportedMongoDB = listOf("6.0.26", "7.0.25", "8.2.1")
+val supportedMongoDB = listOf("6.0.26", "7.0.25")
 
 gitlabCi {
 	val build by stage()
