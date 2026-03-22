@@ -184,9 +184,23 @@ abstract class ApplyTemplateTask : DefaultTask() {
 					val paramTypeEnd = paramType.stop.stopIndex + 1 - funcStart
 
 					// Overload: original Field receiver + KProperty1 param
-					val fieldReceiverKpropParamText = funcText.substring(0, paramTypeStart) +
+					val fieldParamCallParts = paramCtxList.mapNotNull { fp ->
+						val name = fp.parameter()?.simpleIdentifier()?.text ?: return@mapNotNull null
+						val isVararg = fp.modifierList()?.text?.contains("vararg") == true
+						val callName = if (fp == fieldParamCtx) "$name.field" else name
+						if (isVararg) "*$callName" else callName
+					}
+					val fieldParamCall = fieldParamCallParts.joinToString(", ")
+					val delegationBodyForFieldParam = "{\n\t\treturn this.${funcName}($fieldParamCall)\n\t}"
+
+					val baseFieldReceiverKpropParamText = funcText.substring(0, paramTypeStart) +
 						kpropParamType +
 						funcText.substring(paramTypeEnd)
+					val fieldReceiverKpropParamText = if (ctx.functionBody() != null) {
+						baseFieldReceiverKpropParamText
+					} else {
+						baseFieldReceiverKpropParamText + " " + delegationBodyForFieldParam
+					}
 					insertionBuilder.append("\n\n").append(docPart).append("\t").append(fieldReceiverKpropParamText)
 
 					// Overload: KProperty1 receiver + KProperty1 param

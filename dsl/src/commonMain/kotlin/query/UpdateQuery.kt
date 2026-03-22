@@ -25,7 +25,6 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
-import kotlin.reflect.KProperty1
 import kotlin.time.Instant
 
 /**
@@ -134,11 +133,10 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.set(value: V) {
-		this.field.set(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.set(value: V) {
+		return this.field.set(value)
 	}
 
 	/**
@@ -202,8 +200,9 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setIf(condition: Boolean, value: V) =
-		this.field.setIf(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: V) {
+		return this.field.setIf(condition, value)
+	}
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
@@ -266,8 +265,9 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setUnless(condition: Boolean, value: V) =
-		this.field.setUnless(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: V) {
+		return this.field.setUnless(condition, value)
+	}
 
 	// endregion
 	// region $inc
@@ -334,8 +334,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Number> KProperty1<T, V>.inc(amount: V) {
-		this.field.inc(amount)
+	infix fun <@kotlin.internal.OnlyInputTypes V : Number> kotlin.reflect.KProperty1<T, V>.inc(amount: V) {
+		return this.field.inc(amount)
 	}
 
 	/**
@@ -401,8 +401,9 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	operator fun <@kotlin.internal.OnlyInputTypes V : Number> KProperty1<T, V>.plusAssign(amount: V): Unit =
-		this.field.plusAssign(amount)
+	operator fun <@kotlin.internal.OnlyInputTypes V : Number> kotlin.reflect.KProperty1<T, V>.plusAssign(amount: V): Unit {
+		return this.field.plusAssign(amount)
+	}
 
 	// endregion
 	// region $mul
@@ -463,8 +464,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Number> KProperty1<T, V>.mul(amount: V) {
-		this.field.mul(amount)
+	infix fun <@kotlin.internal.OnlyInputTypes V : Number> kotlin.reflect.KProperty1<T, V>.mul(amount: V) {
+		return this.field.mul(amount)
 	}
 
 	// endregion
@@ -524,8 +525,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.unset() {
-		this.field.unset()
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.unset() {
+		return this.field.unset()
 	}
 
 	// endregion
@@ -581,8 +582,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.min(value: V) {
-		this.field.min(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.min(value: V) {
+		return this.field.min(value)
 	}
 
 	/**
@@ -635,8 +636,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> KProperty1<T, V?>.max(value: V) {
-		this.field.max(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.max(value: V) {
+		return this.field.max(value)
 	}
 
 	// endregion
@@ -692,8 +693,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.renameTo(newName: Field<T, V>) {
-		this.field.renameTo(newName)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.renameTo(newName: Field<T, V>) {
+		return this.field.renameTo(newName)
 	}
 
 	/**
@@ -720,8 +721,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: KProperty1<T, V>) {
-		this.renameTo(newName.field)
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: kotlin.reflect.KProperty1<T, V>) {
+		return this.renameTo(newName.field)
 	}
 
 	/**
@@ -748,8 +749,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.renameTo(newName: KProperty1<T, V>) {
-		this.renameTo(newName.field)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.renameTo(newName: kotlin.reflect.KProperty1<T, V>) {
+		return this.field.renameTo(newName)
 	}
 
 	// endregion
@@ -811,8 +812,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
 	 */
 	@KtMongoDsl
-	fun KProperty1<T, Instant?>.setToCurrentDate() {
-		this.field.setToCurrentDate()
+	fun kotlin.reflect.KProperty1<T, Instant?>.setToCurrentDate() {
+		return this.field.setToCurrentDate()
 	}
 
 	/**
@@ -879,8 +880,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("setToCurrentTimestamp")
 	@KtMongoDsl
-	fun KProperty1<T, Timestamp?>.setToCurrentDate() {
-		this.field.setToCurrentDate()
+	fun kotlin.reflect.KProperty1<T, Timestamp?>.setToCurrentDate() {
+		return this.field.setToCurrentDate()
 	}
 
 	// endregion
@@ -966,9 +967,9 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional/)
 	 */
-	val <E> KProperty1<T, Collection<E>>.selected: Field<T, E>
+	@OptIn(LowLevelApi::class)
+	val <E> kotlin.reflect.KProperty1<T, Collection<E>>.selected: Field<T, E>
 		get() = this.field.selected
-
 	// endregion
 	// region All positional operator: $[]
 
@@ -1030,7 +1031,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-all/)
 	 */
-	val <E> KProperty1<T, Collection<E>>.all: Field<T, E>
+	@OptIn(LowLevelApi::class)
+	val <E> kotlin.reflect.KProperty1<T, Collection<E>>.all: Field<T, E>
 		get() = this.field.all
 
 	// endregion
@@ -1102,8 +1104,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, Collection<V>>.addToSet(value: V) {
-		this.field.addToSet(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, Collection<V>>.addToSet(value: V) {
+		return this.field.addToSet(value)
 	}
 
 	/**
@@ -1189,8 +1191,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, Collection<V>>.addToSet(values: Iterable<V>) {
-		this.field addToSet values
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, Collection<V>>.addToSet(values: Iterable<V>) {
+		return this.field.addToSet(values)
 	}
 
 	// endregion
@@ -1267,8 +1269,8 @@ interface UpsertQuery<T> : UpdateQuery<T> {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setOnInsert(value: V) {
-		this.field.setOnInsert(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setOnInsert(value: V) {
+		return this.field.setOnInsert(value)
 	}
 
 	// endregion
