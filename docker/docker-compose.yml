@@ -3,8 +3,8 @@ name: KtMongo
 services:
   mongo:
     # When downgrading the version, run
-    #  docker compose -p ktmongo rm -v
+    #  docker compose rm -v
     # (all data will be lost)
-    image: "mongo:8.0.6"
+    image: "mongo:7.0.31"
     ports:
       - "27017:27017"
