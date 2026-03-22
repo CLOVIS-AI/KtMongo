@@ -33,23 +33,18 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 internal fun restrictAsDocument(bytes: Bytes): Bytes {
-	println("Creating a document from:      $bytes") // TODO remove
 	val size = bytes.reader.readInt32()
 	return bytes.subrange(4..<(size - 1)) // remove the initial size header, and remove the final 00 padding
-		.also { println("Detected document payload:     $it") } // TODO remove
 }
 
 @LowLevelApi
 internal fun readField(
 	bytes: Bytes,
 	reader: RawBsonReader,
-	name: String,
 	type: BsonType,
 	factory: BsonFactory,
 ): MultiplatformBsonValueReader {
 	val fieldStart = reader.readCount
-
-	println("Found field '$name' of type $type, starting at index $fieldStart")
 
 	@Suppress("DEPRECATION")
 	val fieldSize = when (type) {
@@ -93,8 +88,6 @@ internal fun readField(
 
 	reader.skip(fieldSize)
 
-	println("Found field '$name' in range $fieldRange: $fieldBytes")
-
 	return MultiplatformBsonValueReader(factory, type, fieldBytes)
 }
 
@@ -116,10 +109,9 @@ internal class MultiplatformDocumentReader(
 
 	private fun scanUntil(targetName: String?) {
 		while (reader.request(1)) {
-			println("Left to read: $reader")
 			val type = BsonType.fromCode(reader.readSignedByte())
 			val name = reader.readCString()
-			val field = readField(bytes, reader, name, type, factory)
+			val field = readField(bytes, reader, type, factory)
 
 			fields[name] = field
 
@@ -127,8 +119,6 @@ internal class MultiplatformDocumentReader(
 				return
 			}
 		}
-
-		println("Reached the end of the document")
 	}
 
 	override fun read(name: String): BsonValueReader? = fields[name]

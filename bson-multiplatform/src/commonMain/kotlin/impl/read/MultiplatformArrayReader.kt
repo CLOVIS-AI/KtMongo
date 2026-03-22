@@ -43,22 +43,17 @@ internal class MultiplatformArrayReader(
 	private val fields = ArrayList<MultiplatformBsonValueReader>()
 
 	private fun scanUntil(targetIndex: Int?) {
-		println("Scanning until index $targetIndex…") // TODO remove
 		while (reader.request(1)) {
-			println("Left to read: $reader") // TODO remove
 			val type = BsonType.fromCode(reader.readSignedByte())
 			reader.skipCString() // We ignore the field name
-			val field = readField(bytes, reader, "${fields.lastIndex + 1}", type, factory)
+			val field = readField(bytes, reader, type, factory)
 
 			fields += field
 
 			if (targetIndex != null && fields.lastIndex >= targetIndex) {
-				println("Found ${fields.size} elements, giving up") // TODO remove
 				return
 			}
 		}
-
-		println("Reached the end of the array") // TODO remove
 	}
 
 	override fun read(index: Int): BsonValueReader? =
