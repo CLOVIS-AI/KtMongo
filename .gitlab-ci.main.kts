@@ -112,7 +112,7 @@ fun Job.nativeIosArm64() {
 
 // endregion
 
-val supportedMongoDB = listOf("6.0.26", "7.0.25")
+val supportedMongoDB = listOf("7.0.25")
 
 gitlabCi {
 	val build by stage()
