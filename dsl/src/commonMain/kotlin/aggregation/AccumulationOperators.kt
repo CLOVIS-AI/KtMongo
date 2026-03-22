@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,8 @@ import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
  *
  * Arithmetic operators:
  * - [`$avg`][ArithmeticValueAccumulators.average]
+ * - [`$median`][ArithmeticValueAccumulators.median]
+ * - [`$percentile`][ArithmeticValueAccumulators.percentiles]
  * - [`$sum`][ArithmeticValueAccumulators.sum]
  *
  * @see Value Representation of an aggregation value.
