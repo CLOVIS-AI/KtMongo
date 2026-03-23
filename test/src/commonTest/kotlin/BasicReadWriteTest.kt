@@ -43,6 +43,8 @@ val BasicReadWriteTest by preparedSuite(preparedConfig = CoroutineTimeout(30.sec
 		users().insertOne(User(_id = id1, name = "Bob", age = 18))
 
 		check(User(_id = id1, "Bob", age = 18) in users().find().toList())
+
+		check(users().exists { User::_id eq id1 })
 	}
 
 	test("Simple upsert and read") {

@@ -62,6 +62,36 @@ interface CountOperations<Document : Any> : BaseOperations {
 	): Long
 
 	/**
+	 * Tests if there exists a document that matches [predicate] in the collection.
+	 *
+	 * This method is a convenience function for calling [count] with a [limit][CountOptions.limit] of 1.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.exists {
+	 *     User::name eq "foo"
+	 *     User::age eq 10
+	 * }
+	 * ```
+	 */
+	suspend fun exists(
+		options: CountOptions<Document>.() -> Unit = {},
+		predicate: FilterQuery<Document>.() -> Unit,
+	): Boolean = count(
+		options = {
+			options()
+			limit(1)
+		},
+		predicate = predicate,
+	) == 1L
+
+	/**
 	 * Counts all documents in the collection.
 	 *
 	 * This function reads collection metadata instead of actually counting through all documents.
