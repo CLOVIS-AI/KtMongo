@@ -205,4 +205,187 @@ fun SuiteDsl.bsonPathTests(
 		}
 	}
 
+	suite("Filters") {
+		val filterDoc by prepared {
+			context().buildDocument {
+				writeDocument("obj") {
+					writeString("x", "y")
+				}
+				writeArray("arr") {
+					writeInt32(2)
+					writeInt32(3)
+				}
+				writeBoolean("selected", true)
+			}
+		}
+
+		test("Test the presence of a field") {
+			check(filterDoc().select<Boolean>("$[?@.arr].selected").toList() == listOf(true))
+		}
+
+		test("Test the absence of a field") {
+			check(filterDoc().select<Boolean>("$[?!@.baz].selected").toList() == listOf(true))
+		}
+
+		test("Two missing fields are equal") {
+			check(filterDoc().select<Boolean>("$[?(@.absent1 == @.absent2)].selected").toList() == listOf(true))
+		}
+
+		test("== implies <=") {
+			check(filterDoc().select<Boolean>("$[?(@.absent1 <= @.absent2)].selected").toList() == listOf(true))
+		}
+
+		test("A missing field is not equal to a specific value") {
+			check(filterDoc().select<Boolean>("$[?(@.absent == 'g')].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Two missing fields are equal (negated)") {
+			check(filterDoc().select<Boolean>("$[?(@.absent1 != @.absent2)].selected").toList() == listOf<Boolean>())
+		}
+
+		test("A missing field is not equal to a specific value (negated)") {
+			check(filterDoc().select<Boolean>("$[?@.absent != 'g'].selected").toList() == listOf(true))
+		}
+
+		test("Numeric comparison: <=") {
+			check(filterDoc().select<Boolean>("$[?1 <= 2].selected").toList() == listOf(true))
+		}
+
+		test("Numeric comparison: >") {
+			check(filterDoc().select<Boolean>("$[?1 > 2].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Negation") {
+			check(filterDoc().select<Boolean>("$[?(!false)].selected").toList() == listOf(true))
+		}
+
+		test("Double-negation") {
+			check(filterDoc().select<Boolean>("$[?!!true].selected").toList() == listOf(true))
+		}
+
+		test("Boolean equality") {
+			check(filterDoc().select<Boolean>("$[?true == true].selected").toList() == listOf(true))
+		}
+
+		test("Boolean inequality") {
+			check(filterDoc().select<Boolean>("$[?true != false].selected").toList() == listOf(true))
+		}
+
+		test("Integers are not equal to strings") {
+			check(filterDoc().select<Boolean>("$[?13 == '13'].selected").toList() == listOf<Boolean>())
+		}
+
+		test("String comparison: <=") {
+			check(filterDoc().select<Boolean>("$[?'a' <= 'b'].selected").toList() == listOf(true))
+		}
+
+		test("String comparison: >") {
+			check(filterDoc().select<Boolean>("$[?'a' > 'b'].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Type mismatch between objects and arrays (from the root)") {
+			check(filterDoc().select<Boolean>("$[?$.obj == $.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Type mismatch between objects and arrays (current)") {
+			check(filterDoc().select<Boolean>("$[?@.obj == @.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Type mismatch between objects and arrays (from the root, negated)") {
+			check(filterDoc().select<Boolean>("$[?$.obj != $.arr].selected").toList() == listOf(true))
+		}
+
+		test("Type mismatch between objects and arrays (current)") {
+			check(filterDoc().select<Boolean>("$[?@.obj != @.arr].selected").toList() == listOf(true))
+		}
+
+		test("Object comparison (from the root)") {
+			check(filterDoc().select<Boolean>("$[?$.obj == $.obj].selected").toList() == listOf(true))
+		}
+
+		test("Object comparison (current)") {
+			check(filterDoc().select<Boolean>("$[?@.obj == @.obj].selected").toList() == listOf(true))
+		}
+
+		test("Object comparison (from the root, negated)") {
+			check(filterDoc().select<Boolean>("$[?$.obj != $.obj].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Object comparison (current, negated)") {
+			check(filterDoc().select<Boolean>("$[?@.obj != @.obj].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Array comparison (from the root)") {
+			check(filterDoc().select<Boolean>("$[?$.arr == $.arr].selected").toList() == listOf(true))
+		}
+
+		test("Array comparison (current)") {
+			check(filterDoc().select<Boolean>("$[?@.arr == @.arr].selected").toList() == listOf(true))
+		}
+
+		test("Array comparison (from the root, negated)") {
+			check(filterDoc().select<Boolean>("$[?$.arr != $.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Array comparison (current, negated)") {
+			check(filterDoc().select<Boolean>("$[?@.arr != @.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Type mismatch between object and integer (from the root)") {
+			check(filterDoc().select<Boolean>("$[?$.obj == 17].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Type mismatch between object and integer (current)") {
+			check(filterDoc().select<Boolean>("$[?@.obj == 17].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Type mismatch between object and integer (from the root, negated)") {
+			check(filterDoc().select<Boolean>("$[?$.obj != 17].selected").toList() == listOf(true))
+		}
+
+		test("Type mismatch between object and integer (current, negated)") {
+			check(filterDoc().select<Boolean>("$[?@.obj != 17].selected").toList() == listOf(true))
+		}
+
+		test("Comparing objects and arrays is not allowed: <=") {
+			check(filterDoc().select<Boolean>("$[?@.obj <= @.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Comparing objects and arrays is not allowed: <") {
+			check(filterDoc().select<Boolean>("$[?@.obj < @.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("== implies <= on objects") {
+			check(filterDoc().select<Boolean>("$[?@.obj <= @.obj].selected").toList() == listOf(true))
+		}
+
+		test("== implies <= on arrays") {
+			check(filterDoc().select<Boolean>("$[?@.arr <= @.arr].selected").toList() == listOf(true))
+		}
+
+		test("Arrays do not offer comparison: <=") {
+			check(filterDoc().select<Boolean>("$[?1 <= @.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Arrays do not offer comparison: <") {
+			check(filterDoc().select<Boolean>("$[?1 < @.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Arrays do not offer comparison: >=") {
+			check(filterDoc().select<Boolean>("$[?1 >= @.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("Arrays do not offer comparison: >") {
+			check(filterDoc().select<Boolean>("$[?1 > @.arr].selected").toList() == listOf<Boolean>())
+		}
+
+		test("== implies <= on booleans") {
+			check(filterDoc().select<Boolean>("$[?true <= true].selected").toList() == listOf(true))
+		}
+
+		test("Booleans do not offer comparison") {
+			check(filterDoc().select<Boolean>("$[?true > true].selected").toList() == listOf<Boolean>())
+		}
+	}
+
 }

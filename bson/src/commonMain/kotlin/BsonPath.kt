@@ -18,16 +18,16 @@ package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.BsonPath.PathOrSelector
 import opensavvy.ktmongo.bson.BsonPath.Root.findIn
-import opensavvy.ktmongo.bson.BsonPath.Root.parent
-import opensavvy.ktmongo.bson.BsonPath.Root.reversed
-import opensavvy.ktmongo.bson.BsonPath.Root.sliced
-import opensavvy.ktmongo.bson.BsonPath.Root.toString
 import opensavvy.ktmongo.bson.BsonPath.Selector
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.intellij.lang.annotations.Language
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
+@Target(AnnotationTarget.CLASS, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.TYPEALIAS, AnnotationTarget.PROPERTY, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.FUNCTION)
 @RequiresOptIn("This symbol is part of the experimental BsonPath API. It may change or be removed without warnings. Please provide feedback in https://gitlab.com/opensavvy/ktmongo/-/issues/93.")
 annotation class ExperimentalBsonPathApi
 
@@ -320,6 +320,23 @@ sealed interface BsonPath {
 
 		override fun toString() = "$"
 	}
+
+	/**
+	 * The current node, noted `@`.
+	 *
+	 * This object is used in filter expressions to refer to the node currently being evaluated.
+	 */
+	data object Current : BsonPath {
+		@LowLevelApi
+		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+			sequenceOf(reader)
+
+		@ExperimentalBsonPathApi
+		override val parent: Nothing?
+			get() = null
+
+		override fun toString() = "@"
+	}
 }
 
 // region Segments
@@ -535,6 +552,509 @@ private data class SliceSelector(
 	}
 }
 
+@ExperimentalBsonPathApi
+private data class FilterSelector(
+	val filter: LogicalExpression,
+) : Selector {
+	@LowLevelApi
+	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> =
+		if (filter.test(reader)) sequenceOf(reader)
+		else emptySequence()
+
+	override fun toString(): String =
+		"?$filter"
+}
+
+// endregion
+// region Filters
+
+private sealed class FilterValue {
+
+	abstract val type: Type<FilterValue>
+
+	sealed interface Type<out V : FilterValue>
+
+	data object Nothing : FilterValue(), Type<Nothing> {
+		override val type get() = this
+	}
+
+	@OptIn(LowLevelApi::class)
+	sealed class Value : FilterValue() {
+		override val type get() = Value
+
+		data class Reader(val reader: BsonValueReader) : Value() {
+			override fun toString() = "Value($reader)"
+		}
+
+		data class Text(val text: String) : Value() {
+			override fun toString() = "Value(\"$text\")"
+		}
+
+		data class Integer(val number: Long) : Value() {
+			override fun toString() = "Value($number)"
+		}
+
+		companion object : Type<Value> {
+			override fun toString() = "Value"
+		}
+	}
+
+	sealed class Logical : FilterValue() {
+		data object True : Logical() {
+			override fun toString() = "LogicalTrue"
+			override val type get() = Logical
+		}
+
+		data object False : Logical() {
+			override fun toString() = "LogicalFalse"
+			override val type get() = Logical
+		}
+
+		companion object : Type<Logical> {
+			// fake constructor
+			operator fun invoke(bool: Boolean): Logical =
+				if (bool) True
+				else False
+
+			override fun toString() = "Logical"
+		}
+	}
+
+	@OptIn(LowLevelApi::class)
+	data class Nodes(val nodes: Sequence<BsonValueReader>) : FilterValue() {
+		override fun toString() = "Nodes(${nodes.toList().joinToString(", ")})"
+		override val type get() = Companion
+
+		companion object : Type<Nodes> {
+			override fun toString() = "Nodes"
+		}
+	}
+}
+
+@ExperimentalBsonPathApi
+private sealed interface FilterExpression<out Type : FilterValue> {
+
+	val type: FilterValue.Type<Type>
+
+	@LowLevelApi
+	fun eval(reader: BsonValueReader): Type
+
+	data class LogicalOr(
+		val left: LogicalExpression,
+		val right: LogicalExpression,
+	) : LogicalExpression {
+		override val type get() = FilterValue.Logical
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+			FilterValue.Logical(left.test(reader) || right.test(reader))
+
+		override fun toString(): String =
+			"($left || $right)"
+	}
+
+	data class LogicalAnd(
+		val left: LogicalExpression,
+		val right: LogicalExpression,
+	) : LogicalExpression {
+		override val type get() = FilterValue.Logical
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+			FilterValue.Logical(left.test(reader) && right.test(reader))
+
+		override fun toString(): String =
+			"($left && $right)"
+	}
+
+	data class LogicalNot(
+		val operand: LogicalExpression,
+	) : LogicalExpression {
+		override val type get() = FilterValue.Logical
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+			FilterValue.Logical(!operand.test(reader))
+
+		override fun toString(): String =
+			"!$operand"
+	}
+
+	data class Exists(
+		val field: FilterExpression<FilterValue.Nodes>,
+	) : LogicalExpression {
+		override val type get() = FilterValue.Logical
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+			FilterValue.Logical(field.eval(reader).nodes.any())
+
+		override fun toString(): String =
+			field.toString()
+	}
+
+	data class Literal<V : FilterValue>(
+		val value: V,
+	) : FilterExpression<V> {
+		@Suppress("UNCHECKED_CAST") // Unchecked because we don't have self types, but it's safe
+		override val type: FilterValue.Type<V> get() = value.type as FilterValue.Type<V>
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): V = value
+
+		override fun toString(): String =
+			value.toString()
+	}
+
+	data class Path(
+		val path: BsonPath,
+	) : FilterExpression<FilterValue.Nodes> {
+		override val type get() = FilterValue.Nodes
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Nodes =
+			FilterValue.Nodes(path.findIn(reader))
+
+		override fun toString(): String =
+			path.toString()
+	}
+
+	data class Equals(
+		val left: FilterExpression<*>,
+		val right: FilterExpression<*>,
+	) : LogicalExpression {
+		override val type get() = FilterValue.Logical
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Logical {
+			val leftEval = left.eval(reader)
+			val rightEval = right.eval(reader)
+
+			return when {
+				leftEval is FilterValue.Logical && rightEval is FilterValue.Logical ->
+					FilterValue.Logical(leftEval == rightEval)
+
+				leftEval is FilterValue.Nothing && rightEval is FilterValue.Nothing ->
+					FilterValue.Logical.True
+
+				leftEval is FilterValue.Value.Integer && rightEval is FilterValue.Value.Integer ->
+					FilterValue.Logical(leftEval.number == rightEval.number)
+
+				leftEval is FilterValue.Value.Text && rightEval is FilterValue.Value.Text ->
+					FilterValue.Logical(leftEval.text == rightEval.text)
+
+				leftEval is FilterValue.Nodes && !leftEval.nodes.any() -> {
+					when (rightEval) {
+						// There are no results on the left, and the right is Nothing → equal
+						FilterValue.Nothing -> FilterValue.Logical.True
+
+						// There are no results on the left nor on the right → equal
+						is FilterValue.Nodes if !rightEval.nodes.any() -> FilterValue.Logical.True
+
+						// There are no results on the left but there is something on the right → !equal
+						else -> FilterValue.Logical.False
+					}
+				}
+
+				rightEval is FilterValue.Nodes && !rightEval.nodes.any() -> {
+					when (leftEval) {
+						// There are no results on the right, and the left is Nothing → equal
+						FilterValue.Nothing -> FilterValue.Logical.True
+
+						// There are no results on the right nor on the left → equal
+						is FilterValue.Nodes if !rightEval.nodes.any() -> FilterValue.Logical.True
+
+						// There are no results on the right but there is something on the left → !equal
+						else -> FilterValue.Logical.False
+					}
+				}
+
+				else -> {
+					// We found at least one result
+					val leftExtracted = leftEval.extractValue()
+					val rightExtracted = rightEval.extractValue()
+
+					FilterValue.Logical(leftExtracted == rightExtracted)
+				}
+			}
+		}
+
+		@OptIn(LowLevelApi::class)
+		private fun FilterValue.extractValue(): ExtractedValue = when (this) {
+			is FilterValue.Logical -> ExtractedValue(BsonType.Boolean, this, this === FilterValue.Logical.True)
+			is FilterValue.Nodes -> {
+				val nodes = nodes.toList()
+				when {
+					nodes.isEmpty() -> ExtractedValue(BsonType.Null, this, null)
+					nodes.size == 1 -> FilterValue.Value.Reader(nodes.first()).extractValue()
+					else -> TODO("Unknown type of nodelist $this")
+				}
+			}
+
+			FilterValue.Nothing -> ExtractedValue(BsonType.Null, this, null)
+			is FilterValue.Value.Integer -> ExtractedValue(BsonType.Double, this, this.number.toDouble())
+			is FilterValue.Value.Reader -> when (this.reader.type) {
+				BsonType.Int32 -> ExtractedValue(BsonType.Double, this, this.reader.readInt32().toDouble())
+				BsonType.Int64 -> ExtractedValue(BsonType.Double, this, this.reader.readInt64().toDouble())
+				BsonType.Double -> ExtractedValue(BsonType.Double, this, this.reader.readDouble())
+				BsonType.Decimal128 -> TODO("Decimal128 support is not fully implemented. See https://gitlab.com/opensavvy/ktmongo/-/merge_requests/150")
+				else -> ExtractedValue(this.reader.type, this, this.reader)
+			}
+
+			is FilterValue.Value.Text -> ExtractedValue(BsonType.String, this, this.text)
+		}
+
+		private class ExtractedValue(
+			val type: BsonType,
+			val value: FilterValue,
+			/**
+			 * - If the value is a number, contains a [Double].
+			 * - If the value is `null` or empty, contains `null`.
+			 * - If the value is a string, contains a [String].
+			 * - Otherwise, contains a [BsonValueReader].
+			 */
+			val raw: Any?,
+		) {
+
+			override fun equals(other: Any?): Boolean {
+				if (other == null) return false
+				if (other !is ExtractedValue) return false
+				if (type != other.type) return false
+
+				return this.raw == other.raw
+			}
+
+			override fun hashCode(): Int {
+				throw UnsupportedOperationException("ExtractedValue.hashCode() is not supported")
+			}
+
+			override fun toString(): String =
+				"${this.value} → ${this.raw} ($type)"
+		}
+
+		override fun toString(): String =
+			"($left == $right)"
+	}
+
+	data class NotEquals(
+		val left: FilterExpression<*>,
+		val right: FilterExpression<*>,
+	) : LogicalExpression by LogicalNot(Equals(left, right)) {
+
+		override fun toString(): String =
+			"($left != $right)"
+	}
+
+	data class FewerStrict(
+		val left: FilterExpression<*>,
+		val right: FilterExpression<*>,
+	) : LogicalExpression {
+		override val type get() = FilterValue.Logical
+
+		@OptIn(LowLevelApi::class)
+		private fun FilterValue.kind(): Int = when (this) {
+			is FilterValue.Value.Integer -> IS_NUMBER
+
+			is FilterValue.Value.Text -> IS_STRING
+
+			is FilterValue.Value.Reader -> {
+				when (this.reader.type) {
+					BsonType.Int32, BsonType.Int64,
+					BsonType.Double, BsonType.Decimal128,
+						-> IS_NUMBER
+
+					BsonType.String -> IS_STRING
+
+					else -> IS_OTHER
+				}
+			}
+
+			else -> IS_OTHER
+		}
+
+		@OptIn(LowLevelApi::class)
+		private fun FilterValue.numericValue(): Double = when (this) {
+			is FilterValue.Value.Integer -> this.number.toDouble()
+			is FilterValue.Value.Reader -> {
+				when (val type = this.reader.type) {
+					BsonType.Int32 -> this.reader.readInt32().toDouble()
+					BsonType.Int64 -> this.reader.readInt64().toDouble()
+					BsonType.Double -> this.reader.readDouble()
+					BsonType.Decimal128 -> TODO("Decimal128 support is not fully implemented. See https://gitlab.com/opensavvy/ktmongo/-/merge_requests/150")
+					else -> error("Unsupported type in numeric value: $type, $this")
+				}
+			}
+
+			else -> error("Unsupported type in numeric value: $this")
+		}
+
+		@OptIn(LowLevelApi::class)
+		private fun FilterValue.stringValue(): String = when (this) {
+			is FilterValue.Value.Text -> this.text
+			is FilterValue.Value.Reader -> {
+				when (val type = this.reader.type) {
+					BsonType.String -> this.reader.readString()
+					else -> error("Unsupported type in text value: $type, $this")
+				}
+			}
+
+			else -> error("Unsupported type in text value: $this")
+		}
+
+		/**
+		 * Same as [eval], but returns `null` if the comparison is not valid.
+		 */
+		@LowLevelApi
+		fun evalIfValid(reader: BsonValueReader): FilterValue.Logical? {
+			val leftEval = left.eval(reader)
+			val rightEval = right.eval(reader)
+
+			if (leftEval is FilterValue.Nothing ||
+				rightEval is FilterValue.Nothing ||
+				(leftEval is FilterValue.Nodes && !leftEval.nodes.any()) ||
+				(rightEval is FilterValue.Nodes && !rightEval.nodes.any())) {
+				return FilterValue.Logical.False
+			}
+
+			if (leftEval is FilterValue.Value && rightEval is FilterValue.Value) {
+				// Both are already computed values
+				// The only comparable types are: number, or string
+
+				val leftType = leftEval.kind()
+				val rightType = rightEval.kind()
+
+				if (leftType == IS_NUMBER && rightType == IS_NUMBER) {
+					val leftNumeric = leftEval.numericValue()
+					val rightNumeric = rightEval.numericValue()
+
+					return FilterValue.Logical(leftNumeric < rightNumeric)
+				} else if (leftType == IS_STRING && rightType == IS_STRING) {
+					val leftString = leftEval.stringValue()
+					val rightString = rightEval.stringValue()
+
+					return FilterValue.Logical(leftString < rightString)
+				}
+			}
+
+			// Could not compare the two values
+			return null
+		}
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+			evalIfValid(reader) ?: FilterValue.Logical.False
+
+		override fun toString(): String =
+			"($left < $right)"
+
+		companion object {
+			private const val IS_OTHER = 0
+			private const val IS_NUMBER = 1
+			private const val IS_STRING = 2
+		}
+	}
+
+	data class GreaterStrict(
+		val left: FilterExpression<*>,
+		val right: FilterExpression<*>,
+	) : LogicalExpression {
+		override val type: FilterValue.Type<FilterValue.Logical>
+			get() = FilterValue.Logical
+
+		@LowLevelApi
+		fun evalIfValid(reader: BsonValueReader): FilterValue.Logical? {
+			val isFewerStrict = FewerStrict(left, right)
+				.evalIfValid(reader)
+				?: return null
+
+			val isNotEqual = NotEquals(left, right)
+				.eval(reader)
+
+			return FilterValue.Logical(
+				isFewerStrict == FilterValue.Logical.False &&
+					isNotEqual == FilterValue.Logical.True
+			)
+		}
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+			evalIfValid(reader) ?: FilterValue.Logical.False
+
+		override fun toString(): String =
+			"($left > $right)"
+	}
+
+	data class FewerOrEqual(
+		val left: FilterExpression<*>,
+		val right: FilterExpression<*>,
+	) : LogicalExpression {
+		override val type: FilterValue.Type<FilterValue.Logical>
+			get() = FilterValue.Logical
+
+		@LowLevelApi
+		fun evalIfValid(reader: BsonValueReader): FilterValue.Logical? {
+			val isEqual = Equals(left, right)
+				.eval(reader)
+
+			// If they are equal, it doesn't matter whether they are comparable
+			if (isEqual == FilterValue.Logical.True)
+				return FilterValue.Logical.True
+
+			val isFewerStrict = FewerStrict(left, right)
+				.evalIfValid(reader)
+				?: return null
+
+			return isFewerStrict
+		}
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+			evalIfValid(reader) ?: FilterValue.Logical.False
+
+		override fun toString(): String =
+			"($left <= $right)"
+	}
+
+	data class GreaterOrEqual(
+		val left: FilterExpression<*>,
+		val right: FilterExpression<*>,
+	) : LogicalExpression {
+		override val type: FilterValue.Type<FilterValue.Logical>
+			get() = FilterValue.Logical
+
+		@LowLevelApi
+		fun evalIfValid(reader: BsonValueReader): FilterValue.Logical? {
+			val isEqual = Equals(left, right)
+				.eval(reader)
+
+			// If they are equal, it doesn't matter whether they are comparable
+			if (isEqual == FilterValue.Logical.True)
+				return FilterValue.Logical.True
+
+			val isFewerStrict = FewerStrict(left, right)
+				.evalIfValid(reader)
+				?: return null
+
+			return isFewerStrict
+		}
+
+		@LowLevelApi
+		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+			evalIfValid(reader) ?: FilterValue.Logical.False
+
+		override fun toString(): String =
+			"($left >= $right)"
+	}
+}
+
+@ExperimentalBsonPathApi
+private typealias LogicalExpression = FilterExpression<FilterValue.Logical>
+
+@ExperimentalBsonPathApi
+@LowLevelApi
+private fun LogicalExpression.test(reader: BsonValueReader): Boolean =
+	eval(reader) == FilterValue.Logical.True
+
 // endregion
 // region Parsing
 
@@ -554,6 +1074,7 @@ private data class SliceSelector(
  * | `[0]`                 | Accessor for the first item of an array. See [BsonPath.get]. |
  * | `.*` or `[*]`         | Accessor for all direct children. See [BsonPath.all].        |
  * | `[1:3]`               | Accessor for elements at index 1..<3. See [BsonPath.sliced]. |
+ * | `[?@.a > @.b]`        | Accessor for elements that satisfy the given condition.      |
  *
  * Multiple selectors can be defined in the same brackets.
  * When this is the case, all nodes that match any of the selectors are returned.
@@ -580,9 +1101,18 @@ private data class SliceSelector(
 fun BsonPath(@Language("JSONPath") text: String): BsonPath {
 	require(text.startsWith("$")) { "A BsonPath expression must start with a dollar sign: $text\nDid you mean to create a BsonPath to access a specific field? If so, see BsonPath[\"foo\"]" }
 
-	var expr: BsonPath = BsonPath
 	val parser = BsonPathParserUtils(text, startIndex = 1) // skip the '$'
 
+	return parseBsonPath(parser, BsonPath.Root, isTopLevel = true)
+}
+
+@ExperimentalBsonPathApi
+private fun parseBsonPath(
+	parser: BsonPathParserUtils,
+	root: BsonPath,
+	isTopLevel: Boolean,
+): BsonPath {
+	var expr = root
 	while (parser.hasNext()) {
 		when (val segmentStart = parser.peek()) {
 			'.' -> {
@@ -594,6 +1124,13 @@ fun BsonPath(@Language("JSONPath") text: String): BsonPath {
 				parser.skip('[')
 				expr = parseBracketSegment(expr, parser)
 				parser.skip(']')
+			}
+
+			else if !isTopLevel -> {
+				// If we're not in the top-level expression, and we find anything that doesn't
+				// look like a BsonPath expression, just give up and let the caller handle it.
+				// For example, it could be a ']' or a ' == …'.
+				return expr
 			}
 
 			else -> {
@@ -660,37 +1197,17 @@ private fun parseBracketSegment(
 
 			'*' -> {
 				parser.skip('*')
-				parser.extract() // ignore whatever there is
+				val _ = parser.extract() // ignore whatever there is
 				selectors += AllSelector
 			}
 
 			in Char(0x30)..Char(0x39), '-', ':' -> {
-				if (parser.peek() == '-') {
-					parser.accumulate()
-				}
+				selectors += parseIndexOrSlice(parser)
+			}
 
-				parser.accumulateWhile { it.isDigit() }
-
-				if (parser.peek() == ':') {
-					parser.accumulate()
-					parser.accumulateWhile { it.isDigit() }
-
-					if (parser.peek() == ':') {
-						parser.accumulate()
-						parser.accumulateWhile { it.isDigit() || it == '-' }
-					}
-				}
-
-				val content = parser.extract()
-				if (':' in content) {
-					val bounds = content.split(':')
-					val start = bounds.getIntNotEmpty(0, default = -1)
-					val end = bounds.getIntNotEmpty(1, default = -1)
-					val step = bounds.getIntNotEmpty(2, default = 1)
-					selectors += SliceSelector(start, end, step)
-				} else {
-					selectors += IndexSelector(content.toInt())
-				}
+			'?' -> {
+				parser.skip('?')
+				selectors += FilterSelector(parseLogicalExpression(parser))
 			}
 
 			else -> {
@@ -703,6 +1220,289 @@ private fun parseBracketSegment(
 		selectors.isEmpty() -> parser.fail("At least one selector should be specified between the brackets")
 		selectors.size == 1 -> SingleSelectorSegment(selectors.first(), parent)
 		else -> MultiSelectorSegment(selectors, parent)
+	}
+}
+
+@OptIn(ExperimentalContracts::class)
+@ExperimentalBsonPathApi
+private inline fun <T> parseParenthesizedExpression(
+	parser: BsonPathParserUtils,
+	inner: () -> T,
+): T {
+	contract {
+		callsInPlace(inner, InvocationKind.EXACTLY_ONCE)
+	}
+
+	var parensCounter = 0
+	parser.skipWhitespace()
+	while (parser.peek() == '(') {
+		parser.skip()
+		parensCounter++
+		parser.skipWhitespace()
+	}
+
+	val result = inner()
+
+	repeat(parensCounter) {
+		parser.skipWhitespace()
+		parser.skip(')')
+	}
+
+	return result
+}
+
+@OptIn(ExperimentalContracts::class)
+@ExperimentalBsonPathApi
+private inline fun parseNegationableExpression(
+	parser: BsonPathParserUtils,
+	inner: () -> LogicalExpression,
+): LogicalExpression {
+	contract {
+		callsInPlace(inner, InvocationKind.EXACTLY_ONCE)
+	}
+
+	var negationCounter = 0
+	parser.skipWhitespace()
+	while (parser.peek() == '!') {
+		parser.skip()
+		negationCounter++
+		parser.skipWhitespace()
+	}
+
+	val result = inner()
+
+	return if (negationCounter % 2 == 1)
+		FilterExpression.LogicalNot(result)
+	else result
+}
+
+@OptIn(ExperimentalContracts::class)
+@ExperimentalBsonPathApi
+private inline fun parseParenthesizedLogicalExpression(
+	parser: BsonPathParserUtils,
+	inner: () -> LogicalExpression,
+): LogicalExpression {
+	contract {
+		callsInPlace(inner, InvocationKind.EXACTLY_ONCE)
+	}
+
+	return parseNegationableExpression(parser) {
+		parseParenthesizedExpression(parser, inner)
+	}
+}
+
+@ExperimentalBsonPathApi
+private fun parseLogicalExpression(
+	parser: BsonPathParserUtils,
+): LogicalExpression = parseParenthesizedLogicalExpression(parser) {
+	var expression = parseLogicalAndExpression(parser)
+
+	parser.skipWhitespace()
+	while (parser.peek() == '|' && parser.peek(1) == '|') {
+		parser.skip()
+		parser.skip()
+		parser.skipWhitespace()
+
+		val other = parseLogicalAndExpression(parser)
+		expression = FilterExpression.LogicalOr(expression, other)
+	}
+
+	expression
+}
+
+@ExperimentalBsonPathApi
+private fun parseLogicalAndExpression(
+	parser: BsonPathParserUtils,
+): LogicalExpression = parseParenthesizedLogicalExpression(parser) {
+	var expression = parseLogicalBasicExpression(parser)
+
+	parser.skipWhitespace()
+	while (parser.peek() == '|' && parser.peek(1) == '|') {
+		parser.skip()
+		parser.skip()
+		parser.skipWhitespace()
+
+		val other = parseLogicalBasicExpression(parser)
+		expression = FilterExpression.LogicalAnd(expression, other)
+	}
+
+	expression
+}
+
+@ExperimentalBsonPathApi
+private fun parseLogicalBasicExpression(
+	parser: BsonPathParserUtils,
+): LogicalExpression = parseParenthesizedLogicalExpression(parser) {
+	val expression = parseFilterExpression(parser)
+
+	when (expression.type) {
+		FilterValue.Logical ->
+			@Suppress("UNCHECKED_CAST") // Unchecked but safe because we just verified the type
+			expression as FilterExpression<FilterValue.Logical>
+
+		FilterValue.Nodes ->
+			@Suppress("UNCHECKED_CAST") // Unchecked but safe because we just verified the type
+			FilterExpression.Exists(expression as FilterExpression<FilterValue.Nodes>)
+
+		else -> parser.fail("Type mismatch: '$expression' of type ${expression.type} is not a valid filter. Only ${FilterValue.Logical} and ${FilterValue.Nodes} are supported.")
+	}
+}
+
+@ExperimentalBsonPathApi
+private fun parseFilterExpression(
+	parser: BsonPathParserUtils,
+): FilterExpression<*> = parseParenthesizedExpression(parser) {
+	var expression = parseFilterExpressionSingle(parser)
+
+	// Handle infix operators
+
+	parser.skipWhitespace()
+	when (parser.peek()) {
+		'=' if parser.peek(1) == '=' -> {
+			parser.skip() // =
+			parser.skip() // =
+			val other = parseFilterExpression(parser)
+			expression = FilterExpression.Equals(expression, other)
+		}
+
+		'!' if parser.peek(1) == '=' -> {
+			parser.skip() // !
+			parser.skip() // =
+			val other = parseFilterExpression(parser)
+			expression = FilterExpression.NotEquals(expression, other)
+		}
+
+		'<' if parser.peek(1) == '=' -> {
+			parser.skip() // <
+			parser.skip() // =
+			val other = parseFilterExpression(parser)
+			expression = FilterExpression.FewerOrEqual(expression, other)
+		}
+
+		'<' -> {
+			parser.skip() // <
+			val other = parseFilterExpression(parser)
+			expression = FilterExpression.FewerStrict(expression, other)
+		}
+
+		'>' if parser.peek(1) == '=' -> {
+			parser.skip() // >
+			parser.skip() // =
+			val other = parseFilterExpression(parser)
+			expression = FilterExpression.GreaterOrEqual(expression, other)
+		}
+
+		'>' -> {
+			parser.skip() // >
+			val other = parseFilterExpression(parser)
+			expression = FilterExpression.GreaterStrict(expression, other)
+		}
+	}
+
+	expression
+}
+
+@ExperimentalBsonPathApi
+private fun parseFilterExpressionSingle(
+	parser: BsonPathParserUtils,
+): FilterExpression<*> = parseParenthesizedExpression(parser) {
+	when (val current = parser.peek()) {
+		't' if parser.peek(1) == 'r' && parser.peek(2) == 'u' && parser.peek(3) == 'e' -> {
+			parser.skip() // t
+			parser.skip() // r
+			parser.skip() // u
+			parser.skip() // e
+			FilterExpression.Literal(FilterValue.Logical.True)
+		}
+
+		'f' if parser.peek(1) == 'a' && parser.peek(2) == 'l' && parser.peek(3) == 's' && parser.peek(4) == 'e' -> {
+			parser.skip() // f
+			parser.skip() // a
+			parser.skip() // l
+			parser.skip() // s
+			parser.skip() // e
+			FilterExpression.Literal(FilterValue.Logical.False)
+		}
+
+		'$' -> {
+			parser.skip()
+			val path = parseBsonPath(parser, BsonPath.Root, isTopLevel = false)
+			FilterExpression.Path(path)
+		}
+
+		'@' -> {
+			parser.skip()
+			val path = parseBsonPath(parser, BsonPath.Current, isTopLevel = false)
+			FilterExpression.Path(path)
+		}
+
+		'\'' -> {
+			parser.skip() // '
+			parser.accumulateWhile { it != '\'' }
+			parser.skip('\'')
+			val text = parser.extract()
+			FilterExpression.Literal(
+				FilterValue.Value.Text(text),
+			)
+		}
+
+		'"' -> {
+			parser.skip() // "
+			parser.accumulateWhile { it != '"' }
+			parser.skip('"')
+			val text = parser.extract()
+			FilterExpression.Literal(
+				FilterValue.Value.Text(text),
+			)
+		}
+
+		in Char(0x30)..Char(0x39), '-' -> {
+			if (current == '-') {
+				parser.accumulate()
+			}
+
+			parser.accumulateWhile { it in Char(0x30)..Char(0x39) }
+			val text = parser.extract()
+			val value = text.toLongOrNull()
+				?: parser.fail("Invalid integer: '$text'")
+			FilterExpression.Literal(
+				FilterValue.Value.Integer(value)
+			)
+		}
+
+		else -> parser.fail("Unrecognized filter expression")
+	}
+}
+
+@ExperimentalBsonPathApi
+private fun parseIndexOrSlice(
+	parser: BsonPathParserUtils,
+): Selector {
+	if (parser.peek() == '-') {
+		parser.accumulate()
+	}
+
+	parser.accumulateWhile { it.isDigit() }
+
+	if (parser.peek() == ':') {
+		parser.accumulate()
+		parser.accumulateWhile { it.isDigit() }
+
+		if (parser.peek() == ':') {
+			parser.accumulate()
+			parser.accumulateWhile { it.isDigit() || it == '-' }
+		}
+	}
+
+	val content = parser.extract()
+	if (':' in content) {
+		val bounds = content.split(':')
+		val start = bounds.getIntNotEmpty(0, default = -1)
+		val end = bounds.getIntNotEmpty(1, default = -1)
+		val step = bounds.getIntNotEmpty(2, default = 1)
+		return SliceSelector(start, end, step)
+	} else {
+		return IndexSelector(content.toInt())
 	}
 }
 
@@ -744,6 +1544,20 @@ private class BsonPathParserUtils(
 	fun skipIf(c: Char) {
 		if (text[index] == c)
 			skip()
+	}
+
+	/**
+	 * Skips all characters until [predicate] becomes `false` or we reach the end of [text].
+	 *
+	 * The first character for which [predicate] returns `false` is not included.
+	 */
+	inline fun skipWhile(predicate: (Char) -> Boolean) {
+		while (index < text.length && predicate(text[index]))
+			index++
+	}
+
+	fun skipWhitespace() {
+		skipWhile { it.isWhitespace() }
 	}
 
 	fun hasNext() =
