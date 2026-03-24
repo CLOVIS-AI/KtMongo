@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.dsl.path
 
-import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -522,12 +521,12 @@ interface FieldDsl {
  * }
  * ```
  */
-fun FieldDsl(context: BsonContext): FieldDsl =
-	FieldDslImpl(context)
+fun FieldDsl(nameStrategy: PropertyNameStrategy): FieldDsl =
+	FieldDslImpl(nameStrategy)
 
 @OptIn(LowLevelApi::class)
 internal class FieldDslImpl(
-	override val context: BsonContext,
+	override val context: PropertyNameStrategy,
 ) : FieldDsl
 
 @OptIn(LowLevelApi::class)
