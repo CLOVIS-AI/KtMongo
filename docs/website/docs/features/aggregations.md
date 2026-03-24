@@ -17,7 +17,7 @@ users.aggregate()
 Within each stage, you may combine values together.
 
 !!! note ""
-    Unlike other stages, `match` uses regular find syntax and not aggregation operators. Use the [`expr` operator](../api/-mongo-d-b%20request%20-d-s-l/opensavvy.ktmongo.dsl.query/-filter-query/expr.md) within `match` to access aggregation operators.
+	Unlike other stages, `match` uses regular find syntax and not aggregation operators. Use the [`expr` operator](../api/dsl/opensavvy.ktmongo.dsl.query/-filter-query/index.md#expr) within `match` to access aggregation operators.
 
 ## Aggregation operators
 
@@ -61,8 +61,8 @@ While there are multiple ways the Kotlin language could be modified to remove th
 
 <br/>
 
-You can find the list of implemented aggregation operators [here](../api/-mongo-d-b%20request%20-d-s-l/opensavvy.ktmongo.dsl.aggregation/-aggregation-operators/index.md).
+You can find the list of implemented aggregation operators [here](../api/dsl/opensavvy.ktmongo.dsl.aggregation/-aggregation-operators/index.md).
 
 ## Aggregation stages
 
-You can find the list of implemented aggregation stages [here](../api/-mongo-d-b%20request%20-d-s-l/opensavvy.ktmongo.dsl.aggregation/-aggregation-pipeline/index.md).
+You can find the list of implemented aggregation stages [here](../api/dsl/opensavvy.ktmongo.dsl.aggregation/-aggregation-pipeline/index.md).
