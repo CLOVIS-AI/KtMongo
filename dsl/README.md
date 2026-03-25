@@ -106,7 +106,7 @@ Utilities for referencing variables and classes.
 ```kotlin
 User::_id                          // _id
 User::profile / Profile::name      // profile.name
-User::friends[1] / Friend::name    // friends.$1.name
+User::friends[1] / Friend::name    // friends.1.name
 ```
 
 This package contains a [low-level type-unsafe implementation][opensavvy.ktmongo.dsl.path.Path] of arbitrary document paths, and a [high-level type-safe wrapper][opensavvy.ktmongo.dsl.path.Field] that provides the above utility functions.

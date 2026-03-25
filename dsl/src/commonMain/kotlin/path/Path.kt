@@ -84,7 +84,7 @@ sealed class PathSegment {
  * For example, the following are valid paths:
  * - `"foo"`: targets the field "foo",
  * - `"foo.bar"`: targets the field "bar" which is part of the object "foo",
- * - `"arr.$5.bar"`: targets the field "bar" which is part of the item with index 5 in the array "arr".
+ * - `"arr.5.bar"`: targets the field "bar" which is part of the item with index 5 in the array "arr".
  *
  * This structure is a singly-linked list representing the entire path.
  * Each segment is represented by [PathSegment].

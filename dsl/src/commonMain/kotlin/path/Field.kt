@@ -403,11 +403,11 @@ interface FieldDsl {
 	 *
 	 * // Refer to the first friend
 	 * println(User::friends[0])
-	 * // → 'friends.$0'
+	 * // → 'friends.0'
 	 *
 	 * // Refer to the third friend's name
 	 * println(User::friends[2] / Friend::name)
-	 * // → 'friends.$2.name'
+	 * // → 'friends.2.name'
 	 * ```
 	 */
 	@KtMongoDsl
