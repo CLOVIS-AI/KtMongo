@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -2150,7 +2150,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	val <V> Field<T, Collection<V>>.any: Field<T, V>
-		get() = FieldImpl<T, V>(path)
+		get() = FieldImpl(path)
 
 	/**
 	 * Specify operators on array elements.

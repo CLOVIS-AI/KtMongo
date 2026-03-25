@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * ### Example
 	 *
-	 * This operator is useful to simplify searches when the criteria is optional.
+	 * This operator is useful to simplify searches when the criteria are optional.
 	 * For example, instead of writing:
 	 * ```kotlin
 	 * collection.find {
@@ -721,7 +721,7 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
 	 *
-	 * @see FilterExpression.isNotOneOf
+	 * @see FilterQuery.isNotOneOf
 	 * @see ne
 	 */
 	@KtMongoDsl
@@ -751,7 +751,7 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
 	 *
-	 * @see FilterExpression.isNotOneOf
+	 * @see FilterQuery.isNotOneOf
 	 * @see ne
 	 */
 	@KtMongoDsl

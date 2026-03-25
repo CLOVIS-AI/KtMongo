@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -361,8 +361,8 @@ interface WithWriteConcern : Options {
 	 *
 	 * For convenience of the most common scenarii, KtMongo provides the following helpers:
 	 * - [WriteConcern.Majority]: requests strong acknowledgment from the majority of nodes.
-	 * - [WriteConcern.Primary]: requests weak acknowledgement from the primary node.
-	 * - [WriteConcern.FireAndForget]: requests no acknowledgement at all.
+	 * - [WriteConcern.Primary]: requests weak acknowledgment from the primary node.
+	 * - [WriteConcern.FireAndForget]: requests no acknowledgment at all.
 	 *
 	 * ### Transactions
 	 *
