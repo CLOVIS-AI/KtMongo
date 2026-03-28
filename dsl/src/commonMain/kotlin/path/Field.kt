@@ -16,11 +16,11 @@
 
 package opensavvy.ktmongo.dsl.path
 
-import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.Field.Companion.unsafe
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import kotlin.reflect.KProperty1
 
 /**
@@ -51,16 +51,19 @@ import kotlin.reflect.KProperty1
  *
  * // Refer to the user's id
  * println(User::_id.field)
+ * // _id
  *
  * // Refer to the user's name
  * println(User::profile / Profile::name)
+ * // profile.name
  *
  * // Refer to the name of the second friend
  * println(User::friends[1] / Friend::name)
+ * // friends.1.name
  * ```
  *
- * Some of the functions of the DSL may be available only when [FieldDsl] is in scope.
- * All operator scopes provided by this library should bring it into scope automatically.
+ * An instance of [FieldDsl] is required in scope to call these methods.
+ * All KtMongo commands automatically bring an instance of [FieldDsl] into scope.
  *
  * For example, when writing a filter, methods from this interface are automatically available:
  * ```kotlin
@@ -108,7 +111,9 @@ interface Field<in Root, out Type> {
 }
 
 /**
- * Operators to construct MongoDB field references from Kotlin code.
+ * Operators to construct MongoDB [field references][Field] from Kotlin code.
+ *
+ * The algorithm used to convert from a Kotlin [KProperty1] can be configured with [PropertyNameStrategy].
  *
  * ### Example
  *
@@ -140,6 +145,7 @@ interface Field<in Root, out Type> {
  * ```
  *
  * In most situations, an instance of this interface should be provided in all operations that require it.
+ * For example, the `find {}` method provides an instance of [FilterQuery], which implements this interface.
  */
 interface FieldDsl {
 
@@ -404,11 +410,11 @@ interface FieldDsl {
 	 *
 	 * // Refer to the first friend
 	 * println(User::friends[0])
-	 * // → 'friends.$0'
+	 * // → 'friends.0'
 	 *
 	 * // Refer to the third friend's name
 	 * println(User::friends[2] / Friend::name)
-	 * // → 'friends.$2.name'
+	 * // → 'friends.2.name'
 	 * ```
 	 */
 	@KtMongoDsl
@@ -522,12 +528,12 @@ interface FieldDsl {
  * }
  * ```
  */
-fun FieldDsl(context: BsonContext): FieldDsl =
-	FieldDslImpl(context)
+fun FieldDsl(nameStrategy: PropertyNameStrategy): FieldDsl =
+	FieldDslImpl(nameStrategy)
 
 @OptIn(LowLevelApi::class)
 internal class FieldDslImpl(
-	override val context: BsonContext,
+	override val context: PropertyNameStrategy,
 ) : FieldDsl
 
 @OptIn(LowLevelApi::class)

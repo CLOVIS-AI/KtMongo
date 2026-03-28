@@ -20,7 +20,7 @@ collection.find {
 }
 ```
 
-To learn more about the `Class::field` syntax, and how to refer to fields in general, see [Field][opensavvy.ktmongo.dsl.path.Field].
+To learn more about the `Class::field` syntax, and how to refer to fields in general, see [Field][opensavvy.ktmongo.dsl.path.FieldDsl].
 
 ## Operator DSLs
 
@@ -29,17 +29,17 @@ Operators are organized by the context in which they are available in. For examp
 Instances of these classes are usually provided by the driver as part of its functions.
 
 - [Filter operators][opensavvy.ktmongo.dsl.query.FilterQuery]
-- [Update operators][opensavvy.ktmongo.dsl.query.UpdateOperators]
-- [Upsert operators][opensavvy.ktmongo.dsl.query.UpsertOperators]
+- [Update operators][opensavvy.ktmongo.dsl.query.UpdateQuery]
+- [Upsert operators][opensavvy.ktmongo.dsl.query.UpsertQuery]
 
-To create a custom operator (for example because it isn't part of the library yet), see [AbstractExpression][opensavvy.ktmongo.dsl.query.common.AbstractExpression].
+To create a custom operator (for example because it isn't part of the library yet), see [AbstractExpression][opensavvy.ktmongo.dsl.tree.AbstractBsonNode].
 
 ## Aggregation DSLs
 
 KtMongo has support for aggregation pipelines through dedicated DSLs.
 
 - [Aggregation pipelines and stages][opensavvy.ktmongo.dsl.aggregation.Pipeline]
-- [Aggregation operators][opensavvy.ktmongo.dsl.aggregation.ValueDsl]
+- [Aggregation operators][opensavvy.ktmongo.dsl.aggregation.AggregationOperators]
 
 # Package opensavvy.ktmongo.dsl
 
@@ -93,27 +93,31 @@ You may also be interested in reading the [official documentation on aggregation
 
 # Package opensavvy.ktmongo.dsl.query
 
-Operators, classified by the context in which they are available in.
+Operators to query and update data.
 
-Classes of this package are not expected to be instantiated by the user. Instead, it is expected by the driver will provide an instance of these classes in its own DSL, such that the user doesn't have to think about which class they should use.
+All operators are declared as interface members. Each interface groups the operators of a given MongoDB command.
 
-However, the user should still be aware of these classes, as they are the place where operators are documented.
+- [FilterQuery][opensavvy.ktmongo.dsl.query.FilterQuery] is used in `find()`, `count()`, `delete()` and as the filter in `updateMany()`
+- [UpdateQuery][opensavvy.ktmongo.dsl.query.UpdateQuery] is used as the update in `updateMany()`
+- [UpsertQuery][opensavvy.ktmongo.dsl.query.UpsertQuery] is used as the update in `upsertOne()`
+- [UpdateWithPipelineQuery][opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery] is used as the update in `updateManyWithPipeline()`
+- [UpsertWithPipelineQuery][opensavvy.ktmongo.dsl.query.UpsertWithPipelineQuery] is used as the update in `upsertOneWithPipeline()`
 
 # Package opensavvy.ktmongo.dsl.path
 
-Utilities for referencing variables and classes.
+Syntax to refer to specific fields in MongoDB documents.
+
+When creating a query, we need to refer to specific fields in a MongoDB document, which may be in a nested document or in an array. Traditionally, this is done with the string representation of the path, but that leads to brittle code that is hard to navigate and refactor. Instead, KtMongo provides a DSL to refer to fields with type-safety:
 
 ```kotlin
 User::_id                          // _id
 User::profile / Profile::name      // profile.name
-User::friends[1] / Friend::name    // friends.$1.name
+User::friends[1] / Friend::name    // friends.1.name
 ```
 
-This package contains a [low-level type-unsafe implementation][opensavvy.ktmongo.dsl.path.Path] of arbitrary document paths, and a [high-level type-safe wrapper][opensavvy.ktmongo.dsl.path.Field] that provides the above utility functions.
-
-Note that some functions are only provided when the [FieldDsl][opensavvy.ktmongo.dsl.path.FieldDsl] is into scope (which should be done automatically by most operators). This means that you should rarely need to import anything for these functions to be available.
+The operators are implemented in the interface [FieldDsl][opensavvy.ktmongo.dsl.path.FieldDsl] which is already brought into scope by all KtMongo methods, and return instances of [Field][opensavvy.ktmongo.dsl.path.Field], the type-safe representation of a MongoDB path.
 
 ### Operators
 
-- [The `.` operator][opensavvy.ktmongo.dsl.path.Field.div]
-- [The `.$x.` operator][opensavvy.ktmongo.dsl.path.get]
+- [The `.` operator][opensavvy.ktmongo.dsl.path.FieldDsl.div]
+- [The `.n.` operator][opensavvy.ktmongo.dsl.path.FieldDsl.get]

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,9 +32,14 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 sealed class PathSegment {
 
 	/**
+	 * Returns the string representation of this [PathSegment]. To obtain the representation of an entire [Path], see [Path.toString].
+	 */
+	abstract override fun toString(): String
+
+	/**
 	 * Path segment representing the name of a field.
 	 *
-	 * This class isn't meant to be used directly by end users. Instead, see [div].
+	 * This class isn't type-safe. Instead, see [FieldDsl.div].
 	 */
 	@LowLevelApi
 	data class Field(val name: String) : PathSegment() {
@@ -44,7 +49,7 @@ sealed class PathSegment {
 	/**
 	 * Path segment representing an indexed element in an array.
 	 *
-	 * This class isn't meant to be used directly by end users. Instead, see [get].
+	 * This class isn't type-safe. Instead, see [FieldDsl.get].
 	 */
 	@LowLevelApi
 	data class Indexed(val index: Int) : PathSegment() {
@@ -53,6 +58,8 @@ sealed class PathSegment {
 
 	/**
 	 * Path segment for the "positional" operator (`.$.`).
+	 *
+	 * This class isn't type-safe. Instead, see [opensavvy.ktmongo.dsl.query.UpdateQuery.selected].
 	 *
 	 * Official documentation:
 	 * - [In aggregations](https://www.mongodb.com/docs/manual/reference/operator/projection/positional/#mongodb-projection-proj.-)
@@ -65,6 +72,8 @@ sealed class PathSegment {
 
 	/**
 	 * Path segment for the "all positional" operator (`.$[].`).
+	 *
+	 * This class isn't type-safe. Instead, see [opensavvy.ktmongo.dsl.query.UpdateQuery.all].
 	 *
 	 * Official documentation:
 	 * - [In updates](https://www.mongodb.com/docs/manual/reference/operator/update/positional-all/)
@@ -84,14 +93,22 @@ sealed class PathSegment {
  * For example, the following are valid paths:
  * - `"foo"`: targets the field "foo",
  * - `"foo.bar"`: targets the field "bar" which is part of the object "foo",
- * - `"arr.$5.bar"`: targets the field "bar" which is part of the item with index 5 in the array "arr".
+ * - `"arr.5.bar"`: targets the field "bar" which is part of the item with index 5 in the array "arr".
  *
  * This structure is a singly-linked list representing the entire path.
  * Each segment is represented by [PathSegment].
+ *
+ * The high-level type-safe equivalent of this type is [Field].
  */
 @LowLevelApi
 data class Path(
 	val segment: PathSegment,
+
+	/**
+	 * The previous link in this [Path].
+	 *
+	 * For example, the path `Path(PathSegment.Indexed(5), Path(PathSegment.Field("foo"), null))` represents the path `"foo.5"`.
+	 */
 	val parent: Path?,
 ) {
 
@@ -101,10 +118,21 @@ data class Path(
 		yield(current.segment)
 	}
 
+	/**
+	 * Returns a [Sequence] of the different [PathSegment] instances that form this [Path], in hierarchical order.
+	 *
+	 * For example, the path `Path(PathSegment.Indexed(5), Path(PathSegment.Field("foo"), null))` represents the path `"foo.5"` and
+	 * would return the sequence `[PathSegment.Field("foo"), PathSegment.Indexed(5)]`.
+	 */
 	@LowLevelApi
 	fun asSequence(): Sequence<PathSegment> =
 		sequence { buildSequence(this@Path) }
 
+	/**
+	 * Returns the string representation of this [Path]. This is the representation that is sent to MongoDB to refer to a [Field].
+	 *
+	 * For example, the path `Path(PathSegment.Indexed(5), Path(PathSegment.Field("foo"), null))` represents the path `"foo.5"`.
+	 */
 	@OptIn(LowLevelApi::class)
 	override fun toString() =
 		asSequence().joinToString(separator = ".")

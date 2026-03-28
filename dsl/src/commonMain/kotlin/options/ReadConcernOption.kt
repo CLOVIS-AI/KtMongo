@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ enum class ReadConcern(val bsonName: String) {
 	 * resulting in a document matching the filter not being returned.
 	 *
 	 * Always add a [maxTime][WithMaxTime.maxTime] option in case a majority
-	 * cannot be elected (e.g. if two many replica set members have crashed) to avoid the read blocking forever.
+	 * cannot be elected (e.g. if too many replica set members have crashed) to avoid the read blocking forever.
 	 *
 	 * ### External resources
 	 *
