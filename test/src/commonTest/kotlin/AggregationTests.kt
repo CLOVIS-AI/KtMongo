@@ -100,8 +100,8 @@ val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.secon
 			set {
 				Song::creationDate set cond(
 					Song::editionDate gt Song::creationDate,
-					of(12),
-					of(11)
+					12,
+					11
 				)
 			}
 		}

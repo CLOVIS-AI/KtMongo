@@ -81,7 +81,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		val sourceFilePath = sourceFile.path.replace('\\', '/')
 		val isValueOverloadTarget = sourceFilePath.endsWith("aggregation/operators/ArithmeticValueOperators.kt") ||
 			sourceFilePath.endsWith("aggregation/operators/ArrayValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/ComparisonValueOperators.kt")
+			sourceFilePath.endsWith("aggregation/operators/ComparisonValueOperators.kt") ||
+			sourceFilePath.endsWith("aggregation/operators/ConditionalValueOperators.kt")
 
 		// Pre-scan: collect existing KProperty1 receiver functions/properties to avoid duplicates
 		val existingKPropFunctions = mutableSetOf<Pair<String, Int>>() // (name, paramCount)
@@ -239,16 +240,22 @@ abstract class ApplyTemplateTask : DefaultTask() {
 									// in the parse tree, e.g. a spurious 'Boolean' from 'Value<T & Any, Boolean>').
 									// For vararg replaced params, map each element through of() individually
 									// rather than wrapping the whole array.
+									var seenVararg = false
 									val delegationArgs = vParamCtxList.mapIndexedNotNull { idx, fp ->
 										if (fp.parameter()?.type() == null) return@mapIndexedNotNull null
 										val name = fp.parameter()?.simpleIdentifier()?.text
 											?: return@mapIndexedNotNull null
+										val isVararg = fp.modifierList()?.text?.contains("vararg") == true
+										val afterVararg = seenVararg
+										if (isVararg) seenVararg = true
 										val paramPosIdx = valuePositions.indexOfFirst { !it.isReceiver && it.paramIdx == idx }
 										val replaced = paramPosIdx >= 0 && combination[paramPosIdx] != null
 										if (replaced) {
 											val pos = valuePositions[paramPosIdx]
-											if (pos.isVararg) "$name = $name.map { of(it) }.toTypedArray()" else "of($name)"
-										} else name
+											if (pos.isVararg) "$name = $name.map { of(it) }.toTypedArray()" else if (afterVararg) "$name = of($name)" else "of($name)"
+										} else {
+											if (isVararg) "*$name" else if (afterVararg) "$name = $name" else name
+										}
 									}.joinToString(", ")
 									val delegationCall = "$receiverPrefix$vFuncName($delegationArgs)"
 

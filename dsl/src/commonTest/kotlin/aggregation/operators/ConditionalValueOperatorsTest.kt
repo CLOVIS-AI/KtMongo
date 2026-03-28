@@ -40,7 +40,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 					User::score set cond(
 						condition = User::multiplier gt 2,
 						ifTrue = User::score + User::multiplier,
-						ifFalse = of(User::score)
+						ifFalse = User::score,
 					)
 				} shouldBeBson $$"""
 					[
@@ -77,7 +77,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 						User::role eq "GUEST" to of(5),
 						User::role eq "EMPLOYEE" to of(6),
 						User::role eq "ADMIN" to of(7),
-						default = of(-1)
+						default = -1
 					)
 				} shouldBeBson $$"""
 					[

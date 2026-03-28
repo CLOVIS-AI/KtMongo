@@ -73,6 +73,2556 @@ interface ConditionalValueOperators : ValueOperators {
 	): Value<R, T> =
 		ConditionalValue(context, condition, ifTrue, ifFalse)
 
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByValueByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(condition, ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByValueByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(condition, ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(condition, ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByValueByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByValueByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByValueByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByValueByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByValueByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByValueByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByValueByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByValueByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: T,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByValueByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: T,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByValueByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: T,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Value<R, Boolean>,
+		ifTrue: T,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(condition, of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByFieldByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByFieldByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByFieldByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByFieldByValueByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByFieldByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByFieldByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByFieldByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByFieldByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByFieldByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByFieldByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByFieldByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByFieldByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByFieldByResultByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: T,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByFieldByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: T,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByFieldByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: T,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByFieldByResultByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
+		ifTrue: T,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByPropertyByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByPropertyByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByPropertyByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByPropertyByValueByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: Value<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByPropertyByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByPropertyByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByPropertyByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByPropertyByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByPropertyByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByPropertyByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@JvmName("condByPropertyByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByPropertyByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByPropertyByResultByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: T,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByPropertyByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: T,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByPropertyByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: T,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByPropertyByResultByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: kotlin.reflect.KProperty1<R, Boolean>,
+		ifTrue: T,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: Value<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByValueByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: Value<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByValueByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: Value<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: Value<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), ifTrue, of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByFieldByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByFieldByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByFieldByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByPropertyByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByPropertyByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByPropertyByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: kotlin.reflect.KProperty1<R, T>,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: T,
+		ifFalse: Value<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), ifFalse)
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: T,
+		ifFalse: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("condByResultByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: T,
+		ifFalse: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
+	/**
+	 * Decides between two [values][Value] depending on the evaluation of a boolean value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val multiplier: Int,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::score set cond(
+	 *             condition = of(User::multiplier) gt of(2),
+	 *             ifTrue = of(User::score) * of(User::multiplier),
+	 *             ifFalse = of(User::score)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 *
+	 * @see switch Specify multiple conditions.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any, T> cond(
+		condition: Boolean,
+		ifTrue: T,
+		ifFalse: T,
+	): Value<R, T> =
+		cond(of(condition), of(ifTrue), of(ifFalse))
+
 	@OptIn(LowLevelApi::class)
 	private class ConditionalValue<Root : Any, Type>(
 		context: BsonContext,
@@ -139,6 +2689,129 @@ interface ConditionalValueOperators : ValueOperators {
 		default: Value<R, T>? = null,
 	): Value<R, T> =
 		SwitchValue(context, cases.asList(), default)
+
+	/**
+	 * Selects one value based on multiple conditions.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             of(User::role) eq of("GUEST") to of(5),
+	 *             of(User::role) eq of("EMPLOYEE") to of(6),
+	 *             of(User::role) eq of("ADMIN") to of(7),
+	 *             default = of(-1)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/)
+	 *
+	 * @see cond Specify a single condition.
+	 */
+	@JvmName("switchByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class)
+	fun <R : Any, T> switch(
+		vararg cases: Pair<Value<R, Boolean>, Value<R, T>>,
+		default: opensavvy.ktmongo.dsl.path.Field<R, T>,
+	): Value<R, T> =
+		switch(*cases, default = of(default))
+
+	/**
+	 * Selects one value based on multiple conditions.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             of(User::role) eq of("GUEST") to of(5),
+	 *             of(User::role) eq of("EMPLOYEE") to of(6),
+	 *             of(User::role) eq of("ADMIN") to of(7),
+	 *             default = of(-1)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/)
+	 *
+	 * @see cond Specify a single condition.
+	 */
+	@JvmName("switchByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class)
+	fun <R : Any, T> switch(
+		vararg cases: Pair<Value<R, Boolean>, Value<R, T>>,
+		default: kotlin.reflect.KProperty1<R, T>,
+	): Value<R, T> =
+		switch(*cases, default = of(default))
+
+	/**
+	 * Selects one value based on multiple conditions.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             of(User::role) eq of("GUEST") to of(5),
+	 *             of(User::role) eq of("EMPLOYEE") to of(6),
+	 *             of(User::role) eq of("ADMIN") to of(7),
+	 *             default = of(-1)
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/)
+	 *
+	 * @see cond Specify a single condition.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	@OptIn(LowLevelApi::class)
+	fun <R : Any, T> switch(
+		vararg cases: Pair<Value<R, Boolean>, Value<R, T>>,
+		default: T,
+	): Value<R, T> =
+		switch(*cases, default = of(default))
 
 	@OptIn(LowLevelApi::class)
 	private class SwitchValue<Root : Any, Type>(
