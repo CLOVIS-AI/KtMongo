@@ -80,7 +80,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 		val sourceFilePath = sourceFile.path.replace('\\', '/')
 		val isValueOverloadTarget = sourceFilePath.endsWith("aggregation/operators/ArithmeticValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/ArrayValueOperators.kt")
+			sourceFilePath.endsWith("aggregation/operators/ArrayValueOperators.kt") ||
+			sourceFilePath.endsWith("aggregation/operators/ComparisonValueOperators.kt")
 
 		// Pre-scan: collect existing KProperty1 receiver functions/properties to avoid duplicates
 		val existingKPropFunctions = mutableSetOf<Pair<String, Int>>() // (name, paramCount)
@@ -283,7 +284,14 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 									// Overloads where Result (raw type parameter) appears in any position
 									// are given low priority so navigation operators win on ambiguity.
-									val hasResultAlternative = valuePositions.zip(combination).any { (_, t) ->
+									// Exception: when the receiver is replaced by Field<> or KProperty1<>, the
+									// annotation is omitted. Kotlin's specificity rules already make Field.ne(Field)
+									// beat Field.ne(Result) within the aggregation context. Adding the annotation
+									// would cause an outer FilterQuery.ne(Field, V) to win over the aggregation
+									// overload despite the aggregation context being the closer implicit receiver.
+									val receiverIsSpecificType = recPosIdx >= 0 && combination[recPosIdx] != null &&
+										(combination[recPosIdx]!!.startsWith("opensavvy") || combination[recPosIdx]!!.startsWith("kotlin.reflect.KProperty1"))
+									val hasResultAlternative = !receiverIsSpecificType && valuePositions.zip(combination).any { (_, t) ->
 										t != null && !t.startsWith("opensavvy") && !t.startsWith("kotlin.reflect.KProperty1")
 									}
 

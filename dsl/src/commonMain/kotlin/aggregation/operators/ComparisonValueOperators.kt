@@ -50,7 +50,7 @@ interface ComparisonValueOperators : ValueOperators {
 	 * val releasedOnCreation = collection.aggregate()
 	 *     .match {
 	 *         expr {
-	 *             of(Product::creationDate) eq of(Product::releaseDate)
+	 *             Product::creationDate eq Product::releaseDate
 	 *         }
 	 *     }
 	 *     .toList()
@@ -70,6 +70,550 @@ interface ComparisonValueOperators : ValueOperators {
 		ComparisonValueOperator(context, this, other, "eq")
 
 	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.eq(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		this.eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.eq(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		this.eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.eq(other: Result): Value<Context, Boolean> =
+		this.eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.eq(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).eq(other)
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.eq(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.eq(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.eq(other: Result): Value<Context, Boolean> =
+		of(this).eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.eq(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).eq(other)
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.eq(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.eq(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@JvmName("eqPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.eq(other: Result): Value<Context, Boolean> =
+		of(this).eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("eqResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.eq(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).eq(other)
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("eqResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.eq(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("eqResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.eq(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).eq(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val releasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate eq Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/eq/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see ne Negation of this operator.
+	 * @see FilterQuery.eq Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("eqResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.eq(other: Result): Value<Context, Boolean> =
+		of(this).eq(of(other))
+
+	/**
 	 * Compares two aggregation values and returns `true` if they are not equivalent.
 	 *
 	 * ### Example
@@ -84,7 +628,7 @@ interface ComparisonValueOperators : ValueOperators {
 	 * val notReleasedOnCreation = collection.aggregate()
 	 *     .match {
 	 *         expr {
-	 *             of(Product::creationDate) eq of(Product::releaseDate)
+	 *             Product::creationDate ne Product::releaseDate
 	 *         }
 	 *     }
 	 *     .toList()
@@ -103,6 +647,550 @@ interface ComparisonValueOperators : ValueOperators {
 	infix fun <Context : Any, Result> Value<Context, Result>.ne(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "ne")
 
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("neByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.ne(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		this.ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("neByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.ne(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		this.ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.ne(other: Result): Value<Context, Boolean> =
+		this.ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("neFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.ne(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).ne(other)
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("neFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.ne(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("neFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.ne(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("neFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.ne(other: Result): Value<Context, Boolean> =
+		of(this).ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("nePropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.ne(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).ne(other)
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("nePropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.ne(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("nePropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.ne(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@JvmName("nePropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.ne(other: Result): Value<Context, Boolean> =
+		of(this).ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("neResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.ne(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).ne(other)
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("neResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.ne(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("neResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.ne(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).ne(of(other))
+
+	/**
+	 * Compares two aggregation values and returns `true` if they are not equivalent.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val releaseDate: Instant,
+	 * )
+	 *
+	 * val notReleasedOnCreation = collection.aggregate()
+	 *     .match {
+	 *         expr {
+	 *             Product::creationDate ne Product::releaseDate
+	 *         }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ne/)
+	 * - [Comparison algorithm](https://www.mongodb.com/docs/manual/reference/bson-type-comparison-order/#std-label-bson-types-comparison-order)
+	 *
+	 * @see eq Negation of this operator.
+	 * @see FilterQuery.ne Equivalent operator in regular queries.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("neResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.ne(other: Result): Value<Context, Boolean> =
+		of(this).ne(of(other))
+
 	// TODO: document the other operators once 'project' is implemented, since the official examples use 'project' to demonstrate them
 
 	@OptIn(LowLevelApi::class)
@@ -110,20 +1198,456 @@ interface ComparisonValueOperators : ValueOperators {
 	infix fun <Context : Any, Result> Value<Context, Result>.gt(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "gt")
 
+	@JvmName("gtByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.gt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		this.gt(of(other))
+
+	@JvmName("gtByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.gt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		this.gt(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.gt(other: Result): Value<Context, Boolean> =
+		this.gt(of(other))
+
+	@JvmName("gtFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gt(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).gt(other)
+
+	@JvmName("gtFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).gt(of(other))
+
+	@JvmName("gtFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).gt(of(other))
+
+	@JvmName("gtFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gt(other: Result): Value<Context, Boolean> =
+		of(this).gt(of(other))
+
+	@JvmName("gtPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gt(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).gt(other)
+
+	@JvmName("gtPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).gt(of(other))
+
+	@JvmName("gtPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).gt(of(other))
+
+	@JvmName("gtPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gt(other: Result): Value<Context, Boolean> =
+		of(this).gt(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("gtResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.gt(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).gt(other)
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("gtResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.gt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).gt(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("gtResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.gt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).gt(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("gtResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.gt(other: Result): Value<Context, Boolean> =
+		of(this).gt(of(other))
+
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	infix fun <Context : Any, Result> Value<Context, Result>.gte(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "gte")
+
+	@JvmName("gteByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.gte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		this.gte(of(other))
+
+	@JvmName("gteByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.gte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		this.gte(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.gte(other: Result): Value<Context, Boolean> =
+		this.gte(of(other))
+
+	@JvmName("gteFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gte(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).gte(other)
+
+	@JvmName("gteFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).gte(of(other))
+
+	@JvmName("gteFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).gte(of(other))
+
+	@JvmName("gteFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gte(other: Result): Value<Context, Boolean> =
+		of(this).gte(of(other))
+
+	@JvmName("gtePropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gte(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).gte(other)
+
+	@JvmName("gtePropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).gte(of(other))
+
+	@JvmName("gtePropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).gte(of(other))
+
+	@JvmName("gtePropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gte(other: Result): Value<Context, Boolean> =
+		of(this).gte(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("gteResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.gte(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).gte(other)
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("gteResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.gte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).gte(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("gteResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.gte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).gte(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("gteResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.gte(other: Result): Value<Context, Boolean> =
+		of(this).gte(of(other))
 
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	infix fun <Context : Any, Result> Value<Context, Result>.lt(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "lt")
 
+	@JvmName("ltByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.lt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		this.lt(of(other))
+
+	@JvmName("ltByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.lt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		this.lt(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.lt(other: Result): Value<Context, Boolean> =
+		this.lt(of(other))
+
+	@JvmName("ltFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lt(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).lt(other)
+
+	@JvmName("ltFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).lt(of(other))
+
+	@JvmName("ltFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).lt(of(other))
+
+	@JvmName("ltFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lt(other: Result): Value<Context, Boolean> =
+		of(this).lt(of(other))
+
+	@JvmName("ltPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lt(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).lt(other)
+
+	@JvmName("ltPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).lt(of(other))
+
+	@JvmName("ltPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).lt(of(other))
+
+	@JvmName("ltPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lt(other: Result): Value<Context, Boolean> =
+		of(this).lt(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("ltResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.lt(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).lt(other)
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("ltResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.lt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).lt(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("ltResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.lt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).lt(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("ltResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.lt(other: Result): Value<Context, Boolean> =
+		of(this).lt(of(other))
+
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	infix fun <Context : Any, Result> Value<Context, Result>.lte(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "lte")
+
+	@JvmName("lteByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.lte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		this.lte(of(other))
+
+	@JvmName("lteByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.lte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		this.lte(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Value<Context, Result>.lte(other: Result): Value<Context, Boolean> =
+		this.lte(of(other))
+
+	@JvmName("lteFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lte(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).lte(other)
+
+	@JvmName("lteFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).lte(of(other))
+
+	@JvmName("lteFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).lte(of(other))
+
+	@JvmName("lteFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lte(other: Result): Value<Context, Boolean> =
+		of(this).lte(of(other))
+
+	@JvmName("ltePropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lte(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).lte(other)
+
+	@JvmName("ltePropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).lte(of(other))
+
+	@JvmName("ltePropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).lte(of(other))
+
+	@JvmName("ltePropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lte(other: Result): Value<Context, Boolean> =
+		of(this).lte(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("lteResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.lte(other: Value<Context, Result>): Value<Context, Boolean> =
+		of(this).lte(other)
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("lteResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.lte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+		of(this).lte(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("lteResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.lte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+		of(this).lte(of(other))
+
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("lteResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any, Result> Result.lte(other: Result): Value<Context, Boolean> =
+		of(this).lte(of(other))
 
 	@OptIn(LowLevelApi::class)
 	private class ComparisonValueOperator<Context : Any, T>(

@@ -402,7 +402,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("plusFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
@@ -523,7 +522,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("plusPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
@@ -1048,7 +1046,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("timesFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
@@ -1169,7 +1166,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("timesPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
@@ -1524,7 +1520,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("divFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
@@ -1908,7 +1903,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("minusFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
@@ -2041,7 +2035,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("minusPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")

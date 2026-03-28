@@ -47,7 +47,7 @@ interface ComparisonValueOperators : ValueOperators {
 	 * val releasedOnCreation = collection.aggregate()
 	 *     .match {
 	 *         expr {
-	 *             of(Product::creationDate) eq of(Product::releaseDate)
+	 *             Product::creationDate eq Product::releaseDate
 	 *         }
 	 *     }
 	 *     .toList()
@@ -81,7 +81,7 @@ interface ComparisonValueOperators : ValueOperators {
 	 * val notReleasedOnCreation = collection.aggregate()
 	 *     .match {
 	 *         expr {
-	 *             of(Product::creationDate) eq of(Product::releaseDate)
+	 *             Product::creationDate ne Product::releaseDate
 	 *         }
 	 *     }
 	 *     .toList()

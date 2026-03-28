@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ val SetTest by preparedSuite {
 		TestPipeline<Target>()
 			.set {
 				Target::foo set "bar"
-				Target::isAlive set (of(Target::deathDate) gt of(18))
+				Target::isAlive set (Target::deathDate gt 18)
 			}
 			.shouldBeBson($$"""
 				[

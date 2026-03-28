@@ -657,7 +657,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("filterFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
@@ -826,7 +825,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("filterPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
@@ -1308,9 +1306,8 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("takeFieldReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
@@ -1437,9 +1434,8 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("takePropertyReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
@@ -1853,9 +1849,8 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("takeLastFieldReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
@@ -1982,9 +1977,8 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("takeLastPropertyReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(

@@ -44,7 +44,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 				.set {
 					Target::results set Target::numbers
 						.filter {
-							it gt of(3)
+							it gt 3
 						}
 				}
 				.shouldBeBson($$$"""
@@ -74,7 +74,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 				.set {
 					Target::results set Target::numbers
 						.filter(limit = 4) {
-							it gt of(3)
+							it gt 3
 						}
 				}
 				.shouldBeBson($$$"""
@@ -105,7 +105,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 				.set {
 					Target::results set Target::numbers
 						.filter(variableName = "foo") {
-							it gt of(3)
+							it gt 3
 						}
 				}
 				.shouldBeBson($$$"""
@@ -197,7 +197,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 				.set {
 					Target::results set Target::numbers
 						.map {
-							it eq of(4)
+							it eq 4
 						}
 						.also {
 							@Suppress("UnusedVariable", "unused")

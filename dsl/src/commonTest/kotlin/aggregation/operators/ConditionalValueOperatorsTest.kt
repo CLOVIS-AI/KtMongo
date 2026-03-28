@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,8 +38,8 @@ val ConditionalValueOperatorsTest by preparedSuite {
 			TestPipeline<User>()
 				.set {
 					User::score set cond(
-						condition = of(User::multiplier) gt of(2),
-						ifTrue = of(User::score) + of(User::multiplier),
+						condition = User::multiplier gt 2,
+						ifTrue = User::score + User::multiplier,
 						ifFalse = of(User::score)
 					)
 				} shouldBeBson $$"""
@@ -74,9 +74,9 @@ val ConditionalValueOperatorsTest by preparedSuite {
 			TestPipeline<User>()
 				.set {
 					User::bonus set switch(
-						of(User::role) eq of("GUEST") to of(5),
-						of(User::role) eq of("EMPLOYEE") to of(6),
-						of(User::role) eq of("ADMIN") to of(7),
+						User::role eq "GUEST" to of(5),
+						User::role eq "EMPLOYEE" to of(6),
+						User::role eq "ADMIN" to of(7),
 						default = of(-1)
 					)
 				} shouldBeBson $$"""
@@ -129,7 +129,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 			TestPipeline<User>()
 				.set {
 					User::bonus set switch(
-						of(User::role) eq of("ADMIN") to of(100)
+						User::role eq "ADMIN" to of(100)
 					)
 				} shouldBeBson $$"""
 					[
