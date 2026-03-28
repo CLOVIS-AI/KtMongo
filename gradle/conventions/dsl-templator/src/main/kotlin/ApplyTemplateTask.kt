@@ -78,7 +78,9 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 		val rewriter = org.antlr.v4.runtime.TokenStreamRewriter(tokens)
 
-		val isValueOverloadTarget = sourceFile.path.replace('\\', '/').endsWith("aggregation/operators/ArithmeticValueOperators.kt")
+		val sourceFilePath = sourceFile.path.replace('\\', '/')
+		val isValueOverloadTarget = sourceFilePath.endsWith("aggregation/operators/ArithmeticValueOperators.kt") ||
+			sourceFilePath.endsWith("aggregation/operators/ArrayValueOperators.kt")
 
 		// Pre-scan: collect existing KProperty1 receiver functions/properties to avoid duplicates
 		val existingKPropFunctions = mutableSetOf<Pair<String, Int>>() // (name, paramCount)
@@ -115,7 +117,16 @@ abstract class ApplyTemplateTask : DefaultTask() {
 						val vFuncName = ctx.identifier()?.text
 						if (vFuncName != null) {
 							val vFuncStart = ctx.start.startIndex
-							val vFuncText = source.substring(vFuncStart, ctx.stop.stopIndex + 1)
+							val vFuncBody = ctx.functionBody()
+							// Use the body start to determine the signature extent; if ANTLR misparses
+							// due to constructs like 'T & Any' in type arguments, ctx.stop may be wrong,
+							// so we bracket-count in the token stream to find the true end.
+							val bodyStartInSource = vFuncBody?.start?.startIndex ?: -1
+							val bodyStartInFunc = if (bodyStartInSource >= 0) bodyStartInSource - vFuncStart else -1
+							val vFuncText = source.substring(
+								vFuncStart,
+								if (bodyStartInFunc >= 0) vFuncStart + bodyStartInFunc else ctx.stop.stopIndex + 1,
+							)
 							val vParamCtxList = ctx.functionValueParameters()?.functionValueParameter() ?: emptyList()
 
 							// Collect all "Value<...>" positions: receiver first, then each param
@@ -126,6 +137,13 @@ abstract class ApplyTemplateTask : DefaultTask() {
 								val resultType: String,
 								val typeStartInFunc: Int,
 								val typeEndInFunc: Int,
+								val isVararg: Boolean = false,
+								// True when the original type was Value<...>? with a default of null.
+								// Overloads use the non-null type without a default value.
+								val isNullableWithNullDefault: Boolean = false,
+								// Exclusive end of the default value text in vFuncText (covers " = null").
+								// Only meaningful when isNullableWithNullDefault is true.
+								val defaultValueEndInFunc: Int = -1,
 							)
 
 							val valuePositions = mutableListOf<ValuePos>()
@@ -133,7 +151,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 							val receiverCtx = ctx.receiverType()
 							if (receiverCtx != null) {
 								val recText = source.substring(receiverCtx.start.startIndex, receiverCtx.stop.stopIndex + 1)
-								extractValueTypeArgs(recText)?.let { (c, r) ->
+								extractValueTypeArgs(recText)?.let { (c, r, _) ->
 									valuePositions.add(ValuePos(true, -1, c, r,
 										receiverCtx.start.startIndex - vFuncStart,
 										receiverCtx.stop.stopIndex + 1 - vFuncStart))
@@ -143,10 +161,19 @@ abstract class ApplyTemplateTask : DefaultTask() {
 							for ((idx, paramCtx) in vParamCtxList.withIndex()) {
 								val paramType = paramCtx.parameter()?.type() ?: continue
 								val paramTypeText = source.substring(paramType.start.startIndex, paramType.stop.stopIndex + 1)
-								extractValueTypeArgs(paramTypeText)?.let { (c, r) ->
+								val isVararg = paramCtx.modifierList()?.text?.contains("vararg") == true
+								val hasNullDefault = paramCtx.expression()?.text == "null"
+								extractValueTypeArgs(paramTypeText)?.let { (c, r, isNullable) ->
+									// Nullable Value without a null default cannot be faithfully substituted.
+									if (isNullable && !hasNullDefault) return@let
+									val isNullableWithNullDefault = isNullable && hasNullDefault
+									val defaultValueEndInFunc = if (isNullableWithNullDefault)
+										paramCtx.expression()!!.stop.stopIndex + 1 - vFuncStart
+									else -1
 									valuePositions.add(ValuePos(false, idx, c, r,
 										paramType.start.startIndex - vFuncStart,
-										paramType.stop.stopIndex + 1 - vFuncStart))
+										paramType.stop.stopIndex + 1 - vFuncStart,
+										isVararg, isNullableWithNullDefault, defaultValueEndInFunc))
 								}
 							}
 
@@ -154,13 +181,17 @@ abstract class ApplyTemplateTask : DefaultTask() {
 								// Alternatives per position:
 								// - Receiver: [null=keep, Field, KProperty1, Result]
 								// - Params:   [null=keep, Field, KProperty1, Result]
+								// For vararg params, skip the raw Result alternative: 'of(array)' would wrap the
+								// entire array as a single Value rather than mapping each element individually,
+								// and Context cannot be inferred from a raw element type.
 								val alternatives: List<List<String?>> = valuePositions.map { pos ->
-									listOf(
-										null,
-										"opensavvy.ktmongo.dsl.path.Field<${pos.contextType}, ${pos.resultType}>",
-										"kotlin.reflect.KProperty1<${pos.contextType}, ${pos.resultType}>",
-										pos.resultType,
-									)
+									buildList {
+										// null = keep original type (including "? = null" default for nullable-with-null-default positions)
+										add(null)
+										add("opensavvy.ktmongo.dsl.path.Field<${pos.contextType}, ${pos.resultType}>")
+										add("kotlin.reflect.KProperty1<${pos.contextType}, ${pos.resultType}>")
+										if (!pos.isVararg) add(pos.resultType)
+									}
 								}
 
 								// Cartesian product of alternatives
@@ -168,7 +199,6 @@ abstract class ApplyTemplateTask : DefaultTask() {
 									acc.flatMap { prev -> alts.map { prev + it } }
 								}
 
-								val bodyStartInFunc = ctx.functionBody()?.start?.startIndex?.minus(vFuncStart) ?: -1
 								val recPosIdx = valuePositions.indexOfFirst { it.isReceiver }
 								val hasValueReceiver = recPosIdx >= 0
 
@@ -188,9 +218,13 @@ abstract class ApplyTemplateTask : DefaultTask() {
 									val sigEnd = if (bodyStartInFunc >= 0) bodyStartInFunc else vFuncText.length
 									var newSignature = vFuncText.substring(0, sigEnd)
 									for ((pos, newType) in replacements) {
+										val replaceEnd = if (pos.isNullableWithNullDefault && pos.defaultValueEndInFunc >= 0)
+											pos.defaultValueEndInFunc
+										else
+											pos.typeEndInFunc
 										newSignature = newSignature.substring(0, pos.typeStartInFunc) +
 											newType!! +
-											newSignature.substring(pos.typeEndInFunc)
+											newSignature.substring(replaceEnd)
 									}
 
 									// Build the delegation call
@@ -200,11 +234,20 @@ abstract class ApplyTemplateTask : DefaultTask() {
 										hasValueReceiver -> "this."
 										else -> ""
 									}
-									val delegationArgs = vParamCtxList.mapIndexed { idx, fp ->
-										val name = fp.parameter()?.simpleIdentifier()?.text ?: return@mapIndexed ""
+									// Skip params that ANTLR created during error recovery (they have no type
+									// in the parse tree, e.g. a spurious 'Boolean' from 'Value<T & Any, Boolean>').
+									// For vararg replaced params, map each element through of() individually
+									// rather than wrapping the whole array.
+									val delegationArgs = vParamCtxList.mapIndexedNotNull { idx, fp ->
+										if (fp.parameter()?.type() == null) return@mapIndexedNotNull null
+										val name = fp.parameter()?.simpleIdentifier()?.text
+											?: return@mapIndexedNotNull null
 										val paramPosIdx = valuePositions.indexOfFirst { !it.isReceiver && it.paramIdx == idx }
 										val replaced = paramPosIdx >= 0 && combination[paramPosIdx] != null
-										if (replaced) "of($name)" else name
+										if (replaced) {
+											val pos = valuePositions[paramPosIdx]
+											if (pos.isVararg) "$name = $name.map { of(it) }.toTypedArray()" else "of($name)"
+										} else name
 									}.joinToString(", ")
 									val delegationCall = "$receiverPrefix$vFuncName($delegationArgs)"
 
@@ -246,13 +289,22 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 									// Merge INAPPLICABLE_JVM_NAME into the existing @Suppress rather than
 									// adding a second (non-repeatable) @Suppress annotation.
-									val annotatedFuncText = if (needsJvmName) {
+									val afterJvmName = if (needsJvmName) {
 										if (newFuncText.contains("@Suppress(\"")) {
 											newFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
 										} else {
 											"@Suppress(\"INAPPLICABLE_JVM_NAME\")\n\t" + newFuncText
 										}
 									} else newFuncText
+									// @kotlin.internal.LowPriorityInOverloadResolution is itself an internal API,
+									// so INVISIBLE_REFERENCE must be suppressed wherever it appears.
+									val annotatedFuncText = if (hasResultAlternative && !afterJvmName.contains("INVISIBLE_REFERENCE")) {
+										if (afterJvmName.contains("@Suppress(\"")) {
+											afterJvmName.replaceFirst("@Suppress(\"", "@Suppress(\"INVISIBLE_REFERENCE\", \"")
+										} else {
+											"@Suppress(\"INVISIBLE_REFERENCE\")\n\t" + afterJvmName
+										}
+									} else afterJvmName
 									val jvmNameAnnotation = if (needsJvmName) "@JvmName(\"$vFuncName$receiverSuffix$paramSuffix\")\n\t" else ""
 									val lowPriorityAnnotation = if (hasResultAlternative) "@kotlin.internal.LowPriorityInOverloadResolution\n\t" else ""
 
@@ -262,7 +314,16 @@ abstract class ApplyTemplateTask : DefaultTask() {
 								}
 
 								if (valueOverloadBuilder.isNotEmpty()) {
-									rewriter.insertAfter(ctx.stop, valueOverloadBuilder.toString())
+									// Use bracket-counting to find the true end of the function body,
+									// because ANTLR may misparse functions whose bodies contain constructs
+									// like 'T & Any' in type arguments (which the grammar doesn't support),
+									// resulting in a wrong ctx.stop token.
+									val insertAfterIdx = if (vFuncBody != null) {
+										findExpressionBodyEndTokenIndex(tokens, vFuncBody)
+									} else {
+										ctx.stop.tokenIndex
+									}
+									rewriter.insertAfter(insertAfterIdx, valueOverloadBuilder.toString())
 								}
 							}
 						}
@@ -438,6 +499,73 @@ abstract class ApplyTemplateTask : DefaultTask() {
 	}
 
 	/**
+	 * For expression bodies of functions, ANTLR may misparse constructs like `T & Any` in type
+	 * arguments (definitely non-null syntax), causing [ctx.stop][opensavvy.ktmongo.build.kotlin.KotlinParser.FunctionDeclarationContext.stop]
+	 * to point to the wrong token. This method finds the true last token of a [functionBody] by
+	 * bracket-counting in the raw token stream, which is immune to parser-level misparsing.
+	 *
+	 * For block bodies (`{ ... }`), the ANTLR stop token is reliable and is used directly.
+	 */
+	private fun findExpressionBodyEndTokenIndex(
+		tokens: CommonTokenStream,
+		funcBody: opensavvy.ktmongo.build.kotlin.KotlinParser.FunctionBodyContext,
+	): Int {
+		// Block bodies: ANTLR reliably identifies the closing '}' even with grammar quirks
+		if (funcBody.block() != null) return funcBody.block().stop.tokenIndex
+
+		// Expression body ('= expression'): bracket-count in the token stream from after '='
+		val allTokens = tokens.tokens
+		val equalsTokenIdx = funcBody.start.tokenIndex
+
+		// Skip the '=' token and any whitespace/NL immediately following it
+		var i = equalsTokenIdx + 1
+		while (i < allTokens.size) {
+			val t = allTokens[i]
+			if (t.channel != 0 || t.type == opensavvy.ktmongo.build.kotlin.KotlinLexer.NL) i++ else break
+		}
+		if (i >= allTokens.size) return equalsTokenIdx
+
+		var depth = 0
+		var lastRealIdx = i
+
+		while (i < allTokens.size) {
+			val tok = allTokens[i]
+			if (tok.channel != 0) {
+				i++; continue
+			} // skip hidden channel (WS, comments)
+			when (tok.type) {
+				opensavvy.ktmongo.build.kotlin.KotlinLexer.LPAREN,
+				opensavvy.ktmongo.build.kotlin.KotlinLexer.LCURL,
+				opensavvy.ktmongo.build.kotlin.KotlinLexer.LSQUARE,
+					-> {
+					depth++
+					lastRealIdx = i
+				}
+
+				opensavvy.ktmongo.build.kotlin.KotlinLexer.RPAREN,
+				opensavvy.ktmongo.build.kotlin.KotlinLexer.RCURL,
+				opensavvy.ktmongo.build.kotlin.KotlinLexer.RSQUARE,
+					-> {
+					if (depth == 0) return lastRealIdx // closing bracket we didn't open → stop before it
+					depth--
+					lastRealIdx = i
+				}
+
+				opensavvy.ktmongo.build.kotlin.KotlinLexer.NL,
+				opensavvy.ktmongo.build.kotlin.KotlinLexer.SEMICOLON,
+					-> {
+					if (depth == 0) return lastRealIdx // expression finished at previous token
+				}
+
+				-1 -> return lastRealIdx // EOF
+				else -> lastRealIdx = i
+			}
+			i++
+		}
+		return lastRealIdx
+	}
+
+	/**
 	 * Returns the receiver type text for a function declaration, or null if there is none.
 	 * Handles both the with-type-params and without-type-params ANTLR grammar positions.
 	 */
@@ -458,15 +586,20 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 	/**
 	 * Extracts the two type arguments from a `Value<Context, Result>` type string.
-	 * Returns a pair `(contextType, resultType)`, or null if the input doesn't match.
+	 * Returns a triple `(contextType, resultType, isNullable)`, or null if the input doesn't match.
+	 *
+	 * `isNullable` is true when the outer type was `Value<...>?`. Callers decide whether to act on
+	 * such positions; the `?` is stripped before the type arguments are parsed.
 	 */
-	private fun extractValueTypeArgs(valueTypeText: String): Pair<String, String>? {
+	private fun extractValueTypeArgs(valueTypeText: String): Triple<String, String, Boolean>? {
 		if (!valueTypeText.startsWith("Value<")) return null
+		val isNullable = valueTypeText.endsWith("?")
+		val typeText = if (isNullable) valueTypeText.dropLast(1) else valueTypeText
 		var depth = 0
 		var openIdx = -1
 		var closeIdx = -1
-		for (i in valueTypeText.indices) {
-			when (valueTypeText[i]) {
+		for (i in typeText.indices) {
+			when (typeText[i]) {
 				'<' -> {
 					if (depth == 0) openIdx = i
 					depth++
@@ -482,14 +615,14 @@ abstract class ApplyTemplateTask : DefaultTask() {
 			}
 		}
 		if (openIdx == -1 || closeIdx == -1) return null
-		val content = valueTypeText.substring(openIdx + 1, closeIdx)
+		val content = typeText.substring(openIdx + 1, closeIdx)
 		var innerDepth = 0
 		for (i in content.indices) {
 			when (content[i]) {
 				'<' -> innerDepth++
 				'>' -> innerDepth--
 				',' -> if (innerDepth == 0) {
-					return Pair(content.substring(0, i).trim(), content.substring(i + 1).trim())
+					return Triple(content.substring(0, i).trim(), content.substring(i + 1).trim(), isNullable)
 				}
 			}
 		}

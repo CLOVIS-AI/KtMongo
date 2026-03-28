@@ -30,7 +30,6 @@ import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
-import kotlin.reflect.KProperty1
 
 /**
  * Operators to manipulate arrays.
@@ -69,68 +68,6 @@ interface ArrayValueOperators : ValueOperators {
 	fun <Context : Any, T : Number> Value<Context, Collection<Number?>>.average(): Value<Context, T> =
 		AverageArrayValueOperator(
 			input = this,
-			context = context,
-		)
-
-	/**
-	 * Returns the average of the elements in the array.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val averageScore: Double,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::averageScore set Player::scores.average()
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any, T : Number> Field<Context, Collection<Number?>>.average(): Value<Context, T> =
-		AverageArrayValueOperator(
-			input = of(this),
-			context = context,
-		)
-
-	/**
-	 * Returns the average of the elements in the array.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val averageScore: Double,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::averageScore set Player::scores.average()
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any, T : Number> KProperty1<Context, Collection<Number?>>.average(): Value<Context, T> =
-		AverageArrayValueOperator(
-			input = of(this),
 			context = context,
 		)
 
@@ -283,123 +220,6 @@ interface ArrayValueOperators : ValueOperators {
 			context = context,
 		)
 
-	/**
-	 * Selects a subset of an array to return based on the specified [predicate], similarly to [Kotlin's `filter`][kotlin.collections.filter].
-	 *
-	 * The returned elements are in the original order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Sensor(
-	 *     val measurements: List<Int>,
-	 * )
-	 *
-	 * collection.updateManyWithPipeline {
-	 *     set {
-	 *         Sensor::measurements set (Sensor::measurements).filter { it gte of(0) }
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/)
-	 *
-	 * @param limit If set, specifies a maximum number of elements returned:
-	 * only the first [limit] matching elements are returned, even if there are more matching elements.
-	 * Must be greater or equal to `1`, or be `null`.
-	 *
-	 * @param variableName The name of the temporary variable passed to the [predicate] lambda, which represents the
-	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
-	 * nested [filter] or other similar calls, which could otherwise conflict.
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Field<Context, Collection<T>>.filter(
-		limit: Value<Context, Number>? = null,
-		variableName: String = "this",
-		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
-	): Value<Context, List<T>> =
-		of(this).filter(limit, variableName, predicate)
-
-	/**
-	 * Selects a subset of an array to return based on the specified [predicate], similarly to [Kotlin's `filter`][kotlin.collections.filter].
-	 *
-	 * The returned elements are in the original order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Sensor(
-	 *     val measurements: List<Int>,
-	 * )
-	 *
-	 * collection.updateManyWithPipeline {
-	 *     set {
-	 *         Sensor::measurements set (Sensor::measurements).filter { it gte of(0) }
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/)
-	 *
-	 * @param limit If set, specifies a maximum number of elements returned:
-	 * only the first [limit] matching elements are returned, even if there are more matching elements.
-	 * Must be greater or equal to `1`, or be `null`.
-	 *
-	 * @param variableName The name of the temporary variable passed to the [predicate] lambda, which represents the
-	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
-	 * nested [filter] or other similar calls, which could otherwise conflict.
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> KProperty1<Context, Collection<T>>.filter(
-		limit: Value<Context, Number>? = null,
-		variableName: String = "this",
-		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
-	): Value<Context, List<T>> =
-		of(this).filter(limit, variableName, predicate)
-
-	/**
-	 * Selects a subset of an array to return based on the specified [predicate], similarly to [Kotlin's `filter`][kotlin.collections.filter].
-	 *
-	 * The returned elements are in the original order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Sensor(
-	 *     val measurements: List<Int>,
-	 * )
-	 *
-	 * collection.updateManyWithPipeline {
-	 *     set {
-	 *         Sensor::measurements set (Sensor::measurements).filter { it gte of(0) }
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/filter/)
-	 *
-	 * @param limit If set, specifies a maximum number of elements returned:
-	 * only the first [limit] matching elements are returned, even if there are more matching elements.
-	 * Must be greater or equal to `1`, or be `null`.
-	 *
-	 * @param variableName The name of the temporary variable passed to the [predicate] lambda, which represents the
-	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
-	 * nested [filter] or other similar calls, which could otherwise conflict.
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Collection<T>.filter(
-		limit: Value<Context, Number>? = null,
-		variableName: String = "this",
-		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
-	): Value<Context, List<T>> =
-		of(this).filter(limit, variableName, predicate)
-
 	@LowLevelApi
 	private class PredicateEvaluator(override val context: BsonContext) : AggregationOperators
 
@@ -483,93 +303,6 @@ interface ArrayValueOperators : ValueOperators {
 			context = context,
 		)
 
-	/**
-	 * Returns the first [limit] elements in an array, similar to [kotlin.collections.take].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val firstScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::firstScores set Player::scores.take(3)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Field<Context, Collection<T>>.take(
-		limit: Value<Context, Number>,
-	): Value<Context, List<T>> =
-		of(this).take(limit)
-
-	/**
-	 * Returns the first [limit] elements in an array, similar to [kotlin.collections.take].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val firstScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::firstScores set Player::scores.take(3)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> KProperty1<Context, Collection<T>>.take(
-		limit: Value<Context, Number>,
-	): Value<Context, List<T>> =
-		of(this).take(limit)
-
-	/**
-	 * Returns the first [limit] elements in an array, similar to [kotlin.collections.take].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val firstScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::firstScores set Player::scores.take(3)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Collection<T>.take(
-		limit: Value<Context, Number>,
-	): Value<Context, List<T>> =
-		of(this).take(limit)
-
 	@LowLevelApi
 	private class TakeValueOperator<Context : Any, T>(
 		private val input: Value<Context, Collection<T>>,
@@ -628,96 +361,6 @@ interface ArrayValueOperators : ValueOperators {
 			limit = limit,
 			context = context,
 		)
-
-	/**
-	 * Returns the last [limit] elements in an array, similar to [kotlin.collections.takeLast].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val lastScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::lastScores set Player::scores.takeLast(3)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any, T> Field<Context, Collection<T>>.takeLast(
-		limit: Value<Context, Number>,
-	): Value<Context, List<T>> =
-		of(this).takeLast(limit)
-
-	/**
-	 * Returns the last [limit] elements in an array, similar to [kotlin.collections.takeLast].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val lastScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::lastScores set Player::scores.takeLast(3)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any, T> KProperty1<Context, Collection<T>>.takeLast(
-		limit: Value<Context, Number>,
-	): Value<Context, List<T>> =
-		of(this).takeLast(limit)
-
-	/**
-	 * Returns the last [limit] elements in an array, similar to [kotlin.collections.takeLast].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val lastScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::lastScores set Player::scores.takeLast(3)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any, T> Collection<T>.takeLast(
-		limit: Value<Context, Number>,
-	): Value<Context, List<T>> =
-		of(this).takeLast(limit)
 
 	@LowLevelApi
 	private class TakeLastValueOperator<Context : Any, T>(
@@ -783,105 +426,6 @@ interface ArrayValueOperators : ValueOperators {
 			context = context,
 		)
 
-	/**
-	 * Applies a [transform] to all elements in an array and returns the array with the applied results, similar to
-	 * [kotlin.collections.map].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::scores set Player::scores
-	 *             .map {
-	 *                 it + of(1)
-	 *             }
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T, R> Field<Context, Collection<T>>.map(
-		variableName: String = "this",
-		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
-	): Value<Context, List<R>> =
-		of(this).map(variableName, transform)
-
-	/**
-	 * Applies a [transform] to all elements in an array and returns the array with the applied results, similar to
-	 * [kotlin.collections.map].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::scores set Player::scores
-	 *             .map {
-	 *                 it + of(1)
-	 *             }
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T, R> KProperty1<Context, Collection<T>>.map(
-		variableName: String = "this",
-		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
-	): Value<Context, List<R>> =
-		of(this).map(variableName, transform)
-
-	/**
-	 * Applies a [transform] to all elements in an array and returns the array with the applied results, similar to
-	 * [kotlin.collections.map].
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::scores set Player::scores
-	 *             .map {
-	 *                 it + of(1)
-	 *             }
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T, R> Collection<T>.map(
-		variableName: String = "this",
-		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
-	): Value<Context, List<R>> =
-		of(this).map(variableName, transform)
-
 	@LowLevelApi
 	private class MapValueOperator<Context : Any, R>(
 		private val input: Value<*, *>,
@@ -909,6 +453,82 @@ interface ArrayValueOperators : ValueOperators {
 
 	// endregion
 	// region $sortArray
+
+	/**
+	 * Sorts an array based on its elements, in ascending order.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 *
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val worstScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::bestScores set Player::scores
+	 *             .sorted()
+	 *             .take(5)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
+	 *
+	 * @see sortedBy Sort by fields of elements.
+	 * @see sortedDescending Sort by elements in descending order.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T> Value<Context, Collection<T>>.sorted(): Value<Context, List<T>> =
+		SortValueOperator(
+			input = this,
+			sortOrder = SortSelfValueOperator(order = 1, context),
+			context = context,
+		)
+
+	/**
+	 * Sorts an array based on its elements, in descending order.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 *
+	 * class Player(
+	 *     val _id: ObjectId,
+	 *     val scores: List<Int>,
+	 *     val bestScores: List<Int>,
+	 * )
+	 *
+	 * players.updateManyWithPipeline {
+	 *     set {
+	 *         Player::bestScores set Player::scores
+	 *             .sortedDescending()
+	 *             .take(5)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
+	 *
+	 * @see sortedBy Sort by fields of elements.
+	 * @see sortedDescending Sort by fields of elements.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any, T> Value<Context, Collection<T>>.sortedDescending(): Value<Context, List<T>> =
+		SortValueOperator(
+			input = this,
+			sortOrder = SortSelfValueOperator(order = -1, context),
+			context = context,
+		)
 
 	/**
 	 * Sorts an array based on fields of its elements.
@@ -952,117 +572,6 @@ interface ArrayValueOperators : ValueOperators {
 			context = context,
 		)
 
-	/**
-	 * Sorts an array based on fields of its elements.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Score(
-	 *     val value: Int,
-	 * )
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Score>,
-	 *     val bestScores: List<Score>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sortedBy { ascending(Score::value) }
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sorted Sort by the elements themselves (ascending order).
-	 * @see sortedDescending Sort by the elements themselves (descending order).
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Field<Context, Collection<T>>.sortedBy(
-		order: SortOptionDsl<T & Any>.() -> Unit,
-	): Value<Context, List<T>> =
-		of(this).sortedBy(order)
-
-	/**
-	 * Sorts an array based on fields of its elements.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Score(
-	 *     val value: Int,
-	 * )
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Score>,
-	 *     val bestScores: List<Score>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sortedBy { ascending(Score::value) }
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sorted Sort by the elements themselves (ascending order).
-	 * @see sortedDescending Sort by the elements themselves (descending order).
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> KProperty1<Context, Collection<T>>.sortedBy(
-		order: SortOptionDsl<T & Any>.() -> Unit,
-	): Value<Context, List<T>> =
-		of(this).sortedBy(order)
-
-	/**
-	 * Sorts an array based on fields of its elements.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Score(
-	 *     val value: Int,
-	 * )
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Score>,
-	 *     val bestScores: List<Score>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sortedBy { ascending(Score::value) }
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sorted Sort by the elements themselves (ascending order).
-	 * @see sortedDescending Sort by the elements themselves (descending order).
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Collection<T>.sortedBy(
-		order: SortOptionDsl<T & Any>.() -> Unit,
-	): Value<Context, List<T>> =
-		of(this).sortedBy(order)
-
 	@LowLevelApi
 	private class SortOptionDslBsonNode<Context : Any>(
 		context: BsonContext,
@@ -1090,7 +599,8 @@ interface ArrayValueOperators : ValueOperators {
 			}
 		}
 
-		fun toValue() = SortOptionDslValue(context)
+		fun toValue(): Value<Context, Nothing> =
+			SortOptionDslValue(context)
 
 		@LowLevelApi
 		private inner class SortOptionDslValue(
@@ -1109,280 +619,6 @@ interface ArrayValueOperators : ValueOperators {
 			}
 		}
 	}
-
-	/**
-	 * Sorts an array based on its elements, in ascending order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val worstScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sorted()
-	 *             .take(5)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sortedBy Sort by fields of elements.
-	 * @see sortedDescending Sort by elements in descending order.
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any, T> Value<Context, Collection<T>>.sorted(): Value<Context, List<T>> =
-		SortValueOperator(
-			input = this,
-			sortOrder = SortSelfValueOperator(order = 1, context),
-			context = context,
-		)
-
-	/**
-	 * Sorts an array based on its elements, in ascending order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val worstScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sorted()
-	 *             .take(5)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sortedBy Sort by fields of elements.
-	 * @see sortedDescending Sort by elements in descending order.
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Field<Context, Collection<T>>.sorted(): Value<Context, List<T>> =
-		of(this).sorted()
-
-	/**
-	 * Sorts an array based on its elements, in ascending order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val worstScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sorted()
-	 *             .take(5)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sortedBy Sort by fields of elements.
-	 * @see sortedDescending Sort by elements in descending order.
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> KProperty1<Context, Collection<T>>.sorted(): Value<Context, List<T>> =
-		of(this).sorted()
-
-	/**
-	 * Sorts an array based on its elements, in ascending order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val worstScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sorted()
-	 *             .take(5)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sortedBy Sort by fields of elements.
-	 * @see sortedDescending Sort by elements in descending order.
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Collection<T>.sorted(): Value<Context, List<T>> =
-		of(this).sorted()
-
-	/**
-	 * Sorts an array based on its elements, in descending order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val bestScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sortedDescending()
-	 *             .take(5)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sortedBy Sort by fields of elements.
-	 * @see sortedDescending Sort by fields of elements.
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any, T> Value<Context, Collection<T>>.sortedDescending(): Value<Context, List<T>> =
-		SortValueOperator(
-			input = this,
-			sortOrder = SortSelfValueOperator(order = -1, context),
-			context = context,
-		)
-
-	/**
-	 * Sorts an array based on its elements, in descending order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val bestScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sortedDescending()
-	 *             .take(5)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sortedBy Sort by fields of elements.
-	 * @see sortedDescending Sort by fields of elements.
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Field<Context, Collection<T>>.sortedDescending(): Value<Context, List<T>> =
-		of(this).sortedDescending()
-
-	/**
-	 * Sorts an array based on its elements, in descending order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val bestScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sortedDescending()
-	 *             .take(5)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sortedBy Sort by fields of elements.
-	 * @see sortedDescending Sort by fields of elements.
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> KProperty1<Context, Collection<T>>.sortedDescending(): Value<Context, List<T>> =
-		of(this).sortedDescending()
-
-	/**
-	 * Sorts an array based on its elements, in descending order.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 *
-	 * class Player(
-	 *     val _id: ObjectId,
-	 *     val scores: List<Int>,
-	 *     val bestScores: List<Int>,
-	 * )
-	 *
-	 * players.updateManyWithPipeline {
-	 *     set {
-	 *         Player::bestScores set Player::scores
-	 *             .sortedDescending()
-	 *             .take(5)
-	 *     }
-	 * }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortArray/)
-	 *
-	 * @see sortedBy Sort by fields of elements.
-	 * @see sortedDescending Sort by fields of elements.
-	 */
-	@KtMongoDsl
-	fun <Context : Any, T> Collection<T>.sortedDescending(): Value<Context, List<T>> =
-		of(this).sortedDescending()
 
 	@LowLevelApi
 	private class SortSelfValueOperator(
