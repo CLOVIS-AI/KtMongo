@@ -74,9 +74,9 @@ val ConditionalValueOperatorsTest by preparedSuite {
 			TestPipeline<User>()
 				.set {
 					User::bonus set switch(
-						User::role eq "GUEST" to of(5),
-						User::role eq "EMPLOYEE" to of(6),
-						User::role eq "ADMIN" to of(7),
+						User::role eq "GUEST" then 5,
+						User::role eq "EMPLOYEE" then 6,
+						User::role eq "ADMIN" then 7,
 						default = -1
 					)
 				} shouldBeBson $$"""
@@ -129,7 +129,7 @@ val ConditionalValueOperatorsTest by preparedSuite {
 			TestPipeline<User>()
 				.set {
 					User::bonus set switch(
-						User::role eq "ADMIN" to of(100)
+						User::role eq "ADMIN" then 100
 					)
 				} shouldBeBson $$"""
 					[

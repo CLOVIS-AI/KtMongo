@@ -114,10 +114,10 @@ interface ConditionalValueOperators : ValueOperators {
 	 * users.updateManyWithPipeline {
 	 *     set {
 	 *         User::bonus set switch(
-	 *             of(User::role) eq of("GUEST") to of(5),
-	 *             of(User::role) eq of("EMPLOYEE") to of(6),
-	 *             of(User::role) eq of("ADMIN") to of(7),
-	 *             default = of(-1)
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
 	 *         )
 	 *     }
 	 * }
@@ -128,19 +128,59 @@ interface ConditionalValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/)
 	 *
 	 * @see cond Specify a single condition.
+	 * @see then Keyword to declare the different cases.
 	 */
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	fun <R : Any, T> switch(
-		vararg cases: Pair<Value<R, Boolean>, Value<R, T>>,
+		vararg cases: Case<R, T>,
 		default: Value<R, T>? = null,
 	): Value<R, T> =
 		SwitchValue(context, cases.asList(), default)
 
+	/**
+	 * A single case in a [switch] operator.
+	 */
+	data class Case<Root : Any, T>(
+		val condition: Value<Root, Boolean>,
+		val value: Value<Root, T>,
+	)
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@KtMongoDsl
+	infix fun <R : Any, T> Value<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
+		Case(this, value)
+
 	@OptIn(LowLevelApi::class)
 	private class SwitchValue<Root : Any, Type>(
 		context: BsonContext,
-		private val cases: List<Pair<Value<Root, Boolean>, Value<Root, Type>>>,
+		private val cases: List<Case<Root, Type>>,
 		private val default: Value<Root, Type>?,
 	) : Value<Root, Type>, AbstractValue<Root, Type>(context) {
 
@@ -149,14 +189,14 @@ interface ConditionalValueOperators : ValueOperators {
 			writeDocument {
 				writeDocument("\$switch") {
 					writeArray("branches") {
-						for ((condition, value) in cases) {
+						for (case in cases) {
 							writeDocument {
 								write("case") {
-									condition.writeTo(this)
+									case.condition.writeTo(this)
 								}
 
 								write("then") {
-									value.writeTo(this)
+									case.value.writeTo(this)
 								}
 							}
 						}

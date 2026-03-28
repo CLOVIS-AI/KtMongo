@@ -2667,10 +2667,10 @@ interface ConditionalValueOperators : ValueOperators {
 	 * users.updateManyWithPipeline {
 	 *     set {
 	 *         User::bonus set switch(
-	 *             of(User::role) eq of("GUEST") to of(5),
-	 *             of(User::role) eq of("EMPLOYEE") to of(6),
-	 *             of(User::role) eq of("ADMIN") to of(7),
-	 *             default = of(-1)
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
 	 *         )
 	 *     }
 	 * }
@@ -2681,11 +2681,12 @@ interface ConditionalValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/)
 	 *
 	 * @see cond Specify a single condition.
+	 * @see then Keyword to declare the different cases.
 	 */
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	fun <R : Any, T> switch(
-		vararg cases: Pair<Value<R, Boolean>, Value<R, T>>,
+		vararg cases: Case<R, T>,
 		default: Value<R, T>? = null,
 	): Value<R, T> =
 		SwitchValue(context, cases.asList(), default)
@@ -2706,10 +2707,10 @@ interface ConditionalValueOperators : ValueOperators {
 	 * users.updateManyWithPipeline {
 	 *     set {
 	 *         User::bonus set switch(
-	 *             of(User::role) eq of("GUEST") to of(5),
-	 *             of(User::role) eq of("EMPLOYEE") to of(6),
-	 *             of(User::role) eq of("ADMIN") to of(7),
-	 *             default = of(-1)
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
 	 *         )
 	 *     }
 	 * }
@@ -2720,13 +2721,14 @@ interface ConditionalValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/)
 	 *
 	 * @see cond Specify a single condition.
+	 * @see then Keyword to declare the different cases.
 	 */
 	@JvmName("switchByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	fun <R : Any, T> switch(
-		vararg cases: Pair<Value<R, Boolean>, Value<R, T>>,
+		vararg cases: Case<R, T>,
 		default: opensavvy.ktmongo.dsl.path.Field<R, T>,
 	): Value<R, T> =
 		switch(*cases, default = of(default))
@@ -2747,10 +2749,10 @@ interface ConditionalValueOperators : ValueOperators {
 	 * users.updateManyWithPipeline {
 	 *     set {
 	 *         User::bonus set switch(
-	 *             of(User::role) eq of("GUEST") to of(5),
-	 *             of(User::role) eq of("EMPLOYEE") to of(6),
-	 *             of(User::role) eq of("ADMIN") to of(7),
-	 *             default = of(-1)
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
 	 *         )
 	 *     }
 	 * }
@@ -2761,13 +2763,14 @@ interface ConditionalValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/)
 	 *
 	 * @see cond Specify a single condition.
+	 * @see then Keyword to declare the different cases.
 	 */
 	@JvmName("switchByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	fun <R : Any, T> switch(
-		vararg cases: Pair<Value<R, Boolean>, Value<R, T>>,
+		vararg cases: Case<R, T>,
 		default: kotlin.reflect.KProperty1<R, T>,
 	): Value<R, T> =
 		switch(*cases, default = of(default))
@@ -2788,10 +2791,10 @@ interface ConditionalValueOperators : ValueOperators {
 	 * users.updateManyWithPipeline {
 	 *     set {
 	 *         User::bonus set switch(
-	 *             of(User::role) eq of("GUEST") to of(5),
-	 *             of(User::role) eq of("EMPLOYEE") to of(6),
-	 *             of(User::role) eq of("ADMIN") to of(7),
-	 *             default = of(-1)
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
 	 *         )
 	 *     }
 	 * }
@@ -2802,21 +2805,560 @@ interface ConditionalValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/switch/)
 	 *
 	 * @see cond Specify a single condition.
+	 * @see then Keyword to declare the different cases.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	fun <R : Any, T> switch(
-		vararg cases: Pair<Value<R, Boolean>, Value<R, T>>,
+		vararg cases: Case<R, T>,
 		default: T,
 	): Value<R, T> =
 		switch(*cases, default = of(default))
 
+	/**
+	 * A single case in a [switch] operator.
+	 */
+	data class Case<Root : Any, T>(
+		val condition: Value<Root, Boolean>,
+		val value: Value<Root, T>,
+	)
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@KtMongoDsl
+	infix fun <R : Any, T> Value<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
+		Case(this, value)
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> Value<R, Boolean>.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
+		this.then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> Value<R, Boolean>.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
+		this.then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <R : Any, T> Value<R, Boolean>.then(value: T): Case<R, T> =
+		this.then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
+		of(this).then(value)
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
+		of(this).then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
+		of(this).then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: T): Case<R, T> =
+		of(this).then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
+		of(this).then(value)
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
+		of(this).then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
+		of(this).then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@JvmName("thenPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: T): Case<R, T> =
+		of(this).then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("thenResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> Boolean.then(value: Value<R, T>): Case<R, T> =
+		of(this).then(value)
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("thenResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> Boolean.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
+		of(this).then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("thenResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> Boolean.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
+		of(this).then(of(value))
+
+	/**
+	 * Instantiates a [Case] for the [switch] operator.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 *     val role: String,
+	 *     val bonus: Int?,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::bonus set switch(
+	 *             User::role eq "GUEST" then 5,
+	 *             User::role eq "EMPLOYEE" then 6,
+	 *             User::role eq "ADMIN" then 7,
+	 *             default = -1,
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see switch
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("thenResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@KtMongoDsl
+	infix fun <R : Any, T> Boolean.then(value: T): Case<R, T> =
+		of(this).then(of(value))
+
 	@OptIn(LowLevelApi::class)
 	private class SwitchValue<Root : Any, Type>(
 		context: BsonContext,
-		private val cases: List<Pair<Value<Root, Boolean>, Value<Root, Type>>>,
+		private val cases: List<Case<Root, Type>>,
 		private val default: Value<Root, Type>?,
 	) : Value<Root, Type>, AbstractValue<Root, Type>(context) {
 
@@ -2825,14 +3367,14 @@ interface ConditionalValueOperators : ValueOperators {
 			writeDocument {
 				writeDocument("\$switch") {
 					writeArray("branches") {
-						for ((condition, value) in cases) {
+						for (case in cases) {
 							writeDocument {
 								write("case") {
-									condition.writeTo(this)
+									case.condition.writeTo(this)
 								}
 
 								write("then") {
-									value.writeTo(this)
+									case.value.writeTo(this)
 								}
 							}
 						}
