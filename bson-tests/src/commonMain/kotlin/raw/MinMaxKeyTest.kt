@@ -42,7 +42,7 @@ fun SuiteDsl.minMaxKey(context: Prepared<BsonFactory>) = suite("MinMaxKey") {
 		hex("08000000FF610000"),
 		json($$"""{"a": {"$minKey": 1}}"""),
 		verify("Read value") {
-			check(read("a")?.readMinKey() == Unit)
+			check(this["a"]?.decodeMinKey() == Unit)
 		}
 	)
 
@@ -55,7 +55,7 @@ fun SuiteDsl.minMaxKey(context: Prepared<BsonFactory>) = suite("MinMaxKey") {
 		hex("080000007F610000"),
 		json($$"""{"a": {"$maxKey": 1}}"""),
 		verify("Read value") {
-			check(read("a")?.readMaxKey() == Unit)
+			check(this["a"]?.decodeMaxKey() == Unit)
 		}
 	)
 }

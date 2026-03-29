@@ -53,10 +53,10 @@ fun SuiteDsl.timestamp(context: Prepared<BsonFactory>) = suite("Timestamp") {
 		hex("100000001161002A00000015CD5B0700"),
 		json($$"""{"a": {"$timestamp": {"t": 123456789, "i": 42}}}"""),
 		verify("Read the timestamp") {
-			check(read("a")?.readTimestamp()?.instant?.epochSeconds == 123456789L)
+			check(this["a"]?.decodeTimestamp()?.instant?.epochSeconds == 123456789L)
 		},
 		verify("Read the counter") {
-			check(read("a")?.readTimestamp()?.counter == 42u)
+			check(this["a"]?.decodeTimestamp()?.counter == 42u)
 		}
 	)
 
@@ -70,10 +70,10 @@ fun SuiteDsl.timestamp(context: Prepared<BsonFactory>) = suite("Timestamp") {
 		hex("10000000116100FFFFFFFFFFFFFFFF00"),
 		json($$"""{"a": {"$timestamp": {"t": 4294967295, "i": 4294967295}}}"""),
 		verify("Read the timestamp") {
-			check(read("a")?.readTimestamp()?.instant?.epochSeconds == 4294967295L)
+			check(this["a"]?.decodeTimestamp()?.instant?.epochSeconds == 4294967295L)
 		},
 		verify("Read the counter") {
-			check(read("a")?.readTimestamp()?.counter == 4294967295u)
+			check(this["a"]?.decodeTimestamp()?.counter == 4294967295u)
 		}
 	)
 
@@ -87,10 +87,10 @@ fun SuiteDsl.timestamp(context: Prepared<BsonFactory>) = suite("Timestamp") {
 		hex("1000000011610000286BEE00286BEE00"),
 		json($$"""{"a": {"$timestamp": {"t": 4000000000, "i": 4000000000}}}"""),
 		verify("Read the timestamp") {
-			check(read("a")?.readTimestamp()?.instant?.epochSeconds == 4000000000L)
+			check(this["a"]?.decodeTimestamp()?.instant?.epochSeconds == 4000000000L)
 		},
 		verify("Read the counter") {
-			check(read("a")?.readTimestamp()?.counter == 4000000000u)
+			check(this["a"]?.decodeTimestamp()?.counter == 4000000000u)
 		}
 	)
 }

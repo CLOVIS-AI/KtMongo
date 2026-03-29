@@ -48,7 +48,7 @@ fun SuiteDsl.boolean(context: Prepared<BsonFactory>) = suite("Boolean") {
 		hex("090000000862000100"),
 		json("""{"b": true}"""),
 		verify("Read value") {
-			check(read("b")?.readBoolean() == true)
+			check(this["b"]?.decodeBoolean() == true)
 		}
 	)
 
@@ -62,7 +62,7 @@ fun SuiteDsl.boolean(context: Prepared<BsonFactory>) = suite("Boolean") {
 		hex("090000000862000000"),
 		json("""{"b": false}"""),
 		verify("Read value") {
-			check(read("b")?.readBoolean() == false)
+			check(this["b"]?.decodeBoolean() == false)
 		}
 	)
 }

@@ -46,7 +46,7 @@ fun SuiteDsl.int32(context: Prepared<BsonFactory>) = suite("Int32") {
 		hex("0C0000001069000000008000"),
 		json("""{"i": -2147483648}"""),
 		verify("Read value") {
-			check(read("i")?.readInt32() == Int.MIN_VALUE)
+			check(this["i"]?.decodeInt32() == Int.MIN_VALUE)
 		}
 	)
 
@@ -58,7 +58,7 @@ fun SuiteDsl.int32(context: Prepared<BsonFactory>) = suite("Int32") {
 		hex("0C000000106900FFFFFF7F00"),
 		json("""{"i": 2147483647}"""),
 		verify("Read value") {
-			check(read("i")?.readInt32() == Int.MAX_VALUE)
+			check(this["i"]?.decodeInt32() == Int.MAX_VALUE)
 		}
 	)
 
@@ -70,7 +70,7 @@ fun SuiteDsl.int32(context: Prepared<BsonFactory>) = suite("Int32") {
 		hex("0C000000106900FFFFFFFF00"),
 		json("""{"i": -1}"""),
 		verify("Read value") {
-			check(read("i")?.readInt32() == -1)
+			check(this["i"]?.decodeInt32() == -1)
 		}
 	)
 
@@ -82,7 +82,7 @@ fun SuiteDsl.int32(context: Prepared<BsonFactory>) = suite("Int32") {
 		hex("0C0000001069000000000000"),
 		json("""{"i": 0}"""),
 		verify("Read value") {
-			check(read("i")?.readInt32() == 0)
+			check(this["i"]?.decodeInt32() == 0)
 		}
 	)
 
@@ -94,7 +94,7 @@ fun SuiteDsl.int32(context: Prepared<BsonFactory>) = suite("Int32") {
 		hex("0C0000001069000100000000"),
 		json("""{"i": 1}"""),
 		verify("Read value") {
-			check(read("i")?.readInt32() == 1)
+			check(this["i"]?.decodeInt32() == 1)
 		}
 	)
 }

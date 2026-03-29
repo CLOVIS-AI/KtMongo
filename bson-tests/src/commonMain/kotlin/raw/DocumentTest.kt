@@ -48,7 +48,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 		hex("0D000000037800050000000000"),
 		json("""{"x": {}}"""),
 		verify("Read value") {
-			check(read("x")?.readDocument() != null)
+			check(this["x"]?.decodeDocument() != null)
 		}
 	)
 
@@ -59,7 +59,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 		hex("150000000378000D00000002000200000062000000"),
 		json("""{"x": {"": "b"}}"""),
 		verify("Read value") {
-			check(read("x")?.readDocument()?.read("")?.readString() == "b")
+			check(this["x"]?.decodeDocument()?.get("")?.decodeString() == "b")
 		}
 	)
 
@@ -71,7 +71,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 		serialize(X(A("b"))),
 		json("""{"x": {"a": "b"}}"""),
 		verify("Read value") {
-			check(read("x")?.readDocument()?.read("a")?.readString() == "b")
+			check(this["x"]?.decodeDocument()?.get("a")?.decodeString() == "b")
 		}
 	)
 
@@ -82,7 +82,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 		hex("170000000378000F000000022461000200000062000000"),
 		json($$"""{"x": {"$a": "b"}}"""),
 		verify("Read value") {
-			check(read("x")?.readDocument()?.read("\$a")?.readString() == "b")
+			check(this["x"]?.decodeDocument()?.get("\$a")?.decodeString() == "b")
 		}
 	)
 
@@ -93,7 +93,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 		hex("160000000378000E0000000224000200000061000000"),
 		json("""{"x": {"$": "a"}}"""),
 		verify("Read value") {
-			check(read("x")?.readDocument()?.read("$")?.readString() == "a")
+			check(this["x"]?.decodeDocument()?.get("$")?.decodeString() == "a")
 		}
 	)
 
@@ -104,7 +104,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 		hex("180000000378001000000002612E62000200000063000000"),
 		json("""{"x": {"a.b": "c"}}"""),
 		verify("Read value") {
-			check(read("x")?.readDocument()?.read("a.b")?.readString() == "c")
+			check(this["x"]?.decodeDocument()?.get("a.b")?.decodeString() == "c")
 		}
 	)
 
@@ -115,7 +115,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 		hex("160000000378000E000000022E000200000061000000"),
 		json("""{"x": {".": "a"}}"""),
 		verify("Read value") {
-			check(read("x")?.readDocument()?.read(".")?.readString() == "a")
+			check(this["x"]?.decodeDocument()?.get(".")?.decodeString() == "a")
 		}
 	)
 }

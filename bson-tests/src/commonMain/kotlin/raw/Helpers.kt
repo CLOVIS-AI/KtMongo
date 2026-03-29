@@ -19,7 +19,6 @@
 package opensavvy.ktmongo.bson.raw
 
 import opensavvy.ktmongo.bson.BsonDocument
-import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -68,7 +67,7 @@ interface BsonDeclaration {
 			BsonJsonRepresentation(json)
 
 		@PreparedDslMarker
-		fun verify(name: String, block: BsonDocumentReader.() -> Unit): BsonDeclaration =
+		fun verify(name: String, block: BsonDocument.() -> Unit): BsonDeclaration =
 			BsonAssertion(name, block)
 	}
 }
@@ -92,7 +91,7 @@ private class BsonSerializeDeclaration(
 		context.buildDocument(obj, type, klass as KClass<Any>)
 
 	fun toAssertion() = BsonAssertion(obj.toString()) {
-		check(this.read(type, klass) == obj)
+		check(this.decode<Any?>(type) == obj)
 	}
 
 	override fun toString() = obj.toString()
@@ -112,7 +111,7 @@ private class BsonJsonRepresentation(
 
 private class BsonAssertion(
 	val name: String,
-	val assert: BsonDocumentReader.() -> Unit,
+	val assert: BsonDocument.() -> Unit,
 ) : BsonDeclaration {
 	override fun toString() = "“$name”"
 }
@@ -146,7 +145,7 @@ fun SuiteDsl.testBson(
 		for (verification in verifications) {
 			test("Write and verify that $verification") {
 				val document = log(writer(context()))
-				verification.assert(document.reader())
+				verification.assert(document)
 			}
 		}
 	}
@@ -163,7 +162,7 @@ fun SuiteDsl.testBson(
 		for (verification in verifications) {
 			test("Read $hex and verify that $verification") {
 				val document = log(context().readDocument(hexArray))
-				verification.assert(document.reader())
+				verification.assert(document)
 			}
 		}
 	}

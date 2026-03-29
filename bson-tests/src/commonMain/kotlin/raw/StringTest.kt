@@ -48,7 +48,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 		hex("0D000000026100010000000000"),
 		json("""{"a": ""}"""),
 		verify("Read value") {
-			check(read("a")?.readString() == "")
+			check(this["a"]?.decodeString() == "")
 		}
 	)
 
@@ -62,7 +62,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 		hex("0E00000002610002000000620000"),
 		json("""{"a": "b"}"""),
 		verify("Read value") {
-			check(read("a")?.readString() == "b")
+			check(this["a"]?.decodeString() == "b")
 		}
 	)
 
@@ -76,7 +76,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 		hex("190000000261000D0000006162616261626162616261620000"),
 		json("""{"a": "abababababab"}"""),
 		verify("Read value") {
-			check(read("a")?.readString() == "abababababab")
+			check(this["a"]?.decodeString() == "abababababab")
 		}
 	)
 
@@ -90,7 +90,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 		hex("190000000261000D000000C3A9C3A9C3A9C3A9C3A9C3A90000"),
 		json("""{"a": "éééééé"}"""),
 		verify("Read value") {
-			check(read("a")?.readString() == "éééééé")
+			check(this["a"]?.decodeString() == "éééééé")
 		}
 	)
 
@@ -104,7 +104,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 		hex("190000000261000D000000E29886E29886E29886E298860000"),
 		json("""{"a": "☆☆☆☆"}"""),
 		verify("Read value") {
-			check(read("a")?.readString() == "☆☆☆☆")
+			check(this["a"]?.decodeString() == "☆☆☆☆")
 		}
 	)
 
@@ -117,7 +117,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 		serialize(A("ab\u0000bab\u0000babab")),
 		hex("190000000261000D0000006162006261620062616261620000"),
 		verify("Read value") {
-			check(read("a")?.readString() == "ab\u0000bab\u0000babab")
+			check(this["a"]?.decodeString() == "ab\u0000bab\u0000babab")
 		}
 	)
 
@@ -130,7 +130,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 		serialize(A("ab\\\"\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\u000c\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fab")),
 		hex("320000000261002600000061625C220102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F61620000"),
 		verify("Read value") {
-			check(read("a")?.readString() == "ab\\\"\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\u000c\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fab")
+			check(this["a"]?.decodeString() == "ab\\\"\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\u000c\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fab")
 		}
 	)
 }

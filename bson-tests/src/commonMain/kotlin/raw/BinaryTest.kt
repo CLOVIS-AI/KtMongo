@@ -50,10 +50,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("0D000000057800000000000000"),
 		json($$"""{"x": {"$binary": {"base64": "", "subType": "00"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 0.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 0.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(ByteArray(0)))
+			check(this["x"]?.decodeBinaryData().contentEquals(ByteArray(0)))
 		}
 	)
 
@@ -66,10 +66,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("0F0000000578000200000000FFFF00"),
 		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "00"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 0.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 0.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("//8=")))
 		}
 	)
 
@@ -82,10 +82,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("0F0000000578000200000001FFFF00"),
 		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "01"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 1.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 1.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("//8=")))
 		}
 	)
 
@@ -98,10 +98,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("13000000057800060000000202000000FFFF00"),
 		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "02"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 2.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 2.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("//8=")))
 		}
 	)
 
@@ -119,10 +119,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("1D000000057800100000000373FFD26444B34C6990E8E7D1DFC035D400"),
 		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "03"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 3.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 3.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
 		}
 	)
 
@@ -136,10 +136,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		serialize(U(Uuid.parse("73ffd264-44b3-4c69-90e8-e7d1dfc035d4"))),
 		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 4.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 4.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
 		},
 	)
 
@@ -153,10 +153,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("1D000000057800100000000473FFD26444B34C6990E8E7D1DFC035D400"),
 		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "04"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 4.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 4.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
 		},
 	)
 
@@ -169,10 +169,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("1D000000057800100000000573FFD26444B34C6990E8E7D1DFC035D400"),
 		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "05"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 5.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 5.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
 		},
 	)
 
@@ -185,10 +185,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("1D000000057800100000000773FFD26444B34C6990E8E7D1DFC035D400"),
 		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "07"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 7.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 7.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
 		},
 	)
 
@@ -201,10 +201,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("1D000000057800100000000873FFD26444B34C6990E8E7D1DFC035D400"),
 		json($$"""{"x": {"$binary": {"base64": "c//SZESzTGmQ6OfR38A11A==", "subType": "08"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 8.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 8.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("c//SZESzTGmQ6OfR38A11A==")))
 		}
 	)
 
@@ -217,10 +217,10 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("0F0000000578000200000080FFFF00"),
 		json($$"""{"x": {"$binary": {"base64": "//8=", "subType": "80"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 0x80.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 0x80.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("//8=")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("//8=")))
 		}
 	)
 
@@ -235,7 +235,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("1F000000037800170000000224747970650007000000737472696E67000000"),
 		json($$"""{"x": {"$type": "string"}}"""),
 		verify("Read type") {
-			check(read("x")?.readDocument()?.read("\$type")?.readString() == "string")
+			check(this["x"]?.decodeDocument()?.get("\$type")?.decodeString() == "string")
 		}
 	)
 
@@ -250,7 +250,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("180000000378001000000010247479706500020000000000"),
 		json($$"""{"x": {"$type": 2}}"""),
 		verify("Read type") {
-			check(read("x")?.readDocument()?.read("\$type")?.readInt32() == 2)
+			check(this["x"]?.decodeDocument()?.get("\$type")?.decodeInt32() == 2)
 		}
 	)
 
@@ -282,22 +282,22 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("170000000578000A0000000927000000FE420000E04000"),
 		json($$"""{"x": {"$binary": {"base64": "JwAAAP5CAADgQA==", "subType": "09"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 0x09.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("JwAAAP5CAADgQA==")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("JwAAAP5CAADgQA==")))
 		},
 		verify("Read vector type") {
-			check(read("x")?.readVector()?.type == 0x27.toByte())
+			check(this["x"]?.decodeVector()?.type == 0x27.toByte())
 		},
 		verify("Read vector padding") {
-			check(read("x")?.readVector()?.padding == 0x0.toByte())
+			check(this["x"]?.decodeVector()?.padding == 0x0.toByte())
 		},
 		verify("Read vector content") {
-			check(read("x")?.readVector()?.raw.contentEquals(byteArrayOf(0, 0, -2, 66, 0, 0, -32, 64)))
+			check(this["x"]?.decodeVector()?.raw.contentEquals(byteArrayOf(0, 0, -2, 66, 0, 0, -32, 64)))
 		},
 		verify("Read vector content as list") {
-			check(read("x")?.readVector() == listOf(127f, 7f))
+			check(this["x"]?.decodeVector() == listOf(127f, 7f))
 		},
 	)
 
@@ -323,22 +323,22 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("11000000057800040000000903007F0700"),
 		json($$"""{"x": {"$binary": {"base64": "AwB/Bw==", "subType": "09"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 0x09.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("AwB/Bw==")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("AwB/Bw==")))
 		},
 		verify("Read vector type") {
-			check(read("x")?.readVector()?.type == 0x03.toByte())
+			check(this["x"]?.decodeVector()?.type == 0x03.toByte())
 		},
 		verify("Read vector padding") {
-			check(read("x")?.readVector()?.padding == 0x0.toByte())
+			check(this["x"]?.decodeVector()?.padding == 0x0.toByte())
 		},
 		verify("Read vector content") {
-			check(read("x")?.readVector()?.raw.contentEquals(byteArrayOf(127, 7)))
+			check(this["x"]?.decodeVector()?.raw.contentEquals(byteArrayOf(127, 7)))
 		},
 		verify("Read vector content as list") {
-			check(read("x")?.readVector() == listOf<Byte>(127, 7))
+			check(this["x"]?.decodeVector() == listOf<Byte>(127, 7))
 		},
 	)
 
@@ -364,22 +364,22 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("11000000057800040000000910007F0700"),
 		json($$"""{"x": {"$binary": {"base64": "EAB/Bw==", "subType": "09"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 0x09.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("EAB/Bw==")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("EAB/Bw==")))
 		},
 		verify("Read vector type") {
-			check(read("x")?.readVector()?.type == 0x10.toByte())
+			check(this["x"]?.decodeVector()?.type == 0x10.toByte())
 		},
 		verify("Read vector padding") {
-			check(read("x")?.readVector()?.padding == 0x0.toByte())
+			check(this["x"]?.decodeVector()?.padding == 0x0.toByte())
 		},
 		verify("Read vector content") {
-			check(read("x")?.readVector()?.raw.contentEquals(byteArrayOf(127, 7)))
+			check(this["x"]?.decodeVector()?.raw.contentEquals(byteArrayOf(127, 7)))
 		},
 		verify("Read vector content as list") {
-			check(read("x")?.readVector() == listOf(true, true, true, true, true, true, true, false, true, true, true, false, false, false, false, false))
+			check(this["x"]?.decodeVector() == listOf(true, true, true, true, true, true, true, false, true, true, true, false, false, false, false, false))
 		},
 	)
 
@@ -400,22 +400,22 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("0F0000000578000200000009270000"),
 		json($$"""{"x": {"$binary": {"base64": "JwA=", "subType": "09"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 0x09.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("JwA=")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("JwA=")))
 		},
 		verify("Read vector type") {
-			check(read("x")?.readVector()?.type == 0x27.toByte())
+			check(this["x"]?.decodeVector()?.type == 0x27.toByte())
 		},
 		verify("Read vector padding") {
-			check(read("x")?.readVector()?.padding == 0x0.toByte())
+			check(this["x"]?.decodeVector()?.padding == 0x0.toByte())
 		},
 		verify("Read vector content") {
-			check(read("x")?.readVector()?.raw?.size == 0)
+			check(this["x"]?.decodeVector()?.raw?.size == 0)
 		},
 		verify("Read vector content as list") {
-			check(read("x")?.readVector() == emptyList<Float>())
+			check(this["x"]?.decodeVector() == emptyList<Float>())
 		},
 	)
 
@@ -436,22 +436,22 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("0F0000000578000200000009030000"),
 		json($$"""{"x": {"$binary": {"base64": "AwA=", "subType": "09"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 0x09.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("AwA=")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("AwA=")))
 		},
 		verify("Read vector type") {
-			check(read("x")?.readVector()?.type == 0x03.toByte())
+			check(this["x"]?.decodeVector()?.type == 0x03.toByte())
 		},
 		verify("Read vector padding") {
-			check(read("x")?.readVector()?.padding == 0x0.toByte())
+			check(this["x"]?.decodeVector()?.padding == 0x0.toByte())
 		},
 		verify("Read vector content") {
-			check(read("x")?.readVector()?.raw?.size == 0)
+			check(this["x"]?.decodeVector()?.raw?.size == 0)
 		},
 		verify("Read vector content as list") {
-			check(read("x")?.readVector() == emptyList<Byte>())
+			check(this["x"]?.decodeVector() == emptyList<Byte>())
 		},
 	)
 
@@ -472,22 +472,22 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 		hex("0F0000000578000200000009100000"),
 		json($$"""{"x": {"$binary": {"base64": "EAA=", "subType": "09"}}}"""),
 		verify("Read type") {
-			check(read("x")?.readBinaryDataType() == 0x09.toUByte())
+			check(this["x"]?.decodeBinaryDataType() == 0x09.toUByte())
 		},
 		verify("Read data") {
-			check(read("x")?.readBinaryData().contentEquals(Base64.decode("EAA=")))
+			check(this["x"]?.decodeBinaryData().contentEquals(Base64.decode("EAA=")))
 		},
 		verify("Read vector type") {
-			check(read("x")?.readVector()?.type == 0x10.toByte())
+			check(this["x"]?.decodeVector()?.type == 0x10.toByte())
 		},
 		verify("Read vector padding") {
-			check(read("x")?.readVector()?.padding == 0x0.toByte())
+			check(this["x"]?.decodeVector()?.padding == 0x0.toByte())
 		},
 		verify("Read vector content") {
-			check(read("x")?.readVector()?.raw?.size == 0)
+			check(this["x"]?.decodeVector()?.raw?.size == 0)
 		},
 		verify("Read vector content as list") {
-			check(read("x")?.readVector() == emptyList<Boolean>())
+			check(this["x"]?.decodeVector() == emptyList<Boolean>())
 		},
 	)
 

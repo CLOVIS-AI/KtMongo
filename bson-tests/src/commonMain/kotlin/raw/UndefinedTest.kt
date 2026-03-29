@@ -39,6 +39,6 @@ fun SuiteDsl.reprUndefined(context: Prepared<BsonFactory>) = suite("Undefined") 
 		document { writeUndefined("a") },
 		hex("0800000006610000"),
 		json($$"""{"a": {"$undefined": true}}"""),
-		verify("Read value") { check(read("a")?.readUndefined() == Unit) }
+		verify("Read value") { check(this["a"]?.decodeUndefined() == Unit) }
 	)
 }

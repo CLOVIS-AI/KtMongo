@@ -44,7 +44,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 		hex("0D0000000D6100010000000000"),
 		json($$"""{"a": {"$code": ""}}"""),
 		verify("Read value") {
-			check(read("a")?.readJavaScript() == "")
+			check(this["a"]?.decodeJavaScript() == "")
 		}
 	)
 
@@ -55,7 +55,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 		hex("0E0000000D610002000000620000"),
 		json($$"""{"a": {"$code": "b"}}"""),
 		verify("Read value") {
-			check(read("a")?.readJavaScript() == "b")
+			check(this["a"]?.decodeJavaScript() == "b")
 		}
 	)
 
@@ -66,7 +66,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 		hex("190000000D61000D0000006162616261626162616261620000"),
 		json($$"""{"a": {"$code": "abababababab"}}"""),
 		verify("Read value") {
-			check(read("a")?.readJavaScript() == "abababababab")
+			check(this["a"]?.decodeJavaScript() == "abababababab")
 		}
 	)
 
@@ -77,7 +77,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 		hex("190000000D61000D000000C3A9C3A9C3A9C3A9C3A9C3A90000"),
 		json($$"""{"a": {"$code": "éééééé"}}"""),
 		verify("Read value") {
-			check(read("a")?.readJavaScript() == "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9")
+			check(this["a"]?.decodeJavaScript() == "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9")
 		}
 	)
 
@@ -88,7 +88,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 		hex("190000000D61000D000000E29886E29886E29886E298860000"),
 		json($$"""{"a": {"$code": "☆☆☆☆"}}"""),
 		verify("Read value") {
-			check(read("a")?.readJavaScript() == "\u2606\u2606\u2606\u2606")
+			check(this["a"]?.decodeJavaScript() == "\u2606\u2606\u2606\u2606")
 		}
 	)
 
@@ -98,7 +98,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 		document { writeJavaScript("a", "ab\u0000bab\u0000babab") },
 		hex("190000000D61000D0000006162006261620062616261620000"),
 		verify("Read value") {
-			check(read("a")?.readJavaScript() == "ab\u0000bab\u0000babab")
+			check(this["a"]?.decodeJavaScript() == "ab\u0000bab\u0000babab")
 		}
 	)
 }

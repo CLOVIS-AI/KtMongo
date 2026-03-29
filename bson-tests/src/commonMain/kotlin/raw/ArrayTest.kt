@@ -42,7 +42,7 @@ fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
 		hex("0D000000046100050000000000"),
 		json("""{"a": []}"""),
 		verify("Read value") {
-			check(read("a")?.readArray() != null)
+			check(this["a"]?.decodeArray() != null)
 		}
 	)
 
@@ -57,7 +57,7 @@ fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
 		hex("140000000461000C0000001030000A0000000000"),
 		json("""{"a": [10]}"""),
 		verify("Read value") {
-			check(read("a")?.readArray()?.read(0)?.readInt32() == 10)
+			check(this["a"]?.decodeArray()?.getOrNull(0)?.decodeInt32() == 10)
 		}
 	)
 
@@ -67,7 +67,7 @@ fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
 		hex("130000000461000B00000010000A0000000000"),
 		json("""{"a": [10]}"""),
 		verify("Read value") {
-			check(read("a")?.readArray()?.read(0)?.readInt32() == 10)
+			check(this["a"]?.decodeArray()?.getOrNull(0)?.decodeInt32() == 10)
 		}
 	)
 
@@ -77,7 +77,7 @@ fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
 		hex("150000000461000D000000106162000A0000000000"),
 		json("""{"a": [10]}"""),
 		verify("Read value") {
-			check(read("a")?.readArray()?.read(0)?.readInt32() == 10)
+			check(this["a"]?.decodeArray()?.getOrNull(0)?.decodeInt32() == 10)
 		}
 	)
 
@@ -87,10 +87,10 @@ fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
 		hex("1b000000046100130000001030000a000000103000140000000000"),
 		json("""{"a": [10, 20]}"""),
 		verify("Read first value") {
-			check(read("a")?.readArray()?.read(0)?.readInt32() == 10)
+			check(this["a"]?.decodeArray()?.getOrNull(0)?.decodeInt32() == 10)
 		},
 		verify("Read second value") {
-			check(read("a")?.readArray()?.read(1)?.readInt32() == 20)
+			check(this["a"]?.decodeArray()?.getOrNull(1)?.decodeInt32() == 20)
 		}
 	)
 }

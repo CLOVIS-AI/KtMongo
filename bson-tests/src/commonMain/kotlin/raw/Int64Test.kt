@@ -46,7 +46,7 @@ fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
 		hex("10000000126100000000000000008000"),
 		json("""{"a": -9223372036854775808}"""),
 		verify("Read value") {
-			check(read("a")?.readInt64() == Long.MIN_VALUE)
+			check(this["a"]?.decodeInt64() == Long.MIN_VALUE)
 		}
 	)
 
@@ -58,7 +58,7 @@ fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
 		hex("10000000126100FFFFFFFFFFFFFF7F00"),
 		json("""{"a": 9223372036854775807}"""),
 		verify("Read value") {
-			check(read("a")?.readInt64() == Long.MAX_VALUE)
+			check(this["a"]?.decodeInt64() == Long.MAX_VALUE)
 		}
 	)
 
@@ -70,7 +70,7 @@ fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
 		hex("10000000126100FFFFFFFFFFFFFFFF00"),
 		json("""{"a": -1}"""),
 		verify("Read value") {
-			check(read("a")?.readInt64() == -1L)
+			check(this["a"]?.decodeInt64() == -1L)
 		}
 	)
 
@@ -82,7 +82,7 @@ fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
 		hex("10000000126100000000000000000000"),
 		json("""{"a": 0}"""),
 		verify("Read value") {
-			check(read("a")?.readInt64() == 0L)
+			check(this["a"]?.decodeInt64() == 0L)
 		}
 	)
 
@@ -94,7 +94,7 @@ fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
 		hex("10000000126100010000000000000000"),
 		json("""{"a": 1}"""),
 		verify("Read value") {
-			check(read("a")?.readInt64() == 1L)
+			check(this["a"]?.decodeInt64() == 1L)
 		}
 	)
 }

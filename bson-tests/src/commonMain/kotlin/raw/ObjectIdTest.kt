@@ -49,7 +49,7 @@ fun SuiteDsl.objectId(context: Prepared<BsonFactory>) = suite("ObjectId") {
 		hex("1400000007610000000000000000000000000000"),
 		json($$"""{"a": {"$oid": "000000000000000000000000"}}"""),
 		verify("Read value") {
-			check(read("a")?.readObjectId() == ObjectId.MIN)
+			check(this["a"]?.decodeObjectId() == ObjectId.MIN)
 		}
 	)
 
@@ -62,7 +62,7 @@ fun SuiteDsl.objectId(context: Prepared<BsonFactory>) = suite("ObjectId") {
 		hex("14000000076100FFFFFFFFFFFFFFFFFFFFFFFF00"),
 		json($$"""{"a": {"$oid": "ffffffffffffffffffffffff"}}"""),
 		verify("Read value") {
-			check(read("a")?.readObjectId() == ObjectId.MAX)
+			check(this["a"]?.decodeObjectId() == ObjectId.MAX)
 		}
 	)
 
@@ -74,7 +74,7 @@ fun SuiteDsl.objectId(context: Prepared<BsonFactory>) = suite("ObjectId") {
 		hex("1400000007610056E1FC72E0C917E9C471416100"),
 		json($$"""{"a": {"$oid": "56e1fc72e0c917e9c4714161"}}"""),
 		verify("Read value") {
-			check(read("a")?.readObjectId() == ObjectId("56e1fc72e0c917e9c4714161"))
+			check(this["a"]?.decodeObjectId() == ObjectId("56e1fc72e0c917e9c4714161"))
 		}
 	)
 }

@@ -47,7 +47,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("10000000016400000000000000F03F00"),
 		json("""{"d": 1.0}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == 1.0)
+			check(this["d"]?.decodeDouble() == 1.0)
 		}
 	)
 
@@ -59,7 +59,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("10000000016400000000000000F0BF00"),
 		json("""{"d": -1.0}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == -1.0)
+			check(this["d"]?.decodeDouble() == -1.0)
 		}
 	)
 
@@ -71,7 +71,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("10000000016400000000008000F03F00"),
 		json("""{"d": 1.0001220703125}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == 1.0001220703125)
+			check(this["d"]?.decodeDouble() == 1.0001220703125)
 		}
 	)
 
@@ -83,7 +83,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("10000000016400000000008000F0BF00"),
 		json("""{"d": -1.0001220703125}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == -1.0001220703125)
+			check(this["d"]?.decodeDouble() == -1.0001220703125)
 		}
 	)
 
@@ -95,7 +95,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("100000000164002A1BF5F41022B14300"),
 		json("""{"d": 1.2345678921232E18}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == 1.2345678921232E+18)
+			check(this["d"]?.decodeDouble() == 1.2345678921232E+18)
 		}
 	)
 
@@ -107,7 +107,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("100000000164002A1BF5F41022B1C300"),
 		json("""{"d": -1.2345678921232E18}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == -1.2345678921232E+18)
+			check(this["d"]?.decodeDouble() == -1.2345678921232E+18)
 		}
 	)
 
@@ -119,7 +119,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("10000000016400000000000000000000"),
 		json("""{"d": 0.0}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == 0.0)
+			check(this["d"]?.decodeDouble() == 0.0)
 		}
 	)
 
@@ -131,7 +131,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("10000000016400000000000000008000"),
 		json("""{"d": -0.0}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == -0.0)
+			check(this["d"]?.decodeDouble() == -0.0)
 		}
 	)
 
@@ -143,7 +143,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("10000000016400000000000000F87F00"),
 		json($$"""{"d": {"$numberDouble": "NaN"}}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble()?.isNaN() == true)
+			check(this["d"]?.decodeDouble()?.isNaN() == true)
 		}
 	)
 
@@ -155,7 +155,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("10000000016400000000000000F07F00"),
 		json($$"""{"d": {"$numberDouble": "Infinity"}}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == Double.POSITIVE_INFINITY)
+			check(this["d"]?.decodeDouble() == Double.POSITIVE_INFINITY)
 		}
 	)
 
@@ -167,7 +167,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 		hex("10000000016400000000000000F0FF00"),
 		json($$"""{"d": {"$numberDouble": "-Infinity"}}"""),
 		verify("Read value") {
-			check(read("d")?.readDouble() == Double.NEGATIVE_INFINITY)
+			check(this["d"]?.decodeDouble() == Double.NEGATIVE_INFINITY)
 		}
 	)
 }

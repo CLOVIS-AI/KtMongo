@@ -53,7 +53,7 @@ fun SuiteDsl.datetime(context: Prepared<BsonFactory>) = suite("Datetime") {
 		hex("10000000096100000000000000000000"),
 		json($$"""{"a": {"$date": "1970-01-01T00:00:00Z"}}"""),
 		verify("Read value") {
-			check(read("a")?.readInstant() == Instant.fromEpochSeconds(0))
+			check(this["a"]?.decodeInstant() == Instant.fromEpochSeconds(0))
 		}
 	)
 
@@ -67,7 +67,7 @@ fun SuiteDsl.datetime(context: Prepared<BsonFactory>) = suite("Datetime") {
 		hex("10000000096100C5D8D6CC3B01000000"),
 		json($$"""{"a": {"$date": "2012-12-24T12:15:30.501Z"}}"""),
 		verify("Read value") {
-			check(read("a")?.readInstant() == Instant.parse("2012-12-24T12:15:30.501Z"))
+			check(this["a"]?.decodeInstant() == Instant.parse("2012-12-24T12:15:30.501Z"))
 		}
 	)
 
@@ -81,7 +81,7 @@ fun SuiteDsl.datetime(context: Prepared<BsonFactory>) = suite("Datetime") {
 		hex("10000000096100C33CE7B9BDFFFFFF00"),
 		json($$"""{"a": {"$date": {"$numberLong": "-284643869501"}}}"""),
 		verify("Read value") {
-			check(read("a")?.readInstant() == Instant.fromEpochMilliseconds(-284643869501))
+			check(this["a"]?.decodeInstant() == Instant.fromEpochMilliseconds(-284643869501))
 		}
 	)
 
@@ -95,7 +95,7 @@ fun SuiteDsl.datetime(context: Prepared<BsonFactory>) = suite("Datetime") {
 		hex("1000000009610000DC1FD277E6000000"),
 		json($$"""{"a": {"$date": {"$numberLong": "253402300800000"}}}"""),
 		verify("Read value") {
-			check(read("a")?.readInstant() == Instant.fromEpochMilliseconds(253402300800000))
+			check(this["a"]?.decodeInstant() == Instant.fromEpochMilliseconds(253402300800000))
 		}
 	)
 
@@ -109,7 +109,7 @@ fun SuiteDsl.datetime(context: Prepared<BsonFactory>) = suite("Datetime") {
 		hex("10000000096100D1D6D6CC3B01000000"),
 		json($$"""{"a": {"$date": "2012-12-24T12:15:30.001Z"}}"""),
 		verify("Read value") {
-			check(read("a")?.readInstant() == Instant.parse("2012-12-24T12:15:30.001Z"))
+			check(this["a"]?.decodeInstant() == Instant.parse("2012-12-24T12:15:30.001Z"))
 		}
 	)
 }

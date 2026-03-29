@@ -111,7 +111,7 @@ fun SuiteDsl.validateBsonFactory(
 
 		prepareFactory().buildDocument {
 			write("root") {
-				pipe(pipe.reader().asValue())
+				pipe(pipe.asValue())
 			}
 		} shouldBeJson """{"root": {"four": 4, "foo": "bar", "grades": [4, 7]}}"""
 	}
@@ -141,15 +141,15 @@ fun SuiteDsl.validateBsonFactory(
 
 		fun d() = factory.buildDocument {
 			write("a") {
-				pipe(a().reader().asValue())
+				pipe(a().asValue())
 			}
 
 			write("b") {
-				pipe(b().reader().asValue())
+				pipe(b().asValue())
 			}
 
 			write("c") {
-				pipe(c().reader().asValue())
+				pipe(c().asValue())
 			}
 		}
 

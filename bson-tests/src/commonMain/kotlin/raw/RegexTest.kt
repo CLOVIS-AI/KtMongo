@@ -42,10 +42,10 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 		hex("0A0000000B6100000000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "", "options": ""}}}"""),
 		verify("Read pattern") {
-			check(read("a")?.readRegularExpressionPattern() == "")
+			check(this["a"]?.decodeRegularExpressionPattern() == "")
 		},
 		verify("Read options") {
-			check(read("a")?.readRegularExpressionOptions() == "")
+			check(this["a"]?.decodeRegularExpressionOptions() == "")
 		}
 	)
 
@@ -58,10 +58,10 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 		hex("0D0000000B6100616263000000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "abc", "options": ""}}}"""),
 		verify("Read pattern") {
-			check(read("a")?.readRegularExpressionPattern() == "abc")
+			check(this["a"]?.decodeRegularExpressionPattern() == "abc")
 		},
 		verify("Read options") {
-			check(read("a")?.readRegularExpressionOptions() == "")
+			check(this["a"]?.decodeRegularExpressionOptions() == "")
 		}
 	)
 
@@ -74,10 +74,10 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 		hex("0F0000000B610061626300696D0000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "abc", "options": "im"}}}"""),
 		verify("Read pattern") {
-			check(read("a")?.readRegularExpressionPattern() == "abc")
+			check(this["a"]?.decodeRegularExpressionPattern() == "abc")
 		},
 		verify("Read options") {
-			check(read("a")?.readRegularExpressionOptions() == "im")
+			check(this["a"]?.decodeRegularExpressionOptions() == "im")
 		}
 	)
 
@@ -90,10 +90,10 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 		hex("110000000B610061622F636400696D0000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "ab/cd", "options": "im"}}}"""),
 		verify("Read pattern") {
-			check(read("a")?.readRegularExpressionPattern() == "ab/cd")
+			check(this["a"]?.decodeRegularExpressionPattern() == "ab/cd")
 		},
 		verify("Read options") {
-			check(read("a")?.readRegularExpressionOptions() == "im")
+			check(this["a"]?.decodeRegularExpressionOptions() == "im")
 		}
 	)
 
@@ -109,10 +109,10 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 		hex("100000000B610061626300696D780000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "abc", "options": "imx"}}}"""),
 		verify("Read pattern") {
-			check(read("a")?.readRegularExpressionPattern() == "abc")
+			check(this["a"]?.decodeRegularExpressionPattern() == "abc")
 		},
 		verify("Read options") {
-			check(read("a")?.readRegularExpressionOptions() == "imx")
+			check(this["a"]?.decodeRegularExpressionOptions() == "imx")
 		}
 	)
 
@@ -125,10 +125,10 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 		hex("100000000B610061625C226162000000"),
 		json($$"""{"a": {"$regularExpression": {"pattern": "ab\\\"ab", "options": ""}}}"""),
 		verify("Read pattern") {
-			check(read("a")?.readRegularExpressionPattern() == "ab\\\"ab")
+			check(this["a"]?.decodeRegularExpressionPattern() == "ab\\\"ab")
 		},
 		verify("Read options") {
-			check(read("a")?.readRegularExpressionOptions() == "")
+			check(this["a"]?.decodeRegularExpressionOptions() == "")
 		}
 	)
 }

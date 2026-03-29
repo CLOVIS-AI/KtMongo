@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
@@ -24,37 +25,183 @@ import kotlin.reflect.typeOf
  *
  * To create instances of this class, see [BsonFactory].
  *
- * ### Implementation constraints
+ * ### Navigating BSON types
  *
- * [equals] and [hashCode] should follow the same constraints as [BsonDocumentReader]'s implementations.
+ * This interface is part of the BSON trinity:
+ *
+ * - [BsonDocument] represents an entire BSON document.
+ * - [BsonArray] represents an array of BSON values.
+ * - [BsonValue] represents a single value in isolation.
+ *
+ * ### Usage
+ *
+ * ```kotlin
+ * val bson: BsonDocument = …
+ *
+ * for ((name, field) in bson) {
+ *     println("Field: $name • ${field.type}")
+ * }
+ * ```
+ *
+ * ### Equality
+ *
+ * Different implementations of this interface are considered equal if they represent the same value
+ * with the same type. That is, both values would result in the exact same BSON sent over the wire.
+ *
+ * The methods [BsonDocument.Companion.equals] and [BsonDocument.Companion.hashCode] are provided
+ * as default implementations.
  */
-interface BsonDocument {
+interface BsonDocument : Map<String, BsonValue> {
 
 	/**
-	 * Low-level byte representation of this BSON document.
+	 * Generates a [ByteArray] of the raw BSON representation of this value.
 	 */
-	@LowLevelApi
 	fun toByteArray(): ByteArray
 
 	/**
-	 * Reads the fields of this document.
+	 * Decodes this document into an instance of the Kotlin type [T].
+	 *
+	 * ### Serialization configuration
+	 *
+	 * This method uses the serialization methods configured in the [BsonFactory] that created this instance.
+	 *
+	 * For example, if you use the official Java or Kotlin MongoDB drivers,
+	 * this method will use your configured `CodecRegistry`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * data class User(
+	 *     val _id: ObjectId,
+	 *     val profile: Profile,
+	 * )
+	 *
+	 * data class Profile(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * val factory: BsonFactory = …
+	 *
+	 * val bson = factory.buildDocument {
+	 *     writeObjectId("_id", ObjectId("69c93e17b96e83b72d11b734"))
+	 *     writeDocument("profile") {
+	 *         writeString("name", "Bob")
+	 *         writeInt32("age", 30)
+	 *     }
+	 * }
+	 *
+	 * val user = bson.decode<User>()
+	 *
+	 * println(user._id)          // ObjectId(69c93e17b96e83b72d11b734)
+	 * println(user.profile.name) // Bob
+	 * println(user.profile.age)  // 30
+	 * ```
+	 *
+	 * ### Overloads
+	 *
+	 * Prefer using the parameter-less overload.
+	 *
+	 * If [type] doesn't match [T], the behavior is unspecified.
+	 *
+	 * @throws BsonDecodingException If the value cannot be decoded as an instance of [T].
 	 */
 	@LowLevelApi
-	fun reader(): BsonDocumentReader
+	fun <T> decode(type: KType): T
 
 	/**
 	 * JSON representation of this [BsonDocument] object, as a [String].
 	 */
 	override fun toString(): String
+
+	/**
+	 * Returns the [BsonValue] equivalent to this document.
+	 *
+	 * The returned value has type [BsonType.Document] and its [BsonValue.decodeDocument] method returns this document.
+	 */
+	fun asValue(): BsonValue
+
+	companion object {
+
+		/**
+		 * Compares two [BsonDocument] to verify whether they are equal according to the rules documented in [BsonDocument].
+		 *
+		 * This method may be used in [BsonDocument] implementations as a default implementation.
+		 */
+		@LowLevelApi
+		fun equals(a: BsonDocument, b: BsonDocument): Boolean {
+			// Start by comparing fields one by one to keep the lazy initialization property of
+			// some implementations.
+			for ((name, valueInA) in a) {
+				val valueInB = b[name]
+
+				if (valueInB == null || valueInA != valueInB)
+					return false
+			}
+
+			// At this point we know that we have accessed all fields at least once, so this should be inexpensive.
+			return a.keys == b.keys
+		}
+
+		/**
+		 * Generates a hash code for a [BsonDocument] instance, that respects the equality rules documented in [BsonDocument].
+		 *
+		 * This method may be used in [BsonDocument] implementations as a default implementation.
+		 */
+		@LowLevelApi
+		fun hashCode(a: BsonDocument): Int {
+			var hashCode = 1
+			for ((name, value) in a) {
+				hashCode = 31 * hashCode + name.hashCode()
+				hashCode = 31 * hashCode + value.hashCode()
+			}
+			return hashCode
+		}
+	}
 }
 
 /**
- * Reads this document into an instance of type [T].
+ * Decodes this document into an instance of the Kotlin type [T].
  *
- * If it isn't possible to deserialize this BSON to the given type, an exception is thrown.
+ * ### Serialization configuration
  *
- * @see BsonContext.write The inverse operation.
+ * This method uses the serialization methods configured in the [BsonFactory] that created this instance.
+ *
+ * For example, if you use the official Java or Kotlin MongoDB drivers,
+ * this method will use your configured `CodecRegistry`.
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * data class User(
+ *     val _id: ObjectId,
+ *     val profile: Profile,
+ * )
+ *
+ * data class Profile(
+ *     val name: String,
+ *     val age: Int?,
+ * )
+ *
+ * val factory: BsonFactory = …
+ *
+ * val bson = factory.buildDocument {
+ *     writeObjectId("_id", ObjectId("69c93e17b96e83b72d11b734"))
+ *     writeDocument("profile") {
+ *         writeString("name", "Bob")
+ *         writeInt32("age", 30)
+ *     }
+ * }
+ *
+ * val user = bson.decode<User>()
+ *
+ * println(user._id)          // ObjectId(69c93e17b96e83b72d11b734)
+ * println(user.profile.name) // Bob
+ * println(user.profile.age)  // 30
+ * ```
+ *
+ * @throws BsonDecodingException If the value cannot be decoded as an instance of [T].
  */
 @OptIn(LowLevelApi::class)
-inline fun <reified T : Any> BsonDocument.read(): T? =
-	reader().read(typeOf<T>(), T::class)
+inline fun <reified T> BsonDocument.decode(): T =
+	decode(typeOf<T>())

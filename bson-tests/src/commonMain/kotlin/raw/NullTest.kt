@@ -42,7 +42,8 @@ fun SuiteDsl.reprNull(context: Prepared<BsonFactory>) = suite("Null") {
 		hex("080000000A610000"),
 		json("""{"a": null}"""),
 		verify("Read value") {
-			check(read("a")?.readNull() == Unit)
+			@Suppress("SENSELESS_COMPARISON") // it could throw
+			check(this["a"]?.decodeNull() == null)
 		}
 	)
 }
