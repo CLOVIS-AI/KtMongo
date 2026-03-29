@@ -184,7 +184,7 @@ private fun ByteArray.readLong(index: Int): Long {
  *
  * To write generic values, see [BsonValueWriter].
  *
- * Instances of this interface are commonly obtained by calling the [BsonFactory.buildDocument] function.
+ * Instances of this interface are commonly obtained by calling the [BsonFactory.encode] function.
  */
 @LowLevelApi
 @BsonWriterDsl

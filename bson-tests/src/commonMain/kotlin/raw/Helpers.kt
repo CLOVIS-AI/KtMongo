@@ -52,7 +52,7 @@ interface BsonDeclaration {
 
 		@PreparedDslMarker
 		fun serialize(obj: Any, type: KType, klass: KClass<*>): BsonDeclaration =
-			BsonSerializeDeclaration(obj, type, klass)
+			BsonSerializeDeclaration(obj, type)
 
 		@PreparedDslMarker
 		inline fun <reified T : Any> serialize(obj: T): BsonDeclaration =
@@ -83,12 +83,11 @@ private class BsonBinaryDeclaration(
 private class BsonSerializeDeclaration(
 	val obj: Any,
 	val type: KType,
-	val klass: KClass<*>,
 ) : BsonDeclaration {
 
 	@Suppress("UNCHECKED_CAST")
 	fun write(context: BsonFactory): BsonDocument =
-		context.buildDocument(obj, type, klass as KClass<Any>)
+		context.encode(obj, type)
 
 	fun toAssertion() = BsonAssertion(obj.toString()) {
 		check(this.decode<Any?>(type) == obj)
