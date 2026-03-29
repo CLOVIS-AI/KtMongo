@@ -21,11 +21,11 @@ package opensavvy.ktmongo.bson.official
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.ExperimentalBsonDiffApi
+import opensavvy.ktmongo.bson.decode
 import opensavvy.ktmongo.bson.diff
-import opensavvy.ktmongo.bson.read
+import opensavvy.ktmongo.bson.encode
 import opensavvy.ktmongo.bson.types.*
 import opensavvy.ktmongo.bson.types.Vector
-import opensavvy.ktmongo.bson.write
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
@@ -134,11 +134,11 @@ val SerializationOptionsCompatibility by preparedSuite {
 	}
 
 	val valueDataClassBson by prepared {
-		testContext().write(valueDataClass())
+		testContext().encode(valueDataClass())
 	}
 
 	val valueKxSBson by prepared {
-		testContext().write(valueKxS())
+		testContext().encode(valueKxS())
 	}
 
 	test("Compare :bson-kotlin to baseline") {
@@ -154,11 +154,11 @@ val SerializationOptionsCompatibility by preparedSuite {
 	}
 
 	test("Round-trip from :bson-kotlin to :bson-kotlinx") {
-		check(valueDataClassBson().read<SerializableWithKxS>() == valueKxS())
+		check(valueDataClassBson().decode<SerializableWithKxS>() == valueKxS())
 	}
 
 	test("Round-trip from :bson-kotlinx to :bson-kotlin") {
-		check(valueKxSBson().read<SerializableWithDataClass>() == valueDataClass())
+		check(valueKxSBson().decode<SerializableWithDataClass>() == valueDataClass())
 	}
 
 }

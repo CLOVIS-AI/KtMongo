@@ -163,6 +163,13 @@ interface BsonArray : List<BsonValue> {
 		map { it.decode(type) }
 
 	/**
+	 * Returns the [BsonValue] equivalent to this array.
+	 *
+	 * The returned value has type [BsonType.Array] and its [BsonValue.decodeArray] method returns this array.
+	 */
+	fun asValue(): BsonValue
+
+	/**
 	 * JSON representation of this [BsonArray], as a [String].
 	 */
 	override fun toString(): String

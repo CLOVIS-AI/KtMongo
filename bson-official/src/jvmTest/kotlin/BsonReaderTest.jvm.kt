@@ -28,8 +28,8 @@ val BsonReaderTest by preparedSuite {
 			writeInt32("a", 42)
 		}
 
-		check(output.reader().read("hello")?.readString() == "world")
-		check(output.reader().read("a")?.readInt32() == 42)
+		check(output["hello"]?.decodeString() == "world")
+		check(output["a"]?.decodeInt32() == 42)
 	}
 
 }

@@ -22,7 +22,7 @@ import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 
 val testContext by prepared {
-	JvmBsonFactory(MongoClientSettings.getDefaultCodecRegistry())
+	BsonFactory(MongoClientSettings.getDefaultCodecRegistry())
 }
 
 @OptIn(ExperimentalStdlibApi::class)
