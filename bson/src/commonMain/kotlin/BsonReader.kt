@@ -26,9 +26,9 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
 /**
- * Utilities for decomposing a [Bson] document into its fields.
+ * Utilities for decomposing a [BsonDocument] document into its fields.
  *
- * To obtain an instance of this interface, see [Bson.reader].
+ * To obtain an instance of this interface, see [BsonDocument.reader].
  *
  * ### Example
  *
@@ -75,9 +75,9 @@ interface BsonDocumentReader {
 		get() = entries.keys
 
 	/**
-	 * Reads this document into a [Bson] instance.
+	 * Reads this document into a [BsonDocument] instance.
 	 */
-	fun toBson(): Bson
+	fun toBson(): BsonDocument
 
 	/**
 	 * Reads this entire document as a [BsonValueReader].

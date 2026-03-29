@@ -34,11 +34,11 @@ annotation class ExperimentalBsonPathApi
 /**
  * Access specific fields in arbitrary BSON documents using a [JSONPath](https://www.rfc-editor.org/rfc/rfc9535.html)-like API.
  *
- * To access fields of a [BSON document][Bson], use [select] or [at].
+ * To access fields of a [BSON document][BsonDocument], use [select] or [at].
  *
  * ### Why BSON paths?
  *
- * Most of the time, users want to deserialize documents, which they can do with [opensavvy.ktmongo.bson.read].
+ * Most of the time, users want to deserialize documents, which they can do with [read].
  *
  * However, sometimes, we receive large BSON payloads but only care about a few fields (for example, an explain plan).
  * Writing an entire DTO for such payloads is time-consuming and complex.
@@ -133,7 +133,7 @@ sealed interface BsonPath {
 	sealed interface PathOrSelector : BsonPath, Selector
 
 	/**
-	 * Points to a [field] in a [Bson] document.
+	 * Points to a [field] in a [BsonDocument] document.
 	 *
 	 * ### Example
 	 *
@@ -163,7 +163,7 @@ sealed interface BsonPath {
 	 * Points to all children of a document.
 	 *
 	 * - The children of a [BsonArray] are its elements.
-	 * - The children of a [Bson] document are the values of its fields.
+	 * - The children of a [BsonDocument] document are the values of its fields.
 	 *
 	 * ### Example
 	 *
@@ -1625,7 +1625,7 @@ private inline fun Char.isNameChar() =
 // region Execution/selection
 
 /**
- * Finds all values that match [path] in a given [BSON document][Bson].
+ * Finds all values that match [path] in a given [BSON document][BsonDocument].
  *
  * ### Example
  *
@@ -1641,7 +1641,7 @@ private inline fun Char.isNameChar() =
  */
 @OptIn(LowLevelApi::class)
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.select(path: BsonPath): Sequence<T> {
+inline fun <reified T> BsonDocument.select(path: BsonPath): Sequence<T> {
 	val type = typeOf<T>()
 
 	return path.findIn(this.reader().asValue())
@@ -1659,7 +1659,7 @@ inline fun <reified T> Bson.select(path: BsonPath): Sequence<T> {
 }
 
 /**
- * Finds all values that match [path] in a given [BSON document][Bson].
+ * Finds all values that match [path] in a given [BSON document][BsonDocument].
  *
  * To learn more about the syntax, see [BsonPath].
  *
@@ -1675,11 +1675,11 @@ inline fun <reified T> Bson.select(path: BsonPath): Sequence<T> {
  * @see at Select a single value.
  */
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.select(@Language("JSONPath") path: String): Sequence<T> =
+inline fun <reified T> BsonDocument.select(@Language("JSONPath") path: String): Sequence<T> =
 	select(BsonPath(path))
 
 /**
- * Finds the first value that matches [path] in a given [BSON document][Bson].
+ * Finds the first value that matches [path] in a given [BSON document][BsonDocument].
  *
  * ### Example
  *
@@ -1704,7 +1704,7 @@ inline fun <reified T> Bson.select(@Language("JSONPath") path: String): Sequence
  * @throws NoSuchElementException If no element is found matching the path.
  */
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.selectFirst(path: BsonPath): T {
+inline fun <reified T> BsonDocument.selectFirst(path: BsonPath): T {
 	val iter = select<T>(path).iterator()
 
 	if (iter.hasNext()) {
@@ -1715,7 +1715,7 @@ inline fun <reified T> Bson.selectFirst(path: BsonPath): T {
 }
 
 /**
- * Finds the first value that matches [path] in a given [BSON document][Bson].
+ * Finds the first value that matches [path] in a given [BSON document][BsonDocument].
  *
  * To learn more about the syntax, see [BsonPath].
  *
@@ -1733,11 +1733,11 @@ inline fun <reified T> Bson.selectFirst(path: BsonPath): T {
  * @see at Select a single value using infix notation.
  */
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.selectFirst(@Language("JSONPath") path: String): T =
+inline fun <reified T> BsonDocument.selectFirst(@Language("JSONPath") path: String): T =
 	selectFirst(BsonPath(path))
 
 /**
- * Finds the first value that matches [path] in a given [BSON document][Bson].
+ * Finds the first value that matches [path] in a given [BSON document][BsonDocument].
  *
  * ### Example
  *
@@ -1760,7 +1760,7 @@ inline fun <reified T> Bson.selectFirst(@Language("JSONPath") path: String): T =
  * @throws NoSuchElementException If no element is found matching the path.
  */
 @ExperimentalBsonPathApi
-inline infix fun <reified T : Any?> Bson.at(path: BsonPath): T =
+inline infix fun <reified T : Any?> BsonDocument.at(path: BsonPath): T =
 	selectFirst(path)
 
 // endregion

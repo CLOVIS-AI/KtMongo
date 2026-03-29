@@ -18,7 +18,7 @@
 
 package opensavvy.ktmongo.bson.raw
 
-import opensavvy.ktmongo.bson.Bson
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonFieldWriter
@@ -32,15 +32,15 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-private val Bson.hex: String
+private val BsonDocument.hex: String
 	get() = this.toByteArray().toHexString(HexFormat.UpperCase)
 
 @OptIn(ExperimentalStdlibApi::class, LowLevelApi::class)
-infix fun Bson.shouldBeHex(@Language("HEXDUMP") expected: String) {
+infix fun BsonDocument.shouldBeHex(@Language("HEXDUMP") expected: String) {
 	check(this.hex == expected) { "Difference in the resulting hexadecimal representation\nExpected: $expected\nActual:   ${this.hex}" }
 }
 
-infix fun Bson.shouldBeJson(@Language("MongoDB-JSON") expected: String) {
+infix fun BsonDocument.shouldBeJson(@Language("MongoDB-JSON") expected: String) {
 	check(toString() == expected) { "Difference in the resulting JSON representation\nExpected: $expected\nActual:   $this" }
 }
 
@@ -77,7 +77,7 @@ private class BsonBinaryDeclaration(
 	val writer: BsonFieldWriter.() -> Unit,
 ) : BsonDeclaration {
 
-	fun write(context: BsonFactory): Bson =
+	fun write(context: BsonFactory): BsonDocument =
 		context.buildDocument { writer() }
 }
 
@@ -88,7 +88,7 @@ private class BsonSerializeDeclaration(
 ) : BsonDeclaration {
 
 	@Suppress("UNCHECKED_CAST")
-	fun write(context: BsonFactory): Bson =
+	fun write(context: BsonFactory): BsonDocument =
 		context.buildDocument(obj, type, klass as KClass<Any>)
 
 	fun toAssertion() = BsonAssertion(obj.toString()) {

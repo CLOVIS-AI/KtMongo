@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,35 +19,29 @@ package opensavvy.ktmongo.bson
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 /**
- * An object that can be represented as fields in a [BSON document][BsonDocument].
+ * A BSON array.
+ *
+ * To create instances of this class, see [BsonFactory].
+ *
+ * ### Implementation constraints
+ *
+ * [equals] and [hashCode] should follow the same constraints as [BsonArrayReader]'s implementations.
  */
-interface BsonFieldWriteable {
+interface BsonArray {
 
 	/**
-	 * Writes this object to the provided [writer].
+	 * Low-level byte representation of this BSON document.
+	 */
+	fun toByteArray(): ByteArray
+
+	/**
+	 * Reads the elements of this array.
 	 */
 	@LowLevelApi
-	fun writeTo(writer: BsonFieldWriter)
+	fun reader(): BsonArrayReader
 
 	/**
-	 * JSON representation of this object as a [BSON document][BsonDocument].
-	 */
-	override fun toString(): String
-}
-
-/**
- * An object that can be represented as a BSON value (value of a field, item in an array, an array itself).
- */
-interface BsonValueWriteable {
-
-	/**
-	 * Writes this object to the provided [writer].
-	 */
-	@LowLevelApi
-	fun writeTo(writer: BsonValueWriter)
-
-	/**
-	 * JSON representation of this object.
+	 * JSON representation of this [BsonArray], as a [String].
 	 */
 	override fun toString(): String
 }

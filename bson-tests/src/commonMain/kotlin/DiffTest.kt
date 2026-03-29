@@ -29,7 +29,7 @@ fun SuiteDsl.validateDiffAlgorithms(
 	factory: Prepared<BsonFactory>,
 ) = suite("Diff algorithms") {
 
-	suspend fun TestDsl.checkDiff(a: Bson, b: Bson, expected: String?) {
+	suspend fun TestDsl.checkDiff(a: BsonDocument, b: BsonDocument, expected: String?) {
 		log(a) { "a" }
 		log(b) { "b" }
 

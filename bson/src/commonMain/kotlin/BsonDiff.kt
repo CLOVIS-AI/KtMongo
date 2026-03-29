@@ -346,7 +346,7 @@ infix fun BsonValueReader.diff(other: BsonValueReader): String? {
  */
 @ExperimentalBsonDiffApi
 @OptIn(LowLevelApi::class)
-infix fun Bson.diff(other: Bson): String? =
+infix fun BsonDocument.diff(other: BsonDocument): String? =
 	this.reader() diff other.reader()
 
 /**

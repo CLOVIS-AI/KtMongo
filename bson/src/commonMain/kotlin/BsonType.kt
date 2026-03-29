@@ -51,7 +51,7 @@ enum class BsonType(
 	String(2),
 
 	/**
-	 * An arbitrary document, represented by the Kotlin interface [Bson].
+	 * An arbitrary document, represented by the Kotlin interface [BsonDocument].
 	 *
 	 * @see BsonValueReader.readDocument Low-level read.
 	 * @see BsonFieldWriter.writeDocument Low-level write.

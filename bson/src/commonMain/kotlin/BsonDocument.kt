@@ -28,7 +28,7 @@ import kotlin.reflect.typeOf
  *
  * [equals] and [hashCode] should follow the same constraints as [BsonDocumentReader]'s implementations.
  */
-interface Bson {
+interface BsonDocument {
 
 	/**
 	 * Low-level byte representation of this BSON document.
@@ -43,35 +43,7 @@ interface Bson {
 	fun reader(): BsonDocumentReader
 
 	/**
-	 * JSON representation of this [Bson] object, as a [String].
-	 */
-	override fun toString(): String
-}
-
-/**
- * A BSON array.
- *
- * To create instances of this class, see [BsonFactory].
- *
- * ### Implementation constraints
- *
- * [equals] and [hashCode] should follow the same constraints as [BsonArrayReader]'s implementations.
- */
-interface BsonArray {
-
-	/**
-	 * Low-level byte representation of this BSON document.
-	 */
-	fun toByteArray(): ByteArray
-
-	/**
-	 * Reads the elements of this array.
-	 */
-	@LowLevelApi
-	fun reader(): BsonArrayReader
-
-	/**
-	 * JSON representation of this [BsonArray], as a [String].
+	 * JSON representation of this [BsonDocument] object, as a [String].
 	 */
 	override fun toString(): String
 }
@@ -84,5 +56,5 @@ interface BsonArray {
  * @see BsonContext.write The inverse operation.
  */
 @OptIn(LowLevelApi::class)
-inline fun <reified T : Any> Bson.read(): T? =
+inline fun <reified T : Any> BsonDocument.read(): T? =
 	reader().read(typeOf<T>(), T::class)
