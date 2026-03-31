@@ -145,9 +145,6 @@ nav:
 # !!! EMBEDDED DOKKA START, DO NOT COMMIT !!! #
 # !!! EMBEDDED DOKKA END, DO NOT COMMIT !!! #
 
-  - Reference (external):
-      - reference.md
-
   - News:
       - news/index.md
       - news/tags.md
