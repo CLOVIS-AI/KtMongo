@@ -26,7 +26,7 @@ import org.bson.conversions.Bson
 import java.util.concurrent.TimeUnit
 
 @LowLevelApi
-fun opensavvy.ktmongo.bson.Bson.toJava(): Bson = (this as opensavvy.ktmongo.bson.official.Bson).raw
+fun opensavvy.ktmongo.bson.BsonDocument.toJava(): Bson = (this as opensavvy.ktmongo.bson.official.BsonDocument).raw
 
 @LowLevelApi
 fun BsonNode.toJava(): Bson = this.toBson().toJava()

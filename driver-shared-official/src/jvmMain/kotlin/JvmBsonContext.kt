@@ -16,16 +16,16 @@
 
 package opensavvy.ktmongo.official
 
-import opensavvy.ktmongo.bson.official.JvmBsonFactory
+import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 
 class JvmBsonContext(
-	bsonFactory: JvmBsonFactory,
+	val bsonFactory: BsonFactory,
 	objectIdGenerator: ObjectIdGenerator,
 	nameStrategy: PropertyNameStrategy,
 ) : BsonContext,
-	JvmBsonFactory by bsonFactory,
+	opensavvy.ktmongo.bson.BsonFactory by bsonFactory,
 	ObjectIdGenerator by objectIdGenerator,
 	PropertyNameStrategy by nameStrategy

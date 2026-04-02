@@ -17,7 +17,7 @@
 package opensavvy.ktmongo.official.command
 
 import com.mongodb.client.model.*
-import opensavvy.ktmongo.bson.official.Bson
+import opensavvy.ktmongo.bson.official.BsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.*
 
@@ -25,32 +25,32 @@ import opensavvy.ktmongo.dsl.command.*
 @OptIn(LowLevelApi::class)
 fun <Document> AvailableInBulkWrite<Document>.toJava(): WriteModel<Document> = when (this) {
 	is UpdateMany<*> -> UpdateManyModel<Document>(
-		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
-		/* update = */ (context.buildDocument(this.update) as Bson).raw,
+		/* filter = */ (context.buildDocument(this.filter) as BsonDocument).raw,
+		/* update = */ (context.buildDocument(this.update) as BsonDocument).raw,
 		/* options = */ com.mongodb.client.model.UpdateOptions(),
 	)
 
 	is UpdateOne<*> -> UpdateOneModel<Document>(
-		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
-		/* update = */ (context.buildDocument(this.update) as Bson).raw,
+		/* filter = */ (context.buildDocument(this.filter) as BsonDocument).raw,
+		/* update = */ (context.buildDocument(this.update) as BsonDocument).raw,
 		/* options = */ com.mongodb.client.model.UpdateOptions(),
 	)
 
 	is ReplaceOne<*> -> ReplaceOneModel<Document>(
-		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* filter = */ (context.buildDocument(this.filter) as BsonDocument).raw,
 		/* replacement = */ this.document as Document,
 		/* options = */ com.mongodb.client.model.ReplaceOptions(),
 	)
 
 	is RepsertOne<*> -> ReplaceOneModel<Document>(
-		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* filter = */ (context.buildDocument(this.filter) as BsonDocument).raw,
 		/* replacement = */ this.document as Document,
 		/* options = */ com.mongodb.client.model.ReplaceOptions().upsert(true),
 	)
 
 	is UpsertOne<*> -> UpdateOneModel<Document>(
-		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
-		/* update = */ (context.buildDocument(this.update) as Bson).raw,
+		/* filter = */ (context.buildDocument(this.filter) as BsonDocument).raw,
+		/* update = */ (context.buildDocument(this.update) as BsonDocument).raw,
 		/* options = */ com.mongodb.client.model.UpdateOptions().upsert(true),
 	)
 
@@ -59,12 +59,12 @@ fun <Document> AvailableInBulkWrite<Document>.toJava(): WriteModel<Document> = w
 	)
 
 	is DeleteOne<*> -> DeleteOneModel<Document>(
-		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* filter = */ (context.buildDocument(this.filter) as BsonDocument).raw,
 		/* options = */ DeleteOptions(),
 	)
 
 	is DeleteMany<*> -> DeleteManyModel<Document>(
-		/* filter = */ (context.buildDocument(this.filter) as Bson).raw,
+		/* filter = */ (context.buildDocument(this.filter) as BsonDocument).raw,
 		/* options = */ DeleteOptions(),
 	)
 }
