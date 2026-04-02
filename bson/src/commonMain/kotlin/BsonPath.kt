@@ -442,7 +442,7 @@ private data class IndexSelector(val index: Int) : Selector {
 		return if (reader.type == BsonType.Array) {
 			val array = reader.decodeArray()
 			val readingIndex = if (index >= 0) index else array.size + index
-			val value = array.getOrNull(readingIndex)
+			val value = array[readingIndex]
 			if (value != null)
 				sequenceOf(value)
 			else
@@ -460,7 +460,7 @@ private object AllSelector : Selector {
 	@LowLevelApi
 	override fun findInParent(reader: BsonValue): Sequence<BsonValue> =
 		when (reader.type) {
-			BsonType.Document -> reader.decodeDocument().values.asSequence()
+			BsonType.Document -> reader.decodeDocument().asSequence().map { it.value }
 			BsonType.Array -> reader.decodeArray().asSequence()
 			else -> emptySequence()
 		}
@@ -529,7 +529,7 @@ private data class SliceSelector(
 					yield(elements[index])
 				}
 			}
-		}
+		}.filterNotNull()
 
 		else -> emptySequence()
 	}

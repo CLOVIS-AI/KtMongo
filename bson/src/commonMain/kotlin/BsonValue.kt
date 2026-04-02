@@ -166,6 +166,13 @@ interface BsonValue {
 	/**
 	 * Decodes this value as a Kotlin `null`.
 	 *
+	 * Note that we differentiate "the value is not present" with "the value as the BSON type `null`".
+	 * This method only returns successfully in the presence of the BSON type `null`.
+	 *
+	 * A [BsonValue] cannot represent an absent value, so there is no "check if present"
+	 * method. Instead, [BsonDocument.get] and [BsonArray.get] return `null`
+	 * (NOT a [BsonValue] that decodes to `null`) if the field is absent.
+	 *
 	 * @throws BsonDecodingException If the value is not a [BsonType.Null].
 	 */
 	fun decodeNull(): Nothing?
@@ -376,6 +383,19 @@ interface BsonValue {
 	 */
 	fun decodeArray(): BsonArray
 
+	/**
+	 * Returns this value, unless it is undefined or `null`, in which case returns `null`.
+	 *
+	 * @see decodeNull
+	 * @see decodeUndefined
+	 */
+	@Suppress("DEPRECATION") // Undefined is deprecated
+	fun takeIfPresent(): BsonValue? = when (type) {
+		BsonType.Null -> null
+		BsonType.Undefined -> null
+		else -> this
+	}
+
 	companion object {
 
 		/**
@@ -404,6 +424,7 @@ interface BsonValue {
 				BsonType.Null ->
 					@Suppress("SENSELESS_COMPARISON") // it's not, either could throw
 					a.decodeNull() == b.decodeNull()
+
 				BsonType.RegExp -> a.decodeRegularExpressionOptions() == b.decodeRegularExpressionOptions() &&
 					a.decodeRegularExpressionPattern() == b.decodeRegularExpressionPattern()
 
@@ -518,5 +539,5 @@ inline fun <reified T> BsonValue.decode(): T =
  */
 class BsonDecodingException(
 	message: String,
-	cause: Throwable? = null
+	cause: Throwable? = null,
 ) : IllegalStateException(message, cause)

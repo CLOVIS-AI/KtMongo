@@ -64,7 +64,7 @@ private fun StringBuilder.diff(a: BsonDocument, b: BsonDocument, indent: String)
 		}
 	}
 
-	for ((name, bReader) in b.entries) {
+	for ((name, bReader) in b) {
 		if (a[name] == null) {
 			// Found a field in 'b' that isn't in 'a'
 			hasDiff = true
@@ -148,7 +148,7 @@ private fun StringBuilder.diff(a: BsonArray, b: BsonArray, indent: String): Bool
 		append(index)
 		append(": ")
 
-		val valueInB = b.getOrNull(index)
+		val valueInB = b[index]
 
 		val newIndentSize = index.toString().length + 4
 
@@ -171,7 +171,7 @@ private fun StringBuilder.diff(a: BsonArray, b: BsonArray, indent: String): Bool
 	}
 
 	for ((index, bReader) in b.withIndex()) {
-		if (a.getOrNull(index) == null) {
+		if (a[index] == null) {
 			// Found a field in 'b' that isn't in 'a'
 			hasDiff = true
 			append(indent)

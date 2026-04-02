@@ -43,6 +43,9 @@ import kotlin.reflect.typeOf
  * }
  * ```
  *
+ * The iteration order of a BSON document is preserved: fields appear in the same order as they
+ * are written in.
+ *
  * ### Equality
  *
  * Different implementations of this interface are considered equal if they represent the same value
@@ -51,7 +54,7 @@ import kotlin.reflect.typeOf
  * The methods [BsonDocument.Companion.equals] and [BsonDocument.Companion.hashCode] are provided
  * as default implementations.
  */
-interface BsonDocument : Map<String, BsonValue> {
+interface BsonDocument {
 
 	/**
 	 * Generates a [ByteArray] of the raw BSON representation of this value.
@@ -110,6 +113,79 @@ interface BsonDocument : Map<String, BsonValue> {
 	fun <T> decode(type: KType): T
 
 	/**
+	 * Creates an [Iterable] that wraps this document.
+	 *
+	 * Each pair is the name of a field and its value.
+	 *
+	 * The iteration order of a BSON document is preserved: fields appear in the same order as they
+	 * are written in.
+	 */
+	fun asIterable(): Iterable<Field>
+
+	/**
+	 * Creates a [Map] view of this document.
+	 *
+	 * Each entry associates a field and its value.
+	 *
+	 * The iteration order of a BSON document is preserved: fields appear in the same order as they
+	 * are written in.
+	 */
+	fun asMap(): Map<String, BsonValue>
+
+	/**
+	 * Creates a [Sequence] of the fields in this document.
+	 *
+	 * Each pair is the name of a field and its value.
+	 *
+	 * The iteration order of a BSON document is preserved: fields appear in the same order as they
+	 * are written in.
+	 */
+	fun asSequence(): Sequence<Field>
+
+	/**
+	 * The number of fields in this document.
+	 */
+	val size: Int
+
+	/**
+	 * Returns `true` if this document has no fields.
+	 */
+	fun isEmpty(): Boolean =
+		size == 0
+
+	/**
+	 * Returns `true` if this document has at least one field.
+	 */
+	fun isNotEmpty(): Boolean =
+		!isEmpty()
+
+	/**
+	 * Returns the set of fields in this document.
+	 *
+	 * The iteration order of this set is the same as the iteration order as the document.
+	 */
+	val fields: Set<String>
+
+	/**
+	 * Returns the element with named [field].
+	 *
+	 * This method returns `null` if there is no element named [field].
+	 * Note that if there **is** an element named [field], and it has the value `null`, then a [BsonValue]
+	 * with [type][BsonValue.type] [BsonType.Null] is returned.
+	 */
+	operator fun get(field: String): BsonValue?
+
+	/**
+	 * Iterates over the fields in this document.
+	 *
+	 * Each pair is the name of a field and its value.
+	 *
+	 * The iteration order of a BSON document is preserved: fields appear in the same order as they
+	 * are written in.
+	 */
+	operator fun iterator(): Iterator<Field>
+
+	/**
 	 * JSON representation of this [BsonDocument] object, as a [String].
 	 */
 	override fun toString(): String
@@ -120,6 +196,14 @@ interface BsonDocument : Map<String, BsonValue> {
 	 * The returned value has type [BsonType.Document] and its [BsonValue.decodeDocument] method returns this document.
 	 */
 	fun asValue(): BsonValue
+
+	interface Field {
+		val name: String
+		val value: BsonValue
+
+		operator fun component1(): String = name
+		operator fun component2(): BsonValue = value
+	}
 
 	companion object {
 
@@ -140,7 +224,7 @@ interface BsonDocument : Map<String, BsonValue> {
 			}
 
 			// At this point we know that we have accessed all fields at least once, so this should be inexpensive.
-			return a.keys == b.keys
+			return a.fields == b.fields
 		}
 
 		/**

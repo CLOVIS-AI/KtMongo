@@ -51,7 +51,7 @@ import kotlin.reflect.typeOf
  * The methods [BsonArray.Companion.equals] and [BsonArray.Companion.hashCode] are provided
  * as default implementations.
  */
-interface BsonArray : List<BsonValue> {
+interface BsonArray {
 
 	/**
 	 * Decodes this array into an instance of the Kotlin type [T].
@@ -109,6 +109,67 @@ interface BsonArray : List<BsonValue> {
 	fun <T> decode(type: KType): T
 
 	/**
+	 * Creates an [Iterable] that wraps this array.
+	 */
+	fun asIterable(): Iterable<BsonValue>
+
+	/**
+	 * Creates a [List] view of this array.
+	 */
+	fun asList(): List<BsonValue>
+
+	/**
+	 * Creates a [Sequence] of the items in this array.
+	 */
+	fun asSequence(): Sequence<BsonValue>
+
+	/**
+	 * Iterates over this array, returning both each item and its index.
+	 *
+	 * @see Iterable.withIndex
+	 */
+	fun withIndex(): Iterable<IndexedValue<BsonValue>>
+
+	/**
+	 * The number of items in this array.
+	 */
+	val size: Int
+
+	/**
+	 * Returns `true` if this array has no elements.
+	 */
+	fun isEmpty(): Boolean =
+		size == 0
+
+	/**
+	 * Returns `true` if this array has at least one element.
+	 */
+	fun isNotEmpty(): Boolean =
+		!isEmpty()
+
+	val lastIndex: Int
+		get() = size - 1
+
+	val indices: IntRange
+		get() = 0 until size
+
+	/**
+	 * Returns the element in the array at [index].
+	 *
+	 * Just like in Kotlin, [index] should start at 0 and increase monotonically.
+	 *
+	 * This method returns `null` if there is no element with an index of [index].
+	 * Note that if there **is** an element at [index], and it has the value `null`, then a [BsonValue]
+	 * with [type][BsonValue.type] [BsonType.Null] is returned.
+	 */
+	operator fun get(index: Int): BsonValue?
+
+	/**
+	 * Iterates over the elements in this array.
+	 */
+	operator fun iterator(): Iterator<BsonValue>
+
+	/**
 	 * Decodes this array into a [List] of the Kotlin type [T].
 	 *
 	 * To decode this array into a type other than a [List], see [decode].
@@ -160,7 +221,7 @@ interface BsonArray : List<BsonValue> {
 	 */
 	@LowLevelApi
 	fun <T> decodeElements(type: KType): List<T> =
-		map { it.decode(type) }
+		asIterable().map { it.decode(type) }
 
 	/**
 	 * Returns the [BsonValue] equivalent to this array.
@@ -184,8 +245,8 @@ interface BsonArray : List<BsonValue> {
 		@LowLevelApi
 		fun equals(a: BsonArray, b: BsonArray): Boolean {
 			// Compare fields one by one to keep the lazy properties
-			for ((i, aReader) in a.withIndex()) {
-				val bReader = b.getOrNull(i)
+			for ((i, aReader) in a.asIterable().withIndex()) {
+				val bReader = b[i]
 
 				if (bReader == null || aReader != bReader)
 					return false
