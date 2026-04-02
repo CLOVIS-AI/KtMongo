@@ -18,7 +18,10 @@ package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonDocument
+import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonValue
+import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.typeOf
 
 /**
  * Implementation of [opensavvy.ktmongo.bson.BsonDocument] based on the official MongoDB drivers.
@@ -45,13 +48,27 @@ import opensavvy.ktmongo.bson.BsonValue
  */
 expect class BsonDocument : BsonDocument {
 
-	override fun get(key: String): opensavvy.ktmongo.bson.official.BsonValue?
+	override fun get(field: String): opensavvy.ktmongo.bson.official.BsonValue?
 
 	override fun asValue(): opensavvy.ktmongo.bson.official.BsonValue
 
-	override val values: Collection<opensavvy.ktmongo.bson.official.BsonValue>
+	override fun asIterable(): Iterable<Field>
 
-	override val entries: Set<Map.Entry<String, opensavvy.ktmongo.bson.official.BsonValue>>
+	override fun asMap(): Map<String, opensavvy.ktmongo.bson.official.BsonValue>
+
+	override fun asSequence(): Sequence<Field>
+
+	override fun iterator(): Iterator<Field>
+
+	class Field(
+		name: String,
+		value: opensavvy.ktmongo.bson.official.BsonValue,
+	) : BsonDocument.Field {
+
+		override val value: opensavvy.ktmongo.bson.official.BsonValue
+
+		override fun component2(): opensavvy.ktmongo.bson.official.BsonValue
+	}
 }
 
 /**
@@ -79,17 +96,19 @@ expect class BsonDocument : BsonDocument {
  */
 expect class BsonArray : BsonArray {
 
-	override fun get(index: Int): opensavvy.ktmongo.bson.official.BsonValue
+	override fun get(index: Int): opensavvy.ktmongo.bson.official.BsonValue?
 
 	override fun asValue(): opensavvy.ktmongo.bson.official.BsonValue
 
 	override fun iterator(): Iterator<opensavvy.ktmongo.bson.official.BsonValue>
 
-	override fun listIterator(): ListIterator<opensavvy.ktmongo.bson.official.BsonValue>
+	override fun asIterable(): Iterable<opensavvy.ktmongo.bson.official.BsonValue>
 
-	override fun listIterator(index: Int): ListIterator<opensavvy.ktmongo.bson.official.BsonValue>
+	override fun asList(): List<opensavvy.ktmongo.bson.official.BsonValue>
 
-	override fun subList(fromIndex: Int, toIndex: Int): List<opensavvy.ktmongo.bson.official.BsonValue>
+	override fun asSequence(): Sequence<opensavvy.ktmongo.bson.official.BsonValue>
+
+	override fun withIndex(): Iterable<IndexedValue<opensavvy.ktmongo.bson.official.BsonValue>>
 }
 
 /**
@@ -125,3 +144,15 @@ expect class BsonValue : BsonValue {
 
 	override fun decodeArray(): opensavvy.ktmongo.bson.official.BsonArray
 }
+
+/**
+ * Writes an arbitrary Kotlin [obj] into a top-level BSON document.
+ *
+ * A top-level BSON document cannot be `null`, cannot be a primitive, and cannot be a collection.
+ * If [obj] is not representable as a document, an exception is thrown.
+ *
+ * @see BsonDocument.decode The inverse operation.
+ */
+@OptIn(LowLevelApi::class)
+inline fun <reified T : Any> opensavvy.ktmongo.bson.official.BsonFactory.encode(obj: T): opensavvy.ktmongo.bson.official.BsonDocument =
+	encode(obj, typeOf<T>())

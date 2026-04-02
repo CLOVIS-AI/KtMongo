@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.bson.official
 
-import opensavvy.ktmongo.bson.BsonValue
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonBinaryWriter
 import org.bson.codecs.DecoderContext
@@ -57,89 +56,128 @@ actual class BsonDocument internal constructor(
 		)
 	}
 
-	actual override fun asValue(): opensavvy.ktmongo.bson.official.BsonValue =
+	actual override fun asIterable(): Iterable<Field> =
+		object : Iterable<Field> {
+			override fun iterator(): Iterator<Field> =
+				this@BsonDocument.iterator()
+
+			override fun toString(): String =
+				this@BsonDocument.toString()
+		}
+
+	actual override fun asMap(): Map<String, BsonValue> =
+		BsonDocumentMap()
+
+	actual override fun asSequence(): Sequence<Field> =
+		Sequence { this@BsonDocument.iterator() }
+
+	actual override fun asValue(): BsonValue =
 		BsonValue(raw, factory)
 
 	override val size: Int
 		get() = raw.size
 
-	override val keys: Set<String>
+	override val fields: Set<String>
 		get() = raw.keys
 
-	actual override val values: Collection<opensavvy.ktmongo.bson.official.BsonValue>
-		get() = object : Collection<opensavvy.ktmongo.bson.official.BsonValue> {
-			override val size: Int
-				get() = raw.size
+	private inner class BsonDocumentMap : Map<String, BsonValue> {
 
-			override fun isEmpty(): Boolean =
-				raw.isEmpty()
+		override val size: Int
+			get() = raw.size
 
-			override fun contains(element: opensavvy.ktmongo.bson.official.BsonValue): Boolean =
-				raw.containsValue(element.raw)
+		override val keys: Set<String>
+			get() = raw.keys
 
-			override fun iterator(): Iterator<opensavvy.ktmongo.bson.official.BsonValue> =
-				object : Iterator<opensavvy.ktmongo.bson.official.BsonValue> {
-					val iter = raw.values.iterator()
+		override val values: Collection<BsonValue>
+			get() = object : Collection<BsonValue> {
+				override val size: Int
+					get() = raw.size
 
-					override fun hasNext(): Boolean =
-						iter.hasNext()
+				override fun isEmpty(): Boolean =
+					raw.isEmpty()
 
-					override fun next(): opensavvy.ktmongo.bson.official.BsonValue =
-						BsonValue(iter.next(), factory)
-				}
+				override fun contains(element: BsonValue): Boolean =
+					raw.containsValue(element.raw)
 
-			override fun containsAll(elements: Collection<opensavvy.ktmongo.bson.official.BsonValue>): Boolean =
-				elements.all { it in this }
+				override fun iterator(): Iterator<BsonValue> =
+					object : Iterator<BsonValue> {
+						val iter = raw.values.iterator()
+
+						override fun hasNext(): Boolean =
+							iter.hasNext()
+
+						override fun next(): BsonValue =
+							BsonValue(iter.next(), factory)
+					}
+
+				override fun containsAll(elements: Collection<BsonValue>): Boolean =
+					elements.all { it in this }
+			}
+
+		override val entries: Set<Map.Entry<String, BsonValue>>
+			get() = object : Set<Map.Entry<String, BsonValue>> {
+				val entries = raw.entries
+
+				override val size: Int
+					get() = entries.size
+
+				override fun isEmpty(): Boolean =
+					entries.isEmpty()
+
+				override fun contains(element: Map.Entry<String, BsonValue>): Boolean =
+					entries.any { it.key == element.key && it.value == element.value.raw }
+
+				override fun iterator(): Iterator<Map.Entry<String, BsonValue>> =
+					object : Iterator<Map.Entry<String, BsonValue>> {
+						val iter = entries.iterator()
+
+						override fun hasNext(): Boolean =
+							iter.hasNext()
+
+						override fun next(): Map.Entry<String, BsonValue> =
+							object : Map.Entry<String, BsonValue> {
+								val raw = iter.next()
+
+								override val key: String
+									get() = raw.key
+
+								override val value: BsonValue
+									get() = BsonValue(raw.value, factory)
+							}
+					}
+
+				override fun containsAll(elements: Collection<Map.Entry<String, BsonValue>>): Boolean =
+					elements.all { it in this}
+			}
+
+		override fun isEmpty(): Boolean =
+			raw.isEmpty()
+
+		override fun containsKey(key: String): Boolean =
+			raw.containsKey(key)
+
+		override fun containsValue(value: BsonValue): Boolean =
+			raw.containsValue(value.raw) // If it's a multiplatform BsonValue, then it can't be in the BsonDocument from the official driver
+
+		override fun get(key: String): BsonValue? =
+			this@BsonDocument[key]
+	}
+
+	actual override fun get(field: String): BsonValue? =
+		raw[field]?.let { BsonValue(it, factory) }
+
+	actual override fun iterator(): Iterator<Field> =
+		object : Iterator<Field> {
+			val iter = raw.iterator()
+
+			override fun hasNext(): Boolean =
+				iter.hasNext()
+
+			override fun next(): Field {
+				val next = iter.next()
+				return Field(next.key, BsonValue(next.value, factory))
+			}
 		}
-
-	actual override val entries: Set<Map.Entry<String, opensavvy.ktmongo.bson.official.BsonValue>>
-		get() = object : Set<Map.Entry<String, opensavvy.ktmongo.bson.official.BsonValue>> {
-			val entries = raw.entries
-
-			override val size: Int
-				get() = entries.size
-
-			override fun isEmpty(): Boolean =
-				entries.isEmpty()
-
-			override fun contains(element: Map.Entry<String, opensavvy.ktmongo.bson.official.BsonValue>): Boolean =
-				entries.any { it.key == element.key && it.value == element.value.raw }
-
-			override fun iterator(): Iterator<Map.Entry<String, opensavvy.ktmongo.bson.official.BsonValue>> =
-				object : Iterator<Map.Entry<String, opensavvy.ktmongo.bson.official.BsonValue>> {
-					val iter = entries.iterator()
-
-					override fun hasNext(): Boolean =
-						iter.hasNext()
-
-					override fun next(): Map.Entry<String, opensavvy.ktmongo.bson.official.BsonValue> =
-						object : Map.Entry<String, opensavvy.ktmongo.bson.official.BsonValue> {
-							val raw = iter.next()
-
-							override val key: String
-								get() = raw.key
-
-							override val value: opensavvy.ktmongo.bson.official.BsonValue
-								get() = BsonValue(raw.value, factory)
-						}
-				}
-
-			override fun containsAll(elements: Collection<Map.Entry<String, opensavvy.ktmongo.bson.official.BsonValue>>): Boolean =
-				elements.all { it in this}
-		}
-
-	override fun isEmpty(): Boolean =
-		raw.isEmpty()
-
-	override fun containsKey(key: String): Boolean =
-		raw.containsKey(key)
-
-	override fun containsValue(value: BsonValue): Boolean =
-		if (value is opensavvy.ktmongo.bson.official.BsonValue) raw.containsValue(value.raw)
-		else false // If it's a multiplatform BsonValue, then it can't be in the BsonDocument from the official driver
-
-	actual override fun get(key: String): opensavvy.ktmongo.bson.official.BsonValue? =
-		raw[key]?.let { BsonValue(it, factory) }
 
 	@OptIn(LowLevelApi::class)
 	override fun equals(other: Any?): Boolean =
@@ -152,6 +190,15 @@ actual class BsonDocument internal constructor(
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String =
 		raw.toJson()
+
+	actual class Field actual constructor(
+		override val name: String,
+		actual override val value: BsonValue
+	) : opensavvy.ktmongo.bson.BsonDocument.Field {
+
+		override fun component1(): String = name
+		actual override fun component2(): BsonValue = value
+	}
 }
 
 // Inspired by https://gist.github.com/Koboo/ebd7c6802101e1a941ef31baca04113d

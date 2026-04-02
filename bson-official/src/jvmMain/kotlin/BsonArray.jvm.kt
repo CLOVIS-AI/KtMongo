@@ -18,7 +18,6 @@ package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonDecodingException
-import opensavvy.ktmongo.bson.BsonValue
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonDocument
 import kotlin.reflect.KClass
@@ -90,73 +89,106 @@ actual class BsonArray internal constructor(
 		}
 	}
 
-	actual override fun asValue(): opensavvy.ktmongo.bson.official.BsonValue =
+	actual override fun asIterable(): Iterable<BsonValue> =
+		object : Iterable<BsonValue> {
+			override fun iterator(): Iterator<BsonValue> =
+				this@BsonArray.iterator()
+
+			override fun toString(): String =
+				this@BsonArray.toString()
+		}
+
+	actual override fun asList(): List<BsonValue> =
+		BsonArrayList()
+
+	actual override fun asSequence(): Sequence<BsonValue> =
+		Sequence { iterator() }
+
+	actual override fun withIndex(): Iterable<IndexedValue<BsonValue>> =
+		asIterable().withIndex()
+
+	actual override fun asValue(): BsonValue =
 		BsonValue(raw, factory)
 
 	override val size: Int
 		get() = raw.size
 
-	actual override fun get(index: Int): opensavvy.ktmongo.bson.official.BsonValue =
-		BsonValue(raw[index], factory)
-
 	override fun isEmpty(): Boolean =
 		raw.isEmpty()
 
-	override fun contains(element: BsonValue): Boolean =
-		if (element is opensavvy.ktmongo.bson.official.BsonValue) raw.contains(element.raw)
-		else false
+	actual override fun get(index: Int): BsonValue? =
+		raw.getOrNull(index)?.let { BsonValue(it, factory)}
 
-	actual override fun iterator(): Iterator<opensavvy.ktmongo.bson.official.BsonValue> =
-		object : Iterator<opensavvy.ktmongo.bson.official.BsonValue> {
+	actual override fun iterator(): Iterator<BsonValue> =
+		object : Iterator<BsonValue> {
 			val iter = raw.iterator()
 
 			override fun hasNext(): Boolean =
 				iter.hasNext()
 
-			override fun next(): opensavvy.ktmongo.bson.official.BsonValue =
+			override fun next(): BsonValue =
 				BsonValue(iter.next(), factory)
 		}
 
-	override fun containsAll(elements: Collection<BsonValue>): Boolean =
-		elements.all { it in this }
+	private inner class BsonArrayList : List<BsonValue> {
 
-	override fun indexOf(element: BsonValue): Int =
-		if (element is opensavvy.ktmongo.bson.official.BsonValue) raw.indexOf(element.raw)
-		else -1
+		override val size: Int
+			get() = raw.size
 
-	override fun lastIndexOf(element: BsonValue): Int =
-		if (element is opensavvy.ktmongo.bson.official.BsonValue) raw.lastIndexOf(element.raw)
-		else -1
+		override fun isEmpty(): Boolean =
+			raw.isEmpty()
 
-	actual override fun listIterator(): ListIterator<opensavvy.ktmongo.bson.official.BsonValue> =
-		listIterator(0)
+		override fun get(index: Int): BsonValue =
+			BsonValue(raw[index], factory)
 
-	actual override fun listIterator(index: Int): ListIterator<opensavvy.ktmongo.bson.official.BsonValue> =
-		object : ListIterator<opensavvy.ktmongo.bson.official.BsonValue> {
-			val iter = raw.listIterator(index)
+		override fun contains(element: BsonValue): Boolean =
+			raw.contains(element.raw)
 
-			override fun next(): opensavvy.ktmongo.bson.official.BsonValue =
-				BsonValue(iter.next(), factory)
+		override fun iterator(): Iterator<BsonValue> =
+			this@BsonArray.iterator()
 
-			override fun hasNext(): Boolean =
-				iter.hasNext()
+		override fun containsAll(elements: Collection<BsonValue>): Boolean =
+			elements.all { it in this }
 
-			override fun hasPrevious(): Boolean =
-				iter.hasPrevious()
+		override fun indexOf(element: BsonValue): Int =
+			raw.indexOf(element.raw)
 
-			override fun previous(): opensavvy.ktmongo.bson.official.BsonValue =
-				BsonValue(iter.previous(), factory)
+		override fun lastIndexOf(element: BsonValue): Int =
+			raw.lastIndexOf(element.raw)
 
-			override fun nextIndex(): Int =
-				iter.nextIndex()
+		override fun listIterator(): ListIterator<BsonValue> =
+			listIterator(0)
 
-			override fun previousIndex(): Int =
-				iter.previousIndex()
-		}
+		override fun listIterator(index: Int): ListIterator<BsonValue> =
+			object : ListIterator<BsonValue> {
+				val iter = raw.listIterator(index)
 
-	actual override fun subList(fromIndex: Int, toIndex: Int): List<opensavvy.ktmongo.bson.official.BsonValue> =
-		// Very poor implementation, tell us if you need this!
-		this.iterator().asSequence().toList().subList(fromIndex, toIndex)
+				override fun next(): BsonValue =
+					BsonValue(iter.next(), factory)
+
+				override fun hasNext(): Boolean =
+					iter.hasNext()
+
+				override fun hasPrevious(): Boolean =
+					iter.hasPrevious()
+
+				override fun previous(): BsonValue =
+					BsonValue(iter.previous(), factory)
+
+				override fun nextIndex(): Int =
+					iter.nextIndex()
+
+				override fun previousIndex(): Int =
+					iter.previousIndex()
+			}
+
+		override fun subList(fromIndex: Int, toIndex: Int): List<BsonValue> =
+			// Very poor implementation, tell us if you need this!
+			this.iterator().asSequence().toList().subList(fromIndex, toIndex)
+
+		override fun toString(): String =
+			joinToString(separator = "", prefix = "[", postfix = "]")
+	}
 
 	override fun toString(): String {
 		// This is very ugly.
