@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.multiplatform.impl.read
+package opensavvy.ktmongo.bson.multiplatform
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
-import opensavvy.ktmongo.bson.BsonReaderException
-import opensavvy.ktmongo.bson.BsonType
-import opensavvy.ktmongo.bson.BsonValueReader
-import opensavvy.ktmongo.bson.multiplatform.BsonFactory
-import opensavvy.ktmongo.bson.multiplatform.Bytes
-import opensavvy.ktmongo.bson.multiplatform.RawBsonWriter
+import opensavvy.ktmongo.bson.*
+import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.bson.BsonValue
 import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoder
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
@@ -36,147 +33,163 @@ import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-@LowLevelApi
-internal class MultiplatformBsonValueReader(
+/**
+ * Pure Kotlin implementation of [opensavvy.ktmongo.bson.BsonValue].
+ *
+ * The BSON specification only allows root [documents][BsonDocument], so it is not possible
+ * to instantiate this class directly with a complex structure. This class
+ * is used to decode the fields of a [BsonDocument] or the items of a [BsonArray].
+ *
+ * To instantiate a [BsonDocument] or [BsonArray], see [BsonFactory].
+ *
+ * ### Navigating BSON types
+ *
+ * This class is part of the BSON trinity:
+ *
+ * - [BsonDocument][opensavvy.ktmongo.bson.multiplatform.BsonDocument] represents an entire BSON document.
+ * - [BsonArray][opensavvy.ktmongo.bson.multiplatform.BsonArray] represents an array of BSON values.
+ * - [BsonValue][opensavvy.ktmongo.bson.multiplatform.BsonValue] represents a single value in isolation.
+ *
+ * ### Usage
+ *
+ * If this BSON value is the serialized form of a Kotlin DTO, see [decode].
+ *
+ * This interface provides methods for decoding the different BSON native types, like [decodeInt32],
+ * [decodeObjectId] and [decodeInstant].
+ *
+ * Some BSON types cannot be represented by a single Kotlin type, so multiple methods are provided to decode
+ * their components. For example: [decodeRegularExpressionPattern] and [decodeRegularExpressionOptions].
+ *
+ * ### Thread-safety
+ *
+ * This class is **not thread-safe**.
+ * Although it is not possible to mutate its state, this class uses internal mutation to lazily decode the BSON stream.
+ */
+class BsonValue internal constructor(
 	private val factory: BsonFactory,
 	override val type: BsonType,
 	private val bytes: Bytes,
-) : BsonValueReader {
+) : BsonValue {
 
 	private fun checkType(expected: BsonType) {
 		if (type != expected)
-			throw BsonReaderException("Cannot read this field as a $expected, because it is a $type")
+			throw BsonDecodingException("Cannot read this field as a $expected, because it is a $type")
 	}
 
 	@LowLevelApi
-	override fun readBoolean(): Boolean {
+	override fun <T> decode(type: KType): T {
+		val decoder = BsonDecoder(EmptySerializersModule(), this)
+		@Suppress("UNCHECKED_CAST")
+		return decoder.decodeSerializableValue(serializer(type) as KSerializer<T>)
+	}
+
+	override fun decodeBoolean(): Boolean {
 		checkType(BsonType.Boolean)
 		val byte = bytes.reader.readUnsignedByte()
 		return byte == 1.toUByte() // 1 == true, 0 == false, everything else is forbidden so let's say they're false
 	}
 
-	@LowLevelApi
-	override fun readDouble(): Double {
+	override fun decodeDouble(): Double {
 		checkType(BsonType.Double)
 		return bytes.reader.readDouble()
 	}
 
-	@LowLevelApi
-	override fun readInt32(): Int {
+	override fun decodeInt32(): Int {
 		checkType(BsonType.Int32)
 		return bytes.reader.readInt32()
 	}
 
-	@LowLevelApi
-	override fun readInt64(): Long {
+	override fun decodeInt64(): Long {
 		checkType(BsonType.Int64)
 		return bytes.reader.readInt64()
 	}
 
 	@LowLevelApi
-	override fun readDecimal128(): ByteArray {
+	override fun decodeDecimal128Bytes(): ByteArray {
 		checkType(BsonType.Decimal128)
 		TODO("Not yet implemented")
 	}
 
-	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
-		val decoder = BsonDecoder(EmptySerializersModule(), this)
-		@Suppress("UNCHECKED_CAST")
-		return decoder.decodeSerializableValue(serializer(type) as KSerializer<T?>)
-	}
-
-	@LowLevelApi
-	override fun readDateTime(): Long {
+	override fun decodeDateTime(): Long {
 		checkType(BsonType.Datetime)
 		return bytes.reader.readInt64()
 	}
 
-	@LowLevelApi
-	override fun readNull() {
+	override fun decodeNull(): Nothing? {
 		checkType(BsonType.Null)
+		return null
 	}
 
 	@LowLevelApi
-	override fun readObjectIdBytes(): ByteArray {
+	override fun decodeObjectIdBytes(): ByteArray {
 		checkType(BsonType.ObjectId)
 		return bytes.reader.readBytes(12)
 	}
 
-	@LowLevelApi
-	override fun readObjectId(): ObjectId {
-		return ObjectId(readObjectIdBytes())
-	}
-
-	@LowLevelApi
-	override fun readRegularExpressionPattern(): String {
+	override fun decodeRegularExpressionPattern(): String {
 		checkType(BsonType.RegExp)
 		return bytes.reader.readCString()
 	}
 
-	@LowLevelApi
-	override fun readRegularExpressionOptions(): String {
+	override fun decodeRegularExpressionOptions(): String {
 		checkType(BsonType.RegExp)
 		val reader = bytes.reader
-		reader.readCString() // pattern
+		val _ = reader.readCString() // pattern
 		return reader.readCString() // options
 	}
 
-	@LowLevelApi
-	override fun readString(): String {
+	override fun decodeString(): String {
 		checkType(BsonType.String)
 		return bytes.reader.readString()
 	}
 
-	@LowLevelApi
-	override fun readTimestamp(): Timestamp {
+	override fun decodeTimestamp(): Timestamp {
 		checkType(BsonType.Timestamp)
 		return Timestamp(bytes.reader.readUInt64())
 	}
 
-	@LowLevelApi
-	override fun readSymbol(): String {
+	override fun decodeSymbol(): String {
 		checkType(BsonType.Symbol)
 		TODO("Not yet implemented")
 	}
 
-	@LowLevelApi
-	override fun readUndefined() {
+	override fun decodeUndefined() {
 		checkType(BsonType.Undefined)
 	}
 
-	@LowLevelApi
-	override fun readDBPointerNamespace(): String {
+	override fun decodeDBPointerNamespace(): String {
 		checkType(BsonType.DBPointer)
 		TODO("Not yet implemented")
 	}
 
-	@LowLevelApi
-	override fun readDBPointerId(): ByteArray {
+	override fun decodeDBPointerId(): ObjectId {
 		checkType(BsonType.DBPointer)
 		TODO("Not yet implemented")
 	}
 
-	@LowLevelApi
-	override fun readJavaScriptWithScope(): String {
+	override fun decodeJavaScript(): String {
+		checkType(BsonType.JavaScript)
+		return bytes.reader.readString()
+	}
+
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
+	override fun decodeJavaScriptScope(): BsonDocument {
 		checkType(BsonType.JavaScriptWithScope)
 		TODO("Not yet implemented")
 	}
 
-	@LowLevelApi
-	override fun readBinaryDataType(): UByte {
+	override fun decodeBinaryDataType(): UByte {
 		checkType(BsonType.BinaryData)
 		return bytes.reader
 			.apply { skip(4) } // skip the length
 			.readUnsignedByte()
 	}
 
-	@LowLevelApi
-	override fun readBinaryData(): ByteArray {
+	override fun decodeBinaryData(): ByteArray {
 		checkType(BsonType.BinaryData)
 		val reader = bytes.reader
 		val entireLength = reader.readInt32()
@@ -189,32 +202,22 @@ internal class MultiplatformBsonValueReader(
 		return reader.readBytes(dataLength)
 	}
 
-	@LowLevelApi
-	override fun readJavaScript(): String {
-		checkType(BsonType.JavaScript)
-		return bytes.reader.readString()
-	}
-
-	@LowLevelApi
-	override fun readMinKey() {
+	override fun decodeMinKey() {
 		checkType(BsonType.MinKey)
 	}
 
-	@LowLevelApi
-	override fun readMaxKey() {
+	override fun decodeMaxKey() {
 		checkType(BsonType.MaxKey)
 	}
 
-	@LowLevelApi
-	override fun readDocument(): MultiplatformDocumentReader {
+	override fun decodeDocument(): BsonDocument {
 		checkType(BsonType.Document)
-		return MultiplatformDocumentReader(factory, bytes)
+		return BsonDocument(factory, bytes)
 	}
 
-	@LowLevelApi
-	override fun readArray(): MultiplatformArrayReader {
+	override fun decodeArray(): opensavvy.ktmongo.bson.multiplatform.BsonArray {
 		checkType(BsonType.Array)
-		return MultiplatformArrayReader(factory, bytes)
+		return BsonArray(factory, bytes)
 	}
 
 	@OptIn(DangerousMongoApi::class)
@@ -222,29 +225,21 @@ internal class MultiplatformBsonValueReader(
 		writer.writeArbitrary(bytes)
 	}
 
-	internal fun eager() {
-		when (type) {
-			BsonType.Document -> readDocument().eager()
-			BsonType.Array -> readArray().eager()
-			else -> {}
-		}
-	}
-
 	@OptIn(ExperimentalTime::class)
 	@Suppress("DEPRECATION")
 	override fun toString(): String = when (type) {
-		BsonType.Boolean -> readBoolean().toString()
-		BsonType.Int32 -> readInt32().toString()
-		BsonType.Int64 -> readInt64().toString()
-		BsonType.Double -> commonDoubleToString(readDouble())
-		BsonType.String -> '"' + readString() + '"'
+		BsonType.Boolean -> decodeBoolean().toString()
+		BsonType.Int32 -> decodeInt32().toString()
+		BsonType.Int64 -> decodeInt64().toString()
+		BsonType.Double -> commonDoubleToString(decodeDouble())
+		BsonType.String -> '"' + decodeString() + '"'
 		BsonType.Null -> "null"
 		BsonType.Undefined -> """{"${'$'}undefined": true}"""
-		BsonType.Document -> readDocument().toString()
-		BsonType.Array -> readArray().toString()
-		BsonType.JavaScript -> """{"${'$'}code": "${readJavaScript()}"}"""
+		BsonType.Document -> decodeDocument().toString()
+		BsonType.Array -> decodeArray().toString()
+		BsonType.JavaScript -> """{"${'$'}code": "${decodeJavaScript()}"}"""
 		BsonType.Datetime -> {
-			val time = readDateTime()
+			val time = decodeDateTime()
 			if (time in 0..253402300799999) // Start of the year 1970 … End of the year 9999
 				"""{"${'$'}date": "${Instant.fromEpochMilliseconds(time)}"}"""
 			else
@@ -252,8 +247,8 @@ internal class MultiplatformBsonValueReader(
 		}
 
 		BsonType.BinaryData -> {
-			val subType = readBinaryDataType()
-			val data = readBinaryData()
+			val subType = decodeBinaryDataType()
+			val data = decodeBinaryData()
 
 			@OptIn(ExperimentalEncodingApi::class)
 			val base64 = Base64.encode(data)
@@ -272,12 +267,12 @@ internal class MultiplatformBsonValueReader(
 		}
 
 		BsonType.Timestamp -> {
-			val timestamp = readTimestamp()
+			val timestamp = decodeTimestamp()
 
 			"""{"${'$'}timestamp": {"t": ${timestamp.instant.epochSeconds}, "i": ${timestamp.counter}}}"""
 		}
 
-		BsonType.ObjectId -> """{"${'$'}oid": "${readObjectIdBytes().toHexString()}"}"""
+		BsonType.ObjectId -> """{"${'$'}oid": "${decodeObjectIdBytes().toHexString()}"}"""
 		BsonType.MinKey -> """{"${'$'}minKey": 1}"""
 		BsonType.MaxKey -> """{"${'$'}maxKey": 1}"""
 		else -> "{$type}: $bytes" // TODO
@@ -311,9 +306,11 @@ internal class MultiplatformBsonValueReader(
 		return str
 	}
 
+	@OptIn(LowLevelApi::class)
 	override fun equals(other: Any?): Boolean =
-		(other is MultiplatformBsonValueReader && bytes == other.bytes) || (other is BsonValueReader && BsonValueReader.equals(this, other))
+		(other is opensavvy.ktmongo.bson.multiplatform.BsonValue && bytes == other.bytes) || (other is BsonValue && BsonValue.equals(this, other))
 
+	@OptIn(LowLevelApi::class)
 	override fun hashCode(): Int =
-		BsonValueReader.hashCode(this)
+		BsonValue.hashCode(this)
 }

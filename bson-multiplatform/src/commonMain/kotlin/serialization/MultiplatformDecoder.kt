@@ -28,14 +28,8 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
-import opensavvy.ktmongo.bson.BsonArrayReader
-import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonType
-import opensavvy.ktmongo.bson.BsonValueReader
-import opensavvy.ktmongo.bson.multiplatform.BsonFactory
-import opensavvy.ktmongo.bson.multiplatform.Bytes
-import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformArrayReader
-import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformDocumentReader
+import opensavvy.ktmongo.bson.multiplatform.*
 import opensavvy.ktmongo.bson.types.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.ExperimentalTime
@@ -62,8 +56,8 @@ internal class BsonDecoderTopLevel(
 	@LowLevelApi
 	override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
 		return when (descriptor.kind) {
-			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, MultiplatformDocumentReader(factory, bytesWithHeader))
-			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, MultiplatformArrayReader(factory, bytesWithHeader))
+			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, BsonDocument(factory, bytesWithHeader))
+			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, BsonArray(factory, bytesWithHeader))
 			else -> TODO()
 		}
 	}
@@ -77,7 +71,7 @@ internal class BsonDecoderTopLevel(
 @LowLevelApi
 internal class BsonDecoder(
 	override val serializersModule: SerializersModule,
-	val source: BsonValueReader,
+	val source: BsonValue,
 ) : Decoder {
 	@ExperimentalSerializationApi
 	override fun decodeNotNullMark(): Boolean {
@@ -86,48 +80,47 @@ internal class BsonDecoder(
 
 	@ExperimentalSerializationApi
 	override fun decodeNull(): Nothing? {
-		source.readNull()
-		return null
+		return source.decodeNull()
 	}
 
 	override fun decodeBoolean(): Boolean {
-		return source.readBoolean()
+		return source.decodeBoolean()
 	}
 
 	override fun decodeByte(): Byte {
-		return source.readInt32().toByte()
+		return source.decodeInt32().toByte()
 	}
 
 	override fun decodeShort(): Short {
-		return source.readInt32().toShort()
+		return source.decodeInt32().toShort()
 	}
 
 	override fun decodeChar(): Char {
-		return source.readString().single()
+		return source.decodeString().single()
 	}
 
 	override fun decodeInt(): Int {
-		return source.readInt32()
+		return source.decodeInt32()
 	}
 
 	override fun decodeLong(): Long {
-		return source.readInt64()
+		return source.decodeInt64()
 	}
 
 	override fun decodeFloat(): Float {
-		return source.readDouble().toFloat()
+		return source.decodeDouble().toFloat()
 	}
 
 	override fun decodeDouble(): Double {
-		return source.readDouble()
+		return source.decodeDouble()
 	}
 
 	override fun decodeString(): String {
-		return source.readString()
+		return source.decodeString()
 	}
 
 	override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
-		return enumDescriptor.getElementIndex(source.readString())
+		return enumDescriptor.getElementIndex(source.decodeString())
 	}
 
 	override fun decodeInline(descriptor: SerialDescriptor): Decoder {
@@ -136,8 +129,8 @@ internal class BsonDecoder(
 
 	override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
 		return when (descriptor.kind) {
-			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, source.readDocument())
-			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, source.readArray())
+			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, source.decodeDocument())
+			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, source.decodeArray())
 			else -> TODO()
 		}
 	}
@@ -155,16 +148,16 @@ internal class BsonDecoder(
 		@Suppress("UNCHECKED_CAST")
 		return when (deserializer.descriptor) {
 			// Special cases where we provide our own decoder
-			bytes -> source.readBinaryData() as T
-			objectId -> source.readObjectId() as T
-			timestamp -> source.readTimestamp() as T
+			bytes -> source.decodeBinaryData() as T
+			objectId -> source.decodeObjectId() as T
+			timestamp -> source.decodeTimestamp() as T
 			uuid -> {
-				val subType = source.readBinaryDataType()
+				val subType = source.decodeBinaryDataType()
 				check(subType == 3.toUByte() || subType == 4.toUByte()) { "Uuid should be represented by the binary subtypes 3 (deprecated) or 4, found: $subType" }
-				Uuid.fromByteArray(source.readBinaryData()) as T
+				Uuid.fromByteArray(source.decodeBinaryData()) as T
 			}
-			instant -> source.readInstant() as T
-			vector, floatVector, booleanVector, byteVector -> Vector.fromBinaryData(source.readBinaryData()) as T
+			instant -> source.decodeInstant() as T
+			vector, floatVector, booleanVector, byteVector -> Vector.fromBinaryData(source.decodeBinaryData()) as T
 
 			// General case: do what the serializer says
 			else -> deserializer.deserialize(this)
@@ -175,53 +168,53 @@ internal class BsonDecoder(
 @LowLevelApi
 internal class BsonCompositeDecoder(
 	override val serializersModule: SerializersModule,
-	source: BsonDocumentReader,
+	source: BsonDocument,
 ) : CompositeDecoder {
 	override fun endStructure(descriptor: SerialDescriptor) {
 	}
 
-	val iterator = source.entries.entries.iterator()
-	lateinit var current: Map.Entry<String, BsonValueReader>
+	val iterator = source.iterator()
+	lateinit var current: BsonDocument.Field
 	override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
 		if (!iterator.hasNext()) return CompositeDecoder.DECODE_DONE
 		current = iterator.next()
-		return descriptor.getElementIndex(current.key)
+		return descriptor.getElementIndex(current.name)
 	}
 
 	override fun decodeBooleanElement(descriptor: SerialDescriptor, index: Int): Boolean {
-		return current.value.readBoolean()
+		return current.value.decodeBoolean()
 	}
 
 	override fun decodeByteElement(descriptor: SerialDescriptor, index: Int): Byte {
-		return current.value.readInt32().toByte()
+		return current.value.decodeInt32().toByte()
 	}
 
 	override fun decodeCharElement(descriptor: SerialDescriptor, index: Int): Char {
-		return current.value.readString().single()
+		return current.value.decodeString().single()
 	}
 
 	override fun decodeShortElement(descriptor: SerialDescriptor, index: Int): Short {
-		return current.value.readInt32().toShort()
+		return current.value.decodeInt32().toShort()
 	}
 
 	override fun decodeIntElement(descriptor: SerialDescriptor, index: Int): Int {
-		return current.value.readInt32()
+		return current.value.decodeInt32()
 	}
 
 	override fun decodeLongElement(descriptor: SerialDescriptor, index: Int): Long {
-		return current.value.readInt64()
+		return current.value.decodeInt64()
 	}
 
 	override fun decodeFloatElement(descriptor: SerialDescriptor, index: Int): Float {
-		return current.value.readDouble().toFloat()
+		return current.value.decodeDouble().toFloat()
 	}
 
 	override fun decodeDoubleElement(descriptor: SerialDescriptor, index: Int): Double {
-		return current.value.readDouble()
+		return current.value.decodeDouble()
 	}
 
 	override fun decodeStringElement(descriptor: SerialDescriptor, index: Int): String {
-		return current.value.readString()
+		return current.value.decodeString()
 	}
 
 	override fun decodeInlineElement(descriptor: SerialDescriptor, index: Int): Decoder {
@@ -242,13 +235,13 @@ internal class BsonCompositeDecoder(
 @LowLevelApi
 internal class BsonCompositeListDecoder(
 	override val serializersModule: SerializersModule,
-	source: BsonArrayReader,
+	source: BsonArray,
 ) : CompositeDecoder {
 	override fun endStructure(descriptor: SerialDescriptor) {
 	}
 
-	val iterator = source.elements.iterator()
-	lateinit var current: BsonValueReader
+	val iterator = source.iterator()
+	lateinit var current: BsonValue
 	var index = 0
 	override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
 		if (!iterator.hasNext()) return CompositeDecoder.DECODE_DONE
@@ -257,39 +250,39 @@ internal class BsonCompositeListDecoder(
 	}
 
 	override fun decodeBooleanElement(descriptor: SerialDescriptor, index: Int): Boolean {
-		return current.readBoolean()
+		return current.decodeBoolean()
 	}
 
 	override fun decodeByteElement(descriptor: SerialDescriptor, index: Int): Byte {
-		return current.readInt32().toByte()
+		return current.decodeInt32().toByte()
 	}
 
 	override fun decodeCharElement(descriptor: SerialDescriptor, index: Int): Char {
-		return current.readString().single()
+		return current.decodeString().single()
 	}
 
 	override fun decodeShortElement(descriptor: SerialDescriptor, index: Int): Short {
-		return current.readInt32().toShort()
+		return current.decodeInt32().toShort()
 	}
 
 	override fun decodeIntElement(descriptor: SerialDescriptor, index: Int): Int {
-		return current.readInt32()
+		return current.decodeInt32()
 	}
 
 	override fun decodeLongElement(descriptor: SerialDescriptor, index: Int): Long {
-		return current.readInt64()
+		return current.decodeInt64()
 	}
 
 	override fun decodeFloatElement(descriptor: SerialDescriptor, index: Int): Float {
-		return current.readDouble().toFloat()
+		return current.decodeDouble().toFloat()
 	}
 
 	override fun decodeDoubleElement(descriptor: SerialDescriptor, index: Int): Double {
-		return current.readDouble()
+		return current.decodeDouble()
 	}
 
 	override fun decodeStringElement(descriptor: SerialDescriptor, index: Int): String {
-		return current.readString()
+		return current.decodeString()
 	}
 
 	override fun decodeInlineElement(descriptor: SerialDescriptor, index: Int): Decoder {

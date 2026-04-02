@@ -17,20 +17,12 @@
 package opensavvy.ktmongo.bson.multiplatform.impl.read
 
 import kotlinx.io.readIntLe
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.modules.EmptySerializersModule
-import kotlinx.serialization.serializer
-import opensavvy.ktmongo.bson.BsonDocumentReader
 import opensavvy.ktmongo.bson.BsonType
-import opensavvy.ktmongo.bson.BsonValueReader
-import opensavvy.ktmongo.bson.multiplatform.Bson
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
+import opensavvy.ktmongo.bson.multiplatform.BsonValue
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.RawBsonReader
-import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoder
 import opensavvy.ktmongo.dsl.LowLevelApi
-import kotlin.reflect.KClass
-import kotlin.reflect.KType
 
 internal fun restrictAsDocument(bytes: Bytes): Bytes {
 	val size = bytes.reader.readInt32()
@@ -43,7 +35,7 @@ internal fun readField(
 	reader: RawBsonReader,
 	type: BsonType,
 	factory: BsonFactory,
-): MultiplatformBsonValueReader {
+): BsonValue {
 	val fieldStart = reader.readCount
 
 	@Suppress("DEPRECATION")
@@ -71,6 +63,7 @@ internal fun readField(
 			byteCount++ // null terminator
 			byteCount.toInt()
 		}
+
 		BsonType.DBPointer -> TODO()
 		BsonType.JavaScript -> reader.peek().readIntLe() + 4
 		BsonType.Symbol -> TODO()
@@ -88,14 +81,20 @@ internal fun readField(
 
 	reader.skip(fieldSize)
 
-	return MultiplatformBsonValueReader(factory, type, fieldBytes)
+	return BsonValue(factory, type, fieldBytes)
 }
 
+/**
+ * Exposes the bytes in a [BsonDocument] as a lazily-populated [List].
+ *
+ * We take advantage of the linear nature of BSON: we only scan which fields exist when we need them.
+ * We do not recursively decode the contents of each field.
+ */
 @LowLevelApi
-internal class MultiplatformDocumentReader(
+internal class MultiplatformBsonDocumentMap(
 	private val factory: BsonFactory,
-	private val bytesWithHeader: Bytes,
-) : BsonDocumentReader {
+	bytesWithHeader: Bytes,
+) : Map<String, BsonValue> {
 
 	private val bytes: Bytes = restrictAsDocument(bytesWithHeader)
 	private val reader = this.bytes.reader
@@ -105,15 +104,21 @@ internal class MultiplatformDocumentReader(
 	 *
 	 * This class is filled lazily by the [scanUntil] method.
 	 */
-	private val fields = LinkedHashMap<String, MultiplatformBsonValueReader>()
+	private val scannedFields = LinkedHashMap<String, BsonValue>()
+
+	private fun scanOne(): String {
+		val type = BsonType.fromCode(reader.readSignedByte())
+		val name = reader.readCString()
+		val field = readField(bytes, reader, type, factory)
+
+		scannedFields[name] = field
+
+		return name
+	}
 
 	private fun scanUntil(targetName: String?) {
 		while (reader.request(1)) {
-			val type = BsonType.fromCode(reader.readSignedByte())
-			val name = reader.readCString()
-			val field = readField(bytes, reader, type, factory)
-
-			fields[name] = field
+			val name = scanOne()
 
 			if (name == targetName) {
 				return
@@ -121,66 +126,72 @@ internal class MultiplatformDocumentReader(
 		}
 	}
 
-	override fun read(name: String): BsonValueReader? = fields[name]
+	override fun get(key: String): BsonValue? = scannedFields[key]
 		?: run {
-			scanUntil(name)
-			fields[name]
+			scanUntil(key)
+			scannedFields[key]
 		}
 
-	override val entries: Map<String, BsonValueReader>
+	operator fun iterator(): Iterator<Pair<String, BsonValue>> =
+		object : Iterator<Pair<String, BsonValue>> {
+			val iter = scannedFields.iterator()
+
+			override fun hasNext(): Boolean =
+				iter.hasNext() || reader.request(1)
+
+			override fun next(): Pair<String, BsonValue> {
+				if (iter.hasNext()) {
+					val (field, value) = iter.next()
+					return field to value
+				} else if (reader.request(1)) {
+					val field = scanOne()
+					return field to scannedFields[field]!!
+				} else {
+					throw NoSuchElementException("No more elements in this BSON document")
+				}
+			}
+		}
+
+	override val size: Int
 		get() {
 			scanUntil(null)
-			return fields
+			return scannedFields.size
 		}
 
-	override val names: Set<String>
+	override fun isEmpty(): Boolean {
+		// Fast path: we have already scanned a field
+		if (scannedFields.isNotEmpty())
+			return false
+
+		// Otherwise: check buffer
+		return !reader.request(1)
+	}
+
+	override val keys: Set<String>
 		get() {
 			scanUntil(null)
-			return fields.keys
+			return scannedFields.keys
 		}
 
-	override fun toBson(): Bson =
-		Bson(factory, bytesWithHeader)
-
-	override fun asValue(): BsonValueReader =
-		MultiplatformBsonValueReader(factory, BsonType.Document, bytesWithHeader)
-
-	internal fun eager() {
-		scanUntil(null)
-
-		for (field in fields.values) {
-			field.eager()
-		}
-	}
-
-	@Suppress("UNCHECKED_CAST")
-	override fun <T : Any> read(type: KType, klass: KClass<T>): T? {
-		val decoder = BsonDecoder(EmptySerializersModule(), this.asValue())
-		return decoder.decodeSerializableValue(serializer(type) as KSerializer<T?>)
-	}
-
-	override fun toString(): String = buildString {
-		append('{')
-
-		var isFirst = true
-		for ((key, value) in entries) {
-			if (!isFirst)
-				append(", ")
-
-			append('"')
-			append(key)
-			append("\": ")
-			append(value)
-
-			isFirst = false
+	override val values: Collection<BsonValue>
+		get() {
+			scanUntil(null)
+			return scannedFields.values
 		}
 
-		append('}')
+	override val entries: Set<Map.Entry<String, BsonValue>>
+		get() {
+			scanUntil(null)
+			return scannedFields.entries
+		}
+
+	override fun containsKey(key: String): Boolean =
+		get(key) != null
+
+	override fun containsValue(value: BsonValue): Boolean {
+		for ((_, found) in iterator())
+			if (found == value)
+				return true
+		return false
 	}
-
-	override fun equals(other: Any?): Boolean =
-		(other is MultiplatformDocumentReader && bytes == other.bytes) || (other is BsonDocumentReader && BsonDocumentReader.equals(this, other))
-
-	override fun hashCode(): Int =
-		BsonDocumentReader.hashCode(this)
 }

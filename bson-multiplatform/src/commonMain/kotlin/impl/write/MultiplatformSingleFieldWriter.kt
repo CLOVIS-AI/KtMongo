@@ -17,9 +17,9 @@
 package opensavvy.ktmongo.bson.multiplatform.impl.write
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
-import opensavvy.ktmongo.bson.BsonValueReader
+import opensavvy.ktmongo.bson.BsonValue
 import opensavvy.ktmongo.bson.BsonValueWriter
-import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonValueReader
+import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -85,21 +85,25 @@ internal class MultiplatformSingleFieldWriter(
 		writer.writeTimestamp(name, value)
 	}
 
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeSymbol(value: String) {
 		writer.writeSymbol(name, value)
 	}
 
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeUndefined() {
 		writer.writeUndefined(name)
 	}
 
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeDBPointer(namespace: String, id: ByteArray) {
 		writer.writeDBPointer(name, namespace, id)
 	}
 
+	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeJavaScriptWithScope(code: String) {
 		writer.writeJavaScriptWithScope(name, code)
@@ -153,11 +157,10 @@ internal class MultiplatformSingleFieldWriter(
 		writer.openArray(name)
 
 	@DangerousMongoApi
-	override fun pipe(obj: BsonValueReader) {
-		if (obj is MultiplatformBsonValueReader) {
+	override fun pipe(obj: BsonValue) {
+		if (obj is opensavvy.ktmongo.bson.multiplatform.BsonValue)
 			writer.pipe(name, obj)
-		} else {
+		else
 			super<BsonValueWriter>.pipe(obj)
-		}
 	}
 }
