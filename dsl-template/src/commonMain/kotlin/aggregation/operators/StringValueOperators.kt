@@ -679,37 +679,6 @@ interface StringValueOperators : ValueOperators {
 	fun <Context : Any> Value<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
 		SplitValueOperator(context, this, delimiter)
 
-	/**
-	 * Divides a string into an array of substrings based on a [delimiter].
-	 *
-	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
-	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
-	 *
-	 * The string expression must be a string. Otherwise, the operation fails with an error.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Document(
-	 *     val city: String,
-	 *     val cityState: List<String>,
-	 * )
-	 *
-	 * collection.aggregate()
-	 *     .set {
-	 *         Document::cityState set of(Document::city).split(", ")
-	 *     }.toList()
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any> Value<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
-		SplitValueOperator(context, this, of(delimiter))
-
 	// endregion
 	// region $replaceOne
 
@@ -743,36 +712,6 @@ interface StringValueOperators : ValueOperators {
 	fun <Context : Any> Value<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		ReplaceValueOperator(context, "\$replaceOne", this, find, replacement)
 
-	/**
-	 * Replaces the first instance of [find] with a [replacement] string.
-	 *
-	 * If no occurrences of [find] are found in the input string, the input string is returned.
-	 * If the input is `null`, `null` is returned.
-	 *
-	 * The input must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Document(
-	 *     val item: String,
-	 * )
-	 *
-	 * collection.aggregate()
-	 *     .set {
-	 *         Document::item set of(Document::item).replaceFirst(find = "blue paint", replacement = "red paint")
-	 *     }.toList()
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String, replacement: String): Value<Context, String?> =
-		ReplaceValueOperator(context, "\$replaceOne", this, of(find), of(replacement))
-
 	// endregion
 	// region $replaceAll
 
@@ -805,36 +744,6 @@ interface StringValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.replace(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		ReplaceValueOperator(context, "\$replaceAll", this, find, replacement)
-
-	/**
-	 * Replaces all instances of [find] with a [replacement] string.
-	 *
-	 * If no occurrences of [find] are found in the input string, the input string is returned.
-	 * If the input is `null`, `null` is returned.
-	 *
-	 * The input must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Document(
-	 *     val item: String,
-	 * )
-	 *
-	 * collection.aggregate()
-	 *     .set {
-	 *         Document::item set of(Document::item).replace(find = "blue paint", replacement = "red paint")
-	 *     }.toList()
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
-	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replace(find: String, replacement: String): Value<Context, String?> =
-		ReplaceValueOperator(context, "\$replaceAll", this, of(find), of(replacement))
 
 	// endregion
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Default whitespace trimming") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trim()
+					Target::text set Target::description.trim()
 				}
 				.shouldBeBson($$"""
 					[
@@ -66,7 +66,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Custom character trimming") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trim(characters = of("ge"))
+					Target::text set Target::description.trim(characters = "ge")
 				}
 				.shouldBeBson($$"""
 					[
@@ -111,7 +111,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Trimming with custom chars and literal string") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(" ggggoodbyeeeee").trim(characters = of(" ge"))
+					Target::text set " ggggoodbyeeeee".trim(characters = " ge")
 				}
 				.shouldBeBson($$"""
 					[
@@ -136,7 +136,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Trimming with vararg characters") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trim('g', 'e')
+					Target::text set Target::description.trim('g', 'e')
 				}
 				.shouldBeBson($$"""
 					[
@@ -161,7 +161,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Default whitespace trimming from start") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimStart()
+					Target::text set Target::description.trimStart()
 				}
 				.shouldBeBson($$"""
 					[
@@ -181,7 +181,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Custom character trimming from start") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimStart(characters = of("ge"))
+					Target::text set Target::description.trimStart(characters = "ge")
 				}
 				.shouldBeBson($$"""
 					[
@@ -204,7 +204,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Trimming from start with vararg characters") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimStart('g', 'e')
+					Target::text set Target::description.trimStart('g', 'e')
 				}
 				.shouldBeBson($$"""
 					[
@@ -229,7 +229,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Default whitespace trimming from end") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimEnd()
+					Target::text set Target::description.trimEnd()
 				}
 				.shouldBeBson($$"""
 					[
@@ -249,7 +249,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Custom character trimming from end") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimEnd(characters = of("ge"))
+					Target::text set Target::description.trimEnd(characters = "ge")
 				}
 				.shouldBeBson($$"""
 					[
@@ -272,7 +272,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Trimming from end with vararg characters") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimEnd('g', 'e')
+					Target::text set Target::description.trimEnd('g', 'e')
 				}
 				.shouldBeBson($$"""
 					[
@@ -297,7 +297,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Convert string to lowercase") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).lowercase()
+					Target::text set Target::description.lowercase()
 				}
 				.shouldBeBson($$"""
 					[
@@ -335,7 +335,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Convert field reference to lowercase") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::text).lowercase()
+					Target::text set Target::text.lowercase()
 				}
 				.shouldBeBson($$"""
 					[
@@ -355,7 +355,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Convert string to uppercase") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).uppercase()
+					Target::text set Target::description.uppercase()
 				}
 				.shouldBeBson($$"""
 					[
@@ -393,7 +393,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Convert field reference to uppercase") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::text).uppercase()
+					Target::text set Target::text.uppercase()
 				}
 				.shouldBeBson($$"""
 					[
@@ -413,7 +413,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Get length of string field") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set of(LengthTarget::description).length
+					LengthTarget::length set LengthTarget::description.length
 				}
 				.shouldBeBson($$"""
 					[
@@ -451,7 +451,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Get length of field reference") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set of(LengthTarget::text).length
+					LengthTarget::length set LengthTarget::text.length
 				}
 				.shouldBeBson($$"""
 					[
@@ -471,7 +471,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Get UTF-8 byte length of string field") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set of(LengthTarget::description).lengthUTF8
+					LengthTarget::length set LengthTarget::description.lengthUTF8
 				}
 				.shouldBeBson($$"""
 					[
@@ -509,7 +509,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Get UTF-8 byte length of field reference") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set of(LengthTarget::text).lengthUTF8
+					LengthTarget::length set LengthTarget::text.lengthUTF8
 				}
 				.shouldBeBson($$"""
 					[
@@ -529,7 +529,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Split string field with delimiter") {
 			TestPipeline<SplitTarget>()
 				.set {
-					SplitTarget::parts set of(SplitTarget::description).split(delimiter = of("-"))
+					SplitTarget::parts set SplitTarget::description.split(delimiter = "-")
 				}
 				.shouldBeBson($$"""
 					[

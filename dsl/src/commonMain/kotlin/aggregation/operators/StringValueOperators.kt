@@ -66,6 +66,94 @@ interface StringValueOperators : ValueOperators {
 		TrimValueOperator(context, this, null, trimStart = true, trimEnd = true)
 
 	/**
+	 * Removes whitespace characters, including null, or the specified characters from the beginning and end of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trim(): Value<Context, String?> =
+		of(this).trim()
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the beginning and end of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trim(): Value<Context, String?> =
+		of(this).trim()
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the beginning and end of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trim(): Value<Context, String?> =
+		of(this).trim()
+
+	/**
 	 * Removes the specified [characters] from the beginning and end of a string.
 	 *
 	 * ### Example
@@ -96,6 +184,109 @@ interface StringValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trim(vararg characters: Char): Value<Context, String?> =
 		TrimValueOperator(context, this, of(characters.joinToString(separator = "")), trimStart = true, trimEnd = true)
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trim(vararg characters: Char): Value<Context, String?> =
+		of(this).trim(*characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trim(vararg characters: Char): Value<Context, String?> =
+		of(this).trim(*characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trim(vararg characters: Char): Value<Context, String?> =
+		of(this).trim(*characters)
 
 	/**
 	 * Removes the specified [characters] from the beginning and end of a string.
@@ -132,6 +323,565 @@ interface StringValueOperators : ValueOperators {
 	fun <Context : Any> Value<Context, String?>.trim(characters: Value<Context, String?>): Value<Context, String?> =
 		TrimValueOperator(context, this, characters, trimStart = true, trimEnd = true)
 
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trim(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trim(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trim(characters: String?): Value<Context, String?> =
+		this.trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trim(characters: Value<Context, String?>): Value<Context, String?> =
+		of(this).trim(characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trim(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trim(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trim(characters: String?): Value<Context, String?> =
+		of(this).trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trim(characters: Value<Context, String?>): Value<Context, String?> =
+		of(this).trim(characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trim(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trim(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@JvmName("trimPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trim(characters: String?): Value<Context, String?> =
+		of(this).trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trim(characters: Value<Context, String?>): Value<Context, String?> =
+		of(this).trim(characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trim(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trim(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).trim(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning and end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from both the beginning and end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning and end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trim(chars = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trim(characters: String?): Value<Context, String?> =
+		of(this).trim(of(characters))
+
 	// endregion
 	// region $ltrim
 
@@ -161,6 +911,94 @@ interface StringValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trimStart(): Value<Context, String?> =
 		TrimValueOperator(context, this, null, trimStart = true, trimEnd = false)
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the beginning of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimStart(): Value<Context, String?> =
+		of(this).trimStart()
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the beginning of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimStart(): Value<Context, String?> =
+		of(this).trimStart()
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the beginning of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimStartResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimStart(): Value<Context, String?> =
+		of(this).trimStart()
 
 	/**
 	 * Removes the specified [characters] from the beginning of a string.
@@ -197,6 +1035,109 @@ interface StringValueOperators : ValueOperators {
 	/**
 	 * Removes the specified [characters] from the beginning of a string.
 	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimStart(vararg characters: Char): Value<Context, String?> =
+		of(this).trimStart(*characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimStart(vararg characters: Char): Value<Context, String?> =
+		of(this).trimStart(*characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimStartResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimStart(vararg characters: Char): Value<Context, String?> =
+		of(this).trimStart(*characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
 	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
 	 * Each character in the string will be removed from the beginning of the input string.
 	 *
@@ -229,6 +1170,565 @@ interface StringValueOperators : ValueOperators {
 	fun <Context : Any> Value<Context, String?>.trimStart(characters: Value<Context, String?>): Value<Context, String?> =
 		TrimValueOperator(context, this, characters, trimStart = true, trimEnd = false)
 
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimStart(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimStart(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimStart(characters: String?): Value<Context, String?> =
+		this.trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimStart(characters: Value<Context, String?>): Value<Context, String?> =
+		of(this).trimStart(characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimStart(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimStart(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimStart(characters: String?): Value<Context, String?> =
+		of(this).trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimStart(characters: Value<Context, String?>): Value<Context, String?> =
+		of(this).trimStart(characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimStart(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimStart(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@JvmName("trimStartPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimStart(characters: String?): Value<Context, String?> =
+		of(this).trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimStartResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimStart(characters: Value<Context, String?>): Value<Context, String?> =
+		of(this).trimStart(characters)
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimStartResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimStart(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimStartResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimStart(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).trimStart(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the beginning of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the beginning of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the beginning
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimStart(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimStartResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimStart(characters: String?): Value<Context, String?> =
+		of(this).trimStart(of(characters))
+
 	// endregion
 	// region $rtrim
 
@@ -258,6 +1758,94 @@ interface StringValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trimEnd(): Value<Context, String?> =
 		TrimValueOperator(context, this, null, trimStart = false, trimEnd = true)
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the end of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimEnd(): Value<Context, String?> =
+		of(this).trimEnd()
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the end of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimEnd(): Value<Context, String?> =
+		of(this).trimEnd()
+
+	/**
+	 * Removes whitespace characters, including null, or the specified characters from the end of a string.
+	 *
+	 * By default, removes whitespace characters including the null character.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimEndResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimEnd(): Value<Context, String?> =
+		of(this).trimEnd()
 
 	/**
 	 * Removes the specified [characters] from the end of a string.
@@ -294,6 +1882,109 @@ interface StringValueOperators : ValueOperators {
 	/**
 	 * Removes the specified [characters] from the end of a string.
 	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimEnd(vararg characters: Char): Value<Context, String?> =
+		of(this).trimEnd(*characters)
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimEnd(vararg characters: Char): Value<Context, String?> =
+		of(this).trimEnd(*characters)
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd('g', 'e')
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(' ', 'g', 'e')
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimEndResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimEnd(vararg characters: Char): Value<Context, String?> =
+		of(this).trimEnd(*characters)
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
 	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
 	 * Each character in the string will be removed from the end of the input string.
 	 *
@@ -326,6 +2017,565 @@ interface StringValueOperators : ValueOperators {
 	fun <Context : Any> Value<Context, String?>.trimEnd(characters: Value<Context, String?>): Value<Context, String?> =
 		TrimValueOperator(context, this, characters, trimStart = false, trimEnd = true)
 
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimEnd(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimEnd(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.trimEnd(characters: String?): Value<Context, String?> =
+		this.trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimEnd(characters: Value<Context, String?>): Value<Context, String?> =
+		of(this).trimEnd(characters)
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimEnd(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimEnd(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimEnd(characters: String?): Value<Context, String?> =
+		of(this).trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimEnd(characters: Value<Context, String?>): Value<Context, String?> =
+		of(this).trimEnd(characters)
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimEnd(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimEnd(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@JvmName("trimEndPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimEnd(characters: String?): Value<Context, String?> =
+		of(this).trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimEndResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimEnd(characters: Value<Context, String?>): Value<Context, String?> =
+		of(this).trimEnd(characters)
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimEndResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimEnd(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimEndResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimEnd(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).trimEnd(of(characters))
+
+	/**
+	 * Removes the specified [characters] from the end of a string.
+	 *
+	 * The [characters] parameter is a single string that can contain multiple characters to be trimmed.
+	 * Each character in the string will be removed from the end of the input string.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * // Trim both 'g' and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of("ge"))
+	 *     }.toList()
+	 *
+	 * // Trim space, 'g', and 'e' characters from the end
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).trimEnd(characters = of(" ge"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("trimEndResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.trimEnd(characters: String?): Value<Context, String?> =
+		of(this).trimEnd(of(characters))
+
 	// endregion
 	// region $toLower
 
@@ -356,6 +2606,94 @@ interface StringValueOperators : ValueOperators {
 	fun <Context : Any> Value<Context, String?>.lowercase(): Value<Context, String?> =
 		UnaryStringValueOperator(context, "toLower", this)
 
+	/**
+	 * Converts a string to lowercase, returning the result.
+	 *
+	 * If the argument resolves to `null`, `$toLower` returns an empty string `""`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).lowercase()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/)
+	 */
+	@JvmName("lowercaseFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.lowercase(): Value<Context, String?> =
+		of(this).lowercase()
+
+	/**
+	 * Converts a string to lowercase, returning the result.
+	 *
+	 * If the argument resolves to `null`, `$toLower` returns an empty string `""`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).lowercase()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/)
+	 */
+	@JvmName("lowercasePropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.lowercase(): Value<Context, String?> =
+		of(this).lowercase()
+
+	/**
+	 * Converts a string to lowercase, returning the result.
+	 *
+	 * If the argument resolves to `null`, `$toLower` returns an empty string `""`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).lowercase()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("lowercaseResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.lowercase(): Value<Context, String?> =
+		of(this).lowercase()
+
 	// endregion
 	// region $toUpper
 
@@ -385,6 +2723,94 @@ interface StringValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.uppercase(): Value<Context, String?> =
 		UnaryStringValueOperator(context, "toUpper", this)
+
+	/**
+	 * Converts a string to uppercase, returning the result.
+	 *
+	 * If the argument resolves to `null`, `$toUpper` returns an empty string `""`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).uppercase()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/)
+	 */
+	@JvmName("uppercaseFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.uppercase(): Value<Context, String?> =
+		of(this).uppercase()
+
+	/**
+	 * Converts a string to uppercase, returning the result.
+	 *
+	 * If the argument resolves to `null`, `$toUpper` returns an empty string `""`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).uppercase()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/)
+	 */
+	@JvmName("uppercasePropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.uppercase(): Value<Context, String?> =
+		of(this).uppercase()
+
+	/**
+	 * Converts a string to uppercase, returning the result.
+	 *
+	 * If the argument resolves to `null`, `$toUpper` returns an empty string `""`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).uppercase()
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("uppercaseResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.uppercase(): Value<Context, String?> =
+		of(this).uppercase()
 
 	// endregion
 	// region $strLenCP
@@ -430,6 +2856,88 @@ interface StringValueOperators : ValueOperators {
 	val <Context : Any> Value<Context, String?>.length: Value<Context, Int?>
 		get() = StrLenCPValueOperator(context, this)
 
+	/**
+	 * Returns the number of code points in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.length], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the counting behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a length of 7.
+	 * However, according to Kotlin's [String.length], it has a length of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val length: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::length set of(Document::text).length
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 *
+	 * @see lengthUTF8
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.length: Value<Context, Int?>
+		get() = of(this).length
+
+	/**
+	 * Returns the number of code points in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.length], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the counting behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a length of 7.
+	 * However, according to Kotlin's [String.length], it has a length of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val length: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::length set of(Document::text).length
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 *
+	 * @see lengthUTF8
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <Context : Any> kotlin.reflect.KProperty1<Context, String?>.length: Value<Context, Int?>
+		get() = of(this).length
+
 	// endregion
 	// region $strLenBytes
 
@@ -473,6 +2981,88 @@ interface StringValueOperators : ValueOperators {
 	@KtMongoDsl
 	val <Context : Any> Value<Context, String?>.lengthUTF8: Value<Context, Int?>
 		get() = StrLenBytesValueOperator(context, this)
+
+	/**
+	 * Returns the number of UTF-8 encoded bytes in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [length] property which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val byteLength: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::byteLength set of(Document::text).lengthUTF8
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/)
+	 *
+	 * @see length
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.lengthUTF8: Value<Context, Int?>
+		get() = of(this).lengthUTF8
+
+	/**
+	 * Returns the number of UTF-8 encoded bytes in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [length] property which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val byteLength: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::byteLength set of(Document::text).lengthUTF8
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/)
+	 *
+	 * @see length
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <Context : Any> kotlin.reflect.KProperty1<Context, String?>.lengthUTF8: Value<Context, Int?>
+		get() = of(this).lengthUTF8
 
 	// endregion
 	// region $substrCP
@@ -522,6 +3112,2798 @@ interface StringValueOperators : ValueOperators {
 	/**
 	 * Returns the substring of a string.
 	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: Value<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		this.substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: Value<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		this.substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
+		this.substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		this.substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		this.substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		this.substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
+		this.substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		this.substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		this.substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		this.substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
+		this.substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
+		this.substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		this.substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		this.substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: Int): Value<Context, String?> =
+		this.substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Value<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(startIndex, length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Value<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Value<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByValueByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
+		of(this).substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByResultByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiverByResultByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: Int): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Value<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(startIndex, length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Value<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Value<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByValueByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
+		of(this).substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByResultByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiverByResultByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: Int): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByValueByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(startIndex, length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByValueByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByValueByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByValueByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
+		of(this).substring(startIndex, of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByFieldByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByFieldByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByFieldByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByPropertyByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByPropertyByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByPropertyByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByResultByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), length)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified Unicode code point [startIndex] (zero-based) in the string and continues for the [length] number of code points specified.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(startIndex = of(1), length = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiverByResultByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(startIndex: Int, length: Int): Value<Context, String?> =
+		of(this).substring(of(startIndex), of(length))
+
+	/**
+	 * Returns the substring of a string.
+	 *
 	 * The substring contains the Unicode code points that are contained within [indexes].
 	 *
 	 * ### Counting characters
@@ -558,6 +5940,133 @@ interface StringValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.substring(indexes: IntRange): Value<Context, String?> =
 		SubstrCPValueOperator(context, this, of(indexes.first), of(indexes.last - indexes.first))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring contains the Unicode code points that are contained within [indexes].
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(1..2)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(indexes: IntRange): Value<Context, String?> =
+		of(this).substring(indexes)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring contains the Unicode code points that are contained within [indexes].
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(1..2)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@JvmName("substringPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(indexes: IntRange): Value<Context, String?> =
+		of(this).substring(indexes)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring contains the Unicode code points that are contained within [indexes].
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.substring], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the indexing behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a size of 5.
+	 * However, according to Kotlin's [String.substring], it has a size of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substring(1..2)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrCP/)
+	 *
+	 * @see substringUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substring(indexes: IntRange): Value<Context, String?> =
+		of(this).substring(indexes)
 
 	// endregion
 	// region $substrBytes
@@ -609,6 +6118,2924 @@ interface StringValueOperators : ValueOperators {
 	/**
 	 * Returns the substring of a string.
 	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8ByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8ByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
+		this.substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8ByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8ByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8ByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8ByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8ByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8ByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
+		this.substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByValueByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByResultByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiverByResultByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByValueByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByResultByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiverByResultByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByValueByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByValueByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByValueByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByValueByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(startIndex, of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByFieldByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByFieldByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByFieldByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByPropertyByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByPropertyByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByPropertyByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByResultByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), byteCount)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring starts with the character at the specified UTF-8 byte [startIndex] in the string and continues for the [byteCount] number of bytes.
+	 *
+	 * Note that this behavior is different from [String.substring], which expects start and end indexes.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If [startIndex] or [byteCount] happen to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(startIndex = of(1), byteCount = of(2))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiverByResultByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
+		of(this).substringUTF8(of(startIndex), of(byteCount))
+
+	/**
+	 * Returns the substring of a string.
+	 *
 	 * The substring contains the Unicode code points that are contained within [indexes].
 	 *
 	 * ### Counting characters
@@ -647,6 +9074,139 @@ interface StringValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.substringUTF8(indexes: IntRange): Value<Context, String?> =
 		SubstrBytesValueOperator(context, this, of(indexes.first), of(indexes.last - indexes.first))
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring contains the Unicode code points that are contained within [indexes].
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If the start or end index happens to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(1..2)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8FieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(indexes: IntRange): Value<Context, String?> =
+		of(this).substringUTF8(indexes)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring contains the Unicode code points that are contained within [indexes].
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If the start or end index happens to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(1..2)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@JvmName("substringUTF8PropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(indexes: IntRange): Value<Context, String?> =
+		of(this).substringUTF8(indexes)
+
+	/**
+	 * Returns the substring of a string.
+	 *
+	 * The substring contains the Unicode code points that are contained within [indexes].
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$substrBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [substring] function which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * If the start or end index happens to be within a multibyte character, an error will be thrown.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::text set of(Document::text).substringUTF8(1..2)
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/substrBytes/)
+	 *
+	 * @see substring
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("substringUTF8ResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.substringUTF8(indexes: IntRange): Value<Context, String?> =
+		of(this).substringUTF8(indexes)
 
 	// endregion
 	// region $split
@@ -688,7 +9248,7 @@ interface StringValueOperators : ValueOperators {
 	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
 	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
 	 *
-	 * The string expression must be a string. Otherwise, the operation fails with an error.
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
 	 *
 	 * ### Example
 	 *
@@ -700,7 +9260,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * collection.aggregate()
 	 *     .set {
-	 *         Document::cityState set of(Document::city).split(", ")
+	 *         Document::cityState set of(Document::city).split(of(", "))
 	 *     }.toList()
 	 * ```
 	 *
@@ -708,10 +9268,478 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
+	@JvmName("splitByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String>.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
+		this.split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@JvmName("splitByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String>.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
+		this.split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
-		SplitValueOperator(context, this, of(delimiter))
+		this.split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@JvmName("splitFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+		of(this).split(delimiter)
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@JvmName("splitFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
+		of(this).split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@JvmName("splitFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
+		of(this).split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@JvmName("splitFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
+		of(this).split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@JvmName("splitPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+		of(this).split(delimiter)
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@JvmName("splitPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
+		of(this).split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@JvmName("splitPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
+		of(this).split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@JvmName("splitPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
+		of(this).split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("splitResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+		of(this).split(delimiter)
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("splitResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
+		of(this).split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("splitResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
+		of(this).split(of(delimiter))
+
+	/**
+	 * Divides a string into an array of substrings based on a [delimiter].
+	 *
+	 * `$split` removes the delimiter and returns the resulting substrings as elements of an array.
+	 * If the delimiter is not found in the string, `$split` returns the original string as the only element of an array.
+	 *
+	 * Both the string expression and delimiter must be strings. Otherwise, the operation fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val city: String,
+	 *     val cityState: List<String>,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::cityState set of(Document::city).split(of(", "))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("splitResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String.split(delimiter: String): Value<Context, List<String>?> =
+		of(this).split(of(delimiter))
 
 	// endregion
 	// region $replaceOne
@@ -750,9 +9778,9 @@ interface StringValueOperators : ValueOperators {
 	 * Replaces the first instance of [find] with a [replacement] string.
 	 *
 	 * If no occurrences of [find] are found in the input string, the input string is returned.
-	 * If the input is `null`, `null` is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
 	 *
-	 * The input must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
 	 *
 	 * ### Example
 	 *
@@ -763,7 +9791,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * collection.aggregate()
 	 *     .set {
-	 *         Document::item set of(Document::item).replaceFirst(find = "blue paint", replacement = "red paint")
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
 	 *     }.toList()
 	 * ```
 	 *
@@ -771,10 +9799,2016 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
+	@JvmName("replaceFirstByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String, replacement: String): Value<Context, String?> =
-		ReplaceValueOperator(context, "\$replaceOne", this, of(find), of(replacement))
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+		this.replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+		this.replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+		this.replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
+		this.replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(find, replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByValueByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByResultByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstFieldReceiverByResultByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(find, replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByValueByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByResultByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@JvmName("replaceFirstPropertyReceiverByResultByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByValueByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(find, replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByValueByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByValueByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByValueByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(find, of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByFieldByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByFieldByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByFieldByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByPropertyByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByPropertyByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByPropertyByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByResultByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), replacement)
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
+
+	/**
+	 * Replaces the first instance of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceOne` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceFirstResultReceiverByResultByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
+		of(this).replaceFirst(of(find), of(replacement))
 
 	// endregion
 	// region $replaceAll
@@ -813,9 +11847,9 @@ interface StringValueOperators : ValueOperators {
 	 * Replaces all instances of [find] with a [replacement] string.
 	 *
 	 * If no occurrences of [find] are found in the input string, the input string is returned.
-	 * If the input is `null`, `null` is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
 	 *
-	 * The input must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
 	 *
 	 * ### Example
 	 *
@@ -826,7 +11860,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * collection.aggregate()
 	 *     .set {
-	 *         Document::item set of(Document::item).replace(find = "blue paint", replacement = "red paint")
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
 	 *     }.toList()
 	 * ```
 	 *
@@ -834,10 +11868,2016 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
+	@JvmName("replaceByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replace(find: String, replacement: String): Value<Context, String?> =
-		ReplaceValueOperator(context, "\$replaceAll", this, of(find), of(replacement))
+	fun <Context : Any> Value<Context, String?>.replace(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+		this.replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		this.replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+		this.replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		this.replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+		this.replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+		this.replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: String?): Value<Context, String?> =
+		this.replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(find, replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByValueByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByResultByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replaceFieldReceiverByResultByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: String?): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByValueByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(find, replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByValueByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByResultByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@JvmName("replacePropertyReceiverByResultByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: String?): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByValueByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(find, replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByValueByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByValueByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByValueByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replace(find, of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByFieldByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByFieldByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByFieldByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByFieldByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByPropertyByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByPropertyByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByPropertyByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByPropertyByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByResultByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), replacement)
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByResultByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByResultByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
+
+	/**
+	 * Replaces all instances of [find] with a [replacement] string.
+	 *
+	 * If no occurrences of [find] are found in the input string, the input string is returned.
+	 * If any of the input, [find] or [replacement] is `null`, `null` is returned.
+	 *
+	 * The input, [find], and [replacement] expressions must evaluate to a string or a `null`, or `$replaceAll` fails with an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val item: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::item set of(Document::item).replace(find = of("blue paint"), replacement = of("red paint"))
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("replaceResultReceiverByResultByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> String?.replace(find: String?, replacement: String?): Value<Context, String?> =
+		of(this).replace(of(find), of(replacement))
 
 	// endregion
 
@@ -1078,6 +14118,70 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * collection.aggregate()
 	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> concat(vararg strings: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		concat(strings = strings.map { of(it) }.toTypedArray())
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> concat(vararg strings: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		concat(strings = strings.map { of(it) }.toTypedArray())
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
 	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
 	 *     }
 	 *     .toList()
@@ -1091,6 +14195,490 @@ interface StringValueOperators : ValueOperators {
 	@KtMongoDsl
 	infix fun <Context : Any> Value<Context, String?>.concat(other: Value<Context, String?>): Value<Context, String?> =
 		concat(listOf(this, other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> Value<Context, String?>.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		this.concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> Value<Context, String?>.concat(other: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		this.concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> Value<Context, String?>.concat(other: String?): Value<Context, String?> =
+		this.concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.concat(other: Value<Context, String?>): Value<Context, String?> =
+		of(this).concat(other)
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.concat(other: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.concat(other: String?): Value<Context, String?> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.concat(other: Value<Context, String?>): Value<Context, String?> =
+		of(this).concat(other)
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.concat(other: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@JvmName("concatPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.concat(other: String?): Value<Context, String?> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("concatResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> String?.concat(other: Value<Context, String?>): Value<Context, String?> =
+		of(this).concat(other)
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("concatResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> String?.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("concatResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> String?.concat(other: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("concatResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	infix fun <Context : Any> String?.concat(other: String?): Value<Context, String?> =
+		of(this).concat(of(other))
 
 	@LowLevelApi
 	private class ConcatValueOperator<Context : Any>(

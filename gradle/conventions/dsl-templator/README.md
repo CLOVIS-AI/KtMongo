@@ -33,7 +33,7 @@ Each overload is documented with a copy of the original KDoc comment.
 
 ### Value<T, V>
 
-For each `Value<T, V>` occurrence in a function signature (receiver type or parameter type), three substitutions are possible:
+For each `Value<T, V>` occurrence in a **function** signature (receiver type or parameter type), three substitutions are possible:
 
 - `Field<T, V>`, delegating via `of(it)`
 - `KProperty1<T, V>`, delegating via `of(it)`
@@ -52,3 +52,5 @@ Each overload is documented with a copy of the original KDoc comment.
 Overloads where the raw result type `V` appears in any position are annotated with `@kotlin.internal.LowPriorityInOverloadResolution` so that `Field`/`KProperty1` overloads win on ambiguity — **except** when the receiver itself is replaced by `Field<>` or `KProperty1<>`. In that case the annotation is omitted: Kotlin's specificity rules already select the more-specific parameter overload within the aggregation context, and adding the annotation would allow outer `FilterQuery` functions (with the same `Field` receiver) to win over the aggregation overload even though the aggregation context is the closer implicit receiver.
 
 **Special case — `div`:** `KProperty1` overloads for a function named `div` are skipped to avoid conflicts with the built-in navigation operator `KProperty1<Root, Parent>.div(KProperty1<Parent, Child>)`.
+
+For **extension properties** with a `Value<T, V>` receiver, only two overloads are generated (not three): `Field<T, V>` and `KProperty1<T, V>`, both delegating via `of(this).<propertyName>`. The raw-type (`V`) receiver overload is skipped because the type parameter `Context` appears only in the receiver position; replacing it with `V` leaves `Context` with no position from which it can be inferred, making the overload unusable.

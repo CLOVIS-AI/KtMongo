@@ -186,7 +186,7 @@ companionObject
     ;
 
 propertyDeclaration
-    : modifierList? (VAL | VAR) (NL* typeParameters)? (NL* type NL* DOT)? (
+    : modifierList? (VAL | VAR) (NL* typeParameters)? (NL* receiverType NL* DOT)? (
         NL* (multiVariableDeclaration | variableDeclaration)
     ) (NL* typeConstraints)? (NL* (BY | ASSIGNMENT) NL* expression)? (
         (NL* getter (semi setter)?

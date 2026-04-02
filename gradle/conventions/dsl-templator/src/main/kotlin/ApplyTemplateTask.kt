@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.build
 
-import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
@@ -69,7 +68,13 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 	private fun String.applyTemplate(sourceFile: File): String {
 		val source = this
-		val stream = CharStreams.fromString(source)
+		// ANTLRInputStream uses Java char indices (not Unicode code-point indices), which is required
+		// so that token startIndex/stopIndex values are consistent with String.substring() calls below.
+		// CharStreams.fromString() uses code-point indices, which diverge from char indices when the
+		// source contains characters outside the BMP (e.g. emoji in KDoc comments), causing wrong text
+		// extraction for any token that appears after such a character.
+		@Suppress("DEPRECATION")
+		val stream = org.antlr.v4.runtime.ANTLRInputStream(source)
 		val lexer = opensavvy.ktmongo.build.kotlin.KotlinLexer(stream)
 		val tokens = CommonTokenStream(lexer)
 		tokens.fill()
@@ -82,7 +87,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		val isValueOverloadTarget = sourceFilePath.endsWith("aggregation/operators/ArithmeticValueOperators.kt") ||
 			sourceFilePath.endsWith("aggregation/operators/ArrayValueOperators.kt") ||
 			sourceFilePath.endsWith("aggregation/operators/ComparisonValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/ConditionalValueOperators.kt")
+			sourceFilePath.endsWith("aggregation/operators/ConditionalValueOperators.kt") ||
+			sourceFilePath.endsWith("aggregation/operators/StringValueOperators.kt")
 
 		// Pre-scan: collect existing KProperty1 receiver functions/properties to avoid duplicates
 		val existingKPropFunctions = mutableSetOf<Pair<String, Int>>() // (name, paramCount)
@@ -98,7 +104,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 			}
 
 			override fun exitPropertyDeclaration(ctx: opensavvy.ktmongo.build.kotlin.KotlinParser.PropertyDeclarationContext) {
-				val receiverTypeCtx = ctx.type() ?: return
+				val receiverTypeCtx = ctx.receiverType() ?: return
 				if (ctx.DOT() == null) return
 				val receiverText = source.substring(receiverTypeCtx.start.startIndex, receiverTypeCtx.stop.stopIndex + 1)
 				if (!receiverText.startsWith("KProperty1<") && !receiverText.startsWith("kotlin.reflect.KProperty1<")) return
@@ -456,13 +462,49 @@ abstract class ApplyTemplateTask : DefaultTask() {
 			}
 
 			override fun exitPropertyDeclaration(ctx: opensavvy.ktmongo.build.kotlin.KotlinParser.PropertyDeclarationContext) {
-				// For extension properties, the receiver type is accessed via ctx.type() with a DOT following
-				val receiverTypeCtx = ctx.type() ?: return
+				// For extension properties, the receiver type is accessed via ctx.receiverType() with a DOT following
+				val receiverTypeCtx = ctx.receiverType() ?: return
 				if (ctx.DOT() == null) return
-
 				val receiverStart = receiverTypeCtx.start.startIndex
 				val receiverEnd = receiverTypeCtx.stop.stopIndex
 				val receiverText = source.substring(receiverStart, receiverEnd + 1)
+				// region Value<> overloads for extension properties
+				if (isValueOverloadTarget) {
+					extractValueTypeArgs(receiverText)?.let { (contextType, resultType, _) ->
+						val propName = ctx.variableDeclaration()?.simpleIdentifier()?.text ?: return@let
+						val propStart = ctx.start.startIndex
+						val propText = source.substring(propStart, ctx.stop.stopIndex + 1)
+						val receiverOffsetInProp = receiverStart - propStart
+						val receiverEndOffsetInProp = receiverEnd + 1 - propStart
+						val afterReceiver = propText.substring(receiverEndOffsetInProp)
+						val getterPattern = "get() = "
+						val getterIdx = afterReceiver.indexOf(getterPattern)
+						val valueOverloadBuilder = StringBuilder()
+						for (newReceiver in listOf(
+							"opensavvy.ktmongo.dsl.path.Field<$contextType, $resultType>",
+							"kotlin.reflect.KProperty1<$contextType, $resultType>",
+						)) {
+							val newPropText = if (getterIdx >= 0) {
+								propText.substring(0, receiverOffsetInProp) +
+									newReceiver +
+									afterReceiver.substring(0, getterIdx + getterPattern.length) +
+									"of(this).$propName"
+							} else {
+								propText.substring(0, receiverOffsetInProp) +
+									newReceiver +
+									afterReceiver +
+									"\n\t\tget() = of(this).$propName"
+							}
+							val docComment = findDocCommentBefore(source, propStart)
+							val docPart = if (docComment.isNotEmpty()) "\t$docComment\n" else ""
+							valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(newPropText)
+						}
+						if (valueOverloadBuilder.isNotEmpty()) {
+							rewriter.insertAfter(ctx.stop, valueOverloadBuilder.toString())
+						}
+					}
+				}
+				// endregion
 				if (!receiverText.startsWith("Field<T")) return
 
 				val propName = ctx.variableDeclaration()?.simpleIdentifier()?.text ?: return
