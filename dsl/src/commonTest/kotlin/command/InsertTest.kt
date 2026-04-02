@@ -30,7 +30,7 @@ val InsertTest by preparedSuite {
 		val context = testContext()
 		val daniel = context.buildDocument {
 			writeString("name", "Daniel")
-		} as opensavvy.ktmongo.bson.official.Bson
+		} as opensavvy.ktmongo.bson.official.BsonDocument
 
 		InsertOne(testContext(), daniel.raw).apply {
 			options.apply {
@@ -56,16 +56,16 @@ val InsertTest by preparedSuite {
 
 		val daniel = context.buildDocument {
 			writeString("name", "Daniel")
-		} as opensavvy.ktmongo.bson.official.Bson
+		} as opensavvy.ktmongo.bson.official.BsonDocument
 
 		val fred = context.buildDocument {
 			writeString("name", "Fred")
 			writeInt32("age", 24)
-		} as opensavvy.ktmongo.bson.official.Bson
+		} as opensavvy.ktmongo.bson.official.BsonDocument
 
 		val alice = context.buildDocument {
 			writeString("name", "Alice")
-		} as opensavvy.ktmongo.bson.official.Bson
+		} as opensavvy.ktmongo.bson.official.BsonDocument
 
 		InsertMany(testContext(), listOf(daniel.raw, fred.raw, alice.raw)).apply {
 			options.apply {

@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.dsl.options
 
-import opensavvy.ktmongo.bson.Bson
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -51,7 +51,7 @@ class SortOption<Document : Any>(
 	 * In this block, each field is the declaration of a sort criterion.
 	 */
 	@OptIn(LowLevelApi::class)
-	val block: Bson get() = read().readDocument().toBson()
+	val block: BsonDocument get() = read().decodeDocument()
 }
 
 /**

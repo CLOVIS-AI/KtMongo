@@ -16,13 +16,14 @@
 
 package opensavvy.ktmongo.dsl.path
 
-import opensavvy.ktmongo.bson.Bson
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonPath
 import opensavvy.ktmongo.bson.ExperimentalBsonPathApi
 import opensavvy.ktmongo.bson.at
 import opensavvy.ktmongo.bson.select
 import opensavvy.ktmongo.bson.selectFirst
 import opensavvy.ktmongo.dsl.LowLevelApi
+import org.bson.conversions.Bson
 
 /**
  * Converts this MongoDB [Path] to a [BsonPath].
@@ -100,7 +101,7 @@ fun Field<*, *>.toBsonPath(): BsonPath =
  * @see at Select a single value.
  */
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.select(field: Field<*, T>): Sequence<T> =
+inline fun <reified T> BsonDocument.select(field: Field<*, T>): Sequence<T> =
 	select(field.toBsonPath())
 
 /**
@@ -123,7 +124,7 @@ inline fun <reified T> Bson.select(field: Field<*, T>): Sequence<T> =
  * @throws NoSuchElementException If no element is found matching the path.
  */
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.selectFirst(field: Field<*, T>): T =
+inline fun <reified T> BsonDocument.selectFirst(field: Field<*, T>): T =
 	selectFirst(field.toBsonPath())
 
 /**
@@ -143,5 +144,5 @@ inline fun <reified T> Bson.selectFirst(field: Field<*, T>): T =
  * @throws NoSuchElementException If no element is found matching the path.
  */
 @ExperimentalBsonPathApi
-inline infix fun <reified T : Any?> Bson.at(field: Field<*, T>): T =
+inline infix fun <reified T : Any?> BsonDocument.at(field: Field<*, T>): T =
 	selectFirst(field)
