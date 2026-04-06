@@ -150,7 +150,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trim(): Value<Context, String?> =
+	fun String?.trim(): Value<Any, String?> =
 		of(this).trim()
 
 	/**
@@ -285,7 +285,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trim(vararg characters: Char): Value<Context, String?> =
+	fun String?.trim(vararg characters: Char): Value<Any, String?> =
 		of(this).trim(*characters)
 
 	/**
@@ -879,7 +879,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trim(characters: String?): Value<Context, String?> =
+	fun String?.trim(characters: String?): Value<Any, String?> =
 		of(this).trim(of(characters))
 
 	// endregion
@@ -997,7 +997,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimStart(): Value<Context, String?> =
+	fun String?.trimStart(): Value<Any, String?> =
 		of(this).trimStart()
 
 	/**
@@ -1132,7 +1132,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimStart(vararg characters: Char): Value<Context, String?> =
+	fun String?.trimStart(vararg characters: Char): Value<Any, String?> =
 		of(this).trimStart(*characters)
 
 	/**
@@ -1726,7 +1726,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimStart(characters: String?): Value<Context, String?> =
+	fun String?.trimStart(characters: String?): Value<Any, String?> =
 		of(this).trimStart(of(characters))
 
 	// endregion
@@ -1844,7 +1844,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimEnd(): Value<Context, String?> =
+	fun String?.trimEnd(): Value<Any, String?> =
 		of(this).trimEnd()
 
 	/**
@@ -1979,7 +1979,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimEnd(vararg characters: Char): Value<Context, String?> =
+	fun String?.trimEnd(vararg characters: Char): Value<Any, String?> =
 		of(this).trimEnd(*characters)
 
 	/**
@@ -2573,7 +2573,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimEnd(characters: String?): Value<Context, String?> =
+	fun String?.trimEnd(characters: String?): Value<Any, String?> =
 		of(this).trimEnd(of(characters))
 
 	// endregion
@@ -2691,7 +2691,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.lowercase(): Value<Context, String?> =
+	fun String?.lowercase(): Value<Any, String?> =
 		of(this).lowercase()
 
 	// endregion
@@ -2809,7 +2809,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.uppercase(): Value<Context, String?> =
+	fun String?.uppercase(): Value<Any, String?> =
 		of(this).uppercase()
 
 	// endregion
@@ -2938,6 +2938,49 @@ interface StringValueOperators : ValueOperators {
 	val <Context : Any> kotlin.reflect.KProperty1<Context, String?>.length: Value<Context, Int?>
 		get() = of(this).length
 
+	/**
+	 * Returns the number of code points in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.length], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the counting behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a length of 7.
+	 * However, according to Kotlin's [String.length], it has a length of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val length: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::length set of(Document::text).length
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 *
+	 * @see lengthUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val String?.length: Value<Any, Int?>
+		get() = of(this).length
+
 	// endregion
 	// region $strLenBytes
 
@@ -3062,6 +3105,49 @@ interface StringValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	val <Context : Any> kotlin.reflect.KProperty1<Context, String?>.lengthUTF8: Value<Context, Int?>
+		get() = of(this).lengthUTF8
+
+	/**
+	 * Returns the number of UTF-8 encoded bytes in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [length] property which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val byteLength: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::byteLength set of(Document::text).lengthUTF8
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/)
+	 *
+	 * @see length
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val String?.lengthUTF8: Value<Any, Int?>
 		get() = of(this).lengthUTF8
 
 	// endregion
@@ -5898,7 +5984,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: Int, length: Int): Value<Context, String?> =
+	fun String?.substring(startIndex: Int, length: Int): Value<Any, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -6065,7 +6151,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(indexes: IntRange): Value<Context, String?> =
+	fun String?.substring(indexes: IntRange): Value<Any, String?> =
 		of(this).substring(indexes)
 
 	// endregion
@@ -9030,7 +9116,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
+	fun String?.substringUTF8(startIndex: Int, byteCount: Int): Value<Any, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -9205,7 +9291,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(indexes: IntRange): Value<Context, String?> =
+	fun String?.substringUTF8(indexes: IntRange): Value<Any, String?> =
 		of(this).substringUTF8(indexes)
 
 	// endregion
@@ -9738,7 +9824,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String.split(delimiter: String): Value<Context, List<String>?> =
+	fun String.split(delimiter: String): Value<Any, List<String>?> =
 		of(this).split(of(delimiter))
 
 	// endregion
@@ -11807,7 +11893,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
+	fun String?.replaceFirst(find: String?, replacement: String?): Value<Any, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	// endregion
@@ -13876,7 +13962,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: String?, replacement: String?): Value<Context, String?> =
+	fun String?.replace(find: String?, replacement: String?): Value<Any, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	// endregion
@@ -14677,7 +14763,7 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any> String?.concat(other: String?): Value<Context, String?> =
+	infix fun String?.concat(other: String?): Value<Any, String?> =
 		of(this).concat(of(other))
 
 	@LowLevelApi

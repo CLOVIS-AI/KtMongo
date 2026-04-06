@@ -235,6 +235,23 @@ abstract class ApplyTemplateTask : DefaultTask() {
 											newSignature.substring(replaceEnd)
 									}
 
+									// When all Value<> positions are replaced by raw types, contextType no longer
+									// appears in any receiver or parameter — only in the return type. The type
+									// parameter cannot be inferred, so remove its declaration and fix the return
+									// type to use Any instead.
+									val contextTypeForFix = valuePositions.first().contextType
+									val contextAbsentFromSignature = valuePositions.zip(combination).all { (_, t) ->
+										t != null && !t.startsWith("opensavvy") && !t.startsWith("kotlin.reflect.KProperty1")
+									}
+									if (contextAbsentFromSignature && newSignature.contains(" <$contextTypeForFix : Any>")) {
+										newSignature = newSignature.replace(" <$contextTypeForFix : Any>", "")
+										val lastParenIdx = newSignature.lastIndexOf(')')
+										if (lastParenIdx >= 0) {
+											newSignature = newSignature.substring(0, lastParenIdx + 1) +
+												newSignature.substring(lastParenIdx + 1).replace(contextTypeForFix, "Any")
+										}
+									}
+
 									// Build the delegation call
 									val receiverReplaced = hasValueReceiver && combination[recPosIdx] != null
 									val receiverPrefix = when {
@@ -480,24 +497,39 @@ abstract class ApplyTemplateTask : DefaultTask() {
 						val getterPattern = "get() = "
 						val getterIdx = afterReceiver.indexOf(getterPattern)
 						val valueOverloadBuilder = StringBuilder()
-						for (newReceiver in listOf(
-							"opensavvy.ktmongo.dsl.path.Field<$contextType, $resultType>",
-							"kotlin.reflect.KProperty1<$contextType, $resultType>",
+
+						data class PropReceiverCandidate(val type: String, val isRawType: Boolean)
+						for (candidate in listOf(
+							PropReceiverCandidate("opensavvy.ktmongo.dsl.path.Field<$contextType, $resultType>", false),
+							PropReceiverCandidate("kotlin.reflect.KProperty1<$contextType, $resultType>", false),
+							PropReceiverCandidate(resultType, true),
 						)) {
-							val newPropText = if (getterIdx >= 0) {
-								propText.substring(0, receiverOffsetInProp) +
-									newReceiver +
-									afterReceiver.substring(0, getterIdx + getterPattern.length) +
-									"of(this).$propName"
+							// For raw-type receivers, contextType is no longer in the receiver — remove the
+							// type parameter declaration and replace contextType with Any in the return type.
+							val beforeReceiver = if (candidate.isRawType) {
+								propText.substring(0, receiverOffsetInProp).replace(" <$contextType : Any>", "")
 							} else {
-								propText.substring(0, receiverOffsetInProp) +
-									newReceiver +
-									afterReceiver +
-									"\n\t\tget() = of(this).$propName"
+								propText.substring(0, receiverOffsetInProp)
 							}
+							val newPropText = if (getterIdx >= 0) {
+								val afterReceiverSig = afterReceiver.substring(0, getterIdx + getterPattern.length)
+								val cleanedSig = if (candidate.isRawType) afterReceiverSig.replace(contextType, "Any") else afterReceiverSig
+								beforeReceiver + candidate.type + cleanedSig + "of(this).$propName"
+							} else {
+								val cleanedAfterReceiver = if (candidate.isRawType) afterReceiver.replace(contextType, "Any") else afterReceiver
+								beforeReceiver + candidate.type + cleanedAfterReceiver + "\n\t\tget() = of(this).$propName"
+							}
+							val lowPriorityAnnotation = if (candidate.isRawType) "@kotlin.internal.LowPriorityInOverloadResolution\n\t" else ""
+							val annotatedPropText = if (candidate.isRawType) {
+								if (newPropText.contains("@Suppress(\"")) {
+									newPropText.replaceFirst("@Suppress(\"", "@Suppress(\"INVISIBLE_REFERENCE\", \"")
+								} else {
+									"@Suppress(\"INVISIBLE_REFERENCE\")\n\t" + newPropText
+								}
+							} else newPropText
 							val docComment = findDocCommentBefore(source, propStart)
 							val docPart = if (docComment.isNotEmpty()) "\t$docComment\n" else ""
-							valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(newPropText)
+							valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(lowPriorityAnnotation).append(annotatedPropText)
 						}
 						if (valueOverloadBuilder.isNotEmpty()) {
 							rewriter.insertAfter(ctx.stop, valueOverloadBuilder.toString())
