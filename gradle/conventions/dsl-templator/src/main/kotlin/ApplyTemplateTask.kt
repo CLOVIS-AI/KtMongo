@@ -89,7 +89,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 			sourceFilePath.endsWith("aggregation/operators/ComparisonValueOperators.kt") ||
 			sourceFilePath.endsWith("aggregation/operators/ConditionalValueOperators.kt") ||
 			sourceFilePath.endsWith("aggregation/operators/StringValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/TrigonometryValueOperators.kt")
+			sourceFilePath.endsWith("aggregation/operators/TrigonometryValueOperators.kt") ||
+			sourceFilePath.endsWith("aggregation/operators/TypeValueOperators.kt")
 
 		// Pre-scan: collect existing KProperty1 receiver functions/properties to avoid duplicates
 		val existingKPropFunctions = mutableSetOf<Pair<String, Int>>() // (name, paramCount)
@@ -199,7 +200,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 										add(null)
 										add("opensavvy.ktmongo.dsl.path.Field<${pos.contextType}, ${pos.resultType}>")
 										add("kotlin.reflect.KProperty1<${pos.contextType}, ${pos.resultType}>")
-										if (!pos.isVararg) add(pos.resultType)
+										if (!pos.isVararg) add(if (pos.resultType == "*") "Any?" else pos.resultType)
 									}
 								}
 
@@ -503,7 +504,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 						for (candidate in listOf(
 							PropReceiverCandidate("opensavvy.ktmongo.dsl.path.Field<$contextType, $resultType>", false),
 							PropReceiverCandidate("kotlin.reflect.KProperty1<$contextType, $resultType>", false),
-							PropReceiverCandidate(resultType, true),
+							PropReceiverCandidate(if (resultType == "*") "Any?" else resultType, true),
 						)) {
 							// For raw-type receivers, contextType is no longer in the receiver — remove the
 							// type parameter declaration and replace contextType with Any in the return type.

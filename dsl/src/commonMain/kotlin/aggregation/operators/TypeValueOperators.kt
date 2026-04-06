@@ -68,6 +68,92 @@ interface TypeValueOperators : ValueOperators {
 	val <R : Any> Value<R, *>.type: Value<R, BsonType>
 		get() = TypeValue(context, this)
 
+	/**
+	 * Gets the [BsonType] of the current value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("nameIsString") set (of(User::name).type eq of(BsonType.String))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/)
+	 *
+	 * @see BsonType List of possible types.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.type: Value<R, BsonType>
+		get() = of(this).type
+
+	/**
+	 * Gets the [BsonType] of the current value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("nameIsString") set (of(User::name).type eq of(BsonType.String))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/)
+	 *
+	 * @see BsonType List of possible types.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <R : Any> kotlin.reflect.KProperty1<R, *>.type: Value<R, BsonType>
+		get() = of(this).type
+
+	/**
+	 * Gets the [BsonType] of the current value.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("nameIsString") set (of(User::name).type eq of(BsonType.String))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/type/)
+	 *
+	 * @see BsonType List of possible types.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val Any?.type: Value<Any, BsonType>
+		get() = of(this).type
+
 	@OptIn(LowLevelApi::class)
 	private class TypeValue<Root : Any>(
 		context: BsonContext,
@@ -110,6 +196,89 @@ interface TypeValueOperators : ValueOperators {
 	@KtMongoDsl
 	val <R : Any> Value<R, *>.isArray: Value<R, Boolean>
 		get() = IsArrayValue(context, this)
+
+	/**
+	 * Determines if this value is an array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val data: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("dataIsArray") set of(User::data).isArray
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/)
+	 *
+	 * @see type Get a value's type.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.isArray: Value<R, Boolean>
+		get() = of(this).isArray
+
+	/**
+	 * Determines if this value is an array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val data: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("dataIsArray") set of(User::data).isArray
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/)
+	 *
+	 * @see type Get a value's type.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <R : Any> kotlin.reflect.KProperty1<R, *>.isArray: Value<R, Boolean>
+		get() = of(this).isArray
+
+	/**
+	 * Determines if this value is an array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val data: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("dataIsArray") set of(User::data).isArray
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isArray/)
+	 *
+	 * @see type Get a value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val Any?.isArray: Value<Any, Boolean>
+		get() = of(this).isArray
 
 	@LowLevelApi
 	private class IsArrayValue<Root : Any>(
@@ -159,6 +328,107 @@ interface TypeValueOperators : ValueOperators {
 	@KtMongoDsl
 	val <R : Any> Value<R, *>.isNumber: Value<R, Boolean>
 		get() = IsNumberValue(context, this)
+
+	/**
+	 * Determines if this value is a number.
+	 *
+	 * The following types are considered numbers:
+	 * - [BsonType.Int32]
+	 * - [BsonType.Int64]
+	 * - [BsonType.Double]
+	 * - [BsonType.Decimal128]
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val data: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("dataIsNumber") set of(User::data).isNumber
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/)
+	 *
+	 * @see type Get a value's type.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.isNumber: Value<R, Boolean>
+		get() = of(this).isNumber
+
+	/**
+	 * Determines if this value is a number.
+	 *
+	 * The following types are considered numbers:
+	 * - [BsonType.Int32]
+	 * - [BsonType.Int64]
+	 * - [BsonType.Double]
+	 * - [BsonType.Decimal128]
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val data: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("dataIsNumber") set of(User::data).isNumber
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/)
+	 *
+	 * @see type Get a value's type.
+	 */
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val <R : Any> kotlin.reflect.KProperty1<R, *>.isNumber: Value<R, Boolean>
+		get() = of(this).isNumber
+
+	/**
+	 * Determines if this value is a number.
+	 *
+	 * The following types are considered numbers:
+	 * - [BsonType.Int32]
+	 * - [BsonType.Int64]
+	 * - [BsonType.Double]
+	 * - [BsonType.Decimal128]
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val data: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("dataIsNumber") set of(User::data).isNumber
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isNumber/)
+	 *
+	 * @see type Get a value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	val Any?.isNumber: Value<Any, Boolean>
+		get() = of(this).isNumber
 
 	@LowLevelApi
 	private class IsNumberValue<Root : Any>(
@@ -213,6 +483,127 @@ interface TypeValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toBoolean(): Value<R, Boolean> =
 		ConvertToValue(context, this, "Bool")
+
+	/**
+	 * Converts this value to a [BsonType.Boolean].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Boolean] is returned as itself.
+	 *
+	 * Numeric types ([BsonType.Int32], [BsonType.Int64], [BsonType.Double] and [BsonType.Decimal128]) consider that
+	 * 0 is `false` and all other values are `true`.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * All other types always return `true`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val foo: String
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("asBoolean") set of(User::foo).toBoolean()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toBooleanFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toBoolean(): Value<R, Boolean> =
+		of(this).toBoolean()
+
+	/**
+	 * Converts this value to a [BsonType.Boolean].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Boolean] is returned as itself.
+	 *
+	 * Numeric types ([BsonType.Int32], [BsonType.Int64], [BsonType.Double] and [BsonType.Decimal128]) consider that
+	 * 0 is `false` and all other values are `true`.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * All other types always return `true`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val foo: String
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("asBoolean") set of(User::foo).toBoolean()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toBooleanPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toBoolean(): Value<R, Boolean> =
+		of(this).toBoolean()
+
+	/**
+	 * Converts this value to a [BsonType.Boolean].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Boolean] is returned as itself.
+	 *
+	 * Numeric types ([BsonType.Int32], [BsonType.Int64], [BsonType.Double] and [BsonType.Decimal128]) consider that
+	 * 0 is `false` and all other values are `true`.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * All other types always return `true`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val foo: String
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .project {
+	 *         Field.unsafe<Boolean>("asBoolean") set of(User::foo).toBoolean()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toBool)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toBooleanResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Any?.toBoolean(): Value<Any, Boolean> =
+		of(this).toBoolean()
 
 	/**
 	 * Converts this value to an [Instant] ([BsonType.Datetime]).
@@ -271,6 +662,181 @@ interface TypeValueOperators : ValueOperators {
 		ConvertToValue(context, this, "Date")
 
 	/**
+	 * Converts this value to an [Instant] ([BsonType.Datetime]).
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Datetime] is returned as itself.
+	 *
+	 * [BsonType.Int64], [BsonType.Double] and [BsonType.Decimal128] are interpreted as a timestamp from the UNIX epoch
+	 * in milliseconds: positive values happen after the epoch, negative values happen before the epoch.
+	 *
+	 * [BsonType.String] is parsed using the ISO timestamp formats, for example:
+	 * - `"2018-03-20"`
+	 * - `"2018-03-20T12:00:00Z"`
+	 * - `"2018-03-20T12:00:00+0500"`
+	 *
+	 * [BsonType.ObjectId] and [BsonType.Timestamp] are represented by extracting their timestamp component
+	 * (both have a precision of one second).
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val modificationDate: Instant
+	 * )
+	 *
+	 * // Update old data
+	 * users.updateManyWithPipeline(
+	 *     filter = {
+	 *         User::modificationType {
+	 *             not {
+	 *                 hasType(BsonType.String)
+	 *             }
+	 *         }
+	 *     }
+	 * ) {
+	 *    set {
+	 *        User::name set of(User::name).toInstant()
+	 *    }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/todate/)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toInstantFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toInstant(): Value<R, Instant> =
+		of(this).toInstant()
+
+	/**
+	 * Converts this value to an [Instant] ([BsonType.Datetime]).
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Datetime] is returned as itself.
+	 *
+	 * [BsonType.Int64], [BsonType.Double] and [BsonType.Decimal128] are interpreted as a timestamp from the UNIX epoch
+	 * in milliseconds: positive values happen after the epoch, negative values happen before the epoch.
+	 *
+	 * [BsonType.String] is parsed using the ISO timestamp formats, for example:
+	 * - `"2018-03-20"`
+	 * - `"2018-03-20T12:00:00Z"`
+	 * - `"2018-03-20T12:00:00+0500"`
+	 *
+	 * [BsonType.ObjectId] and [BsonType.Timestamp] are represented by extracting their timestamp component
+	 * (both have a precision of one second).
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val modificationDate: Instant
+	 * )
+	 *
+	 * // Update old data
+	 * users.updateManyWithPipeline(
+	 *     filter = {
+	 *         User::modificationType {
+	 *             not {
+	 *                 hasType(BsonType.String)
+	 *             }
+	 *         }
+	 *     }
+	 * ) {
+	 *    set {
+	 *        User::name set of(User::name).toInstant()
+	 *    }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/todate/)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toInstantPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toInstant(): Value<R, Instant> =
+		of(this).toInstant()
+
+	/**
+	 * Converts this value to an [Instant] ([BsonType.Datetime]).
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Datetime] is returned as itself.
+	 *
+	 * [BsonType.Int64], [BsonType.Double] and [BsonType.Decimal128] are interpreted as a timestamp from the UNIX epoch
+	 * in milliseconds: positive values happen after the epoch, negative values happen before the epoch.
+	 *
+	 * [BsonType.String] is parsed using the ISO timestamp formats, for example:
+	 * - `"2018-03-20"`
+	 * - `"2018-03-20T12:00:00Z"`
+	 * - `"2018-03-20T12:00:00+0500"`
+	 *
+	 * [BsonType.ObjectId] and [BsonType.Timestamp] are represented by extracting their timestamp component
+	 * (both have a precision of one second).
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val modificationDate: Instant
+	 * )
+	 *
+	 * // Update old data
+	 * users.updateManyWithPipeline(
+	 *     filter = {
+	 *         User::modificationType {
+	 *             not {
+	 *                 hasType(BsonType.String)
+	 *             }
+	 *         }
+	 *     }
+	 * ) {
+	 *    set {
+	 *        User::name set of(User::name).toInstant()
+	 *    }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/todate/)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toInstantResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Any?.toInstant(): Value<Any, Instant> =
+		of(this).toInstant()
+
+	/**
 	 * Converts this value to a [BsonType.Double].
 	 *
 	 * ### Conversion algorithm
@@ -319,6 +885,163 @@ interface TypeValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toDouble(): Value<R, Double> =
 		ConvertToValue(context, this, "Double")
+
+	/**
+	 * Converts this value to a [BsonType.Double].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Double] is returned as itself.
+	 *
+	 * [BsonType.Int32] and [BsonType.Int64] are extended to a double.
+	 *
+	 * [BsonType.Boolean] becomes 1 if `true` and 0 if `false`.
+	 *
+	 * [BsonType.Decimal128] is converted if it is within the possible range of a double value.
+	 * Otherwise, an exception is thrown.
+	 *
+	 * [BsonType.String] is parsed as a double.
+	 * Only base 10 numbers can be parsed.
+	 * If the value is outside the range of a double, an exception is thrown.
+	 * `"-5.5"` and `"123456"` are two valid examples.
+	 *
+	 * [BsonType.Datetime] returns the number of milliseconds since the epoch.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Metric(
+	 *     val instant: Instant,
+	 *     val millis: Double
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::millis set of(Metric::instant).toDouble()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/todouble)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toDoubleFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toDouble(): Value<R, Double> =
+		of(this).toDouble()
+
+	/**
+	 * Converts this value to a [BsonType.Double].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Double] is returned as itself.
+	 *
+	 * [BsonType.Int32] and [BsonType.Int64] are extended to a double.
+	 *
+	 * [BsonType.Boolean] becomes 1 if `true` and 0 if `false`.
+	 *
+	 * [BsonType.Decimal128] is converted if it is within the possible range of a double value.
+	 * Otherwise, an exception is thrown.
+	 *
+	 * [BsonType.String] is parsed as a double.
+	 * Only base 10 numbers can be parsed.
+	 * If the value is outside the range of a double, an exception is thrown.
+	 * `"-5.5"` and `"123456"` are two valid examples.
+	 *
+	 * [BsonType.Datetime] returns the number of milliseconds since the epoch.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Metric(
+	 *     val instant: Instant,
+	 *     val millis: Double
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::millis set of(Metric::instant).toDouble()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/todouble)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toDoublePropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toDouble(): Value<R, Double> =
+		of(this).toDouble()
+
+	/**
+	 * Converts this value to a [BsonType.Double].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Double] is returned as itself.
+	 *
+	 * [BsonType.Int32] and [BsonType.Int64] are extended to a double.
+	 *
+	 * [BsonType.Boolean] becomes 1 if `true` and 0 if `false`.
+	 *
+	 * [BsonType.Decimal128] is converted if it is within the possible range of a double value.
+	 * Otherwise, an exception is thrown.
+	 *
+	 * [BsonType.String] is parsed as a double.
+	 * Only base 10 numbers can be parsed.
+	 * If the value is outside the range of a double, an exception is thrown.
+	 * `"-5.5"` and `"123456"` are two valid examples.
+	 *
+	 * [BsonType.Datetime] returns the number of milliseconds since the epoch.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Metric(
+	 *     val instant: Instant,
+	 *     val millis: Double
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::millis set of(Metric::instant).toDouble()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/todouble)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toDoubleResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Any?.toDouble(): Value<Any, Double> =
+		of(this).toDouble()
 
 	/**
 	 * Converts this value to an [Int] ([BsonType.Int32]).
@@ -372,6 +1095,166 @@ interface TypeValueOperators : ValueOperators {
 		ConvertToValue(context, this, "Int")
 
 	/**
+	 * Converts this value to an [Int] ([BsonType.Int32]).
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Int32] is returned as itself.
+	 *
+	 * [BsonType.Int64] is converted to an Int if it fits into the range.
+	 * Otherwise, an exception is thrown.
+	 *
+	 * [BsonType.Boolean] becomes 1 if `true` and 0 if `false`.
+	 *
+	 * [BsonType.Double] and [BsonType.Decimal128] are truncated to an integer value.
+	 * If this value does not fall in the valid range for an int, an exception is thrown.
+	 *
+	 * [BsonType.String] is parsed as an int.
+	 * Only base 10 numbers can be parsed.
+	 * If the value is outside the range of a double, an exception is thrown.
+	 * `"-5"` and `"123456"` are two valid examples.
+	 * Floating-point numbers are not supported (use [toDouble]).
+	 *
+	 * [BsonType.Datetime] returns the number of milliseconds since the epoch.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val quantity: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         Field.unsafe<Int>("quantity") set of(Product::quantity).toInt()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toint)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toIntFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toInt(): Value<R, Int> =
+		of(this).toInt()
+
+	/**
+	 * Converts this value to an [Int] ([BsonType.Int32]).
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Int32] is returned as itself.
+	 *
+	 * [BsonType.Int64] is converted to an Int if it fits into the range.
+	 * Otherwise, an exception is thrown.
+	 *
+	 * [BsonType.Boolean] becomes 1 if `true` and 0 if `false`.
+	 *
+	 * [BsonType.Double] and [BsonType.Decimal128] are truncated to an integer value.
+	 * If this value does not fall in the valid range for an int, an exception is thrown.
+	 *
+	 * [BsonType.String] is parsed as an int.
+	 * Only base 10 numbers can be parsed.
+	 * If the value is outside the range of a double, an exception is thrown.
+	 * `"-5"` and `"123456"` are two valid examples.
+	 * Floating-point numbers are not supported (use [toDouble]).
+	 *
+	 * [BsonType.Datetime] returns the number of milliseconds since the epoch.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val quantity: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         Field.unsafe<Int>("quantity") set of(Product::quantity).toInt()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toint)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toIntPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toInt(): Value<R, Int> =
+		of(this).toInt()
+
+	/**
+	 * Converts this value to an [Int] ([BsonType.Int32]).
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Int32] is returned as itself.
+	 *
+	 * [BsonType.Int64] is converted to an Int if it fits into the range.
+	 * Otherwise, an exception is thrown.
+	 *
+	 * [BsonType.Boolean] becomes 1 if `true` and 0 if `false`.
+	 *
+	 * [BsonType.Double] and [BsonType.Decimal128] are truncated to an integer value.
+	 * If this value does not fall in the valid range for an int, an exception is thrown.
+	 *
+	 * [BsonType.String] is parsed as an int.
+	 * Only base 10 numbers can be parsed.
+	 * If the value is outside the range of a double, an exception is thrown.
+	 * `"-5"` and `"123456"` are two valid examples.
+	 * Floating-point numbers are not supported (use [toDouble]).
+	 *
+	 * [BsonType.Datetime] returns the number of milliseconds since the epoch.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val quantity: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         Field.unsafe<Int>("quantity") set of(Product::quantity).toInt()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toint)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toIntResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Any?.toInt(): Value<Any, Int> =
+		of(this).toInt()
+
+	/**
 	 * Converts this value to an [Long] ([BsonType.Int64]).
 	 *
 	 * ### Conversion algorithm
@@ -422,6 +1305,163 @@ interface TypeValueOperators : ValueOperators {
 		ConvertToValue(context, this, "Long")
 
 	/**
+	 * Converts this value to an [Long] ([BsonType.Int64]).
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Int64] is returned as itself.
+	 *
+	 * [BsonType.Int32] is extended to a Long.
+	 *
+	 * [BsonType.Boolean] becomes 1 if `true` and 0 if `false`.
+	 *
+	 * [BsonType.Double] and [BsonType.Decimal128] are truncated to an integer value.
+	 * If this value does not fall in the valid range for a long, an exception is thrown.
+	 *
+	 * [BsonType.String] is parsed as a double.
+	 * Only base 10 numbers can be parsed.
+	 * If the value is outside the range of a double, an exception is thrown.
+	 * `"-5"` and `"123456"` are two valid examples.
+	 * Floating-point numbers are not supported (use [toDouble]).
+	 *
+	 * [BsonType.Datetime] returns the number of milliseconds since the epoch.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val quantity: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         Field.unsafe<Long>("quantity") set of(Product::quantity).toLong()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tolong)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toLongFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toLong(): Value<R, Long> =
+		of(this).toLong()
+
+	/**
+	 * Converts this value to an [Long] ([BsonType.Int64]).
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Int64] is returned as itself.
+	 *
+	 * [BsonType.Int32] is extended to a Long.
+	 *
+	 * [BsonType.Boolean] becomes 1 if `true` and 0 if `false`.
+	 *
+	 * [BsonType.Double] and [BsonType.Decimal128] are truncated to an integer value.
+	 * If this value does not fall in the valid range for a long, an exception is thrown.
+	 *
+	 * [BsonType.String] is parsed as a double.
+	 * Only base 10 numbers can be parsed.
+	 * If the value is outside the range of a double, an exception is thrown.
+	 * `"-5"` and `"123456"` are two valid examples.
+	 * Floating-point numbers are not supported (use [toDouble]).
+	 *
+	 * [BsonType.Datetime] returns the number of milliseconds since the epoch.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val quantity: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         Field.unsafe<Long>("quantity") set of(Product::quantity).toLong()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tolong)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toLongPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toLong(): Value<R, Long> =
+		of(this).toLong()
+
+	/**
+	 * Converts this value to an [Long] ([BsonType.Int64]).
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.Int64] is returned as itself.
+	 *
+	 * [BsonType.Int32] is extended to a Long.
+	 *
+	 * [BsonType.Boolean] becomes 1 if `true` and 0 if `false`.
+	 *
+	 * [BsonType.Double] and [BsonType.Decimal128] are truncated to an integer value.
+	 * If this value does not fall in the valid range for a long, an exception is thrown.
+	 *
+	 * [BsonType.String] is parsed as a double.
+	 * Only base 10 numbers can be parsed.
+	 * If the value is outside the range of a double, an exception is thrown.
+	 * `"-5"` and `"123456"` are two valid examples.
+	 * Floating-point numbers are not supported (use [toDouble]).
+	 *
+	 * [BsonType.Datetime] returns the number of milliseconds since the epoch.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val quantity: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         Field.unsafe<Long>("quantity") set of(Product::quantity).toLong()
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tolong)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toLongResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Any?.toLong(): Value<Any, Long> =
+		of(this).toLong()
+
+	/**
 	 * Converts this value to an [ObjectId].
 	 *
 	 * ### Conversion algorithm
@@ -458,6 +1498,127 @@ interface TypeValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toObjectId(): Value<R, ObjectId> =
 		ConvertToValue(context, this, "ObjectId")
+
+	/**
+	 * Converts this value to an [ObjectId].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.ObjectId] is returned as itself.
+	 *
+	 * [BsonType.String] is parsed as an [ObjectId] as a 24-character hexadecimal representation,
+	 * for example `"5ab9cbfa31c2ab715d42129e"`.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val _id: ObjectId,
+	 * )
+	 *
+	 * // Migrate ids which were accidentally written as strings:
+	 * products.updateManyWithPipeline {
+	 *     _id set of(Product::_id).toObjectId()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toObjectIdFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toObjectId(): Value<R, ObjectId> =
+		of(this).toObjectId()
+
+	/**
+	 * Converts this value to an [ObjectId].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.ObjectId] is returned as itself.
+	 *
+	 * [BsonType.String] is parsed as an [ObjectId] as a 24-character hexadecimal representation,
+	 * for example `"5ab9cbfa31c2ab715d42129e"`.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val _id: ObjectId,
+	 * )
+	 *
+	 * // Migrate ids which were accidentally written as strings:
+	 * products.updateManyWithPipeline {
+	 *     _id set of(Product::_id).toObjectId()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toObjectIdPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toObjectId(): Value<R, ObjectId> =
+		of(this).toObjectId()
+
+	/**
+	 * Converts this value to an [ObjectId].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.ObjectId] is returned as itself.
+	 *
+	 * [BsonType.String] is parsed as an [ObjectId] as a 24-character hexadecimal representation,
+	 * for example `"5ab9cbfa31c2ab715d42129e"`.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * Other types throw an exception.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val _id: ObjectId,
+	 * )
+	 *
+	 * // Migrate ids which were accidentally written as strings:
+	 * products.updateManyWithPipeline {
+	 *     _id set of(Product::_id).toObjectId()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toObjectId)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toObjectIdResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Any?.toObjectId(): Value<Any, ObjectId> =
+		of(this).toObjectId()
 
 	/**
 	 * Converts this value to a [String].
@@ -503,6 +1664,142 @@ interface TypeValueOperators : ValueOperators {
 		ConvertToValue(context, this, "String")
 
 	/**
+	 * Converts this value to a [String].
+	 *
+	 * Note: the MongoDB operator is called `toString`, but that name would be ambiguous in Kotlin because of [Any.toString].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.String] is always returned as itself.
+	 *
+	 * [BsonType.Int32], [BsonType.Int64], [BsonType.Double], [BsonType.Decimal128], [BsonType.Boolean] and
+	 * [BsonType.BinaryData] are converted to a string.
+	 *
+	 * [BsonType.ObjectId] returns its hexadecimal representation.
+	 *
+	 * [BsonType.Datetime] is formatted in ISO.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val _id: ObjectId,
+	 *     val age: Double,
+	 * )
+	 *
+	 * // Migrate ids which were accidentally written as strings:
+	 * products.updateManyWithPipeline {
+	 *     _id set of(Product::age).toText()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toTextFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toText(): Value<R, String> =
+		of(this).toText()
+
+	/**
+	 * Converts this value to a [String].
+	 *
+	 * Note: the MongoDB operator is called `toString`, but that name would be ambiguous in Kotlin because of [Any.toString].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.String] is always returned as itself.
+	 *
+	 * [BsonType.Int32], [BsonType.Int64], [BsonType.Double], [BsonType.Decimal128], [BsonType.Boolean] and
+	 * [BsonType.BinaryData] are converted to a string.
+	 *
+	 * [BsonType.ObjectId] returns its hexadecimal representation.
+	 *
+	 * [BsonType.Datetime] is formatted in ISO.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val _id: ObjectId,
+	 *     val age: Double,
+	 * )
+	 *
+	 * // Migrate ids which were accidentally written as strings:
+	 * products.updateManyWithPipeline {
+	 *     _id set of(Product::age).toText()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toTextPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toText(): Value<R, String> =
+		of(this).toText()
+
+	/**
+	 * Converts this value to a [String].
+	 *
+	 * Note: the MongoDB operator is called `toString`, but that name would be ambiguous in Kotlin because of [Any.toString].
+	 *
+	 * ### Conversion algorithm
+	 *
+	 * [BsonType.String] is always returned as itself.
+	 *
+	 * [BsonType.Int32], [BsonType.Int64], [BsonType.Double], [BsonType.Decimal128], [BsonType.Boolean] and
+	 * [BsonType.BinaryData] are converted to a string.
+	 *
+	 * [BsonType.ObjectId] returns its hexadecimal representation.
+	 *
+	 * [BsonType.Datetime] is formatted in ISO.
+	 *
+	 * [BsonType.Null] always returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val _id: ObjectId,
+	 *     val age: Double,
+	 * )
+	 *
+	 * // Migrate ids which were accidentally written as strings:
+	 * products.updateManyWithPipeline {
+	 *     _id set of(Product::age).toText()
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toString)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toTextResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Any?.toText(): Value<Any, String> =
+		of(this).toText()
+
+	/**
 	 * Converts a string value to a [Uuid] ([BsonType.BinaryData]).
 	 *
 	 * ### Example
@@ -532,6 +1829,106 @@ interface TypeValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toUuid(): Value<R, Uuid> =
 		ConvertToValue(context, this, "UUID")
+
+	/**
+	 * Converts a string value to a [Uuid] ([BsonType.BinaryData]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val eventId: Uuid,
+	 * )
+	 *
+	 * // Convert old 'eventId' data which was incorrectly created as strings
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::eventId set of(User::eventId).toUuid()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUUID/)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toUuidFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@ExperimentalUuidApi
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toUuid(): Value<R, Uuid> =
+		of(this).toUuid()
+
+	/**
+	 * Converts a string value to a [Uuid] ([BsonType.BinaryData]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val eventId: Uuid,
+	 * )
+	 *
+	 * // Convert old 'eventId' data which was incorrectly created as strings
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::eventId set of(User::eventId).toUuid()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUUID/)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@JvmName("toUuidPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@ExperimentalUuidApi
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toUuid(): Value<R, Uuid> =
+		of(this).toUuid()
+
+	/**
+	 * Converts a string value to a [Uuid] ([BsonType.BinaryData]).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val eventId: Uuid,
+	 * )
+	 *
+	 * // Convert old 'eventId' data which was incorrectly created as strings
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::eventId set of(User::eventId).toUuid()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUUID/)
+	 *
+	 * @see type Get the value's type.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toUuidResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@ExperimentalUuidApi
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Any?.toUuid(): Value<Any, Uuid> =
+		of(this).toUuid()
 
 	@LowLevelApi
 	private class ConvertToValue<Root : Any, Type : Any>(
