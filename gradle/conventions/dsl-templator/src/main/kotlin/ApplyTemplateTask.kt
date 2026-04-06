@@ -88,7 +88,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 			sourceFilePath.endsWith("aggregation/operators/ArrayValueOperators.kt") ||
 			sourceFilePath.endsWith("aggregation/operators/ComparisonValueOperators.kt") ||
 			sourceFilePath.endsWith("aggregation/operators/ConditionalValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/StringValueOperators.kt")
+			sourceFilePath.endsWith("aggregation/operators/StringValueOperators.kt") ||
+			sourceFilePath.endsWith("aggregation/operators/TrigonometryValueOperators.kt")
 
 		// Pre-scan: collect existing KProperty1 receiver functions/properties to avoid duplicates
 		val existingKPropFunctions = mutableSetOf<Pair<String, Int>>() // (name, paramCount)

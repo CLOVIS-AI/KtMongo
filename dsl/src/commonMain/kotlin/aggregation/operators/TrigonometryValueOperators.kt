@@ -70,6 +70,111 @@ interface TrigonometryValueOperators : ValueOperators {
 		UnaryTrigonometryOperator(context, "acos", value)
 
 	/**
+	 * The inverse cosine (arc cosine) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set acos(of(Triangle::sideB) / of(Triangle::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/)
+	 */
+	@JvmName("acosByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> acos(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		acos(of(value))
+
+	/**
+	 * The inverse cosine (arc cosine) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set acos(of(Triangle::sideB) / of(Triangle::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/)
+	 */
+	@JvmName("acosByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> acos(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		acos(of(value))
+
+	/**
+	 * The inverse cosine (arc cosine) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set acos(of(Triangle::sideB) / of(Triangle::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun acos(value: Double?): Value<Any, Double?> =
+		acos(of(value))
+
+	/**
 	 * The inverse hyperbolic cosine (hyperbolic arc cosine) of a value, in radians.
 	 *
 	 * The value must be in the range `1..∞`.
@@ -99,6 +204,105 @@ interface TrigonometryValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> acosh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "acosh", value)
+
+	/**
+	 * The inverse hyperbolic cosine (hyperbolic arc cosine) of a value, in radians.
+	 *
+	 * The value must be in the range `1..∞`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set acosh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
+	 */
+	@JvmName("acoshByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> acosh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		acosh(of(value))
+
+	/**
+	 * The inverse hyperbolic cosine (hyperbolic arc cosine) of a value, in radians.
+	 *
+	 * The value must be in the range `1..∞`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set acosh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
+	 */
+	@JvmName("acoshByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> acosh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		acosh(of(value))
+
+	/**
+	 * The inverse hyperbolic cosine (hyperbolic arc cosine) of a value, in radians.
+	 *
+	 * The value must be in the range `1..∞`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set acosh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun acosh(value: Double?): Value<Any, Double?> =
+		acosh(of(value))
 
 	/**
 	 * The cosine of a value that is measured in radians.
@@ -132,6 +336,105 @@ interface TrigonometryValueOperators : ValueOperators {
 		UnaryTrigonometryOperator(context, "cos", value)
 
 	/**
+	 * The cosine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (of(cos(Triangle::angleA) * of(Triangle::hypotenuse)))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
+	 */
+	@JvmName("cosByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> cos(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		cos(of(value))
+
+	/**
+	 * The cosine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (of(cos(Triangle::angleA) * of(Triangle::hypotenuse)))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
+	 */
+	@JvmName("cosByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> cos(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		cos(of(value))
+
+	/**
+	 * The cosine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (of(cos(Triangle::angleA) * of(Triangle::hypotenuse)))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun cos(value: Double?): Value<Any, Double?> =
+		cos(of(value))
+
+	/**
 	 * The hyperbolic cosine of a value that is measured in radians.
 	 *
 	 * If the value is `null` or `NaN`, it is returned unchanged.
@@ -159,6 +462,99 @@ interface TrigonometryValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> cosh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "cosh", value)
+
+	/**
+	 * The hyperbolic cosine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val angle: Double,
+	 *     val cosh: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::cosh set cosh(of(Trigonometry::angle))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
+	 */
+	@JvmName("coshByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> cosh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		cosh(of(value))
+
+	/**
+	 * The hyperbolic cosine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val angle: Double,
+	 *     val cosh: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::cosh set cosh(of(Trigonometry::angle))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
+	 */
+	@JvmName("coshByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> cosh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		cosh(of(value))
+
+	/**
+	 * The hyperbolic cosine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val angle: Double,
+	 *     val cosh: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::cosh set cosh(of(Trigonometry::angle))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun cosh(value: Double?): Value<Any, Double?> =
+		cosh(of(value))
 
 	/**
 	 * The inverse sine (arc sine) of a value, in radians.
@@ -194,6 +590,111 @@ interface TrigonometryValueOperators : ValueOperators {
 		UnaryTrigonometryOperator(context, "asin", value)
 
 	/**
+	 * The inverse sine (arc sine) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set asin(of(Triangle::sideA) / of(Triangle::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
+	 */
+	@JvmName("asinByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> asin(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		asin(of(value))
+
+	/**
+	 * The inverse sine (arc sine) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set asin(of(Triangle::sideA) / of(Triangle::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
+	 */
+	@JvmName("asinByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> asin(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		asin(of(value))
+
+	/**
+	 * The inverse sine (arc sine) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set asin(of(Triangle::sideA) / of(Triangle::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun asin(value: Double?): Value<Any, Double?> =
+		asin(of(value))
+
+	/**
 	 * The inverse hyperbolic sine (hyperbolic arc sine) of a value, in radians.
 	 *
 	 * If the value is `null` or `NaN`, it is returned unchanged.
@@ -221,6 +722,99 @@ interface TrigonometryValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> asinh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "asinh", value)
+
+	/**
+	 * The inverse hyperbolic sine (hyperbolic arc sine) of a value, in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set asinh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
+	 */
+	@JvmName("asinhByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> asinh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		asinh(of(value))
+
+	/**
+	 * The inverse hyperbolic sine (hyperbolic arc sine) of a value, in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set asinh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
+	 */
+	@JvmName("asinhByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> asinh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		asinh(of(value))
+
+	/**
+	 * The inverse hyperbolic sine (hyperbolic arc sine) of a value, in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set asinh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun asinh(value: Double?): Value<Any, Double?> =
+		asinh(of(value))
 
 	/**
 	 * The sine of a value that is measured in radians.
@@ -254,6 +848,105 @@ interface TrigonometryValueOperators : ValueOperators {
 		UnaryTrigonometryOperator(context, "sin", value)
 
 	/**
+	 * The sine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (sin(of(Trigonometry::angleA)) * of(Trigonometry::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/)
+	 */
+	@JvmName("sinByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> sin(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		sin(of(value))
+
+	/**
+	 * The sine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (sin(of(Trigonometry::angleA)) * of(Trigonometry::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/)
+	 */
+	@JvmName("sinByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> sin(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		sin(of(value))
+
+	/**
+	 * The sine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (sin(of(Trigonometry::angleA)) * of(Trigonometry::hypotenuse))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun sin(value: Double?): Value<Any, Double?> =
+		sin(of(value))
+
+	/**
 	 * The hyperbolic sine of a value that is measured in radians.
 	 *
 	 * If the value is `null` or `NaN`, it is returned unchanged.
@@ -281,6 +974,99 @@ interface TrigonometryValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> sinh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "sinh", value)
+
+	/**
+	 * The hyperbolic sine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set sinh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/)
+	 */
+	@JvmName("sinhByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> sinh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		sinh(of(value))
+
+	/**
+	 * The hyperbolic sine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set sinh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/)
+	 */
+	@JvmName("sinhByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> sinh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		sinh(of(value))
+
+	/**
+	 * The hyperbolic sine of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set sinh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun sinh(value: Double?): Value<Any, Double?> =
+		sinh(of(value))
 
 	/**
 	 * The inverse tangent (arc tangent) of a value, in radians.
@@ -314,6 +1100,105 @@ interface TrigonometryValueOperators : ValueOperators {
 		UnaryTrigonometryOperator(context, "atan", value)
 
 	/**
+	 * The inverse tangent (arc tangent) of a value, in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set atan(of(Triangle::sideB) / of(Triangle::sideA))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
+	 */
+	@JvmName("atanByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> atan(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		atan(of(value))
+
+	/**
+	 * The inverse tangent (arc tangent) of a value, in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set atan(of(Triangle::sideB) / of(Triangle::sideA))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
+	 */
+	@JvmName("atanByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> atan(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		atan(of(value))
+
+	/**
+	 * The inverse tangent (arc tangent) of a value, in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::angleA set atan(of(Triangle::sideB) / of(Triangle::sideA))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun atan(value: Double?): Value<Any, Double?> =
+		atan(of(value))
+
+	/**
 	 * The inverse hyperbolic tangent (hyperbolic arc tangent) of a value, in radians.
 	 *
 	 * The value must be in the range `-1..1`.
@@ -343,6 +1228,105 @@ interface TrigonometryValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> atanh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "atanh", value)
+
+	/**
+	 * The inverse hyperbolic tangent (hyperbolic arc tangent) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set atanh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
+	 */
+	@JvmName("atanhByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> atanh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		atanh(of(value))
+
+	/**
+	 * The inverse hyperbolic tangent (hyperbolic arc tangent) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set atanh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
+	 */
+	@JvmName("atanhByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> atanh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		atanh(of(value))
+
+	/**
+	 * The inverse hyperbolic tangent (hyperbolic arc tangent) of a value, in radians.
+	 *
+	 * The value must be in the range `-1..1`.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set atanh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun atanh(value: Double?): Value<Any, Double?> =
+		atanh(of(value))
 
 	/**
 	 * The tangent of a value that is measured in radians.
@@ -376,6 +1360,105 @@ interface TrigonometryValueOperators : ValueOperators {
 		UnaryTrigonometryOperator(context, "tan", value)
 
 	/**
+	 * The tangent of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (tan(of(Trigonometry::angleA) * of(Trigonometry::sideA)))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/)
+	 */
+	@JvmName("tanByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> tan(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		tan(of(value))
+
+	/**
+	 * The tangent of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (tan(of(Trigonometry::angleA) * of(Trigonometry::sideA)))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/)
+	 */
+	@JvmName("tanByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> tan(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		tan(of(value))
+
+	/**
+	 * The tangent of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Triangle(
+	 *     val name: String,
+	 *     val sideA: Double,
+	 *     val sideB: Double,
+	 *     val hypotenuse: Double,
+	 *     val angleA: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Triangle::sideB set (tan(of(Trigonometry::angleA) * of(Trigonometry::sideA)))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun tan(value: Double?): Value<Any, Double?> =
+		tan(of(value))
+
+	/**
 	 * The hyperbolic tangent of a value that is measured in radians.
 	 *
 	 * If the value is `null` or `NaN`, it is returned unchanged.
@@ -403,6 +1486,99 @@ interface TrigonometryValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> tanh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "tanh", value)
+
+	/**
+	 * The hyperbolic tangent of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set tanh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/)
+	 */
+	@JvmName("tanhByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> tanh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
+		tanh(of(value))
+
+	/**
+	 * The hyperbolic tangent of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set tanh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/)
+	 */
+	@JvmName("tanhByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> tanh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
+		tanh(of(value))
+
+	/**
+	 * The hyperbolic tangent of a value that is measured in radians.
+	 *
+	 * If the value is `null` or `NaN`, it is returned unchanged.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val name: String,
+	 *     val x: Double,
+	 *     val y: Double,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Trigonometry::y set tanh(of(Trigonometry::x))
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun tanh(value: Double?): Value<Any, Double?> =
+		tanh(of(value))
 
 	// endregion
 	// region °/radians
@@ -437,6 +1613,100 @@ interface TrigonometryValueOperators : ValueOperators {
 		UnaryTrigonometryOperator(context, "degreesToRadians", this)
 
 	/**
+	 * Converts an angle in degrees to an angle in radians.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val angleADeg: Double,
+	 *     val angleARad: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Trigonometry::angleARad set of(Trigonometry::angleADeg).toRadians()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/)
+	 *
+	 * @see toDegrees Opposite operation
+	 */
+	@JvmName("toRadiansFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, Double>.toRadians(): Value<Context, Double> =
+		of(this).toRadians()
+
+	/**
+	 * Converts an angle in degrees to an angle in radians.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val angleADeg: Double,
+	 *     val angleARad: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Trigonometry::angleARad set of(Trigonometry::angleADeg).toRadians()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/)
+	 *
+	 * @see toDegrees Opposite operation
+	 */
+	@JvmName("toRadiansPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, Double>.toRadians(): Value<Context, Double> =
+		of(this).toRadians()
+
+	/**
+	 * Converts an angle in degrees to an angle in radians.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val angleADeg: Double,
+	 *     val angleARad: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Trigonometry::angleARad set of(Trigonometry::angleADeg).toRadians()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/degreesToRadians/)
+	 *
+	 * @see toDegrees Opposite operation
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toRadiansResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Double.toRadians(): Value<Any, Double> =
+		of(this).toRadians()
+
+	/**
 	 * Converts an angle in radians to an angle in degrees.
 	 *
 	 * ### Example
@@ -464,6 +1734,100 @@ interface TrigonometryValueOperators : ValueOperators {
 	@KtMongoDsl
 	fun <Context : Any> Value<Context, Double>.toDegrees(): Value<Context, Double> =
 		UnaryTrigonometryOperator(context, "radiansToDegrees", this)
+
+	/**
+	 * Converts an angle in radians to an angle in degrees.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val angleADeg: Double,
+	 *     val angleARad: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Trigonometry::angleADeg set of(Trigonometry::angleARad).toDegrees()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/)
+	 *
+	 * @see toRadians Opposite operation
+	 */
+	@JvmName("toDegreesFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, Double>.toDegrees(): Value<Context, Double> =
+		of(this).toDegrees()
+
+	/**
+	 * Converts an angle in radians to an angle in degrees.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val angleADeg: Double,
+	 *     val angleARad: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Trigonometry::angleADeg set of(Trigonometry::angleARad).toDegrees()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/)
+	 *
+	 * @see toRadians Opposite operation
+	 */
+	@JvmName("toDegreesPropertyReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, Double>.toDegrees(): Value<Context, Double> =
+		of(this).toDegrees()
+
+	/**
+	 * Converts an angle in radians to an angle in degrees.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Trigonometry(
+	 *     val angleADeg: Double,
+	 *     val angleARad: Double,
+	 * )
+	 *
+	 * collection.updateManyWithPipeline {
+	 *     set {
+	 *         Trigonometry::angleADeg set of(Trigonometry::angleARad).toDegrees()
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/radiansToDegrees/)
+	 *
+	 * @see toRadians Opposite operation
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("toDegreesResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	@KtMongoDsl
+	fun Double.toDegrees(): Value<Any, Double> =
+		of(this).toDegrees()
 
 	// endregion
 
