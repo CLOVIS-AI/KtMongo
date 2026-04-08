@@ -29,7 +29,6 @@ import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
-import kotlin.reflect.KProperty1
 
 /**
  * Accumulators to perform arithmetic operations.
@@ -100,10 +99,208 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
 	 */
+	@JvmName("sumByField")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
+		sum(of(value))
+
+	/**
+	 * Calculates and returns the collective sum of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance sum of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
+	 */
+	@JvmName("sumPropertyReceiverByField")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
+		this.field.sum(of(value))
+
+	/**
+	 * Calculates and returns the collective sum of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance sum of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
+	 */
+	@JvmName("sumByProperty")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: kotlin.reflect.KProperty1<From, Number?>) =
+		sum(of(value))
+
+	/**
+	 * Calculates and returns the collective sum of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance sum of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
+	 */
+	@JvmName("sumPropertyReceiverByProperty")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: kotlin.reflect.KProperty1<From, Number?>) =
+		this.field.sum(of(value))
+
+	/**
+	 * Calculates and returns the collective sum of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance sum of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, T>.sum(value: Value<From, Number?>) {
-		this.field.sum(value)
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: Number?) =
+		sum(of(value))
+
+	/**
+	 * Calculates and returns the collective sum of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance sum of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: Number?) =
+		this.field.sum(of(value))
+
+	/**
+	 * Calculates and returns the collective sum of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance sum of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: Value<From, Number?>) {
+		return this.field.sum(value)
 	}
 
 	// endregion
@@ -172,10 +369,220 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
 	 */
+	@JvmName("averageByField")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
+		average(of(value))
+
+	/**
+	 * Calculates and returns the collective average of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * If all elements are non-numeric, `null` is returned.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance average of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
+	 */
+	@JvmName("averagePropertyReceiverByField")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
+		this.field.average(of(value))
+
+	/**
+	 * Calculates and returns the collective average of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * If all elements are non-numeric, `null` is returned.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance average of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
+	 */
+	@JvmName("averageByProperty")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: kotlin.reflect.KProperty1<From, Number?>) =
+		average(of(value))
+
+	/**
+	 * Calculates and returns the collective average of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * If all elements are non-numeric, `null` is returned.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance average of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
+	 */
+	@JvmName("averagePropertyReceiverByProperty")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: kotlin.reflect.KProperty1<From, Number?>) =
+		this.field.average(of(value))
+
+	/**
+	 * Calculates and returns the collective average of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * If all elements are non-numeric, `null` is returned.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance average of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, T>.average(value: Value<From, Number?>) {
-		this.field.average(value)
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: Number?) =
+		average(of(value))
+
+	/**
+	 * Calculates and returns the collective average of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * If all elements are non-numeric, `null` is returned.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance average of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: Number?) =
+		this.field.average(of(value))
+
+	/**
+	 * Calculates and returns the collective average of numeric values.
+	 * Non-numeric values are ignored.
+	 *
+	 * If all elements are non-numeric, `null` is returned.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val totalBalance: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::totalBalance average of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: Value<From, Number?>) {
+		return this.field.average(value)
 	}
 
 	// endregion
@@ -244,11 +651,220 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
 	 */
+	@JvmName("medianByField")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
+		median(of(value))
+
+	/**
+	 * Returns an approximation of the median, the 50th percentile, as a scalar value.
+	 *
+	 * The median is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The result may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val medianBalance: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::medianBalance median of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
+	 */
+	@JvmName("medianPropertyReceiverByField")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
+		this.field.median(of(value))
+
+	/**
+	 * Returns an approximation of the median, the 50th percentile, as a scalar value.
+	 *
+	 * The median is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The result may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val medianBalance: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::medianBalance median of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
+	 */
+	@JvmName("medianByProperty")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: kotlin.reflect.KProperty1<From, Number?>) =
+		median(of(value))
+
+	/**
+	 * Returns an approximation of the median, the 50th percentile, as a scalar value.
+	 *
+	 * The median is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The result may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val medianBalance: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::medianBalance median of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
+	 */
+	@JvmName("medianPropertyReceiverByProperty")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: kotlin.reflect.KProperty1<From, Number?>) =
+		this.field.median(of(value))
+
+	/**
+	 * Returns an approximation of the median, the 50th percentile, as a scalar value.
+	 *
+	 * The median is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The result may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val medianBalance: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::medianBalance median of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, T>.median(value: Value<From, Number?>) {
-		this.field median value
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: Number?) =
+		median(of(value))
+
+	/**
+	 * Returns an approximation of the median, the 50th percentile, as a scalar value.
+	 *
+	 * The median is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The result may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val medianBalance: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::medianBalance median of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: Number?) =
+		this.field.median(of(value))
+
+	/**
+	 * Returns an approximation of the median, the 50th percentile, as a scalar value.
+	 *
+	 * The median is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The result may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val medianBalance: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::medianBalance median of(User::balance)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: Value<From, Number?>) {
+		return this.field.median(value)
 	}
 
 	// endregion
@@ -320,14 +936,241 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
 	 */
+	@JvmName("percentilesByField")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
+		value: opensavvy.ktmongo.dsl.path.Field<From, Number?>,
+		vararg percentiles: Double,
+	) =
+		percentiles(of(value), *percentiles)
+
+	/**
+	 * Returns an approximation of the specified [percentiles].
+	 *
+	 * Each percentile is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The results may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val percentiles: List<Double>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::percentiles.percentiles(of(User::balance), 0.5, 0.75, 0.9, 0.95)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
+	 */
+	@JvmName("percentilesPropertyReceiverByField")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
+		value: opensavvy.ktmongo.dsl.path.Field<From, Number?>,
+		vararg percentiles: Double,
+	) =
+		this.field.percentiles(of(value), *percentiles)
+
+	/**
+	 * Returns an approximation of the specified [percentiles].
+	 *
+	 * Each percentile is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The results may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val percentiles: List<Double>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::percentiles.percentiles(of(User::balance), 0.5, 0.75, 0.9, 0.95)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
+	 */
+	@JvmName("percentilesByProperty")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
+		value: kotlin.reflect.KProperty1<From, Number?>,
+		vararg percentiles: Double,
+	) =
+		percentiles(of(value), *percentiles)
+
+	/**
+	 * Returns an approximation of the specified [percentiles].
+	 *
+	 * Each percentile is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The results may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val percentiles: List<Double>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::percentiles.percentiles(of(User::balance), 0.5, 0.75, 0.9, 0.95)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
+	 */
+	@JvmName("percentilesPropertyReceiverByProperty")
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
+		value: kotlin.reflect.KProperty1<From, Number?>,
+		vararg percentiles: Double,
+	) =
+		this.field.percentiles(of(value), *percentiles)
+
+	/**
+	 * Returns an approximation of the specified [percentiles].
+	 *
+	 * Each percentile is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The results may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val percentiles: List<Double>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::percentiles.percentiles(of(User::balance), 0.5, 0.75, 0.9, 0.95)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes T : Number> KProperty1<Into, List<T>>.percentiles(
+	fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
+		value: Number?,
+		vararg percentiles: Double,
+	) =
+		percentiles(of(value), *percentiles)
+
+	/**
+	 * Returns an approximation of the specified [percentiles].
+	 *
+	 * Each percentile is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The results may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val percentiles: List<Double>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::percentiles.percentiles(of(User::balance), 0.5, 0.75, 0.9, 0.95)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
+		value: Number?,
+		vararg percentiles: Double,
+	) =
+		this.field.percentiles(of(value), *percentiles)
+
+	/**
+	 * Returns an approximation of the specified [percentiles].
+	 *
+	 * Each percentile is computed with the [t-digest algorithm](https://arxiv.org/abs/1902.04023), which computes an approximation.
+	 * The results may vary, even on the same dataset.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val balance: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val percentiles: List<Double>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .group {
+	 *         Result::percentiles.percentiles(of(User::balance), 0.5, 0.75, 0.9, 0.95)
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
 		value: Value<From, Number?>,
 		vararg percentiles: Double,
 	) {
-		this.field.percentiles(value, percentiles = percentiles)
+		return this.field.percentiles(value, *percentiles)
 	}
 
 	// endregion
@@ -359,7 +1202,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument(into.toString()) {
-				writeDocument($$"$median") {
+				writeDocument("\$median") {
 					write("input") {
 						value.writeTo(this)
 					}
@@ -380,7 +1223,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument(into.toString()) {
-				writeDocument($$"$percentile") {
+				writeDocument("\$percentile") {
 					write("input") {
 						value.writeTo(this)
 					}

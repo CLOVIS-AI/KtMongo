@@ -167,10 +167,10 @@ val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.secon
 		val statistics = songs().aggregate()
 			.match { Song::editionDate gt 0 }
 			.group {
-				Statistics::total sum of(Song::editionDate)
-				Statistics::average average of(Song::editionDate)
-				Statistics::median median of(Song::editionDate)
-				Statistics::percentiles.percentiles(of(Song::editionDate), 0.5, 0.75, 0.9, 0.95)
+				Statistics::total sum Song::editionDate
+				Statistics::average average Song::editionDate
+				Statistics::median median Song::editionDate
+				Statistics::percentiles.percentiles(Song::editionDate, 0.5, 0.75, 0.9, 0.95)
 			}
 			.first()
 

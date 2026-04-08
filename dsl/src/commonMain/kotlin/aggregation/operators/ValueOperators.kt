@@ -180,8 +180,132 @@ interface ValueOperators : FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
 	 */
+	@JvmName("divFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	operator fun <Context : Any, Root, Child> opensavvy.ktmongo.dsl.path.Field<Context, Root>.div(field: Field<Root, Child>): Value<Context, Child> =
+		of(this).div(field)
+
+	/**
+	 * Refers to [field] as a nested field of the current value.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 * )
+	 *
+	 * class Data(
+	 *     val users: List<User>,
+	 *     val userNames: List<Int>,
+	 * )
+	 *
+	 * data.aggregate()
+	 *     .set {
+	 *         Data::userNames set Data::users.map { it / User::name }
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("divResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@OptIn(LowLevelApi::class)
+	operator fun <Context : Any, Root, Child> Root.div(field: Field<Root, Child>): Value<Context, Child> =
+		of(this).div(field)
+
+	/**
+	 * Refers to [field] as a nested field of the current value.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 * )
+	 *
+	 * class Data(
+	 *     val users: List<User>,
+	 *     val userNames: List<Int>,
+	 * )
+	 *
+	 * data.aggregate()
+	 *     .set {
+	 *         Data::userNames set Data::users.map { it / User::name }
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
+	 */
 	operator fun <Context : Any, Root, Child> Value<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
 		this / field.field
+
+	/**
+	 * Refers to [field] as a nested field of the current value.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 * )
+	 *
+	 * class Data(
+	 *     val users: List<User>,
+	 *     val userNames: List<Int>,
+	 * )
+	 *
+	 * data.aggregate()
+	 *     .set {
+	 *         Data::userNames set Data::users.map { it / User::name }
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
+	 */
+	@JvmName("divFieldReceiver")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	operator fun <Context : Any, Root, Child> opensavvy.ktmongo.dsl.path.Field<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
+		of(this).div(field)
+
+	/**
+	 * Refers to [field] as a nested field of the current value.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 * )
+	 *
+	 * class Data(
+	 *     val users: List<User>,
+	 *     val userNames: List<Int>,
+	 * )
+	 *
+	 * data.aggregate()
+	 *     .set {
+	 *         Data::userNames set Data::users.map { it / User::name }
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("divResultReceiver")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	operator fun <Context : Any, Root, Child> Root.div(field: KProperty1<Root, Child>): Value<Context, Child> =
+		of(this).div(field)
 
 }
 

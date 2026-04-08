@@ -84,13 +84,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		val rewriter = org.antlr.v4.runtime.TokenStreamRewriter(tokens)
 
 		val sourceFilePath = sourceFile.path.replace('\\', '/')
-		val isValueOverloadTarget = sourceFilePath.endsWith("aggregation/operators/ArithmeticValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/ArrayValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/ComparisonValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/ConditionalValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/StringValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/TrigonometryValueOperators.kt") ||
-			sourceFilePath.endsWith("aggregation/operators/TypeValueOperators.kt")
+		val isValueOverloadTarget = sourceFilePath.contains("aggregation/operators") ||
+			sourceFilePath.endsWith("aggregation/accumulators/ArithmeticValueAccumulators.kt")
 
 		// Pre-scan: collect existing KProperty1 receiver functions/properties to avoid duplicates
 		val existingKPropFunctions = mutableSetOf<Pair<String, Int>>() // (name, paramCount)
@@ -351,6 +346,48 @@ abstract class ApplyTemplateTask : DefaultTask() {
 									val docComment = findDocCommentBefore(source, vFuncStart)
 									val docPart = if (docComment.isNotEmpty()) "\t$docComment\n" else ""
 									valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(lowPriorityAnnotation).append(jvmNameAnnotation).append(annotatedFuncText)
+
+									// If the receiver is Field<> (not a Value<> position), also generate
+									// KProperty1<> receiver variants of this overload, delegating via this.field.
+									// This mirrors the Field→KProperty1 path but for each value-substituted variant.
+									if (!hasValueReceiver && receiverCtx != null) {
+										val recText = source.substring(
+											receiverCtx.start.startIndex,
+											receiverCtx.stop.stopIndex + 1,
+										)
+										if (recText.startsWith("Field<")) {
+											// Search for the receiver text in newSignature (the contextAbsentFromSignature
+											// fix may have shifted offsets, but the receiver text itself is unchanged).
+											val recIdxInNewSig = newSignature.indexOf(recText)
+											if (recIdxInNewSig >= 0) {
+												val kpropReceiverText = recText.replaceFirst("Field<", "kotlin.reflect.KProperty1<")
+												val kpropNewSignature = newSignature.substring(0, recIdxInNewSig) +
+													kpropReceiverText +
+													newSignature.substring(recIdxInNewSig + recText.length)
+												val kpropDelegationCall = "this.field.$vFuncName($delegationArgs)"
+												val kpropNewFuncText = if (bodyStartInFunc >= 0) {
+													kpropNewSignature + "=\n\t\t$kpropDelegationCall"
+												} else {
+													kpropNewSignature + " =\n\t\t$kpropDelegationCall"
+												}
+												// KProperty1 receiver is specific — omit @LowPriorityInOverloadResolution
+												// (same exception as when a Value<> receiver is replaced by Field<>/KProperty1<>).
+												val kpropNeedsJvmName = combination.any {
+													it != null &&
+														(it.startsWith("opensavvy") || it.startsWith("kotlin.reflect.KProperty1"))
+												}
+												val kpropAfterJvmName = if (kpropNeedsJvmName) {
+													if (kpropNewFuncText.contains("@Suppress(\"")) {
+														kpropNewFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
+													} else {
+														"@Suppress(\"INAPPLICABLE_JVM_NAME\")\n\t" + kpropNewFuncText
+													}
+												} else kpropNewFuncText
+												val kpropJvmNameAnnotation = if (kpropNeedsJvmName) "@JvmName(\"${vFuncName}PropertyReceiver${paramSuffix}\")\n\t" else ""
+												valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(kpropJvmNameAnnotation).append(kpropAfterJvmName)
+											}
+										}
+									}
 								}
 
 								if (valueOverloadBuilder.isNotEmpty()) {
