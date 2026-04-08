@@ -16,9 +16,25 @@
 
 package opensavvy.ktmongo.bson
 
-import opensavvy.ktmongo.bson.path.bsonPathTests
-import opensavvy.ktmongo.bson.raw.*
+import opensavvy.ktmongo.bson.path.verifyBsonPath
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.types.shouldBeJson
+import opensavvy.ktmongo.bson.types.verifyArrays
+import opensavvy.ktmongo.bson.types.verifyBinaryData
+import opensavvy.ktmongo.bson.types.verifyBooleans
+import opensavvy.ktmongo.bson.types.verifyCode
+import opensavvy.ktmongo.bson.types.verifyDateTime
+import opensavvy.ktmongo.bson.types.verifyDocuments
+import opensavvy.ktmongo.bson.types.verifyDoubles
+import opensavvy.ktmongo.bson.types.verifyInt32s
+import opensavvy.ktmongo.bson.types.verifyInt64s
+import opensavvy.ktmongo.bson.types.verifyMinMaxKeys
+import opensavvy.ktmongo.bson.types.verifyNulls
+import opensavvy.ktmongo.bson.types.verifyObjectIds
+import opensavvy.ktmongo.bson.types.verifyRegexes
+import opensavvy.ktmongo.bson.types.verifyStrings
+import opensavvy.ktmongo.bson.types.verifyTimestamps
+import opensavvy.ktmongo.bson.types.verifyUndefined
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -28,7 +44,7 @@ import kotlin.time.Instant
 
 @OptIn(LowLevelApi::class, ExperimentalStdlibApi::class, ExperimentalTime::class, DangerousMongoApi::class)
 @Suppress("DEPRECATION")
-fun SuiteDsl.validateBsonFactory(
+fun SuiteDsl.verifyBsonFactory(
 	prepareFactory: Prepared<BsonFactory>,
 ) {
 
@@ -80,22 +96,22 @@ fun SuiteDsl.validateBsonFactory(
 	}
 
 	suite("BSON corpus") {
-		boolean(prepareFactory)
-		int32(prepareFactory)
-		int64(prepareFactory)
-		double(prepareFactory)
-		string(prepareFactory)
-		reprNull(prepareFactory)
-		reprUndefined(prepareFactory)
-		document(prepareFactory)
-		array(prepareFactory)
-		binary(prepareFactory)
-		code(prepareFactory)
-		datetime(prepareFactory)
-		minMaxKey(prepareFactory)
-		regex(prepareFactory)
-		timestamp(prepareFactory)
-		objectId(prepareFactory)
+		verifyBooleans(prepareFactory)
+		verifyInt32s(prepareFactory)
+		verifyInt64s(prepareFactory)
+		verifyDoubles(prepareFactory)
+		verifyStrings(prepareFactory)
+		verifyNulls(prepareFactory)
+		verifyUndefined(prepareFactory)
+		verifyDocuments(prepareFactory)
+		verifyArrays(prepareFactory)
+		verifyBinaryData(prepareFactory)
+		verifyCode(prepareFactory)
+		verifyDateTime(prepareFactory)
+		verifyMinMaxKeys(prepareFactory)
+		verifyRegexes(prepareFactory)
+		verifyTimestamps(prepareFactory)
+		verifyObjectIds(prepareFactory)
 	}
 
 	@OptIn(DangerousMongoApi::class)
@@ -164,6 +180,6 @@ fun SuiteDsl.validateBsonFactory(
 		check(d().hashCode() == d().hashCode())
 	}
 
-	bsonPathTests(prepareFactory)
-	validateDiffAlgorithms(prepareFactory)
+	verifyBsonPath(prepareFactory)
+	verifyDiffAlgorithms(prepareFactory)
 }

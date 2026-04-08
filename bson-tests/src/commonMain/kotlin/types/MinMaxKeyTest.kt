@@ -16,13 +16,13 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -32,9 +32,9 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from the BSON corpus tests.
  */
-fun SuiteDsl.minMaxKey(context: Prepared<BsonFactory>) = suite("MinMaxKey") {
+fun SuiteDsl.verifyMinMaxKeys(factory: Prepared<BsonFactory>) = suite("MinMaxKey") {
 	testBson(
-		context,
+		factory,
 		"Minkey",
 		document {
 			writeMinKey("a")
@@ -47,7 +47,7 @@ fun SuiteDsl.minMaxKey(context: Prepared<BsonFactory>) = suite("MinMaxKey") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Maxkey",
 		document {
 			writeMaxKey("a")

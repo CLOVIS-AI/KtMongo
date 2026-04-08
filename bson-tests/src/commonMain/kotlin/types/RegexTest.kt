@@ -16,13 +16,13 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -32,9 +32,9 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/regex.json.
  */
-fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
+fun SuiteDsl.verifyRegexes(factory: Prepared<BsonFactory>) = suite("Regex") {
 	testBson(
-		context,
+		factory,
 		"Empty regex with no options",
 		document {
 			writeRegularExpression("a", "", "")
@@ -50,7 +50,7 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Regex with no options",
 		document {
 			writeRegularExpression("a", "abc", "")
@@ -66,7 +66,7 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Regex with options",
 		document {
 			writeRegularExpression("a", "abc", "im")
@@ -82,7 +82,7 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Regex with slash",
 		document {
 			writeRegularExpression("a", "ab/cd", "im")
@@ -98,7 +98,7 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Flags not alphabetized",
 		document {
 			writeRegularExpression("a", "abc", "imx")
@@ -117,7 +117,7 @@ fun SuiteDsl.regex(context: Prepared<BsonFactory>) = suite("Regex") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Required escapes",
 		document {
 			writeRegularExpression("a", "ab\\\"ab", "")

@@ -58,7 +58,7 @@ data class User(
 @Serializable
 data class IntList(val items: List<Int>)
 
-fun SuiteDsl.bsonPathTests(
+fun SuiteDsl.verifyBsonPath(
 	context: Prepared<BsonFactory>,
 ) = suite("BsonPath") {
 

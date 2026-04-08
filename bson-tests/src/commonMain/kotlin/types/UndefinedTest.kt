@@ -16,13 +16,13 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -32,9 +32,9 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/undefined.json.
  */
-fun SuiteDsl.reprUndefined(context: Prepared<BsonFactory>) = suite("Undefined") {
+fun SuiteDsl.verifyUndefined(factory: Prepared<BsonFactory>) = suite("Undefined") {
 	testBson(
-		context,
+		factory,
 		"Undefined",
 		document { writeUndefined("a") },
 		hex("0800000006610000"),

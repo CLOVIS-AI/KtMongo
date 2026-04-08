@@ -16,15 +16,15 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.serialize
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -34,7 +34,7 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/document.json.
  */
-fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
+fun SuiteDsl.verifyDocuments(factory: Prepared<BsonFactory>) = suite("Document") {
 	@Serializable
 	data class A(val a: String)
 
@@ -42,7 +42,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 	data class X(val x: A)
 
 	testBson(
-		context,
+		factory,
 		"Empty subdocument",
 		document { writeDocument("x") {} },
 		hex("0D000000037800050000000000"),
@@ -53,7 +53,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Document with an empty string key",
 		document { writeDocument("x") { writeString("", "b") } },
 		hex("150000000378000D00000002000200000062000000"),
@@ -64,7 +64,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Document with a single-character key",
 		document { writeDocument("x") { writeString("a", "b") } },
 		hex("160000000378000E0000000261000200000062000000"),
@@ -76,7 +76,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Document with a dollar-prefixed key",
 		document { writeDocument("x") { writeString("\$a", "b") } },
 		hex("170000000378000F000000022461000200000062000000"),
@@ -87,7 +87,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Document with a dollar key",
 		document { writeDocument("x") { writeString("$", "a") } },
 		hex("160000000378000E0000000224000200000061000000"),
@@ -98,7 +98,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Document with a dotted key",
 		document { writeDocument("x") { writeString("a.b", "c") } },
 		hex("180000000378001000000002612E62000200000063000000"),
@@ -109,7 +109,7 @@ fun SuiteDsl.document(context: Prepared<BsonFactory>) = suite("Document") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Document with a dot key",
 		document { writeDocument("x") { writeString(".", "a") } },
 		hex("160000000378000E000000022E000200000061000000"),

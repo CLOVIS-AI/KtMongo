@@ -16,13 +16,13 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -34,9 +34,9 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/code.json.
  */
 @OptIn(ExperimentalEncodingApi::class)
-fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
+fun SuiteDsl.verifyCode(factory: Prepared<BsonFactory>) = suite("Code") {
 	testBson(
-		context,
+		factory,
 		"Empty string",
 		document {
 			writeJavaScript("a", "")
@@ -49,7 +49,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Single character",
 		document { writeJavaScript("a", "b") },
 		hex("0E0000000D610002000000620000"),
@@ -60,7 +60,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Multi-character",
 		document { writeJavaScript("a", "abababababab") },
 		hex("190000000D61000D0000006162616261626162616261620000"),
@@ -71,7 +71,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"two-byte UTF-8",
 		document { writeJavaScript("a", "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9") },
 		hex("190000000D61000D000000C3A9C3A9C3A9C3A9C3A9C3A90000"),
@@ -82,7 +82,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"three-byte UTF-8",
 		document { writeJavaScript("a", "\u2606\u2606\u2606\u2606") },
 		hex("190000000D61000D000000E29886E29886E29886E298860000"),
@@ -93,7 +93,7 @@ fun SuiteDsl.code(context: Prepared<BsonFactory>) = suite("Code") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Embedded nulls",
 		document { writeJavaScript("a", "ab\u0000bab\u0000babab") },
 		hex("190000000D61000D0000006162006261620062616261620000"),

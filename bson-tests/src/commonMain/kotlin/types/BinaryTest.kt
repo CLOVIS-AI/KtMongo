@@ -16,16 +16,15 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
-import opensavvy.ktmongo.bson.types.*
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.serialize
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -40,9 +39,9 @@ import kotlin.uuid.Uuid
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/binary.json.
  */
 @OptIn(ExperimentalEncodingApi::class, ExperimentalUuidApi::class)
-fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
+fun SuiteDsl.verifyBinaryData(factory: Prepared<BsonFactory>) = suite("Binary") {
 	testBson(
-		context,
+		factory,
 		"subtype 0x00 (Zero-length)",
 		document {
 			writeBinaryData("x", 0x0u, Base64.decode(""))
@@ -58,7 +57,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x00",
 		document {
 			writeBinaryData("x", 0x0u, Base64.decode("//8="))
@@ -74,7 +73,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x01",
 		document {
 			writeBinaryData("x", 0x1u, Base64.decode("//8="))
@@ -90,7 +89,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x02",
 		document {
 			writeBinaryData("x", 0x2u, Base64.decode("//8="))
@@ -111,7 +110,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x03",
 		document {
 			writeBinaryData("x", 0x3u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
@@ -127,7 +126,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x04",
 		document {
 			writeBinaryData("x", 0x4u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
@@ -144,7 +143,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x04 UUID",
 		document {
 			writeBinaryData("x", 0x4u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
@@ -161,7 +160,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x05",
 		document {
 			writeBinaryData("x", 0x5u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
@@ -177,7 +176,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x07",
 		document {
 			writeBinaryData("x", 0x7u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
@@ -193,7 +192,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x08",
 		document {
 			writeBinaryData("x", 0x8u, Base64.decode("c//SZESzTGmQ6OfR38A11A=="))
@@ -209,7 +208,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x80",
 		document {
 			writeBinaryData("x", 0x80u, Base64.decode("//8="))
@@ -225,7 +224,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		$$"$type query operator (conflicts with legacy $binary form with $type field)",
 		document {
 			writeDocument("x") {
@@ -240,7 +239,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		$$"$type query operator (conflicts with legacy $binary form with $type field) with int",
 		document {
 			writeDocument("x") {
@@ -266,7 +265,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x09 Vector FLOAT32",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("JwAAAP5CAADgQA=="))
@@ -307,7 +306,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x09 Vector INT8",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("AwB/Bw=="))
@@ -348,7 +347,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x09 Vector PACKED_BIT",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("EAB/Bw=="))
@@ -384,7 +383,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x09 Vector (Zero-length) FLOAT32",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("JwA="))
@@ -420,7 +419,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x09 Vector (Zero-length) INT8",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("AwA="))
@@ -456,7 +455,7 @@ fun SuiteDsl.binary(context: Prepared<BsonFactory>) = suite("Binary") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"subtype 0x09 Vector (Zero-length) PACKED_BIT",
 		document {
 			writeBinaryData("x", 0x09u, Base64.decode("EAA="))

@@ -16,16 +16,15 @@
 
 @file:OptIn(LowLevelApi::class, ExperimentalTime::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
-import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.serialize
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -39,12 +38,12 @@ import kotlin.time.Instant
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/timestamp.json.
  */
 @OptIn(ExperimentalEncodingApi::class)
-fun SuiteDsl.timestamp(context: Prepared<BsonFactory>) = suite("Timestamp") {
+fun SuiteDsl.verifyTimestamps(factory: Prepared<BsonFactory>) = suite("Timestamp") {
 	@Serializable
 	data class A(val a: Timestamp)
 
 	testBson(
-		context,
+		factory,
 		"Timestamp: (123456789, 42)",
 		document {
 			writeTimestamp("a", Timestamp(Instant.fromEpochSeconds(123456789), 42u))
@@ -61,7 +60,7 @@ fun SuiteDsl.timestamp(context: Prepared<BsonFactory>) = suite("Timestamp") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Timestamp with high-order bit set on both seconds and increment",
 		document {
 			writeTimestamp("a", Timestamp(Instant.fromEpochSeconds(4294967295), 4294967295u))
@@ -78,7 +77,7 @@ fun SuiteDsl.timestamp(context: Prepared<BsonFactory>) = suite("Timestamp") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Timestamp with high-order bit set on both seconds and increment (not UINT32_MAX)",
 		document {
 			writeTimestamp("a", Timestamp(Instant.fromEpochSeconds(4000000000), 4000000000u))

@@ -16,7 +16,7 @@
 
 @file:OptIn(LowLevelApi::class, ExperimentalStdlibApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonFactory
@@ -117,7 +117,7 @@ private class BsonAssertion(
 
 @PreparedDslMarker
 fun SuiteDsl.testBson(
-	context: Prepared<BsonFactory>,
+	factory: Prepared<BsonFactory>,
 	name: String,
 	vararg declarations: BsonDeclaration,
 ) = suite(name) {
@@ -131,19 +131,19 @@ fun SuiteDsl.testBson(
 	for (writer in writers) {
 		for (hex in hexReprs) {
 			test("Write to binary: $hex") {
-				writer(context()) shouldBeHex hex
+				writer(factory()) shouldBeHex hex
 			}
 		}
 
 		for (json in jsonReprs) {
 			test("Write to JSON: $json") {
-				writer(context()) shouldBeJson json
+				writer(factory()) shouldBeJson json
 			}
 		}
 
 		for (verification in verifications) {
 			test("Write and verify that $verification") {
-				val document = log(writer(context()))
+				val document = log(writer(factory()))
 				verification.assert(document)
 			}
 		}
@@ -154,13 +154,13 @@ fun SuiteDsl.testBson(
 
 		for (json in jsonReprs) {
 			test("Read $hex outputs the JSON $json") {
-				log(context().readDocument(hexArray)) shouldBeJson json
+				log(factory().readDocument(hexArray)) shouldBeJson json
 			}
 		}
 
 		for (verification in verifications) {
 			test("Read $hex and verify that $verification") {
-				val document = log(context().readDocument(hexArray))
+				val document = log(factory().readDocument(hexArray))
 				verification.assert(document)
 			}
 		}

@@ -16,15 +16,15 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.serialize
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -34,12 +34,12 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/string.json.
  */
-fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
+fun SuiteDsl.verifyStrings(factory: Prepared<BsonFactory>) = suite("String") {
 	@Serializable
 	data class A(val a: String)
 
 	testBson(
-		context,
+		factory,
 		"Empty string",
 		document {
 			writeString("a", "")
@@ -53,7 +53,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Single character",
 		document {
 			writeString("a", "b")
@@ -67,7 +67,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Multi character",
 		document {
 			writeString("a", "abababababab")
@@ -81,7 +81,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Two-byte UTF8",
 		document {
 			writeString("a", "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9")
@@ -95,7 +95,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Three-byte UTF8",
 		document {
 			writeString("a", "\u2606\u2606\u2606\u2606")
@@ -109,7 +109,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Embedded nulls",
 		document {
 			writeString("a", "ab\u0000bab\u0000babab")
@@ -122,7 +122,7 @@ fun SuiteDsl.string(context: Prepared<BsonFactory>) = suite("String") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Required escapes",
 		document {
 			writeString("a", "ab\\\"\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\u000c\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fab")

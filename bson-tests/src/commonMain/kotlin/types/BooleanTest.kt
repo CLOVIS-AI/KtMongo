@@ -16,15 +16,15 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.serialize
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -34,12 +34,12 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/boolean.json.
  */
-fun SuiteDsl.boolean(context: Prepared<BsonFactory>) = suite("Boolean") {
+fun SuiteDsl.verifyBooleans(factory: Prepared<BsonFactory>) = suite("Boolean") {
 	@Serializable
 	data class B(val b: Boolean)
 
 	testBson(
-		context,
+		factory,
 		"True",
 		document {
 			writeBoolean("b", true)
@@ -53,7 +53,7 @@ fun SuiteDsl.boolean(context: Prepared<BsonFactory>) = suite("Boolean") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"False",
 		document {
 			writeBoolean("b", false)

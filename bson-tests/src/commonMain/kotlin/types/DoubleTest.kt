@@ -16,15 +16,15 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.serialize
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -35,12 +35,12 @@ import kotlin.Double.Companion.NaN
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/double.json.
  */
-fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
+fun SuiteDsl.verifyDoubles(factory: Prepared<BsonFactory>) = suite("Double") {
 	@Serializable
 	data class D(val d: Double)
 
 	testBson(
-		context,
+		factory,
 		"+1.0",
 		document { writeDouble("d", 1.0) },
 		serialize(D(1.0)),
@@ -52,7 +52,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"-1.0",
 		document { writeDouble("d", -1.0) },
 		serialize(D(-1.0)),
@@ -64,7 +64,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"+1.0001220703125",
 		document { writeDouble("d", +1.0001220703125) },
 		serialize(D(+1.0001220703125)),
@@ -76,7 +76,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"-1.0001220703125",
 		document { writeDouble("d", -1.0001220703125) },
 		serialize(D(-1.0001220703125)),
@@ -88,7 +88,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"+1.2345678921232E+18",
 		document { writeDouble("d", 1.2345678921232E+18) },
 		serialize(D(1.2345678921232E+18)),
@@ -100,7 +100,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"-1.2345678921232E+18",
 		document { writeDouble("d", -1.2345678921232E+18) },
 		serialize(D(-1.2345678921232E+18)),
@@ -112,7 +112,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"+0.0",
 		document { writeDouble("d", 0.0) },
 		serialize(D(0.0)),
@@ -124,7 +124,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"-0.0",
 		document { writeDouble("d", -0.0) },
 		serialize(D(-0.0)),
@@ -136,7 +136,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"NaN",
 		document { writeDouble("d", NaN) },
 		serialize(D(NaN)),
@@ -148,7 +148,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"+Infinity",
 		document { writeDouble("d", Double.POSITIVE_INFINITY) },
 		serialize(D(Double.POSITIVE_INFINITY)),
@@ -160,7 +160,7 @@ fun SuiteDsl.double(context: Prepared<BsonFactory>) = suite("Double") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"-Infinity",
 		document { writeDouble("d", Double.NEGATIVE_INFINITY) },
 		serialize(D(Double.NEGATIVE_INFINITY)),

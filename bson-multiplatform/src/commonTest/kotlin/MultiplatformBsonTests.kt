@@ -18,7 +18,7 @@
 
 package opensavvy.ktmongo.bson.multiplatform
 
-import opensavvy.ktmongo.bson.validateBsonFactory
+import opensavvy.ktmongo.bson.verifyBsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
@@ -28,5 +28,5 @@ val context by prepared {
 }
 
 val MultiplatformBsonWriterTest by preparedSuite {
-	validateBsonFactory(context)
+	verifyBsonFactory(context)
 }

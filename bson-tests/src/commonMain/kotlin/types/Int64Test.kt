@@ -16,15 +16,15 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.serialize
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -34,12 +34,12 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/int64.json.
  */
-fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
+fun SuiteDsl.verifyInt64s(factory: Prepared<BsonFactory>) = suite("Int64") {
 	@Serializable
 	data class A(val a: Long)
 
 	testBson(
-		context,
+		factory,
 		"Min value",
 		document { writeInt64("a", Long.MIN_VALUE) },
 		serialize(A(Long.MIN_VALUE)),
@@ -51,7 +51,7 @@ fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Max value",
 		document { writeInt64("a", Long.MAX_VALUE) },
 		serialize(A(Long.MAX_VALUE)),
@@ -63,7 +63,7 @@ fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"-1",
 		document { writeInt64("a", -1) },
 		serialize(A(-1)),
@@ -75,7 +75,7 @@ fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"0",
 		document { writeInt64("a", 0) },
 		serialize(A(0)),
@@ -87,7 +87,7 @@ fun SuiteDsl.int64(context: Prepared<BsonFactory>) = suite("Int64") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"+1",
 		document { writeInt64("a", 1) },
 		serialize(A(1)),

@@ -25,7 +25,7 @@ import opensavvy.prepared.suite.TestDsl
 import opensavvy.prepared.suite.assertions.log
 import kotlin.test.assertEquals
 
-fun SuiteDsl.validateDiffAlgorithms(
+fun SuiteDsl.verifyDiffAlgorithms(
 	factory: Prepared<BsonFactory>,
 ) = suite("Diff algorithms") {
 

@@ -16,13 +16,13 @@
 
 @file:OptIn(LowLevelApi::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -32,9 +32,9 @@ import opensavvy.prepared.suite.SuiteDsl
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/array.json.
  */
-fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
+fun SuiteDsl.verifyArrays(factory: Prepared<BsonFactory>) = suite("Array") {
 	testBson(
-		context,
+		factory,
 		"Empty",
 		document {
 			writeArray("a") {}
@@ -47,7 +47,7 @@ fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Single-element array",
 		document {
 			writeArray("a") {
@@ -62,7 +62,7 @@ fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Single Element Array with index set incorrectly to empty string",
 		hex("130000000461000B00000010000A0000000000"),
 		json("""{"a": [10]}"""),
@@ -72,7 +72,7 @@ fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Single Element Array with index set incorrectly to ab",
 		hex("150000000461000D000000106162000A0000000000"),
 		json("""{"a": [10]}"""),
@@ -82,7 +82,7 @@ fun SuiteDsl.array(context: Prepared<BsonFactory>) = suite("Array") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Multi Element Array with duplicate indexes",
 		hex("1b000000046100130000001030000a000000103000140000000000"),
 		json("""{"a": [10, 20]}"""),

@@ -16,16 +16,15 @@
 
 @file:OptIn(LowLevelApi::class, ExperimentalTime::class)
 
-package opensavvy.ktmongo.bson.raw
+package opensavvy.ktmongo.bson.types
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.document
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.hex
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.json
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.serialize
-import opensavvy.ktmongo.bson.raw.BsonDeclaration.Companion.verify
-import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.hex
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.serialize
+import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.verify
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -36,12 +35,12 @@ import kotlin.time.ExperimentalTime
  *
  * Adapted from https://github.com/mongodb/specifications/blob/master/source/bson-corpus/tests/oid.json.
  */
-fun SuiteDsl.objectId(context: Prepared<BsonFactory>) = suite("ObjectId") {
+fun SuiteDsl.verifyObjectIds(factory: Prepared<BsonFactory>) = suite("ObjectId") {
 	@Serializable
 	data class A(val a: ObjectId)
 
 	testBson(
-		context,
+		factory,
 		"All zeroes",
 		document { writeObjectId("a", ObjectId.MIN) },
 		document { writeObjectId("a", "000000000000000000000000".hexToByteArray(HexFormat.Default)) },
@@ -54,7 +53,7 @@ fun SuiteDsl.objectId(context: Prepared<BsonFactory>) = suite("ObjectId") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"All ones",
 		document { writeObjectId("a", ObjectId.MAX) },
 		document { writeObjectId("a", "ffffffffffffffffffffffff".hexToByteArray(HexFormat.Default)) },
@@ -67,7 +66,7 @@ fun SuiteDsl.objectId(context: Prepared<BsonFactory>) = suite("ObjectId") {
 	)
 
 	testBson(
-		context,
+		factory,
 		"Random",
 		document { writeObjectId("a", ObjectId("56e1fc72e0c917e9c4714161")) },
 		serialize(A(ObjectId("56e1fc72e0c917e9c4714161"))),
