@@ -16,13 +16,13 @@
 
 package opensavvy.ktmongo.bson.official
 
+import opensavvy.ktmongo.bson.BsonDecodingException
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonBinaryWriter
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.DocumentCodec
 import org.bson.codecs.EncoderContext
 import org.bson.io.BasicOutputBuffer
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import org.bson.BsonDocument as OfficialBsonDocument
 
@@ -42,18 +42,16 @@ actual class BsonDocument internal constructor(
 
 	@LowLevelApi
 	override fun <T> decode(type: KType): T {
-		val classifier = type.classifier
-		require(classifier is KClass<*>) { "The official Java driver only supports types that can be represented as classes\n\tObject: $raw\n\tType: $type" }
+		val codec = factory.findCodecForType<T>(type)
 
-		@Suppress("UNCHECKED_CAST")
-		classifier as KClass<T & Any>
-
-		val codec = factory.codecRegistry.get(classifier.java)
-
-		return codec.decode(
-			raw.asBsonReader(),
-			DecoderContext.builder().build(),
-		)
+		return try {
+			codec.decode(
+				raw.asBsonReader(),
+				DecoderContext.builder().build(),
+			)
+		} catch (e: Exception) {
+			throw BsonDecodingException("Could not decode $type\n\tfrom value $this\n\tusing $codec", e)
+		}
 	}
 
 	actual override fun asIterable(): Iterable<Field> =

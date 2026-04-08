@@ -18,6 +18,7 @@ package opensavvy.ktmongo.bson.multiplatform.serialization
 
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.builtins.ByteArraySerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -28,6 +29,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
+import opensavvy.ktmongo.bson.BsonDecodingException
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.*
 import opensavvy.ktmongo.bson.types.*
@@ -160,7 +162,11 @@ internal class BsonDecoder(
 			vector, floatVector, booleanVector, byteVector -> Vector.fromBinaryData(source.decodeBinaryData()) as T
 
 			// General case: do what the serializer says
-			else -> deserializer.deserialize(this)
+			else -> try {
+				deserializer.deserialize(this)
+			} catch (e: SerializationException) {
+				throw BsonDecodingException("Could not decode ${deserializer.descriptor}\n\tfrom value $source", e)
+			}
 		}
 	}
 }

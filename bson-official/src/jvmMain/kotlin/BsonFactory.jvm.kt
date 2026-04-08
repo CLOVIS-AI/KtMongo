@@ -18,16 +18,7 @@ package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.official.types.KotlinBooleanVectorCodec
-import opensavvy.ktmongo.bson.official.types.KotlinBsonArrayCodec
-import opensavvy.ktmongo.bson.official.types.KotlinBsonDocumentCodec
-import opensavvy.ktmongo.bson.official.types.KotlinByteVectorCodec
-import opensavvy.ktmongo.bson.official.types.KotlinFloatVectorCodec
-import opensavvy.ktmongo.bson.official.types.KotlinInstantCodec
-import opensavvy.ktmongo.bson.official.types.KotlinObjectIdCodec
-import opensavvy.ktmongo.bson.official.types.KotlinTimestampCodec
-import opensavvy.ktmongo.bson.official.types.KotlinUuidCodec
-import opensavvy.ktmongo.bson.official.types.KotlinVectorCodec
+import opensavvy.ktmongo.bson.official.types.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonBinaryReader
 import org.bson.BsonDocumentWriter
@@ -39,6 +30,7 @@ import org.bson.codecs.configuration.CodecRegistry
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * [BsonDocument] and [BsonArray] factory that uses the official MongoDB driver's [CodecRegistry] machinery.
@@ -176,4 +168,61 @@ actual class BsonFactory(
 	 */
 	fun readValue(raw: org.bson.BsonValue): BsonValue =
 		BsonValue(raw, this)
+
+	/**
+	 * Returns the instance of [Codec] (from the official MongoDB driver)
+	 * that is used to encode or decode the given [type].
+	 *
+	 * **If [type] and [T] do not match, the behavior is unspecified.**
+	 * Prefer using the no-argument of this method.
+	 *
+	 * @see codecRegistry The codec registry used by this BSON factory.
+	 * @throws BsonDecodingException If no matching codec is found for the given type.
+	 */
+	@LowLevelApi
+	fun <T> findCodecForType(type: KType): Codec<T> {
+		val classifier = type.classifier
+
+		if (classifier !is KClass<*>) {
+			throw BsonDecodingException("The official Java driver only supports types that can be represented as classes; cannot find a codec for type $type (classifier: $classifier)")
+		}
+
+		@Suppress("UNCHECKED_CAST")
+		classifier as KClass<T & Any>
+
+		val codec = try {
+			codecRegistry.get(classifier.java)
+		} catch (e: Exception) {
+			throw BsonDecodingException(
+				"""
+					Could not find codec for type $type (${classifier.java})
+					If you're using org.bson:bson-kotlin, are you sure your type is a non-private data class?
+					If you're using org.bson:bson-kotlinx, did you annotate your type with @Serializable and configured the KotlinX.Serialization plugin?
+				""".trimIndent(),
+				e,
+			)
+		}
+
+		return codec
+	}
+
+	/**
+	 * Returns the instance of [Codec] (from the official MongoDB driver)
+	 * that is used to encode or decode the given type [T].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * val client = MongoClient.create("mongodb://mongo:27017")
+	 * val factory = BsonFactory(client.codecRegistry)
+	 *
+	 * val codec = factory.findCodecForType<String>()
+	 * ```
+	 *
+	 * @see codecRegistry The codec registry used by this BSON factory.
+	 * @throws BsonDecodingException If no matching codec is found for the given type.
+	 */
+	@LowLevelApi
+	inline fun <reified T> findCodecForType(): Codec<T> =
+		findCodecForType(typeOf<T>())
 }

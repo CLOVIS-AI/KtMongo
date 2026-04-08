@@ -17,24 +17,7 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.path.verifyBsonPath
-import opensavvy.ktmongo.bson.types.ObjectId
-import opensavvy.ktmongo.bson.types.shouldBeJson
-import opensavvy.ktmongo.bson.types.verifyArrays
-import opensavvy.ktmongo.bson.types.verifyBinaryData
-import opensavvy.ktmongo.bson.types.verifyBooleans
-import opensavvy.ktmongo.bson.types.verifyCode
-import opensavvy.ktmongo.bson.types.verifyDateTime
-import opensavvy.ktmongo.bson.types.verifyDocuments
-import opensavvy.ktmongo.bson.types.verifyDoubles
-import opensavvy.ktmongo.bson.types.verifyInt32s
-import opensavvy.ktmongo.bson.types.verifyInt64s
-import opensavvy.ktmongo.bson.types.verifyMinMaxKeys
-import opensavvy.ktmongo.bson.types.verifyNulls
-import opensavvy.ktmongo.bson.types.verifyObjectIds
-import opensavvy.ktmongo.bson.types.verifyRegexes
-import opensavvy.ktmongo.bson.types.verifyStrings
-import opensavvy.ktmongo.bson.types.verifyTimestamps
-import opensavvy.ktmongo.bson.types.verifyUndefined
+import opensavvy.ktmongo.bson.types.*
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.Prepared
@@ -47,6 +30,7 @@ import kotlin.time.Instant
 fun SuiteDsl.verifyBsonFactory(
 	prepareFactory: Prepared<BsonFactory>,
 ) {
+	verifyBsonDocuments(prepareFactory)
 
 	test("An Int in a root document") {
 		val result = prepareFactory().buildDocument {
