@@ -23,10 +23,10 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 
-val context by prepared {
+val factory by prepared {
 	BsonFactory()
 }
 
-val MultiplatformBsonWriterTest by preparedSuite {
-	verifyBsonFactory(context)
+val MultiplatformBsonFactory by preparedSuite {
+	verifyBsonFactory(factory)
 }
