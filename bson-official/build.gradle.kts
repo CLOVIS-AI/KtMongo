@@ -44,6 +44,7 @@ kotlin {
 	sourceSets.jvmTest.dependencies {
 		implementation(libs.mongodb.sync.jvm)
 		implementation(libs.mongodb.kotlinx.serialization)
+		implementation(libs.mongodb.kotlin.reflection)
 		implementation(libs.kotlinx.serialization)
 	}
 }

@@ -23,7 +23,7 @@ import opensavvy.prepared.runner.testballoon.preparedSuite
 val BsonReaderTest by preparedSuite {
 
 	test("Read basic data types") {
-		val output = testContext().buildDocument {
+		val output = reflectionFactory().buildDocument {
 			writeString("hello", "world")
 			writeInt32("a", 42)
 		}
