@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,16 +33,12 @@ kotlin {
 	}
 	linuxX64()
 	linuxArm64()
-	macosX64()
 	macosArm64()
 	iosArm64()
-	iosX64()
 	iosSimulatorArm64()
-	watchosX64()
 	watchosArm32()
 	watchosArm64()
 	watchosSimulatorArm64()
-	tvosX64()
 	tvosArm64()
 	tvosSimulatorArm64()
 	mingwX64()
