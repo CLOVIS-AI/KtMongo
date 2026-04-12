@@ -16,12 +16,9 @@
 
 package opensavvy.ktmongo.bson.official
 
-import opensavvy.ktmongo.bson.BsonArray
-import opensavvy.ktmongo.bson.BsonDecodingException
+import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonDocument
-import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValue
-import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.official.types.toKtMongo
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
@@ -31,7 +28,6 @@ import org.bson.BsonWriter
 import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
-import org.bson.codecs.configuration.CodecRegistry
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -74,7 +70,7 @@ actual class BsonValue internal constructor(
 			return BsonArray(raw.asArray(), factory).decode(type)
 		}
 
-		return decodeValue(raw, classifier, factory.codecRegistry)
+		return decodeValue(raw, classifier, factory)
 	}
 
 	override fun decodeBoolean(): Boolean {
@@ -235,7 +231,7 @@ actual class BsonValue internal constructor(
 internal fun <T> decodeValue(
 	value: org.bson.BsonValue,
 	kClass: KClass<T & Any>,
-	codecRegistry: CodecRegistry,
+	factory: BsonFactory,
 ): T {
 	// At the top-level, only BSON documents exist. Therefore, the Java driver only provides ways
 	// to decode BSON documents, and not arrays or other values.
@@ -245,12 +241,16 @@ internal fun <T> decodeValue(
 	val documentReader: BsonReader = org.bson.BsonDocumentReader(valueHolder)
 
 	// Acquire the codec for the requested type.
-	val valueCodec: Codec<T> = codecRegistry.get(unprimitive(kClass).java)
+	val valueCodec: Codec<T> = factory.codecRegistry.get(unprimitive(kClass).java)
 
-	// Decode the fake document and extract its only field using a delegating codec.
-	val docCodec = FakeDocumentCodec(valueCodec)
-	val decoded = docCodec.decode(documentReader, DecoderContext.builder().build())
-	return decoded.a
+	try {
+		// Decode the fake document and extract its only field using a delegating codec.
+		val docCodec = FakeDocumentCodec(valueCodec)
+		val decoded = docCodec.decode(documentReader, DecoderContext.builder().build())
+		return decoded.a
+	} catch (e: Exception) {
+		throw BsonDecodingException("Could not decode $kClass\n\tfrom value ${factory.readValue(value)}\n\tusing $valueCodec", e)
+	}
 }
 
 private class FakeDocument<T>(

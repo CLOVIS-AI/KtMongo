@@ -110,6 +110,10 @@ interface BsonArray {
 
 	/**
 	 * Creates an [Iterable] that wraps this array.
+	 *
+	 * ### Requirements
+	 *
+	 * - The [Iterable.toString] output should follow the same rules as on [BsonArray] itself.
 	 */
 	fun asIterable(): Iterable<BsonValue>
 
@@ -120,6 +124,10 @@ interface BsonArray {
 
 	/**
 	 * Creates a [Sequence] of the items in this array.
+	 *
+	 * ### Requirements
+	 *
+	 * The [Sequence.toString] output should follow the same rules as the [BsonArray] itself.
 	 */
 	fun asSequence(): Sequence<BsonValue>
 
@@ -221,7 +229,11 @@ interface BsonArray {
 	 */
 	@LowLevelApi
 	fun <T> decodeElements(type: KType): List<T> =
-		asIterable().map { it.decode(type) }
+		try {
+			asIterable().map { it.decode(type) }
+		} catch (e: BsonDecodingException) {
+			throw BsonDecodingException("Could not decode elements of type ${type}\n\tfrom value $this", e)
+		}
 
 	/**
 	 * Returns the [BsonValue] equivalent to this array.

@@ -78,7 +78,6 @@ internal class MultiplatformBsonArrayList(
 	override fun iterator(): Iterator<BsonValue> =
 		BsonArrayIterator()
 
-
 	inner class BsonArrayIterator : Iterator<BsonValue> {
 		var index = 0
 			private set
@@ -121,7 +120,7 @@ internal class MultiplatformBsonArrayList(
 
 		while (iter.hasNext()) {
 			if (iter.next() == element) {
-				return iter.index
+				return iter.index - 1
 			}
 		}
 
@@ -148,4 +147,36 @@ internal class MultiplatformBsonArrayList(
 		return scannedFields.subList(fromIndex, toIndex)
 	}
 
+	override fun equals(other: Any?): Boolean {
+		if (other !is List<*>) return false
+		if (size != other.size) return false
+
+		for (index in indices) {
+			if (this[index] != other[index]) return false
+		}
+		return true
+	}
+
+	override fun hashCode(): Int {
+		var code = 1
+		for (element in this) {
+			code = code * 31 + element.hashCode()
+		}
+		return code
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String = buildString {
+		append('[')
+		var isFirst = true
+		for (element in this@MultiplatformBsonArrayList) {
+			if (!isFirst)
+				append(", ")
+
+			append(element)
+
+			isFirst = false
+		}
+		append(']')
+	}
 }

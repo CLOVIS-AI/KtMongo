@@ -148,25 +148,27 @@ internal class BsonDecoder(
 	private val byteVector = ByteVector.serializer().descriptor
 	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
 		@Suppress("UNCHECKED_CAST")
-		return when (deserializer.descriptor) {
-			// Special cases where we provide our own decoder
-			bytes -> source.decodeBinaryData() as T
-			objectId -> source.decodeObjectId() as T
-			timestamp -> source.decodeTimestamp() as T
-			uuid -> {
-				val subType = source.decodeBinaryDataType()
-				check(subType == 3.toUByte() || subType == 4.toUByte()) { "Uuid should be represented by the binary subtypes 3 (deprecated) or 4, found: $subType" }
-				Uuid.fromByteArray(source.decodeBinaryData()) as T
-			}
-			instant -> source.decodeInstant() as T
-			vector, floatVector, booleanVector, byteVector -> Vector.fromBinaryData(source.decodeBinaryData()) as T
+		return try {
+			when (deserializer.descriptor) {
+				// Special cases where we provide our own decoder
+				bytes -> source.decodeBinaryData() as T
+				objectId -> source.decodeObjectId() as T
+				timestamp -> source.decodeTimestamp() as T
+				uuid -> {
+					val subType = source.decodeBinaryDataType()
+					check(subType == 3.toUByte() || subType == 4.toUByte()) { "Uuid should be represented by the binary subtypes 3 (deprecated) or 4, found: $subType" }
+					Uuid.fromByteArray(source.decodeBinaryData()) as T
+				}
+				instant -> source.decodeInstant() as T
+				vector, floatVector, booleanVector, byteVector -> Vector.fromBinaryData(source.decodeBinaryData()) as T
 
-			// General case: do what the serializer says
-			else -> try {
-				deserializer.deserialize(this)
-			} catch (e: SerializationException) {
-				throw BsonDecodingException("Could not decode ${deserializer.descriptor}\n\tfrom value $source", e)
+				// General case: do what the serializer says
+				else -> deserializer.deserialize(this)
 			}
+		} catch (e: SerializationException) {
+			throw BsonDecodingException("Could not decode ${deserializer.descriptor}\n\tfrom value $source", e)
+		} catch (e: BsonDecodingException) {
+			throw BsonDecodingException("Could not decode ${deserializer.descriptor}\n\tfrom value $source", e)
 		}
 	}
 }

@@ -21,6 +21,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.bson.BsonDecodingException
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonArrayList
 import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoderTopLevel
@@ -70,7 +71,12 @@ class BsonArray internal constructor(
 	override fun <T> decode(type: KType): T {
 		val decoder = BsonDecoderTopLevel(EmptySerializersModule(), factory, bytesWithHeader)
 		@Suppress("UNCHECKED_CAST")
-		return decoder.decodeSerializableValue(serializer(type) as KSerializer<T>)
+		val serializer = serializer(type) as KSerializer<T>
+		return try {
+			decoder.decodeSerializableValue(serializer)
+		} catch (e: BsonDecodingException) {
+			throw BsonDecodingException("Could not decode ${serializer.descriptor}\n\tfrom value $this", e)
+		}
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -85,7 +91,13 @@ class BsonArray internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun asIterable(): Iterable<BsonValue> =
-		Iterable { list.iterator() }
+		object : Iterable<BsonValue> {
+			override fun iterator(): Iterator<BsonValue> =
+				list.iterator()
+
+			override fun toString(): String =
+				this@BsonArray.toString()
+		}
 
 	@OptIn(LowLevelApi::class)
 	override fun asList(): List<BsonValue> =
@@ -93,7 +105,13 @@ class BsonArray internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun asSequence(): Sequence<BsonValue> =
-		Sequence { list.iterator() }
+		object : Sequence<BsonValue> {
+			override fun iterator(): Iterator<BsonValue> =
+				list.iterator()
+
+			override fun toString(): String =
+				this@BsonArray.toString()
+		}
 
 	override fun withIndex(): Iterable<IndexedValue<BsonValue>> =
 		asIterable().withIndex()
@@ -122,19 +140,8 @@ class BsonArray internal constructor(
 		BsonArray.hashCode(this)
 
 	@OptIn(LowLevelApi::class)
-	override fun toString(): String = buildString {
-		append('[')
-		var isFirst = true
-		for (element in list) {
-			if (!isFirst)
-				append(", ")
-
-			append(element)
-
-			isFirst = false
-		}
-		append(']')
-	}
+	override fun toString(): String =
+		list.toString()
 
 	// endregion
 }

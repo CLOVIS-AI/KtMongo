@@ -77,7 +77,7 @@ class BsonValue internal constructor(
 
 	private fun checkType(expected: BsonType) {
 		if (type != expected)
-			throw BsonDecodingException("Cannot read this field as a $expected, because it is a $type")
+			throw BsonDecodingException("Cannot read this field as a $expected, because it is a $type: $this")
 	}
 
 	@LowLevelApi

@@ -56,36 +56,40 @@ actual class BsonArray internal constructor(
 
 			require(elementKClass is KClass<*>) { "The official Java driver only supports types that can be represented as classes, but this array has an unsupported parameter type\n\tObject: $raw\n\tType: $typeArg" }
 
-			return decodeValue(element, elementKClass, factory.codecRegistry)
+			return decodeValue(element, elementKClass, factory)
 		}
 
 		@Suppress("UNCHECKED_CAST")
-		return when {
-			classifier == List::class || classifier == MutableList::class || classifier == Collection::class || classifier == MutableCollection::class -> {
-				val out = ArrayList<Any?>()
-				for (v in raw) out.add(decodeElement(v))
-				out as T
-			}
-
-			classifier == Set::class || classifier == MutableSet::class -> {
-				val out = LinkedHashSet<Any?>()
-				for (v in raw) out.add(decodeElement(v))
-				out as T
-			}
-
-			classifier.java.isArray && typeArg != null && elementKClass != null && !classifier.java.componentType.isPrimitive -> {
-				val size = raw.size
-				val componentClass = elementKClass.java
-				val arrayObj = java.lang.reflect.Array.newInstance(componentClass, size)
-				for (i in 0 until size) {
-					val v = raw[i]
-					val decoded = decodeElement(v)
-					java.lang.reflect.Array.set(arrayObj, i, decoded)
+		return try {
+			when {
+				classifier == List::class || classifier == MutableList::class || classifier == Collection::class || classifier == MutableCollection::class -> {
+					val out = ArrayList<Any?>()
+					for (v in raw) out.add(decodeElement(v))
+					out as T
 				}
-				arrayObj as T
-			}
 
-			else -> decodeValue(raw, classifier, factory.codecRegistry)
+				classifier == Set::class || classifier == MutableSet::class -> {
+					val out = LinkedHashSet<Any?>()
+					for (v in raw) out.add(decodeElement(v))
+					out as T
+				}
+
+				classifier.java.isArray && typeArg != null && elementKClass != null && !classifier.java.componentType.isPrimitive -> {
+					val size = raw.size
+					val componentClass = elementKClass.java
+					val arrayObj = java.lang.reflect.Array.newInstance(componentClass, size)
+					for (i in 0 until size) {
+						val v = raw[i]
+						val decoded = decodeElement(v)
+						java.lang.reflect.Array.set(arrayObj, i, decoded)
+					}
+					arrayObj as T
+				}
+
+				else -> decodeValue(raw, classifier, factory)
+			}
+		} catch (e: Exception) {
+			throw BsonDecodingException("Could not decode $type\n\tfrom value $this", e)
 		}
 	}
 
@@ -102,7 +106,13 @@ actual class BsonArray internal constructor(
 		BsonArrayList()
 
 	actual override fun asSequence(): Sequence<BsonValue> =
-		Sequence { iterator() }
+		object : Sequence<BsonValue> {
+			override fun iterator(): Iterator<BsonValue> =
+				this@BsonArray.iterator()
+
+			override fun toString(): String =
+				this@BsonArray.toString()
+		}
 
 	actual override fun withIndex(): Iterable<IndexedValue<BsonValue>> =
 		asIterable().withIndex()
@@ -186,8 +196,26 @@ actual class BsonArray internal constructor(
 			// Very poor implementation, tell us if you need this!
 			this.iterator().asSequence().toList().subList(fromIndex, toIndex)
 
+		override fun equals(other: Any?): Boolean {
+			if (other !is List<*>) return false
+			if (size != other.size) return false
+
+			for (index in indices) {
+				if (this[index] != other[index]) return false
+			}
+			return true
+		}
+
+		override fun hashCode(): Int {
+			var code = 1
+			for (element in this) {
+				code = code * 31 + element.hashCode()
+			}
+			return code
+		}
+
 		override fun toString(): String =
-			joinToString(separator = "", prefix = "[", postfix = "]")
+			joinToString(separator = ", ", prefix = "[", postfix = "]")
 	}
 
 	override fun toString(): String {
