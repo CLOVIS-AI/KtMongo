@@ -18,10 +18,7 @@ package opensavvy.ktmongo.bson.multiplatform.impl.read
 
 import kotlinx.io.readIntLe
 import opensavvy.ktmongo.bson.BsonType
-import opensavvy.ktmongo.bson.multiplatform.BsonFactory
-import opensavvy.ktmongo.bson.multiplatform.BsonValue
-import opensavvy.ktmongo.bson.multiplatform.Bytes
-import opensavvy.ktmongo.bson.multiplatform.RawBsonReader
+import opensavvy.ktmongo.bson.multiplatform.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 internal fun restrictAsDocument(bytes: Bytes): Bytes {
@@ -132,20 +129,32 @@ internal class MultiplatformBsonDocumentMap(
 			scannedFields[key]
 		}
 
-	operator fun iterator(): Iterator<Pair<String, BsonValue>> =
-		object : Iterator<Pair<String, BsonValue>> {
-			val iter = scannedFields.iterator()
+	operator fun iterator(): Iterator<BsonDocument.Field> =
+		object : Iterator<BsonDocument.Field> {
+			var index: Int = 0
 
 			override fun hasNext(): Boolean =
-				iter.hasNext() || reader.request(1)
+				scannedFields.size > index || reader.request(1)
 
-			override fun next(): Pair<String, BsonValue> {
+			private fun Iterator<*>.skip(n: Int) {
+				for (i in 0 until n) {
+					if (!hasNext()) return
+					val _ = next()
+				}
+			}
+
+			override fun next(): BsonDocument.Field {
+				val iter = scannedFields.iterator()
+				iter.skip(index)
+
 				if (iter.hasNext()) {
 					val (field, value) = iter.next()
-					return field to value
+					index++
+					return BsonDocument.Field(field, value)
 				} else if (reader.request(1)) {
 					val field = scanOne()
-					return field to scannedFields[field]!!
+					index++
+					return BsonDocument.Field(field, scannedFields[field]!!)
 				} else {
 					throw NoSuchElementException("No more elements in this BSON document")
 				}
@@ -193,5 +202,34 @@ internal class MultiplatformBsonDocumentMap(
 			if (found == value)
 				return true
 		return false
+	}
+
+	override fun equals(other: Any?): Boolean {
+		scanUntil(null)
+		return scannedFields == other
+	}
+
+	override fun hashCode(): Int {
+		scanUntil(null)
+		return scannedFields.hashCode()
+	}
+
+	override fun toString(): String = buildString {
+		append('{')
+
+		var isFirst = true
+		for ((key, value) in this@MultiplatformBsonDocumentMap) {
+			if (!isFirst)
+				append(", ")
+
+			append('"')
+			append(key)
+			append("\": ")
+			append(value)
+
+			isFirst = false
+		}
+
+		append('}')
 	}
 }

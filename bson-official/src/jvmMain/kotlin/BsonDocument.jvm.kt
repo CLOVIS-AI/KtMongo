@@ -67,7 +67,13 @@ actual class BsonDocument internal constructor(
 		BsonDocumentMap()
 
 	actual override fun asSequence(): Sequence<Field> =
-		Sequence { this@BsonDocument.iterator() }
+		object : Sequence<Field> {
+			override fun iterator(): Iterator<Field> =
+				this@BsonDocument.iterator()
+
+			override fun toString(): String =
+				this@BsonDocument.toString()
+		}
 
 	actual override fun asValue(): BsonValue =
 		BsonValue(raw, factory)
@@ -141,11 +147,33 @@ actual class BsonDocument internal constructor(
 
 								override val value: BsonValue
 									get() = BsonValue(raw.value, factory)
+
+								override fun equals(other: Any?): Boolean =
+									other is Map.Entry<*, *> && key == other.key && value == other.value
+
+								override fun hashCode(): Int =
+									key.hashCode() xor value.hashCode()
+
+								override fun toString(): String =
+									"($key, $value)"
 							}
 					}
 
 				override fun containsAll(elements: Collection<Map.Entry<String, BsonValue>>): Boolean =
 					elements.all { it in this}
+
+				override fun equals(other: Any?): Boolean {
+					if (other !is Set<*>) return false
+					if (size != other.size) return false
+
+					return this.all { it in other }
+				}
+
+				override fun hashCode(): Int =
+					sumOf { it.hashCode() }
+
+				override fun toString(): String =
+					Iterable { iterator() }.joinToString(", ", "[", "]")
 			}
 
 		override fun isEmpty(): Boolean =
@@ -159,6 +187,16 @@ actual class BsonDocument internal constructor(
 
 		override fun get(key: String): BsonValue? =
 			this@BsonDocument[key]
+
+		// Follow the rules of java.util.Map
+		override fun equals(other: Any?): Boolean =
+			other is Map<*, *> && this.entries == other.entries
+
+		override fun hashCode(): Int =
+			this.entries.hashCode()
+
+		override fun toString(): String =
+			this@BsonDocument.toString()
 	}
 
 	actual override fun get(field: String): BsonValue? =
@@ -196,6 +234,15 @@ actual class BsonDocument internal constructor(
 
 		override fun component1(): String = name
 		actual override fun component2(): BsonValue = value
+
+		override fun equals(other: Any?): Boolean =
+			other is opensavvy.ktmongo.bson.BsonDocument.Field && name == other.name && value == other.value
+
+		override fun hashCode(): Int =
+			name.hashCode() * 31 + value.hashCode()
+
+		override fun toString(): String =
+			"($name, $value)"
 	}
 }
 

@@ -94,18 +94,34 @@ class BsonDocument internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun asIterable(): Iterable<Field> =
-		Iterable { iterator() }
+		object : Iterable<Field> {
+			override fun iterator(): Iterator<Field> =
+				this@BsonDocument.iterator()
+
+			override fun toString(): String =
+				this@BsonDocument.toString()
+		}
 
 	@OptIn(LowLevelApi::class)
 	override fun asMap(): Map<String, BsonValue> =
 		map
 
 	override fun asSequence(): Sequence<Field> =
-		Sequence { iterator() }
+		object : Sequence<Field> {
+			override fun iterator(): Iterator<Field> =
+				this@BsonDocument.iterator()
+
+			override fun toString(): String =
+				this@BsonDocument.toString()
+		}
 
 	@OptIn(LowLevelApi::class)
 	override val size: Int
 		get() = map.size
+
+	@OptIn(LowLevelApi::class)
+	override fun isEmpty(): Boolean =
+		map.isEmpty()
 
 	@OptIn(LowLevelApi::class)
 	override val fields: Set<String>
@@ -113,17 +129,7 @@ class BsonDocument internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override fun iterator(): Iterator<Field> =
-		object : Iterator<Field> {
-			val iter = map.iterator()
-
-			override fun hasNext(): Boolean =
-				iter.hasNext()
-
-			override fun next(): Field {
-				val (field, next) = iter.next()
-				return Field(field, next)
-			}
-		}
+		map.iterator()
 
 	class Field(
 		override val name: String,
@@ -132,6 +138,15 @@ class BsonDocument internal constructor(
 
 		override fun component1(): String  = name
 		override fun component2(): BsonValue = value
+
+		override fun equals(other: Any?): Boolean =
+			other is BsonDocument.Field && name == other.name && value == other.value
+
+		override fun hashCode(): Int =
+			name.hashCode() * 31 + value.hashCode()
+
+		override fun toString(): String =
+			"($name, $value)"
 	}
 
 	override fun toByteArray(): ByteArray =
@@ -148,24 +163,9 @@ class BsonDocument internal constructor(
 	override fun hashCode(): Int =
 		BsonDocument.hashCode(this)
 
-	override fun toString(): String = buildString {
-		append('{')
-
-		var isFirst = true
-		for ((key, value) in this@BsonDocument.iterator()) {
-			if (!isFirst)
-				append(", ")
-
-			append('"')
-			append(key)
-			append("\": ")
-			append(value)
-
-			isFirst = false
-		}
-
-		append('}')
-	}
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String =
+		map.toString()
 
 	// endregion
 

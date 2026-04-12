@@ -119,6 +119,10 @@ interface BsonDocument {
 	 *
 	 * The iteration order of a BSON document is preserved: fields appear in the same order as they
 	 * are written in.
+	 *
+	 * ### Requirements
+	 *
+	 * - The [Iterable.toString] output should follow the same rules as on [BsonDocument] itself.
 	 */
 	fun asIterable(): Iterable<Field>
 
@@ -129,6 +133,12 @@ interface BsonDocument {
 	 *
 	 * The iteration order of a BSON document is preserved: fields appear in the same order as they
 	 * are written in.
+	 *
+	 * ### Requirements
+	 *
+	 * - The [Map.toString] output should follow the same rules as on [BsonDocument] itself.
+	 * - The [Map.equals] and [Map.hashCode] implementations should follow the equality rules of the JDK.
+	 * - The [Map.entries] set should follow the equality rules of the JDK.
 	 */
 	fun asMap(): Map<String, BsonValue>
 
@@ -139,6 +149,10 @@ interface BsonDocument {
 	 *
 	 * The iteration order of a BSON document is preserved: fields appear in the same order as they
 	 * are written in.
+	 *
+	 * ### Requirements
+	 *
+	 * The [Sequence.toString] output should follow the same rules as on [BsonDocument] itself.
 	 */
 	fun asSequence(): Sequence<Field>
 
@@ -197,6 +211,32 @@ interface BsonDocument {
 	 */
 	fun asValue(): BsonValue
 
+	/**
+	 * A pair of a [name] and a [value].
+	 *
+	 * This type is used when iterating over the fields of a [BsonDocument].
+	 *
+	 * ### Equality & string representation
+	 *
+	 * Different implementations of this interface are considered equal if:
+	 * - Their [name] is equal.
+	 * - Their [value] is equal (according to the equality rules of [BsonValue]).
+	 *
+	 * The behavior of [equals], [hashCode] and [toString] should be semantially equivalent to:
+	 * ```kotlin
+	 * override fun equals(other: Any?): Boolean =
+	 *     other is BsonDocument.Field && name == other.name && value == other.value
+	 *
+	 * override fun hashCode(): Int =
+	 *     name.hashCode() * 31 + value.hashCode()
+	 *
+	 * override fun toString(): String =
+	 *     "($name, $value)"
+	 * ```
+	 *
+	 * Different implementations are allowed only as performance improvements, but the output
+	 * must be identical to the implementations provided above.
+	 */
 	interface Field {
 		val name: String
 		val value: BsonValue
