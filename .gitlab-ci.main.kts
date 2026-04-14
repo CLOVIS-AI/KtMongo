@@ -52,17 +52,15 @@ fun Job.stripUnicodeTestReports() {
 		// language="Shell Script"
 		shell($$"""
 			find . -path '*/build/test-results/*/TEST-*.xml' -print0 |
-			  grep -zP '[^\x00-\x{00FF}]' |
+			  perl -C -0ne 'print if /[^\x00-\xFF]/' |
 			  while IFS= read -r -d '' f; do
 			    d="$(dirname "$f")"
 			    b="$(basename "$f")"
-			    nb=$(printf '%s' "$b" | LC_ALL=C sed -E \
-			      -e 's/[\xc4-\xdf][\x80-\xbf]/-/g' \
-			      -e 's/[\xe0-\xef][\x80-\xbf]{2}/-/g' \
-			      -e 's/[\xf0-\xf4][\x80-\xbf]{3}/-/g')
+			    nb=$(printf '%s' "$b" | perl -C -pe 's/[\x{80}-\x{FFFF}]/-/g')
 			    mv -- "$f" "$d/$nb"
 			  done
 		""".trimIndent())
+		shell("find . -path '*/build/test-results/*/TEST-*.xml'")
 	}
 }
 
@@ -97,10 +95,11 @@ fun Job.nativeLinuxX64() {
 
 fun Job.nativeIosArm64() {
 	useGradle()
-	image("macos-15-xcode-16")
+	image("macos-26-xcode-26")
 
 	beforeScript {
 		shell("xcodebuild -downloadPlatform iOS")
+		shell("xcodebuild -downloadPlatform watchOS")
 	}
 
 	tag("saas-macos-medium-m1")
@@ -108,6 +107,8 @@ fun Job.nativeIosArm64() {
 	retry(1) {
 		onExitCode(1)
 	}
+
+	stripUnicodeTestReports()
 }
 
 // endregion
