@@ -86,6 +86,9 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		val sourceFilePath = sourceFile.path.replace('\\', '/')
 		val isValueOverloadTarget = sourceFilePath.contains("aggregation/operators") ||
 			sourceFilePath.endsWith("aggregation/accumulators/ArithmeticValueAccumulators.kt")
+		// Field.kt defines the KProperty1→Field conversion functions themselves, so generating
+		// KProperty1 overloads there would produce recursive or broken delegations.
+		val isFieldDslFile = sourceFilePath.endsWith("path/Field.kt")
 
 		// Pre-scan: collect existing KProperty1 receiver functions/properties to avoid duplicates
 		val existingKPropFunctions = mutableSetOf<Pair<String, Int>>() // (name, paramCount)
@@ -408,6 +411,11 @@ abstract class ApplyTemplateTask : DefaultTask() {
 				}
 				// endregion
 
+				// Skip top-level functions: KProperty1.field is only available inside FieldDsl context
+				if (ctx.parent is opensavvy.ktmongo.build.kotlin.KotlinParser.TopLevelObjectContext) return
+				// Skip Field.kt itself: it defines the conversion functions, not consumers of them
+				if (isFieldDslFile) return
+
 				// The receiver type is stored in different places depending on whether type parameters are present:
 				// - With type params (e.g. fun <V> Field<T,V>.foo()): receiverType() after typeParameters()
 				// - Without type params (e.g. fun Field<T,*>.foo()): type() before typeParameters() (grammar quirk)
@@ -424,7 +432,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 					return
 				}
 				val receiverText = source.substring(receiverStart, receiverEnd + 1)
-				if (!receiverText.startsWith("Field<T")) return
+				if (!receiverText.startsWith("Field<")) return
 
 				// Don't generate overloads for 'override' functions: the parent interface already has them
 				val funcStart0 = ctx.start.startIndex
@@ -435,7 +443,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 				val paramCount = ctx.functionValueParameters()?.functionValueParameter()?.size ?: 0
 				if (Pair(funcName, paramCount) in existingKPropFunctions) return
 
-				val kpropReceiver = receiverText.replaceFirst("Field<T", "kotlin.reflect.KProperty1<T")
+				val kpropReceiver = receiverText.replaceFirst("Field<", "kotlin.reflect.KProperty1<")
 
 				val paramCallParts = ctx.functionValueParameters()
 					?.functionValueParameter()
@@ -576,12 +584,14 @@ abstract class ApplyTemplateTask : DefaultTask() {
 					}
 				}
 				// endregion
-				if (!receiverText.startsWith("Field<T")) return
+				// Skip Field.kt itself: it defines the conversion functions, not consumers of them
+				if (isFieldDslFile) return
+				if (!receiverText.startsWith("Field<")) return
 
 				val propName = ctx.variableDeclaration()?.simpleIdentifier()?.text ?: return
 				if (propName in existingKPropProperties) return
 
-				val kpropReceiver = receiverText.replaceFirst("Field<T", "kotlin.reflect.KProperty1<T")
+				val kpropReceiver = receiverText.replaceFirst("Field<", "kotlin.reflect.KProperty1<")
 
 				val propStart = ctx.start.startIndex
 				val propEnd = ctx.stop.stopIndex
