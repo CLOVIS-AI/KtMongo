@@ -34,7 +34,6 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
-import kotlin.reflect.KProperty1
 
 /**
  * Pipeline implementing the `$set` stage.
@@ -99,11 +98,63 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 */
+	@JvmName("setByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		set(of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 */
+	@JvmName("setPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.set(value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		this.field.set(of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 */
+	@JvmName("setByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: kotlin.reflect.KProperty1<T, V>) =
+		set(of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 */
+	@JvmName("setPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.set(value: kotlin.reflect.KProperty1<T, V>) =
+		this.field.set(of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.set(value: Value<T, V>) {
-		this.field.set(value)
-	}
+	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V) =
+		set(of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value].
@@ -114,9 +165,8 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V) {
-		this.set(of(value))
-	}
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.set(value: V) =
+		this.field.set(of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value].
@@ -127,13 +177,12 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.set(value: V) {
-		this.field.set(value)
+	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.set(value: Value<T, V>) {
+		return this.field.set(value)
 	}
 
 	// endregion
 	// region Conditional $set
-	// region setIf
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
@@ -160,10 +209,11 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@JvmName("setIfByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setIf(condition: Value<T, Boolean>, value: Value<T, V>) =
-		this.field.setIf(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Value<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		setIf(condition, of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
@@ -175,10 +225,59 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
+	@JvmName("setIfPropertyReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Value<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		this.field.setIf(condition, of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Value<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		setIf(condition, of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Value<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		this.field.setIf(condition, of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Value<T, Boolean>, value: V) =
-		this.setIf(condition, of(value))
+		setIf(condition, of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
@@ -192,8 +291,282 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setIf(condition: Value<T, Boolean>, value: V) =
-		this.field.setIf(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Value<T, Boolean>, value: V) =
+		this.field.setIf(condition, of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: Value<T, V>) =
+		setIf(of(condition), value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: Value<T, V>) =
+		this.field.setIf(of(condition), value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		this.field.setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		this.field.setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("setIfByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
+		setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
+		this.field.setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: Value<T, V>) =
+		setIf(of(condition), value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: Value<T, V>) =
+		this.field.setIf(of(condition), value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		this.field.setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		this.field.setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("setIfByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
+		setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
+		this.field.setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: Value<T, V>) =
+		setIf(of(condition), value)
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
@@ -207,10 +580,8 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: Value<T, V>) {
-		if (condition)
-			this.set(value)
-	}
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: Value<T, V>) =
+		this.field.setIf(of(condition), value)
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
@@ -222,10 +593,12 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("setIfByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setIf(condition: Boolean, value: Value<T, V>) =
-		this.field.setIf(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		setIf(of(condition), of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
@@ -237,10 +610,60 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
+	@JvmName("setIfPropertyReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		this.field.setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("setIfByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
+		setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setIfPropertyReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
+		this.field.setIf(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: V) =
-		this.setIf(condition, of(value))
+		setIf(of(condition), of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
@@ -254,11 +677,24 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setIf(condition: Boolean, value: V) =
-		this.field.setIf(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: V) =
+		this.field.setIf(of(condition), of(value))
 
-	// endregion
-	// region setUnless
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
+	 *
+	 * If [condition] is `false`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Value<T, Boolean>, value: Value<T, V>) {
+		return this.field.setIf(condition, value)
+	}
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
@@ -285,10 +721,11 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@JvmName("setUnlessByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setUnless(condition: Value<T, Boolean>, value: Value<T, V>) =
-		this.field.setUnless(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Value<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		setUnless(condition, of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
@@ -300,10 +737,59 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
+	@JvmName("setUnlessPropertyReceiverByValueByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Value<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		this.field.setUnless(condition, of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Value<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		setUnless(condition, of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByValueByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Value<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		this.field.setUnless(condition, of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Value<T, Boolean>, value: V) =
-		this.setUnless(condition, of(value))
+		setUnless(condition, of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
@@ -317,8 +803,282 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setUnless(condition: Value<T, Boolean>, value: V) =
-		this.field.setUnless(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Value<T, Boolean>, value: V) =
+		this.field.setUnless(condition, of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: Value<T, V>) =
+		setUnless(of(condition), value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByFieldByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: Value<T, V>) =
+		this.field.setUnless(of(condition), value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByFieldByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		this.field.setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByFieldByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		this.field.setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("setUnlessByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
+		setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByFieldByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
+		this.field.setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: Value<T, V>) =
+		setUnless(of(condition), value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByPropertyByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: Value<T, V>) =
+		this.field.setUnless(of(condition), value)
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByPropertyByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		this.field.setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByPropertyByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: kotlin.reflect.KProperty1<T, V>) =
+		this.field.setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("setUnlessByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
+		setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByPropertyByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
+		this.field.setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: Value<T, V>) =
+		setUnless(of(condition), value)
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
@@ -332,10 +1092,8 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: Value<T, V>) {
-		if (!condition)
-			this.set(value)
-	}
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: Value<T, V>) =
+		this.field.setUnless(of(condition), value)
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
@@ -347,10 +1105,12 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("setUnlessByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setUnless(condition: Boolean, value: Value<T, V>) =
-		this.field.setUnless(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		setUnless(of(condition), of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
@@ -362,10 +1122,60 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
+	@JvmName("setUnlessPropertyReceiverByResultByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+		this.field.setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@JvmName("setUnlessByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
+		setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@JvmName("setUnlessPropertyReceiverByResultByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
+		this.field.setUnless(of(condition), of(value))
+
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: V) =
-		this.setUnless(condition, of(value))
+		setUnless(of(condition), of(value))
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
@@ -379,10 +1189,25 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> KProperty1<T, V>.setUnless(condition: Boolean, value: V) =
-		this.field.setUnless(condition, value)
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: V) =
+		this.field.setUnless(of(condition), of(value))
 
-	// endregion
+	/**
+	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
+	 *
+	 * If [condition] is `true`, this operator does nothing.
+	 *
+	 * ### External resources
+	 *
+	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Value<T, Boolean>, value: Value<T, V>) {
+		return this.field.setUnless(condition, value)
+	}
+
 	// endregion
 }
 

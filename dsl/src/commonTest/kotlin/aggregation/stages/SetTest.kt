@@ -108,15 +108,23 @@ val SetTest by preparedSuite {
 		test("Boolean condition") {
 			TestPipeline<Target>()
 				.set {
-					Target::deathDate.setIf(true, of(12))
-					Target::deathDate.setIf(false, of(13))
+					Target::deathDate.setIf(true, 12)
+					Target::deathDate.setIf(false, 13)
 				}
 				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
 								"deathDate": {
-									"$literal": 12
+									"$cond": {
+										"if": {
+											"$literal": false
+										}, 
+										"then": {
+											"$literal": 13
+										}, 
+										"else": "$deathDate"
+									}
 								}
 							}
 						}
@@ -135,7 +143,15 @@ val SetTest by preparedSuite {
 						{
 							"$set": {
 								"deathDate": {
-									"$literal": 12
+									"$cond": {
+										"if": {
+											"$literal": false
+										},
+										"then": {
+											"$literal": 13
+										}, 
+										"else": "$deathDate"
+									}
 								}
 							}
 						}
