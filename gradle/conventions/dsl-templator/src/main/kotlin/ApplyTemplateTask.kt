@@ -85,7 +85,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 		val sourceFilePath = sourceFile.path.replace('\\', '/')
 		val isValueOverloadTarget = sourceFilePath.contains("aggregation/operators") ||
-			sourceFilePath.endsWith("aggregation/accumulators/ArithmeticValueAccumulators.kt")
+			sourceFilePath.contains("aggregation/accumulators")
 		// Field.kt defines the KProperty1→Field conversion functions themselves, so generating
 		// KProperty1 overloads there would produce recursive or broken delegations.
 		val isFieldDslFile = sourceFilePath.endsWith("path/Field.kt")
