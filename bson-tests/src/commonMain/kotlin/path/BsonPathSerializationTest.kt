@@ -58,7 +58,7 @@ data class User(
 @Serializable
 data class IntList(val items: List<Int>)
 
-fun SuiteDsl.bsonPathTests(
+fun SuiteDsl.verifyBsonPath(
 	context: Prepared<BsonFactory>,
 ) = suite("BsonPath") {
 
@@ -73,7 +73,7 @@ fun SuiteDsl.bsonPathTests(
 	)
 
 	val bobDoc by prepared {
-		context().write(bob)
+		context().encode(bob)
 	}
 
 	test("Select a simple field") {
@@ -132,7 +132,7 @@ fun SuiteDsl.bsonPathTests(
 	suite("Slices") {
 		suite("Indices") {
 			val sliceDoc by prepared {
-				context().write(IntList(listOf(0, 1, 2, 3, 4, 5, 6)))
+				context().encode(IntList(listOf(0, 1, 2, 3, 4, 5, 6)))
 			}
 
 			test("Default step") {

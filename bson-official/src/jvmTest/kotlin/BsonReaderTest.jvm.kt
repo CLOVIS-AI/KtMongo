@@ -23,13 +23,13 @@ import opensavvy.prepared.runner.testballoon.preparedSuite
 val BsonReaderTest by preparedSuite {
 
 	test("Read basic data types") {
-		val output = testContext().buildDocument {
+		val output = reflectionFactory().buildDocument {
 			writeString("hello", "world")
 			writeInt32("a", 42)
 		}
 
-		check(output.reader().read("hello")?.readString() == "world")
-		check(output.reader().read("a")?.readInt32() == 42)
+		check(output["hello"]?.decodeString() == "world")
+		check(output["a"]?.decodeInt32() == 42)
 	}
 
 }

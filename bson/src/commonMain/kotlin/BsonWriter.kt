@@ -47,7 +47,7 @@ sealed interface AnyBsonWriter
  *
  * To write fields in a BSON document, see [BsonFieldWriter].
  *
- * Instances of this interface are commonly obtained by calling the [BsonContext.buildArray] function.
+ * Instances of this interface are commonly obtained by calling the [BsonFactory.buildArray] function.
  */
 @LowLevelApi
 @BsonWriterDsl
@@ -123,13 +123,13 @@ interface BsonValueWriter : AnyBsonWriter {
 	 */
 	@LowLevelApi
 	@DangerousMongoApi
-	fun pipe(obj: BsonValueReader) {
+	fun pipe(obj: BsonValue) {
 		@Suppress("DEPRECATION")
 		when (obj.type) {
-			BsonType.Double -> writeDouble(obj.readDouble())
-			BsonType.String -> writeString(obj.readString())
+			BsonType.Double -> writeDouble(obj.decodeDouble())
+			BsonType.String -> writeString(obj.decodeString())
 			BsonType.Document -> writeDocument {
-				for ((name, value) in obj.readDocument().entries) {
+				for ((name, value) in obj.decodeDocument()) {
 					write(name) {
 						pipe(value)
 					}
@@ -137,27 +137,27 @@ interface BsonValueWriter : AnyBsonWriter {
 			}
 
 			BsonType.Array -> writeArray {
-				for (value in obj.readArray().elements) {
+				for (value in obj.decodeArray()) {
 					pipe(value)
 				}
 			}
 
-			BsonType.BinaryData -> writeBinaryData(obj.readBinaryDataType(), obj.readBinaryData())
+			BsonType.BinaryData -> writeBinaryData(obj.decodeBinaryDataType(), obj.decodeBinaryData())
 			BsonType.Undefined -> writeUndefined()
-			BsonType.ObjectId -> writeObjectId(obj.readObjectIdBytes())
-			BsonType.Boolean -> writeBoolean(obj.readBoolean())
-			BsonType.Datetime -> writeDateTime(obj.readDateTime())
+			BsonType.ObjectId -> writeObjectId(obj.decodeObjectIdBytes())
+			BsonType.Boolean -> writeBoolean(obj.decodeBoolean())
+			BsonType.Datetime -> writeDateTime(obj.decodeDateTime())
 			BsonType.Null -> writeNull()
-			BsonType.RegExp -> writeRegularExpression(obj.readRegularExpressionPattern(), obj.readRegularExpressionOptions())
-			BsonType.DBPointer -> writeDBPointer(obj.readDBPointerNamespace(), obj.readDBPointerId())
-			BsonType.JavaScript -> writeJavaScript(obj.readJavaScript())
-			BsonType.Symbol -> writeSymbol(obj.readSymbol())
-			BsonType.JavaScriptWithScope -> writeJavaScriptWithScope(obj.readJavaScriptWithScope())
-			BsonType.Int32 -> writeInt32(obj.readInt32())
-			BsonType.Timestamp -> writeTimestamp(obj.readTimestamp())
-			BsonType.Int64 -> writeInt64(obj.readInt64())
+			BsonType.RegExp -> writeRegularExpression(obj.decodeRegularExpressionPattern(), obj.decodeRegularExpressionOptions())
+			BsonType.DBPointer -> writeDBPointer(obj.decodeDBPointerNamespace(), obj.decodeDBPointerId().bytes)
+			BsonType.JavaScript -> writeJavaScript(obj.decodeJavaScript())
+			BsonType.Symbol -> writeSymbol(obj.decodeSymbol())
+			BsonType.JavaScriptWithScope -> writeJavaScriptWithScope(obj.decodeJavaScript())
+			BsonType.Int32 -> writeInt32(obj.decodeInt32())
+			BsonType.Timestamp -> writeTimestamp(obj.decodeTimestamp())
+			BsonType.Int64 -> writeInt64(obj.decodeInt64())
 			BsonType.Decimal128 -> {
-				val bytes = obj.readDecimal128()
+				val bytes = obj.decodeDecimal128Bytes()
 				writeDecimal128(bytes.readLong(0), bytes.readLong(1))
 			}
 
@@ -184,7 +184,7 @@ private fun ByteArray.readLong(index: Int): Long {
  *
  * To write generic values, see [BsonValueWriter].
  *
- * Instances of this interface are commonly obtained by calling the [BsonContext.buildDocument] function.
+ * Instances of this interface are commonly obtained by calling the [BsonFactory.encode] function.
  */
 @LowLevelApi
 @BsonWriterDsl

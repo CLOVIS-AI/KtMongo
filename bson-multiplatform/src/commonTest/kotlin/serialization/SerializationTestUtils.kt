@@ -19,12 +19,12 @@
 package opensavvy.ktmongo.bson.multiplatform.serialization
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import opensavvy.ktmongo.bson.multiplatform.context
+import opensavvy.ktmongo.bson.multiplatform.factory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.TestDsl
 
 suspend inline fun <reified T : Any> TestDsl.serializeRoundTrip(value: T) {
-	val ctx = context()
+	val ctx = factory()
 
 	check(decodeFromBson<T>(ctx, encodeToBson<T>(ctx, value).toByteArray()) == value)
 }

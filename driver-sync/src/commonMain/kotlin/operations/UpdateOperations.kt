@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.sync.operations
 
-import opensavvy.ktmongo.bson.BsonValueReader
+import opensavvy.ktmongo.bson.BsonValue
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.BulkWrite
 import opensavvy.ktmongo.dsl.command.BulkWriteOptions
@@ -472,7 +472,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 		 * @throws UnsupportedOperationException If the update was not [acknowledged].
 		 */
 		@OptIn(LowLevelApi::class)
-		val upsertedId: BsonValueReader?
+		val upsertedId: BsonValue?
 
 		/**
 		 * The number of upserted documents.

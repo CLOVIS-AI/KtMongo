@@ -20,12 +20,12 @@ package opensavvy.ktmongo.bson.official
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.ExperimentalBsonDiffApi
 import opensavvy.ktmongo.bson.diff
-import opensavvy.ktmongo.bson.read
+import opensavvy.ktmongo.bson.encode
 import opensavvy.ktmongo.bson.types.*
 import opensavvy.ktmongo.bson.types.Vector
-import opensavvy.ktmongo.bson.write
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
@@ -94,17 +94,31 @@ class SerializableWithKxS(
 
 val SerializationOptionsCompatibility by preparedSuite {
 
-	val expectedBson by prepared {
-		testContext().buildDocument {
-			writeString("a", "Bob")
-			writeObjectId("b", ObjectId("640180000000000000000000"))
-			writeObjectId("c", ObjectId("640180000000000000000000"))
-			writeTimestamp("d", Timestamp(Instant.parse("2023-03-01T00:00:00Z"), 12u))
-			writeVector("e", Vector.fromBinaryData(Base64.getDecoder().decode("EAA=")))
-			writeVector("f", FloatVector(127f, 7f))
-			writeVector("g", ByteVector(127, 7))
-			writeVector("h", BooleanVector(true, false))
+	fun BsonFieldWriter.writeExpectedBson() {
+		writeString("a", "Bob")
+		writeObjectId("b", ObjectId("640180000000000000000000"))
+		writeObjectId("c", ObjectId("640180000000000000000000"))
+		writeTimestamp("d", Timestamp(Instant.parse("2023-03-01T00:00:00Z"), 12u))
+		writeVector("e", Vector.fromBinaryData(Base64.getDecoder().decode("EAA=")))
+		writeVector("f", FloatVector(127f, 7f))
+		writeVector("g", ByteVector(127, 7))
+		writeVector("h", BooleanVector(true, false))
+	}
+
+	val expectedBsonReflection by prepared {
+		reflectionFactory().buildDocument {
+			writeExpectedBson()
 		}
+	}
+
+	val expectedBsonSerialization by prepared {
+		serializationFactory().buildDocument {
+			writeExpectedBson()
+		}
+	}
+
+	test("The two expected BSON are identical") {
+		check(expectedBsonReflection() == expectedBsonSerialization()) { "Diff: ${expectedBsonReflection() diff expectedBsonSerialization()}" }
 	}
 
 	val valueDataClass by prepared {
@@ -134,31 +148,23 @@ val SerializationOptionsCompatibility by preparedSuite {
 	}
 
 	val valueDataClassBson by prepared {
-		testContext().write(valueDataClass())
+		reflectionFactory().encode(valueDataClass())
 	}
 
 	val valueKxSBson by prepared {
-		testContext().write(valueKxS())
+		serializationFactory().encode(valueKxS())
 	}
 
 	test("Compare :bson-kotlin to baseline") {
-		check(valueDataClassBson() == expectedBson()) { "Diff:\n${valueDataClassBson() diff expectedBson()}" }
+		check(valueDataClassBson() == expectedBsonReflection()) { "Diff:\n${valueDataClassBson() diff expectedBsonReflection()}" }
 	}
 
 	test("Compare :bson-kotlinx to baseline") {
-		check(valueKxSBson() == expectedBson()) { "Diff:\n${valueKxSBson() diff expectedBson()}" }
+		check(valueKxSBson() == expectedBsonReflection()) { "Diff:\n${valueKxSBson() diff expectedBsonReflection()}" }
 	}
 
 	test("Compare :bson-kotlin to :bson-kotlinx") {
 		check(valueDataClassBson() == valueKxSBson()) { "Diff:\n${valueDataClassBson() diff valueKxSBson()}" }
-	}
-
-	test("Round-trip from :bson-kotlin to :bson-kotlinx") {
-		check(valueDataClassBson().read<SerializableWithKxS>() == valueKxS())
-	}
-
-	test("Round-trip from :bson-kotlinx to :bson-kotlin") {
-		check(valueKxSBson().read<SerializableWithDataClass>() == valueDataClass())
 	}
 
 }

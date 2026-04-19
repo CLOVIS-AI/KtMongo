@@ -19,23 +19,31 @@ package opensavvy.ktmongo.bson.official
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KType
 
 /**
- * BSON implementation based on the official MongoDB drivers.
+ * Creates KtMongo [BsonDocument] and [BsonArray] instances by wrapping the equivalents from the official drivers.
  */
-interface BsonFactory : BsonFactory {
+expect class BsonFactory : BsonFactory {
 
 	@LowLevelApi
-	override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson
+	override fun buildDocument(block: BsonFieldWriter.() -> Unit): BsonDocument
 
 	@LowLevelApi
-	override fun buildDocument(instance: BsonFieldWriteable): Bson =
-		buildDocument { instance.writeTo(this) }
+	override fun buildDocument(instance: BsonFieldWriteable): BsonDocument
+
+	@LowLevelApi
+	override fun <T : Any> encode(obj: T, type: KType): BsonDocument
+
+	@LowLevelApi
+	override fun readDocument(bytes: ByteArray): BsonDocument
 
 	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray
 
 	@LowLevelApi
-	override fun buildArray(instance: BsonValueWriteable): BsonArray =
-		buildArray { instance.writeTo(this) }
+	override fun buildArray(instance: BsonValueWriteable): BsonArray
+
+	@LowLevelApi
+	override fun readArray(bytes: ByteArray): BsonArray
 }

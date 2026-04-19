@@ -19,7 +19,7 @@ package opensavvy.ktmongo.bson
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 /**
- * An object that can be represented as fields in a [BSON document][Bson].
+ * An object that can be represented as fields in a [BSON document][BsonDocument].
  */
 interface BsonFieldWriteable {
 
@@ -30,7 +30,7 @@ interface BsonFieldWriteable {
 	fun writeTo(writer: BsonFieldWriter)
 
 	/**
-	 * JSON representation of this object as a [BSON document][Bson].
+	 * JSON representation of this object as a [BSON document][BsonDocument].
 	 */
 	override fun toString(): String
 }

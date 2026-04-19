@@ -24,8 +24,6 @@ import org.intellij.lang.annotations.Language
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
-import kotlin.reflect.KClass
-import kotlin.reflect.typeOf
 
 @Target(AnnotationTarget.CLASS, AnnotationTarget.CONSTRUCTOR, AnnotationTarget.TYPEALIAS, AnnotationTarget.PROPERTY, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER, AnnotationTarget.FUNCTION)
 @RequiresOptIn("This symbol is part of the experimental BsonPath API. It may change or be removed without warnings. Please provide feedback in https://gitlab.com/opensavvy/ktmongo/-/issues/93.")
@@ -34,11 +32,11 @@ annotation class ExperimentalBsonPathApi
 /**
  * Access specific fields in arbitrary BSON documents using a [JSONPath](https://www.rfc-editor.org/rfc/rfc9535.html)-like API.
  *
- * To access fields of a [BSON document][Bson], use [select] or [at].
+ * To access fields of a [BSON document][BsonDocument], use [select] or [at].
  *
  * ### Why BSON paths?
  *
- * Most of the time, users want to deserialize documents, which they can do with [opensavvy.ktmongo.bson.read].
+ * Most of the time, users want to deserialize documents, which they can do with [decode].
  *
  * However, sometimes, we receive large BSON payloads but only care about a few fields (for example, an explain plan).
  * Writing an entire DTO for such payloads is time-consuming and complex.
@@ -90,7 +88,7 @@ sealed interface BsonPath {
 	 * The path should recursively search by applying the [parent]'s [findIn] first.
 	 */
 	@LowLevelApi
-	fun findIn(reader: BsonValueReader): Sequence<BsonValueReader>
+	fun findIn(reader: BsonValue): Sequence<BsonValue>
 
 	/**
 	 * The parent path of this path: the same path without the last segment.
@@ -120,7 +118,7 @@ sealed interface BsonPath {
 		 * It is not the root node itself, unlike with [findIn].
 		 */
 		@LowLevelApi
-		fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader>
+		fun findInParent(reader: BsonValue): Sequence<BsonValue>
 
 	}
 
@@ -133,7 +131,7 @@ sealed interface BsonPath {
 	sealed interface PathOrSelector : BsonPath, Selector
 
 	/**
-	 * Points to a [field] in a [Bson] document.
+	 * Points to a [field] in a [BsonDocument] document.
 	 *
 	 * ### Example
 	 *
@@ -163,7 +161,7 @@ sealed interface BsonPath {
 	 * Points to all children of a document.
 	 *
 	 * - The children of a [BsonArray] are its elements.
-	 * - The children of a [Bson] document are the values of its fields.
+	 * - The children of a [BsonDocument] document are the values of its fields.
 	 *
 	 * ### Example
 	 *
@@ -288,7 +286,7 @@ sealed interface BsonPath {
 	 */
 	companion object Root : BsonPath {
 		@LowLevelApi
-		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+		override fun findIn(reader: BsonValue): Sequence<BsonValue> =
 			sequenceOf(reader)
 
 		@Deprecated("This function has been renamed to BsonPath(text).", ReplaceWith("BsonPath(text)", "opensavvy.ktmongo.bson.BsonPath"))
@@ -328,7 +326,7 @@ sealed interface BsonPath {
 	 */
 	data object Current : BsonPath {
 		@LowLevelApi
-		override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+		override fun findIn(reader: BsonValue): Sequence<BsonValue> =
 			sequenceOf(reader)
 
 		@ExperimentalBsonPathApi
@@ -357,7 +355,7 @@ private data class SingleSelectorSegment(
 	}
 
 	@LowLevelApi
-	override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> =
+	override fun findIn(reader: BsonValue): Sequence<BsonValue> =
 		parent.findIn(reader)
 			.flatMap { selector.findInParent(it) }
 
@@ -383,7 +381,7 @@ private data class MultiSelectorSegment(
 	}
 
 	@LowLevelApi
-	override fun findIn(reader: BsonValueReader): Sequence<BsonValueReader> {
+	override fun findIn(reader: BsonValue): Sequence<BsonValue> {
 		val values = parent.findIn(reader).toList()
 
 		return selectors
@@ -418,9 +416,9 @@ private data class FieldSelector(val name: String) : Selector {
 	}
 
 	@LowLevelApi
-	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> {
+	override fun findInParent(reader: BsonValue): Sequence<BsonValue> {
 		return if (reader.type == BsonType.Document) {
-			val value = reader.readDocument().read(name)
+			val value = reader.decodeDocument()[name]
 
 			if (value != null)
 				sequenceOf(value)
@@ -440,11 +438,11 @@ private data class FieldSelector(val name: String) : Selector {
 @ExperimentalBsonPathApi
 private data class IndexSelector(val index: Int) : Selector {
 	@LowLevelApi
-	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> {
+	override fun findInParent(reader: BsonValue): Sequence<BsonValue> {
 		return if (reader.type == BsonType.Array) {
-			val array = reader.readArray()
-			val readingIndex = if (index >= 0) index else array.elements.size + index
-			val value = array.read(readingIndex)
+			val array = reader.decodeArray()
+			val readingIndex = if (index >= 0) index else array.size + index
+			val value = array[readingIndex]
 			if (value != null)
 				sequenceOf(value)
 			else
@@ -460,10 +458,10 @@ private data class IndexSelector(val index: Int) : Selector {
 @ExperimentalBsonPathApi
 private object AllSelector : Selector {
 	@LowLevelApi
-	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> =
+	override fun findInParent(reader: BsonValue): Sequence<BsonValue> =
 		when (reader.type) {
-			BsonType.Document -> reader.readDocument().entries.values.asSequence()
-			BsonType.Array -> reader.readArray().elements.asSequence()
+			BsonType.Document -> reader.decodeDocument().asSequence().map { it.value }
+			BsonType.Array -> reader.decodeArray().asSequence()
 			else -> emptySequence()
 		}
 
@@ -513,10 +511,10 @@ private data class SliceSelector(
 	}
 
 	@LowLevelApi
-	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> = when {
+	override fun findInParent(reader: BsonValue): Sequence<BsonValue> = when {
 		step == 0 -> emptySequence()
 		reader.type == BsonType.Array -> sequence {
-			val elements = reader.readArray().elements
+			val elements = reader.decodeArray()
 
 			if (step >= 0) {
 				val start = if (start == -1) 0 else start
@@ -531,7 +529,7 @@ private data class SliceSelector(
 					yield(elements[index])
 				}
 			}
-		}
+		}.filterNotNull()
 
 		else -> emptySequence()
 	}
@@ -557,7 +555,7 @@ private data class FilterSelector(
 	val filter: LogicalExpression,
 ) : Selector {
 	@LowLevelApi
-	override fun findInParent(reader: BsonValueReader): Sequence<BsonValueReader> =
+	override fun findInParent(reader: BsonValue): Sequence<BsonValue> =
 		if (filter.test(reader)) sequenceOf(reader)
 		else emptySequence()
 
@@ -582,8 +580,8 @@ private sealed class FilterValue {
 	sealed class Value : FilterValue() {
 		override val type get() = Value
 
-		data class Reader(val reader: BsonValueReader) : Value() {
-			override fun toString() = "Value($reader)"
+		data class Bson(val value: BsonValue) : Value() {
+			override fun toString() = "Value($value)"
 		}
 
 		data class Text(val text: String) : Value() {
@@ -621,7 +619,7 @@ private sealed class FilterValue {
 	}
 
 	@OptIn(LowLevelApi::class)
-	data class Nodes(val nodes: Sequence<BsonValueReader>) : FilterValue() {
+	data class Nodes(val nodes: Sequence<BsonValue>) : FilterValue() {
 		override fun toString() = "Nodes(${nodes.toList().joinToString(", ")})"
 		override val type get() = Companion
 
@@ -637,7 +635,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 	val type: FilterValue.Type<Type>
 
 	@LowLevelApi
-	fun eval(reader: BsonValueReader): Type
+	fun eval(reader: BsonValue): Type
 
 	data class LogicalOr(
 		val left: LogicalExpression,
@@ -646,7 +644,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		override val type get() = FilterValue.Logical
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+		override fun eval(reader: BsonValue): FilterValue.Logical =
 			FilterValue.Logical(left.test(reader) || right.test(reader))
 
 		override fun toString(): String =
@@ -660,7 +658,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		override val type get() = FilterValue.Logical
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+		override fun eval(reader: BsonValue): FilterValue.Logical =
 			FilterValue.Logical(left.test(reader) && right.test(reader))
 
 		override fun toString(): String =
@@ -673,7 +671,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		override val type get() = FilterValue.Logical
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+		override fun eval(reader: BsonValue): FilterValue.Logical =
 			FilterValue.Logical(!operand.test(reader))
 
 		override fun toString(): String =
@@ -686,7 +684,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		override val type get() = FilterValue.Logical
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+		override fun eval(reader: BsonValue): FilterValue.Logical =
 			FilterValue.Logical(field.eval(reader).nodes.any())
 
 		override fun toString(): String =
@@ -700,7 +698,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		override val type: FilterValue.Type<V> get() = value.type as FilterValue.Type<V>
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): V = value
+		override fun eval(reader: BsonValue): V = value
 
 		override fun toString(): String =
 			value.toString()
@@ -712,7 +710,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		override val type get() = FilterValue.Nodes
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Nodes =
+		override fun eval(reader: BsonValue): FilterValue.Nodes =
 			FilterValue.Nodes(path.findIn(reader))
 
 		override fun toString(): String =
@@ -726,7 +724,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		override val type get() = FilterValue.Logical
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Logical {
+		override fun eval(reader: BsonValue): FilterValue.Logical {
 			val leftEval = left.eval(reader)
 			val rightEval = right.eval(reader)
 
@@ -786,19 +784,19 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 				val nodes = nodes.toList()
 				when {
 					nodes.isEmpty() -> ExtractedValue(BsonType.Null, this, null)
-					nodes.size == 1 -> FilterValue.Value.Reader(nodes.first()).extractValue()
+					nodes.size == 1 -> FilterValue.Value.Bson(nodes.first()).extractValue()
 					else -> TODO("Unknown type of nodelist $this")
 				}
 			}
 
 			FilterValue.Nothing -> ExtractedValue(BsonType.Null, this, null)
 			is FilterValue.Value.Integer -> ExtractedValue(BsonType.Double, this, this.number.toDouble())
-			is FilterValue.Value.Reader -> when (this.reader.type) {
-				BsonType.Int32 -> ExtractedValue(BsonType.Double, this, this.reader.readInt32().toDouble())
-				BsonType.Int64 -> ExtractedValue(BsonType.Double, this, this.reader.readInt64().toDouble())
-				BsonType.Double -> ExtractedValue(BsonType.Double, this, this.reader.readDouble())
+			is FilterValue.Value.Bson -> when (this.value.type) {
+				BsonType.Int32 -> ExtractedValue(BsonType.Double, this, this.value.decodeInt32().toDouble())
+				BsonType.Int64 -> ExtractedValue(BsonType.Double, this, this.value.decodeInt64().toDouble())
+				BsonType.Double -> ExtractedValue(BsonType.Double, this, this.value.decodeDouble())
 				BsonType.Decimal128 -> TODO("Decimal128 support is not fully implemented. See https://gitlab.com/opensavvy/ktmongo/-/merge_requests/150")
-				else -> ExtractedValue(this.reader.type, this, this.reader)
+				else -> ExtractedValue(this.value.type, this, this.value)
 			}
 
 			is FilterValue.Value.Text -> ExtractedValue(BsonType.String, this, this.text)
@@ -811,7 +809,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 			 * - If the value is a number, contains a [Double].
 			 * - If the value is `null` or empty, contains `null`.
 			 * - If the value is a string, contains a [String].
-			 * - Otherwise, contains a [BsonValueReader].
+			 * - Otherwise, contains a [BsonValue].
 			 */
 			val raw: Any?,
 		) {
@@ -857,8 +855,8 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 
 			is FilterValue.Value.Text -> IS_STRING
 
-			is FilterValue.Value.Reader -> {
-				when (this.reader.type) {
+			is FilterValue.Value.Bson -> {
+				when (this.value.type) {
 					BsonType.Int32, BsonType.Int64,
 					BsonType.Double, BsonType.Decimal128,
 						-> IS_NUMBER
@@ -875,11 +873,11 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		@OptIn(LowLevelApi::class)
 		private fun FilterValue.numericValue(): Double = when (this) {
 			is FilterValue.Value.Integer -> this.number.toDouble()
-			is FilterValue.Value.Reader -> {
-				when (val type = this.reader.type) {
-					BsonType.Int32 -> this.reader.readInt32().toDouble()
-					BsonType.Int64 -> this.reader.readInt64().toDouble()
-					BsonType.Double -> this.reader.readDouble()
+			is FilterValue.Value.Bson -> {
+				when (val type = this.value.type) {
+					BsonType.Int32 -> this.value.decodeInt32().toDouble()
+					BsonType.Int64 -> this.value.decodeInt64().toDouble()
+					BsonType.Double -> this.value.decodeDouble()
 					BsonType.Decimal128 -> TODO("Decimal128 support is not fully implemented. See https://gitlab.com/opensavvy/ktmongo/-/merge_requests/150")
 					else -> error("Unsupported type in numeric value: $type, $this")
 				}
@@ -891,9 +889,9 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		@OptIn(LowLevelApi::class)
 		private fun FilterValue.stringValue(): String = when (this) {
 			is FilterValue.Value.Text -> this.text
-			is FilterValue.Value.Reader -> {
-				when (val type = this.reader.type) {
-					BsonType.String -> this.reader.readString()
+			is FilterValue.Value.Bson -> {
+				when (val type = this.value.type) {
+					BsonType.String -> this.value.decodeString()
 					else -> error("Unsupported type in text value: $type, $this")
 				}
 			}
@@ -905,7 +903,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		 * Same as [eval], but returns `null` if the comparison is not valid.
 		 */
 		@LowLevelApi
-		fun evalIfValid(reader: BsonValueReader): FilterValue.Logical? {
+		fun evalIfValid(reader: BsonValue): FilterValue.Logical? {
 			val leftEval = left.eval(reader)
 			val rightEval = right.eval(reader)
 
@@ -941,7 +939,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		}
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+		override fun eval(reader: BsonValue): FilterValue.Logical =
 			evalIfValid(reader) ?: FilterValue.Logical.False
 
 		override fun toString(): String =
@@ -962,7 +960,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 			get() = FilterValue.Logical
 
 		@LowLevelApi
-		fun evalIfValid(reader: BsonValueReader): FilterValue.Logical? {
+		fun evalIfValid(reader: BsonValue): FilterValue.Logical? {
 			val isFewerStrict = FewerStrict(left, right)
 				.evalIfValid(reader)
 				?: return null
@@ -977,7 +975,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		}
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+		override fun eval(reader: BsonValue): FilterValue.Logical =
 			evalIfValid(reader) ?: FilterValue.Logical.False
 
 		override fun toString(): String =
@@ -992,7 +990,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 			get() = FilterValue.Logical
 
 		@LowLevelApi
-		fun evalIfValid(reader: BsonValueReader): FilterValue.Logical? {
+		fun evalIfValid(reader: BsonValue): FilterValue.Logical? {
 			val isEqual = Equals(left, right)
 				.eval(reader)
 
@@ -1008,7 +1006,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		}
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+		override fun eval(reader: BsonValue): FilterValue.Logical =
 			evalIfValid(reader) ?: FilterValue.Logical.False
 
 		override fun toString(): String =
@@ -1023,7 +1021,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 			get() = FilterValue.Logical
 
 		@LowLevelApi
-		fun evalIfValid(reader: BsonValueReader): FilterValue.Logical? {
+		fun evalIfValid(reader: BsonValue): FilterValue.Logical? {
 			val isEqual = Equals(left, right)
 				.eval(reader)
 
@@ -1039,7 +1037,7 @@ private sealed interface FilterExpression<out Type : FilterValue> {
 		}
 
 		@LowLevelApi
-		override fun eval(reader: BsonValueReader): FilterValue.Logical =
+		override fun eval(reader: BsonValue): FilterValue.Logical =
 			evalIfValid(reader) ?: FilterValue.Logical.False
 
 		override fun toString(): String =
@@ -1052,7 +1050,7 @@ private typealias LogicalExpression = FilterExpression<FilterValue.Logical>
 
 @ExperimentalBsonPathApi
 @LowLevelApi
-private fun LogicalExpression.test(reader: BsonValueReader): Boolean =
+private fun LogicalExpression.test(reader: BsonValue): Boolean =
 	eval(reader) == FilterValue.Logical.True
 
 // endregion
@@ -1625,7 +1623,7 @@ private inline fun Char.isNameChar() =
 // region Execution/selection
 
 /**
- * Finds all values that match [path] in a given [BSON document][Bson].
+ * Finds all values that match [path] in a given [BSON document][BsonDocument].
  *
  * ### Example
  *
@@ -1641,25 +1639,23 @@ private inline fun Char.isNameChar() =
  */
 @OptIn(LowLevelApi::class)
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.select(path: BsonPath): Sequence<T> {
-	val type = typeOf<T>()
-
-	return path.findIn(this.reader().asValue())
+inline fun <reified T> BsonDocument.select(path: BsonPath): Sequence<T> {
+	return path.findIn(this.asValue())
 		.map {
 			@Suppress("UNCHECKED_CAST")
-			val result = it.read(type, type.classifier as KClass<T & Any>)
+			val result = it.decode<T>()
 
 			if (null is T) {
-				result as T
+				result
 			} else {
 				result
-					?: throw BsonReaderException("Found an unexpected 'null' when reading the path $path in document $this")
+					?: throw BsonDecodingException("Found an unexpected 'null' when reading the path $path in document $this")
 			}
 		}
 }
 
 /**
- * Finds all values that match [path] in a given [BSON document][Bson].
+ * Finds all values that match [path] in a given [BSON document][BsonDocument].
  *
  * To learn more about the syntax, see [BsonPath].
  *
@@ -1675,11 +1671,11 @@ inline fun <reified T> Bson.select(path: BsonPath): Sequence<T> {
  * @see at Select a single value.
  */
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.select(@Language("JSONPath") path: String): Sequence<T> =
+inline fun <reified T> BsonDocument.select(@Language("JSONPath") path: String): Sequence<T> =
 	select(BsonPath(path))
 
 /**
- * Finds the first value that matches [path] in a given [BSON document][Bson].
+ * Finds the first value that matches [path] in a given [BSON document][BsonDocument].
  *
  * ### Example
  *
@@ -1704,7 +1700,7 @@ inline fun <reified T> Bson.select(@Language("JSONPath") path: String): Sequence
  * @throws NoSuchElementException If no element is found matching the path.
  */
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.selectFirst(path: BsonPath): T {
+inline fun <reified T> BsonDocument.selectFirst(path: BsonPath): T {
 	val iter = select<T>(path).iterator()
 
 	if (iter.hasNext()) {
@@ -1715,7 +1711,7 @@ inline fun <reified T> Bson.selectFirst(path: BsonPath): T {
 }
 
 /**
- * Finds the first value that matches [path] in a given [BSON document][Bson].
+ * Finds the first value that matches [path] in a given [BSON document][BsonDocument].
  *
  * To learn more about the syntax, see [BsonPath].
  *
@@ -1733,11 +1729,11 @@ inline fun <reified T> Bson.selectFirst(path: BsonPath): T {
  * @see at Select a single value using infix notation.
  */
 @ExperimentalBsonPathApi
-inline fun <reified T> Bson.selectFirst(@Language("JSONPath") path: String): T =
+inline fun <reified T> BsonDocument.selectFirst(@Language("JSONPath") path: String): T =
 	selectFirst(BsonPath(path))
 
 /**
- * Finds the first value that matches [path] in a given [BSON document][Bson].
+ * Finds the first value that matches [path] in a given [BSON document][BsonDocument].
  *
  * ### Example
  *
@@ -1760,7 +1756,7 @@ inline fun <reified T> Bson.selectFirst(@Language("JSONPath") path: String): T =
  * @throws NoSuchElementException If no element is found matching the path.
  */
 @ExperimentalBsonPathApi
-inline infix fun <reified T : Any?> Bson.at(path: BsonPath): T =
+inline infix fun <reified T> BsonDocument.at(path: BsonPath): T =
 	selectFirst(path)
 
 // endregion

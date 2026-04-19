@@ -44,6 +44,7 @@ kotlin {
 	sourceSets.jvmTest.dependencies {
 		implementation(libs.mongodb.sync.jvm)
 		implementation(libs.mongodb.kotlinx.serialization)
+		implementation(libs.mongodb.kotlin.reflection)
 		implementation(libs.kotlinx.serialization)
 	}
 }
@@ -57,4 +58,6 @@ library {
 		name.set("Apache 2.0")
 		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
 	}
+
+	coverage.set(60)
 }

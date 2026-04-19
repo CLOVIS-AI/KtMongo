@@ -17,7 +17,7 @@
 package opensavvy.ktmongo.dsl.options
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
-import opensavvy.ktmongo.bson.BsonValueReader
+import opensavvy.ktmongo.bson.BsonValue
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
@@ -100,7 +100,7 @@ interface Option : BsonNode {
 	 * Note that this method requires to write this option into a temporary BSON value.
 	 */
 	@OptIn(LowLevelApi::class)
-	fun read(): BsonValueReader
+	fun read(): BsonValue
 
 }
 
@@ -128,8 +128,8 @@ abstract class AbstractOption(
 	}
 
 	@LowLevelApi
-	final override fun read(): BsonValueReader =
-		this.toBson().reader().read(name)!! // safe because we always write with that same name
+	final override fun read(): BsonValue =
+		this.toBson()[name]!! // safe because we always write with that same name
 }
 
 /**

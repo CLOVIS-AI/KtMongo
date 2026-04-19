@@ -18,60 +18,15 @@
 
 package opensavvy.ktmongo.bson.multiplatform
 
-import opensavvy.ktmongo.bson.validateBsonFactory
+import opensavvy.ktmongo.bson.verifyBsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.prepared
 
-val context by prepared {
+val factory by prepared {
 	BsonFactory()
 }
 
-val MultiplatformBsonWriterTest by preparedSuite {
-	validateBsonFactory(context)
-
-	test("Bson.eager()") {
-		val document = context().buildDocument {
-			writeString("foo", "bar")
-			writeArray("baz") {
-				writeString("a")
-				writeString("b")
-			}
-			writeInt32("a", 12)
-			writeArray("bad") {
-				writeString("a")
-				writeString("b")
-			}
-		}
-
-		check(document.reader().read("baz")?.readArray()?.read(0)?.readString() == "a")
-
-		println("*** Initializing everything eagerly ***")
-		document.eager()
-
-		check(document.reader().read("bad")?.readArray()?.read(1)?.readString() == "b")
-
-		document.eager() // Allowed, does nothing
-	}
-
-	test("BsonArray.eager()") {
-		val document = context().buildArray {
-			writeDocument {
-				writeString("foo", "foo")
-			}
-			writeInt32(12)
-			writeDocument {
-				writeString("bar", "bar")
-			}
-		}
-
-		check(document.reader().read(0)?.readDocument()?.read("foo")?.readString() == "foo")
-
-		println("*** Initializing everything eagerly ***")
-		document.eager()
-
-		check(document.reader().read(2)?.readDocument()?.read("bar")?.readString() == "bar")
-
-		document.eager() // Allowed, does nothing
-	}
+val MultiplatformBsonFactory by preparedSuite {
+	verifyBsonFactory(factory)
 }

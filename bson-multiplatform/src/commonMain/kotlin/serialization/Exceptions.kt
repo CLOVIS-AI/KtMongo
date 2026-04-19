@@ -17,7 +17,3 @@
 package opensavvy.ktmongo.bson.multiplatform.serialization
 
 class BsonEncodingException(message: String) : Exception(message)
-
-class BsonDecodingException(message: String) : Exception(message)
-
-class BsonUnknownElementException(message: String) : Exception(message)

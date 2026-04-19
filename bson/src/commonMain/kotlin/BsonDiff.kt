@@ -32,10 +32,10 @@ private const val fieldNotPresent = "(field not present)"
 // returns 'true' if there is a diff
 @ExperimentalBsonDiffApi
 @LowLevelApi
-private fun StringBuilder.diff(a: BsonDocumentReader, b: BsonDocumentReader, indent: String): Boolean {
+private fun StringBuilder.diff(a: BsonDocument, b: BsonDocument, indent: String): Boolean {
 	var hasDiff = false
 
-	for ((name, aReader) in a.entries) {
+	for ((name, valueInA) in a) {
 		val isEqual: Boolean
 
 		append(indent)
@@ -44,28 +44,28 @@ private fun StringBuilder.diff(a: BsonDocumentReader, b: BsonDocumentReader, ind
 		append(name)
 		append(": ")
 
-		val bReader = b.read(name)
+		val valueInB = b[name]
 
-		if (bReader == null) {
-			appendLine(aReader)
+		if (valueInB == null) {
+			appendLine(valueInA)
 			append(indent.addIndent(name.length + 4))
 			appendLine(fieldNotPresent)
 			isEqual = false
 		} else {
-			isEqual = !diff(aReader, bReader, indent.addIndent(name.length + 4))
+			isEqual = !diff(valueInA, valueInB, indent.addIndent(name.length + 4))
 		}
 
 		if (isEqual) {
 			set(lastIndexOf(replacementChar), successChar)
-			appendLine(aReader)
+			appendLine(valueInA)
 		} else {
 			set(lastIndexOf(replacementChar), diffChar)
 			hasDiff = true
 		}
 	}
 
-	for ((name, bReader) in b.entries) {
-		if (a.read(name) == null) {
+	for ((name, bReader) in b) {
+		if (a[name] == null) {
 			// Found a field in 'b' that isn't in 'a'
 			hasDiff = true
 			append(indent)
@@ -109,7 +109,7 @@ private fun StringBuilder.diff(a: BsonDocumentReader, b: BsonDocumentReader, ind
  *     }
  * }
  *
- * println(a.reader() diff b.reader())
+ * println(a diff b)
  * ```
  *
  * ```text
@@ -124,9 +124,9 @@ private fun StringBuilder.diff(a: BsonDocumentReader, b: BsonDocumentReader, ind
  * @return If the two documents are equal, returns `null`.
  * Otherwise, generates a human-readable diff.
  */
+@OptIn(LowLevelApi::class)
 @ExperimentalBsonDiffApi
-@LowLevelApi
-infix fun BsonDocumentReader.diff(other: BsonDocumentReader): String? {
+infix fun BsonDocument.diff(other: BsonDocument): String? {
 	val sb = StringBuilder()
 	val hasDiff = sb.diff(this, other, indent = "")
 
@@ -136,10 +136,10 @@ infix fun BsonDocumentReader.diff(other: BsonDocumentReader): String? {
 // returns 'true' if there is a diff
 @ExperimentalBsonDiffApi
 @LowLevelApi
-private fun StringBuilder.diff(a: BsonArrayReader, b: BsonArrayReader, indent: String): Boolean {
+private fun StringBuilder.diff(a: BsonArray, b: BsonArray, indent: String): Boolean {
 	var hasDiff = false
 
-	for ((index, aReader) in a.elements.withIndex()) {
+	for ((index, valueInA) in a.withIndex()) {
 		val isEqual: Boolean
 
 		append(indent)
@@ -148,30 +148,30 @@ private fun StringBuilder.diff(a: BsonArrayReader, b: BsonArrayReader, indent: S
 		append(index)
 		append(": ")
 
-		val bReader = b.read(index)
+		val valueInB = b[index]
 
 		val newIndentSize = index.toString().length + 4
 
-		if (bReader == null) {
-			appendLine(aReader)
+		if (valueInB == null) {
+			appendLine(valueInA)
 			append(indent.addIndent(newIndentSize))
 			appendLine(fieldNotPresent)
 			isEqual = false
 		} else {
-			isEqual = !diff(aReader, bReader, indent.addIndent(newIndentSize))
+			isEqual = !diff(valueInA, valueInB, indent.addIndent(newIndentSize))
 		}
 
 		if (isEqual) {
 			set(lastIndexOf(replacementChar), successChar)
-			appendLine(aReader)
+			appendLine(valueInA)
 		} else {
 			set(lastIndexOf(replacementChar), diffChar)
 			hasDiff = true
 		}
 	}
 
-	for ((index, bReader) in b.elements.withIndex()) {
-		if (a.read(index) == null) {
+	for ((index, bReader) in b.withIndex()) {
+		if (a[index] == null) {
 			// Found a field in 'b' that isn't in 'a'
 			hasDiff = true
 			append(indent)
@@ -215,7 +215,7 @@ private fun StringBuilder.diff(a: BsonArrayReader, b: BsonArrayReader, indent: S
  *     }
  * }
  *
- * println(a.reader() diff b.reader())
+ * println(a diff b)
  * ```
  *
  * ```text
@@ -230,9 +230,9 @@ private fun StringBuilder.diff(a: BsonArrayReader, b: BsonArrayReader, indent: S
  * @return If the two arrays are equal, returns `null`.
  * Otherwise, generates a human-readable diff.
  */
+@OptIn(LowLevelApi::class)
 @ExperimentalBsonDiffApi
-@LowLevelApi
-infix fun BsonArrayReader.diff(other: BsonArrayReader): String? {
+infix fun BsonArray.diff(other: BsonArray): String? {
 	val sb = StringBuilder()
 	val hasDiff = sb.diff(this, other, indent = "")
 
@@ -242,7 +242,7 @@ infix fun BsonArrayReader.diff(other: BsonArrayReader): String? {
 // returns 'true' if there is a diff
 @ExperimentalBsonDiffApi
 @LowLevelApi
-private fun StringBuilder.diff(a: BsonValueReader, b: BsonValueReader, indent: String): Boolean {
+private fun StringBuilder.diff(a: BsonValue, b: BsonValue, indent: String): Boolean {
 	if (a == b)
 		return false
 
@@ -264,12 +264,12 @@ private fun StringBuilder.diff(a: BsonValueReader, b: BsonValueReader, indent: S
 		when (aType) {
 			BsonType.Document -> {
 				appendLine()
-				return diff(a.readDocument(), b.readDocument(), indent)
+				return diff(a.decodeDocument(), b.decodeDocument(), indent)
 			}
 
 			BsonType.Array -> {
 				appendLine()
-				return diff(a.readArray(), b.readArray(), indent)
+				return diff(a.decodeArray(), b.decodeArray(), indent)
 			}
 
 			else -> {
@@ -293,105 +293,11 @@ private fun StringBuilder.diff(a: BsonValueReader, b: BsonValueReader, indent: S
  * @return If the two documents are equal, returns `null`.
  * Otherwise, generates a human-readable diff.
  */
+@OptIn(LowLevelApi::class)
 @ExperimentalBsonDiffApi
-@LowLevelApi
-infix fun BsonValueReader.diff(other: BsonValueReader): String? {
+infix fun BsonValue.diff(other: BsonValue): String? {
 	val sb = StringBuilder()
 	val hasDiff = sb.diff(this, other, indent = "")
 
 	return if (hasDiff) sb.toString() else null
 }
-
-/**
- * Analyzes the difference between two BSON documents.
- *
- * This function is particularly useful in tests.
- * Since BSON documents can be large, it may be difficult to find what the difference between two documents is.
- *
- * This function generates human-readable output to find the differences.
- *
- * ### Example
- *
- * ```kotlin
- * val a = factory.buildDocument {
- *     writeString("a", "foo")
- *     writeDocument("b") {
- *         writeString("name", "Bob")
- *         writeInt32("age", 18)
- *     }
- * }
- *
- * val b = factory.buildDocument {
- *     writeString("a", "foo")
- *     writeDocument("b") {
- *         writeString("name", "Alice")
- *         writeInt32("age", 19)
- *     }
- * }
- *
- * println(a diff b)
- * ```
- *
- * ```text
- * ✓ a: "foo"
- * ✗ b:
- *      ✗ name: "Bob"
- *              "Alice"
- *      ✓ age: 18
- *             19
- * ```
- *
- * @return If the two documents are equal, returns `null`.
- * Otherwise, generates a human-readable diff.
- */
-@ExperimentalBsonDiffApi
-@OptIn(LowLevelApi::class)
-infix fun Bson.diff(other: Bson): String? =
-	this.reader() diff other.reader()
-
-/**
- * Analyzes the difference between two BSON arrays.
- *
- * This function is particularly useful in tests.
- * Since BSON arrays can be large, it may be difficult to find what the difference between two documents is.
- *
- * This function generates human-readable output to find the differences.
- *
- * ### Example
- *
- * ```kotlin
- * val a = factory.buildArray {
- *     writeString("foo")
- *     writeDocument {
- *         writeString("name", "Bob")
- *         writeInt32("age", 18)
- *     }
- * }
- *
- * val b = factory.buildArray {
- *     writeString("foo")
- *     writeDocument {
- *         writeString("name", "Alice")
- *         writeInt32("age", 19)
- *     }
- * }
- *
- * println(a diff b)
- * ```
- *
- * ```text
- * ✓ 0: "foo"
- * ✗ 1:
- *      ✗ name: "Bob"
- *              "Alice"
- *      ✓ age: 18
- *             19
- * ```
- *
- * @return If the two arrays are equal, returns `null`.
- * Otherwise, generates a human-readable diff.
- */
-@ExperimentalBsonDiffApi
-@OptIn(LowLevelApi::class)
-infix fun BsonArray.diff(other: BsonArray): String? =
-	this.reader() diff other.reader()

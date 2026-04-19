@@ -30,12 +30,76 @@ import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformDocumentFiel
 import opensavvy.ktmongo.bson.multiplatform.serialization.encodeToBson
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import kotlin.time.ExperimentalTime
 
 /**
- * The entry point for creating and reading BSON documents.
+ * Entrypoint for creating [BsonDocument] and [BsonArray] instances.
+ *
+ * ### Navigating BSON types
+ *
+ * This interface is part of the BSON trinity:
+ *
+ * - [BsonDocument] represents an entire BSON document.
+ * - [BsonArray] represents an array of BSON values.
+ * - [BsonValue] represents a single value in isolation.
+ *
+ * ### Serialization
+ *
+ * This interface encapsulates methods to serialize and serialize BSON documents with KotlinX.Serialization.
+ *
+ * ### Usage
+ *
+ * To create the following BSON document:
+ * ```json
+ * {
+ *     "name": "Bob",
+ *     "isAlive": true,
+ *     "children": [
+ *         {
+ *             "name": "Alice"
+ *         },
+ *         {
+ *             "name": "Charles"
+ *         }
+ *     ]
+ * }
+ * ```
+ * use the code:
+ * ```kotlin
+ * val document = factory.buildDocument {
+ *     writeString("name", "Alice")
+ *     writeBoolean("isAlive", true)
+ *     writeArray("children") {
+ *         writeDocument {
+ *             writeString("name", "Alice")
+ *         }
+ *         writeDocument {
+ *             writeString("name", "Charles")
+ *         }
+ *     }
+ * }
+ * ```
+ *
+ * The value can then be read into Kotlin types:
+ * ```kotlin
+ * @Serializable
+ * data class User(
+ *     val name: String,
+ *     val isAlive: Boolean,
+ *     val children: List<Child>,
+ * )
+ *
+ * @Serializable
+ * data class Child(
+ *     val name: String,
+ * )
+ *
+ * val user = document.decode<User>()
+ *
+ * println(user.children[0].name)  // Alice
+ * ```
  */
 @OptIn(ExperimentalTime::class)
 class BsonFactory : BsonFactory {
@@ -80,14 +144,14 @@ class BsonFactory : BsonFactory {
 	}
 
 	@LowLevelApi
-	override fun buildDocument(block: BsonFieldWriter.() -> Unit): Bson =
+	override fun buildDocument(block: BsonFieldWriter.() -> Unit): BsonDocument =
 		buildArbitraryTopLevel {
 			block(this)
-		}.let { Bson(this, it) }
+		}.let { BsonDocument(this, it) }
 
-	@OptIn(ExperimentalSerializationApi::class)
+	@ExperimentalSerializationApi
 	@LowLevelApi
-	override fun <T : Any> buildDocument(obj: T, type: KType, klass: KClass<T>): Bson =
+	override fun <T : Any> encode(obj: T, type: KType): BsonDocument =
 		encodeToBson(this, obj, serializer(type))
 
 	@LowLevelApi
@@ -97,14 +161,14 @@ class BsonFactory : BsonFactory {
 		val bsonWriter = openArbitraryTopLevel(buffer)
 
 		return object : TopCompletableBsonFieldWriter, CompletableBsonFieldWriter by MultiplatformDocumentFieldWriter(bsonWriter) {
-			override fun build(): Bson =
-				Bson(this@BsonFactory, closeArbitraryTopLevel(buffer, bsonWriter))
+			override fun build(): BsonDocument =
+				BsonDocument(this@BsonFactory, closeArbitraryTopLevel(buffer, bsonWriter))
 		}
 	}
 
 	@LowLevelApi
-	override fun readDocument(bytes: ByteArray): Bson =
-		Bson(this, Bytes(bytes.copyOf()))
+	override fun readDocument(bytes: ByteArray): BsonDocument =
+		BsonDocument(this, Bytes(bytes.copyOf()))
 
 	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray =
@@ -131,7 +195,7 @@ class BsonFactory : BsonFactory {
 	@LowLevelApi
 	@DangerousMongoApi
 	internal interface TopCompletableBsonFieldWriter : CompletableBsonFieldWriter {
-		fun build(): Bson
+		fun build(): BsonDocument
 	}
 
 	@LowLevelApi
@@ -140,3 +204,16 @@ class BsonFactory : BsonFactory {
 		fun build(): BsonArray
 	}
 }
+
+/**
+ * Writes an arbitrary Kotlin [obj] into a top-level BSON document.
+ *
+ * A top-level BSON document cannot be `null`, cannot be a primitive, and cannot be a collection.
+ * If [obj] is not representable as a document, an exception is thrown.
+ *
+ * @see BsonDocument.decode The inverse operation.
+ */
+@ExperimentalSerializationApi
+@OptIn(LowLevelApi::class)
+inline fun <reified T : Any> opensavvy.ktmongo.bson.multiplatform.BsonFactory.encode(obj: T): BsonDocument =
+	encode(obj, typeOf<T>())

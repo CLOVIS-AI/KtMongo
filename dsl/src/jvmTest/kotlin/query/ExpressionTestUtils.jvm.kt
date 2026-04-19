@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.dsl.query
 
-import opensavvy.ktmongo.bson.official.JvmBsonFactory
+import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.dsl.BsonContext
 import org.bson.codecs.*
 import org.bson.codecs.configuration.CodecRegistries
@@ -29,7 +29,7 @@ import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalAtomicApi::class, ExperimentalTime::class)
 actual fun testContext(): BsonContext = BsonContext(
-	bsonFactory = JvmBsonFactory(
+	bsonFactory = BsonFactory(
 		codecRegistry = CodecRegistries.fromCodecs(
 			AtomicBooleanCodec(),
 			AtomicIntegerCodec(),

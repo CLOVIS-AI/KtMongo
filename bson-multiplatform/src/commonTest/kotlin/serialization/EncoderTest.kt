@@ -20,7 +20,7 @@ package opensavvy.ktmongo.bson.multiplatform.serialization
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.multiplatform.context
+import opensavvy.ktmongo.bson.multiplatform.factory
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -36,7 +36,7 @@ val EncoderTest by preparedSuite {
 		@Serializable
 		data class User(val id: Int)
 
-		check(encodeToBson(context(), User(1234)).toString() == """{"id": 1234}""")
+		check(encodeToBson(factory(), User(1234)).toString() == """{"id": 1234}""")
 	}
 
 	suite("Complex example") {

@@ -20,7 +20,7 @@ package opensavvy.ktmongo.bson.multiplatform.serialization
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
-import opensavvy.ktmongo.bson.multiplatform.context
+import opensavvy.ktmongo.bson.multiplatform.factory
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
@@ -30,9 +30,9 @@ private fun SuiteDsl.testDocument(
 	name: String,
 	block: BsonFieldWriter.() -> Unit,
 ) = test(name) {
-	val a = context().buildDocument(block)
+	val a = factory().buildDocument(block)
 
-	val b = context().openDocument().apply(block).build()
+	val b = factory().openDocument().apply(block).build()
 
 	check(a.toString() == b.toString())
 }
@@ -41,9 +41,9 @@ private fun SuiteDsl.testArray(
 	name: String,
 	block: BsonValueWriter.() -> Unit,
 ) = test(name) {
-	val a = context().buildArray(block)
+	val a = factory().buildArray(block)
 
-	val b = context().openArray().apply(block).build()
+	val b = factory().openArray().apply(block).build()
 
 	check(a.toString() == b.toString())
 }

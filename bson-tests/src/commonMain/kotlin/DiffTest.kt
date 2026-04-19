@@ -25,11 +25,11 @@ import opensavvy.prepared.suite.TestDsl
 import opensavvy.prepared.suite.assertions.log
 import kotlin.test.assertEquals
 
-fun SuiteDsl.validateDiffAlgorithms(
+fun SuiteDsl.verifyDiffAlgorithms(
 	factory: Prepared<BsonFactory>,
 ) = suite("Diff algorithms") {
 
-	suspend fun TestDsl.checkDiff(a: Bson, b: Bson, expected: String?) {
+	suspend fun TestDsl.checkDiff(a: BsonDocument, b: BsonDocument, expected: String?) {
 		log(a) { "a" }
 		log(b) { "b" }
 

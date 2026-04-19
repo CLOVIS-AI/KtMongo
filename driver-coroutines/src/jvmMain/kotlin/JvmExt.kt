@@ -16,8 +16,7 @@
 
 package opensavvy.ktmongo.coroutines
 
-import opensavvy.ktmongo.bson.Bson
 import org.bson.BsonDocument
 
-internal fun Bson.toJava(): BsonDocument =
-	(this as opensavvy.ktmongo.bson.official.Bson).raw
+internal fun opensavvy.ktmongo.bson.BsonDocument.toJava(): BsonDocument =
+	(this as opensavvy.ktmongo.bson.official.BsonDocument).raw

@@ -21,9 +21,9 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.multiplatform.BsonValue
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.RawBsonWriter
-import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonValueReader
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -287,7 +287,7 @@ internal class MultiplatformDocumentFieldWriter(
 	}
 
 	@DangerousMongoApi
-	internal fun pipe(name: String, obj: MultiplatformBsonValueReader) {
+	internal fun pipe(name: String, obj: BsonValue) {
 		writeType(obj.type)
 		writeName(name)
 		obj.writeTo(writer)

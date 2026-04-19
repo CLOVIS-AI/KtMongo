@@ -16,6 +16,8 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.types.Vector
+
 /**
  * The different data types supported in BSON documents.
  *
@@ -37,51 +39,58 @@ enum class BsonType(
 	/**
 	 * A 64-bit floating-point number, represented by the Kotlin class [kotlin.Double].
 	 *
-	 * @see BsonValueReader.readDouble Low-level read.
-	 * @see BsonFieldWriter.writeDouble Low-level write.
+	 * @see BsonValue.decodeDouble Read this type.
+	 * @see BsonFieldWriter.writeDouble Write this type.
 	 */
 	Double(1),
 
 	/**
 	 * A UTF-8 encoded string, represented by the Kotlin class [kotlin.String].
 	 *
-	 * @see BsonValueReader.readString Low-level read.
-	 * @see BsonFieldWriter.writeString Low-level write.
+	 * @see BsonValue.decodeString Read this type.
+	 * @see BsonFieldWriter.writeString Write this type.
 	 */
 	String(2),
 
 	/**
-	 * An arbitrary document, represented by the Kotlin interface [Bson].
+	 * An arbitrary document, represented by the Kotlin interface [BsonDocument].
 	 *
-	 * @see BsonValueReader.readDocument Low-level read.
-	 * @see BsonFieldWriter.writeDocument Low-level write.
+	 * @see BsonValue.decodeDocument Read this type.
+	 * @see BsonFieldWriter.writeDocument Write this type.
 	 */
 	Document(3),
 
 	/**
 	 * An array of arbitrary values, represented by the Kotlin interface [BsonArray].
 	 *
-	 * @see BsonValueReader.readArray Low-level read.
-	 * @see BsonFieldWriter.writeArray Low-level write.
+	 * @see BsonValue.decodeArray Read this type.
+	 * @see BsonFieldWriter.writeArray Write this type.
 	 */
 	Array(4),
 
 	/**
 	 * An arbitrary binary block.
 	 *
-	 * The arbitrary block is accompanied by a type.
+	 * The arbitrary block is accompanied by a type as a [UByte].
 	 *
-	 * @see BsonValueReader.readBinaryData Low-level read: binary data.
-	 * @see BsonValueReader.readBinaryDataType Low-level read: binary type.
-	 * @see BsonFieldWriter.writeBinaryData Low-level write.
+	 * The binary data types `0..127` are reserved.
+	 * The data types `128..255` are available for custom use.
+	 *
+	 * The binary data type `0` is a generic subtype that can be used for any usage.
+	 *
+	 * The KtMongo library provides utilities for some binary data types, like [kotlin.uuid.Uuid] and [Vector].
+	 *
+	 * @see BsonValue.decodeBinaryData Read the binary blob.
+	 * @see BsonValue.decodeBinaryDataType Read the subtype.
+	 * @see BsonFieldWriter.writeBinaryData Write this type.
 	 */
 	BinaryData(5),
 
 	/**
 	 * The undefined value.
 	 *
-	 * @see BsonValueReader.readUndefined Low-level read.
-	 * @see BsonFieldWriter.writeUndefined Low-level write.
+	 * @see BsonValue.decodeUndefined Read this type.
+	 * @see BsonFieldWriter.writeUndefined Write this type.
 	 */
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	Undefined(6),
@@ -89,52 +98,57 @@ enum class BsonType(
 	/**
 	 * A 12-bytes, time-sorted unique identifier for documents, represented by the Kotlin class [ObjectId][opensavvy.ktmongo.bson.types.ObjectId].
 	 *
-	 * @see BsonValueReader.readObjectId Low-level read.
-	 * @see BsonFieldWriter.writeObjectId Low-level write.
+	 * @see BsonValue.decodeObjectId Read this type.
+	 * @see BsonValue.decodeObjectIdBytes Low-level read.
+	 * @see BsonFieldWriter.writeObjectId Write this type.
 	 */
 	ObjectId(7),
 
 	/**
 	 * A boolean value, represented by the Kotlin class [kotlin.Boolean].
 	 *
-	 * @see BsonValueReader.readBoolean Low-level read.
-	 * @see BsonFieldWriter.writeBoolean Low-level write.
+	 * @see BsonValue.decodeBoolean Read this type.
+	 * @see BsonFieldWriter.writeBoolean Write this type.
 	 */
 	Boolean(8),
 
 	/**
 	 * A date and time in UTC, represented by the Kotlin class [kotlin.time.Instant].
 	 *
-	 * @see BsonValueReader.readInstant Low-level read.
-	 * @see BsonValueReader.readDateTime Low-level read as a UNIX timestamp.
-	 * @see BsonFieldWriter.writeInstant Low-level write.
-	 * @see BsonFieldWriter.writeDateTime Low-level write as a UNIX timestamp.
+	 * @see BsonValue.decodeInstant Read this type.
+	 * @see BsonValue.decodeDateTime Low-level read as a Unix timestamp.
+	 * @see BsonFieldWriter.writeInstant Write this type.
+	 * @see BsonFieldWriter.writeDateTime Low-level write as a Unix timestamp.
 	 */
 	Datetime(9),
 
 	/**
 	 * The null value.
 	 *
-	 * @see BsonValueReader.readNull Low-level read.
-	 * @see BsonFieldWriter.writeNull Low-level write.
+	 * @see BsonValue.decodeNull Read this type.
+	 * @see BsonFieldWriter.writeNull Write this type.
 	 */
 	Null(10),
 
 	/**
 	 * A MongoDB regular expression.
 	 *
-	 * @see BsonValueReader.readRegularExpressionPattern Low-level read: pattern.
-	 * @see BsonValueReader.readRegularExpressionOptions Low-level read: options.
-	 * @see BsonFieldWriter.writeRegularExpression Low-level write.
+	 * A regular expression is composed of two strings: the pattern, and its options.
+	 *
+	 * @see BsonValue.decodeRegularExpressionPattern Read the pattern.
+	 * @see BsonValue.decodeRegularExpressionOptions Read the options.
+	 * @see BsonFieldWriter.writeRegularExpression Write this type.
 	 */
 	RegExp(11),
 
 	/**
 	 * A reference to a document in another collection.
 	 *
-	 * @see BsonValueReader.readDBPointerId Low-level read: ID.
-	 * @see BsonValueReader.readDBPointerNamespace Low-level read: namespace.
-	 * @see BsonFieldWriter.writeDBPointer Low-level write.
+	 * A DB pointer is composed of two values: a namespace (the name of a collection) and an ID.
+	 *
+	 * @see BsonValue.decodeDBPointerNamespace Read the namespace.
+	 * @see BsonValue.decodeDBPointerId Read the ID.
+	 * @see BsonFieldWriter.writeDBPointer Write this type.
 	 */
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	DBPointer(12),
@@ -142,14 +156,16 @@ enum class BsonType(
 	/**
 	 * A string of JavaScript code.
 	 *
-	 * @see BsonValueReader.readJavaScript Low-level read.
-	 * @see BsonFieldWriter.writeJavaScript Low-level write.
+	 * @see BsonValue.decodeJavaScript Read this type.
+	 * @see BsonFieldWriter.writeJavaScript Write this type.
 	 */
 	JavaScript(13),
 
 	/**
-	 * @see BsonValueReader.readSymbol Low-level read.
-	 * @see BsonFieldWriter.writeSymbol Low-level write.
+	 * A symbol.
+	 *
+	 * @see BsonValue.decodeSymbol Read this type.
+	 * @see BsonFieldWriter.writeSymbol Write this type.
 	 */
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	Symbol(14),
@@ -157,8 +173,9 @@ enum class BsonType(
 	/**
 	 * A string of JavaScript code, accompanied by a document containing variables.
 	 *
-	 * @see BsonValueReader.readJavaScriptWithScope Low-level read.
-	 * @see BsonFieldWriter.writeJavaScriptWithScope Low-level write.
+	 * @see BsonValue.decodeJavaScript Read the JavaScript code.
+	 * @see BsonValue.decodeJavaScriptScope Read the accompanying variables document.
+	 * @see BsonFieldWriter.writeJavaScriptWithScope Write this type.
 	 */
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	JavaScriptWithScope(15),
@@ -166,8 +183,8 @@ enum class BsonType(
 	/**
 	 * A 32-bit signed integer, represented by the Kotlin class [kotlin.Int].
 	 *
-	 * @see BsonValueReader.readInt32 Low-level read.
-	 * @see BsonFieldWriter.writeInt32 Low-level write.
+	 * @see BsonValue.decodeInt32 Read this type.
+	 * @see BsonFieldWriter.writeInt32 Write this type.
 	 */
 	Int32(16),
 
@@ -175,40 +192,40 @@ enum class BsonType(
 	 * A special type used in MongoDB logs, represented by the Kotlin class [Timestamp][opensavvy.ktmongo.bson.types.Timestamp].
 	 * In most situations, users should use [Datetime] instead.
 	 *
-	 * @see BsonValueReader.readInstant Low-level read.
-	 * @see BsonFieldWriter.writeInstant Low-level write.
+	 * @see BsonValue.decodeTimestamp Read this type.
+	 * @see BsonFieldWriter.writeTimestamp Write this type.
 	 */
 	Timestamp(17),
 
 	/**
 	 * A 64-bit signed integer, represented by the Kotlin class [kotlin.Long].
 	 *
-	 * @see BsonValueReader.readInt64 Low-level read.
-	 * @see BsonFieldWriter.writeInt64 Low-level write.
+	 * @see BsonValue.decodeInt64 Read this type.
+	 * @see BsonFieldWriter.writeInt64 Write this type.
 	 */
 	Int64(18),
 
 	/**
 	 * A 128-bit floating-point number.
 	 *
-	 * @see BsonValueReader.readDecimal128 Low-level read.
-	 * @see BsonFieldWriter.writeDecimal128 Low-level write.
+	 * @see BsonValue.decodeDecimal128Bytes Read this type.
+	 * @see BsonFieldWriter.writeDecimal128 Write this type.
 	 */
 	Decimal128(19),
 
 	/**
 	 * A special value containing the minimum possible value.
 	 *
-	 * @see BsonValueReader.readMinKey Low-level read.
-	 * @see BsonFieldWriter.writeMinKey Low-level write.
+	 * @see BsonValue.decodeMinKey Read this type.
+	 * @see BsonFieldWriter.writeMinKey Write this type.
 	 */
 	MinKey(-1),
 
 	/**
 	 * A special value containing the maximum possible value.
 	 *
-	 * @see BsonValueReader.readMaxKey Low-level read.
-	 * @see BsonFieldWriter.writeMaxKey Low-level write.
+	 * @see BsonValue.decodeMaxKey Read this type.
+	 * @see BsonFieldWriter.writeMaxKey Write this type.
 	 */
 	MaxKey(127),
 	;

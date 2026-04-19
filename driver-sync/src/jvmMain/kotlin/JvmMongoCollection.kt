@@ -19,8 +19,8 @@ package opensavvy.ktmongo.sync
 import com.mongodb.client.model.*
 import com.mongodb.client.model.ReplaceOptions
 import com.mongodb.client.model.UpdateOptions
-import opensavvy.ktmongo.bson.BsonValueReader
-import opensavvy.ktmongo.bson.official.JvmBsonFactory
+import opensavvy.ktmongo.bson.BsonValue
+import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
@@ -65,13 +65,13 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@LowLevelApi
 	override val context = JvmBsonContext(
-		bsonFactory = JvmBsonFactory(inner.codecRegistry),
+		bsonFactory = BsonFactory(inner.codecRegistry),
 		objectIdGenerator = ObjectIdGenerator.Jvm(),
 		nameStrategy = nameStrategy,
 	)
 
 	@OptIn(LowLevelApi::class)
-	private val inner = inner.withCodecRegistry(context.codecRegistry)
+	private val inner = inner.withCodecRegistry(context.bsonFactory.codecRegistry)
 
 	@OptIn(LowLevelApi::class)
 	override fun newId(): ObjectId =
@@ -95,7 +95,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		return JvmMongoIterable(
 			inner.withReadConcern(model.options.readReadConcern())
 				.withReadPreference(model.options.readReadPreference())
-				.find(context.buildDocument(model.filter).raw)
+				.find(context.bsonFactory.buildDocument(model.filter).raw)
 				.limit(model.options.readLimit())
 				.skip(model.options.readSkip())
 				.maxTime(model.options.readMaxTimeMS().toLong(), TimeUnit.MILLISECONDS)
@@ -121,7 +121,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.predicate()
 
 		return inner.countDocuments(
-			context.buildDocument(model.filter).raw,
+			context.bsonFactory.buildDocument(model.filter).raw,
 			model.options.toJava()
 		)
 	}
@@ -144,7 +144,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		val result = inner.withWriteConcern(model.options).updateMany(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
+		val result = inner.withWriteConcern(model.options).updateMany(context.bsonFactory.buildDocument(model.filter).raw, context.bsonFactory.buildDocument(model.update).raw, UpdateOptions())
 		return JvmUpdateResult(result, context)
 	}
 
@@ -160,7 +160,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		val result = inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions())
+		val result = inner.withWriteConcern(model.options).updateOne(context.bsonFactory.buildDocument(model.filter).raw, context.bsonFactory.buildDocument(model.update).raw, UpdateOptions())
 		return JvmUpdateResult(result, context)
 	}
 
@@ -176,7 +176,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		val result = inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, UpdateOptions().upsert(true))
+		val result = inner.withWriteConcern(model.options).updateOne(context.bsonFactory.buildDocument(model.filter).raw, context.bsonFactory.buildDocument(model.update).raw, UpdateOptions().upsert(true))
 		return JvmUpdateResult(result, context)
 	}
 
@@ -191,7 +191,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.options.options()
 		model.filter.filter()
 
-		inner.withWriteConcern(model.options).replaceOne(context.buildDocument(model.filter).raw, document, ReplaceOptions())
+		inner.withWriteConcern(model.options).replaceOne(context.bsonFactory.buildDocument(model.filter).raw, document, ReplaceOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -205,7 +205,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.options.options()
 		model.filter.filter()
 
-		inner.withWriteConcern(model.options).replaceOne(context.buildDocument(model.filter).raw, document, ReplaceOptions().upsert(true))
+		inner.withWriteConcern(model.options).replaceOne(context.bsonFactory.buildDocument(model.filter).raw, document, ReplaceOptions().upsert(true))
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -220,7 +220,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		return inner.withWriteConcern(model.options).findOneAndUpdate(context.buildDocument(model.filter).raw, context.buildDocument(model.update).raw, FindOneAndUpdateOptions())
+		return inner.withWriteConcern(model.options).findOneAndUpdate(context.bsonFactory.buildDocument(model.filter).raw, context.bsonFactory.buildDocument(model.update).raw, FindOneAndUpdateOptions())
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -255,7 +255,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		val result = inner.withWriteConcern(model.options).updateMany(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
+		val result = inner.withWriteConcern(model.options).updateMany(context.bsonFactory.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
 		return JvmUpdateResult(result, context)
 	}
 
@@ -271,7 +271,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		val result = inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
+		val result = inner.withWriteConcern(model.options).updateOne(context.bsonFactory.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions())
 		return JvmUpdateResult(result, context)
 	}
 
@@ -287,7 +287,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		val result = inner.withWriteConcern(model.options).updateOne(context.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions().upsert(true))
+		val result = inner.withWriteConcern(model.options).updateOne(context.bsonFactory.buildDocument(model.filter).raw, model.updates.map { it.toJava() }, UpdateOptions().upsert(true))
 		return JvmUpdateResult(result, context)
 	}
 
@@ -332,7 +332,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.options.options()
 
 		inner.withWriteConcern(model.options).deleteOne(
-			filter = context.buildDocument(model.filter).raw,
+			filter = context.bsonFactory.buildDocument(model.filter).raw,
 			options = DeleteOptions()
 		)
 	}
@@ -348,7 +348,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.options.options()
 
 		inner.withWriteConcern(model.options).deleteOne(
-			filter = context.buildDocument(model.filter).raw,
+			filter = context.bsonFactory.buildDocument(model.filter).raw,
 			options = DeleteOptions()
 		)
 	}
@@ -418,8 +418,8 @@ private class JvmUpdateResult(
 		get() = inner.modifiedCount
 
 	@OptIn(LowLevelApi::class)
-	override val upsertedId: BsonValueReader?
-		get() = inner.upsertedId?.let { context.readValue(it) }
+	override val upsertedId: BsonValue?
+		get() = inner.upsertedId?.let { context.bsonFactory.readValue(it) }
 	override val upsertedCount: Int
 		get() = if (inner.upsertedId == null) 0 else 1
 
