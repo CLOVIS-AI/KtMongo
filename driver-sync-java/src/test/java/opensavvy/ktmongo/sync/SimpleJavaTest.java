@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,11 +58,11 @@ public class SimpleJavaTest {
 
 			// Calling the lambdas directly
 			collection.find(options -> Unit.INSTANCE, filters -> {
-				filters.eq(JavaField.of(Utilisateur::enfant).child(Utilisateur.Enfant::name), "foo");
+				filters.eq(JavaField.of(Utilisateur::enfant).child(Utilisateur.Enfant::name), "foo", KtMongo.typeOf("foo"));
 
 				filters.and((it) -> {
-					it.gt(JavaField.of(Utilisateur::enfant).child(Utilisateur.Enfant::age), 5);
-					it.eq(JavaField.of(Utilisateur::name), "bar");
+					it.gt(JavaField.of(Utilisateur::enfant).child(Utilisateur.Enfant::age), 5, KtMongo.typeOf(5));
+					it.eq(JavaField.of(Utilisateur::name), "bar", KtMongo.typeOf("bar"));
 					return Unit.INSTANCE;
 				});
 
@@ -71,11 +71,11 @@ public class SimpleJavaTest {
 
 			// Using the Java helpers
 			collection.find(options(), filter(filter -> {
-				filter.eq(JavaField.of(Utilisateur::enfant).child(Utilisateur.Enfant::name), "Bob");
+				filter.eq(JavaField.of(Utilisateur::enfant).child(Utilisateur.Enfant::name), "Bob", KtMongo.typeOf("Bob"));
 
 				filter.and(filter(and -> {
-					and.gt(JavaField.of(Utilisateur::enfant).child(Utilisateur.Enfant::age), 5);
-					and.eq(JavaField.of(Utilisateur::name), "bar");
+					and.gt(JavaField.of(Utilisateur::enfant).child(Utilisateur.Enfant::age), 5, KtMongo.typeOf(5));
+					and.eq(JavaField.of(Utilisateur::name), "bar", KtMongo.typeOf("bar"));
 				}));
 			})).toList();
 

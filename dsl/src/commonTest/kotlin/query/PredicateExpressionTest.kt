@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,14 +22,15 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
 @OptIn(LowLevelApi::class)
-val PredicateExpressionTest by preparedSuite {
+@KtMongoDsl
+private inline fun <reified T> predicate(block: FilterQueryPredicate<T>.() -> Unit): String =
+	FilterQueryPredicate<T>(testContext())
+		.apply(block)
+		.toBson()
+		.toString()
 
-	@KtMongoDsl
-	fun <T> predicate(block: FilterQueryPredicate<T>.() -> Unit): String =
-		FilterQueryPredicate<T>(testContext())
-			.apply(block)
-			.toBson()
-			.toString()
+@OptIn(LowLevelApi::class)
+val PredicateExpressionTest by preparedSuite {
 
 	suite($$"Operator $eq") {
 		test("Integer") {
