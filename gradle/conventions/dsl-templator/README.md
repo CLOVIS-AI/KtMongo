@@ -24,6 +24,7 @@ Overloads are generated only for:
 - members (methods and properties)
 - that are public
 - that are NOT marked `override`
+- that do NOT have a `KType` parameter (those are internal delegation targets called by `inline reified` overloads)
 
 If the overload already exists, it is not generated.
 

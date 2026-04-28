@@ -444,15 +444,21 @@ abstract class ApplyTemplateTask : DefaultTask() {
 				val paramCount = ctx.functionValueParameters()?.functionValueParameter()?.size ?: 0
 				if (Pair(funcName, paramCount) in existingKPropFunctions) return
 
+				val paramCtxList = ctx.functionValueParameters()?.functionValueParameter() ?: emptyList()
+				// KType methods are internal delegation targets called by inline reified overloads; skip KProperty1 generation
+				if (paramCtxList.any { fp ->
+						val paramType = fp.parameter()?.type() ?: return@any false
+						source.substring(paramType.start.startIndex, paramType.stop.stopIndex + 1) == "KType"
+					}) return
+
 				val kpropReceiver = receiverText.replaceFirst("Field<", "kotlin.reflect.KProperty1<")
 
-				val paramCallParts = ctx.functionValueParameters()
-					?.functionValueParameter()
-					?.mapNotNull { fp ->
+				val paramCallParts = paramCtxList
+					.mapNotNull { fp ->
 						val name = fp.parameter()?.simpleIdentifier()?.text ?: return@mapNotNull null
 						val isVararg = fp.modifierList()?.text?.contains("vararg") == true
 						if (isVararg) "*$name" else name
-					} ?: emptyList()
+					}
 				val paramCall = paramCallParts.joinToString(", ")
 
 				val funcStart = ctx.start.startIndex
@@ -485,7 +491,6 @@ abstract class ApplyTemplateTask : DefaultTask() {
 				insertionBuilder.append("\n\n").append(docPart).append("\t").append(kpropFuncText)
 
 				// For each parameter whose type starts with Field<, also generate overloads with KProperty1 for that param
-				val paramCtxList = ctx.functionValueParameters()?.functionValueParameter() ?: emptyList()
 				for (fieldParamCtx in paramCtxList) {
 					val paramType = fieldParamCtx.parameter()?.type() ?: continue
 					val paramTypeText = source.substring(paramType.start.startIndex, paramType.stop.stopIndex + 1)
