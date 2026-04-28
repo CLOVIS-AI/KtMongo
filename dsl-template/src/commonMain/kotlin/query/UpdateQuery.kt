@@ -813,7 +813,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *         User::name eq "Bob"
 	 *     },
 	 *     update = {
-	 *         User::tokens addToSet listOf("123456789", "789456123")
+	 *         User::tokens addEachToSet listOf("123456789", "789456123")
 	 *     }
 	 * )
 	 * ```
@@ -827,7 +827,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addToSet(values: Iterable<V>, type: KType) {
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addEachToSet(values: Iterable<V>, type: KType) {
 		for (value in values)
 			this.addToSet(value, type)
 	}
@@ -857,7 +857,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *         User::name eq "Bob"
 	 *     },
 	 *     update = {
-	 *         User::tokens addToSet listOf("123456789", "789456123")
+	 *         User::tokens addEachToSet listOf("123456789", "789456123")
 	 *     }
 	 * )
 	 * ```
@@ -871,8 +871,8 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.addToSet(values: Iterable<V>) {
-		this.addToSet(values, typeOf<V>())
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.addEachToSet(values: Iterable<V>) {
+		this.addEachToSet(values, typeOf<V>())
 	}
 
 	// endregion
