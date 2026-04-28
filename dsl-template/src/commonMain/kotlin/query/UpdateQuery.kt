@@ -22,6 +22,8 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import kotlin.time.Instant
 
 /**
@@ -104,7 +106,37 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V)
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V, type: KType)
+
+	/**
+	 * Replaces the value of a field with the specified [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.updateMany {
+	 *     User::age set 18
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 *
+	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.set(value: V) {
+		set(value, typeOf<V>())
+	}
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `true`.
@@ -132,9 +164,9 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: V) {
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setIf(condition: Boolean, value: V) {
 		if (condition)
 			this set value
 	}
@@ -165,9 +197,9 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: V) {
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setUnless(condition: Boolean, value: V) {
 		if (!condition)
 			this set value
 	}
@@ -205,7 +237,41 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.inc(amount: V)
+	fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.inc(amount: V, type: KType)
+
+	/**
+	 * Increments a field by the specified [amount].
+	 *
+	 * [amount] may be negative, in which case the field is decremented.
+	 *
+	 * If the field doesn't exist (either the document doesn't have it, or the operation is an upsert and a new document is created),
+	 * the field is created with an initial value of [amount].
+	 *
+	 * Use of this operator with a field with a `null` value will generate an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * // It's the new year!
+	 * collection.updateMany {
+	 *     User::age inc 1
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Number> Field<T, V>.inc(amount: V) {
+		this.inc(amount, typeOf<V>())
+	}
 
 	/**
 	 * Increments a field by the specified [amount].
@@ -235,9 +301,9 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.plusAssign(amount: V): Unit =
+	final inline operator fun <@kotlin.internal.OnlyInputTypes reified V : Number> Field<T, V>.plusAssign(amount: V): Unit =
 		this.inc(amount)
 
 	// endregion
@@ -270,7 +336,69 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.mul(amount: V)
+	fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.mul(amount: V, type: KType)
+
+	/**
+	 * Multiplies a field by the specified [amount].
+	 *
+	 * If the field doesn't exist (either the document doesn't have it, or the operation is an upsert and a new document is created),
+	 * the field is created with an initial value of 0.
+	 *
+	 * Use of this operator with a field with a `null` value will generate an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val price: Double,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::price mul 2.0
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/mul/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Number> Field<T, V>.mul(amount: V) {
+		this.mul(amount, typeOf<V>())
+	}
+
+	/**
+	 * Multiplies a field by the specified [amount].
+	 *
+	 * If the field doesn't exist (either the document doesn't have it, or the operation is an upsert and a new document is created),
+	 * the field is created with an initial value of 0.
+	 *
+	 * Use of this operator with a field with a `null` value will generate an error.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val price: Double,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::price *= 2.0
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/mul/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline operator fun <@kotlin.internal.OnlyInputTypes reified V : Number> Field<T, V>.timesAssign(amount: V) {
+		this mul amount
+	}
 
 	// endregion
 	// region $unset
@@ -330,7 +458,35 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.min(value: V)
+	fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.min(value: V, type: KType)
+
+	/**
+	 * Updates the value of a field to the specified [value] only if the specified [value] is less than the current value of the field.
+	 *
+	 * If the field doesn't exist, the field is set to the specified [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::score min 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/min/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> Field<T, V?>.min(value: V) {
+		this.min(value, typeOf<V>())
+	}
 
 	/**
 	 * Updates the value of a field to the specified [value] only if the specified [value] is greater than the current value of the field.
@@ -356,7 +512,35 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.max(value: V)
+	fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.max(value: V, type: KType)
+
+	/**
+	 * Updates the value of a field to the specified [value] only if the specified [value] is greater than the current value of the field.
+	 *
+	 * If the field doesn't exist, the field is set to the specified [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val score: Int,
+	 * )
+	 *
+	 * collection.updateMany {
+	 *     User::score max 100
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/max/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> Field<T, V?>.max(value: V) {
+		this.max(value, typeOf<V>())
+	}
 
 	// endregion
 	// region $rename
@@ -496,6 +680,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class)
 	val <E> Field<T, Collection<E>>.selected: Field<T, E>
 		get() = FieldImpl<T, E>(path / PathSegment.Positional)
+
 	// endregion
 	// region All positional operator: $[]
 
@@ -565,7 +750,43 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addToSet(value: V)
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addToSet(value: V, type: KType)
+
+	/**
+	 * Adds [value] at the end of the array, unless it is already present, in which case it does nothing.
+	 *
+	 * MongoDB detects equality if the two documents are exactly identical. All the fields must be the same _in the same order_.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens addToSet "123456789"
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123456789"` to the user's tokens only if it isn't already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.addToSet(value: V) {
+		this.addToSet(value, typeOf<V>())
+	}
 
 	/**
 	 * Adds multiple [values] at the end of the array, unless they are already present.
@@ -606,9 +827,52 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addToSet(values: Iterable<V>) {
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addToSet(values: Iterable<V>, type: KType) {
 		for (value in values)
-			this addToSet value
+			this.addToSet(value, type)
+	}
+
+	/**
+	 * Adds multiple [values] at the end of the array, unless they are already present.
+	 *
+	 * Each value in [values] is treated independently.
+	 * It if it is already present in the array, nothing happens.
+	 * If it is absent from the array, it is added at the end.
+	 *
+	 * MongoDB detects equality if the two documents are exactly identical. All the fields must be the same _in the same order_.
+	 *
+	 * This is a convenience function for calling [addToSet] multiple times.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens addToSet listOf("123456789", "789456123")
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123456789"` and `"789465123"` to the user's tokens only if they aren't already present.
+	 * If only one of them is present, the other is added.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.addToSet(values: Iterable<V>) {
+		this.addToSet(values, typeOf<V>())
 	}
 
 	// endregion
@@ -655,7 +919,39 @@ interface UpsertQuery<T> : UpdateQuery<T> {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setOnInsert(value: V)
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setOnInsert(value: V, type: KType)
+
+	/**
+	 * If an upsert operation results in an insert of a document,
+	 * then this operator assigns the specified [value] to the field.
+	 * If the update operation does not result in an insert, this operator does nothing.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.filter {
+	 *     User::name eq "foo"
+	 * }.upsertOne {
+	 *     User::age setOnInsert 18
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/setOnInsert/)
+	 *
+	 * @see set Always set the value.
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setOnInsert(value: V) {
+		this.setOnInsert(value, typeOf<V>())
+	}
 
 	// endregion
 
