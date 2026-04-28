@@ -168,10 +168,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun acos(value: Double?): Value<Any, Double?> =
+	final inline fun acos(value: Double?): Value<Any, Double?> =
 		acos(of(value))
 
 	/**
@@ -298,10 +298,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun acosh(value: Double?): Value<Any, Double?> =
+	final inline fun acosh(value: Double?): Value<Any, Double?> =
 		acosh(of(value))
 
 	/**
@@ -428,10 +428,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun cos(value: Double?): Value<Any, Double?> =
+	final inline fun cos(value: Double?): Value<Any, Double?> =
 		cos(of(value))
 
 	/**
@@ -550,10 +550,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun cosh(value: Double?): Value<Any, Double?> =
+	final inline fun cosh(value: Double?): Value<Any, Double?> =
 		cosh(of(value))
 
 	/**
@@ -688,10 +688,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun asin(value: Double?): Value<Any, Double?> =
+	final inline fun asin(value: Double?): Value<Any, Double?> =
 		asin(of(value))
 
 	/**
@@ -810,10 +810,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun asinh(value: Double?): Value<Any, Double?> =
+	final inline fun asinh(value: Double?): Value<Any, Double?> =
 		asinh(of(value))
 
 	/**
@@ -940,10 +940,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun sin(value: Double?): Value<Any, Double?> =
+	final inline fun sin(value: Double?): Value<Any, Double?> =
 		sin(of(value))
 
 	/**
@@ -1062,10 +1062,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun sinh(value: Double?): Value<Any, Double?> =
+	final inline fun sinh(value: Double?): Value<Any, Double?> =
 		sinh(of(value))
 
 	/**
@@ -1192,10 +1192,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun atan(value: Double?): Value<Any, Double?> =
+	final inline fun atan(value: Double?): Value<Any, Double?> =
 		atan(of(value))
 
 	/**
@@ -1322,10 +1322,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun atanh(value: Double?): Value<Any, Double?> =
+	final inline fun atanh(value: Double?): Value<Any, Double?> =
 		atanh(of(value))
 
 	/**
@@ -1452,10 +1452,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun tan(value: Double?): Value<Any, Double?> =
+	final inline fun tan(value: Double?): Value<Any, Double?> =
 		tan(of(value))
 
 	/**
@@ -1574,10 +1574,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun tanh(value: Double?): Value<Any, Double?> =
+	final inline fun tanh(value: Double?): Value<Any, Double?> =
 		tanh(of(value))
 
 	// endregion
@@ -1700,10 +1700,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toRadiansResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Double.toRadians(): Value<Any, Double> =
+	final inline fun Double.toRadians(): Value<Any, Double> =
 		of(this).toRadians()
 
 	/**
@@ -1823,10 +1823,10 @@ interface TrigonometryValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toDegreesResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Double.toDegrees(): Value<Any, Double> =
+	final inline fun Double.toDegrees(): Value<Any, Double> =
 		of(this).toDegrees()
 
 	// endregion

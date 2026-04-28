@@ -599,10 +599,10 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toBooleanResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Any?.toBoolean(): Value<Any, Boolean> =
+	final inline fun Any?.toBoolean(): Value<Any, Boolean> =
 		of(this).toBoolean()
 
 	/**
@@ -830,10 +830,10 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toInstantResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Any?.toInstant(): Value<Any, Instant> =
+	final inline fun Any?.toInstant(): Value<Any, Instant> =
 		of(this).toInstant()
 
 	/**
@@ -1037,10 +1037,10 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toDoubleResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Any?.toDouble(): Value<Any, Double> =
+	final inline fun Any?.toDouble(): Value<Any, Double> =
 		of(this).toDouble()
 
 	/**
@@ -1248,10 +1248,10 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toIntResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Any?.toInt(): Value<Any, Int> =
+	final inline fun Any?.toInt(): Value<Any, Int> =
 		of(this).toInt()
 
 	/**
@@ -1455,10 +1455,10 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toLongResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Any?.toLong(): Value<Any, Long> =
+	final inline fun Any?.toLong(): Value<Any, Long> =
 		of(this).toLong()
 
 	/**
@@ -1614,10 +1614,10 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toObjectIdResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Any?.toObjectId(): Value<Any, ObjectId> =
+	final inline fun Any?.toObjectId(): Value<Any, ObjectId> =
 		of(this).toObjectId()
 
 	/**
@@ -1793,10 +1793,10 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toTextResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Any?.toText(): Value<Any, String> =
+	final inline fun Any?.toText(): Value<Any, String> =
 		of(this).toText()
 
 	/**
@@ -1923,11 +1923,11 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("toUuidResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@ExperimentalUuidApi
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun Any?.toUuid(): Value<Any, Uuid> =
+	final inline fun Any?.toUuid(): Value<Any, Uuid> =
 		of(this).toUuid()
 
 	@LowLevelApi

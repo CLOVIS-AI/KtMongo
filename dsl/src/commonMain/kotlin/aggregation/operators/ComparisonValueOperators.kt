@@ -171,10 +171,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 * @see FilterQuery.eq Equivalent operator in regular queries.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Value<Context, Result>.eq(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Value<Context, Result>.eq(other: Result): Value<Context, Boolean> =
 		this.eq(of(other))
 
 	/**
@@ -315,10 +315,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 * @see FilterQuery.eq Equivalent operator in regular queries.
 	 */
 	@JvmName("eqFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.eq(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.eq(other: Result): Value<Context, Boolean> =
 		of(this).eq(of(other))
 
 	/**
@@ -459,10 +459,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 * @see FilterQuery.eq Equivalent operator in regular queries.
 	 */
 	@JvmName("eqPropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.eq(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> kotlin.reflect.KProperty1<Context, Result>.eq(other: Result): Value<Context, Boolean> =
 		of(this).eq(of(other))
 
 	/**
@@ -496,10 +496,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("eqResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.eq(other: Value<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.eq(other: Value<Context, Result>): Value<Context, Boolean> =
 		of(this).eq(other)
 
 	/**
@@ -533,10 +533,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("eqResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.eq(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.eq(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
 		of(this).eq(of(other))
 
 	/**
@@ -570,10 +570,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("eqResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.eq(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.eq(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
 		of(this).eq(of(other))
 
 	/**
@@ -607,10 +607,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("eqResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.eq(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.eq(other: Result): Value<Context, Boolean> =
 		of(this).eq(of(other))
 
 	/**
@@ -749,10 +749,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 * @see FilterQuery.ne Equivalent operator in regular queries.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Value<Context, Result>.ne(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Value<Context, Result>.ne(other: Result): Value<Context, Boolean> =
 		this.ne(of(other))
 
 	/**
@@ -893,10 +893,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 * @see FilterQuery.ne Equivalent operator in regular queries.
 	 */
 	@JvmName("neFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.ne(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.ne(other: Result): Value<Context, Boolean> =
 		of(this).ne(of(other))
 
 	/**
@@ -1037,10 +1037,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 * @see FilterQuery.ne Equivalent operator in regular queries.
 	 */
 	@JvmName("nePropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.ne(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> kotlin.reflect.KProperty1<Context, Result>.ne(other: Result): Value<Context, Boolean> =
 		of(this).ne(of(other))
 
 	/**
@@ -1074,10 +1074,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("neResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.ne(other: Value<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.ne(other: Value<Context, Result>): Value<Context, Boolean> =
 		of(this).ne(other)
 
 	/**
@@ -1111,10 +1111,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("neResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.ne(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.ne(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
 		of(this).ne(of(other))
 
 	/**
@@ -1148,10 +1148,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("neResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.ne(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.ne(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
 		of(this).ne(of(other))
 
 	/**
@@ -1185,10 +1185,10 @@ interface ComparisonValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("neResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.ne(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.ne(other: Result): Value<Context, Boolean> =
 		of(this).ne(of(other))
 
 	// TODO: document the other operators once 'project' is implemented, since the official examples use 'project' to demonstrate them
@@ -1213,10 +1213,10 @@ interface ComparisonValueOperators : ValueOperators {
 		this.gt(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Value<Context, Result>.gt(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Value<Context, Result>.gt(other: Result): Value<Context, Boolean> =
 		this.gt(of(other))
 
 	@JvmName("gtFieldReceiverByValue")
@@ -1241,10 +1241,10 @@ interface ComparisonValueOperators : ValueOperators {
 		of(this).gt(of(other))
 
 	@JvmName("gtFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gt(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gt(other: Result): Value<Context, Boolean> =
 		of(this).gt(of(other))
 
 	@JvmName("gtPropertyReceiverByValue")
@@ -1269,42 +1269,42 @@ interface ComparisonValueOperators : ValueOperators {
 		of(this).gt(of(other))
 
 	@JvmName("gtPropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gt(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> kotlin.reflect.KProperty1<Context, Result>.gt(other: Result): Value<Context, Boolean> =
 		of(this).gt(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("gtResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.gt(other: Value<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.gt(other: Value<Context, Result>): Value<Context, Boolean> =
 		of(this).gt(other)
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("gtResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.gt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.gt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
 		of(this).gt(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("gtResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.gt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.gt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
 		of(this).gt(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("gtResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.gt(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.gt(other: Result): Value<Context, Boolean> =
 		of(this).gt(of(other))
 
 	@OptIn(LowLevelApi::class)
@@ -1327,10 +1327,10 @@ interface ComparisonValueOperators : ValueOperators {
 		this.gte(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Value<Context, Result>.gte(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Value<Context, Result>.gte(other: Result): Value<Context, Boolean> =
 		this.gte(of(other))
 
 	@JvmName("gteFieldReceiverByValue")
@@ -1355,10 +1355,10 @@ interface ComparisonValueOperators : ValueOperators {
 		of(this).gte(of(other))
 
 	@JvmName("gteFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gte(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.gte(other: Result): Value<Context, Boolean> =
 		of(this).gte(of(other))
 
 	@JvmName("gtePropertyReceiverByValue")
@@ -1383,42 +1383,42 @@ interface ComparisonValueOperators : ValueOperators {
 		of(this).gte(of(other))
 
 	@JvmName("gtePropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.gte(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> kotlin.reflect.KProperty1<Context, Result>.gte(other: Result): Value<Context, Boolean> =
 		of(this).gte(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("gteResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.gte(other: Value<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.gte(other: Value<Context, Result>): Value<Context, Boolean> =
 		of(this).gte(other)
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("gteResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.gte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.gte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
 		of(this).gte(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("gteResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.gte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.gte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
 		of(this).gte(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("gteResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.gte(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.gte(other: Result): Value<Context, Boolean> =
 		of(this).gte(of(other))
 
 	@OptIn(LowLevelApi::class)
@@ -1441,10 +1441,10 @@ interface ComparisonValueOperators : ValueOperators {
 		this.lt(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Value<Context, Result>.lt(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Value<Context, Result>.lt(other: Result): Value<Context, Boolean> =
 		this.lt(of(other))
 
 	@JvmName("ltFieldReceiverByValue")
@@ -1469,10 +1469,10 @@ interface ComparisonValueOperators : ValueOperators {
 		of(this).lt(of(other))
 
 	@JvmName("ltFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lt(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lt(other: Result): Value<Context, Boolean> =
 		of(this).lt(of(other))
 
 	@JvmName("ltPropertyReceiverByValue")
@@ -1497,42 +1497,42 @@ interface ComparisonValueOperators : ValueOperators {
 		of(this).lt(of(other))
 
 	@JvmName("ltPropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lt(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> kotlin.reflect.KProperty1<Context, Result>.lt(other: Result): Value<Context, Boolean> =
 		of(this).lt(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("ltResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.lt(other: Value<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.lt(other: Value<Context, Result>): Value<Context, Boolean> =
 		of(this).lt(other)
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("ltResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.lt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.lt(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
 		of(this).lt(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("ltResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.lt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.lt(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
 		of(this).lt(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("ltResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.lt(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.lt(other: Result): Value<Context, Boolean> =
 		of(this).lt(of(other))
 
 	@OptIn(LowLevelApi::class)
@@ -1555,10 +1555,10 @@ interface ComparisonValueOperators : ValueOperators {
 		this.lte(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Value<Context, Result>.lte(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Value<Context, Result>.lte(other: Result): Value<Context, Boolean> =
 		this.lte(of(other))
 
 	@JvmName("lteFieldReceiverByValue")
@@ -1583,10 +1583,10 @@ interface ComparisonValueOperators : ValueOperators {
 		of(this).lte(of(other))
 
 	@JvmName("lteFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lte(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.lte(other: Result): Value<Context, Boolean> =
 		of(this).lte(of(other))
 
 	@JvmName("ltePropertyReceiverByValue")
@@ -1611,42 +1611,42 @@ interface ComparisonValueOperators : ValueOperators {
 		of(this).lte(of(other))
 
 	@JvmName("ltePropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> kotlin.reflect.KProperty1<Context, Result>.lte(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> kotlin.reflect.KProperty1<Context, Result>.lte(other: Result): Value<Context, Boolean> =
 		of(this).lte(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("lteResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.lte(other: Value<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.lte(other: Value<Context, Result>): Value<Context, Boolean> =
 		of(this).lte(other)
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("lteResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.lte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.lte(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Boolean> =
 		of(this).lte(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("lteResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.lte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.lte(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Boolean> =
 		of(this).lte(of(other))
 
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("lteResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any, Result> Result.lte(other: Result): Value<Context, Boolean> =
+	infix final inline fun <Context : Any, reified Result> Result.lte(other: Result): Value<Context, Boolean> =
 		of(this).lte(of(other))
 
 	@OptIn(LowLevelApi::class)

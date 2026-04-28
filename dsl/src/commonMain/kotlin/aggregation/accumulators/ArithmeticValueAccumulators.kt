@@ -233,9 +233,9 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: Number?) =
+	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: Number?) =
 		sum(of(value))
 
 	/**
@@ -265,9 +265,9 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: Number?) =
+	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: Number?) =
 		this.field.sum(of(value))
 
 	/**
@@ -511,9 +511,9 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: Number?) =
+	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: Number?) =
 		average(of(value))
 
 	/**
@@ -545,9 +545,9 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: Number?) =
+	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: Number?) =
 		this.field.average(of(value))
 
 	/**
@@ -793,9 +793,9 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: Number?) =
+	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: Number?) =
 		median(of(value))
 
 	/**
@@ -827,9 +827,9 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: Number?) =
+	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: Number?) =
 		this.field.median(of(value))
 
 	/**
@@ -1090,9 +1090,9 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
+	final inline fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
 		value: Number?,
 		vararg percentiles: Double,
 	) =
@@ -1127,9 +1127,9 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
+	final inline fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
 		value: Number?,
 		vararg percentiles: Double,
 	) =

@@ -253,6 +253,24 @@ abstract class ApplyTemplateTask : DefaultTask() {
 										}
 									}
 
+									val receiverIsSpecificType = recPosIdx >= 0 && combination[recPosIdx] != null &&
+										(combination[recPosIdx]!!.startsWith("opensavvy") || combination[recPosIdx]!!.startsWith("kotlin.reflect.KProperty1"))
+									val hasResultAlternative = !receiverIsSpecificType && valuePositions.zip(combination).any { (_, t) ->
+										t != null && !t.startsWith("opensavvy") && !t.startsWith("kotlin.reflect.KProperty1")
+									}
+									// True when ANY position has a raw-type substitution (including when the receiver
+									// is Field<>/KProperty1<>). Used to decide whether 'final inline' and 'reified'
+									// are needed — these are required whenever of(rawParam) is called in the body.
+									val hasAnyRawTypeSubstitution = valuePositions.zip(combination).any { (_, t) ->
+										t != null && !t.startsWith("opensavvy") && !t.startsWith("kotlin.reflect.KProperty1")
+									}
+									val rawResultTypeNames = if (hasAnyRawTypeSubstitution) {
+										valuePositions.zip(combination)
+											.filter { (_, t) -> t != null && !t.startsWith("opensavvy") && !t.startsWith("kotlin.reflect.KProperty1") }
+											.map { (pos, _) -> pos.resultType }
+											.distinct()
+									} else emptyList()
+
 									// Build the delegation call
 									val receiverReplaced = hasValueReceiver && combination[recPosIdx] != null
 									val receiverPrefix = when {
@@ -289,6 +307,34 @@ abstract class ApplyTemplateTask : DefaultTask() {
 										newSignature + " =\n\t\t$delegationCall"
 									}
 
+									// For raw-type (literal value) overloads, mark as 'final inline' and add
+									// 'reified' to each substituted type param so the delegated of() call can
+									// capture the type at compile time. Skip when the function has lambda
+									// parameters: inline lambdas can't be passed to non-inline functions.
+									// Search the raw parameter-list source so ANTLR misparses of intersection
+									// types (e.g. T & Any inside a receiver lambda) don't silently miss a '->'.
+									val hasLambdaParams = run {
+										val paramListCtx = ctx.functionValueParameters()
+										paramListCtx != null &&
+											source.substring(paramListCtx.start.startIndex, paramListCtx.stop.stopIndex + 1).contains("->")
+									}
+									var processedFuncText = newFuncText
+									// Only add 'final inline' + 'reified' when at least one raw result-type name
+									// is a non-parameterized type. Parameterized types like Collection<T> can
+									// never be added as type params by addReifiedToTypeParam — 'final inline'
+									// without any reification adds noise (WRONG_MODIFIER_CONTAINING_DECLARATION)
+									// with zero benefit.
+									val anyWillBeReified = rawResultTypeNames.any { !it.contains('<') }
+									if (hasAnyRawTypeSubstitution && !hasLambdaParams && anyWillBeReified) {
+										val funIdx = processedFuncText.indexOf("fun ")
+										if (funIdx >= 0 && !processedFuncText.take(funIdx).contains("inline ")) {
+											processedFuncText = processedFuncText.substring(0, funIdx) + "final inline " + processedFuncText.substring(funIdx)
+										}
+										for (name in rawResultTypeNames) {
+											processedFuncText = addReifiedToTypeParam(processedFuncText, name)
+										}
+									}
+
 									// Build @JvmName suffix — added when field/kprop/result types are involved
 									// to avoid JVM signature clashes from erasure
 									val receiverSuffix = if (hasValueReceiver) {
@@ -320,30 +366,35 @@ abstract class ApplyTemplateTask : DefaultTask() {
 									// beat Field.ne(Result) within the aggregation context. Adding the annotation
 									// would cause an outer FilterQuery.ne(Field, V) to win over the aggregation
 									// overload despite the aggregation context being the closer implicit receiver.
-									val receiverIsSpecificType = recPosIdx >= 0 && combination[recPosIdx] != null &&
-										(combination[recPosIdx]!!.startsWith("opensavvy") || combination[recPosIdx]!!.startsWith("kotlin.reflect.KProperty1"))
-									val hasResultAlternative = !receiverIsSpecificType && valuePositions.zip(combination).any { (_, t) ->
-										t != null && !t.startsWith("opensavvy") && !t.startsWith("kotlin.reflect.KProperty1")
-									}
 
 									// Merge INAPPLICABLE_JVM_NAME into the existing @Suppress rather than
 									// adding a second (non-repeatable) @Suppress annotation.
 									val afterJvmName = if (needsJvmName) {
-										if (newFuncText.contains("@Suppress(\"")) {
-											newFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
+										if (processedFuncText.contains("@Suppress(\"")) {
+											processedFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
 										} else {
-											"@Suppress(\"INAPPLICABLE_JVM_NAME\")\n\t" + newFuncText
+											"@Suppress(\"INAPPLICABLE_JVM_NAME\")\n\t" + processedFuncText
 										}
-									} else newFuncText
+									} else processedFuncText
 									// @kotlin.internal.LowPriorityInOverloadResolution is itself an internal API,
 									// so INVISIBLE_REFERENCE must be suppressed wherever it appears.
-									val annotatedFuncText = if (hasResultAlternative && !afterJvmName.contains("INVISIBLE_REFERENCE")) {
+									val afterInvisibleRef = if (hasResultAlternative && !afterJvmName.contains("INVISIBLE_REFERENCE")) {
 										if (afterJvmName.contains("@Suppress(\"")) {
 											afterJvmName.replaceFirst("@Suppress(\"", "@Suppress(\"INVISIBLE_REFERENCE\", \"")
 										} else {
 											"@Suppress(\"INVISIBLE_REFERENCE\")\n\t" + afterJvmName
 										}
 									} else afterJvmName
+									// final inline in interface bodies requires suppressing WRONG_MODIFIER_CONTAINING_DECLARATION.
+									val annotatedFuncText = if (hasAnyRawTypeSubstitution && !hasLambdaParams && anyWillBeReified && !afterInvisibleRef.contains("WRONG_MODIFIER_CONTAINING_DECLARATION")) {
+										if (afterInvisibleRef.contains("@Suppress(\"")) {
+											val suppressIdx = afterInvisibleRef.indexOf("@Suppress(\"")
+											val closeParenIdx = afterInvisibleRef.indexOf(")", suppressIdx)
+											afterInvisibleRef.substring(0, closeParenIdx) + ", \"WRONG_MODIFIER_CONTAINING_DECLARATION\"" + afterInvisibleRef.substring(closeParenIdx)
+										} else {
+											"@Suppress(\"WRONG_MODIFIER_CONTAINING_DECLARATION\")\n\t" + afterInvisibleRef
+										}
+									} else afterInvisibleRef
 									val jvmNameAnnotation = if (needsJvmName) "@JvmName(\"$vFuncName$receiverSuffix$paramSuffix\")\n\t" else ""
 									val lowPriorityAnnotation = if (hasResultAlternative) "@kotlin.internal.LowPriorityInOverloadResolution\n\t" else ""
 
@@ -369,10 +420,20 @@ abstract class ApplyTemplateTask : DefaultTask() {
 													kpropReceiverText +
 													newSignature.substring(recIdxInNewSig + recText.length)
 												val kpropDelegationCall = "this.field.$vFuncName($delegationArgs)"
-												val kpropNewFuncText = if (bodyStartInFunc >= 0) {
+												var kpropNewFuncText = if (bodyStartInFunc >= 0) {
 													kpropNewSignature + "=\n\t\t$kpropDelegationCall"
 												} else {
 													kpropNewSignature + " =\n\t\t$kpropDelegationCall"
+												}
+												// Apply final inline + reified to KProperty1 variants that delegate via of().
+												if (hasAnyRawTypeSubstitution && !hasLambdaParams) {
+													val funIdx = kpropNewFuncText.indexOf("fun ")
+													if (funIdx >= 0 && !kpropNewFuncText.take(funIdx).contains("inline ")) {
+														kpropNewFuncText = kpropNewFuncText.substring(0, funIdx) + "final inline " + kpropNewFuncText.substring(funIdx)
+													}
+													for (name in rawResultTypeNames) {
+														kpropNewFuncText = addReifiedToTypeParam(kpropNewFuncText, name)
+													}
 												}
 												// KProperty1 receiver is specific — omit @LowPriorityInOverloadResolution
 												// (same exception as when a Value<> receiver is replaced by Field<>/KProperty1<>).
@@ -380,15 +441,24 @@ abstract class ApplyTemplateTask : DefaultTask() {
 													it != null &&
 														(it.startsWith("opensavvy") || it.startsWith("kotlin.reflect.KProperty1"))
 												}
-												val kpropAfterJvmName = if (kpropNeedsJvmName) {
+												var kpropFinalText = if (kpropNeedsJvmName) {
 													if (kpropNewFuncText.contains("@Suppress(\"")) {
 														kpropNewFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
 													} else {
 														"@Suppress(\"INAPPLICABLE_JVM_NAME\")\n\t" + kpropNewFuncText
 													}
 												} else kpropNewFuncText
+												if (hasAnyRawTypeSubstitution && !hasLambdaParams && !kpropFinalText.contains("WRONG_MODIFIER_CONTAINING_DECLARATION")) {
+													kpropFinalText = if (kpropFinalText.contains("@Suppress(\"")) {
+														val suppressIdx = kpropFinalText.indexOf("@Suppress(\"")
+														val closeParenIdx = kpropFinalText.indexOf(")", suppressIdx)
+														kpropFinalText.substring(0, closeParenIdx) + ", \"WRONG_MODIFIER_CONTAINING_DECLARATION\"" + kpropFinalText.substring(closeParenIdx)
+													} else {
+														"@Suppress(\"WRONG_MODIFIER_CONTAINING_DECLARATION\")\n\t" + kpropFinalText
+													}
+												}
 												val kpropJvmNameAnnotation = if (kpropNeedsJvmName) "@JvmName(\"${vFuncName}PropertyReceiver${paramSuffix}\")\n\t" else ""
-												valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(kpropJvmNameAnnotation).append(kpropAfterJvmName)
+												valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(kpropJvmNameAnnotation).append(kpropFinalText)
 											}
 										}
 									}
@@ -809,5 +879,45 @@ abstract class ApplyTemplateTask : DefaultTask() {
 			return ""
 		}
 		return ""
+	}
+
+	/**
+	 * Inserts `reified` before [typeName] in the type parameter block of [funcText].
+	 * Scoped to the `<…>` block immediately following `fun ` so it never touches
+	 * return types or parameter types that coincidentally contain the same name.
+	 */
+	private fun addReifiedToTypeParam(funcText: String, typeName: String): String {
+		if (funcText.contains("reified $typeName")) return funcText
+		val funIdx = funcText.indexOf("fun ")
+		if (funIdx < 0) return funcText
+		var pos = funIdx + 4
+		while (pos < funcText.length && funcText[pos].isWhitespace()) pos++
+		if (pos >= funcText.length || funcText[pos] != '<') return funcText
+		val typeParamStart = pos
+		var depth = 0
+		var typeParamEnd = -1
+		for (i in typeParamStart until funcText.length) {
+			when (funcText[i]) {
+				'<' -> depth++
+				'>' -> {
+					depth--
+					if (depth == 0) {
+						typeParamEnd = i
+						break
+					}
+				}
+			}
+		}
+		if (typeParamEnd < 0) return funcText
+		val block = funcText.substring(typeParamStart, typeParamEnd + 1)
+		val modified = block
+			.replace(" $typeName :", " reified $typeName :")
+			.replace(" $typeName>", " reified $typeName>")
+			.replace(" $typeName,", " reified $typeName,")
+			.replace("<$typeName>", "<reified $typeName>")
+			.replace("<$typeName :", "<reified $typeName :")
+			.replace("<$typeName,", "<reified $typeName,")
+		if (modified == block) return funcText
+		return funcText.substring(0, typeParamStart) + modified + funcText.substring(typeParamEnd + 1)
 	}
 }
