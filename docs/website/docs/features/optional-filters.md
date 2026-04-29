@@ -66,3 +66,7 @@ songs.find {
 	Song::releaseDate ltNotNull criteria.releasedBefore
 }
 ```
+
+Learn more:
+
+- [Filter operators](../api/dsl/opensavvy.ktmongo.dsl.query/-filter-query/index.md) (optional filter operators are suffixed with `NotNull`)
