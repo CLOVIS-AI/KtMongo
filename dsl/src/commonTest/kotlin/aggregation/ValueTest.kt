@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ val ValueTest by preparedSuite {
 
 	test("Foo") {
 		value {
-			of(5) eq of(User::profile / Profile::age)
+			5 eq User::profile / Profile::age
 		} shouldBeBson $$"""
 			[
 				{

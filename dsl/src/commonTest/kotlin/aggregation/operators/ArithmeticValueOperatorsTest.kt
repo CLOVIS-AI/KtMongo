@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Usage with a number") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set abs(of(5.2))
+					Target::average set abs(5.2)
 				}
 				.shouldBeBson($$"""
 					[
@@ -57,7 +57,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Binary usage") {
 			TestPipeline<Target>()
 				.set {
-					Target::score set (of(Target::score) + of(15))
+					Target::score set Target::score + 15
 				}
 				.shouldBeBson($$"""
 					[
@@ -80,7 +80,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Binary usage with doubles") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set (of(Target::average) + of(15.0))
+					Target::average set Target::average + 15.0
 				}
 				.shouldBeBson($$"""
 					[
@@ -103,7 +103,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("N-ary usage") {
 			TestPipeline<Target>()
 				.set {
-					Target::score set (of(1) + of(Target::score) + of(15))
+					Target::score set (1 + Target::score + 15)
 				}
 				.shouldBeBson($$"""
 					[
@@ -131,7 +131,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Usage with a number") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set ceil(of(Target::average))
+					Target::average set ceil(Target::average)
 				}
 				.shouldBeBson($$"""
 					[
@@ -151,7 +151,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Usage with a number") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set floor(of(Target::average))
+					Target::average set floor(Target::average)
 				}
 				.shouldBeBson($$"""
 					[
@@ -171,7 +171,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Binary usage") {
 			TestPipeline<Target>()
 				.set {
-					Target::score set (of(Target::score) * of(2))
+					Target::score set Target::score * 2
 				}
 				.shouldBeBson($$"""
 					[
@@ -194,7 +194,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Binary usage with doubles") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set (of(Target::average) * of(1.5))
+					Target::average set Target::average * 1.5
 				}
 				.shouldBeBson($$"""
 					[
@@ -217,7 +217,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("N-ary usage") {
 			TestPipeline<Target>()
 				.set {
-					Target::score set (of(2) * of(Target::score) * of(3))
+					Target::score set 2 * Target::score * 3
 				}
 				.shouldBeBson($$"""
 					[
@@ -245,7 +245,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Binary usage") {
 			TestPipeline<Target>()
 				.set {
-					Target::score set (of(Target::score) / of(2))
+					Target::score set of(Target::score) / of(2)
 				}
 				.shouldBeBson($$"""
 					[
@@ -268,7 +268,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Binary usage with doubles") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set (of(Target::average) / of(2.5))
+					Target::average set of(Target::average) / 2.5
 				}
 				.shouldBeBson($$"""
 					[
@@ -291,7 +291,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Literal divided by literal") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set (of(80.0) / of(8.0))
+					Target::average set of(80.0) / 8.0
 				}
 				.shouldBeBson($$"""
 					[
@@ -318,7 +318,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Binary usage") {
 			TestPipeline<Target>()
 				.set {
-					Target::score set (of(Target::score) - of(5))
+					Target::score set Target::score - 5
 				}
 				.shouldBeBson($$"""
 					[
@@ -341,7 +341,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Binary usage with doubles") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set (of(Target::average) - of(2.5))
+					Target::average set Target::average - 2.5
 				}
 				.shouldBeBson($$"""
 					[
@@ -364,7 +364,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Literal subtracted from literal") {
 			TestPipeline<Target>()
 				.set {
-					Target::score set (of(100) - of(25))
+					Target::score set of(100) - 25
 				}
 				.shouldBeBson($$"""
 					[
@@ -389,7 +389,7 @@ val ArithmeticValueOperatorsTest by preparedSuite {
 		test("Complex expression with addition and subtraction") {
 			TestPipeline<Target>()
 				.set {
-					Target::score set (of(Target::score) + of(10) - of(3))
+					Target::score set Target::score + of(10) - 3
 				}
 				.shouldBeBson($$"""
 					[

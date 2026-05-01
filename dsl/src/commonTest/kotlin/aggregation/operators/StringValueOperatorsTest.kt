@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Default whitespace trimming") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trim()
+					Target::text set Target::description.trim()
 				}
 				.shouldBeBson($$"""
 					[
@@ -66,7 +66,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Custom character trimming") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trim(characters = of("ge"))
+					Target::text set Target::description.trim(characters = "ge")
 				}
 				.shouldBeBson($$"""
 					[
@@ -111,7 +111,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Trimming with custom chars and literal string") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(" ggggoodbyeeeee").trim(characters = of(" ge"))
+					Target::text set " ggggoodbyeeeee".trim(characters = " ge")
 				}
 				.shouldBeBson($$"""
 					[
@@ -136,7 +136,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Trimming with vararg characters") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trim('g', 'e')
+					Target::text set Target::description.trim('g', 'e')
 				}
 				.shouldBeBson($$"""
 					[
@@ -161,7 +161,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Default whitespace trimming from start") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimStart()
+					Target::text set Target::description.trimStart()
 				}
 				.shouldBeBson($$"""
 					[
@@ -181,7 +181,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Custom character trimming from start") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimStart(characters = of("ge"))
+					Target::text set Target::description.trimStart(characters = "ge")
 				}
 				.shouldBeBson($$"""
 					[
@@ -204,7 +204,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Trimming from start with vararg characters") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimStart('g', 'e')
+					Target::text set Target::description.trimStart('g', 'e')
 				}
 				.shouldBeBson($$"""
 					[
@@ -229,7 +229,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Default whitespace trimming from end") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimEnd()
+					Target::text set Target::description.trimEnd()
 				}
 				.shouldBeBson($$"""
 					[
@@ -249,7 +249,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Custom character trimming from end") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimEnd(characters = of("ge"))
+					Target::text set Target::description.trimEnd(characters = "ge")
 				}
 				.shouldBeBson($$"""
 					[
@@ -272,7 +272,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Trimming from end with vararg characters") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).trimEnd('g', 'e')
+					Target::text set Target::description.trimEnd('g', 'e')
 				}
 				.shouldBeBson($$"""
 					[
@@ -297,7 +297,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Convert string to lowercase") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).lowercase()
+					Target::text set Target::description.lowercase()
 				}
 				.shouldBeBson($$"""
 					[
@@ -335,7 +335,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Convert field reference to lowercase") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::text).lowercase()
+					Target::text set Target::text.lowercase()
 				}
 				.shouldBeBson($$"""
 					[
@@ -355,7 +355,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Convert string to uppercase") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).uppercase()
+					Target::text set Target::description.uppercase()
 				}
 				.shouldBeBson($$"""
 					[
@@ -393,7 +393,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Convert field reference to uppercase") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::text).uppercase()
+					Target::text set Target::text.uppercase()
 				}
 				.shouldBeBson($$"""
 					[
@@ -413,7 +413,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Get length of string field") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set of(LengthTarget::description).length
+					LengthTarget::length set LengthTarget::description.length
 				}
 				.shouldBeBson($$"""
 					[
@@ -451,7 +451,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Get length of field reference") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set of(LengthTarget::text).length
+					LengthTarget::length set LengthTarget::text.length
 				}
 				.shouldBeBson($$"""
 					[
@@ -471,7 +471,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Get UTF-8 byte length of string field") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set of(LengthTarget::description).lengthUTF8
+					LengthTarget::length set LengthTarget::description.lengthUTF8
 				}
 				.shouldBeBson($$"""
 					[
@@ -489,7 +489,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Get UTF-8 byte length of literal string") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set of("Hello World!").lengthUTF8
+					LengthTarget::length set "Hello World!".lengthUTF8
 				}
 				.shouldBeBson($$"""
 					[
@@ -509,7 +509,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Get UTF-8 byte length of field reference") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set of(LengthTarget::text).lengthUTF8
+					LengthTarget::length set LengthTarget::text.lengthUTF8
 				}
 				.shouldBeBson($$"""
 					[
@@ -529,7 +529,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Split string field with delimiter") {
 			TestPipeline<SplitTarget>()
 				.set {
-					SplitTarget::parts set of(SplitTarget::description).split(delimiter = of("-"))
+					SplitTarget::parts set SplitTarget::description.split(delimiter = "-")
 				}
 				.shouldBeBson($$"""
 					[
@@ -552,7 +552,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Split literal string with delimiter") {
 			TestPipeline<SplitTarget>()
 				.set {
-					SplitTarget::parts set of("June-15-2013").split(delimiter = of("-"))
+					SplitTarget::parts set "June-15-2013".split(delimiter = of("-"))
 				}
 				.shouldBeBson($$"""
 					[
@@ -577,7 +577,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Split with single character delimiter") {
 			TestPipeline<SplitTarget>()
 				.set {
-					SplitTarget::parts set of("banana split").split(delimiter = of("a"))
+					SplitTarget::parts set "banana split".split(delimiter = of("a"))
 				}
 				.shouldBeBson($$"""
 					[
@@ -602,7 +602,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Split with space delimiter") {
 			TestPipeline<SplitTarget>()
 				.set {
-					SplitTarget::parts set of("Hello World").split(delimiter = of(" "))
+					SplitTarget::parts set "Hello World".split(delimiter = of(" "))
 				}
 				.shouldBeBson($$"""
 					[
@@ -627,7 +627,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Split with multi-character delimiter") {
 			TestPipeline<SplitTarget>()
 				.set {
-					SplitTarget::parts set of("astronomical").split(delimiter = of("astro"))
+					SplitTarget::parts set "astronomical".split(delimiter = of("astro"))
 				}
 				.shouldBeBson($$"""
 					[
@@ -652,7 +652,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Split with field reference as delimiter") {
 			TestPipeline<SplitTarget>()
 				.set {
-					SplitTarget::parts set of(SplitTarget::text).split(delimiter = of(SplitTarget::description))
+					SplitTarget::parts set SplitTarget::text.split(delimiter = SplitTarget::description)
 				}
 				.shouldBeBson($$"""
 					[
@@ -675,7 +675,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace first occurrence in string field") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+					Target::text set Target::description.replaceFirst(find = "blue paint", replacement = "red paint")
 				}
 				.shouldBeBson($$"""
 					[
@@ -701,7 +701,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace first occurrence in literal string") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("blue paint with blue paintbrush").replaceFirst(find = of("blue paint"), replacement = of("red paint"))
+					Target::text set "blue paint with blue paintbrush".replaceFirst(find = "blue paint", replacement = "red paint")
 				}
 				.shouldBeBson($$"""
 					[
@@ -729,7 +729,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace with string literals") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).replaceFirst(find = "blue paint", replacement = "red paint")
+					Target::text set Target::description.replaceFirst(find = "blue paint", replacement = "red paint")
 				}
 				.shouldBeBson($$"""
 					[
@@ -755,7 +755,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace single character") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("banana split").replaceFirst(find = of("a"), replacement = of("o"))
+					Target::text set "banana split".replaceFirst(find = "a", replacement = "o")
 				}
 				.shouldBeBson($$"""
 					[
@@ -783,7 +783,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace with empty string") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("Hello World").replaceFirst(find = of(" "), replacement = of(""))
+					Target::text set "Hello World".replaceFirst(find = " ", replacement = "")
 				}
 				.shouldBeBson($$"""
 					[
@@ -811,7 +811,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace with field references") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::text).replaceFirst(find = of(Target::description), replacement = of("REPLACED"))
+					Target::text set Target::text.replaceFirst(find = Target::description, replacement = "REPLACED")
 				}
 				.shouldBeBson($$"""
 					[
@@ -837,7 +837,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace all occurrences in string field") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).replace(find = of("blue paint"), replacement = of("red paint"))
+					Target::text set Target::description.replace(find = "blue paint", replacement = "red paint")
 				}
 				.shouldBeBson($$"""
 					[
@@ -863,7 +863,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace all occurrences in literal string") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("blue paint with blue paintbrush").replace(find = of("blue paint"), replacement = of("red paint"))
+					Target::text set "blue paint with blue paintbrush".replace(find = "blue paint", replacement = "red paint")
 				}
 				.shouldBeBson($$"""
 					[
@@ -891,7 +891,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace all with string literals") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).replace(find = "blue paint", replacement = "red paint")
+					Target::text set Target::description.replace(find = "blue paint", replacement = "red paint")
 				}
 				.shouldBeBson($$"""
 					[
@@ -917,7 +917,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace all single character occurrences") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("banana split").replace(find = of("a"), replacement = of("o"))
+					Target::text set "banana split".replace(find = "a", replacement = "o")
 				}
 				.shouldBeBson($$"""
 					[
@@ -945,7 +945,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace all with empty string") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("Hello World Hello").replace(find = of("Hello"), replacement = of(""))
+					Target::text set "Hello World Hello".replace(find = "Hello", replacement = "")
 				}
 				.shouldBeBson($$"""
 					[
@@ -973,7 +973,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Replace all with field references") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::text).replace(find = of(Target::description), replacement = of("REPLACED"))
+					Target::text set Target::text.replace(find = Target::description, replacement = "REPLACED")
 				}
 				.shouldBeBson($$"""
 					[
@@ -999,7 +999,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Extract substring with start index and length") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).substring(startIndex = of(1), length = of(2))
+					Target::text set Target::description.substring(startIndex = 1, length = 2)
 				}
 				.shouldBeBson($$"""
 					[
@@ -1025,7 +1025,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Extract substring with literal string") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("abcde").substring(startIndex = of(1), length = of(2))
+					Target::text set "abcde".substring(startIndex = 1, length = 2)
 				}
 				.shouldBeBson($$"""
 					[
@@ -1054,7 +1054,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Extract substring from field with dynamic indices") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("Hello World!").substring(startIndex = of(6), length = of(5))
+					Target::text set "Hello World!".substring(startIndex = 6, length = 5)
 				}
 				.shouldBeBson($$"""
 					[
@@ -1112,7 +1112,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Extract substring with start index and byte count") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of(Target::description).substringUTF8(startIndex = of(1), byteCount = of(2))
+					Target::text set Target::description.substringUTF8(startIndex = 1, byteCount = 2)
 				}
 				.shouldBeBson($$"""
 					[
@@ -1138,7 +1138,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Extract substring with literal string") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("abcde").substringUTF8(startIndex = of(1), byteCount = of(2))
+					Target::text set "abcde".substringUTF8(startIndex = 1, byteCount = 2)
 				}
 				.shouldBeBson($$"""
 					[
@@ -1166,7 +1166,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Extract substring from field with dynamic indices") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("Hello World!").substringUTF8(startIndex = of(6), byteCount = of(5))
+					Target::text set "Hello World!".substringUTF8(startIndex = 6, byteCount = 5)
 				}
 				.shouldBeBson($$"""
 					[
@@ -1194,7 +1194,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Extract substring with IntRange") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set of("abcde").substringUTF8(1..2)
+					Target::text set "abcde".substringUTF8(1..2)
 				}
 				.shouldBeBson($$"""
 					[
@@ -1224,7 +1224,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Concatenate two strings") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set (of(Target::text) concat of(Target::description))
+					Target::text set (Target::text concat Target::description)
 				}
 				.shouldBeBson($$"""
 					[
@@ -1300,7 +1300,7 @@ val StringValueOperatorsTest by preparedSuite {
 		test("Combine nested concatenations") {
 			TestPipeline<Target>()
 				.set {
-					Target::text set (of("Hello") concat of(" ") concat of("World"))
+					Target::text set ("Hello" concat " " concat "World")
 				}
 				.shouldBeBson($$"""
 					[

@@ -45,7 +45,7 @@ val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.secon
 
 		val anomalies = songs().find {
 			expr {
-				of(Song::creationDate) gt of(Song::editionDate)
+				Song::creationDate gt Song::editionDate
 			}
 		}
 
@@ -74,7 +74,7 @@ val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.secon
 
 		val anomalies = songs().filter {
 			expr {
-				of(Song::creationDate) gt of(Song::editionDate)
+				Song::creationDate gt Song::editionDate
 			}
 		}
 
@@ -99,9 +99,9 @@ val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.secon
 		songs().updateManyWithPipeline {
 			set {
 				Song::creationDate set cond(
-					of(Song::editionDate) gt of(Song::creationDate),
-					of(12),
-					of(11)
+					Song::editionDate gt Song::creationDate,
+					12,
+					11
 				)
 			}
 		}
@@ -167,10 +167,10 @@ val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.secon
 		val statistics = songs().aggregate()
 			.match { Song::editionDate gt 0 }
 			.group {
-				Statistics::total sum of(Song::editionDate)
-				Statistics::average average of(Song::editionDate)
-				Statistics::median median of(Song::editionDate)
-				Statistics::percentiles.percentiles(of(Song::editionDate), 0.5, 0.75, 0.9, 0.95)
+				Statistics::total sum Song::editionDate
+				Statistics::average average Song::editionDate
+				Statistics::median median Song::editionDate
+				Statistics::percentiles.percentiles(Song::editionDate, 0.5, 0.75, 0.9, 0.95)
 			}
 			.first()
 

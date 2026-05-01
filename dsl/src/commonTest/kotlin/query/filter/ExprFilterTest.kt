@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ val ExprFilterTest by preparedSuite {
 	test("Comparing two fields") {
 		filter {
 			expr {
-				of(User::grades[0]) ne of(User::grades[1])
+				User::grades[0] ne User::grades[1]
 			}
 		} shouldBeBson $$"""
 			{
@@ -66,7 +66,7 @@ val ExprFilterTest by preparedSuite {
 	test("Comparing a field and a hardcoded value") {
 		filter {
 			expr {
-				of(User::grades[0]) ne of(12)
+				User::grades[0] ne 12
 			}
 		} shouldBeBson $$"""
 			{
@@ -85,7 +85,7 @@ val ExprFilterTest by preparedSuite {
 	test("Comparing a hardcoded value and a field") {
 		filter {
 			expr {
-				of(12) ne of(User::grades[0])
+				12 ne User::grades[0]
 			}
 		} shouldBeBson $$"""
 			{

@@ -18,6 +18,7 @@ plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
 	alias(libsCommon.plugins.testBalloon)
+	id("dev.opensavvy.ktmongo.build.templator")
 }
 
 kotlin {

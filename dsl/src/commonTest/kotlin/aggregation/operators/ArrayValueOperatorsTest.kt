@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 				.set {
 					Target::results set Target::numbers
 						.filter {
-							it gt of(3)
+							it gt 3
 						}
 				}
 				.shouldBeBson($$$"""
@@ -73,8 +73,8 @@ val ArrayValueOperatorsTest by preparedSuite {
 			TestPipeline<Target>()
 				.set {
 					Target::results set Target::numbers
-						.filter(limit = of(4)) {
-							it gt of(3)
+						.filter(limit = 4) {
+							it gt 3
 						}
 				}
 				.shouldBeBson($$$"""
@@ -105,7 +105,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 				.set {
 					Target::results set Target::numbers
 						.filter(variableName = "foo") {
-							it gt of(3)
+							it gt 3
 						}
 				}
 				.shouldBeBson($$$"""
@@ -137,7 +137,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 				.set {
 					Target::results set Target::numbers
 						.map {
-							it + of(4)
+							it + 4
 						}
 				}
 				.shouldBeBson($$$"""
@@ -167,7 +167,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 				.set {
 					Target::results set Target::numbers
 						.map(variableName = "foo") {
-							it + of(4)
+							it + 4
 						}
 				}
 				.shouldBeBson($$$"""
@@ -197,7 +197,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 				.set {
 					Target::results set Target::numbers
 						.map {
-							it eq of(4)
+							it eq 4
 						}
 						.also {
 							@Suppress("UnusedVariable", "unused")
@@ -342,7 +342,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 			TestPipeline<Target>()
 				.set {
 					Target::results set Target::numbers
-						.take(of(5))
+						.take(5)
 				}
 				.shouldBeBson($$"""
 					[
@@ -366,7 +366,7 @@ val ArrayValueOperatorsTest by preparedSuite {
 			TestPipeline<Target>()
 				.set {
 					Target::results set Target::numbers
-						.takeLast(of(5))
+						.takeLast(5)
 				}
 				.shouldBeBson($$"""
 					[
