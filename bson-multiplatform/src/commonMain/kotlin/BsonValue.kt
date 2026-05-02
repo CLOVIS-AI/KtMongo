@@ -46,6 +46,9 @@ import kotlin.time.Instant
  *
  * To instantiate a [BsonDocument] or [BsonArray], see [BsonFactory].
  *
+ * > This page describes the BSON multiplatform implementation.
+ * > To learn more about the general BSON operations, see [opensavvy.ktmongo.bson.BsonValue].
+ *
  * ### Navigating BSON types
  *
  * This class is part of the BSON trinity:

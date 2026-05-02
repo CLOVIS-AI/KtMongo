@@ -31,6 +31,9 @@ import kotlin.reflect.KType
  *
  * To create instances of this class, see [BsonFactory].
  *
+ * > This page describes the BSON multiplatform implementation.
+ * > To learn more about the general BSON operations, see [opensavvy.ktmongo.bson.BsonDocument].
+ *
  * ### Navigating BSON types
  *
  * This class is part of the BSON trinity:
