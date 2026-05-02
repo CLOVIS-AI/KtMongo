@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,5 +24,5 @@ import opensavvy.ktmongo.utils.kmongo.KMongoNameStrategy
 /**
  * Converts a collection from the official Java MongoDB driver into a KtMongo collection.
  */
-fun <T : Any> com.mongodb.client.MongoCollection<T>.asKtMongo(): JvmMongoCollection<T> =
+inline fun <reified T : Any> com.mongodb.client.MongoCollection<T>.asKtMongo(): JvmMongoCollection<T> =
 	MongoCollection(this).asKtMongo(nameStrategy = KMongoNameStrategy())
