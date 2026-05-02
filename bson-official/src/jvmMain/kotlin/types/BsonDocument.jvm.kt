@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,23 @@ internal class KotlinBsonDocumentCodec(
 		BsonDocument::class.java
 
 	override fun decode(reader: BsonReader, decoderContext: DecoderContext): BsonDocument? =
+		documentCodec.decode(reader, decoderContext)?.let { BsonDocument(it, factory) }
+
+}
+
+internal class KotlinCommonBsonDocumentCodec(
+	private val factory: BsonFactory,
+) : Codec<opensavvy.ktmongo.bson.BsonDocument> {
+	private val documentCodec = BsonDocumentCodec()
+
+	override fun encode(writer: BsonWriter, value: opensavvy.ktmongo.bson.BsonDocument, encoderContext: EncoderContext) {
+		documentCodec.encode(writer, (value as BsonDocument).raw, encoderContext)
+	}
+
+	override fun getEncoderClass(): Class<opensavvy.ktmongo.bson.BsonDocument> =
+		opensavvy.ktmongo.bson.BsonDocument::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): opensavvy.ktmongo.bson.BsonDocument? =
 		documentCodec.decode(reader, decoderContext)?.let { BsonDocument(it, factory) }
 
 }
