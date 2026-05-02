@@ -106,6 +106,7 @@ fun Job.nativeIosArm64() {
 
 	retry(1) {
 		onExitCode(1)
+		on(RetryCause.ScriptFailure)
 	}
 
 	stripUnicodeTestReports()

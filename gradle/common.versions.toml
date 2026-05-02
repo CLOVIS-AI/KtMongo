@@ -17,28 +17,28 @@ compose = "1.10.2"
 kotest = "6.1.7"
 
 # https://github.com/infix-de/testBalloon/releases
-testBalloon = "0.8.3-K2.3.0"
+testBalloon = "0.8.4-K2.3.0"
 
 # https://gitlab.com/opensavvy/groundwork/pedestal/-/releases
 pedestal = "3.2.1"
 
 # https://prepared.opensavvy.dev/news
-prepared = "2.5.0"
+prepared = "2.5.1"
 
 # https://spine.opensavvy.dev/news
 spine = "0.10.1"
 
 # https://ktmongo.opensavvy.dev/news
-ktmongo = "0.28.1"
+ktmongo = "0.29.1"
 
 # https://gitlab.com/opensavvy/telegram-bot/-/releases
-telegram-bot = "0.2.0"
+telegram-bot = "0.3.1"
 
 # https://github.com/JetBrains/java-annotations/releases
 jetbrains-annotations = "26.1.0"
 
 # https://nodejs.org/en/download
-nodejs = "24.14.0"
+nodejs = "24.15.0"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
