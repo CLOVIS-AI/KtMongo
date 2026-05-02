@@ -62,3 +62,9 @@ publishing {
 		}
 	}
 }
+
+dokka {
+	dokkaSourceSets.configureEach {
+		includes.from("README.md")
+	}
+}
