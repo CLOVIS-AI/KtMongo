@@ -28,6 +28,9 @@ import kotlin.reflect.typeOf
  *
  * To create instances of this class, see [BsonFactory].
  *
+ * > This page describes the BSON implementation based on the official MongoDB drivers.
+ * > To learn more about the general BSON operations, see [opensavvy.ktmongo.bson.BsonDocument].
+ *
  * ### Navigating BSON types
  *
  * This interface is part of the BSON trinity:
@@ -76,6 +79,9 @@ expect class BsonDocument : BsonDocument {
  *
  * To create instances of this class, see [BsonFactory].
  *
+ * > This page describes the BSON implementation based on the official MongoDB drivers.
+ * > To learn more about the general BSON operations, see [opensavvy.ktmongo.bson.BsonArray].
+ *
  * ### Navigating BSON types
  *
  * This interface is part of the BSON trinity:
@@ -119,6 +125,9 @@ expect class BsonArray : BsonArray {
  * is used to decode the fields of a [BsonDocument] or the items of a [BsonArray].
  *
  * To instantiate a [BsonDocument] or [BsonArray], see [BsonFactory].
+ *
+ * > This page describes the BSON implementation based on the official MongoDB drivers.
+ * > To learn more about the general BSON operations, see [opensavvy.ktmongo.bson.BsonArray].
  *
  * ### Navigating BSON types
  *
