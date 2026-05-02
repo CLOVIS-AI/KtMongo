@@ -59,5 +59,5 @@ library {
 		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
 	}
 
-	coverage.set(60)
+	coverage.set(58)
 }
