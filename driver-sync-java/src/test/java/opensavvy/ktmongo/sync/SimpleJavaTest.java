@@ -47,7 +47,7 @@ public class SimpleJavaTest {
 			var javaCollection = client.getDatabase("java-test")
 				.getCollection("test-basic", Utilisateur.class);
 
-			var collection = KtMongo.from(javaCollection);
+			var collection = KtMongo.from(javaCollection, KtMongo.typeOf(new Utilisateur(null, null, null)));
 
 			System.out.println("truc " + collection);
 
