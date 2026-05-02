@@ -54,6 +54,13 @@ import kotlin.reflect.typeOf
 interface BsonArray {
 
 	/**
+	 * The instance of [BsonFactory] that created this instance.
+	 *
+	 * [BsonFactory] contains the serialization configuration that apply to this array.
+	 */
+	val factory: BsonFactory
+
+	/**
 	 * Decodes this array into an instance of the Kotlin type [T].
 	 *
 	 * **`T` should be a type that contains elements, such as `List<Int>` or `Set<User>`.**

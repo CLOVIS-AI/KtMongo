@@ -63,6 +63,13 @@ import kotlin.time.Instant
 interface BsonValue {
 
 	/**
+	 * The instance of [BsonFactory] that created this instance.
+	 *
+	 * [BsonFactory] contains the serialization configuration that apply to this value.
+	 */
+	val factory: BsonFactory
+
+	/**
 	 * The native [BSON type][BsonType] of this value.
 	 */
 	val type: BsonType

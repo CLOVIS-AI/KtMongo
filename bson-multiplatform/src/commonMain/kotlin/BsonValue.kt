@@ -73,7 +73,7 @@ import kotlin.time.Instant
  * Although it is not possible to mutate its state, this class uses internal mutation to lazily decode the BSON stream.
  */
 class BsonValue internal constructor(
-	private val factory: BsonFactory,
+	override val factory: BsonFactory,
 	override val type: BsonType,
 	private val bytes: Bytes,
 ) : BsonValue {

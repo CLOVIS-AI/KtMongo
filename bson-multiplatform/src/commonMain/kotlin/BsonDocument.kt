@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ import kotlin.reflect.KType
  * Although it is not possible to mutate its state, this class uses internal mutation to lazily decode the BSON stream.
  */
 class BsonDocument internal constructor(
-	private val factory: BsonFactory,
+	override val factory: BsonFactory,
 	private val bytesWithHeader: Bytes,
 ) : BsonDocument {
 
