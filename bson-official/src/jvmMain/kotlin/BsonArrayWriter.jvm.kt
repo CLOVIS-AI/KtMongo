@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,28 +22,12 @@ import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.official.types.toOfficial
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
+import org.bson.*
 import org.bson.BsonArray
-import org.bson.BsonBinary
-import org.bson.BsonBoolean
-import org.bson.BsonDateTime
-import org.bson.BsonDbPointer
-import org.bson.BsonDecimal128
 import org.bson.BsonDocument
-import org.bson.BsonDocumentWriter
-import org.bson.BsonDouble
-import org.bson.BsonInt32
-import org.bson.BsonInt64
-import org.bson.BsonJavaScript
-import org.bson.BsonMaxKey
-import org.bson.BsonMinKey
-import org.bson.BsonNull
-import org.bson.BsonObjectId
-import org.bson.BsonRegularExpression
-import org.bson.BsonString
-import org.bson.BsonSymbol
-import org.bson.BsonUndefined
 import org.bson.types.Decimal128
 import org.bson.types.ObjectId
+import kotlin.reflect.KType
 
 @LowLevelApi
 internal class JavaBsonArrayWriter(
@@ -150,11 +134,11 @@ internal class JavaBsonArrayWriter(
 	}
 
 	@LowLevelApi
-	override fun <T> writeObjectSafe(obj: T) {
+	override fun <T> writeSafe(obj: T, type: KType) {
 		val document = BsonDocument()
 
 		BsonDocumentWriter(document).use { writer ->
-			JavaBsonDocumentWriter(factory, writer).writeObjectSafe(obj)
+			JavaBsonDocumentWriter(factory, writer).writeSafe(obj, type)
 		}
 
 		array.add(document)

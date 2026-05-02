@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KType
 
 @LowLevelApi
 internal class MultiplatformArrayFieldWriter(
@@ -157,7 +158,7 @@ internal class MultiplatformArrayFieldWriter(
 		writer.openArray(nextIndex())
 
 	@LowLevelApi
-	override fun <T> writeObjectSafe(obj: T) {
-		writer.writeObjectSafe(nextIndex(), obj)
+	override fun <T> writeSafe(obj: T, type: KType) {
+		writer.writeSafe(nextIndex(), obj, type)
 	}
 }

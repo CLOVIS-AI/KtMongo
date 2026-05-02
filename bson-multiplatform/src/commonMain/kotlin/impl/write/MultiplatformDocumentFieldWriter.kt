@@ -28,6 +28,7 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KType
 
 @LowLevelApi
 internal class MultiplatformDocumentFieldWriter(
@@ -282,7 +283,7 @@ internal class MultiplatformDocumentFieldWriter(
 		}
 
 	@LowLevelApi
-	override fun <T> writeObjectSafe(name: String, obj: T) {
+	override fun <T> writeSafe(name: String, obj: T, type: KType) {
 		TODO()
 	}
 
