@@ -84,6 +84,14 @@ private class UpdateQueryImpl<T>(
 		return this
 	}
 
+	private class Value(
+		val value: Any?,
+		val type: KType,
+	) {
+		override fun toString(): String =
+			"Value($value, $type)"
+	}
+
 	@LowLevelApi
 	private sealed class UpdateBsonNodeNode(context: BsonContext) : AbstractBsonNode(context)
 
@@ -94,12 +102,12 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V, type: KType) {
-		accept(SetBsonNodeNode(listOf(this.path to value), context))
+		accept(SetBsonNodeNode(listOf(this.path to Value(value, type)), context))
 	}
 
 	@LowLevelApi
 	private class SetBsonNodeNode(
-		val mappings: List<Pair<Path, *>>,
+		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
 	) : UpdateBsonNodeNode(context) {
 
@@ -109,7 +117,7 @@ private class UpdateQueryImpl<T>(
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument("\$set") {
 				for ((field, value) in mappings) {
-					writeObjectSafe(field.toString(), value)
+					writeSafe(field.toString(), value.value, value.type)
 				}
 			}
 		}
@@ -122,12 +130,12 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setOnInsert(value: V, type: KType) {
-		accept(SetOnInsertBsonNodeNode(listOf(this.path to value), context))
+		accept(SetOnInsertBsonNodeNode(listOf(this.path to Value(value, type)), context))
 	}
 
 	@LowLevelApi
 	private class SetOnInsertBsonNodeNode(
-		val mappings: List<Pair<Path, *>>,
+		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
 	) : UpdateBsonNodeNode(context) {
 		override fun simplify(): AbstractBsonNode? =
@@ -136,7 +144,7 @@ private class UpdateQueryImpl<T>(
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument("\$setOnInsert") {
 				for ((field, value) in mappings) {
-					writeObjectSafe(field.toString(), value)
+					writeSafe(field.toString(), value.value, value.type)
 				}
 			}
 		}
@@ -149,12 +157,12 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.inc(amount: V, type: KType) {
-		accept(IncrementBsonNodeNode(listOf(this.path to amount), context))
+		accept(IncrementBsonNodeNode(listOf(this.path to Value(amount, type)), context))
 	}
 
 	@LowLevelApi
 	private class IncrementBsonNodeNode(
-		val mappings: List<Pair<Path, Number>>,
+		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
 	) : UpdateBsonNodeNode(context) {
 		override fun simplify(): AbstractBsonNode? =
@@ -163,7 +171,7 @@ private class UpdateQueryImpl<T>(
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument("\$inc") {
 				for ((field, value) in mappings) {
-					writeObjectSafe(field.toString(), value)
+					writeSafe(field.toString(), value.value, value.type)
 				}
 			}
 		}
@@ -176,12 +184,12 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.mul(amount: V, type: KType) {
-		accept(MultiplyBsonNodeNode(listOf(this.path to amount), context))
+		accept(MultiplyBsonNodeNode(listOf(this.path to Value(amount, type)), context))
 	}
 
 	@LowLevelApi
 	private class MultiplyBsonNodeNode(
-		val mappings: List<Pair<Path, Number>>,
+		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
 	) : UpdateBsonNodeNode(context) {
 		override fun simplify(): AbstractBsonNode? =
@@ -190,7 +198,7 @@ private class UpdateQueryImpl<T>(
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument("\$mul") {
 				for ((field, value) in mappings) {
-					writeObjectSafe(field.toString(), value)
+					writeSafe(field.toString(), value.value, value.type)
 				}
 			}
 		}
@@ -230,12 +238,12 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.min(value: V, type: KType) {
-		accept(MinBsonNodeNode(listOf(this.path to value), context))
+		accept(MinBsonNodeNode(listOf(this.path to Value(value, type)), context))
 	}
 
 	@LowLevelApi
 	private class MinBsonNodeNode(
-		val mappings: List<Pair<Path, *>>,
+		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
 	) : UpdateBsonNodeNode(context) {
 		override fun simplify(): AbstractBsonNode? =
@@ -244,7 +252,7 @@ private class UpdateQueryImpl<T>(
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument("\$min") {
 				for ((field, value) in mappings) {
-					writeObjectSafe(field.toString(), value)
+					writeSafe(field.toString(), value.value, value.type)
 				}
 			}
 		}
@@ -257,12 +265,12 @@ private class UpdateQueryImpl<T>(
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.max(value: V, type: KType) {
-		accept(MaxBsonNodeNode(listOf(this.path to value), context))
+		accept(MaxBsonNodeNode(listOf(this.path to Value(value, type)), context))
 	}
 
 	@LowLevelApi
 	private class MaxBsonNodeNode(
-		val mappings: List<Pair<Path, *>>,
+		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
 	) : UpdateBsonNodeNode(context) {
 		override fun simplify(): AbstractBsonNode? =
@@ -271,7 +279,7 @@ private class UpdateQueryImpl<T>(
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument("\$max") {
 				for ((field, value) in mappings) {
-					writeObjectSafe(field.toString(), value)
+					writeSafe(field.toString(), value.value, value.type)
 				}
 			}
 		}
@@ -350,12 +358,12 @@ private class UpdateQueryImpl<T>(
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun <V> Field<T, Collection<V>>.addToSet(value: V, type: KType) {
-		accept(AddToSetBsonNode(listOf(this.path to value), context))
+		accept(AddToSetBsonNode(listOf(this.path to Value(value, type)), context))
 	}
 
 	@LowLevelApi
 	private class AddToSetBsonNode(
-		val mappings: List<Pair<Path, *>>,
+		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
 	) : UpdateBsonNodeNode(context) {
 
@@ -371,12 +379,12 @@ private class UpdateQueryImpl<T>(
 			writeDocument($$"$addToSet") {
 				for ((field, values) in groupedMappings) {
 					if (values.size == 1)
-						writeObjectSafe(field.toString(), values.single())
+						writeSafe(field.toString(), values.single().value, values.single().type)
 					else
 						writeDocument(field.toString()) {
 							writeArray($$"$each") {
 								for (value in values)
-									writeObjectSafe(value)
+									writeSafe(value.value, value.type)
 							}
 						}
 				}

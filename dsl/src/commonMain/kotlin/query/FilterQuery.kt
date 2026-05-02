@@ -19,6 +19,7 @@
 
 package opensavvy.ktmongo.dsl.query
 
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -907,7 +908,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	fun Field<T, Map<String, *>>.isMapEmpty() {
 		or {
 			doesNotExist()
-			FieldImpl<T, Any>(path) eq context.buildDocument { }
+			FieldImpl<T, Any>(path).eq(context.buildDocument { }, typeOf<BsonDocument>())
 		}
 	}
 
@@ -1022,7 +1023,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun Field<T, Map<String, *>>.isMapNotEmpty() {
-		FieldImpl<T, Any>(path) gt context.buildDocument { }
+		FieldImpl<T, Any>(path).gt(context.buildDocument { }, typeOf<BsonDocument>())
 	}
 
 	/**

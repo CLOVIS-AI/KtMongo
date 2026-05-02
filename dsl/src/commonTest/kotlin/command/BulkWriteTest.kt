@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.minutes
 
 val BulkWriteTest by preparedSuite {
@@ -31,7 +32,7 @@ val BulkWriteTest by preparedSuite {
 	)
 
 	test("bulkWrite") {
-		BulkWrite<Target>(testContext(), {}).apply {
+		BulkWrite<Target>(testContext(), typeOf<Target>(), {}).apply {
 			updateOne(
 				filter = {
 					Target::name eq "Daniel"

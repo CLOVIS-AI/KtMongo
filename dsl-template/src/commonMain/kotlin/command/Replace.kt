@@ -25,6 +25,7 @@ import opensavvy.ktmongo.dsl.options.OptionsHolder
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import kotlin.reflect.KType
 
 /**
  * Replaces a single element in a collection.
@@ -47,10 +48,15 @@ class ReplaceOne<Document : Any> private constructor(
 	val options: ReplaceOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val document: Document,
+	val documentType: KType,
 ) : AbstractBsonNode(context), Command, AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext, document: Document) : this(context, ReplaceOptions(context), FilterQuery(context), document)
+	constructor(
+		context: BsonContext,
+		document: Document,
+		documentType: KType,
+	) : this(context, ReplaceOptions(context), FilterQuery(context), document, documentType)
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -59,7 +65,7 @@ class ReplaceOne<Document : Any> private constructor(
 				writeDocument("q") {
 					filter.writeTo(this)
 				}
-				writeObjectSafe("u", document)
+				writeSafe("u", document, documentType)
 				writeBoolean("upsert", false)
 				writeBoolean("multi", false)
 			}
@@ -90,10 +96,15 @@ class RepsertOne<Document : Any> private constructor(
 	val options: ReplaceOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val document: Document,
+	val documentType: KType,
 ) : AbstractBsonNode(context), Command, AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext, document: Document) : this(context, ReplaceOptions(context), FilterQuery(context), document)
+	constructor(
+		context: BsonContext,
+		document: Document,
+		documentType: KType,
+	) : this(context, ReplaceOptions(context), FilterQuery(context), document, documentType)
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -102,7 +113,7 @@ class RepsertOne<Document : Any> private constructor(
 				writeDocument("q") {
 					filter.writeTo(this)
 				}
-				writeObjectSafe("u", document)
+				writeSafe("u", document, documentType)
 				writeBoolean("upsert", true)
 				writeBoolean("multi", false)
 			}

@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import kotlin.reflect.KType
 
 /**
  * Inserting a single element in a collection.
@@ -46,14 +47,19 @@ class InsertOne<Document : Any> private constructor(
 	context: BsonContext,
 	val options: InsertOneOptions<Document>,
 	val document: Document,
+	val documentType: KType,
 ) : Command, AbstractBsonNode(context), AvailableInBulkWrite<Document> {
 
-	constructor(context: BsonContext, document: Document) : this(context, InsertOneOptions(context), document)
+	constructor(
+		context: BsonContext,
+		document: Document,
+		documentType: KType,
+	) : this(context, InsertOneOptions(context), document, documentType)
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeArray("documents") {
-			writeObjectSafe(document)
+			writeSafe(document, documentType)
 		}
 
 		options.writeTo(this)
@@ -81,15 +87,20 @@ class InsertMany<Document : Any> private constructor(
 	context: BsonContext,
 	val options: InsertManyOptions<Document>,
 	val documents: List<Document>,
+	val documentType: KType,
 ) : Command, AbstractBsonNode(context) {
 
-	constructor(context: BsonContext, documents: List<Document>) : this(context, InsertManyOptions(context), documents)
+	constructor(
+		context: BsonContext,
+		documents: List<Document>,
+		documentType: KType,
+	) : this(context, InsertManyOptions(context), documents, documentType)
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeArray("documents") {
 			for (document in documents) {
-				writeObjectSafe(document)
+				writeSafe(document, documentType)
 			}
 		}
 

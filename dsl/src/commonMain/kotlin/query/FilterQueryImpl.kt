@@ -243,7 +243,7 @@ private class FilterQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun <V> Field<T, Collection<V>>.containsAll(values: Collection<V>, type: KType) {
-		accept(ArrayAllBsonNodeNode(path, values, context))
+		accept(ArrayAllBsonNodeNode(path, values, context, type))
 	}
 
 	@LowLevelApi
@@ -251,13 +251,14 @@ private class FilterQueryImpl<T>(
 		val path: Path,
 		val values: Collection<T>,
 		context: BsonContext,
+		val type: KType,
 	) : FilterBsonNodeNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument(path.toString()) {
 				writeArray("\$all") {
 					for (value in values) {
-						writeObjectSafe(value)
+						writeSafe(value, type)
 					}
 				}
 			}

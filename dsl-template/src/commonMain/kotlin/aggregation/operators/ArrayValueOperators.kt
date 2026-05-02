@@ -208,7 +208,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
-		limit: Value<Context, Number>? = null,
+		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -295,7 +295,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.take(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		TakeValueOperator(
 			input = this,
@@ -354,7 +354,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		TakeLastValueOperator(
 			input = this,

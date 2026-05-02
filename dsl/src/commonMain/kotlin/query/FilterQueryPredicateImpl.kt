@@ -59,17 +59,18 @@ private class FilterQueryPredicateImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun eq(value: T) {
-		accept(EqualityBsonNodeNode(value, context))
+		accept(EqualityBsonNodeNode(value, context, type))
 	}
 
 	@LowLevelApi
 	private class EqualityBsonNodeNode<T>(
 		val value: T,
 		context: BsonContext,
+		val type: KType,
 	) : PredicateBsonNodeNode(context) {
 
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$eq", value)
+			writer.writeSafe("\$eq", value, type)
 		}
 	}
 
@@ -79,17 +80,18 @@ private class FilterQueryPredicateImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun ne(value: T) {
-		accept(InequalityBsonNodeNode(value, context))
+		accept(InequalityBsonNodeNode(value, context, type))
 	}
 
 	@LowLevelApi
 	private class InequalityBsonNodeNode<T>(
 		val value: T,
 		context: BsonContext,
+		val type: KType,
 	) : PredicateBsonNodeNode(context) {
 
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$ne", value)
+			writer.writeSafe("\$ne", value, type)
 		}
 	}
 
@@ -174,72 +176,76 @@ private class FilterQueryPredicateImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun gt(value: T) {
-		accept(GtPredicateBsonNodeNode(value, context))
+		accept(GtPredicateBsonNodeNode(value, context, type))
 	}
 
 	@LowLevelApi
 	private class GtPredicateBsonNodeNode<T>(
 		private val value: T,
 		context: BsonContext,
+		val type: KType,
 	) : PredicateBsonNodeNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$gt", value)
+			writer.writeSafe("\$gt", value, type)
 		}
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun gte(value: T) {
-		accept(GtePredicateBsonNodeNode(value, context))
+		accept(GtePredicateBsonNodeNode(value, context, type))
 	}
 
 	@LowLevelApi
 	private class GtePredicateBsonNodeNode<T>(
 		private val value: T,
 		context: BsonContext,
+		val type: KType,
 	) : PredicateBsonNodeNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$gte", value)
+			writer.writeSafe("\$gte", value, type)
 		}
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun lt(value: T) {
-		accept(LtPredicateBsonNodeNode(value, context))
+		accept(LtPredicateBsonNodeNode(value, context, type))
 	}
 
 	@LowLevelApi
 	private class LtPredicateBsonNodeNode<T>(
 		private val value: T,
 		context: BsonContext,
+		val type: KType,
 	) : PredicateBsonNodeNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$lt", value)
+			writer.writeSafe("\$lt", value, type)
 		}
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun lte(value: T) {
-		accept(LtePredicateBsonNodeNode(value, context))
+		accept(LtePredicateBsonNodeNode(value, context, type))
 	}
 
 	@LowLevelApi
 	private class LtePredicateBsonNodeNode<T>(
 		private val value: T,
 		context: BsonContext,
+		val type: KType,
 	) : PredicateBsonNodeNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
-			writer.writeObjectSafe("\$lte", value)
+			writer.writeSafe("\$lte", value, type)
 		}
 	}
 
@@ -249,20 +255,21 @@ private class FilterQueryPredicateImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun isOneOf(values: Collection<T>) {
-		accept(OneOfPredicateBsonNodeNode(values, context))
+		accept(OneOfPredicateBsonNodeNode(values, context, type))
 	}
 
 	@LowLevelApi
 	private class OneOfPredicateBsonNodeNode<T>(
 		val values: Collection<T>,
 		context: BsonContext,
+		val type: KType,
 	) : PredicateBsonNodeNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
 			writer.writeArray("\$in") {
 				for (value in values)
-					writeObjectSafe(value)
+					writeSafe(value, type)
 			}
 		}
 	}
@@ -273,20 +280,21 @@ private class FilterQueryPredicateImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun isNotOneOf(values: Collection<T>) {
-		accept(NotOneOfPredicateExpressionNode(values, context))
+		accept(NotOneOfPredicateExpressionNode(values, context, type))
 	}
 
 	@LowLevelApi
 	private class NotOneOfPredicateExpressionNode<T>(
 		val values: Collection<T>,
 		context: BsonContext,
+		val type: KType,
 	) : PredicateBsonNodeNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
 			writer.writeArray("\$nin") {
 				for (value in values)
-					writeObjectSafe(value)
+					writeSafe(value, type)
 			}
 		}
 	}
