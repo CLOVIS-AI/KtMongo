@@ -17,6 +17,10 @@
 package opensavvy.ktmongo.bson.multiplatform.impl.write
 
 import kotlinx.io.Buffer
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.modules.EmptySerializersModule
+import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
@@ -24,6 +28,7 @@ import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
 import opensavvy.ktmongo.bson.multiplatform.BsonValue
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.RawBsonWriter
+import opensavvy.ktmongo.bson.multiplatform.serialization.BsonEncoder
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -282,9 +287,11 @@ internal class MultiplatformDocumentFieldWriter(
 			override fun complete() {} // Nothing to do. This function isn't building anything; it's just an adapter to go from FieldWriter to ValueWriter.
 		}
 
+	@OptIn(ExperimentalSerializationApi::class, DangerousMongoApi::class)
 	@LowLevelApi
 	override fun <T> writeSafe(name: String, obj: T, type: KType) {
-		TODO()
+		val serializer = serializer(type) as SerializationStrategy<T>
+		BsonEncoder(EmptySerializersModule(), open(name)).encodeSerializableValue(serializer, obj)
 	}
 
 	@DangerousMongoApi

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalBsonPathApi::class, ExperimentalBsonDiffApi::class)
 
 package opensavvy.ktmongo.bson
 
@@ -272,6 +272,25 @@ fun SuiteDsl.verifyBsonDocuments(factory: Prepared<BsonFactory>) = suite("BSON d
 
 			check(document.asValue().decodeDocument() == document) { "Round-trip through BsonValue" }
 		}
+	}
+
+	test("Encode nested document") {
+		val user = BsonDocumentUser("Bob", 45)
+
+		val document = factory().buildDocument {
+			writeSafe("user", user)
+		}
+
+		val expected = factory().buildDocument {
+			writeDocument("user") {
+				writeString("a", user.a)
+				writeInt32("b", user.b)
+			}
+		}
+
+		check(document == expected) { "Diff: ${document diff expected}" }
+
+		check(document["user"]?.decode<BsonDocumentUser>() == user)
 	}
 
 }
