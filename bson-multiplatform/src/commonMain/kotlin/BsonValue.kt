@@ -28,6 +28,8 @@ import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonValue
 import opensavvy.ktmongo.bson.multiplatform.BsonValue.Serializer
+import opensavvy.ktmongo.bson.multiplatform.impl.read.encodeRegexToJsonString
+import opensavvy.ktmongo.bson.multiplatform.impl.read.encodeToJsonString
 import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoder
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
@@ -242,12 +244,12 @@ class BsonValue internal constructor(
 		BsonType.Int32 -> decodeInt32().toString()
 		BsonType.Int64 -> decodeInt64().toString()
 		BsonType.Double -> commonDoubleToString(decodeDouble())
-		BsonType.String -> '"' + decodeString() + '"'
+		BsonType.String -> '"' + decodeString().encodeToJsonString() + '"'
 		BsonType.Null -> "null"
 		BsonType.Undefined -> """{"${'$'}undefined": true}"""
 		BsonType.Document -> decodeDocument().toString()
 		BsonType.Array -> decodeArray().toString()
-		BsonType.JavaScript -> """{"${'$'}code": "${decodeJavaScript()}"}"""
+		BsonType.JavaScript -> """{"${'$'}code": "${decodeJavaScript().encodeToJsonString()}"}"""
 		BsonType.Datetime -> {
 			val time = decodeDateTime()
 			if (time in 0..253402300799999) // Start of the year 1970 … End of the year 9999
@@ -273,7 +275,7 @@ class BsonValue internal constructor(
 			val escapedPattern = pattern
 				.replace("\\", "\\\\")
 				.replace("\"", "\\\"")
-			"""{"${'$'}regularExpression": {"pattern": "$escapedPattern", "options": "$options"}}"""
+			"""{"${'$'}regularExpression": {"pattern": "${escapedPattern.encodeRegexToJsonString()}", "options": "${options.encodeToJsonString()}"}}"""
 		}
 
 		BsonType.Timestamp -> {

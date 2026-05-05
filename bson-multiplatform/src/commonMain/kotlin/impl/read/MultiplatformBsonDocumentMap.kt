@@ -223,7 +223,7 @@ internal class MultiplatformBsonDocumentMap(
 				append(", ")
 
 			append('"')
-			append(key)
+			append(key.encodeToJsonString())
 			append("\": ")
 			append(value)
 
