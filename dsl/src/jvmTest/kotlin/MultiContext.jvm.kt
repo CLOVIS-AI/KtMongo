@@ -16,71 +16,60 @@
 
 package opensavvy.ktmongo.dsl
 
+import com.mongodb.*
+import com.mongodb.client.gridfs.codecs.GridFSFileCodecProvider
+import com.mongodb.client.model.geojson.codecs.GeoJsonCodecProvider
+import com.mongodb.client.model.mql.ExpressionCodecProvider
 import opensavvy.ktmongo.bson.BsonFactory
 import org.bson.codecs.*
 import org.bson.codecs.configuration.CodecRegistries
-import org.bson.codecs.jsr310.InstantCodec
-import org.bson.codecs.jsr310.LocalDateCodec
-import org.bson.codecs.jsr310.LocalDateTimeCodec
-import org.bson.codecs.jsr310.LocalTimeCodec
+import org.bson.codecs.jsr310.Jsr310CodecProvider
+import org.bson.codecs.kotlin.ArrayCodecProvider
+import org.bson.codecs.kotlin.DataClassCodecProvider
+import org.bson.codecs.kotlinx.KotlinSerializerCodecProvider
+
+/**
+ * Default codec providers copied from [com.mongodb.MongoClientSettings.getDefaultCodecRegistry],
+ * but with the [KotlinCodecProvider] removed.
+ *
+ * Should not be used directly. See [testFactories].
+ */
+private val defaultCodecProvidersWithoutKotlin = CodecRegistries.fromProviders(
+	ValueCodecProvider(),
+	BsonValueCodecProvider(),
+	DBRefCodecProvider(),
+	DBObjectCodecProvider(),
+	DocumentCodecProvider(DocumentToDBRefTransformer()),
+	CollectionCodecProvider(DocumentToDBRefTransformer()),
+	IterableCodecProvider(DocumentToDBRefTransformer()),
+	MapCodecProvider(DocumentToDBRefTransformer()),
+	GeoJsonCodecProvider(),
+	GridFSFileCodecProvider(),
+	Jsr310CodecProvider(),
+	JsonObjectCodecProvider(),
+	BsonCodecProvider(),
+	ExpressionCodecProvider(),
+	Jep395RecordCodecProvider(),
+	// KotlinCodecProvider(), // Do NOT include the KotlinCodecProvider! It uses classpath scanning to choose a serialization library, but we want to control it
+	EnumCodecProvider()
+)
 
 actual val testFactories: Map<String, () -> BsonFactory> = mapOf(
-	"JVM Official" to {
+	"JVM Official, reflection-based" to {
 		opensavvy.ktmongo.bson.official.BsonFactory(
-			codecRegistry = CodecRegistries.fromCodecs(
-				AtomicBooleanCodec(),
-				AtomicIntegerCodec(),
-				AtomicLongCodec(),
-				BigDecimalCodec(),
-				BinaryCodec(),
-				BooleanCodec(),
-				BsonArrayCodec(),
-				BsonBinaryCodec(),
-				BsonBooleanCodec(),
-				BsonDateTimeCodec(),
-				BsonDBPointerCodec(),
-				BsonDecimal128Codec(),
-				BsonDocumentCodec(),
-				BsonDoubleCodec(),
-				BsonInt32Codec(),
-				BsonInt64Codec(),
-				BsonJavaScriptCodec(),
-				BsonMaxKeyCodec(),
-				BsonMinKeyCodec(),
-				BsonNullCodec(),
-				BsonObjectIdCodec(),
-				BsonRegularExpressionCodec(),
-				BsonStringCodec(),
-				BsonSymbolCodec(),
-				BsonTimestampCodec(),
-				BsonUndefinedCodec(),
-				BsonValueCodec(),
-				ByteArrayCodec(),
-				ByteCodec(),
-				CharacterCodec(),
-				CodeCodec(),
-				DateCodec(),
-				Decimal128Codec(),
-				DocumentCodec(),
-				DoubleCodec(),
-				FloatCodec(),
-				InstantCodec(),
-				IntegerCodec(),
-				JsonObjectCodec(),
-				LocalDateCodec(),
-				LocalDateTimeCodec(),
-				LocalTimeCodec(),
-				LongCodec(),
-				MaxKeyCodec(),
-				MinKeyCodec(),
-				ObjectIdCodec(),
-				OverridableUuidRepresentationUuidCodec(),
-				PatternCodec(),
-				RawBsonDocumentCodec(),
-				ShortCodec(),
-				StringCodec(),
-				SymbolCodec(),
-				UuidCodec(),
+			codecRegistry = CodecRegistries.fromProviders(
+				ArrayCodecProvider(),
+				DataClassCodecProvider(),
+				defaultCodecProvidersWithoutKotlin,
+			)
+		)
+	},
+
+	"JVM Official, serialization-based" to {
+		opensavvy.ktmongo.bson.official.BsonFactory(
+			codecRegistry = CodecRegistries.fromProviders(
+				KotlinSerializerCodecProvider(),
+				defaultCodecProvidersWithoutKotlin,
 			)
 		)
 	},

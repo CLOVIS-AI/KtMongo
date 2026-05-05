@@ -70,7 +70,12 @@ kotlin {
 	}
 
 	sourceSets.jvmTest.dependencies {
+		// Test the official driver with or without reflection
 		implementation(projects.bsonOfficial)
+		implementation(libs.mongodb.sync.jvm)
+		implementation(libs.mongodb.kotlinx.serialization)
+		implementation(libs.mongodb.kotlin.reflection)
+		implementation(libs.kotlinx.serialization)
 	}
 }
 
