@@ -27,7 +27,7 @@ internal class Bytes(
 	private val range: IntRange,
 ) {
 
-	constructor(data: ByteArray) : this(data, 0..data.lastIndex)
+	constructor(data: ByteArray) : this(data, data.indices)
 
 	val size get() = range.last - range.first + 1
 
