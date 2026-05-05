@@ -109,7 +109,6 @@ val SetTest by multiContextSuite {
 			TestPipeline<Target>()
 				.set {
 					Target::deathDate.setIf(true, 12)
-					Target::deathDate.setIf(false, 13)
 				}
 				.shouldBeBson($$"""
 					[
@@ -118,10 +117,10 @@ val SetTest by multiContextSuite {
 								"deathDate": {
 									"$cond": {
 										"if": {
-											"$literal": false
+											"$literal": true
 										}, 
 										"then": {
-											"$literal": 13
+											"$literal": 12
 										}, 
 										"else": "$deathDate"
 									}
@@ -135,7 +134,6 @@ val SetTest by multiContextSuite {
 		test("Boolean condition and Kotlin values") {
 			TestPipeline<Target>()
 				.set {
-					Target::deathDate.setIf(true, 12)
 					Target::deathDate.setIf(false, 13)
 				}
 				.shouldBeBson($$"""
