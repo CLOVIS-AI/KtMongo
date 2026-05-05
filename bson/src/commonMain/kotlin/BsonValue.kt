@@ -554,3 +554,13 @@ class BsonDecodingException(
 	message: String,
 	cause: Throwable? = null,
 ) : IllegalStateException(message, cause)
+
+/**
+ * Exception thrown when encoding a [BsonValue] fails.
+ *
+ * This typically happens when the data is malformed one way or another.
+ */
+class BsonEncodingException(
+	message: String,
+	cause: Throwable? = null,
+) : IllegalStateException(message, cause)

@@ -20,10 +20,7 @@ import kotlinx.io.Buffer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.serializer
-import opensavvy.ktmongo.bson.BsonFieldWriter
-import opensavvy.ktmongo.bson.BsonType
-import opensavvy.ktmongo.bson.BsonValueWriter
-import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.BsonValue
 import opensavvy.ktmongo.bson.multiplatform.Bytes
@@ -41,6 +38,25 @@ internal class MultiplatformDocumentFieldWriter(
 	private val writer: RawBsonWriter,
 ) : BsonFieldWriter, CompletableBsonFieldWriter {
 
+	private var currentlyWritingInChild: Boolean = false
+
+	fun verifyNesting() {
+		if (currentlyWritingInChild) {
+			throw BsonEncodingException("""
+				Cannot write to an outer document while an inner document is open.
+				You may have written something like:
+					factory.buildDocument {
+						val outer = this
+						buildDocument("foo") {
+							outer.writeString("bar", "baz")
+							// ↑ Incorrect writer! Should be:
+							this.writeString("bar", "baz")
+						}
+					}
+			""".trimIndent())
+		}
+	}
+
 	@LowLevelApi
 	private fun writeType(type: BsonType) {
 		writer.writeSignedByte(type.code)
@@ -53,11 +69,17 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun write(name: String, block: BsonValueWriter.() -> Unit) {
+		verifyNesting()
+
+		// We're opening the current document through a single-field view, we should NOT lock with currentlyWritingInChild
+
 		MultiplatformSingleFieldWriter(this, name).block()
 	}
 
 	@LowLevelApi
 	override fun writeBoolean(name: String, value: Boolean) {
+		verifyNesting()
+
 		writeType(BsonType.Boolean)
 		writeName(name)
 		writer.writeUnsignedByte(if (value) 1u else 0u)
@@ -65,6 +87,8 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeDouble(name: String, value: Double) {
+		verifyNesting()
+
 		writeType(BsonType.Double)
 		writeName(name)
 		writer.writeDouble(value)
@@ -72,6 +96,8 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeInt32(name: String, value: Int) {
+		verifyNesting()
+
 		writeType(BsonType.Int32)
 		writeName(name)
 		writer.writeInt32(value)
@@ -79,6 +105,8 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeInt64(name: String, value: Long) {
+		verifyNesting()
+
 		writeType(BsonType.Int64)
 		writeName(name)
 		writer.writeInt64(value)
@@ -86,11 +114,15 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeDecimal128(name: String, low: Long, high: Long) {
+		verifyNesting()
+
 		TODO()
 	}
 
 	@LowLevelApi
 	override fun writeDateTime(name: String, value: Long) {
+		verifyNesting()
+
 		writeType(BsonType.Datetime)
 		writeName(name)
 		writer.writeInt64(value)
@@ -98,12 +130,16 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeNull(name: String) {
+		verifyNesting()
+
 		writeType(BsonType.Null)
 		writeName(name)
 	}
 
 	@LowLevelApi
 	override fun writeObjectId(name: String, id: ByteArray) {
+		verifyNesting()
+
 		writeType(BsonType.ObjectId)
 		writeName(name)
 		@OptIn(DangerousMongoApi::class)
@@ -112,11 +148,15 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeObjectId(name: String, id: ObjectId) {
+		verifyNesting()
+
 		writeObjectId(name, id.bytes)
 	}
 
 	@LowLevelApi
 	override fun writeRegularExpression(name: String, pattern: String, options: String) {
+		verifyNesting()
+
 		writeType(BsonType.RegExp)
 		writeName(name)
 		writer.writeCString(pattern)
@@ -125,6 +165,8 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeString(name: String, value: String) {
+		verifyNesting()
+
 		writeType(BsonType.String)
 		writeName(name)
 		writer.writeString(value)
@@ -132,6 +174,8 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeTimestamp(name: String, value: Timestamp) {
+		verifyNesting()
+
 		writeType(BsonType.Timestamp)
 		writeName(name)
 		writer.writeUInt64(value.value)
@@ -141,6 +185,8 @@ internal class MultiplatformDocumentFieldWriter(
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeSymbol(name: String, value: String) {
+		verifyNesting()
+
 		TODO()
 	}
 
@@ -148,6 +194,8 @@ internal class MultiplatformDocumentFieldWriter(
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeUndefined(name: String) {
+		verifyNesting()
+
 		writeType(BsonType.Undefined)
 		writeName(name)
 	}
@@ -156,6 +204,8 @@ internal class MultiplatformDocumentFieldWriter(
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeDBPointer(name: String, namespace: String, id: ByteArray) {
+		verifyNesting()
+
 		TODO()
 	}
 
@@ -163,11 +213,15 @@ internal class MultiplatformDocumentFieldWriter(
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	@LowLevelApi
 	override fun writeJavaScriptWithScope(name: String, code: String) {
+		verifyNesting()
+
 		TODO()
 	}
 
 	@LowLevelApi
 	override fun writeBinaryData(name: String, type: UByte, data: ByteArray) {
+		verifyNesting()
+
 		writeType(BsonType.BinaryData)
 		writeName(name)
 		if (type == 2u.toUByte()) {
@@ -186,6 +240,8 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeJavaScript(name: String, code: String) {
+		verifyNesting()
+
 		writeType(BsonType.JavaScript)
 		writeName(name)
 		writer.writeString(code)
@@ -193,12 +249,16 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeMinKey(name: String) {
+		verifyNesting()
+
 		writeType(BsonType.MinKey)
 		writeName(name)
 	}
 
 	@LowLevelApi
 	override fun writeMaxKey(name: String) {
+		verifyNesting()
+
 		writeType(BsonType.MaxKey)
 		writeName(name)
 	}
@@ -222,12 +282,16 @@ internal class MultiplatformDocumentFieldWriter(
 		val childBuffer = Buffer()
 		val childWriter = RawBsonWriter(childBuffer)
 
+		currentlyWritingInChild = true
 		writeTo(MultiplatformDocumentFieldWriter(factory, childWriter))
 		closeArbitraryDocument(childBuffer, childWriter)
+		currentlyWritingInChild = false
 	}
 
 	@LowLevelApi
 	override fun writeDocument(name: String, block: BsonFieldWriter.() -> Unit) {
+		verifyNesting()
+
 		writeType(BsonType.Document)
 		writeName(name)
 		writeArbitraryDocument(block)
@@ -235,6 +299,8 @@ internal class MultiplatformDocumentFieldWriter(
 
 	@LowLevelApi
 	override fun writeArray(name: String, block: BsonValueWriter.() -> Unit) {
+		verifyNesting()
+
 		writeType(BsonType.Array)
 		writeName(name)
 		writeArbitraryDocument {
@@ -258,8 +324,10 @@ internal class MultiplatformDocumentFieldWriter(
 		val childWriter = RawBsonWriter(childBuffer)
 
 		val writer = MultiplatformDocumentFieldWriter(factory, childWriter)
+		currentlyWritingInChild = true
 		return object : CompletableBsonFieldWriter by writer {
 			override fun complete() {
+				this@MultiplatformDocumentFieldWriter.currentlyWritingInChild = false
 				this@MultiplatformDocumentFieldWriter.closeArbitraryDocument(childBuffer, childWriter)
 			}
 		}
@@ -275,28 +343,39 @@ internal class MultiplatformDocumentFieldWriter(
 		val childBuffer = Buffer()
 		val childWriter = RawBsonWriter(childBuffer)
 
+		currentlyWritingInChild = true
 		return object : CompletableBsonValueWriter by MultiplatformArrayFieldWriter(MultiplatformDocumentFieldWriter(factory, childWriter)) {
 			override fun complete() {
+				this@MultiplatformDocumentFieldWriter.currentlyWritingInChild = false
 				this@MultiplatformDocumentFieldWriter.closeArbitraryDocument(childBuffer, childWriter)
 			}
 		}
 	}
 
 	@DangerousMongoApi
-	override fun open(name: String): CompletableBsonValueWriter =
-		object : CompletableBsonValueWriter by MultiplatformSingleFieldWriter(this, name) {
+	override fun open(name: String): CompletableBsonValueWriter {
+		verifyNesting()
+
+		// We're opening the current document through a single-field view, we should NOT lock with currentlyWritingInChild
+
+		return object : CompletableBsonValueWriter by MultiplatformSingleFieldWriter(this, name) {
 			override fun complete() {} // Nothing to do. This function isn't building anything; it's just an adapter to go from FieldWriter to ValueWriter.
 		}
+	}
 
 	@OptIn(ExperimentalSerializationApi::class, DangerousMongoApi::class)
 	@LowLevelApi
 	override fun <T> writeSafe(name: String, obj: T, type: KType) {
+		verifyNesting()
+
 		val serializer = serializer(type) as SerializationStrategy<T>
 		BsonEncoder(factory, open(name)).encodeSerializableValue(serializer, obj)
 	}
 
 	@DangerousMongoApi
 	internal fun pipe(name: String, obj: BsonValue) {
+		verifyNesting()
+
 		writeType(obj.type)
 		writeName(name)
 		obj.writeTo(writer)
