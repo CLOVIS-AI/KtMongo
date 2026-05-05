@@ -162,7 +162,7 @@ private class FilterQueryPredicateImpl<T>(
 
 		override fun write(writer: BsonFieldWriter) {
 			writer.writeDocument("\$not") {
-				expression.writeTo(writer)
+				expression.writeTo(this)
 			}
 		}
 	}
