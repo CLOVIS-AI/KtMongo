@@ -32,6 +32,7 @@ fun SuiteDsl.verifyBsonFactory(
 ) {
 	verifyBsonDocuments(prepareFactory)
 	verifyBsonArrays(prepareFactory)
+	verifyBsonValues(prepareFactory)
 
 	test("An Int in a root document") {
 		val result = prepareFactory().buildDocument {
