@@ -146,6 +146,9 @@ internal class BsonDecoder(
 	private val floatVector = FloatVector.serializer().descriptor
 	private val booleanVector = BooleanVector.serializer().descriptor
 	private val byteVector = ByteVector.serializer().descriptor
+	private val bsonDocument = BsonDocument.serializer().descriptor
+	private val bsonArray = BsonArray.serializer().descriptor
+	private val bsonValue = BsonValue.serializer().descriptor
 	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
 		@Suppress("UNCHECKED_CAST")
 		return try {
@@ -161,6 +164,9 @@ internal class BsonDecoder(
 				}
 				instant -> source.decodeInstant() as T
 				vector, floatVector, booleanVector, byteVector -> Vector.fromBinaryData(source.decodeBinaryData()) as T
+				bsonDocument -> source.decodeDocument() as T
+				bsonArray -> source.decodeArray() as T
+				bsonValue -> source as T
 
 				// General case: do what the serializer says
 				else -> deserializer.deserialize(this)

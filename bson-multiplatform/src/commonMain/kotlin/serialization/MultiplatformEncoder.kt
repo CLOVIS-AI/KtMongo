@@ -28,8 +28,10 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
+import opensavvy.ktmongo.bson.multiplatform.BsonArray
 import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
+import opensavvy.ktmongo.bson.multiplatform.BsonValue
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.types.*
@@ -141,6 +143,9 @@ internal class BsonEncoder(override val serializersModule: SerializersModule, va
 	private val floatVector = FloatVector.serializer().descriptor
 	private val booleanVector = BooleanVector.serializer().descriptor
 	private val byteVector = ByteVector.serializer().descriptor
+	private val bsonDocument = BsonDocument.serializer().descriptor
+	private val bsonArray = BsonArray.serializer().descriptor
+	private val bsonValue = BsonValue.serializer().descriptor
 	override fun <T> encodeSerializableValue(serializer: SerializationStrategy<T>, value: T) {
 		when (serializer.descriptor) {
 			// Special cases where we provide our own encoder
@@ -150,6 +155,9 @@ internal class BsonEncoder(override val serializersModule: SerializersModule, va
 			uuid -> out.writeBinaryData(4u, (value as Uuid).toByteArray())
 			instant -> out.writeInstant(value as Instant)
 			vector, floatVector, booleanVector, byteVector -> out.writeBinaryData(0x09u, (value as Vector).toBinaryData())
+			bsonDocument -> out.pipe((value as BsonDocument).asValue())
+			bsonArray -> out.pipe((value as BsonArray).asValue())
+			bsonValue -> out.pipe(value as BsonValue)
 
 			// General case: do what the serializer says
 			else -> serializer.serialize(this, value)

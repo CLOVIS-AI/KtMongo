@@ -17,10 +17,17 @@
 package opensavvy.ktmongo.bson.multiplatform
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.multiplatform.BsonDocument.Serializer
 import opensavvy.ktmongo.bson.multiplatform.impl.read.MultiplatformBsonDocumentMap
 import opensavvy.ktmongo.bson.multiplatform.serialization.BsonDecoder
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -68,6 +75,7 @@ import kotlin.reflect.KType
  * This class is **not thread-safe**.
  * Although it is not possible to mutate its state, this class uses internal mutation to lazily decode the BSON stream.
  */
+@Serializable(with = Serializer::class)
 class BsonDocument internal constructor(
 	override val factory: BsonFactory,
 	private val bytesWithHeader: Bytes,
@@ -171,5 +179,28 @@ class BsonDocument internal constructor(
 		map.toString()
 
 	// endregion
+
+	/**
+	 * Serializer for the multiplatform [opensavvy.ktmongo.bson.multiplatform.BsonDocument] implementation.
+	 *
+	 * This serializer only supports KtMongo's bson-multiplatform serialization. Other formats are not supported.
+	 *
+	 * If support for other formats is important to you, please [comment on the tracking issue](https://gitlab.com/opensavvy/ktmongo/-/work_items/122).
+	 */
+	object Serializer : KSerializer<opensavvy.ktmongo.bson.multiplatform.BsonDocument> {
+		// Implementation is empty because the bson-multiplatform encoder has a special case for this type
+
+		private const val NAME = "opensavvy.ktmongo.bson.multiplatform.BsonDocument"
+
+		override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(NAME, PrimitiveKind.STRING)
+
+		override fun serialize(encoder: Encoder, value: opensavvy.ktmongo.bson.multiplatform.BsonDocument) {
+			error("The $NAME type is only serializable with KtMongo's bson-multiplatform serialization. Found encoder: $encoder")
+		}
+
+		override fun deserialize(decoder: Decoder): opensavvy.ktmongo.bson.multiplatform.BsonDocument {
+			error("The $NAME type is only deserializable with KtMongo's bson-multiplatform serialization. Found decoder: $decoder")
+		}
+	}
 
 }
