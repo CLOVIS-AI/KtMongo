@@ -58,6 +58,7 @@ kotlin {
 
 	sourceSets.commonTest.dependencies {
 		implementation(projects.bsonTests)
+		implementation(libs.kotlinx.serialization.json)
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotlin.test)
 	}
