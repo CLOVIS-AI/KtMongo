@@ -18,6 +18,8 @@ package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonFactory
+import opensavvy.ktmongo.bson.official.BsonFactory.Companion.current
+import opensavvy.ktmongo.bson.official.BsonFactory.Companion.setCurrent
 import opensavvy.ktmongo.bson.official.types.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonBinaryReader
@@ -68,6 +70,7 @@ actual class BsonFactory(
 		CodecRegistries.fromCodecs(
 			KotlinBsonDocumentCodec(this),
 			KotlinCommonBsonDocumentCodec(this),
+			KotlinBsonValueCodec(this),
 			KotlinBsonArrayCodec(this),
 			KotlinObjectIdCodec(),
 			KotlinTimestampCodec(),
@@ -103,7 +106,7 @@ actual class BsonFactory(
 	}
 
 	@LowLevelApi
-	actual override fun buildDocument(instance: BsonFieldWriteable): BsonDocument  =
+	actual override fun buildDocument(instance: BsonFieldWriteable): BsonDocument =
 		buildDocument { instance.writeTo(this) }
 
 	@LowLevelApi
@@ -234,4 +237,42 @@ actual class BsonFactory(
 	@LowLevelApi
 	inline fun <reified T> findCodecForType(): Codec<T> =
 		findCodecForType(typeOf<T>())
+
+	companion object {
+		private val currentFactory = ThreadLocal<opensavvy.ktmongo.bson.official.BsonFactory>()
+
+		/**
+		 * Accesses the currently-set [opensavvy.ktmongo.bson.official.BsonFactory].
+		 *
+		 * In most situations, no current factory is set, and this method throws [IllegalStateException].
+		 *
+		 * This method is part of a work-around to deserialize [BsonDocument] & co.
+		 * These types are themselves deserializable, so they need to know which factory they are created with.
+		 * However, KotlinX.Serialization does not pass that information to the deserializer.
+		 *
+		 * Instead, we call [setCurrent] when deserializing, so the deserializer has access to the factory
+		 * at the top of the stacktrace.
+		 */
+		@LowLevelApi
+		internal fun current(): opensavvy.ktmongo.bson.official.BsonFactory =
+			currentFactory.get()
+				?: error("The current BSON factory is not set. This usually means you are deserializing a special type like BsonDocument from a function that is not KtMongo aware. If that's your situation, try deserializing with one of the decode() methods provided by the KtMongo library. If you cannot use these methods, please report your use-case.")
+
+		/**
+		 * Sets [current] to [factory] during the lifetime of [block].
+		 */
+		@LowLevelApi
+		internal fun <T> setCurrent(
+			factory: opensavvy.ktmongo.bson.official.BsonFactory,
+			block: () -> T,
+		): T {
+			currentFactory.set(factory)
+			try {
+				return block()
+			} finally {
+				currentFactory.remove()
+				// We don't reset to the value from before the call, because it was 'null' anyway
+			}
+		}
+	}
 }

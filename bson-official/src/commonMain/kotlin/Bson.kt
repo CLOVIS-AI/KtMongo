@@ -16,6 +16,8 @@
 
 package opensavvy.ktmongo.bson.official
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonFactory
@@ -49,6 +51,7 @@ import kotlin.reflect.typeOf
  * }
  * ```
  */
+@Serializable(with = opensavvy.ktmongo.bson.official.BsonDocument.Serializer::class)
 expect class BsonDocument : BsonDocument {
 
 	override val factory: opensavvy.ktmongo.bson.official.BsonFactory
@@ -74,6 +77,15 @@ expect class BsonDocument : BsonDocument {
 
 		override fun component2(): opensavvy.ktmongo.bson.official.BsonValue
 	}
+
+	/**
+	 * Serializer for the official [opensavvy.ktmongo.bson.official.BsonDocument] implementation.
+	 *
+	 * This serializer only supports the official MongoDB library `org.bson:bson-kotlinx`.
+	 *
+	 * If support for other formats is important to you, please [comment on the tracking issue](https://gitlab.com/opensavvy/ktmongo/-/work_items/122).
+	 */
+	object Serializer : KSerializer<opensavvy.ktmongo.bson.official.BsonDocument>
 }
 
 /**
@@ -102,6 +114,7 @@ expect class BsonDocument : BsonDocument {
  * }
  * ```
  */
+@Serializable(with = opensavvy.ktmongo.bson.official.BsonArray.Serializer::class)
 expect class BsonArray : BsonArray {
 
 	override val factory: opensavvy.ktmongo.bson.official.BsonFactory
@@ -119,6 +132,15 @@ expect class BsonArray : BsonArray {
 	override fun asSequence(): Sequence<opensavvy.ktmongo.bson.official.BsonValue>
 
 	override fun withIndex(): Iterable<IndexedValue<opensavvy.ktmongo.bson.official.BsonValue>>
+
+	/**
+	 * Serializer for the official [opensavvy.ktmongo.bson.official.BsonArray] implementation.
+	 *
+	 * This serializer only supports the official MongoDB library `org.bson:bson-kotlinx`.
+	 *
+	 * If support for other formats is important to you, please [comment on the tracking issue](https://gitlab.com/opensavvy/ktmongo/-/work_items/122).
+	 */
+	object Serializer : KSerializer<opensavvy.ktmongo.bson.official.BsonArray>
 }
 
 /**
@@ -151,6 +173,7 @@ expect class BsonArray : BsonArray {
  * Some BSON types cannot be represented by a single Kotlin type, so multiple methods are provided to decode
  * their components. For example: [decodeRegularExpressionPattern] and [decodeRegularExpressionOptions].
  */
+@Serializable(with = opensavvy.ktmongo.bson.official.BsonValue.Serializer::class)
 expect class BsonValue : BsonValue {
 
 	override val factory: opensavvy.ktmongo.bson.official.BsonFactory
@@ -158,6 +181,15 @@ expect class BsonValue : BsonValue {
 	override fun decodeDocument(): opensavvy.ktmongo.bson.official.BsonDocument
 
 	override fun decodeArray(): opensavvy.ktmongo.bson.official.BsonArray
+
+	/**
+	 * Serializer for the official [opensavvy.ktmongo.bson.official.BsonValue] implementation.
+	 *
+	 * This serializer only supports the official MongoDB library `org.bson:bson-kotlinx`.
+	 *
+	 * If support for other formats is important to you, please [comment on the tracking issue](https://gitlab.com/opensavvy/ktmongo/-/work_items/122).
+	 */
+	object Serializer : KSerializer<opensavvy.ktmongo.bson.official.BsonValue>
 }
 
 /**

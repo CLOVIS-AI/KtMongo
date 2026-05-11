@@ -16,12 +16,22 @@
 
 package opensavvy.ktmongo.bson.official
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import opensavvy.ktmongo.bson.BsonDecodingException
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonBinaryWriter
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.DocumentCodec
 import org.bson.codecs.EncoderContext
+import org.bson.codecs.kotlinx.BsonDecoder
+import org.bson.codecs.kotlinx.BsonEncoder
 import org.bson.io.BasicOutputBuffer
 import kotlin.reflect.KType
 import org.bson.BsonDocument as OfficialBsonDocument
@@ -31,6 +41,7 @@ import org.bson.BsonDocument as OfficialBsonDocument
  *
  * To create an instance of this class, see [BsonFactory.readDocument].
  */
+@Serializable(with = BsonDocument.Serializer::class)
 actual class BsonDocument internal constructor(
 	val raw: OfficialBsonDocument,
 	actual override val factory: BsonFactory,
@@ -45,10 +56,12 @@ actual class BsonDocument internal constructor(
 		val codec = factory.findCodecForType<T>(type)
 
 		return try {
-			codec.decode(
-				raw.asBsonReader(),
-				DecoderContext.builder().build(),
-			)
+			BsonFactory.setCurrent(factory) {
+				codec.decode(
+					raw.asBsonReader(),
+					DecoderContext.builder().build(),
+				)
+			}
 		} catch (e: Exception) {
 			throw BsonDecodingException("Could not decode $type\n\tfrom value $this\n\tusing $codec", e)
 		}
@@ -243,6 +256,28 @@ actual class BsonDocument internal constructor(
 
 		override fun toString(): String =
 			"($name, $value)"
+	}
+
+	@OptIn(ExperimentalSerializationApi::class)
+	actual object Serializer : KSerializer<BsonDocument> {
+		private const val NAME = "opensavvy.ktmongo.bson.official.BsonDocument"
+
+		override val descriptor: SerialDescriptor =
+			PrimitiveSerialDescriptor(NAME, PrimitiveKind.STRING)
+
+		override fun serialize(encoder: Encoder, value: BsonDocument) {
+			require(encoder is BsonEncoder) { "${this::class} only supports org.bson:bson-kotlinx. See its documentation for details. Found encoder: $encoder" }
+
+			encoder.encodeBsonValue(value.raw)
+		}
+
+		@OptIn(LowLevelApi::class)
+		override fun deserialize(decoder: Decoder): BsonDocument {
+			require(decoder is BsonDecoder) { "${this::class} only supports org.bson:bson-kotlinx. See its documentation for details. Found decoder: $decoder" }
+
+			val decoded = decoder.decodeBsonValue()
+			return BsonDocument(decoded as OfficialBsonDocument, BsonFactory.current())
+		}
 	}
 }
 

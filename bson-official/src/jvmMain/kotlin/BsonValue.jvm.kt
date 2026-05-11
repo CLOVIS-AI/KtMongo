@@ -16,9 +16,18 @@
 
 package opensavvy.ktmongo.bson.official
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonValue
+import opensavvy.ktmongo.bson.official.BsonValue.Serializer
 import opensavvy.ktmongo.bson.official.types.toKtMongo
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
@@ -28,6 +37,8 @@ import org.bson.BsonWriter
 import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
+import org.bson.codecs.kotlinx.BsonDecoder
+import org.bson.codecs.kotlinx.BsonEncoder
 import java.nio.ByteBuffer
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -37,6 +48,7 @@ import kotlin.reflect.KType
  *
  * To create an instance of this class, see [BsonFactory.readValue].
  */
+@Serializable(with = Serializer::class)
 actual class BsonValue internal constructor(
 	val raw: org.bson.BsonValue,
 	actual override val factory: BsonFactory,
@@ -226,8 +238,31 @@ actual class BsonValue internal constructor(
 	override fun hashCode(): Int {
 		return BsonValue.hashCode(this)
 	}
+
+	@OptIn(ExperimentalSerializationApi::class)
+	actual object Serializer : KSerializer<opensavvy.ktmongo.bson.official.BsonValue> {
+		private const val NAME = "opensavvy.ktmongo.bson.official.BsonValue"
+
+		override val descriptor: SerialDescriptor =
+			PrimitiveSerialDescriptor(NAME, PrimitiveKind.STRING)
+
+		override fun serialize(encoder: Encoder, value: opensavvy.ktmongo.bson.official.BsonValue) {
+			require(encoder is BsonEncoder) { "${this::class} only supports org.bson:bson-kotlinx. See its documentation for details. Found encoder: $encoder" }
+
+			encoder.encodeBsonValue(value.raw)
+		}
+
+		@OptIn(LowLevelApi::class)
+		override fun deserialize(decoder: Decoder): opensavvy.ktmongo.bson.official.BsonValue {
+			require(decoder is BsonDecoder) { "${this::class} only supports org.bson:bson-kotlinx. See its documentation for details. Found decoder: $decoder" }
+
+			val decoded = decoder.decodeBsonValue()
+			return BsonValue(decoded, BsonFactory.current())
+		}
+	}
 }
 
+@OptIn(LowLevelApi::class)
 internal fun <T> decodeValue(
 	value: org.bson.BsonValue,
 	kClass: KClass<T & Any>,
@@ -246,7 +281,9 @@ internal fun <T> decodeValue(
 	try {
 		// Decode the fake document and extract its only field using a delegating codec.
 		val docCodec = FakeDocumentCodec(valueCodec)
-		val decoded = docCodec.decode(documentReader, DecoderContext.builder().build())
+		val decoded = BsonFactory.setCurrent(factory) {
+			docCodec.decode(documentReader, DecoderContext.builder().build())
+		}
 		return decoded.a
 	} catch (e: Exception) {
 		throw BsonDecodingException("Could not decode $kClass\n\tfrom value ${factory.readValue(value)}\n\tusing $valueCodec", e)
