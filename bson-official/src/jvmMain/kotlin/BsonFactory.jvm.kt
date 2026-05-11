@@ -66,8 +66,8 @@ actual class BsonFactory(
 	 *
 	 * If you only use the KtMongo DSL to write queries, you do not need this configuration.
 	 */
-	val codecRegistry: CodecRegistry = CodecRegistries.fromRegistries(
-		CodecRegistries.fromCodecs(
+	val codecRegistry: CodecRegistry = run {
+		val kotlinCodecs = arrayListOf(
 			KotlinBsonDocumentCodec(this),
 			KotlinCommonBsonDocumentCodec(this),
 			KotlinBsonValueCodec(this),
@@ -90,9 +90,13 @@ actual class BsonFactory(
 			KotlinPrimitiveDoubleCodec(),
 			KotlinPrimitiveBooleanCodec(),
 			KotlinPrimitiveCharCodec(),
-		),
-		codecRegistry,
-	)
+		)
+
+		CodecRegistries.fromRegistries(
+			CodecRegistries.fromCodecs(kotlinCodecs),
+			codecRegistry,
+		)
+	}
 
 	@LowLevelApi
 	actual override fun buildDocument(block: BsonFieldWriter.() -> Unit): BsonDocument {
