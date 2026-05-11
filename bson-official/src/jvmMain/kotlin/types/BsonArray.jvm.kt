@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,16 +28,33 @@ import org.bson.codecs.EncoderContext
 internal class KotlinBsonArrayCodec(
 	private val factory: BsonFactory,
 ) : Codec<BsonArray> {
-	private val documentCodec = BsonArrayCodec()
+	private val arrayCodec = BsonArrayCodec()
 
 	override fun encode(writer: BsonWriter, value: BsonArray, encoderContext: EncoderContext) {
-		documentCodec.encode(writer, value.raw, encoderContext)
+		arrayCodec.encode(writer, value.raw, encoderContext)
 	}
 
 	override fun getEncoderClass(): Class<BsonArray> =
 		BsonArray::class.java
 
 	override fun decode(reader: BsonReader, decoderContext: DecoderContext): BsonArray? =
-		documentCodec.decode(reader, decoderContext)?.let { BsonArray(it, factory) }
+		arrayCodec.decode(reader, decoderContext)?.let { BsonArray(it, factory) }
+
+}
+
+internal class KotlinCommonBsonArrayCodec(
+	private val factory: BsonFactory,
+) : Codec<opensavvy.ktmongo.bson.BsonArray> {
+	private val arrayCodec = BsonArrayCodec()
+
+	override fun encode(writer: BsonWriter, value: opensavvy.ktmongo.bson.BsonArray, encoderContext: EncoderContext) {
+		arrayCodec.encode(writer, (value as BsonArray).raw, encoderContext)
+	}
+
+	override fun getEncoderClass(): Class<opensavvy.ktmongo.bson.BsonArray> =
+		opensavvy.ktmongo.bson.BsonArray::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): opensavvy.ktmongo.bson.BsonArray? =
+		arrayCodec.decode(reader, decoderContext)?.let { BsonArray(it, factory) }
 
 }

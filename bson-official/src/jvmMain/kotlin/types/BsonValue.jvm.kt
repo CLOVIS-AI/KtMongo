@@ -41,3 +41,20 @@ internal class KotlinBsonValueCodec(
 		valueCodec.decode(reader, decoderContext)?.let { BsonValue(it, factory) }
 
 }
+
+internal class KotlinCommonBsonValueCodec(
+	private val factory: BsonFactory,
+) : Codec<opensavvy.ktmongo.bson.BsonValue> {
+	private val valueCodec = BsonValueCodec()
+
+	override fun encode(writer: BsonWriter, value: opensavvy.ktmongo.bson.BsonValue, encoderContext: EncoderContext) {
+		valueCodec.encode(writer, (value as BsonValue).raw, encoderContext)
+	}
+
+	override fun getEncoderClass(): Class<opensavvy.ktmongo.bson.BsonValue> =
+		opensavvy.ktmongo.bson.BsonValue::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): opensavvy.ktmongo.bson.BsonValue? =
+		valueCodec.decode(reader, decoderContext)?.let { BsonValue(it, factory) }
+
+}
