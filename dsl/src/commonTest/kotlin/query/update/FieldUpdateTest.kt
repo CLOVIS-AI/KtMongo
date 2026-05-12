@@ -457,6 +457,102 @@ val FieldUpdateTest by preparedSuite {
 				}
 			""".trimIndent()
 		}
+
+		test("Add values with slice") {
+			update {
+				User::tokens push {
+					each("123", "456")
+					slice(3)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"123",
+								"456"
+							],
+							"$slice": 3
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Use slice without each") {
+			update {
+				User::tokens push {
+					slice(3)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [],
+							"$slice": 3
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Combine both syntaxes together") {
+			update {
+				User::tokens push "foo"
+				User::tokens push {
+					each("123")
+					slice(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"foo",
+								"123"
+							],
+							"$slice": 5
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Using the advanced syntax multiple times: each are combined, slice only takes the last one") {
+			update {
+				User::tokens push {
+					each("foo", "bar")
+					slice(2)
+				}
+
+				User::tokens push {
+					each("baz")
+					slice(1)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"foo",
+								"bar",
+								"baz"
+							],
+							"$slice": 1
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("An empty block is removed") {
+			update {
+				User::tokens push { }
+			} shouldBeBson $$"""
+				{
+				}
+			""".trimIndent()
+		}
 	}
 
 	suite($$"$currentDate") {

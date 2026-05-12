@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.*
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -1715,7 +1716,267 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		return this.field.pushEach(values)
 	}
 
+	/**
+	 * Adds values to the end of the array with advanced options.
+	 *
+	 * This method allows using MongoDB's advanced `$push` operators like `$each` and `$slice`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens push {
+	 *             each("123", "456")
+	 *             slice(3)
+	 *         }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123"` and `"456"` to the user's tokens and keep only the last 3 elements.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.push(builder: PushBuilder<V>.() -> Unit, type: KType)
+
+	/**
+	 * Adds values to the end of the array with advanced options.
+	 *
+	 * This method allows using MongoDB's advanced `$push` operators like `$each` and `$slice`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens push {
+	 *             each("123", "456")
+	 *             slice(3)
+	 *         }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123"` and `"456"` to the user's tokens and keep only the last 3 elements.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
+		push(builder, typeOf<V>())
+	}
+
+	/**
+	 * Adds values to the end of the array with advanced options.
+	 *
+	 * This method allows using MongoDB's advanced `$push` operators like `$each` and `$slice`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens push {
+	 *             each("123", "456")
+	 *             slice(3)
+	 *         }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123"` and `"456"` to the user's tokens and keep only the last 3 elements.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
+		return this.field.push(builder)
+	}
+
 	// endregion
+
+	/**
+	 * DSL builder for advanced `$push` operations.
+	 *
+	 * See [push].
+	 */
+	@KtMongoDsl
+	interface PushBuilder<V> : BsonNode {
+
+		/**
+		 * Specifies the values to push to the array.
+		 *
+		 * If this function is called multiple times, they are combined (keeping the calling order).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tokens: List<String>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push {
+		 *             each("123", "456")
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * You can also call [push] multiple times:
+		 *
+		 * ```kotlin
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push "123"
+		 *         User::tokens push "456"
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/push/)
+		 */
+		@KtMongoDsl
+		fun each(vararg values: V) {
+			each(values.asIterable())
+		}
+
+		/**
+		 * Specifies the values to push to the array.
+		 *
+		 * If this function is called multiple times, they are combined (keeping the calling order).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tokens: List<String>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push {
+		 *             each(listOf("123", "456"))
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * You can also call [push] multiple times:
+		 *
+		 * ```kotlin
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push "123"
+		 *         User::tokens push "456"
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/push/)
+		 */
+		@KtMongoDsl
+		fun each(values: Iterable<V>)
+
+		/**
+		 * Limits the number of array elements after the push operation.
+		 *
+		 * If [count] is **positive**, after adding the elements to the array,
+		 * only the **first** [count] elements are kept, and all additional elements are discarded.
+		 *
+		 * If [count] is **negative**, after adding the elements to the array,
+		 * only the **last** [count] elements are kept, and prior elements are discarded.
+		 *
+		 * If this operator is specified without an [each] operator, the size of the array
+		 * is truncated but no elements are added.
+		 *
+		 * If this function is called multiple times, only the latest value has an effect.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tokens: List<String>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push {
+		 *             each("123", "456")
+		 *             slice(3)  // Keep only the first 3 elements
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/slice)
+		 */
+		@KtMongoDsl
+		fun slice(count: Int)
+	}
 
 }
 

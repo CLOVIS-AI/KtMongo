@@ -395,36 +395,118 @@ private class UpdateQueryImpl<T>(
 	// endregion
 	// region $push
 
+	@LowLevelApi
+	private class PushBuilderImpl<V>(
+		context: BsonContext,
+		val type: KType,
+	) : AbstractBsonNode(context), UpdateQuery.PushBuilder<V> {
+		var values: List<V> = emptyList()
+		var sliceValue: Int? = null
+
+		override fun each(values: Iterable<V>) {
+			this.values += values
+		}
+
+		override fun slice(count: Int) {
+			this.sliceValue = count
+		}
+
+		private fun sliceNotNull(count: Int?) {
+			if (count != null)
+				slice(count)
+		}
+
+		operator fun plus(other: PushBuilderImpl<V>): PushBuilderImpl<V> {
+			val ret = PushBuilderImpl<V>(context, type)
+
+			ret.each(this.values)
+			ret.each(other.values)
+
+			ret.sliceNotNull(other.sliceValue ?: this.sliceValue)
+
+			ret.freeze()
+
+			return ret
+		}
+
+		override fun simplify(): PushBuilderImpl<V>? =
+			if (values.isNotEmpty() || sliceValue != null) this
+			else null
+
+		override fun write(writer: BsonFieldWriter) {
+			with(writer) {
+				writeArray($$"$each") {
+					for (value in values)
+						writeSafe(value, type)
+				}
+				sliceValue?.let { sliceValue ->
+					writeInt32($$"$slice", sliceValue)
+				}
+			}
+		}
+	}
+
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun <V> Field<T, Collection<V>>.push(value: V, type: KType) {
-		accept(PushBsonNode(listOf(this.path to Value(value, type)), context))
+		val pushBuilder = PushBuilderImpl<V>(context, type)
+		pushBuilder.each(value)
+		pushBuilder.freeze()
+		accept(PushBsonNode(listOf(this.path to pushBuilder), context))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun <V> Field<T, Collection<V>>.push(builder: UpdateQuery.PushBuilder<V>.() -> Unit, type: KType) {
+		val pushBuilder = PushBuilderImpl<V>(context, type)
+			.apply(builder)
+		pushBuilder.freeze()
+		accept(PushBsonNode(listOf(this.path to pushBuilder), context))
 	}
 
 	@LowLevelApi
 	private class PushBsonNode(
-		val mappings: List<Pair<Path, Value>>,
+		val mappings: List<Pair<Path, PushBuilderImpl<*>>>,
 		context: BsonContext,
 	) : UpdateBsonNodeNode(context) {
-		override fun simplify() =
-			this.takeUnless { mappings.isEmpty() }
+		override fun simplify(): PushBsonNode? {
+			if (mappings.isEmpty())
+				return null
+
+			@Suppress("UNCHECKED_CAST") // For a given path, they must all have the same type (guaranteed by the DSL). We can thus treat them all as Any?.
+			val newMappings = mappings
+				.groupingBy { it.first }
+				.fold(
+					initialValueSelector = { _, (_, first) -> PushBuilderImpl<Any?>(context, first.type) },
+					operation = { _, previous, (_, next) ->
+						next as PushBuilderImpl<Any?>
+
+						previous + next
+					},
+				)
+				.toList()
+				.mapNotNull { (path, builder) ->
+					val simplified = builder.simplify()
+
+					if (simplified != null)
+						path to simplified
+					else null
+				}
+
+			if (mappings == newMappings)
+				return this
+
+			return PushBsonNode(newMappings, context)
+		}
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
-			val groupedMappings = mappings.groupBy(
-				keySelector = { it.first },
-				valueTransform = { it.second },
-			)
-
-			writeDocument("\$push") {
-				for ((field, values) in groupedMappings) {
-					if (values.size == 1)
-						writeSafe(field.toString(), values.single().value, values.single().type)
-					else
+			writeDocument($$"$push") {
+				for ((field, pushBuilder) in mappings) {
+					if (pushBuilder.values.size == 1 && pushBuilder.sliceValue == null) {
+						writeSafe(field.toString(), pushBuilder.values.single(), pushBuilder.type)
+					} else {
 						writeDocument(field.toString()) {
-							writeArray("\$each") {
-								for (value in values)
-									writeSafe(value.value, value.type)
-							}
+							pushBuilder.writeTo(this)
 						}
+					}
 				}
 			}
 		}
