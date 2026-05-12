@@ -66,6 +66,7 @@ import kotlin.time.Instant
  * - [`$`][selected]
  * - [`$[]`][all]
  * - [`$addToSet`][addToSet]
+ * - [`$push`][push]
  *
  * Time management:
  * - [`$currentDate`][setToCurrentDate]
@@ -1488,6 +1489,230 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.addEachToSet(values: Iterable<V>) {
 		return this.field.addEachToSet(values)
+	}
+
+	// endregion
+	// region $push
+
+	/**
+	 * Adds [value] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds the value, even if it's already present in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores push 100
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` to the user's scores, even if it's already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.push(value: V, type: KType)
+
+	/**
+	 * Adds [value] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds the value, even if it's already present in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores push 100
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` to the user's scores, even if it's already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.push(value: V) {
+		this.push(value, typeOf<V>())
+	}
+
+	/**
+	 * Adds [value] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds the value, even if it's already present in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores push 100
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` to the user's scores, even if it's already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.push(value: V) {
+		return this.field.push(value)
+	}
+
+	/**
+	 * Adds multiple [values] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds all values, even if they're already present in the array.
+	 *
+	 * This is a convenience function for calling [push] multiple times.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores pushEach listOf(100, 200)
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` and `200` to the user's scores, even if they're already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.pushEach(values: Iterable<V>, type: KType) {
+		for (value in values)
+			this.push(value, type)
+	}
+
+	/**
+	 * Adds multiple [values] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds all values, even if they're already present in the array.
+	 *
+	 * This is a convenience function for calling [push] multiple times.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores pushEach listOf(100, 200)
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` and `200` to the user's scores, even if they're already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.pushEach(values: Iterable<V>) {
+		this.pushEach(values, typeOf<V>())
+	}
+
+	/**
+	 * Adds multiple [values] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds all values, even if they're already present in the array.
+	 *
+	 * This is a convenience function for calling [push] multiple times.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores pushEach listOf(100, 200)
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` and `200` to the user's scores, even if they're already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pushEach(values: Iterable<V>) {
+		return this.field.pushEach(values)
 	}
 
 	// endregion

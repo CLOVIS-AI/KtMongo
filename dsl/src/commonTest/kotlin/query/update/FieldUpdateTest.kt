@@ -396,6 +396,69 @@ val FieldUpdateTest by preparedSuite {
 		}
 	}
 
+	suite($$"$push") {
+		test("Add a single field") {
+			update {
+				User::tokens push "123"
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": "123"
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add multiple fields") {
+			update {
+				User::tokens push "123"
+				User::scores push 1
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": "123",
+						"scores": 1
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add multiple values to the same field") {
+			update {
+				User::tokens push "123"
+				User::tokens push "456"
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"123",
+								"456"
+							]
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add multiple values to the same field using a list") {
+			update {
+				User::tokens pushEach listOf("123", "456")
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"123",
+								"456"
+							]
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
 	suite($$"$currentDate") {
 		test("Set to instant") {
 			update {

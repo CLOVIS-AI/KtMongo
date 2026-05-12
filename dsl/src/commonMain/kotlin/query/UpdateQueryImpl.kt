@@ -357,7 +357,7 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
-	// region $setOnInsert
+	// region $addToSet
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun <V> Field<T, Collection<V>>.addToSet(value: V, type: KType) {
@@ -386,6 +386,44 @@ private class UpdateQueryImpl<T>(
 					else
 						writeDocument(field.toString()) {
 							writeArray($$"$each") {
+								for (value in values)
+									writeSafe(value.value, value.type)
+							}
+						}
+				}
+			}
+		}
+	}
+
+	// endregion
+	// region $push
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun <V> Field<T, Collection<V>>.push(value: V, type: KType) {
+		accept(PushBsonNode(listOf(this.path to Value(value, type)), context))
+	}
+
+	@LowLevelApi
+	private class PushBsonNode(
+		val mappings: List<Pair<Path, Value>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+		override fun simplify() =
+			this.takeUnless { mappings.isEmpty() }
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			val groupedMappings = mappings.groupBy(
+				keySelector = { it.first },
+				valueTransform = { it.second },
+			)
+
+			writeDocument("\$push") {
+				for ((field, values) in groupedMappings) {
+					if (values.size == 1)
+						writeSafe(field.toString(), values.single().value, values.single().type)
+					else
+						writeDocument(field.toString()) {
+							writeArray("\$each") {
 								for (value in values)
 									writeSafe(value.value, value.type)
 							}
@@ -426,6 +464,9 @@ private class UpdateQueryImpl<T>(
 			},
 			OperatorCombinator(AddToSetBsonNode::class) { sources, context ->
 				AddToSetBsonNode(sources.flatMap { it.mappings }, context)
+			},
+			OperatorCombinator(PushBsonNode::class) { sources, context ->
+				PushBsonNode(sources.flatMap { it.mappings }, context)
 			},
 			OperatorCombinator(CurrentDateBsonNode::class) { sources, context ->
 				CurrentDateBsonNode(sources.flatMap { it.mappings }, context)
