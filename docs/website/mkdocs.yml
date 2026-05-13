@@ -119,6 +119,7 @@ nav:
 
       - Based on the official drivers:
           - tutorials/official/index.md
+          - KotlinX.Serialization: tutorials/official/serialization-kotlinx.md
 
       - Migrating from KMongo:
           - tutorials/from-kmongo/index.md
