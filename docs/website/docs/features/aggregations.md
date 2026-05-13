@@ -17,7 +17,7 @@ users.aggregate()
 Within each stage, you may combine values together.
 
 !!! note ""
-	Unlike other stages, `match` uses regular find syntax and not aggregation operators. Use the [`expr` operator](../api/dsl/opensavvy.ktmongo.dsl.query/-filter-query/index.md#expr) within `match` to access aggregation operators.
+	Unlike other stages, [`match`](../api/dsl/opensavvy.ktmongo.dsl.aggregation.stages/-has-match/index.md#match) uses regular find syntax and not aggregation operators. Use the [`expr` operator](../api/dsl/opensavvy.ktmongo.dsl.query/-filter-query/index.md#expr) within `match` to access aggregation operators.
 
 ## Aggregation operators
 

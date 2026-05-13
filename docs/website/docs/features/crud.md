@@ -43,7 +43,7 @@ In the rest of this article, we assume you have [obtained a collection](../tutor
 
 ## Create
 
-Creating a new document is done directly with an instance of the class and the method `insertOne`:
+Creating a new document is done directly with an instance of the class and the method [`insertOne`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-insert-operations/index.md#insertone):
 
 ```kotlin
 users.insertOne(User(ObjectId(), "Bob"))
@@ -51,7 +51,7 @@ users.insertOne(User(ObjectId(), "Bob"))
 
 If the collection didn't yet exist, any write operation creates it.
 
-If we want to insert multiple documents at the same time, we can use `insertMany`:
+If we want to insert multiple documents at the same time, we can use [`insertMany`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-insert-operations/index.md#insertmany):
 
 ```kotlin
 users.insertMany(
@@ -64,19 +64,19 @@ users.insertMany(
 ## Read
 
 Read operations retrieve documents from a collection.
-For example, we can `count` how many documents exist in a collection:
+For example, we can [`count`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-count-operations/index.md#count) how many documents exist in a collection:
 
 ```kotlin
 users.count()
 ```
 
-Or, we can get all the documents using the `find` method:
+Or, we can get all the documents using the [`find`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-find-operations/index.md#find) method:
 
 ```kotlin
 users.find().toList()
 ```
 
-However, lists are in-memory data structures, and it may not be appropriate to query an entire collection into memory. Instead, we can stream the results using `forEach`:
+However, lists are in-memory data structures, and it may not be appropriate to query an entire collection into memory. Instead, we can stream the results using [`forEach`](../api/driver-coroutines/opensavvy.ktmongo.coroutines/-mongo-iterable/index.md#foreach):
 
 ```kotlin
 users.find().forEach { println("Found a document: $it") }
@@ -110,7 +110,7 @@ This syntax is typesafe: invalid requests (for example comparing against another
 
 [//]: # (TODO: add a link to the 'collation' option, whenever it is implemented)
 
-If you are only interested in a single document, use `findOne`, which returns a nullable value instead of a list:
+If you are only interested in a single document, use [`findOne`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-find-operations/index.md#findone), which returns a nullable value instead of a list:
 
 ```kotlin
 users.findOne {
@@ -121,12 +121,13 @@ users.findOne {
 Learn more:
 
 - [Referring to fields](fields.md)
+- [Filter operators](../api/dsl/opensavvy.ktmongo.dsl.query/-filter-query/index.md)
 
 ## Update
 
 Update operations modify existing documents in a collection.
 
-Similarly to search criteria, we can use infix operators to update some fields. To update all documents, use `updateMany`:
+Similarly to search criteria, we can use infix operators to update some fields. To update all documents, use [`updateMany`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-update-operations/index.md#updatemany):
 
 ```kotlin
 users.updateMany {
@@ -146,15 +147,21 @@ users.updateMany(
 }
 ```
 
-If you only want to update a single document, use `updateOne` instead, which has the same syntax.
+If you only want to update a single document, use [`updateOne`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-update-operations/index.md#updateone) instead, which has the same syntax.
 
-Finally, if you want to ensure that a specific document exists, and want to create it if it doesn't, use `upsertOne`.
+Finally, if you want to ensure that a specific document exists, and want to create it if it doesn't, use [`upsertOne`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-update-operations/index.md#upsertone).
+
+Learn more:
+
+- [Filter operators](../api/dsl/opensavvy.ktmongo.dsl.query/-filter-query/index.md)
+- [Update operators](../api/dsl/opensavvy.ktmongo.dsl.query/-update-query/index.md)
+- [Upsert operators](../api/dsl/opensavvy.ktmongo.dsl.query/-upsert-query/index.md)
 
 ## Delete
 
 Delete operations remove documents from a collection. Delete operations accept a filter, just like `findOne` and `findMany`.
 
-To delete one document, use `deleteOne`:
+To delete one document, use [`deleteOne`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-delete-operations/index.md#deleteone):
 
 ```kotlin
 users.deleteOne {
@@ -162,7 +169,7 @@ users.deleteOne {
 }
 ```
 
-To delete multiple documents, use `deleteMany`:
+To delete multiple documents, use [`deleteMany`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-delete-operations/index.md#deletemany):
 
 ```kotlin
 users.deleteMany {
@@ -170,8 +177,12 @@ users.deleteMany {
 }
 ```
 
-Additionally, to delete the entire collection, use `drop`:
+Additionally, to delete the entire collection, use [`drop`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-collection-operations/index.md#drop):
 
 ```kotlin
 users.drop()
 ```
+
+Learn more:
+
+- [Filter operators](../api/dsl/opensavvy.ktmongo.dsl.query/-filter-query/index.md)

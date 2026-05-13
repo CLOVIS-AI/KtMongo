@@ -18,7 +18,7 @@ for (user in usersToCreate) {
 
 This code is bad because each insert will send data to the database and wait for its response. Between each insert, it waits for the previous one to finish and for an entire network roundtrip.
 
-Instead, we can insert all users at once with `insertMany`:
+Instead, we can insert all users at once with [`insertMany`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-insert-operations/index.md#insertmany):
 
 ```kotlin
 val usersToCreate = listOf(
@@ -32,9 +32,9 @@ users.insertMany(usersToCreate)
 
 Here, a single request is sent to the database, which can perform all inserts much quicker.
 
-Similarly, other write operations have a variant that allows performing the same write on multiple documents: `updateMany` and `deleteMany`.
+Similarly, other write operations have a variant that allows performing the same write on multiple documents: [`updateMany`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-update-operations/index.md#updatemany) and [`deleteMany`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-delete-operations/index.md#deletemany).
 
-Sometimes, however, we want to perform very different writes, but we could still benefit from sending them all in a single request. In those situations, we can use `bulkWrite`:
+Sometimes, however, we want to perform very different writes, but we could still benefit from sending them all in a single request. In those situations, we can use [`bulkWrite`](../api/driver-coroutines/opensavvy.ktmongo.coroutines.operations/-update-operations/index.md#bulkwrite):
 
 ```kotlin
 users.bulkWrite {
@@ -57,3 +57,7 @@ users.bulkWrite {
 ```
 
 Note that this _isn't_ a transaction. The operations are performed in the same way they would be if calling their respective methods, the only difference is they are all sent together to the database in a single request to decrease network traffic and latency.
+
+Learn more:
+
+- [Bulk write commands](../api/dsl/opensavvy.ktmongo.dsl.command/-bulk-write/index.md)

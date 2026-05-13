@@ -1,4 +1,4 @@
-# Module MongoDB driver for Kotlin (synchronous, with Java helpers)
+# Module KtMongo: MongoDB driver for Kotlin & Java • Synchronous
 
 Blocking/synchronous driver for MongoDB Java users.
 
@@ -47,11 +47,9 @@ Use the method [`KtMongo.from`][opensavvy.ktmongo.sync.KtMongo.from] to convert 
 Because Java doesn't provide optional parameters, and because Java and Kotlin lambdas are slightly different, we offer convenience methods.
 
 ```java
-collection.find(options(),filter(filter ->{
-	filter.
-
-eq(JavaField.of(Profile::name), "Fred");
-	}));
+collection.find(options(), filter(filter -> {
+	filter.eq(JavaField.of(Profile::name), "Fred");
+}));
 ```
 
 You can find more complex examples in the [test directory](https://gitlab.com/opensavvy/ktmongo/-/tree/main/driver-sync-java/src/test/java/opensavvy/ktmongo/sync?ref_type=heads).

@@ -25,7 +25,6 @@ dependencies {
 	dokka(projects.bson)
 	dokka(projects.bsonOfficial)
 	dokka(projects.bsonMultiplatform)
-	dokka(projects.bsonTests)
 	dokka(projects.dsl)
 	dokka(projects.driverSharedOfficial)
 	dokka(projects.driverSharedKmongo)
