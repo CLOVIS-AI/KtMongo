@@ -73,7 +73,7 @@ private class BsonEncoderTopLevel(override val serializersModule: SerializersMod
 }
 
 @OptIn(LowLevelApi::class, DangerousMongoApi::class, ExperimentalTime::class, ExperimentalUuidApi::class)
-private class BsonEncoder(override val serializersModule: SerializersModule, val out: CompletableBsonValueWriter) : Encoder {
+internal class BsonEncoder(override val serializersModule: SerializersModule, val out: CompletableBsonValueWriter) : Encoder {
 	@ExperimentalSerializationApi
 	override fun encodeNull() {
 		out.writeNull()
