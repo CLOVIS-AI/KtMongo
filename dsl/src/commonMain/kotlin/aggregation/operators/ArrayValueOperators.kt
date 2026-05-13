@@ -1179,10 +1179,10 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, T> Value<Context, Collection<T>>.take(
+	final inline fun <Context : Any, T> Value<Context, Collection<T>>.take(
 		limit: Number,
 	): Value<Context, List<T>> =
 		this.take(of(limit))
@@ -1307,10 +1307,10 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
 	@JvmName("takeFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
+	final inline fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
 		limit: Number,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
@@ -1435,10 +1435,10 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
 	@JvmName("takePropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
+	final inline fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
 		limit: Number,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
@@ -1567,10 +1567,10 @@ interface ArrayValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("takeResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, T> Collection<T>.take(
+	final inline fun <Context : Any, T> Collection<T>.take(
 		limit: Number,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
@@ -1722,10 +1722,10 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
+	final inline fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
 		limit: Number,
 	): Value<Context, List<T>> =
 		this.takeLast(of(limit))
@@ -1850,10 +1850,10 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
 	@JvmName("takeLastFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
+	final inline fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
 		limit: Number,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
@@ -1978,10 +1978,10 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
 	@JvmName("takeLastPropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
+	final inline fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
 		limit: Number,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
@@ -2110,10 +2110,10 @@ interface ArrayValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("takeLastResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any, T> Collection<T>.takeLast(
+	final inline fun <Context : Any, T> Collection<T>.takeLast(
 		limit: Number,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))

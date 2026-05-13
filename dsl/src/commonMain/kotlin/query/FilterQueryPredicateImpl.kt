@@ -31,6 +31,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * Implementation of [FilterQueryPredicate].
@@ -38,6 +40,7 @@ import opensavvy.ktmongo.dsl.tree.BsonNode
 @KtMongoDsl
 private class FilterQueryPredicateImpl<T>(
 	context: BsonContext,
+	val type: KType,
 ) : AbstractCompoundBsonNode(context), FilterQueryPredicate<T> {
 
 	// region Low-level operations
@@ -142,7 +145,7 @@ private class FilterQueryPredicateImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
 	override fun not(expression: FilterQueryPredicate<T>.() -> Unit) {
-		accept(NotPredicateBsonNodeNode(FilterQueryPredicateImpl<T>(context).apply(expression), context))
+		accept(NotPredicateBsonNodeNode(FilterQueryPredicateImpl<T>(context, type).apply(expression), context))
 	}
 
 	@LowLevelApi
@@ -414,7 +417,25 @@ private class FilterQueryPredicateImpl<T>(
 
 /**
  * Creates an empty [FilterQueryPredicate].
+ *
+ * Users should generally not need to interact with this function, as KtMongo already provides an instance of
+ * [FilterQueryPredicate] in all contexts where one is useful.
+ *
+ * If calling this method, prefer the inline overload.
+ *
+ * @param type The [KType] instance that corresponds to type [T].
+ * If [KType] doesn't correspond to [T], the behavior is unspecified.
  */
 @LowLevelApi
-fun <T> FilterQueryPredicate(context: BsonContext): FilterQueryPredicate<T> =
-	FilterQueryPredicateImpl(context)
+fun <T> FilterQueryPredicate(context: BsonContext, type: KType): FilterQueryPredicate<T> =
+	FilterQueryPredicateImpl(context, type)
+
+/**
+ * Creates an empty [FilterQueryPredicate].
+ *
+ * Users should generally not need to interact with this function, as KtMongo already provides an instance of
+ * [FilterQueryPredicate] in all contexts where one is useful.
+ */
+@LowLevelApi
+inline fun <reified T> FilterQueryPredicate(context: BsonContext): FilterQueryPredicate<T> =
+	FilterQueryPredicate(context, typeOf<T>())

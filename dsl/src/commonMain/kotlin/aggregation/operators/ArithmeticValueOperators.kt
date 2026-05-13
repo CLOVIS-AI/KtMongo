@@ -162,9 +162,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> abs(value: Result): Value<Context, Result> =
+	final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result : Number?> abs(value: Result): Value<Context, Result> =
 		abs(of(value))
 
 	// endregion
@@ -284,9 +284,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.plus(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Value<Context, Result>.plus(other: Result): Value<Context, Result> =
 		this.plus(of(other))
 
 	/**
@@ -404,9 +404,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@JvmName("plusFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.plus(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.plus(other: Result): Value<Context, Result> =
 		of(this).plus(of(other))
 
 	/**
@@ -524,9 +524,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@JvmName("plusPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.plus(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> kotlin.reflect.KProperty1<Context, Result>.plus(other: Result): Value<Context, Result> =
 		of(this).plus(of(other))
 
 	/**
@@ -555,9 +555,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("plusResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.plus(other: Value<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.plus(other: Value<Context, Result>): Value<Context, Result> =
 		of(this).plus(other)
 
 	/**
@@ -586,9 +586,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("plusResultReceiverByField")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.plus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.plus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
 		of(this).plus(of(other))
 
 	/**
@@ -617,9 +617,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("plusResultReceiverByProperty")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.plus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.plus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
 		of(this).plus(of(other))
 
 	/**
@@ -648,9 +648,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("plusResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.plus(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.plus(other: Result): Value<Context, Result> =
 		of(this).plus(of(other))
 
 	@OptIn(LowLevelApi::class)
@@ -806,9 +806,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> ceil(value: Result): Value<Context, Result> =
+	final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result : Number?> ceil(value: Result): Value<Context, Result> =
 		ceil(of(value))
 
 	// endregion
@@ -928,9 +928,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.times(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Value<Context, Result>.times(other: Result): Value<Context, Result> =
 		this.times(of(other))
 
 	/**
@@ -1048,9 +1048,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@JvmName("timesFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.times(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.times(other: Result): Value<Context, Result> =
 		of(this).times(of(other))
 
 	/**
@@ -1168,9 +1168,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@JvmName("timesPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.times(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> kotlin.reflect.KProperty1<Context, Result>.times(other: Result): Value<Context, Result> =
 		of(this).times(of(other))
 
 	/**
@@ -1199,9 +1199,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("timesResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.times(other: Value<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.times(other: Value<Context, Result>): Value<Context, Result> =
 		of(this).times(other)
 
 	/**
@@ -1230,9 +1230,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("timesResultReceiverByField")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.times(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.times(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
 		of(this).times(of(other))
 
 	/**
@@ -1261,9 +1261,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("timesResultReceiverByProperty")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.times(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.times(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
 		of(this).times(of(other))
 
 	/**
@@ -1292,9 +1292,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("timesResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.times(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.times(other: Result): Value<Context, Result> =
 		of(this).times(of(other))
 
 	@OptIn(LowLevelApi::class)
@@ -1426,9 +1426,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Value<Context, Result>.div(other: Result): Value<Context, Result> =
 		this.div(of(other))
 
 	/**
@@ -1522,9 +1522,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@JvmName("divFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: Result): Value<Context, Result> =
 		of(this).div(of(other))
 
 	/**
@@ -1555,9 +1555,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("divResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.div(other: Value<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.div(other: Value<Context, Result>): Value<Context, Result> =
 		of(this).div(other)
 
 	/**
@@ -1588,9 +1588,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("divResultReceiverByField")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
 		of(this).div(of(other))
 
 	/**
@@ -1621,9 +1621,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("divResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.div(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.div(other: Result): Value<Context, Result> =
 		of(this).div(of(other))
 
 	@OptIn(LowLevelApi::class)
@@ -1773,9 +1773,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.minus(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Value<Context, Result>.minus(other: Result): Value<Context, Result> =
 		this.minus(of(other))
 
 	/**
@@ -1905,9 +1905,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@JvmName("minusFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.minus(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.minus(other: Result): Value<Context, Result> =
 		of(this).minus(of(other))
 
 	/**
@@ -2037,9 +2037,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@JvmName("minusPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> kotlin.reflect.KProperty1<Context, Result>.minus(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> kotlin.reflect.KProperty1<Context, Result>.minus(other: Result): Value<Context, Result> =
 		of(this).minus(of(other))
 
 	/**
@@ -2071,9 +2071,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("minusResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.minus(other: Value<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.minus(other: Value<Context, Result>): Value<Context, Result> =
 		of(this).minus(other)
 
 	/**
@@ -2105,9 +2105,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("minusResultReceiverByField")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.minus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.minus(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
 		of(this).minus(of(other))
 
 	/**
@@ -2139,9 +2139,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("minusResultReceiverByProperty")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.minus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.minus(other: kotlin.reflect.KProperty1<Context, Result>): Value<Context, Result> =
 		of(this).minus(of(other))
 
 	/**
@@ -2173,9 +2173,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("minusResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Result.minus(other: Result): Value<Context, Result> =
+	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.minus(other: Result): Value<Context, Result> =
 		of(this).minus(of(other))
 
 	@OptIn(LowLevelApi::class)
@@ -2313,9 +2313,9 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(LowLevelApi::class)
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> floor(value: Result): Value<Context, Result> =
+	final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result : Number?> floor(value: Result): Value<Context, Result> =
 		floor(of(value))
 
 	// endregion

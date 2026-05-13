@@ -29,6 +29,8 @@ import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import org.intellij.lang.annotations.Language
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * DSL for MongoDB operators that are used as predicates in conditions.
@@ -266,7 +268,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit)
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit, type: KType)
 
 	/**
 	 * Targets a single field to execute a [targeted predicate][FilterQueryPredicate].
@@ -295,9 +297,42 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * }
 	 * ```
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	operator fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit) {
+	final inline operator fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.invoke(noinline block: FilterQueryPredicate<V>.() -> Unit) {
+		this.invoke(block, typeOf<V>())
+	}
+
+	/**
+	 * Targets a single field to execute a [targeted predicate][FilterQueryPredicate].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name {
+	 *         eq("foo")
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * Note that many operators available this way have a convenience function directly in this class to
+	 * shorten this. For this example, see [eq]:
+	 *
+	 * ```kotlin
+	 * collection.find {
+	 *     User::name eq "foo"
+	 * }
+	 * ```
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline operator fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.invoke(noinline block: FilterQueryPredicate<V>.() -> Unit) {
 		return this.field.invoke(block)
 	}
 
@@ -330,8 +365,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.not(expression: FilterQueryPredicate<V>.() -> Unit) {
-		this { not(expression) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.not(expression: FilterQueryPredicate<V>.() -> Unit, type: KType) {
+		this.invoke({ not(expression) }, type)
 	}
 
 	/**
@@ -358,9 +393,39 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/not/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.not(expression: FilterQueryPredicate<V>.() -> Unit) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.not(noinline expression: FilterQueryPredicate<V>.() -> Unit) {
+		this.not(expression, typeOf<V>())
+	}
+
+	/**
+	 * Performs a logical `NOT` operation on the specified [expression] and selects the
+	 * documents that *do not* match the expression. This includes the elements
+	 * that do not contain the field.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age not {
+	 *         hasType(BsonType.STRING)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/not/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.not(noinline expression: FilterQueryPredicate<V>.() -> Unit) {
 		return this.field.not(expression)
 	}
 
@@ -389,8 +454,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.eq(value: V) {
-		this { eq(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.eq(value: V, type: KType) {
+		this.invoke({ eq(value) }, type)
 	}
 
 	/**
@@ -413,9 +478,35 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/eq/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.eq(value: V) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.eq(value: V) {
+		this.eq(value, typeOf<V>())
+	}
+
+	/**
+	 * Matches documents where the value of a field equals the [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name eq "foo"
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/eq/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.eq(value: V) {
 		return this.field.eq(value)
 	}
 
@@ -449,8 +540,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.eqNotNull(value: V?) {
-		this { eqNotNull(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.eqNotNull(value: V?, type: KType) {
+		this.invoke({ eqNotNull(value) }, type)
 	}
 
 	/**
@@ -481,9 +572,43 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see eq Equality filter.
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.eqNotNull(value: V?) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.eqNotNull(value: V?) {
+		this.eqNotNull(value, typeOf<V>())
+	}
+
+	/**
+	 * Matches documents where the value of a field equals [value].
+	 *
+	 * If [value] is `null`, the operator is not added (all documents are matched).
+	 *
+	 * ### Example
+	 *
+	 * This operator is useful to simplify searches when the criteria are optional.
+	 * For example, instead of writing:
+	 * ```kotlin
+	 * collection.find {
+	 *     if (criteria.name != null)
+	 *         User::name eq criteria.name
+	 * }
+	 * ```
+	 * this operator can be used instead:
+	 * ```kotlin
+	 * collection.find {
+	 *     User::name eqNotNull criteria.name
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/eq/)
+	 *
+	 * @see eq Equality filter.
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.eqNotNull(value: V?) {
 		return this.field.eqNotNull(value)
 	}
 
@@ -516,8 +641,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.ne(value: V) {
-		this { ne(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.ne(value: V, type: KType) {
+		this.invoke({ ne(value) }, type)
 	}
 
 	/**
@@ -544,9 +669,39 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see eq
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.ne(value: V) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.ne(value: V) {
+		this.ne(value, typeOf<V>())
+	}
+
+	/**
+	 * Matches documents where the value of a field does not equal the [value].
+	 *
+	 * The result includes documents which do not contain the specified field.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String?,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name ne "foo"
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/ne/)
+	 *
+	 * @see eq
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.ne(value: V) {
 		return this.field.ne(value)
 	}
 
@@ -1216,8 +1371,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gt(value: V) {
-		this { gt(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gt(value: V, type: KType) {
+		this.invoke({ gt(value) }, type)
 	}
 
 	/**
@@ -1242,9 +1397,37 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see gtNotNull
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.gt(value: V) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.gt(value: V) {
+		this.gt(value, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field has a value strictly greater than [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age gt 18
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gt/)
+	 *
+	 * @see gtNotNull
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.gt(value: V) {
 		return this.field.gt(value)
 	}
 
@@ -1275,8 +1458,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gtNotNull(value: V?) {
-		this { gtNotNull(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gtNotNull(value: V?, type: KType) {
+		this.invoke({ gtNotNull(value) }, type)
 	}
 
 	/**
@@ -1304,9 +1487,40 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see gt
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.gtNotNull(value: V?) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.gtNotNull(value: V?) {
+		this.gtNotNull(value, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field has a value strictly greater than [value].
+	 *
+	 * If [value] is `null`, the operator is not added (all elements are matched).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age gtNotNull 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gt/)
+	 *
+	 * @see gt
+	 * @see eqNotNull Learn more about the 'notNull' variants
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.gtNotNull(value: V?) {
 		return this.field.gtNotNull(value)
 	}
 
@@ -1334,8 +1548,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gte(value: V) {
-		this { gte(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gte(value: V, type: KType) {
+		this.invoke({ gte(value) }, type)
 	}
 
 	/**
@@ -1360,9 +1574,37 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see gteNotNull
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.gte(value: V) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.gte(value: V) {
+		this.gte(value, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field has a value greater or equal to [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age gte 18
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gte/)
+	 *
+	 * @see gteNotNull
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.gte(value: V) {
 		return this.field.gte(value)
 	}
 
@@ -1393,8 +1635,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gteNotNull(value: V?) {
-		this { gteNotNull(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.gteNotNull(value: V?, type: KType) {
+		this.invoke({ gteNotNull(value) }, type)
 	}
 
 	/**
@@ -1422,9 +1664,40 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see gte
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.gteNotNull(value: V?) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.gteNotNull(value: V?) {
+		this.gteNotNull(value, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field has a value greater or equal to [value].
+	 *
+	 * If [value] is `null`, the operator is not added (all elements are matched).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age gteNotNull 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/gte/)
+	 *
+	 * @see gte
+	 * @see eqNotNull Learn more about the 'notNull' variants
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.gteNotNull(value: V?) {
 		return this.field.gteNotNull(value)
 	}
 
@@ -1452,8 +1725,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lt(value: V) {
-		this { lt(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lt(value: V, type: KType) {
+		this.invoke({ lt(value) }, type)
 	}
 
 	/**
@@ -1478,9 +1751,37 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see ltNotNull
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.lt(value: V) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.lt(value: V) {
+		this.lt(value, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field has a value strictly lesser than [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age lt 18
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lt/)
+	 *
+	 * @see ltNotNull
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.lt(value: V) {
 		return this.field.lt(value)
 	}
 
@@ -1511,8 +1812,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.ltNotNull(value: V?) {
-		this { ltNotNull(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.ltNotNull(value: V?, type: KType) {
+		this.invoke({ ltNotNull(value) }, type)
 	}
 
 	/**
@@ -1540,9 +1841,40 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see lt
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.ltNotNull(value: V?) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.ltNotNull(value: V?) {
+		this.ltNotNull(value, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field has a value strictly lesser than [value].
+	 *
+	 * If [value] is `null`, the operator is not added (all elements are matched).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age ltNotNull 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lt/)
+	 *
+	 * @see lt
+	 * @see eqNotNull Learn more about the 'notNull' variants
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.ltNotNull(value: V?) {
 		return this.field.ltNotNull(value)
 	}
 
@@ -1570,8 +1902,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lte(value: V) {
-		this { lte(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lte(value: V, type: KType) {
+		this.invoke({ lte(value) }, type)
 	}
 
 	/**
@@ -1596,9 +1928,37 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see lteNotNull
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.lte(value: V) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.lte(value: V) {
+		this.lte(value, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field has a value lesser or equal to [value].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age lte 18
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lte/)
+	 *
+	 * @see lteNotNull
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.lte(value: V) {
 		return this.field.lte(value)
 	}
 
@@ -1629,8 +1989,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lteNotNull(value: V?) {
-		this { lteNotNull(value) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.lteNotNull(value: V?, type: KType) {
+		this.invoke({ lteNotNull(value) }, type)
 	}
 
 	/**
@@ -1658,9 +2018,40 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see lte
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.lteNotNull(value: V?) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.lteNotNull(value: V?) {
+		this.lteNotNull(value, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field has a value lesser or equal to [value].
+	 *
+	 * If [value] is `null`, the operator is not added (all elements are matched).
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age lteNotNull 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/lte/)
+	 *
+	 * @see lte
+	 * @see eqNotNull Learn more about the 'notNull' variants
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.lteNotNull(value: V?) {
 		return this.field.lteNotNull(value)
 	}
 
@@ -1687,11 +2078,11 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.isIn(range: ClosedRange<V>) {
+	fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.isIn(range: ClosedRange<V>, type: KType) {
 		val field = this
 		and {
-			field gte range.start
-			field lte range.endInclusive
+			field.gte(range.start, type)
+			field.lte(range.endInclusive, type)
 		}
 	}
 
@@ -1714,9 +2105,34 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see gte Only specify the lower bound.
 	 * @see lte Only specify the higher bound.
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.isIn(range: ClosedRange<V>) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> Field<T, V?>.isIn(range: ClosedRange<V>) {
+		this.isIn(range, typeOf<V?>())
+	}
+
+	/**
+	 * Selects documents in which this field has a value included in [range].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age isIn (25..50)
+	 * }
+	 * ```
+	 *
+	 * @see gte Only specify the lower bound.
+	 * @see lte Only specify the higher bound.
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.isIn(range: ClosedRange<V>) {
 		return this.field.isIn(range)
 	}
 
@@ -1741,11 +2157,11 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.isIn(range: OpenEndRange<V>) {
+	fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.isIn(range: OpenEndRange<V>, type: KType) {
 		val field = this
 		and {
-			field gte range.start
-			field lt range.endExclusive
+			field.gte(range.start, type)
+			field.lt(range.endExclusive, type)
 		}
 	}
 
@@ -1768,9 +2184,34 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see gte Only specify the lower bound.
 	 * @see lt Only specify the higher bound.
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.isIn(range: OpenEndRange<V>) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> Field<T, V?>.isIn(range: OpenEndRange<V>) {
+		this.isIn(range, typeOf<V?>())
+	}
+
+	/**
+	 * Selects documents in which this field has a value included in [range].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age isIn (25..<50)
+	 * }
+	 * ```
+	 *
+	 * @see gte Only specify the lower bound.
+	 * @see lt Only specify the higher bound.
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.isIn(range: OpenEndRange<V>) {
 		return this.field.isIn(range)
 	}
 
@@ -1798,10 +2239,10 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see lte Only specify the higher bound.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
-	@JvmName("isInSimple")
+	@JvmName("isInSimpleWithType")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>, R> Field<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
-		this isIn (range as ClosedRange<V>)
+	fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>, R> Field<T, V?>.isIn(range: R, type: KType) where R : ClosedRange<V>, R : OpenEndRange<V> {
+		this.isIn(range as ClosedRange<V>, type)
 	}
 
 	/**
@@ -1823,10 +2264,36 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see gte Only specify the lower bound.
 	 * @see lte Only specify the higher bound.
 	 */
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@JvmName("isInSimple")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>, R> kotlin.reflect.KProperty1<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>, R> Field<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
+		this.isIn(range, typeOf<V?>())
+	}
+
+	/**
+	 * Selects documents in which this field has a value included in [range].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age isIn (25..50)
+	 * }
+	 * ```
+	 *
+	 * @see gte Only specify the lower bound.
+	 * @see lte Only specify the higher bound.
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("isInSimple")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>, R> kotlin.reflect.KProperty1<T, V?>.isIn(range: R) where R : ClosedRange<V>, R : OpenEndRange<V> {
 		return this.field.isIn(range)
 	}
 
@@ -1846,21 +2313,14 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     User::name.isOneOf(listOf("Alfred", "Arthur"))
+	 *     User::name isOneOf listOf("Alfred", "Arthur")
 	 * }
 	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/in/)
-	 *
-	 * @see or
-	 * @see eq
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isOneOf(values: List<V>) {
-		this { isOneOf(values) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isOneOf(values: List<V>, type: KType) {
+		this.invoke({ isOneOf(values) }, type)
 	}
 
 	/**
@@ -1875,7 +2335,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     User::name.isOneOf(listOf("Alfred", "Arthur"))
+	 *     User::name isOneOf listOf("Alfred", "Arthur")
 	 * }
 	 * ```
 	 *
@@ -1886,9 +2346,38 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see or
 	 * @see eq
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.isOneOf(values: List<V>) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.isOneOf(values: List<V>) {
+		this.isOneOf(values, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field is equal to one of the given [values].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name isOneOf listOf("Alfred", "Arthur")
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/in/)
+	 *
+	 * @see or
+	 * @see eq
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.isOneOf(values: List<V>) {
 		return this.field.isOneOf(values)
 	}
 
@@ -1904,7 +2393,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     User::name.isOneOf("Alfred", "Arthur")
+	 *     User::name.isOneOf(listOf("Alfred", "Arthur"))
 	 * }
 	 * ```
 	 *
@@ -1915,10 +2404,10 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see or
 	 * @see eq
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isOneOf(vararg values: V) {
-		isOneOf(values.asList())
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.isOneOf(vararg values: V) {
+		this.isOneOf(values.asList())
 	}
 
 	/**
@@ -1933,7 +2422,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     User::name.isOneOf("Alfred", "Arthur")
+	 *     User::name.isOneOf(listOf("Alfred", "Arthur"))
 	 * }
 	 * ```
 	 *
@@ -1944,9 +2433,9 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see or
 	 * @see eq
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.isOneOf(vararg values: V) {
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.isOneOf(vararg values: V) {
 		return this.field.isOneOf(*values)
 	}
 
@@ -1964,7 +2453,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     User::name.isNotOneOf(listOf("Alfred", "Arthur"))
+	 *     User::name isNotOneOf listOf("Alfred", "Arthur")
 	 * }
 	 * ```
 	 *
@@ -1977,8 +2466,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isNotOneOf(values: List<V>) {
-		this { isNotOneOf(values) }
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isNotOneOf(values: List<V>, type: KType) {
+		this.invoke({ isNotOneOf(values) }, type)
 	}
 
 	/**
@@ -1995,7 +2484,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * )
 	 *
 	 * collection.find {
-	 *     User::name.isNotOneOf(listOf("Alfred", "Arthur"))
+	 *     User::name isNotOneOf listOf("Alfred", "Arthur")
 	 * }
 	 * ```
 	 *
@@ -2006,9 +2495,40 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isOneOf
 	 * @see ne
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.isNotOneOf(values: List<V>) {
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.isNotOneOf(values: List<V>) {
+		this.isNotOneOf(values, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents for which this field is not equal to any of the given [values].
+	 *
+	 * This operator will also select documents for which the field doesn't exist.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::name isNotOneOf listOf("Alfred", "Arthur")
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nin/)
+	 *
+	 * @see isOneOf
+	 * @see ne
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.isNotOneOf(values: List<V>) {
 		return this.field.isNotOneOf(values)
 	}
 
@@ -2037,9 +2557,9 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isOneOf
 	 * @see ne
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isNotOneOf(vararg values: V) {
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.isNotOneOf(vararg values: V) {
 		isNotOneOf(values.asList())
 	}
 
@@ -2068,9 +2588,9 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see isOneOf
 	 * @see ne
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.isNotOneOf(vararg values: V) {
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.isNotOneOf(vararg values: V) {
 		return this.field.isNotOneOf(*values)
 	}
 
@@ -2417,7 +2937,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	fun <V> Field<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit)
+	fun <V> Field<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit, type: KType)
 
 	/**
 	 * Specify multiple operators on a single array element.
@@ -2468,8 +2988,64 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/)
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <V> kotlin.reflect.KProperty1<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit) {
+	final inline fun <reified V> Field<T, Collection<V>>.anyValue(noinline block: FilterQueryPredicate<V>.() -> Unit) {
+		this.anyValue(block, typeOf<V>())
+	}
+
+	/**
+	 * Specify multiple operators on a single array element.
+	 *
+	 * ### Example
+	 *
+	 * Find students with a grade between 8 and 10, that may be eligible to perform
+	 * an exam a second time.
+	 *
+	 * ```kotlin
+	 * class Student(
+	 *     val name: String,
+	 *     val grades: List<Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     Student::grades.anyValue {
+	 *         gte(8)
+	 *         lte(10)
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * The following document will match because the grade 9 is in the interval.
+	 * ```json
+	 * {
+	 *     "name": "John",
+	 *     "grades": [9, 3]
+	 * }
+	 * ```
+	 *
+	 * The following document will NOT match, because none of the grades are in the interval.
+	 * ```json
+	 * {
+	 *     "name": "Lea",
+	 *     "grades": [18, 19]
+	 * }
+	 * ```
+	 *
+	 * If you want to perform multiple checks on different elements of an array,
+	 * see the [any] property.
+	 *
+	 * This function only allows specifying operators on array elements directly.
+	 * To specify operators on sub-fields of array elements, see [any].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/elemMatch/)
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline fun <reified V> kotlin.reflect.KProperty1<T, Collection<V>>.anyValue(noinline block: FilterQueryPredicate<V>.() -> Unit) {
 		return this.field.anyValue(block)
 	}
 
@@ -2612,7 +3188,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/all/)
 	 */
 	@KtMongoDsl
-	infix fun <V> Field<T, Collection<V>>.containsAll(values: Collection<V>)
+	fun <V> Field<T, Collection<V>>.containsAll(values: Collection<V>, type: KType)
 
 	/**
 	 * Selects documents where the value of a field is an array that contains all the specified [values].
@@ -2633,8 +3209,34 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/all/)
 	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <V> kotlin.reflect.KProperty1<T, Collection<V>>.containsAll(values: Collection<V>) {
+	final inline infix fun <reified V> Field<T, Collection<V>>.containsAll(values: Collection<V>) {
+		this.containsAll(values, typeOf<V>())
+	}
+
+	/**
+	 * Selects documents where the value of a field is an array that contains all the specified [values].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val grades: List<Int>
+	 * )
+	 *
+	 * collection.find {
+	 *     User::grades containsAll listOf(2, 3, 7)
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/all/)
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<V>>.containsAll(values: Collection<V>) {
 		return this.field.containsAll(values)
 	}
 

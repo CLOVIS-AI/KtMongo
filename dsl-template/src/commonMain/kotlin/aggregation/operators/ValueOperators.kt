@@ -27,6 +27,8 @@ import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
 import kotlin.reflect.KProperty1
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * Supertype for all interface operators describing operators on aggregation values.
@@ -99,8 +101,30 @@ interface ValueOperators : FieldDsl {
 	 * ```
 	 */
 	@OptIn(LowLevelApi::class)
-	fun <Result> of(value: Result): Value<Any, Result> =
+	fun <Result> of(value: Result, type: KType): Value<Any, Result> =
 		LiteralValue(value, context)
+
+	/**
+	 * Refers to a Kotlin [value] within an [aggregation value][AggregationOperators].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val age: Int,
+	 * )
+	 *
+	 * val publishedBeforeAcceptance = products.find {
+	 *     expr {
+	 *         of(Product::age) lt of(15)
+	 *     }
+	 * }
+	 * ```
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final inline fun <reified Result> of(value: Result): Value<Any, Result> =
+		of(value, typeOf<Result>())
 
 	/**
 	 * Refers to a [BsonType] within an [aggregation value][AggregationOperators].

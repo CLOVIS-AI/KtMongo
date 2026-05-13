@@ -33,6 +33,7 @@ kotlin {
 dependencies {
 	api(projects.driverSync)
 	api(libs.java.accessLambdaName)
+	implementation(kotlin("reflect"))
 	testImplementation(libs.junit.jupiter.api)
 	testImplementation(libs.junit.jupiter.engine)
 	testImplementation(libs.junit.platform.launcher)

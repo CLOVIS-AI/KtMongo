@@ -147,10 +147,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.trim(): Value<Any, String?> =
+	final inline fun String?.trim(): Value<Any, String?> =
 		of(this).trim()
 
 	/**
@@ -282,10 +282,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.trim(vararg characters: Char): Value<Any, String?> =
+	final inline fun String?.trim(vararg characters: Char): Value<Any, String?> =
 		of(this).trim(*characters)
 
 	/**
@@ -428,10 +428,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.trim(characters: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.trim(characters: String?): Value<Context, String?> =
 		this.trim(of(characters))
 
 	/**
@@ -576,10 +576,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@JvmName("trimFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trim(characters: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trim(characters: String?): Value<Context, String?> =
 		of(this).trim(of(characters))
 
 	/**
@@ -724,10 +724,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@JvmName("trimPropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trim(characters: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trim(characters: String?): Value<Context, String?> =
 		of(this).trim(of(characters))
 
 	/**
@@ -762,10 +762,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trim(characters: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.trim(characters: Value<Context, String?>): Value<Context, String?> =
 		of(this).trim(characters)
 
 	/**
@@ -800,10 +800,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trim(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.trim(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).trim(of(characters))
 
 	/**
@@ -838,10 +838,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trim(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.trim(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).trim(of(characters))
 
 	/**
@@ -876,10 +876,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.trim(characters: String?): Value<Any, String?> =
+	final inline fun String?.trim(characters: String?): Value<Any, String?> =
 		of(this).trim(of(characters))
 
 	// endregion
@@ -994,10 +994,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimStartResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.trimStart(): Value<Any, String?> =
+	final inline fun String?.trimStart(): Value<Any, String?> =
 		of(this).trimStart()
 
 	/**
@@ -1129,10 +1129,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimStartResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.trimStart(vararg characters: Char): Value<Any, String?> =
+	final inline fun String?.trimStart(vararg characters: Char): Value<Any, String?> =
 		of(this).trimStart(*characters)
 
 	/**
@@ -1275,10 +1275,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.trimStart(characters: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.trimStart(characters: String?): Value<Context, String?> =
 		this.trimStart(of(characters))
 
 	/**
@@ -1423,10 +1423,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@JvmName("trimStartFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimStart(characters: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimStart(characters: String?): Value<Context, String?> =
 		of(this).trimStart(of(characters))
 
 	/**
@@ -1571,10 +1571,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@JvmName("trimStartPropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimStart(characters: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimStart(characters: String?): Value<Context, String?> =
 		of(this).trimStart(of(characters))
 
 	/**
@@ -1609,10 +1609,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimStartResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimStart(characters: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.trimStart(characters: Value<Context, String?>): Value<Context, String?> =
 		of(this).trimStart(characters)
 
 	/**
@@ -1647,10 +1647,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimStartResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimStart(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.trimStart(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).trimStart(of(characters))
 
 	/**
@@ -1685,10 +1685,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimStartResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimStart(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.trimStart(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).trimStart(of(characters))
 
 	/**
@@ -1723,10 +1723,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimStartResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.trimStart(characters: String?): Value<Any, String?> =
+	final inline fun String?.trimStart(characters: String?): Value<Any, String?> =
 		of(this).trimStart(of(characters))
 
 	// endregion
@@ -1841,10 +1841,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimEndResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.trimEnd(): Value<Any, String?> =
+	final inline fun String?.trimEnd(): Value<Any, String?> =
 		of(this).trimEnd()
 
 	/**
@@ -1976,10 +1976,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimEndResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.trimEnd(vararg characters: Char): Value<Any, String?> =
+	final inline fun String?.trimEnd(vararg characters: Char): Value<Any, String?> =
 		of(this).trimEnd(*characters)
 
 	/**
@@ -2122,10 +2122,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.trimEnd(characters: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.trimEnd(characters: String?): Value<Context, String?> =
 		this.trimEnd(of(characters))
 
 	/**
@@ -2270,10 +2270,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@JvmName("trimEndFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimEnd(characters: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.trimEnd(characters: String?): Value<Context, String?> =
 		of(this).trimEnd(of(characters))
 
 	/**
@@ -2418,10 +2418,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@JvmName("trimEndPropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimEnd(characters: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.trimEnd(characters: String?): Value<Context, String?> =
 		of(this).trimEnd(of(characters))
 
 	/**
@@ -2456,10 +2456,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimEndResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimEnd(characters: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.trimEnd(characters: Value<Context, String?>): Value<Context, String?> =
 		of(this).trimEnd(characters)
 
 	/**
@@ -2494,10 +2494,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimEndResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimEnd(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.trimEnd(characters: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).trimEnd(of(characters))
 
 	/**
@@ -2532,10 +2532,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimEndResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.trimEnd(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.trimEnd(characters: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).trimEnd(of(characters))
 
 	/**
@@ -2570,10 +2570,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("trimEndResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.trimEnd(characters: String?): Value<Any, String?> =
+	final inline fun String?.trimEnd(characters: String?): Value<Any, String?> =
 		of(this).trimEnd(of(characters))
 
 	// endregion
@@ -2688,10 +2688,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("lowercaseResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.lowercase(): Value<Any, String?> =
+	final inline fun String?.lowercase(): Value<Any, String?> =
 		of(this).lowercase()
 
 	// endregion
@@ -2806,10 +2806,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("uppercaseResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.uppercase(): Value<Any, String?> =
+	final inline fun String?.uppercase(): Value<Any, String?> =
 		of(this).uppercase()
 
 	// endregion
@@ -3321,10 +3321,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
 		this.substring(startIndex, of(length))
 
 	/**
@@ -3498,10 +3498,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringByFieldByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
 		this.substring(of(startIndex), of(length))
 
 	/**
@@ -3675,10 +3675,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringByPropertyByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
 		this.substring(of(startIndex), of(length))
 
 	/**
@@ -3719,10 +3719,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
 		this.substring(of(startIndex), length)
 
 	/**
@@ -3764,10 +3764,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringByResultByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		this.substring(of(startIndex), of(length))
 
 	/**
@@ -3809,10 +3809,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringByResultByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		this.substring(of(startIndex), of(length))
 
 	/**
@@ -3853,10 +3853,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substring(startIndex: Int, length: Int): Value<Context, String?> =
 		this.substring(of(startIndex), of(length))
 
 	/**
@@ -4029,10 +4029,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringFieldReceiverByValueByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
 		of(this).substring(startIndex, of(length))
 
 	/**
@@ -4205,10 +4205,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringFieldReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -4381,10 +4381,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringFieldReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -4425,10 +4425,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringFieldReceiverByResultByValue")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), length)
 
 	/**
@@ -4469,10 +4469,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringFieldReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -4513,10 +4513,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringFieldReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -4557,10 +4557,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringFieldReceiverByResultByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substring(startIndex: Int, length: Int): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -4733,10 +4733,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringPropertyReceiverByValueByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
 		of(this).substring(startIndex, of(length))
 
 	/**
@@ -4909,10 +4909,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringPropertyReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5085,10 +5085,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringPropertyReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5129,10 +5129,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringPropertyReceiverByResultByValue")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), length)
 
 	/**
@@ -5173,10 +5173,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringPropertyReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5217,10 +5217,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringPropertyReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5261,10 +5261,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@JvmName("substringPropertyReceiverByResultByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substring(startIndex: Int, length: Int): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5306,10 +5306,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByValueByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
 		of(this).substring(startIndex, length)
 
 	/**
@@ -5351,10 +5351,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByValueByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substring(startIndex, of(length))
 
 	/**
@@ -5396,10 +5396,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByValueByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substring(startIndex, of(length))
 
 	/**
@@ -5441,10 +5441,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByValueByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: Value<Context, Int>, length: Int): Value<Context, String?> =
 		of(this).substring(startIndex, of(length))
 
 	/**
@@ -5486,10 +5486,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByFieldByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), length)
 
 	/**
@@ -5531,10 +5531,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByFieldByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5576,10 +5576,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByFieldByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5621,10 +5621,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByFieldByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, length: Int): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5666,10 +5666,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByPropertyByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), length)
 
 	/**
@@ -5711,10 +5711,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByPropertyByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5756,10 +5756,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByPropertyByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5801,10 +5801,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByPropertyByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: kotlin.reflect.KProperty1<Context, Int>, length: Int): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5846,10 +5846,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByResultByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: Int, length: Value<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), length)
 
 	/**
@@ -5891,10 +5891,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByResultByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: Int, length: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5936,10 +5936,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByResultByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substring(startIndex: Int, length: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -5981,10 +5981,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiverByResultByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.substring(startIndex: Int, length: Int): Value<Any, String?> =
+	final inline fun String?.substring(startIndex: Int, length: Int): Value<Any, String?> =
 		of(this).substring(of(startIndex), of(length))
 
 	/**
@@ -6148,10 +6148,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.substring(indexes: IntRange): Value<Any, String?> =
+	final inline fun String?.substring(indexes: IntRange): Value<Any, String?> =
 		of(this).substring(indexes)
 
 	// endregion
@@ -6333,10 +6333,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
 		this.substringUTF8(startIndex, of(byteCount))
 
 	/**
@@ -6518,10 +6518,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ByFieldByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
 		this.substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -6703,10 +6703,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ByPropertyByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
 		this.substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -6749,10 +6749,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
 		this.substringUTF8(of(startIndex), byteCount)
 
 	/**
@@ -6796,10 +6796,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ByResultByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		this.substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -6843,10 +6843,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ByResultByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		this.substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -6889,10 +6889,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
 		this.substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -7073,10 +7073,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8FieldReceiverByValueByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(startIndex, of(byteCount))
 
 	/**
@@ -7257,10 +7257,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8FieldReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -7441,10 +7441,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8FieldReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -7487,10 +7487,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8FieldReceiverByResultByValue")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), byteCount)
 
 	/**
@@ -7533,10 +7533,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8FieldReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -7579,10 +7579,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8FieldReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -7625,10 +7625,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8FieldReceiverByResultByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -7809,10 +7809,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8PropertyReceiverByValueByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(startIndex, of(byteCount))
 
 	/**
@@ -7993,10 +7993,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8PropertyReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8177,10 +8177,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8PropertyReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8223,10 +8223,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8PropertyReceiverByResultByValue")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), byteCount)
 
 	/**
@@ -8269,10 +8269,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8PropertyReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8315,10 +8315,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8PropertyReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8361,10 +8361,10 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@JvmName("substringUTF8PropertyReceiverByResultByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.substringUTF8(startIndex: Int, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8408,10 +8408,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByValueByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(startIndex, byteCount)
 
 	/**
@@ -8455,10 +8455,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByValueByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(startIndex, of(byteCount))
 
 	/**
@@ -8502,10 +8502,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByValueByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(startIndex, of(byteCount))
 
 	/**
@@ -8549,10 +8549,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByValueByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: Value<Context, Int>, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(startIndex, of(byteCount))
 
 	/**
@@ -8596,10 +8596,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByFieldByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), byteCount)
 
 	/**
@@ -8643,10 +8643,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByFieldByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8690,10 +8690,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByFieldByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8737,10 +8737,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByFieldByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: opensavvy.ktmongo.dsl.path.Field<Context, Int>, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8784,10 +8784,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByPropertyByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), byteCount)
 
 	/**
@@ -8831,10 +8831,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByPropertyByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8878,10 +8878,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByPropertyByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8925,10 +8925,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByPropertyByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: kotlin.reflect.KProperty1<Context, Int>, byteCount: Int): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -8972,10 +8972,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByResultByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: Value<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), byteCount)
 
 	/**
@@ -9019,10 +9019,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByResultByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: opensavvy.ktmongo.dsl.path.Field<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -9066,10 +9066,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByResultByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.substringUTF8(startIndex: Int, byteCount: kotlin.reflect.KProperty1<Context, Int>): Value<Context, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -9113,10 +9113,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiverByResultByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.substringUTF8(startIndex: Int, byteCount: Int): Value<Any, String?> =
+	final inline fun String?.substringUTF8(startIndex: Int, byteCount: Int): Value<Any, String?> =
 		of(this).substringUTF8(of(startIndex), of(byteCount))
 
 	/**
@@ -9288,10 +9288,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("substringUTF8ResultReceiver")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.substringUTF8(indexes: IntRange): Value<Any, String?> =
+	final inline fun String?.substringUTF8(indexes: IntRange): Value<Any, String?> =
 		of(this).substringUTF8(indexes)
 
 	// endregion
@@ -9421,10 +9421,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
+	final inline fun <Context : Any> Value<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
 		this.split(of(delimiter))
 
 	/**
@@ -9553,10 +9553,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@JvmName("splitFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9685,10 +9685,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@JvmName("splitPropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9719,10 +9719,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("splitResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+	final inline fun <Context : Any> String.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
 		of(this).split(delimiter)
 
 	/**
@@ -9753,10 +9753,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("splitResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
+	final inline fun <Context : Any> String.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9787,10 +9787,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("splitResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
+	final inline fun <Context : Any> String.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9821,10 +9821,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("splitResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String.split(delimiter: String): Value<Any, List<String>?> =
+	final inline fun String.split(delimiter: String): Value<Any, List<String>?> =
 		of(this).split(of(delimiter))
 
 	// endregion
@@ -9950,10 +9950,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
 		this.replaceFirst(find, of(replacement))
 
 	/**
@@ -10079,10 +10079,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstByFieldByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
 		this.replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10208,10 +10208,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstByPropertyByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
 		this.replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10240,10 +10240,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
 		this.replaceFirst(of(find), replacement)
 
 	/**
@@ -10273,10 +10273,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstByResultByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		this.replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10306,10 +10306,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstByResultByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		this.replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10338,10 +10338,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
 		this.replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10466,10 +10466,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstFieldReceiverByValueByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(find, of(replacement))
 
 	/**
@@ -10594,10 +10594,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstFieldReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10722,10 +10722,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstFieldReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10754,10 +10754,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstFieldReceiverByResultByValue")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), replacement)
 
 	/**
@@ -10786,10 +10786,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstFieldReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10818,10 +10818,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstFieldReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10850,10 +10850,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstFieldReceiverByResultByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -10978,10 +10978,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstPropertyReceiverByValueByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(find, of(replacement))
 
 	/**
@@ -11106,10 +11106,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstPropertyReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11234,10 +11234,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstPropertyReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11266,10 +11266,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstPropertyReceiverByResultByValue")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), replacement)
 
 	/**
@@ -11298,10 +11298,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstPropertyReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11330,10 +11330,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstPropertyReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11362,10 +11362,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@JvmName("replaceFirstPropertyReceiverByResultByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replaceFirst(find: String?, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11395,10 +11395,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByValueByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(find, replacement)
 
 	/**
@@ -11428,10 +11428,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByValueByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(find, of(replacement))
 
 	/**
@@ -11461,10 +11461,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByValueByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(find, of(replacement))
 
 	/**
@@ -11494,10 +11494,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByValueByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(find, of(replacement))
 
 	/**
@@ -11527,10 +11527,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByFieldByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), replacement)
 
 	/**
@@ -11560,10 +11560,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByFieldByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11593,10 +11593,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByFieldByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11626,10 +11626,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByFieldByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11659,10 +11659,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByPropertyByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), replacement)
 
 	/**
@@ -11692,10 +11692,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByPropertyByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11725,10 +11725,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByPropertyByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11758,10 +11758,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByPropertyByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11791,10 +11791,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByResultByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), replacement)
 
 	/**
@@ -11824,10 +11824,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByResultByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11857,10 +11857,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByResultByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replaceFirst(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	/**
@@ -11890,10 +11890,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceFirstResultReceiverByResultByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.replaceFirst(find: String?, replacement: String?): Value<Any, String?> =
+	final inline fun String?.replaceFirst(find: String?, replacement: String?): Value<Any, String?> =
 		of(this).replaceFirst(of(find), of(replacement))
 
 	// endregion
@@ -12019,10 +12019,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
 		this.replace(find, of(replacement))
 
 	/**
@@ -12148,10 +12148,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceByFieldByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
 		this.replace(of(find), of(replacement))
 
 	/**
@@ -12277,10 +12277,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceByPropertyByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
 		this.replace(of(find), of(replacement))
 
 	/**
@@ -12309,10 +12309,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
 		this.replace(of(find), replacement)
 
 	/**
@@ -12342,10 +12342,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceByResultByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		this.replace(of(find), of(replacement))
 
 	/**
@@ -12375,10 +12375,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceByResultByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		this.replace(of(find), of(replacement))
 
 	/**
@@ -12407,10 +12407,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> Value<Context, String?>.replace(find: String?, replacement: String?): Value<Context, String?> =
 		this.replace(of(find), of(replacement))
 
 	/**
@@ -12535,10 +12535,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replaceFieldReceiverByValueByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replace(find, of(replacement))
 
 	/**
@@ -12663,10 +12663,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replaceFieldReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -12791,10 +12791,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replaceFieldReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -12823,10 +12823,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replaceFieldReceiverByResultByValue")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), replacement)
 
 	/**
@@ -12855,10 +12855,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replaceFieldReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -12887,10 +12887,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replaceFieldReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -12919,10 +12919,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replaceFieldReceiverByResultByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.replace(find: String?, replacement: String?): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13047,10 +13047,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replacePropertyReceiverByValueByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replace(find, of(replacement))
 
 	/**
@@ -13175,10 +13175,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replacePropertyReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13303,10 +13303,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replacePropertyReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13335,10 +13335,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replacePropertyReceiverByResultByValue")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), replacement)
 
 	/**
@@ -13367,10 +13367,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replacePropertyReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13399,10 +13399,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replacePropertyReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13431,10 +13431,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@JvmName("replacePropertyReceiverByResultByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.replace(find: String?, replacement: String?): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13464,10 +13464,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByValueByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replace(find, replacement)
 
 	/**
@@ -13497,10 +13497,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByValueByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replace(find, of(replacement))
 
 	/**
@@ -13530,10 +13530,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByValueByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replace(find, of(replacement))
 
 	/**
@@ -13563,10 +13563,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByValueByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: Value<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replace(find, of(replacement))
 
 	/**
@@ -13596,10 +13596,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByFieldByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), replacement)
 
 	/**
@@ -13629,10 +13629,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByFieldByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13662,10 +13662,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByFieldByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13695,10 +13695,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByFieldByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: opensavvy.ktmongo.dsl.path.Field<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13728,10 +13728,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByPropertyByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), replacement)
 
 	/**
@@ -13761,10 +13761,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByPropertyByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13794,10 +13794,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByPropertyByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13827,10 +13827,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByPropertyByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: kotlin.reflect.KProperty1<Context, String?>, replacement: String?): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13860,10 +13860,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByResultByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: String?, replacement: Value<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), replacement)
 
 	/**
@@ -13893,10 +13893,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByResultByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: String?, replacement: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13926,10 +13926,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByResultByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun <Context : Any> String?.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	final inline fun <Context : Any> String?.replace(find: String?, replacement: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	/**
@@ -13959,10 +13959,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("replaceResultReceiverByResultByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	fun String?.replace(find: String?, replacement: String?): Value<Any, String?> =
+	final inline fun String?.replace(find: String?, replacement: String?): Value<Any, String?> =
 		of(this).replace(of(find), of(replacement))
 
 	// endregion
@@ -14372,10 +14372,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any> Value<Context, String?>.concat(other: String?): Value<Context, String?> =
+	infix final inline fun <Context : Any> Value<Context, String?>.concat(other: String?): Value<Context, String?> =
 		this.concat(of(other))
 
 	/**
@@ -14500,10 +14500,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
 	@JvmName("concatFieldReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.concat(other: String?): Value<Context, String?> =
+	infix final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String?>.concat(other: String?): Value<Context, String?> =
 		of(this).concat(of(other))
 
 	/**
@@ -14628,10 +14628,10 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
 	@JvmName("concatPropertyReceiverByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.concat(other: String?): Value<Context, String?> =
+	infix final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String?>.concat(other: String?): Value<Context, String?> =
 		of(this).concat(of(other))
 
 	/**
@@ -14661,10 +14661,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("concatResultReceiverByValue")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any> String?.concat(other: Value<Context, String?>): Value<Context, String?> =
+	infix final inline fun <Context : Any> String?.concat(other: Value<Context, String?>): Value<Context, String?> =
 		of(this).concat(other)
 
 	/**
@@ -14694,10 +14694,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("concatResultReceiverByField")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any> String?.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
+	infix final inline fun <Context : Any> String?.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String?>): Value<Context, String?> =
 		of(this).concat(of(other))
 
 	/**
@@ -14727,10 +14727,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("concatResultReceiverByProperty")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun <Context : Any> String?.concat(other: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+	infix final inline fun <Context : Any> String?.concat(other: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
 		of(this).concat(of(other))
 
 	/**
@@ -14760,10 +14760,10 @@ interface StringValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("concatResultReceiverByResult")
-	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
-	infix fun String?.concat(other: String?): Value<Any, String?> =
+	infix final inline fun String?.concat(other: String?): Value<Any, String?> =
 		of(this).concat(of(other))
 
 	@LowLevelApi

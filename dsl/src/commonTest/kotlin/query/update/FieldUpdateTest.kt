@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -379,7 +379,7 @@ val FieldUpdateTest by preparedSuite {
 
 			test("Add multiple values to the same field using a list") {
 				update {
-					User::tokens addToSet listOf("123", "456")
+					User::tokens addEachToSet listOf("123", "456")
 				} shouldBeBson $$"""
 					{
 						"$addToSet": {

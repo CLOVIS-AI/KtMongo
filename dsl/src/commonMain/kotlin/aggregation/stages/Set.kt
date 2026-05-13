@@ -151,9 +151,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V) =
+	infix final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.set(value: V) =
 		set(of(value))
 
 	/**
@@ -163,9 +163,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.set(value: V) =
+	infix final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.set(value: V) =
 		this.field.set(of(value))
 
 	/**
@@ -274,9 +274,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Value<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setIf(condition: Value<T, Boolean>, value: V) =
 		setIf(condition, of(value))
 
 	/**
@@ -289,9 +289,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Value<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Value<T, Boolean>, value: V) =
 		this.field.setIf(condition, of(value))
 
 	/**
@@ -402,9 +402,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("setIfByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -418,9 +418,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@JvmName("setIfPropertyReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -531,9 +531,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("setIfByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -547,9 +547,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@JvmName("setIfPropertyReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setIf(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -563,9 +563,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: Value<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: Value<T, V>) =
 		setIf(of(condition), value)
 
 	/**
@@ -578,9 +578,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: Value<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: Value<T, V>) =
 		this.field.setIf(of(condition), value)
 
 	/**
@@ -595,9 +595,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("setIfByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -611,9 +611,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@JvmName("setIfPropertyReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -628,9 +628,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("setIfByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -644,9 +644,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@JvmName("setIfPropertyReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -660,9 +660,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Boolean, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setIf(condition: Boolean, value: V) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -675,9 +675,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: V) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -786,9 +786,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Value<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setUnless(condition: Value<T, Boolean>, value: V) =
 		setUnless(condition, of(value))
 
 	/**
@@ -801,9 +801,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Value<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Value<T, Boolean>, value: V) =
 		this.field.setUnless(condition, of(value))
 
 	/**
@@ -914,9 +914,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("setUnlessByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -930,9 +930,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@JvmName("setUnlessPropertyReceiverByFieldByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<T, Boolean>, value: V) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1043,9 +1043,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("setUnlessByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1059,9 +1059,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@JvmName("setUnlessPropertyReceiverByPropertyByResult")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: kotlin.reflect.KProperty1<T, Boolean>, value: V) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1075,9 +1075,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: Value<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: Value<T, V>) =
 		setUnless(of(condition), value)
 
 	/**
@@ -1090,9 +1090,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: Value<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: Value<T, V>) =
 		this.field.setUnless(of(condition), value)
 
 	/**
@@ -1107,9 +1107,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("setUnlessByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1123,9 +1123,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@JvmName("setUnlessPropertyReceiverByResultByField")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<T, V>) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1140,9 +1140,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@JvmName("setUnlessByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1156,9 +1156,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@JvmName("setUnlessPropertyReceiverByResultByProperty")
-	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
+	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
+	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<T, V>) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1172,9 +1172,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Boolean, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setUnless(condition: Boolean, value: V) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1187,9 +1187,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: V) =
+	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: V) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**

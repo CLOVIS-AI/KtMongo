@@ -35,6 +35,7 @@ import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import kotlin.reflect.KType
 
 @KtMongoDsl
 private class FilterQueryImpl<T>(
@@ -178,8 +179,8 @@ private class FilterQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	override operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit) {
-		accept(PredicateInFilterBsonNode(path, FilterQueryPredicate<V>(context).apply(block), context))
+	override operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit, type: KType) {
+		accept(PredicateInFilterBsonNode(path, FilterQueryPredicate<V>(context, type).apply(block), context))
 	}
 
 	@LowLevelApi
@@ -205,8 +206,8 @@ private class FilterQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override fun <V> Field<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit) {
-		accept(ElementMatchBsonNodeNode<V>(this.path, FilterQueryPredicate<V>(context).apply(block), context))
+	override fun <V> Field<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit, type: KType) {
+		accept(ElementMatchBsonNodeNode<V>(this.path, FilterQueryPredicate<V>(context, type).apply(block), context))
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
@@ -241,7 +242,7 @@ private class FilterQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@KtMongoDsl
-	override infix fun <V> Field<T, Collection<V>>.containsAll(values: Collection<V>) {
+	override fun <V> Field<T, Collection<V>>.containsAll(values: Collection<V>, type: KType) {
 		accept(ArrayAllBsonNodeNode(path, values, context))
 	}
 
