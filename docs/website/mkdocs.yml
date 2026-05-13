@@ -120,6 +120,7 @@ nav:
       - Based on the official drivers:
           - tutorials/official/index.md
           - KotlinX.Serialization: tutorials/official/serialization-kotlinx.md
+          - Serialization via reflection: tutorials/official/serialization-reflection.md
 
       - Migrating from KMongo:
           - tutorials/from-kmongo/index.md
