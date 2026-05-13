@@ -138,7 +138,8 @@ Our high-level goals are as follows:
 
 ## Where do I start?
 
-- [**Configuring KtMongo in a new project**](tutorials/index.md)
+- [**Choose your flavor:**](tutorials/index.md) synchronous, coroutines, based on the official driver, multiplatform? [Make your choice!](tutorials/index.md)
+- [**Quick start: configuring KtMongo in a new project**](tutorials/official/index.md)
 - **Using KtMongo alongside the official Kotlin driver**
 - [**Migrating from KMongo**](tutorials/from-kmongo/index.md)
-- [**Discovering the new features**](features/crud.md)
+- [**Discovering the DSL and its exclusive features**](features/crud.md)

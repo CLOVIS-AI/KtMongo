@@ -119,6 +119,9 @@ nav:
       - Finding data: tutorials/find.md
       - Updating data: tutorials/update.md
 
+      - Based on the official drivers:
+          - tutorials/official/index.md
+
       - Migrating from KMongo:
           - tutorials/from-kmongo/index.md
           - Finding data: tutorials/from-kmongo/find.md

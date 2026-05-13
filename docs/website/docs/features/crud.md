@@ -3,7 +3,7 @@
 CRUD operations (Create, Read, Update and Delete) are the most basic operations a database supports.
 
 !!! note ""
-    Before using any of the code in this page, you will need to connect to a database. To learn how to do so, visit the [Getting Started tutorial](../tutorials/index.md).
+    Before using any of the code in this page, you will need to connect to a database. To learn how to do so, visit the [Getting Started tutorial](../tutorials/official/index.md).
 
 MongoDB separates its data into:
 
