@@ -653,6 +653,173 @@ val FieldUpdateTest by preparedSuite {
 				}
 			""".trimIndent()
 		}
+
+		test("Sort simple values in ascending order") {
+			update {
+				User::scores push {
+					each(40, 60)
+					sort {
+						ascending()
+					}
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"scores": {
+								"$each": [
+									40,
+									60
+								],
+								"$sort": 1
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort simple values in descending order") {
+			update {
+				User::scores push {
+					each(40, 60)
+					sort {
+						descending()
+					}
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"scores": {
+								"$each": [
+									40,
+									60
+								],
+								"$sort": -1
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort documents by field in ascending order") {
+			update {
+				User::friends push {
+					each(Friend("1", "Alice", 1000.0f), Friend("2", "Bob", 2000.0f))
+					sort { ascending(Friend::name) }
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"friends": {
+								"$each": [
+									{
+										"id": "1",
+										"name": "Alice",
+										"money": 1000.0
+									},
+									{
+										"id": "2",
+										"name": "Bob",
+										"money": 2000.0
+									}
+								],
+								"$sort": {
+									"name": 1
+								}
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort documents by field in descending order") {
+			update {
+				User::friends push {
+					each(Friend("1", "Alice", 1000.0f), Friend("2", "Bob", 2000.0f))
+					sort { descending(Friend::money) }
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"friends": {
+								"$each": [
+									{
+										"id": "1",
+										"name": "Alice",
+										"money": 1000.0
+									},
+									{
+										"id": "2",
+										"name": "Bob",
+										"money": 2000.0
+									}
+								],
+								"$sort": {
+									"money": -1
+								}
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort with empty array (sort only)") {
+			update {
+				User::scores push {
+					sort {
+						descending()
+					}
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"scores": {
+								"$each": [],
+								"$sort": -1
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort combined with slice and position") {
+			update {
+				User::friends push {
+					each(Friend("1", "Alice", 1000.0f), Friend("2", "Bob", 2000.0f), Friend("3", "Charlie", 500.0f))
+					sort { descending(Friend::name) }
+					slice(2)
+					position(0)
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"friends": {
+								"$each": [
+									{
+										"id": "1",
+										"name": "Alice",
+										"money": 1000.0
+									},
+									{
+										"id": "2",
+										"name": "Bob",
+										"money": 2000.0
+									},
+									{
+										"id": "3",
+										"name": "Charlie",
+										"money": 500.0
+									}
+								],
+								"$slice": 2,
+								"$position": 0,
+								"$sort": {
+									"name": -1
+								}
+							}
+						}
+					}
+				""".trimIndent()
+		}
 	}
 
 	suite($$"$currentDate") {

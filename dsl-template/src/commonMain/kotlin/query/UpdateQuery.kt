@@ -20,6 +20,7 @@ import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
@@ -1301,6 +1302,131 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		 */
 		@KtMongoDsl
 		fun position(index: Int)
+
+		/**
+		 * Orders the elements of an array during a `$push` operation.
+		 *
+		 * If this function is called multiple times, only the last value has an effect.
+		 *
+		 * If this function is called without an [each] operator, the existing data is sorted but no elements are added.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class Quiz(
+		 *     val id: Int,
+		 *     val score: Int,
+		 * )
+		 *
+		 * class User(
+		 *     val name: String,
+		 *     val quizzes: List<Quiz>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::quizzes push {
+		 *             each(Quiz(3, 8), Quiz(4, 7), Quiz(5, 6))
+		 *             sort {
+		 *                 ascending(Quiz::score)
+		 *             }
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * To sort based on the natural order of the array elements themselves:
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val scores: List<Int>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::scores push {
+		 *             each(12, 34)
+		 *             sort { ascending() }
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/sort/)
+		 */
+		@KtMongoDsl
+		fun sort(block: PushSortDsl<V & Any>.() -> Unit)
+	}
+
+	/**
+	 * DSL for sorting elements during a `$push` operation.
+	 *
+	 * See [push] and [PushBuilder.sort].
+	 */
+	@KtMongoDsl
+	interface PushSortDsl<V : Any> : SortOptionDsl<V> {
+
+		/**
+		 * Sort array elements in ascending order (for simple values, not documents).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tests: List<Int>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tests push {
+		 *             each(40, 60)
+		 *             sort { ascending() }
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 */
+		@KtMongoDsl
+		fun ascending()
+
+		/**
+		 * Sort array elements in descending order (for simple values, not documents).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tests: List<Int>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tests push {
+		 *             each(40, 60)
+		 *             sort { descending() }
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 */
+		@KtMongoDsl
+		fun descending()
 	}
 
 }
