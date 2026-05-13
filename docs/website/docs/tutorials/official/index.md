@@ -71,32 +71,17 @@ The official driver supports two serialization library.
 
     Since the analysis is done at compile-time, it is much faster than reflection-based libraries, and greatly reduces the risk of serialization-born security flaws. Each class we want to serialize must be annotated with `@Serializable`.
 
-    Open your `build.gradle.kts` file and add the KotlinX.Serialization plugin:
-    ```kotlin
-    plugins {
-        kotlin("jvm") version "…"
-        kotlin("plugin.serialization") version "…"
-    }
-    ```
-    The KotlinX.Serialization plugin should use the **same** version as the Kotlin plugin itself.
-
-    Following the same steps as previously, add a dependency on:
-    
-    - `org.jetbrains.kotlinx:kotlinx-serialization-core` ([available versions](https://search.maven.org/artifact/org.jetbrains.kotlinx/kotlinx-serialization-core))
-    - `org.mongodb:bson-kotlinx` ([available versions](https://search.maven.org/artifact/org.mongodb/bson-kotlinx))
+    [Read the dedicated page](serialization-kotlinx.md).
 
 === "Data class reflection"
     MongoDB provides a reflection-based serialization library, that is able to serialize basic Kotlin types (primitives, collections, `data class` instances).
 
-    Following the same steps as previously, add a dependency on:
-
-    - `org.mongodb:bson-kotlin` ([available versions](https://search.maven.org/artifact/org.mongodb/bson-kotlin))
+    [Read the dedicated page](serialization-reflection.md).
 
 === "Other"
     It is possible to add support for any serialization library you prefer, directly through the Kotlin driver's `Codec` system.
 
-    - [Learn more in the Coroutines driver documentation](https://www.mongodb.com/docs/drivers/kotlin/coroutine/current/fundamentals/data-formats/codecs/)
-    - [Learn more in the Synchronous driver documentation](https://www.mongodb.com/docs/languages/kotlin/kotlin-sync-driver/current/data-formats/codecs/)
+    [Read the dedicated page](serialization-custom.md).
 
 ## Running MongoDB
 
