@@ -57,6 +57,13 @@ import kotlin.reflect.typeOf
 interface BsonDocument {
 
 	/**
+	 * The instance of [BsonFactory] that created this instance.
+	 *
+	 * [BsonFactory] contains the serialization configuration that apply to this document.
+	 */
+	val factory: BsonFactory
+
+	/**
 	 * Generates a [ByteArray] of the raw BSON representation of this value.
 	 */
 	fun toByteArray(): ByteArray

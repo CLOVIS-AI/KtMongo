@@ -51,6 +51,8 @@ import kotlin.reflect.typeOf
  */
 expect class BsonDocument : BsonDocument {
 
+	override val factory: opensavvy.ktmongo.bson.official.BsonFactory
+
 	override fun get(field: String): opensavvy.ktmongo.bson.official.BsonValue?
 
 	override fun asValue(): opensavvy.ktmongo.bson.official.BsonValue
@@ -102,6 +104,8 @@ expect class BsonDocument : BsonDocument {
  */
 expect class BsonArray : BsonArray {
 
+	override val factory: opensavvy.ktmongo.bson.official.BsonFactory
+
 	override fun get(index: Int): opensavvy.ktmongo.bson.official.BsonValue?
 
 	override fun asValue(): opensavvy.ktmongo.bson.official.BsonValue
@@ -148,6 +152,8 @@ expect class BsonArray : BsonArray {
  * their components. For example: [decodeRegularExpressionPattern] and [decodeRegularExpressionOptions].
  */
 expect class BsonValue : BsonValue {
+
+	override val factory: opensavvy.ktmongo.bson.official.BsonFactory
 
 	override fun decodeDocument(): opensavvy.ktmongo.bson.official.BsonDocument
 

@@ -32,8 +32,8 @@ import kotlin.time.Duration.Companion.seconds
 val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
 	@Serializable
 	data class Song(
-		val creationDate: Int,
-		val editionDate: Int,
+		val creationDate: Int = 0, // default values are required for dumping the collection
+		val editionDate: Int = 0,
 	)
 
 	val songs by testCollection<Song>("aggregation-songs")

@@ -34,6 +34,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundNode
 import opensavvy.ktmongo.dsl.tree.Node
 import opensavvy.ktmongo.dsl.tree.acceptAll
+import kotlin.reflect.KType
 
 sealed interface AvailableInBulkWrite<Document> : Node, Command
 
@@ -91,12 +92,17 @@ class BulkWrite<Document : Any> private constructor(
 	context: BsonContext,
 	private val globalFilter: FilterQuery<Document>.() -> Unit,
 	val options: BulkWriteOptions<Document>,
+	val documentType: KType,
 ) : Command, AbstractBsonNode(context), CompoundNode<AvailableInBulkWrite<Document>> {
 
 	private val _operations = ArrayList<AvailableInBulkWrite<Document>>()
 	val operations: Sequence<AvailableInBulkWrite<Document>> get() = _operations.asSequence()
 
-	constructor(context: BsonContext, globalFilter: FilterQuery<Document>.() -> Unit) : this(context, globalFilter, BulkWriteOptions(context))
+	constructor(
+		context: BsonContext,
+		documentType: KType,
+		globalFilter: FilterQuery<Document>.() -> Unit,
+	) : this(context, globalFilter, BulkWriteOptions(context), documentType)
 
 	@LowLevelApi
 	@DangerousMongoApi
@@ -129,10 +135,11 @@ class BulkWrite<Document : Any> private constructor(
 
 		val child = BulkWrite(
 			context = context,
+			documentType,
 			globalFilter = {
 				parent.globalFilter(this)
 				filter()
-			}
+			},
 		)
 
 		child.operations()
@@ -170,7 +177,7 @@ class BulkWrite<Document : Any> private constructor(
 		document: Document,
 		options: InsertOneOptions<Document>.() -> Unit = {},
 	) {
-		val model = InsertOne(context, document)
+		val model = InsertOne(context, document, documentType)
 
 		model.options.options()
 
@@ -415,7 +422,7 @@ class BulkWrite<Document : Any> private constructor(
 		filter: FilterQuery<Document>.() -> Unit = {},
 		document: Document,
 	) {
-		val model = ReplaceOne<Document>(context, document)
+		val model = ReplaceOne<Document>(context, document, documentType)
 
 		model.options.options()
 		model.filter.globalFilter()
@@ -464,7 +471,7 @@ class BulkWrite<Document : Any> private constructor(
 		filter: FilterQuery<Document>.() -> Unit = {},
 		document: Document,
 	) {
-		val model = RepsertOne<Document>(context, document)
+		val model = RepsertOne<Document>(context, document, documentType)
 
 		model.options.options()
 		model.filter.globalFilter()
@@ -482,7 +489,7 @@ class BulkWrite<Document : Any> private constructor(
 					when (operation) {
 						is InsertOne<*> -> {
 							writeInt32("insert", 0)
-							writeObjectSafe("document", operation.document)
+							writeSafe("document", operation.document)
 							operation.options.writeTo(this)
 						}
 
@@ -503,7 +510,7 @@ class BulkWrite<Document : Any> private constructor(
 							writeDocument("filter") {
 								operation.filter.writeTo(this)
 							}
-							writeObjectSafe("updateMods", operation.document)
+							writeSafe("updateMods", operation.document)
 							writeBoolean("multi", false)
 							operation.options.writeTo(this)
 						}
@@ -513,7 +520,7 @@ class BulkWrite<Document : Any> private constructor(
 							writeDocument("filter") {
 								operation.filter.writeTo(this)
 							}
-							writeObjectSafe("updateMods", operation.document)
+							writeSafe("updateMods", operation.document)
 							writeBoolean("multi", false)
 							writeBoolean("upsert", true)
 							operation.options.writeTo(this)

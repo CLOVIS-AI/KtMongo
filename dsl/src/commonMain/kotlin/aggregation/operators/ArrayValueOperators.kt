@@ -362,7 +362,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
-		limit: Value<Context, Number>? = null,
+		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -410,7 +410,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -452,7 +452,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -494,7 +494,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
-		limit: Number,
+		limit: Int,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -536,7 +536,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.filter(
-		limit: Value<Context, Number>? = null,
+		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -578,7 +578,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.filter(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -620,7 +620,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.filter(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -662,7 +662,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.filter(
-		limit: Number,
+		limit: Int,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -704,7 +704,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.filter(
-		limit: Value<Context, Number>? = null,
+		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -746,7 +746,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.filter(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -788,7 +788,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.filter(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -830,7 +830,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.filter(
-		limit: Number,
+		limit: Int,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -873,7 +873,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.filter(
-		limit: Value<Context, Number>? = null,
+		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -916,7 +916,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.filter(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -959,7 +959,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.filter(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -1002,7 +1002,7 @@ interface ArrayValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.filter(
-		limit: Number,
+		limit: Int,
 		variableName: String = "this",
 		predicate: AggregationOperators.(Value<Any, T>) -> Value<T & Any, Boolean>,
 	): Value<Context, List<T>> =
@@ -1083,7 +1083,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.take(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		TakeValueOperator(
 			input = this,
@@ -1119,7 +1119,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.take(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
 		this.take(of(limit))
 
@@ -1151,7 +1151,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.take(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
 		this.take(of(limit))
 
@@ -1183,7 +1183,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	final inline fun <Context : Any, T> Value<Context, Collection<T>>.take(
-		limit: Number,
+		limit: Int,
 	): Value<Context, List<T>> =
 		this.take(of(limit))
 
@@ -1215,7 +1215,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).take(limit)
 
@@ -1247,7 +1247,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
 
@@ -1279,7 +1279,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
 
@@ -1311,7 +1311,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	final inline fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
-		limit: Number,
+		limit: Int,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
 
@@ -1343,7 +1343,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).take(limit)
 
@@ -1375,7 +1375,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
 
@@ -1407,7 +1407,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
 
@@ -1439,7 +1439,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	final inline fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
-		limit: Number,
+		limit: Int,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
 
@@ -1472,7 +1472,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.take(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).take(limit)
 
@@ -1505,7 +1505,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.take(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
 
@@ -1538,7 +1538,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.take(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
 
@@ -1571,7 +1571,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	final inline fun <Context : Any, T> Collection<T>.take(
-		limit: Number,
+		limit: Int,
 	): Value<Context, List<T>> =
 		of(this).take(of(limit))
 
@@ -1626,7 +1626,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		TakeLastValueOperator(
 			input = this,
@@ -1662,7 +1662,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
 		this.takeLast(of(limit))
 
@@ -1694,7 +1694,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
 		this.takeLast(of(limit))
 
@@ -1726,7 +1726,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	final inline fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
-		limit: Number,
+		limit: Int,
 	): Value<Context, List<T>> =
 		this.takeLast(of(limit))
 
@@ -1758,7 +1758,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).takeLast(limit)
 
@@ -1790,7 +1790,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
 
@@ -1822,7 +1822,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
 
@@ -1854,7 +1854,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	final inline fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
-		limit: Number,
+		limit: Int,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
 
@@ -1886,7 +1886,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).takeLast(limit)
 
@@ -1918,7 +1918,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
 
@@ -1950,7 +1950,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
 
@@ -1982,7 +1982,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	final inline fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
-		limit: Number,
+		limit: Int,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
 
@@ -2015,7 +2015,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.takeLast(
-		limit: Value<Context, Number>,
+		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).takeLast(limit)
 
@@ -2048,7 +2048,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.takeLast(
-		limit: opensavvy.ktmongo.dsl.path.Field<Context, Number>,
+		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
 
@@ -2081,7 +2081,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.takeLast(
-		limit: kotlin.reflect.KProperty1<Context, Number>,
+		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
 
@@ -2114,7 +2114,7 @@ interface ArrayValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
 	final inline fun <Context : Any, T> Collection<T>.takeLast(
-		limit: Number,
+		limit: Int,
 	): Value<Context, List<T>> =
 		of(this).takeLast(of(limit))
 

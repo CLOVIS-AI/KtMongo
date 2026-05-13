@@ -1641,17 +1641,7 @@ private inline fun Char.isNameChar() =
 @ExperimentalBsonPathApi
 inline fun <reified T> BsonDocument.select(path: BsonPath): Sequence<T> {
 	return path.findIn(this.asValue())
-		.map {
-			@Suppress("UNCHECKED_CAST")
-			val result = it.decode<T>()
-
-			if (null is T) {
-				result
-			} else {
-				result
-					?: throw BsonDecodingException("Found an unexpected 'null' when reading the path $path in document $this")
-			}
-		}
+		.map { it.decode<T>() }
 }
 
 /**

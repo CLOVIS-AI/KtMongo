@@ -102,7 +102,7 @@ interface ValueOperators : FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class)
 	fun <Result> of(value: Result, type: KType): Value<Any, Result> =
-		LiteralValue(value, context)
+		LiteralValue(value, context, type)
 
 	/**
 	 * Refers to a Kotlin [value] within an [aggregation value][AggregationOperators].
@@ -222,12 +222,13 @@ private class FieldValue<Context : Any, Result>(
 private class LiteralValue<Result>(
 	val value: Any?,
 	context: BsonContext,
+	val type: KType,
 ) : AbstractValue<Any, Result>(context) {
 
 	@LowLevelApi
 	override fun write(writer: BsonValueWriter) {
 		writer.writeDocument {
-			writeObjectSafe("\$literal", value)
+			writeSafe("\$literal", value, type)
 		}
 	}
 }

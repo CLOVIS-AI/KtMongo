@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.query.testContext
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import kotlin.reflect.typeOf
 
 val InsertTest by preparedSuite {
 
@@ -32,7 +33,7 @@ val InsertTest by preparedSuite {
 			writeString("name", "Daniel")
 		} as opensavvy.ktmongo.bson.official.BsonDocument
 
-		InsertOne(testContext(), daniel.raw).apply {
+		InsertOne(testContext(), daniel.raw, typeOf<org.bson.BsonDocument>()).apply {
 			options.apply {
 				writeConcern(WriteConcern.FireAndForget)
 			}
@@ -67,7 +68,7 @@ val InsertTest by preparedSuite {
 			writeString("name", "Alice")
 		} as opensavvy.ktmongo.bson.official.BsonDocument
 
-		InsertMany(testContext(), listOf(daniel.raw, fred.raw, alice.raw)).apply {
+		InsertMany(testContext(), listOf(daniel.raw, fred.raw, alice.raw), typeOf<org.bson.BsonDocument>()).apply {
 			options.apply {
 				writeConcern(WriteConcern.Primary)
 			}

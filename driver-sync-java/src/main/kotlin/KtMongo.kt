@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.sync
 
 import com.mongodb.client.MongoCollection
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KType
@@ -52,8 +53,13 @@ object KtMongo {
 	 * ```
 	 */
 	@JvmStatic
-	fun <T : Any> from(driver: MongoCollection<T>): JvmMongoCollection<T> =
-		from(com.mongodb.kotlin.client.MongoCollection(driver))
+	@JvmOverloads
+	fun <T : Any> from(
+		driver: MongoCollection<T>,
+		documentType: KType,
+		nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+	): JvmMongoCollection<T> =
+		from(com.mongodb.kotlin.client.MongoCollection(driver), documentType, nameStrategy)
 
 	/**
 	 * Converts a Kotlin MongoDB collection into a KtMongo collection.
@@ -74,8 +80,13 @@ object KtMongo {
 	 * ```
 	 */
 	@JvmStatic
-	fun <T : Any> from(driver: com.mongodb.kotlin.client.MongoCollection<T>): JvmMongoCollection<T> =
-		driver.asKtMongo()
+	@JvmOverloads
+	fun <T : Any> from(
+		driver: com.mongodb.kotlin.client.MongoCollection<T>,
+		documentType: KType,
+		nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+	): JvmMongoCollection<T> =
+		driver.asKtMongo(nameStrategy, documentType)
 
 	private val typeOfNull: KType = kotlin.reflect.typeOf<Any?>()
 

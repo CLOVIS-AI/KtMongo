@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ import org.bson.BsonBinary
 import org.bson.BsonDbPointer
 import org.bson.BsonRegularExpression
 import org.bson.BsonWriter
-import org.bson.codecs.Encoder
 import org.bson.codecs.EncoderContext
 import org.bson.types.Decimal128
 import org.bson.types.ObjectId
+import kotlin.reflect.KType
 
 @OptIn(LowLevelApi::class)
 internal class JavaBsonDocumentWriter(
@@ -112,9 +112,9 @@ internal class JavaBsonDocumentWriter(
 		writer.writeEndArray()
 	}
 
-	override fun <T> writeObjectSafe(name: String, obj: T) {
+	override fun <T> writeSafe(name: String, obj: T, type: KType) {
 		writer.writeName(name)
-		writeObjectSafe(obj)
+		writeSafe(obj, type)
 	}
 
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
@@ -213,12 +213,12 @@ internal class JavaBsonDocumentWriter(
 		writer.writeEndArray()
 	}
 
-	override fun <T> writeObjectSafe(obj: T) {
+	override fun <T> writeSafe(obj: T, type: KType) {
 		if (obj == null) {
 			writer.writeNull()
 		} else {
 			@Suppress("UNCHECKED_CAST", "UNNECESSARY_NOT_NULL_ASSERTION")
-			val codec = factory.codecRegistry.get(obj!!::class.java) as Encoder<T>
+			val codec = factory.findCodecForType<T>(type)
 			codec.encode(
 				writer,
 				obj,

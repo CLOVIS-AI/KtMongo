@@ -22,6 +22,8 @@ import opensavvy.ktmongo.bson.types.Vector
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.experimental.and
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import kotlin.time.Instant
 
 /**
@@ -110,8 +112,90 @@ interface BsonValueWriter : AnyBsonWriter {
 	 * Writes an arbitrary [obj] into a BSON document.
 	 *
 	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
+	 *
+	 * ### Serialization configuration
+	 *
+	 * This method uses the serialization methods configured in the [BsonFactory] that created this instance.
+	 *
+	 * For example, if you use the official Java or Kotlin MongoDB drivers,
+	 * this method will use your configured `CodecRegistry`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * data class User(
+	 *     val _id: ObjectId,
+	 *     val profile: Profile,
+	 * )
+	 *
+	 * data class Profile(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * val factory: BsonFactory = …
+	 *
+	 * val bson = factory.buildDocument {
+	 *     write("user") {
+	 *         writeSafe("user", User(ObjectId("69c93e17b96e83b72d11b734"), Profile("Bob", 30)))
+	 *     }
+	 * }
+	 *
+	 * val user = bson.decode<User>()
+	 *
+	 * println(user._id)          // ObjectId(69c93e17b96e83b72d11b734)
+	 * println(user.profile.name) // Bob
+	 * println(user.profile.age)  // 30
+	 * ```
 	 */
-	@LowLevelApi fun <T> writeObjectSafe(obj: T)
+	@LowLevelApi
+	fun <T> writeSafe(obj: T, type: KType)
+
+	/**
+	 * Writes an arbitrary [obj] into a BSON document.
+	 *
+	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
+	 *
+	 * ### Serialization configuration
+	 *
+	 * This method uses the serialization methods configured in the [BsonFactory] that created this instance.
+	 *
+	 * For example, if you use the official Java or Kotlin MongoDB drivers,
+	 * this method will use your configured `CodecRegistry`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * data class User(
+	 *     val _id: ObjectId,
+	 *     val profile: Profile,
+	 * )
+	 *
+	 * data class Profile(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * val factory: BsonFactory = …
+	 *
+	 * val bson = factory.buildDocument {
+	 *     write("user") {
+	 *         writeSafe("user", User(ObjectId("69c93e17b96e83b72d11b734"), Profile("Bob", 30)))
+	 *     }
+	 * }
+	 *
+	 * val user = bson.decode<User>()
+	 *
+	 * println(user._id)          // ObjectId(69c93e17b96e83b72d11b734)
+	 * println(user.profile.name) // Bob
+	 * println(user.profile.age)  // 30
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@LowLevelApi
+	final inline fun <reified T> writeSafe(obj: T) {
+		this.writeSafe(obj, typeOf<T>())
+	}
 
 	/**
 	 * Writes the arbitrary [obj] into this writer.
@@ -119,7 +203,7 @@ interface BsonValueWriter : AnyBsonWriter {
 	 * Note that the object will be written as-is, with no safety checks whatsoever.
 	 * Only use this method if you are absolutely sure attackers cannot control the contents of [obj].
 	 *
-	 * If in doubt, prefer using [writeObjectSafe].
+	 * If in doubt, prefer using [writeSafe].
 	 */
 	@LowLevelApi
 	@DangerousMongoApi
@@ -247,8 +331,86 @@ interface BsonFieldWriter : AnyBsonWriter {
 	 * Writes an arbitrary [obj] into a BSON document.
 	 *
 	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
+	 *
+	 * ### Serialization configuration
+	 *
+	 * This method uses the serialization methods configured in the [BsonFactory] that created this instance.
+	 *
+	 * For example, if you use the official Java or Kotlin MongoDB drivers,
+	 * this method will use your configured `CodecRegistry`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * data class User(
+	 *     val _id: ObjectId,
+	 *     val profile: Profile,
+	 * )
+	 *
+	 * data class Profile(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * val factory: BsonFactory = …
+	 *
+	 * val bson = factory.buildDocument {
+	 *     writeSafe("user", User(ObjectId("69c93e17b96e83b72d11b734"), Profile("Bob", 30)))
+	 * }
+	 *
+	 * val user = bson.decode<User>()
+	 *
+	 * println(user._id)          // ObjectId(69c93e17b96e83b72d11b734)
+	 * println(user.profile.name) // Bob
+	 * println(user.profile.age)  // 30
+	 * ```
 	 */
-	@LowLevelApi fun <T> writeObjectSafe(name: String, obj: T)
+	@LowLevelApi
+	fun <T> writeSafe(name: String, obj: T, type: KType)
+
+	/**
+	 * Writes an arbitrary [obj] into a BSON document.
+	 *
+	 * All nested values are escaped as necessary such that the result is a completely inert BSON document.
+	 *
+	 * ### Serialization configuration
+	 *
+	 * This method uses the serialization methods configured in the [BsonFactory] that created this instance.
+	 *
+	 * For example, if you use the official Java or Kotlin MongoDB drivers,
+	 * this method will use your configured `CodecRegistry`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * data class User(
+	 *     val _id: ObjectId,
+	 *     val profile: Profile,
+	 * )
+	 *
+	 * data class Profile(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * val factory: BsonFactory = …
+	 *
+	 * val bson = factory.buildDocument {
+	 *     writeSafe("user", User(ObjectId("69c93e17b96e83b72d11b734"), Profile("Bob", 30)))
+	 * }
+	 *
+	 * val user = bson.decode<User>()
+	 *
+	 * println(user._id)          // ObjectId(69c93e17b96e83b72d11b734)
+	 * println(user.profile.name) // Bob
+	 * println(user.profile.age)  // 30
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@LowLevelApi
+	final inline fun <reified T> writeSafe(name: String, obj: T) {
+		this.writeSafe(name, obj, typeOf<T>())
+	}
 
 	// No 'pipe' overload because it would encourage people to use it.
 	// If you really must use 'pipe', use 'write("name") { pipe(…) }'

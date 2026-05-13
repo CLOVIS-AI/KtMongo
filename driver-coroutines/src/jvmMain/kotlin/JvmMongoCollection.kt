@@ -49,6 +49,8 @@ import opensavvy.ktmongo.official.options.*
 import opensavvy.ktmongo.official.options.toJava
 import opensavvy.ktmongo.official.toJava
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * Implementation of [MongoCollection] based on [MongoDB's MongoCollection][com.mongodb.kotlin.client.coroutine.MongoCollection].
@@ -60,6 +62,7 @@ import java.util.concurrent.TimeUnit
 class JvmMongoCollection<Document : Any> internal constructor(
 	inner: com.mongodb.kotlin.client.coroutine.MongoCollection<Document>,
 	nameStrategy: PropertyNameStrategy,
+	private val documentType: KType,
 ) : MongoCollection<Document> {
 
 	@LowLevelApi
@@ -172,7 +175,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		filter: FilterQuery<Document>.() -> Unit,
 		document: Document,
 	) {
-		val model = ReplaceOne(context, document)
+		val model = ReplaceOne(context, document, documentType)
 
 		model.options.options()
 		model.filter.filter()
@@ -186,7 +189,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		filter: FilterQuery<Document>.() -> Unit,
 		document: Document,
 	) {
-		val model = RepsertOne(context, document)
+		val model = RepsertOne(context, document, documentType)
 
 		model.options.options()
 		model.filter.filter()
@@ -231,7 +234,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		filter: FilterQuery<Document>.() -> Unit,
 		operations: BulkWrite<Document>.() -> Unit,
 	) {
-		val model = BulkWrite(context, filter)
+		val model = BulkWrite(context, documentType, filter)
 
 		model.options.options()
 		model.operations()
@@ -298,7 +301,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override suspend fun insertOne(document: Document, options: InsertOneOptions<Document>.() -> Unit) {
-		val model = InsertOne(context, document)
+		val model = InsertOne(context, document, documentType)
 
 		model.options.options()
 
@@ -310,7 +313,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 
 	@OptIn(LowLevelApi::class)
 	override suspend fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) {
-		val model = InsertMany(context, documents.toList())
+		val model = InsertMany(context, documents.toList(), documentType)
 
 		model.options.options()
 
@@ -404,11 +407,19 @@ class JvmMongoCollection<Document : Any> internal constructor(
 /**
  * Converts a [MongoDB collection][com.mongodb.kotlin.client.coroutine.MongoCollection] into a [KtMongo collection][JvmMongoCollection].
  */
-@JvmOverloads
 fun <Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection<Document>.asKtMongo(
 	nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+	documentType: KType,
 ): JvmMongoCollection<Document> =
-	JvmMongoCollection(this, nameStrategy)
+	JvmMongoCollection(this, nameStrategy, documentType)
+
+/**
+ * Converts a [MongoDB collection][com.mongodb.kotlin.client.coroutine.MongoCollection] into a [KtMongo collection][JvmMongoCollection].
+ */
+inline fun <reified Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection<Document>.asKtMongo(
+	nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+): JvmMongoCollection<Document> =
+	asKtMongo(nameStrategy, typeOf<Document>())
 
 @LowLevelApi
 private fun <Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection<Document>.withWriteConcern(option: WithWriteConcern): com.mongodb.kotlin.client.coroutine.MongoCollection<Document> {

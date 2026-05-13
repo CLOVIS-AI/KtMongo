@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ actual class BsonFactory(
 	val codecRegistry: CodecRegistry = CodecRegistries.fromRegistries(
 		CodecRegistries.fromCodecs(
 			KotlinBsonDocumentCodec(this),
+			KotlinCommonBsonDocumentCodec(this),
 			KotlinBsonArrayCodec(this),
 			KotlinObjectIdCodec(),
 			KotlinTimestampCodec(),
@@ -76,6 +77,14 @@ actual class BsonFactory(
 			KotlinFloatVectorCodec(),
 			KotlinBooleanVectorCodec(),
 			KotlinByteVectorCodec(),
+			KotlinPrimitiveByteCodec(),
+			KotlinPrimitiveShortCodec(),
+			KotlinPrimitiveIntCodec(),
+			KotlinPrimitiveLongCodec(),
+			KotlinPrimitiveFloatCodec(),
+			KotlinPrimitiveDoubleCodec(),
+			KotlinPrimitiveBooleanCodec(),
+			KotlinPrimitiveCharCodec(),
 		),
 		codecRegistry,
 	)
