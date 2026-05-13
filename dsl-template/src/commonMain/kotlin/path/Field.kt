@@ -85,6 +85,15 @@ interface Field<in Root, out Type> {
 	@LowLevelApi
 	val path: Path
 
+	/**
+	 * Overwrites the represented type of this field.
+	 *
+	 * This method can be useful to bypass type checks.
+	 */
+	@Suppress("UNCHECKED_CAST")
+	fun <O> unsafeCast(): Field<Root, O> =
+		this as Field<Root, O>
+
 	companion object {
 
 		/**
