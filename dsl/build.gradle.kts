@@ -18,6 +18,7 @@ plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
 	alias(libsCommon.plugins.testBalloon)
+	alias(libsCommon.plugins.kotlinx.serialization)
 	id("dev.opensavvy.ktmongo.build.templator")
 }
 
@@ -33,6 +34,8 @@ kotlin {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotest.assertions)
 		implementation(libsCommon.kotlin.test)
+		implementation(libs.kotlinx.serialization)
+		implementation(libs.mongodb.kotlin.reflection)
 	}
 }
 
