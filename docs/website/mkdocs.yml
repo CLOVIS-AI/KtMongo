@@ -116,8 +116,6 @@ nav:
 
   - Getting started:
       - tutorials/index.md
-      - Finding data: tutorials/find.md
-      - Updating data: tutorials/update.md
 
       - Based on the official drivers:
           - tutorials/official/index.md
