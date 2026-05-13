@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 package opensavvy.ktmongo.dsl.query.update
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -30,7 +31,8 @@ import org.bson.types.ObjectId
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
-class Friend(
+@Serializable
+data class Friend(
 	val id: String,
 	val name: String,
 	val money: Float,

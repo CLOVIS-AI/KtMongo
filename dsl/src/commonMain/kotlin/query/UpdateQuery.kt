@@ -23,7 +23,9 @@ import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.*
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -66,6 +68,7 @@ import kotlin.time.Instant
  * - [`$`][selected]
  * - [`$[]`][all]
  * - [`$addToSet`][addToSet]
+ * - [`$push`][push]
  *
  * Time management:
  * - [`$currentDate`][setToCurrentDate]
@@ -1491,6 +1494,668 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	// endregion
+	// region $push
+
+	/**
+	 * Adds [value] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds the value, even if it's already present in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores push 100
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` to the user's scores, even if it's already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.push(value: V, type: KType)
+
+	/**
+	 * Adds [value] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds the value, even if it's already present in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores push 100
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` to the user's scores, even if it's already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.push(value: V) {
+		this.push(value, typeOf<V>())
+	}
+
+	/**
+	 * Adds [value] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds the value, even if it's already present in the array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores push 100
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` to the user's scores, even if it's already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.push(value: V) {
+		return this.field.push(value)
+	}
+
+	/**
+	 * Adds multiple [values] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds all values, even if they're already present in the array.
+	 *
+	 * This is a convenience function for calling [push] multiple times.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores pushEach listOf(100, 200)
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` and `200` to the user's scores, even if they're already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.pushEach(values: Iterable<V>, type: KType) {
+		for (value in values)
+			this.push(value, type)
+	}
+
+	/**
+	 * Adds multiple [values] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds all values, even if they're already present in the array.
+	 *
+	 * This is a convenience function for calling [push] multiple times.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores pushEach listOf(100, 200)
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` and `200` to the user's scores, even if they're already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.pushEach(values: Iterable<V>) {
+		this.pushEach(values, typeOf<V>())
+	}
+
+	/**
+	 * Adds multiple [values] at the end of the array.
+	 *
+	 * Unlike [addToSet], this operator always adds all values, even if they're already present in the array.
+	 *
+	 * This is a convenience function for calling [push] multiple times.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores pushEach listOf(100, 200)
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `100` and `200` to the user's scores, even if they're already present.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pushEach(values: Iterable<V>) {
+		return this.field.pushEach(values)
+	}
+
+	/**
+	 * Adds values to the end of the array with advanced options.
+	 *
+	 * This method allows using MongoDB's advanced `$push` operators like `$each` and `$slice`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens push {
+	 *             each("123", "456")
+	 *             slice(3)
+	 *         }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123"` and `"456"` to the user's tokens and keep only the last 3 elements.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.push(builder: PushBuilder<V>.() -> Unit, type: KType)
+
+	/**
+	 * Adds values to the end of the array with advanced options.
+	 *
+	 * This method allows using MongoDB's advanced `$push` operators like `$each` and `$slice`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens push {
+	 *             each("123", "456")
+	 *             slice(3)
+	 *         }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123"` and `"456"` to the user's tokens and keep only the last 3 elements.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
+		push(builder, typeOf<V>())
+	}
+
+	/**
+	 * Adds values to the end of the array with advanced options.
+	 *
+	 * This method allows using MongoDB's advanced `$push` operators like `$each` and `$slice`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val tokens: List<String>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::tokens push {
+	 *             each("123", "456")
+	 *             slice(3)
+	 *         }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will add `"123"` and `"456"` to the user's tokens and keep only the last 3 elements.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
+		return this.field.push(builder)
+	}
+
+	// endregion
+
+	/**
+	 * DSL builder for advanced `$push` operations.
+	 *
+	 * See [push].
+	 */
+	@KtMongoDsl
+	interface PushBuilder<V> : BsonNode {
+
+		/**
+		 * Specifies the values to push to the array.
+		 *
+		 * If this function is called multiple times, they are combined (keeping the calling order).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tokens: List<String>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push {
+		 *             each("123", "456")
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * You can also call [push] multiple times:
+		 *
+		 * ```kotlin
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push "123"
+		 *         User::tokens push "456"
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/push/)
+		 */
+		@KtMongoDsl
+		fun each(vararg values: V) {
+			each(values.asIterable())
+		}
+
+		/**
+		 * Specifies the values to push to the array.
+		 *
+		 * If this function is called multiple times, they are combined (keeping the calling order).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tokens: List<String>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push {
+		 *             each(listOf("123", "456"))
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * You can also call [push] multiple times:
+		 *
+		 * ```kotlin
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push "123"
+		 *         User::tokens push "456"
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/push/)
+		 */
+		@KtMongoDsl
+		fun each(values: Iterable<V>)
+
+		/**
+		 * Limits the number of array elements after the push operation.
+		 *
+		 * If [count] is **positive**, after adding the elements to the array,
+		 * only the **first** [count] elements are kept, and all additional elements are discarded.
+		 *
+		 * If [count] is **negative**, after adding the elements to the array,
+		 * only the **last** [count] elements are kept, and prior elements are discarded.
+		 *
+		 * If this operator is specified without an [each] operator, the size of the array
+		 * is truncated but no elements are added.
+		 *
+		 * If this function is called multiple times, only the latest value has an effect.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tokens: List<String>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tokens push {
+		 *             each("123", "456")
+		 *             slice(3)  // Keep only the first 3 elements
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/slice)
+		 */
+		@KtMongoDsl
+		fun slice(count: Int)
+
+		/**
+		 * Specifies the location in the array at which the `$push` operator inserts elements.
+		 *
+		 * Without the `$position` modifier, the `$push` operator inserts elements to the end of the array.
+		 *
+		 * A **non-negative** number corresponds to the position in the array, starting from the beginning of the array.
+		 * If the value is greater or equal to the length of the array, the `$position` modifier has no effect
+		 * and `$push` adds elements to the end of the array.
+		 *
+		 * A **negative** number corresponds to the position in the array, counting from (but not including)
+		 * the last element of the array. For example, -1 indicates the position just before the last element
+		 * in the array. If you specify multiple elements in the `$each` array, the last added element is in
+		 * the specified position from the end. If the absolute value is greater than or equal to the length
+		 * of the array, the `$push` adds elements to the beginning of the array.
+		 *
+		 * Said otherwise:
+		 * - To insert elements at the end of the array, do not specify [position] at all.
+		 * - To insert elements at the start of the array, specify `position(0)`.
+		 * - To insert elements just after the first value, specify `position(1)`.
+		 * - To insert elements just before the last value, specify `position(-1)`.
+		 *
+		 * If this function is called multiple times, only the last value has an effect.
+		 *
+		 * If this function is called without an [each] operator, this function does nothing.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val scores: List<Int>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::scores push {
+		 *             each(50, 60, 70)
+		 *             position(0)  // Insert at the beginning
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/position/)
+		 */
+		@KtMongoDsl
+		fun position(index: Int)
+
+		/**
+		 * Orders the elements of an array during a `$push` operation.
+		 *
+		 * If this function is called multiple times, only the last value has an effect.
+		 *
+		 * If this function is called without an [each] operator, the existing data is sorted but no elements are added.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class Quiz(
+		 *     val id: Int,
+		 *     val score: Int,
+		 * )
+		 *
+		 * class User(
+		 *     val name: String,
+		 *     val quizzes: List<Quiz>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::quizzes push {
+		 *             each(Quiz(3, 8), Quiz(4, 7), Quiz(5, 6))
+		 *             sort {
+		 *                 ascending(Quiz::score)
+		 *             }
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * To sort based on the natural order of the array elements themselves:
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val scores: List<Int>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::scores push {
+		 *             each(12, 34)
+		 *             sort { ascending() }
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/sort/)
+		 */
+		@KtMongoDsl
+		fun sort(block: PushSortDsl<V & Any>.() -> Unit)
+	}
+
+	/**
+	 * DSL for sorting elements during a `$push` operation.
+	 *
+	 * See [push] and [PushBuilder.sort].
+	 */
+	@KtMongoDsl
+	interface PushSortDsl<V : Any> : SortOptionDsl<V> {
+
+		/**
+		 * Sort array elements in ascending order (for simple values, not documents).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tests: List<Int>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tests push {
+		 *             each(40, 60)
+		 *             sort { ascending() }
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 */
+		@KtMongoDsl
+		fun ascending()
+
+		/**
+		 * Sort array elements in descending order (for simple values, not documents).
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val tests: List<Int>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::tests push {
+		 *             each(40, 60)
+		 *             sort { descending() }
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 */
+		@KtMongoDsl
+		fun descending()
+	}
 
 }
 

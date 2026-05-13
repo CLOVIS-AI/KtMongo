@@ -396,6 +396,432 @@ val FieldUpdateTest by preparedSuite {
 		}
 	}
 
+	suite($$"$push") {
+		test("Add a single field") {
+			update {
+				User::tokens push "123"
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": "123"
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add multiple fields") {
+			update {
+				User::tokens push "123"
+				User::scores push 1
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": "123",
+						"scores": 1
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add multiple values to the same field") {
+			update {
+				User::tokens push "123"
+				User::tokens push "456"
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"123",
+								"456"
+							]
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add multiple values to the same field using a list") {
+			update {
+				User::tokens pushEach listOf("123", "456")
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"123",
+								"456"
+							]
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add values with slice") {
+			update {
+				User::tokens push {
+					each("123", "456")
+					slice(3)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"123",
+								"456"
+							],
+							"$slice": 3
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Use slice without each") {
+			update {
+				User::tokens push {
+					slice(3)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [],
+							"$slice": 3
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Combine both syntaxes together") {
+			update {
+				User::tokens push "foo"
+				User::tokens push {
+					each("123")
+					slice(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"foo",
+								"123"
+							],
+							"$slice": 5
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Using the advanced syntax multiple times: each are combined, slice only takes the last one") {
+			update {
+				User::tokens push {
+					each("foo", "bar")
+					slice(2)
+				}
+
+				User::tokens push {
+					each("baz")
+					slice(1)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"tokens": {
+							"$each": [
+								"foo",
+								"bar",
+								"baz"
+							],
+							"$slice": 1
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("An empty block is removed") {
+			update {
+				User::tokens push { }
+			} shouldBeBson $$"""
+				{
+				}
+			""".trimIndent()
+		}
+
+		test("Add values at the beginning with position 0") {
+			update {
+				User::scores push {
+					each(50, 60, 70)
+					position(0)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"scores": {
+							"$each": [
+								50,
+								60,
+								70
+							],
+							"$position": 0
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add values at middle position") {
+			update {
+				User::scores push {
+					each(20, 30)
+					position(2)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"scores": {
+							"$each": [
+								20,
+								30
+							],
+							"$position": 2
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add values with negative position") {
+			update {
+				User::scores push {
+					each(90, 80)
+					position(-2)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"scores": {
+							"$each": [
+								90,
+								80
+							],
+							"$position": -2
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add values with position, each, and slice") {
+			update {
+				User::scores push {
+					each(10, 20, 30)
+					position(1)
+					slice(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"scores": {
+							"$each": [
+								10,
+								20,
+								30
+							],
+							"$slice": 5,
+							"$position": 1
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Use position without each") {
+			update {
+				User::tokens push {
+					// 'position' does nothing without 'each', so it should be entirely removed
+					position(0)
+				}
+			} shouldBeBson """
+				{
+				}
+			""".trimIndent()
+		}
+
+		test("Sort simple values in ascending order") {
+			update {
+				User::scores push {
+					each(40, 60)
+					sort {
+						ascending()
+					}
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"scores": {
+								"$each": [
+									40,
+									60
+								],
+								"$sort": 1
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort simple values in descending order") {
+			update {
+				User::scores push {
+					each(40, 60)
+					sort {
+						descending()
+					}
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"scores": {
+								"$each": [
+									40,
+									60
+								],
+								"$sort": -1
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort documents by field in ascending order") {
+			update {
+				User::friends push {
+					each(Friend("1", "Alice", 1000.0f), Friend("2", "Bob", 2000.0f))
+					sort { ascending(Friend::name) }
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"friends": {
+								"$each": [
+									{
+										"id": "1",
+										"name": "Alice",
+										"money": 1000.0
+									},
+									{
+										"id": "2",
+										"name": "Bob",
+										"money": 2000.0
+									}
+								],
+								"$sort": {
+									"name": 1
+								}
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort documents by field in descending order") {
+			update {
+				User::friends push {
+					each(Friend("1", "Alice", 1000.0f), Friend("2", "Bob", 2000.0f))
+					sort { descending(Friend::money) }
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"friends": {
+								"$each": [
+									{
+										"id": "1",
+										"name": "Alice",
+										"money": 1000.0
+									},
+									{
+										"id": "2",
+										"name": "Bob",
+										"money": 2000.0
+									}
+								],
+								"$sort": {
+									"money": -1
+								}
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort with empty array (sort only)") {
+			update {
+				User::scores push {
+					sort {
+						descending()
+					}
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"scores": {
+								"$each": [],
+								"$sort": -1
+							}
+						}
+					}
+				""".trimIndent()
+		}
+
+		test("Sort combined with slice and position") {
+			update {
+				User::friends push {
+					each(Friend("1", "Alice", 1000.0f), Friend("2", "Bob", 2000.0f), Friend("3", "Charlie", 500.0f))
+					sort { descending(Friend::name) }
+					slice(2)
+					position(0)
+				}
+			} shouldBeBson $$"""
+					{
+						"$push": {
+							"friends": {
+								"$each": [
+									{
+										"id": "1",
+										"name": "Alice",
+										"money": 1000.0
+									},
+									{
+										"id": "2",
+										"name": "Bob",
+										"money": 2000.0
+									},
+									{
+										"id": "3",
+										"name": "Charlie",
+										"money": 500.0
+									}
+								],
+								"$slice": 2,
+								"$position": 0,
+								"$sort": {
+									"name": -1
+								}
+							}
+						}
+					}
+				""".trimIndent()
+		}
+	}
+
 	suite($$"$currentDate") {
 		test("Set to instant") {
 			update {

@@ -354,7 +354,7 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
-	// region $setOnInsert
+	// region $addToSet
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun <V> Field<T, Collection<V>>.addToSet(value: V, type: KType) {
@@ -393,6 +393,213 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
+	// region $push
+
+	@LowLevelApi
+	private class PushSortOptionDslBsonNode<Context : Any>(
+		context: BsonContext,
+	) : AbstractCompoundBsonNode(context), UpdateQuery.PushSortDsl<Context> {
+		var isSimpleValue = false
+		var simpleValue = 1
+
+		@OptIn(DangerousMongoApi::class)
+		override fun ascending(field: Field<Context, *>) {
+			require(!isSimpleValue) { "Cannot specify both natural and field sorts (both ascending() and ascending(someField))" }
+			accept(PushSortBsonNode(field.path, 1, context))
+		}
+
+		@OptIn(DangerousMongoApi::class)
+		override fun descending(field: Field<Context, *>) {
+			require(!isSimpleValue) { "Cannot specify both natural and field sorts (both ascending() and ascending(someField))" }
+			accept(PushSortBsonNode(field.path, -1, context))
+		}
+
+		/**
+		 * Sort array elements in ascending order (for simple values, not documents).
+		 */
+		override fun ascending() {
+			require(children.isEmpty()) { "Cannot specify both natural and field sorts (both ascending() and ascending(someField))" }
+			isSimpleValue = true
+			simpleValue = 1
+		}
+
+		/**
+		 * Sort array elements in descending order (for simple values, not documents).
+		 */
+		override fun descending() {
+			require(children.isEmpty()) { "Cannot specify both natural and field sorts (both ascending() and ascending(someField))" }
+			isSimpleValue = true
+			simpleValue = -1
+		}
+
+		@LowLevelApi
+		private class PushSortBsonNode(
+			val path: Path,
+			val value: Int,
+			context: BsonContext,
+		) : AbstractBsonNode(context) {
+
+			override fun write(writer: BsonFieldWriter) = with(writer) {
+				writeInt32(path.toString(), value)
+			}
+		}
+
+		override fun write(writer: BsonFieldWriter, children: List<BsonNode>) {
+			if (isSimpleValue) {
+				writer.writeInt32($$"$sort", simpleValue)
+			} else {
+				writer.writeDocument($$"$sort") {
+					for (child in children) {
+						child.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class PushBuilderImpl<V>(
+		context: BsonContext,
+		val type: KType,
+	) : AbstractBsonNode(context), UpdateQuery.PushBuilder<V> {
+		var values: List<V> = emptyList()
+		var sliceValue: Int? = null
+		var positionValue: Int? = null
+		var sortValue: PushSortOptionDslBsonNode<V & Any>? = null
+
+		override fun each(values: Iterable<V>) {
+			this.values += values
+		}
+
+		override fun slice(count: Int) {
+			this.sliceValue = count
+		}
+
+		private fun sliceNotNull(count: Int?) {
+			if (count != null)
+				slice(count)
+		}
+
+		override fun position(index: Int) {
+			this.positionValue = index
+		}
+
+		fun positionNotNull(index: Int?) {
+			if (index != null)
+				position(index)
+		}
+
+		override fun sort(block: UpdateQuery.PushSortDsl<V & Any>.() -> Unit) {
+			val option = PushSortOptionDslBsonNode<V & Any>(context)
+			option.block()
+			this.sortValue = option
+		}
+
+		operator fun plus(other: PushBuilderImpl<V>): PushBuilderImpl<V> {
+			val ret = PushBuilderImpl<V>(context, type)
+
+			ret.each(this.values)
+			ret.each(other.values)
+
+			ret.sliceNotNull(other.sliceValue ?: this.sliceValue)
+			ret.positionNotNull(other.positionValue ?: this.positionValue)
+
+			ret.sortValue = this.sortValue ?: other.sortValue
+
+			ret.freeze()
+
+			return ret
+		}
+
+		override fun simplify(): PushBuilderImpl<V>? =
+			// Ignore positionValue: if it's present but none of the others are, it still does nothing
+			if (values.isNotEmpty() || sliceValue != null || sortValue != null) this
+			else null
+
+		override fun write(writer: BsonFieldWriter) {
+			with(writer) {
+				writeArray($$"$each") {
+					for (value in values)
+						writeSafe(value, type)
+				}
+				sliceValue?.let { sliceValue ->
+					writeInt32($$"$slice", sliceValue)
+				}
+				positionValue.takeIf { values.isNotEmpty() }?.let { positionValue ->
+					writeInt32($$"$position", positionValue)
+				}
+				sortValue?.writeTo(this)
+			}
+		}
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun <V> Field<T, Collection<V>>.push(value: V, type: KType) {
+		val pushBuilder = PushBuilderImpl<V>(context, type)
+		pushBuilder.each(value)
+		pushBuilder.freeze()
+		accept(PushBsonNode(listOf(this.path to pushBuilder), context))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun <V> Field<T, Collection<V>>.push(builder: UpdateQuery.PushBuilder<V>.() -> Unit, type: KType) {
+		val pushBuilder = PushBuilderImpl<V>(context, type)
+			.apply(builder)
+		pushBuilder.freeze()
+		accept(PushBsonNode(listOf(this.path to pushBuilder), context))
+	}
+
+	@LowLevelApi
+	private class PushBsonNode(
+		val mappings: List<Pair<Path, PushBuilderImpl<*>>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+		override fun simplify(): PushBsonNode? {
+			if (mappings.isEmpty())
+				return null
+
+			@Suppress("UNCHECKED_CAST") // For a given path, they must all have the same type (guaranteed by the DSL). We can thus treat them all as Any?.
+			val newMappings = mappings
+				.groupingBy { it.first }
+				.fold(
+					initialValueSelector = { _, (_, first) -> PushBuilderImpl<Any?>(context, first.type) },
+					operation = { _, previous, (_, next) ->
+						next as PushBuilderImpl<Any?>
+
+						previous + next
+					},
+				)
+				.toList()
+				.mapNotNull { (path, builder) ->
+					val simplified = builder.simplify()
+
+					if (simplified != null)
+						path to simplified
+					else null
+				}
+
+			if (mappings == newMappings)
+				return this
+
+			return PushBsonNode(newMappings, context)
+		}
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$push") {
+				for ((field, pushBuilder) in mappings) {
+					if (pushBuilder.values.size == 1 && pushBuilder.sliceValue == null) {
+						writeSafe(field.toString(), pushBuilder.values.single(), pushBuilder.type)
+					} else {
+						writeDocument(field.toString()) {
+							pushBuilder.writeTo(this)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
 
 	companion object {
 		@OptIn(LowLevelApi::class)
@@ -423,6 +630,9 @@ private class UpdateQueryImpl<T>(
 			},
 			OperatorCombinator(AddToSetBsonNode::class) { sources, context ->
 				AddToSetBsonNode(sources.flatMap { it.mappings }, context)
+			},
+			OperatorCombinator(PushBsonNode::class) { sources, context ->
+				PushBsonNode(sources.flatMap { it.mappings }, context)
 			},
 			OperatorCombinator(CurrentDateBsonNode::class) { sources, context ->
 				CurrentDateBsonNode(sources.flatMap { it.mappings }, context)
