@@ -1976,6 +1976,59 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		 */
 		@KtMongoDsl
 		fun slice(count: Int)
+
+		/**
+		 * Specifies the location in the array at which the `$push` operator inserts elements.
+		 *
+		 * Without the `$position` modifier, the `$push` operator inserts elements to the end of the array.
+		 *
+		 * A **non-negative** number corresponds to the position in the array, starting from the beginning of the array.
+		 * If the value is greater or equal to the length of the array, the `$position` modifier has no effect
+		 * and `$push` adds elements to the end of the array.
+		 *
+		 * A **negative** number corresponds to the position in the array, counting from (but not including)
+		 * the last element of the array. For example, -1 indicates the position just before the last element
+		 * in the array. If you specify multiple elements in the `$each` array, the last added element is in
+		 * the specified position from the end. If the absolute value is greater than or equal to the length
+		 * of the array, the `$push` adds elements to the beginning of the array.
+		 *
+		 * Said otherwise:
+		 * - To insert elements at the end of the array, do not specify [position] at all.
+		 * - To insert elements at the start of the array, specify `position(0)`.
+		 * - To insert elements just after the first value, specify `position(1)`.
+		 * - To insert elements just before the last value, specify `position(-1)`.
+		 *
+		 * If this function is called multiple times, only the last value has an effect.
+		 *
+		 * If this function is called without an [each] operator, this function does nothing.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val name: String,
+		 *     val scores: List<Int>,
+		 * )
+		 *
+		 * collection.updateOne(
+		 *     filter = {
+		 *         User::name eq "Bob"
+		 *     },
+		 *     update = {
+		 *         User::scores push {
+		 *             each(50, 60, 70)
+		 *             position(0)  // Insert at the beginning
+		 *         }
+		 *     }
+		 * )
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/position/)
+		 */
+		@KtMongoDsl
+		fun position(index: Int)
 	}
 
 }

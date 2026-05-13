@@ -402,6 +402,7 @@ private class UpdateQueryImpl<T>(
 	) : AbstractBsonNode(context), UpdateQuery.PushBuilder<V> {
 		var values: List<V> = emptyList()
 		var sliceValue: Int? = null
+		var positionValue: Int? = null
 
 		override fun each(values: Iterable<V>) {
 			this.values += values
@@ -416,6 +417,15 @@ private class UpdateQueryImpl<T>(
 				slice(count)
 		}
 
+		override fun position(index: Int) {
+			this.positionValue = index
+		}
+
+		fun positionNotNull(index: Int?) {
+			if (index != null)
+				position(index)
+		}
+
 		operator fun plus(other: PushBuilderImpl<V>): PushBuilderImpl<V> {
 			val ret = PushBuilderImpl<V>(context, type)
 
@@ -423,6 +433,7 @@ private class UpdateQueryImpl<T>(
 			ret.each(other.values)
 
 			ret.sliceNotNull(other.sliceValue ?: this.sliceValue)
+			ret.positionNotNull(other.positionValue ?: this.positionValue)
 
 			ret.freeze()
 
@@ -430,6 +441,7 @@ private class UpdateQueryImpl<T>(
 		}
 
 		override fun simplify(): PushBuilderImpl<V>? =
+			// Ignore positionValue: if it's present but none of the others are, it still does nothing
 			if (values.isNotEmpty() || sliceValue != null) this
 			else null
 
@@ -441,6 +453,9 @@ private class UpdateQueryImpl<T>(
 				}
 				sliceValue?.let { sliceValue ->
 					writeInt32($$"$slice", sliceValue)
+				}
+				positionValue.takeIf { values.isNotEmpty() }?.let { positionValue ->
+					writeInt32($$"$position", positionValue)
 				}
 			}
 		}

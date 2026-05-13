@@ -553,6 +553,106 @@ val FieldUpdateTest by preparedSuite {
 				}
 			""".trimIndent()
 		}
+
+		test("Add values at the beginning with position 0") {
+			update {
+				User::scores push {
+					each(50, 60, 70)
+					position(0)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"scores": {
+							"$each": [
+								50,
+								60,
+								70
+							],
+							"$position": 0
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add values at middle position") {
+			update {
+				User::scores push {
+					each(20, 30)
+					position(2)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"scores": {
+							"$each": [
+								20,
+								30
+							],
+							"$position": 2
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add values with negative position") {
+			update {
+				User::scores push {
+					each(90, 80)
+					position(-2)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"scores": {
+							"$each": [
+								90,
+								80
+							],
+							"$position": -2
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Add values with position, each, and slice") {
+			update {
+				User::scores push {
+					each(10, 20, 30)
+					position(1)
+					slice(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$push": {
+						"scores": {
+							"$each": [
+								10,
+								20,
+								30
+							],
+							"$slice": 5,
+							"$position": 1
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Use position without each") {
+			update {
+				User::tokens push {
+					// 'position' does nothing without 'each', so it should be entirely removed
+					position(0)
+				}
+			} shouldBeBson """
+				{
+				}
+			""".trimIndent()
+		}
 	}
 
 	suite($$"$currentDate") {
