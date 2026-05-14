@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 import io.kotest.assertions.throwables.shouldThrow
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.multiContextSuite
 
-val SkipTest by preparedSuite {
+val SkipTest by multiContextSuite {
 
 	test("Skip 5 elements") {
 		TestPipeline<Nothing>()

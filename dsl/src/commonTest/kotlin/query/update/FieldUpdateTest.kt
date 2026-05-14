@@ -18,11 +18,11 @@
 
 package opensavvy.ktmongo.dsl.query.update
 
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.ExperimentalTime
 
-val FieldUpdateTest by preparedSuite {
+val FieldUpdateTest by multiContextSuite {
 	suite($$"Operator $set") {
 		test("Single field") {
 			update {
@@ -118,11 +118,11 @@ val FieldUpdateTest by preparedSuite {
 
 		test("Nested field") {
 			update {
-				User::bestFriend / Friend::money inc -12.9f
+				User::bestFriend / Friend::money inc -10.25f
 			} shouldBeBson $$"""
 				{
 					"$inc": {
-						"bestFriend.money": -12.899999618530273
+						"bestFriend.money": -10.25
 					}
 				}
 			""".trimIndent()
@@ -131,12 +131,12 @@ val FieldUpdateTest by preparedSuite {
 		test("Multiple fields") {
 			update {
 				User::money += 5.2
-				User::bestFriend / Friend::money += -5.2f
+				User::bestFriend / Friend::money += -1.125f
 			} shouldBeBson $$"""
 				{
 					"$inc": {
 						"money": 5.2,
-						"bestFriend.money": -5.199999809265137
+						"bestFriend.money": -1.125
 					}
 				}
 			""".trimIndent()
@@ -158,11 +158,11 @@ val FieldUpdateTest by preparedSuite {
 
 		test("Nested field") {
 			update {
-				User::bestFriend / Friend::money mul -12.9f
+				User::bestFriend / Friend::money mul -10.25f
 			} shouldBeBson $$"""
 				{
 					"$mul": {
-						"bestFriend.money": -12.899999618530273
+						"bestFriend.money": -10.25
 					}
 				}
 			""".trimIndent()
@@ -171,12 +171,12 @@ val FieldUpdateTest by preparedSuite {
 		test("Multiple fields") {
 			update {
 				User::money mul 5.2
-				User::bestFriend / Friend::money mul -5.2f
+				User::bestFriend / Friend::money mul -1.125f
 			} shouldBeBson $$"""
 				{
 					"$mul": {
 						"money": 5.2,
-						"bestFriend.money": -5.199999809265137
+						"bestFriend.money": -1.125
 					}
 				}
 			""".trimIndent()

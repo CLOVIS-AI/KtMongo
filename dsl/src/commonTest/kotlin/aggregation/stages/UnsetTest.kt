@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.multiContextSuite
 
-val UnsetTest by preparedSuite {
+val UnsetTest by multiContextSuite {
 
 	class Target(
 		val _id: String,

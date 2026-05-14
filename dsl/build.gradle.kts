@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
@@ -24,18 +28,53 @@ plugins {
 
 kotlin {
 	jvm()
+	js {
+		browser()
+		nodejs()
+	}
+	// linuxX64() // TODO https://youtrack.jetbrains.com/issue/KT-83308 Kotlin Native currently crashes on our codebase
+	// linuxArm64()
+	// macosX64()
+	// macosArm64()
+	// iosArm64()
+	// iosX64()
+	// iosSimulatorArm64()
+	// watchosX64()
+	// watchosArm32()
+	// watchosArm64()
+	// watchosSimulatorArm64()
+	// tvosX64()
+	// tvosArm64()
+	// tvosSimulatorArm64()
+	// mingwX64()
+	// wasmJs { // TODO Wasm crashes with a StackOverflow error
+	// 	browser()
+	// nodejs()
+	// }
+	// wasmWasi {
+	// 	nodejs()
+	// }
 
 	sourceSets.commonMain.dependencies {
-		api(projects.bsonOfficial)
+		api(projects.bson)
 		api(projects.annotations)
+		implementation(libsCommon.jetbrains.annotations)
 	}
 
 	sourceSets.commonTest.dependencies {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotest.assertions)
 		implementation(libsCommon.kotlin.test)
-		implementation(libs.kotlinx.serialization)
+		implementation(projects.bsonMultiplatform)
+	}
+
+	sourceSets.jvmTest.dependencies {
+		// Test the official driver with or without reflection
+		implementation(projects.bsonOfficial)
+		implementation(libs.mongodb.sync.jvm)
+		implementation(libs.mongodb.kotlinx.serialization)
 		implementation(libs.mongodb.kotlin.reflection)
+		implementation(libs.kotlinx.serialization)
 	}
 }
 

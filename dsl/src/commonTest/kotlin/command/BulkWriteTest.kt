@@ -16,14 +16,14 @@
 
 package opensavvy.ktmongo.dsl.command
 
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.testContext
 import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.minutes
 
-val BulkWriteTest by preparedSuite {
+val BulkWriteTest by multiContextSuite {
 
 	class Target(
 		val name: String,

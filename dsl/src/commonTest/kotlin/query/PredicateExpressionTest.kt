@@ -17,20 +17,20 @@
 package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonType
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.multiContextSuite
+import opensavvy.ktmongo.dsl.testContext
+import opensavvy.prepared.suite.TestDsl
 
 @OptIn(LowLevelApi::class)
-@KtMongoDsl
-private inline fun <reified T> predicate(block: FilterQueryPredicate<T>.() -> Unit): String =
+private suspend inline fun <reified T> TestDsl.predicate(block: FilterQueryPredicate<T>.() -> Unit): String =
 	FilterQueryPredicate<T>(testContext())
 		.apply(block)
 		.toBson()
 		.toString()
 
 @OptIn(LowLevelApi::class)
-val PredicateExpressionTest by preparedSuite {
+val PredicateExpressionTest by multiContextSuite {
 
 	suite($$"Operator $eq") {
 		test("Integer") {

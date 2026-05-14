@@ -27,7 +27,7 @@ internal class Bytes(
 	private val range: IntRange,
 ) {
 
-	constructor(data: ByteArray) : this(data, 0..data.lastIndex)
+	constructor(data: ByteArray) : this(data, data.indices)
 
 	val size get() = range.last - range.first + 1
 
@@ -47,8 +47,8 @@ internal class Bytes(
 	val reader: RawBsonReader get() = RawBsonReader(source)
 
 	fun subrange(subrange: IntRange): Bytes {
-		require(subrange.first >= 0) { "Cannot create a subrange that starts at a negative index, found: $subrange" }
-		require(subrange.last - subrange.first < size) { "Cannot create a subrange that ends after the end of the data, there are $size bytes, found: $subrange" }
+		require(subrange.first >= 0) { "Cannot create a subrange that starts at a negative index, found: $subrange\n\tBytes: ${toString()}\n\tFull document size: ${data.size} bytes" }
+		require(subrange.last - subrange.first < size) { "Cannot create a subrange that ends after the end of the data, there are $size bytes, found: $subrange\n\tBytes: ${toString()}\n\tFull document size: ${data.size} bytes" }
 		return Bytes(data, (range.first + subrange.first)..(range.first + subrange.last))
 	}
 

@@ -25,6 +25,7 @@ import opensavvy.ktmongo.bson.official.types.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonBinaryReader
 import org.bson.BsonDocumentWriter
+import org.bson.BsonSerializationException
 import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
@@ -145,10 +146,14 @@ actual class BsonFactory(
 	actual override fun readDocument(bytes: ByteArray): BsonDocument {
 		val codec = codecRegistry.get(org.bson.BsonDocument::class.java)
 		val buffer = ByteBuffer.wrap(bytes)
-		val document = codec.decode(
-			BsonBinaryReader(buffer),
-			DecoderContext.builder().build(),
-		)
+		val document = try {
+			codec.decode(
+				BsonBinaryReader(buffer),
+				DecoderContext.builder().build(),
+			)
+		} catch (e: BsonSerializationException) {
+			throw BsonDecodingException("Could not read the bytes ${bytes.toHexString()} as a BsonDocument", e)
+		}
 		return readDocument(document)
 	}
 

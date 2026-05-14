@@ -97,7 +97,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/)
 	 */
-	@JvmName("acosByField")
+	@kotlin.jvm.JvmName("acosByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -132,7 +132,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/)
 	 */
-	@JvmName("acosByProperty")
+	@kotlin.jvm.JvmName("acosByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -231,7 +231,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
 	 */
-	@JvmName("acoshByField")
+	@kotlin.jvm.JvmName("acoshByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -264,7 +264,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
 	 */
-	@JvmName("acoshByProperty")
+	@kotlin.jvm.JvmName("acoshByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -361,7 +361,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
 	 */
-	@JvmName("cosByField")
+	@kotlin.jvm.JvmName("cosByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -394,7 +394,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
 	 */
-	@JvmName("cosByProperty")
+	@kotlin.jvm.JvmName("cosByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -487,7 +487,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
 	 */
-	@JvmName("coshByField")
+	@kotlin.jvm.JvmName("coshByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -518,7 +518,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
 	 */
-	@JvmName("coshByProperty")
+	@kotlin.jvm.JvmName("coshByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -617,7 +617,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
 	 */
-	@JvmName("asinByField")
+	@kotlin.jvm.JvmName("asinByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -652,7 +652,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
 	 */
-	@JvmName("asinByProperty")
+	@kotlin.jvm.JvmName("asinByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -747,7 +747,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
 	 */
-	@JvmName("asinhByField")
+	@kotlin.jvm.JvmName("asinhByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -778,7 +778,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
 	 */
-	@JvmName("asinhByProperty")
+	@kotlin.jvm.JvmName("asinhByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -873,7 +873,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/)
 	 */
-	@JvmName("sinByField")
+	@kotlin.jvm.JvmName("sinByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -906,7 +906,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/)
 	 */
-	@JvmName("sinByProperty")
+	@kotlin.jvm.JvmName("sinByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -999,7 +999,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/)
 	 */
-	@JvmName("sinhByField")
+	@kotlin.jvm.JvmName("sinhByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1030,7 +1030,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/)
 	 */
-	@JvmName("sinhByProperty")
+	@kotlin.jvm.JvmName("sinhByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1125,7 +1125,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
 	 */
-	@JvmName("atanByField")
+	@kotlin.jvm.JvmName("atanByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1158,7 +1158,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
 	 */
-	@JvmName("atanByProperty")
+	@kotlin.jvm.JvmName("atanByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1255,7 +1255,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
 	 */
-	@JvmName("atanhByField")
+	@kotlin.jvm.JvmName("atanhByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1288,7 +1288,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
 	 */
-	@JvmName("atanhByProperty")
+	@kotlin.jvm.JvmName("atanhByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1385,7 +1385,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/)
 	 */
-	@JvmName("tanByField")
+	@kotlin.jvm.JvmName("tanByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1418,7 +1418,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/)
 	 */
-	@JvmName("tanByProperty")
+	@kotlin.jvm.JvmName("tanByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1511,7 +1511,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/)
 	 */
-	@JvmName("tanhByField")
+	@kotlin.jvm.JvmName("tanhByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1542,7 +1542,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/)
 	 */
-	@JvmName("tanhByProperty")
+	@kotlin.jvm.JvmName("tanhByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1636,7 +1636,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * @see toDegrees Opposite operation
 	 */
-	@JvmName("toRadiansFieldReceiver")
+	@kotlin.jvm.JvmName("toRadiansFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1667,7 +1667,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * @see toDegrees Opposite operation
 	 */
-	@JvmName("toRadiansPropertyReceiver")
+	@kotlin.jvm.JvmName("toRadiansPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1699,7 +1699,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * @see toDegrees Opposite operation
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toRadiansResultReceiver")
+	@kotlin.jvm.JvmName("toRadiansResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1759,7 +1759,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * @see toRadians Opposite operation
 	 */
-	@JvmName("toDegreesFieldReceiver")
+	@kotlin.jvm.JvmName("toDegreesFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1790,7 +1790,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 *
 	 * @see toRadians Opposite operation
 	 */
-	@JvmName("toDegreesPropertyReceiver")
+	@kotlin.jvm.JvmName("toDegreesPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1822,7 +1822,7 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * @see toRadians Opposite operation
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toDegreesResultReceiver")
+	@kotlin.jvm.JvmName("toDegreesResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl

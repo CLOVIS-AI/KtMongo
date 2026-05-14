@@ -25,6 +25,7 @@ import opensavvy.prepared.suite.SuiteDsl
 import opensavvy.prepared.suite.assertions.checkThrows
 import opensavvy.prepared.suite.assertions.log
 import opensavvy.prepared.suite.assertions.matches
+import kotlin.test.assertEquals
 
 @Serializable
 data class BsonDocumentUser(
@@ -110,6 +111,46 @@ fun SuiteDsl.verifyBsonDocuments(factory: Prepared<BsonFactory>) = suite("BSON d
 		}
 
 		check(exception.message matches "Could not decode opensavvy.ktmongo.bson.BsonDocumentUser.*\n\tfrom value \\{\"a\": \"Bob\"\\}.*\n*.*")
+	}
+
+	test("Read a corrupt document") {
+		checkThrows<BsonDecodingException> {
+			// This document is malformed
+			factory().readDocument("1b00000003246e6f7400102474797065000a000000050000000000".hexToByteArray())
+				.toString() // Force full parsing (errors would otherwise be detected lazily)
+		}
+
+		// The error message can be different across implementations
+	}
+
+	test("Incorrect nesting when writing a document") {
+		var hasChecked = false
+
+		val _ = factory().buildDocument {
+			val outer = this
+
+			writeDocument("foo") {
+				val exception = checkThrows<BsonEncodingException> {
+					outer.writeString("bar", "baz")
+				}
+
+				assertEquals("""
+					Cannot write to an outer document while an inner document is open.
+					You may have written something like:
+						factory.buildDocument {
+							val outer = this
+							buildDocument("foo") {
+								outer.writeString("bar", "baz")
+								// ↑ Incorrect writer! Should be:
+								this.writeString("bar", "baz")
+							}
+						}
+				""".trimIndent(), exception.message)
+				hasChecked = true
+			}
+		}
+
+		check(hasChecked) { "This test should never reach this code without having executed the assertion, maybe the factory uses lazy writing?" }
 	}
 
 	suite("Iteration") {

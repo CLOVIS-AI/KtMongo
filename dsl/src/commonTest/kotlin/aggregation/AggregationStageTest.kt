@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.multiContextSuite
 
 @OptIn(LowLevelApi::class)
-val AggregationStageTest by preparedSuite {
+val AggregationStageTest by multiContextSuite {
 
 	class Target(
 		val foo: String,

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package opensavvy.ktmongo.dsl.query.filter
 
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQuery
-import opensavvy.ktmongo.dsl.query.testContext
-import org.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.testContext
+import opensavvy.prepared.suite.TestDsl
 
 class Pet(
 	val name: String,
@@ -38,5 +39,5 @@ class User(
 
 @OptIn(LowLevelApi::class)
 @KtMongoDsl
-fun filter(block: FilterQuery<User>.() -> Unit): String =
+suspend fun TestDsl.filter(block: FilterQuery<User>.() -> Unit): String =
 	FilterQuery<User>(testContext()).apply(block).toString()

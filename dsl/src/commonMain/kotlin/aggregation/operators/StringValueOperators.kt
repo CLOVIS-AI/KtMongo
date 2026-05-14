@@ -87,7 +87,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimFieldReceiver")
+	@kotlin.jvm.JvmName("trimFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -116,7 +116,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimPropertyReceiver")
+	@kotlin.jvm.JvmName("trimPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -146,7 +146,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimResultReceiver")
+	@kotlin.jvm.JvmName("trimResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -212,7 +212,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimFieldReceiver")
+	@kotlin.jvm.JvmName("trimFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -246,7 +246,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimPropertyReceiver")
+	@kotlin.jvm.JvmName("trimPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -281,7 +281,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimResultReceiver")
+	@kotlin.jvm.JvmName("trimResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -353,7 +353,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimByField")
+	@kotlin.jvm.JvmName("trimByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -390,7 +390,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimByProperty")
+	@kotlin.jvm.JvmName("trimByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -464,7 +464,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimFieldReceiverByValue")
+	@kotlin.jvm.JvmName("trimFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -501,7 +501,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimFieldReceiverByField")
+	@kotlin.jvm.JvmName("trimFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -538,7 +538,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("trimFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -575,7 +575,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimFieldReceiverByResult")
+	@kotlin.jvm.JvmName("trimFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -612,7 +612,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("trimPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -649,7 +649,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimPropertyReceiverByField")
+	@kotlin.jvm.JvmName("trimPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -686,7 +686,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("trimPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -723,7 +723,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
-	@JvmName("trimPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("trimPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -761,7 +761,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimResultReceiverByValue")
+	@kotlin.jvm.JvmName("trimResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -799,7 +799,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimResultReceiverByField")
+	@kotlin.jvm.JvmName("trimResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -837,7 +837,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimResultReceiverByProperty")
+	@kotlin.jvm.JvmName("trimResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -875,7 +875,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimResultReceiverByResult")
+	@kotlin.jvm.JvmName("trimResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -934,7 +934,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartFieldReceiver")
+	@kotlin.jvm.JvmName("trimStartFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -963,7 +963,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartPropertyReceiver")
+	@kotlin.jvm.JvmName("trimStartPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -993,7 +993,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimStartResultReceiver")
+	@kotlin.jvm.JvmName("trimStartResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1059,7 +1059,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartFieldReceiver")
+	@kotlin.jvm.JvmName("trimStartFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1093,7 +1093,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartPropertyReceiver")
+	@kotlin.jvm.JvmName("trimStartPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1128,7 +1128,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimStartResultReceiver")
+	@kotlin.jvm.JvmName("trimStartResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1200,7 +1200,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartByField")
+	@kotlin.jvm.JvmName("trimStartByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1237,7 +1237,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartByProperty")
+	@kotlin.jvm.JvmName("trimStartByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1311,7 +1311,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartFieldReceiverByValue")
+	@kotlin.jvm.JvmName("trimStartFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1348,7 +1348,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartFieldReceiverByField")
+	@kotlin.jvm.JvmName("trimStartFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1385,7 +1385,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("trimStartFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1422,7 +1422,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartFieldReceiverByResult")
+	@kotlin.jvm.JvmName("trimStartFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1459,7 +1459,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("trimStartPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1496,7 +1496,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartPropertyReceiverByField")
+	@kotlin.jvm.JvmName("trimStartPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1533,7 +1533,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("trimStartPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1570,7 +1570,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
-	@JvmName("trimStartPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("trimStartPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1608,7 +1608,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimStartResultReceiverByValue")
+	@kotlin.jvm.JvmName("trimStartResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1646,7 +1646,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimStartResultReceiverByField")
+	@kotlin.jvm.JvmName("trimStartResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1684,7 +1684,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimStartResultReceiverByProperty")
+	@kotlin.jvm.JvmName("trimStartResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1722,7 +1722,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimStartResultReceiverByResult")
+	@kotlin.jvm.JvmName("trimStartResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1781,7 +1781,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndFieldReceiver")
+	@kotlin.jvm.JvmName("trimEndFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1810,7 +1810,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndPropertyReceiver")
+	@kotlin.jvm.JvmName("trimEndPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1840,7 +1840,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimEndResultReceiver")
+	@kotlin.jvm.JvmName("trimEndResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1906,7 +1906,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndFieldReceiver")
+	@kotlin.jvm.JvmName("trimEndFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1940,7 +1940,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndPropertyReceiver")
+	@kotlin.jvm.JvmName("trimEndPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1975,7 +1975,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimEndResultReceiver")
+	@kotlin.jvm.JvmName("trimEndResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2047,7 +2047,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndByField")
+	@kotlin.jvm.JvmName("trimEndByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2084,7 +2084,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndByProperty")
+	@kotlin.jvm.JvmName("trimEndByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2158,7 +2158,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndFieldReceiverByValue")
+	@kotlin.jvm.JvmName("trimEndFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2195,7 +2195,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndFieldReceiverByField")
+	@kotlin.jvm.JvmName("trimEndFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2232,7 +2232,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("trimEndFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2269,7 +2269,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndFieldReceiverByResult")
+	@kotlin.jvm.JvmName("trimEndFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2306,7 +2306,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("trimEndPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2343,7 +2343,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndPropertyReceiverByField")
+	@kotlin.jvm.JvmName("trimEndPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2380,7 +2380,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("trimEndPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2417,7 +2417,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
-	@JvmName("trimEndPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("trimEndPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2455,7 +2455,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimEndResultReceiverByValue")
+	@kotlin.jvm.JvmName("trimEndResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2493,7 +2493,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimEndResultReceiverByField")
+	@kotlin.jvm.JvmName("trimEndResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2531,7 +2531,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimEndResultReceiverByProperty")
+	@kotlin.jvm.JvmName("trimEndResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2569,7 +2569,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("trimEndResultReceiverByResult")
+	@kotlin.jvm.JvmName("trimEndResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2628,7 +2628,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/)
 	 */
-	@JvmName("lowercaseFieldReceiver")
+	@kotlin.jvm.JvmName("lowercaseFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2657,7 +2657,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/)
 	 */
-	@JvmName("lowercasePropertyReceiver")
+	@kotlin.jvm.JvmName("lowercasePropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2687,7 +2687,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("lowercaseResultReceiver")
+	@kotlin.jvm.JvmName("lowercaseResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2746,7 +2746,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/)
 	 */
-	@JvmName("uppercaseFieldReceiver")
+	@kotlin.jvm.JvmName("uppercaseFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2775,7 +2775,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/)
 	 */
-	@JvmName("uppercasePropertyReceiver")
+	@kotlin.jvm.JvmName("uppercasePropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2805,7 +2805,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("uppercaseResultReceiver")
+	@kotlin.jvm.JvmName("uppercaseResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3232,7 +3232,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringByValueByField")
+	@kotlin.jvm.JvmName("substringByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3276,7 +3276,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringByValueByProperty")
+	@kotlin.jvm.JvmName("substringByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3364,7 +3364,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringByFieldByValue")
+	@kotlin.jvm.JvmName("substringByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3408,7 +3408,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringByFieldByField")
+	@kotlin.jvm.JvmName("substringByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3452,7 +3452,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringByFieldByProperty")
+	@kotlin.jvm.JvmName("substringByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3497,7 +3497,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringByFieldByResult")
+	@kotlin.jvm.JvmName("substringByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3541,7 +3541,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringByPropertyByValue")
+	@kotlin.jvm.JvmName("substringByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3585,7 +3585,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringByPropertyByField")
+	@kotlin.jvm.JvmName("substringByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3629,7 +3629,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringByPropertyByProperty")
+	@kotlin.jvm.JvmName("substringByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3674,7 +3674,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringByPropertyByResult")
+	@kotlin.jvm.JvmName("substringByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3763,7 +3763,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringByResultByField")
+	@kotlin.jvm.JvmName("substringByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3808,7 +3808,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringByResultByProperty")
+	@kotlin.jvm.JvmName("substringByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3896,7 +3896,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByValueByValue")
+	@kotlin.jvm.JvmName("substringFieldReceiverByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3940,7 +3940,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByValueByField")
+	@kotlin.jvm.JvmName("substringFieldReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -3984,7 +3984,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("substringFieldReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4028,7 +4028,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByValueByResult")
+	@kotlin.jvm.JvmName("substringFieldReceiverByValueByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4072,7 +4072,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("substringFieldReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4116,7 +4116,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByFieldByField")
+	@kotlin.jvm.JvmName("substringFieldReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4160,7 +4160,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("substringFieldReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4204,7 +4204,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("substringFieldReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4248,7 +4248,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("substringFieldReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4292,7 +4292,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("substringFieldReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4336,7 +4336,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("substringFieldReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4380,7 +4380,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("substringFieldReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4424,7 +4424,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByResultByValue")
+	@kotlin.jvm.JvmName("substringFieldReceiverByResultByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4468,7 +4468,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByResultByField")
+	@kotlin.jvm.JvmName("substringFieldReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4512,7 +4512,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("substringFieldReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4556,7 +4556,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiverByResultByResult")
+	@kotlin.jvm.JvmName("substringFieldReceiverByResultByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4600,7 +4600,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByValueByValue")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4644,7 +4644,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByValueByField")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4688,7 +4688,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4732,7 +4732,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByValueByResult")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByValueByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4776,7 +4776,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4820,7 +4820,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByFieldByField")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4864,7 +4864,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4908,7 +4908,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4952,7 +4952,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -4996,7 +4996,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5040,7 +5040,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5084,7 +5084,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5128,7 +5128,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByResultByValue")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByResultByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5172,7 +5172,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByResultByField")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5216,7 +5216,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5260,7 +5260,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiverByResultByResult")
+	@kotlin.jvm.JvmName("substringPropertyReceiverByResultByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5305,7 +5305,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByValueByValue")
+	@kotlin.jvm.JvmName("substringResultReceiverByValueByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5350,7 +5350,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByValueByField")
+	@kotlin.jvm.JvmName("substringResultReceiverByValueByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5395,7 +5395,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("substringResultReceiverByValueByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5440,7 +5440,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByValueByResult")
+	@kotlin.jvm.JvmName("substringResultReceiverByValueByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5485,7 +5485,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("substringResultReceiverByFieldByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5530,7 +5530,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByFieldByField")
+	@kotlin.jvm.JvmName("substringResultReceiverByFieldByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5575,7 +5575,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("substringResultReceiverByFieldByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5620,7 +5620,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("substringResultReceiverByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5665,7 +5665,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("substringResultReceiverByPropertyByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5710,7 +5710,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("substringResultReceiverByPropertyByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5755,7 +5755,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("substringResultReceiverByPropertyByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5800,7 +5800,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("substringResultReceiverByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5845,7 +5845,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByResultByValue")
+	@kotlin.jvm.JvmName("substringResultReceiverByResultByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5890,7 +5890,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByResultByField")
+	@kotlin.jvm.JvmName("substringResultReceiverByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5935,7 +5935,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("substringResultReceiverByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -5980,7 +5980,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiverByResultByResult")
+	@kotlin.jvm.JvmName("substringResultReceiverByResultByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6062,7 +6062,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringFieldReceiver")
+	@kotlin.jvm.JvmName("substringFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6104,7 +6104,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substringUTF8
 	 */
-	@JvmName("substringPropertyReceiver")
+	@kotlin.jvm.JvmName("substringPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6147,7 +6147,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringResultReceiver")
+	@kotlin.jvm.JvmName("substringResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6240,7 +6240,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8ByValueByField")
+	@kotlin.jvm.JvmName("substringUTF8ByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6286,7 +6286,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8ByValueByProperty")
+	@kotlin.jvm.JvmName("substringUTF8ByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6378,7 +6378,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8ByFieldByValue")
+	@kotlin.jvm.JvmName("substringUTF8ByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6424,7 +6424,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8ByFieldByField")
+	@kotlin.jvm.JvmName("substringUTF8ByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6470,7 +6470,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8ByFieldByProperty")
+	@kotlin.jvm.JvmName("substringUTF8ByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6517,7 +6517,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ByFieldByResult")
+	@kotlin.jvm.JvmName("substringUTF8ByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6563,7 +6563,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8ByPropertyByValue")
+	@kotlin.jvm.JvmName("substringUTF8ByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6609,7 +6609,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8ByPropertyByField")
+	@kotlin.jvm.JvmName("substringUTF8ByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6655,7 +6655,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8ByPropertyByProperty")
+	@kotlin.jvm.JvmName("substringUTF8ByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6702,7 +6702,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ByPropertyByResult")
+	@kotlin.jvm.JvmName("substringUTF8ByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6795,7 +6795,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ByResultByField")
+	@kotlin.jvm.JvmName("substringUTF8ByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6842,7 +6842,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ByResultByProperty")
+	@kotlin.jvm.JvmName("substringUTF8ByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6934,7 +6934,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByValueByValue")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -6980,7 +6980,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByValueByField")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7026,7 +7026,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7072,7 +7072,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByValueByResult")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByValueByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7118,7 +7118,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7164,7 +7164,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByFieldByField")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7210,7 +7210,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7256,7 +7256,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7302,7 +7302,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7348,7 +7348,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7394,7 +7394,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7440,7 +7440,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7486,7 +7486,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByResultByValue")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByResultByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7532,7 +7532,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByResultByField")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7578,7 +7578,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7624,7 +7624,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiverByResultByResult")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiverByResultByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7670,7 +7670,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByValueByValue")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7716,7 +7716,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByValueByField")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7762,7 +7762,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7808,7 +7808,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByValueByResult")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByValueByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7854,7 +7854,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7900,7 +7900,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByFieldByField")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7946,7 +7946,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -7992,7 +7992,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8038,7 +8038,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8084,7 +8084,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8130,7 +8130,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8176,7 +8176,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8222,7 +8222,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByResultByValue")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByResultByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8268,7 +8268,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByResultByField")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8314,7 +8314,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8360,7 +8360,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiverByResultByResult")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiverByResultByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8407,7 +8407,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByValueByValue")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByValueByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8454,7 +8454,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByValueByField")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByValueByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8501,7 +8501,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByValueByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8548,7 +8548,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByValueByResult")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByValueByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8595,7 +8595,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByFieldByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8642,7 +8642,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByFieldByField")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByFieldByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8689,7 +8689,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByFieldByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8736,7 +8736,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8783,7 +8783,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByPropertyByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8830,7 +8830,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByPropertyByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8877,7 +8877,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByPropertyByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8924,7 +8924,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -8971,7 +8971,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByResultByValue")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByResultByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9018,7 +9018,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByResultByField")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9065,7 +9065,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9112,7 +9112,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiverByResultByResult")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiverByResultByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9198,7 +9198,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8FieldReceiver")
+	@kotlin.jvm.JvmName("substringUTF8FieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9242,7 +9242,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * @see substring
 	 */
-	@JvmName("substringUTF8PropertyReceiver")
+	@kotlin.jvm.JvmName("substringUTF8PropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9287,7 +9287,7 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("substringUTF8ResultReceiver")
+	@kotlin.jvm.JvmName("substringUTF8ResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9354,7 +9354,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitByField")
+	@kotlin.jvm.JvmName("splitByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9387,7 +9387,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitByProperty")
+	@kotlin.jvm.JvmName("splitByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9453,7 +9453,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitFieldReceiverByValue")
+	@kotlin.jvm.JvmName("splitFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9486,7 +9486,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitFieldReceiverByField")
+	@kotlin.jvm.JvmName("splitFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9519,7 +9519,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("splitFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9552,7 +9552,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitFieldReceiverByResult")
+	@kotlin.jvm.JvmName("splitFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9585,7 +9585,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("splitPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9618,7 +9618,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitPropertyReceiverByField")
+	@kotlin.jvm.JvmName("splitPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9651,7 +9651,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("splitPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9684,7 +9684,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
-	@JvmName("splitPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("splitPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9718,7 +9718,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("splitResultReceiverByValue")
+	@kotlin.jvm.JvmName("splitResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9752,7 +9752,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("splitResultReceiverByField")
+	@kotlin.jvm.JvmName("splitResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9786,7 +9786,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("splitResultReceiverByProperty")
+	@kotlin.jvm.JvmName("splitResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9820,7 +9820,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("splitResultReceiverByResult")
+	@kotlin.jvm.JvmName("splitResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9885,7 +9885,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstByValueByField")
+	@kotlin.jvm.JvmName("replaceFirstByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9917,7 +9917,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstByValueByProperty")
+	@kotlin.jvm.JvmName("replaceFirstByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -9981,7 +9981,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstByFieldByValue")
+	@kotlin.jvm.JvmName("replaceFirstByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10013,7 +10013,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstByFieldByField")
+	@kotlin.jvm.JvmName("replaceFirstByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10045,7 +10045,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstByFieldByProperty")
+	@kotlin.jvm.JvmName("replaceFirstByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10078,7 +10078,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstByFieldByResult")
+	@kotlin.jvm.JvmName("replaceFirstByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10110,7 +10110,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstByPropertyByValue")
+	@kotlin.jvm.JvmName("replaceFirstByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10142,7 +10142,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstByPropertyByField")
+	@kotlin.jvm.JvmName("replaceFirstByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10174,7 +10174,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstByPropertyByProperty")
+	@kotlin.jvm.JvmName("replaceFirstByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10207,7 +10207,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstByPropertyByResult")
+	@kotlin.jvm.JvmName("replaceFirstByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10272,7 +10272,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstByResultByField")
+	@kotlin.jvm.JvmName("replaceFirstByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10305,7 +10305,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstByResultByProperty")
+	@kotlin.jvm.JvmName("replaceFirstByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10369,7 +10369,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByValueByValue")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10401,7 +10401,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByValueByField")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10433,7 +10433,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10465,7 +10465,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByValueByResult")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByValueByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10497,7 +10497,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10529,7 +10529,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByFieldByField")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10561,7 +10561,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10593,7 +10593,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10625,7 +10625,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10657,7 +10657,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10689,7 +10689,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10721,7 +10721,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10753,7 +10753,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByResultByValue")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByResultByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10785,7 +10785,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByResultByField")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10817,7 +10817,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10849,7 +10849,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstFieldReceiverByResultByResult")
+	@kotlin.jvm.JvmName("replaceFirstFieldReceiverByResultByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10881,7 +10881,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByValueByValue")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10913,7 +10913,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByValueByField")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10945,7 +10945,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -10977,7 +10977,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByValueByResult")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByValueByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11009,7 +11009,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11041,7 +11041,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByFieldByField")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11073,7 +11073,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11105,7 +11105,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11137,7 +11137,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11169,7 +11169,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11201,7 +11201,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11233,7 +11233,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11265,7 +11265,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByResultByValue")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByResultByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11297,7 +11297,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByResultByField")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11329,7 +11329,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11361,7 +11361,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
-	@JvmName("replaceFirstPropertyReceiverByResultByResult")
+	@kotlin.jvm.JvmName("replaceFirstPropertyReceiverByResultByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11394,7 +11394,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByValueByValue")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByValueByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11427,7 +11427,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByValueByField")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByValueByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11460,7 +11460,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByValueByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11493,7 +11493,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByValueByResult")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByValueByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11526,7 +11526,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByFieldByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11559,7 +11559,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByFieldByField")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByFieldByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11592,7 +11592,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByFieldByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11625,7 +11625,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11658,7 +11658,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByPropertyByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11691,7 +11691,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByPropertyByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11724,7 +11724,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByPropertyByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11757,7 +11757,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11790,7 +11790,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByResultByValue")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByResultByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11823,7 +11823,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByResultByField")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11856,7 +11856,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11889,7 +11889,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceFirstResultReceiverByResultByResult")
+	@kotlin.jvm.JvmName("replaceFirstResultReceiverByResultByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11954,7 +11954,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceByValueByField")
+	@kotlin.jvm.JvmName("replaceByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -11986,7 +11986,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceByValueByProperty")
+	@kotlin.jvm.JvmName("replaceByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12050,7 +12050,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceByFieldByValue")
+	@kotlin.jvm.JvmName("replaceByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12082,7 +12082,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceByFieldByField")
+	@kotlin.jvm.JvmName("replaceByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12114,7 +12114,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceByFieldByProperty")
+	@kotlin.jvm.JvmName("replaceByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12147,7 +12147,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceByFieldByResult")
+	@kotlin.jvm.JvmName("replaceByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12179,7 +12179,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceByPropertyByValue")
+	@kotlin.jvm.JvmName("replaceByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12211,7 +12211,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceByPropertyByField")
+	@kotlin.jvm.JvmName("replaceByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12243,7 +12243,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceByPropertyByProperty")
+	@kotlin.jvm.JvmName("replaceByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12276,7 +12276,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceByPropertyByResult")
+	@kotlin.jvm.JvmName("replaceByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12341,7 +12341,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceByResultByField")
+	@kotlin.jvm.JvmName("replaceByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12374,7 +12374,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceByResultByProperty")
+	@kotlin.jvm.JvmName("replaceByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12438,7 +12438,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByValueByValue")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12470,7 +12470,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByValueByField")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12502,7 +12502,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12534,7 +12534,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByValueByResult")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByValueByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12566,7 +12566,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12598,7 +12598,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByFieldByField")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12630,7 +12630,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12662,7 +12662,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12694,7 +12694,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12726,7 +12726,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12758,7 +12758,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12790,7 +12790,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12822,7 +12822,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByResultByValue")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByResultByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12854,7 +12854,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByResultByField")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12886,7 +12886,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12918,7 +12918,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replaceFieldReceiverByResultByResult")
+	@kotlin.jvm.JvmName("replaceFieldReceiverByResultByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12950,7 +12950,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByValueByValue")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -12982,7 +12982,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByValueByField")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13014,7 +13014,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13046,7 +13046,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByValueByResult")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByValueByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13078,7 +13078,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13110,7 +13110,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByFieldByField")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13142,7 +13142,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13174,7 +13174,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13206,7 +13206,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13238,7 +13238,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13270,7 +13270,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13302,7 +13302,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13334,7 +13334,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByResultByValue")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByResultByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13366,7 +13366,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByResultByField")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13398,7 +13398,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13430,7 +13430,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
-	@JvmName("replacePropertyReceiverByResultByResult")
+	@kotlin.jvm.JvmName("replacePropertyReceiverByResultByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13463,7 +13463,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByValueByValue")
+	@kotlin.jvm.JvmName("replaceResultReceiverByValueByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13496,7 +13496,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByValueByField")
+	@kotlin.jvm.JvmName("replaceResultReceiverByValueByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13529,7 +13529,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByValueByProperty")
+	@kotlin.jvm.JvmName("replaceResultReceiverByValueByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13562,7 +13562,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByValueByResult")
+	@kotlin.jvm.JvmName("replaceResultReceiverByValueByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13595,7 +13595,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByFieldByValue")
+	@kotlin.jvm.JvmName("replaceResultReceiverByFieldByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13628,7 +13628,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByFieldByField")
+	@kotlin.jvm.JvmName("replaceResultReceiverByFieldByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13661,7 +13661,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByFieldByProperty")
+	@kotlin.jvm.JvmName("replaceResultReceiverByFieldByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13694,7 +13694,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByFieldByResult")
+	@kotlin.jvm.JvmName("replaceResultReceiverByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13727,7 +13727,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByPropertyByValue")
+	@kotlin.jvm.JvmName("replaceResultReceiverByPropertyByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13760,7 +13760,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByPropertyByField")
+	@kotlin.jvm.JvmName("replaceResultReceiverByPropertyByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13793,7 +13793,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByPropertyByProperty")
+	@kotlin.jvm.JvmName("replaceResultReceiverByPropertyByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13826,7 +13826,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByPropertyByResult")
+	@kotlin.jvm.JvmName("replaceResultReceiverByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13859,7 +13859,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByResultByValue")
+	@kotlin.jvm.JvmName("replaceResultReceiverByResultByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13892,7 +13892,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByResultByField")
+	@kotlin.jvm.JvmName("replaceResultReceiverByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13925,7 +13925,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByResultByProperty")
+	@kotlin.jvm.JvmName("replaceResultReceiverByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -13958,7 +13958,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("replaceResultReceiverByResultByResult")
+	@kotlin.jvm.JvmName("replaceResultReceiverByResultByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14213,7 +14213,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatByField")
+	@kotlin.jvm.JvmName("concatByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14245,7 +14245,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatByProperty")
+	@kotlin.jvm.JvmName("concatByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14307,7 +14307,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatByField")
+	@kotlin.jvm.JvmName("concatByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14339,7 +14339,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatByProperty")
+	@kotlin.jvm.JvmName("concatByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14403,7 +14403,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatFieldReceiverByValue")
+	@kotlin.jvm.JvmName("concatFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14435,7 +14435,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatFieldReceiverByField")
+	@kotlin.jvm.JvmName("concatFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14467,7 +14467,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("concatFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14499,7 +14499,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatFieldReceiverByResult")
+	@kotlin.jvm.JvmName("concatFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14531,7 +14531,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("concatPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14563,7 +14563,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatPropertyReceiverByField")
+	@kotlin.jvm.JvmName("concatPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14595,7 +14595,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("concatPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14627,7 +14627,7 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@JvmName("concatPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("concatPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14660,7 +14660,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("concatResultReceiverByValue")
+	@kotlin.jvm.JvmName("concatResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14693,7 +14693,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("concatResultReceiverByField")
+	@kotlin.jvm.JvmName("concatResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14726,7 +14726,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("concatResultReceiverByProperty")
+	@kotlin.jvm.JvmName("concatResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -14759,7 +14759,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("concatResultReceiverByResult")
+	@kotlin.jvm.JvmName("concatResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl

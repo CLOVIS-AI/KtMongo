@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -121,16 +121,35 @@ fun SuiteDsl.verifyStrings(factory: Prepared<BsonFactory>) = suite("String") {
 		}
 	)
 
+	val specialCharacters = "ab\\\"\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\u000c\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fab"
+
+	val escapedJson = buildString {
+		for (c in specialCharacters) {
+			when (c) {
+				'"' -> append("\\\"")
+				'\\' -> append("\\\\")
+				'\b' -> append("\\b")
+				'\t' -> append("\\t")
+				'\n' -> append("\\n")
+				'' -> append("\\f")
+				'\r' -> append("\\r")
+				else if (c.code < 0x20) -> append("\\u" + c.code.toString(16).padStart(4, '0'))
+				else -> append(c)
+			}
+		}
+	}
+
 	testBson(
 		factory,
 		"Required escapes",
 		document {
-			writeString("a", "ab\\\"\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\u000c\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fab")
+			writeString("a", specialCharacters)
 		},
-		serialize(A("ab\\\"\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\u000c\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fab")),
+		serialize(A(specialCharacters)),
 		hex("320000000261002600000061625C220102030405060708090A0B0C0D0E0F101112131415161718191A1B1C1D1E1F61620000"),
+		json("{\"a\": \"$escapedJson\"}"),
 		verify("Read value") {
-			check(this["a"]?.decodeString() == "ab\\\"\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\u000c\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001fab")
+			check(this["a"]?.decodeString() == specialCharacters)
 		}
 	)
 }

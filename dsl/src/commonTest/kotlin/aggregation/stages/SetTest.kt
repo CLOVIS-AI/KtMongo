@@ -18,9 +18,9 @@ package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.ktmongo.dsl.multiContextSuite
 
-val SetTest by preparedSuite {
+val SetTest by multiContextSuite {
 
 	class Target(
 		val foo: String,
@@ -109,7 +109,6 @@ val SetTest by preparedSuite {
 			TestPipeline<Target>()
 				.set {
 					Target::deathDate.setIf(true, 12)
-					Target::deathDate.setIf(false, 13)
 				}
 				.shouldBeBson($$"""
 					[
@@ -118,10 +117,10 @@ val SetTest by preparedSuite {
 								"deathDate": {
 									"$cond": {
 										"if": {
-											"$literal": false
+											"$literal": true
 										}, 
 										"then": {
-											"$literal": 13
+											"$literal": 12
 										}, 
 										"else": "$deathDate"
 									}
@@ -135,7 +134,6 @@ val SetTest by preparedSuite {
 		test("Boolean condition and Kotlin values") {
 			TestPipeline<Target>()
 				.set {
-					Target::deathDate.setIf(true, 12)
 					Target::deathDate.setIf(false, 13)
 				}
 				.shouldBeBson($$"""

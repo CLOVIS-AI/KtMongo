@@ -28,6 +28,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import kotlin.jvm.JvmMultifileClass
+import kotlin.jvm.JvmName
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -162,7 +164,7 @@ private class FilterQueryPredicateImpl<T>(
 
 		override fun write(writer: BsonFieldWriter) {
 			writer.writeDocument("\$not") {
-				expression.writeTo(writer)
+				expression.writeTo(this)
 			}
 		}
 	}

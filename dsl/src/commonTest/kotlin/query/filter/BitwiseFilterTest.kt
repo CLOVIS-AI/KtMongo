@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@
 package opensavvy.ktmongo.dsl.query.filter
 
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.ExperimentalTime
 
-val BitwiseFilterTest by preparedSuite {
+val BitwiseFilterTest by multiContextSuite {
 
 	suite($$"$bitsAllClear") {
 		test("Int mask") {

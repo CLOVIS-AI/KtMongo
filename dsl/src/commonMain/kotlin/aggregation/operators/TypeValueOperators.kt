@@ -517,7 +517,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toBooleanFieldReceiver")
+	@kotlin.jvm.JvmName("toBooleanFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -557,7 +557,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toBooleanPropertyReceiver")
+	@kotlin.jvm.JvmName("toBooleanPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -598,7 +598,7 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toBooleanResultReceiver")
+	@kotlin.jvm.JvmName("toBooleanResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -712,7 +712,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toInstantFieldReceiver")
+	@kotlin.jvm.JvmName("toInstantFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -770,7 +770,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toInstantPropertyReceiver")
+	@kotlin.jvm.JvmName("toInstantPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -829,7 +829,7 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toInstantResultReceiver")
+	@kotlin.jvm.JvmName("toInstantResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -931,7 +931,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toDoubleFieldReceiver")
+	@kotlin.jvm.JvmName("toDoubleFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -983,7 +983,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toDoublePropertyReceiver")
+	@kotlin.jvm.JvmName("toDoublePropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1036,7 +1036,7 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toDoubleResultReceiver")
+	@kotlin.jvm.JvmName("toDoubleResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1140,7 +1140,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toIntFieldReceiver")
+	@kotlin.jvm.JvmName("toIntFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1193,7 +1193,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toIntPropertyReceiver")
+	@kotlin.jvm.JvmName("toIntPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1247,7 +1247,7 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toIntResultReceiver")
+	@kotlin.jvm.JvmName("toIntResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1349,7 +1349,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toLongFieldReceiver")
+	@kotlin.jvm.JvmName("toLongFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1401,7 +1401,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toLongPropertyReceiver")
+	@kotlin.jvm.JvmName("toLongPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1454,7 +1454,7 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toLongResultReceiver")
+	@kotlin.jvm.JvmName("toLongResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1532,7 +1532,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toObjectIdFieldReceiver")
+	@kotlin.jvm.JvmName("toObjectIdFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1572,7 +1572,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toObjectIdPropertyReceiver")
+	@kotlin.jvm.JvmName("toObjectIdPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1613,7 +1613,7 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toObjectIdResultReceiver")
+	@kotlin.jvm.JvmName("toObjectIdResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1701,7 +1701,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toTextFieldReceiver")
+	@kotlin.jvm.JvmName("toTextFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1746,7 +1746,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toTextPropertyReceiver")
+	@kotlin.jvm.JvmName("toTextPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1792,7 +1792,7 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toTextResultReceiver")
+	@kotlin.jvm.JvmName("toTextResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1855,7 +1855,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toUuidFieldReceiver")
+	@kotlin.jvm.JvmName("toUuidFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@ExperimentalUuidApi
 	@OptIn(LowLevelApi::class)
@@ -1888,7 +1888,7 @@ interface TypeValueOperators : ValueOperators {
 	 *
 	 * @see type Get the value's type.
 	 */
-	@JvmName("toUuidPropertyReceiver")
+	@kotlin.jvm.JvmName("toUuidPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@ExperimentalUuidApi
 	@OptIn(LowLevelApi::class)
@@ -1922,7 +1922,7 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("toUuidResultReceiver")
+	@kotlin.jvm.JvmName("toUuidResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@ExperimentalUuidApi
 	@OptIn(LowLevelApi::class)

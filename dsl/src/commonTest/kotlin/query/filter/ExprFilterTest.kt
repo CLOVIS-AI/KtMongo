@@ -16,10 +16,10 @@
 
 package opensavvy.ktmongo.dsl.query.filter
 
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.prepared.runner.testballoon.preparedSuite
 
-val ExprFilterTest by preparedSuite {
+val ExprFilterTest by multiContextSuite {
 	test("Reading a field") {
 		filter {
 			expr {

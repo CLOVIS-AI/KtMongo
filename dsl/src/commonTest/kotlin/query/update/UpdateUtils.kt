@@ -19,15 +19,16 @@
 package opensavvy.ktmongo.dsl.query.update
 
 import kotlinx.serialization.Serializable
+import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.dsl.query.shouldBeBson
-import opensavvy.ktmongo.dsl.query.testContext
-import opensavvy.prepared.runner.testballoon.preparedSuite
-import org.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.testContext
+import opensavvy.prepared.suite.TestDsl
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -53,15 +54,15 @@ class User(
 
 @OptIn(LowLevelApi::class)
 @KtMongoDsl
-fun update(block: UpdateQuery<User>.() -> Unit): String =
+suspend fun TestDsl.update(block: UpdateQuery<User>.() -> Unit): String =
 	UpdateQuery<User>(testContext()).apply(block).toString()
 
 @OptIn(LowLevelApi::class)
 @KtMongoDsl
-fun upsert(block: UpsertQuery<User>.() -> Unit): String =
+suspend fun TestDsl.upsert(block: UpsertQuery<User>.() -> Unit): String =
 	UpsertQuery<User>(testContext()).apply(block).toString()
 
-val EmptyUpdateTest by preparedSuite {
+val EmptyUpdateTest by multiContextSuite {
 	test("Empty update") {
 		update { } shouldBeBson "{}"
 	}

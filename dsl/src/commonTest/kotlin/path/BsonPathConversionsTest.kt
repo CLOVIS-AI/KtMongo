@@ -20,13 +20,13 @@ package opensavvy.ktmongo.dsl.path
 
 import opensavvy.ktmongo.bson.BsonPath
 import opensavvy.ktmongo.bson.ExperimentalBsonPathApi
+import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.update.Friend
 import opensavvy.ktmongo.dsl.query.update.User
 import opensavvy.ktmongo.dsl.query.update.update
-import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.assertions.checkThrows
 
-val BsonPathConversions by preparedSuite {
+val BsonPathConversions by multiContextSuite {
 	test("Simple path with fields") {
 		val _ = update {
 			val name = User::bestFriend / Friend::name

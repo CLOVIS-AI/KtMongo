@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.bson.multiplatform.serialization
+@file:OptIn(ExperimentalAtomicApi::class, ExperimentalTime::class)
 
-class BsonEncodingException(message: String) : Exception(message)
+package opensavvy.ktmongo.dsl
+
+import opensavvy.prepared.suite.prepared
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.time.ExperimentalTime
+
+/**
+ * An instance of [BsonContext] usable for configuring DSL tests.
+ */
+val testContext by prepared {
+	BsonContext(
+		bsonFactory = testBsonFactory(),
+	)
+}

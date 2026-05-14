@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.bson.multiplatform.impl.read
 
 import kotlinx.io.readIntLe
+import opensavvy.ktmongo.bson.BsonDecodingException
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.*
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -106,7 +107,11 @@ internal class MultiplatformBsonDocumentMap(
 	private fun scanOne(): String {
 		val type = BsonType.fromCode(reader.readSignedByte())
 		val name = reader.readCString()
-		val field = readField(bytes, reader, type, factory)
+		val field = try {
+			readField(bytes, reader, type, factory)
+		} catch (e: Exception) {
+			throw BsonDecodingException("Could not read field \"$name\" of type $type\n\tBytes: $bytes", e)
+		}
 
 		scannedFields[name] = field
 
@@ -223,7 +228,7 @@ internal class MultiplatformBsonDocumentMap(
 				append(", ")
 
 			append('"')
-			append(key)
+			append(key.encodeToJsonString())
 			append("\": ")
 			append(value)
 

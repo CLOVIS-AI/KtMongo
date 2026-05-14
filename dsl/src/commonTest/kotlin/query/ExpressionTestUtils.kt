@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,8 @@
 
 package opensavvy.ktmongo.dsl.query
 
-import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import org.intellij.lang.annotations.Language
-
-expect fun testContext(): BsonContext
 
 infix fun String.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
 	val expected = expected
