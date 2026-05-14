@@ -25,7 +25,6 @@ import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.AbstractEncoder
 import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.multiplatform.BsonArray
@@ -44,8 +43,13 @@ import kotlin.uuid.Uuid
 
 @ExperimentalSerializationApi
 @LowLevelApi
-private class BsonEncoderTopLevel(override val serializersModule: SerializersModule, val context: BsonFactory) : AbstractEncoder() {
+private class BsonEncoderTopLevel(
+	val factory: BsonFactory,
+) : AbstractEncoder() {
 	lateinit var out: BsonDocument
+
+	override val serializersModule: SerializersModule
+		get() = factory.serializersModule
 
 	override fun encodeNull() {
 		throw BsonEncodingException("Cannot encode a null value at the top level of BSON")
@@ -59,13 +63,13 @@ private class BsonEncoderTopLevel(override val serializersModule: SerializersMod
 	override fun beginStructure(descriptor: SerialDescriptor): CompositeEncoder {
 		val out = when (descriptor.kind) {
 			StructureKind.CLASS, StructureKind.OBJECT -> {
-				val a = context.openDocument()
+				val a = factory.openDocument()
 				val doc = object : CompletableBsonFieldWriter by a {
 					override fun complete() {
 						out = a.build()
 					}
 				}
-				BsonCompositeEncoder(serializersModule, doc)
+				BsonCompositeEncoder(factory, doc)
 			}
 
 			else -> TODO("Unsupported structure kind: ${descriptor.kind}")
@@ -75,7 +79,13 @@ private class BsonEncoderTopLevel(override val serializersModule: SerializersMod
 }
 
 @OptIn(LowLevelApi::class, DangerousMongoApi::class, ExperimentalTime::class, ExperimentalUuidApi::class)
-internal class BsonEncoder(override val serializersModule: SerializersModule, val out: CompletableBsonValueWriter) : Encoder {
+internal class BsonEncoder(
+	val factory: BsonFactory,
+	val out: CompletableBsonValueWriter,
+) : Encoder {
+	override val serializersModule: SerializersModule
+		get() = factory.serializersModule
+
 	@ExperimentalSerializationApi
 	override fun encodeNull() {
 		out.writeNull()
@@ -127,9 +137,9 @@ internal class BsonEncoder(override val serializersModule: SerializersModule, va
 
 	override fun beginStructure(descriptor: SerialDescriptor): CompositeEncoder {
 		return when (descriptor.kind) {
-			StructureKind.CLASS -> BsonCompositeEncoder(serializersModule, out.openDocument())
-			StructureKind.LIST -> BsonCompositeEncoderList(serializersModule, out.openArray())
-			StructureKind.OBJECT -> BsonCompositeEncoder(serializersModule, out.openDocument())
+			StructureKind.CLASS -> BsonCompositeEncoder(factory, out.openDocument())
+			StructureKind.LIST -> BsonCompositeEncoderList(factory, out.openArray())
+			StructureKind.OBJECT -> BsonCompositeEncoder(factory, out.openDocument())
 			else -> TODO("Unsupported structure kind: ${descriptor.kind}")
 		}
 	}
@@ -167,7 +177,13 @@ internal class BsonEncoder(override val serializersModule: SerializersModule, va
 
 @LowLevelApi
 @OptIn(DangerousMongoApi::class)
-private class BsonCompositeEncoder(override val serializersModule: SerializersModule, val out: CompletableBsonFieldWriter) : CompositeEncoder {
+private class BsonCompositeEncoder(
+	val factory: BsonFactory,
+	val out: CompletableBsonFieldWriter,
+) : CompositeEncoder {
+	override val serializersModule: SerializersModule
+		get() = factory.serializersModule
+
 	override fun endStructure(descriptor: SerialDescriptor) {
 		out.complete()
 	}
@@ -209,22 +225,28 @@ private class BsonCompositeEncoder(override val serializersModule: SerializersMo
 	}
 
 	override fun encodeInlineElement(descriptor: SerialDescriptor, index: Int): Encoder {
-		return BsonEncoder(serializersModule, out.open(descriptor.getElementName(index)))
+		return BsonEncoder(factory, out.open(descriptor.getElementName(index)))
 	}
 
 	override fun <T> encodeSerializableElement(descriptor: SerialDescriptor, index: Int, serializer: SerializationStrategy<T>, value: T) {
-		BsonEncoder(serializersModule, out.open(descriptor.getElementName(index))).encodeSerializableValue(serializer, value)
+		BsonEncoder(factory, out.open(descriptor.getElementName(index))).encodeSerializableValue(serializer, value)
 	}
 
 	@ExperimentalSerializationApi
 	override fun <T : Any> encodeNullableSerializableElement(descriptor: SerialDescriptor, index: Int, serializer: SerializationStrategy<T>, value: T?) {
-		BsonEncoder(serializersModule, out.open(descriptor.getElementName(index))).encodeNullableSerializableValue(serializer, value)
+		BsonEncoder(factory, out.open(descriptor.getElementName(index))).encodeNullableSerializableValue(serializer, value)
 	}
 }
 
 @LowLevelApi
 @OptIn(DangerousMongoApi::class)
-private class BsonCompositeEncoderList(override val serializersModule: SerializersModule, val out: CompletableBsonValueWriter) : CompositeEncoder {
+private class BsonCompositeEncoderList(
+	val factory: BsonFactory,
+	val out: CompletableBsonValueWriter,
+) : CompositeEncoder {
+	override val serializersModule: SerializersModule
+		get() = factory.serializersModule
+
 	override fun endStructure(descriptor: SerialDescriptor) {
 		out.complete()
 	}
@@ -266,16 +288,16 @@ private class BsonCompositeEncoderList(override val serializersModule: Serialize
 	}
 
 	override fun encodeInlineElement(descriptor: SerialDescriptor, index: Int): Encoder {
-		return BsonEncoder(serializersModule, out)
+		return BsonEncoder(factory, out)
 	}
 
 	override fun <T> encodeSerializableElement(descriptor: SerialDescriptor, index: Int, serializer: SerializationStrategy<T>, value: T) {
-		BsonEncoder(serializersModule, out).encodeSerializableValue(serializer, value)
+		BsonEncoder(factory, out).encodeSerializableValue(serializer, value)
 	}
 
 	@ExperimentalSerializationApi
 	override fun <T : Any> encodeNullableSerializableElement(descriptor: SerialDescriptor, index: Int, serializer: SerializationStrategy<T>, value: T?) {
-		BsonEncoder(serializersModule, out).encodeNullableSerializableValue(serializer, value)
+		BsonEncoder(factory, out).encodeNullableSerializableValue(serializer, value)
 	}
 }
 
@@ -286,8 +308,8 @@ private class BsonCompositeEncoderList(override val serializersModule: Serialize
  */
 @ExperimentalSerializationApi
 @OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <T : Any> encodeToBson(context: BsonFactory, value: T, serializer: SerializationStrategy<T>): BsonDocument {
-	val encoder = BsonEncoderTopLevel(EmptySerializersModule(), context)
+fun <T : Any> encodeToBson(factory: BsonFactory, value: T, serializer: SerializationStrategy<T>): BsonDocument {
+	val encoder = BsonEncoderTopLevel(factory)
 	encoder.encodeSerializableValue(serializer, value)
 	return encoder.out
 }
@@ -298,5 +320,5 @@ fun <T : Any> encodeToBson(context: BsonFactory, value: T, serializer: Serializa
  * [value] must be serializable using KotlinX.Serialization. For example, using the `@Serializable` annotation.
  */
 @ExperimentalSerializationApi
-inline fun <reified T : Any> encodeToBson(context: BsonFactory, value: T): BsonDocument =
-	encodeToBson(context, value, serializer())
+inline fun <reified T : Any> encodeToBson(factory: BsonFactory, value: T): BsonDocument =
+	encodeToBson(factory, value, serializer())

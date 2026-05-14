@@ -23,7 +23,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonType
@@ -88,7 +87,7 @@ class BsonDocument internal constructor(
 
 	@LowLevelApi
 	override fun <T> decode(type: KType): T {
-		val decoder = BsonDecoder(EmptySerializersModule(), this.asValue())
+		val decoder = BsonDecoder(this.asValue())
 		@Suppress("UNCHECKED_CAST")
 		return decoder.decodeSerializableValue(serializer(type) as KSerializer<T>)
 	}

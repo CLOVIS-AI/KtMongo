@@ -19,12 +19,12 @@ package opensavvy.ktmongo.bson.multiplatform.impl.write
 import kotlinx.io.Buffer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
-import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.BsonValue
 import opensavvy.ktmongo.bson.multiplatform.Bytes
 import opensavvy.ktmongo.bson.multiplatform.RawBsonWriter
@@ -37,6 +37,7 @@ import kotlin.reflect.KType
 
 @LowLevelApi
 internal class MultiplatformDocumentFieldWriter(
+	private val factory: BsonFactory,
 	private val writer: RawBsonWriter,
 ) : BsonFieldWriter, CompletableBsonFieldWriter {
 
@@ -221,7 +222,7 @@ internal class MultiplatformDocumentFieldWriter(
 		val childBuffer = Buffer()
 		val childWriter = RawBsonWriter(childBuffer)
 
-		writeTo(MultiplatformDocumentFieldWriter(childWriter))
+		writeTo(MultiplatformDocumentFieldWriter(factory, childWriter))
 		closeArbitraryDocument(childBuffer, childWriter)
 	}
 
@@ -256,7 +257,7 @@ internal class MultiplatformDocumentFieldWriter(
 		val childBuffer = Buffer()
 		val childWriter = RawBsonWriter(childBuffer)
 
-		val writer = MultiplatformDocumentFieldWriter(childWriter)
+		val writer = MultiplatformDocumentFieldWriter(factory, childWriter)
 		return object : CompletableBsonFieldWriter by writer {
 			override fun complete() {
 				this@MultiplatformDocumentFieldWriter.closeArbitraryDocument(childBuffer, childWriter)
@@ -274,7 +275,7 @@ internal class MultiplatformDocumentFieldWriter(
 		val childBuffer = Buffer()
 		val childWriter = RawBsonWriter(childBuffer)
 
-		return object : CompletableBsonValueWriter by MultiplatformArrayFieldWriter(MultiplatformDocumentFieldWriter(childWriter)) {
+		return object : CompletableBsonValueWriter by MultiplatformArrayFieldWriter(MultiplatformDocumentFieldWriter(factory, childWriter)) {
 			override fun complete() {
 				this@MultiplatformDocumentFieldWriter.closeArbitraryDocument(childBuffer, childWriter)
 			}
@@ -291,7 +292,7 @@ internal class MultiplatformDocumentFieldWriter(
 	@LowLevelApi
 	override fun <T> writeSafe(name: String, obj: T, type: KType) {
 		val serializer = serializer(type) as SerializationStrategy<T>
-		BsonEncoder(EmptySerializersModule(), open(name)).encodeSerializableValue(serializer, obj)
+		BsonEncoder(factory, open(name)).encodeSerializableValue(serializer, obj)
 	}
 
 	@DangerousMongoApi

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package opensavvy.ktmongo.bson.multiplatform
 import kotlinx.io.Buffer
 import kotlinx.io.readTo
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.modules.EmptySerializersModule
+import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonFieldWriter
@@ -102,7 +104,27 @@ import kotlin.time.ExperimentalTime
  * ```
  */
 @OptIn(ExperimentalTime::class)
-class BsonFactory : BsonFactory {
+class BsonFactory(
+	/**
+	 * The [SerializersModule] used by this factory when [encoding][encode] or [decoding][opensavvy.ktmongo.bson.BsonDocument.decode]
+	 * BSON types.
+	 *
+	 * You can use this module to control polymorphic and contextual serialization.
+	 *
+	 * - [KotlinX.Serialization documentation](https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/serializers.md#serializers-module)
+	 */
+	serializersModule: SerializersModule = EmptySerializersModule(),
+) : BsonFactory {
+
+	/**
+	 * The [SerializersModule] used by this factory when [encoding][encode] or [decoding][opensavvy.ktmongo.bson.BsonDocument.decode]
+	 * BSON types.
+	 *
+	 * To customize this module, see the constructor of [opensavvy.ktmongo.bson.multiplatform.BsonFactory].
+	 */
+	val serializersModule = SerializersModule {
+		include(serializersModule)
+	}
 
 	@Suppress("NOTHING_TO_INLINE")
 	private inline fun openArbitraryTopLevel(
@@ -139,7 +161,7 @@ class BsonFactory : BsonFactory {
 	): Bytes {
 		val buffer = Buffer()
 		val bsonWriter = openArbitraryTopLevel(buffer)
-		MultiplatformDocumentFieldWriter(bsonWriter).block()
+		MultiplatformDocumentFieldWriter(this, bsonWriter).block()
 		return closeArbitraryTopLevel(buffer, bsonWriter)
 	}
 
@@ -160,7 +182,7 @@ class BsonFactory : BsonFactory {
 		val buffer = Buffer()
 		val bsonWriter = openArbitraryTopLevel(buffer)
 
-		return object : TopCompletableBsonFieldWriter, CompletableBsonFieldWriter by MultiplatformDocumentFieldWriter(bsonWriter) {
+		return object : TopCompletableBsonFieldWriter, CompletableBsonFieldWriter by MultiplatformDocumentFieldWriter(this, bsonWriter) {
 			override fun build(): BsonDocument =
 				BsonDocument(this@BsonFactory, closeArbitraryTopLevel(buffer, bsonWriter))
 		}
@@ -182,7 +204,7 @@ class BsonFactory : BsonFactory {
 		val buffer = Buffer()
 		val bsonWriter = openArbitraryTopLevel(buffer)
 
-		return object : TopCompletableBsonValueWriter, CompletableBsonValueWriter by MultiplatformArrayFieldWriter(MultiplatformDocumentFieldWriter(bsonWriter)) {
+		return object : TopCompletableBsonValueWriter, CompletableBsonValueWriter by MultiplatformArrayFieldWriter(MultiplatformDocumentFieldWriter(this, bsonWriter)) {
 			override fun build(): BsonArray =
 				BsonArray(this@BsonFactory, closeArbitraryTopLevel(buffer, bsonWriter))
 		}

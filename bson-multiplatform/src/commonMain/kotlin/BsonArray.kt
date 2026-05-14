@@ -24,7 +24,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonDecodingException
@@ -80,7 +79,7 @@ class BsonArray internal constructor(
 	@ExperimentalSerializationApi
 	@LowLevelApi
 	override fun <T> decode(type: KType): T {
-		val decoder = BsonDecoderTopLevel(EmptySerializersModule(), factory, bytesWithHeader)
+		val decoder = BsonDecoderTopLevel(factory, bytesWithHeader)
 		@Suppress("UNCHECKED_CAST")
 		val serializer = serializer(type) as KSerializer<T>
 		return try {
