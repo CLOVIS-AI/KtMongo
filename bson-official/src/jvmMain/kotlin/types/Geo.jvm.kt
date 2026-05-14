@@ -113,3 +113,50 @@ internal class KotlinGeoLineStringCodec(
 		return Geo.LineString(points)
 	}
 }
+
+@OptIn(LowLevelApi::class)
+internal class KotlinGeoPolygonCodec(
+	private val factory: BsonFactory,
+) : Codec<Geo.Polygon> {
+
+	override fun encode(writer: BsonWriter, value: Geo.Polygon, encoderContext: EncoderContext) {
+		factory.writeDocumentTo(writer) {
+			writeString("type", "Polygon")
+			writeArray("coordinates") {
+				for (ring in value.rings) {
+					writeArray {
+						for (point in ring.points) {
+							writeArray {
+								writeDouble(point.x.degrees)
+								writeDouble(point.y.degrees)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	override fun getEncoderClass(): Class<Geo.Polygon> =
+		Geo.Polygon::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.Polygon {
+		val doc = factory.readDocument(reader, decoderContext)
+
+		val type = doc["type"]?.decodeString()
+		val coordinates = doc["coordinates"]?.decodeArray()
+
+		require(type == "Polygon") { "Expected a GeoJSON Polygon, but found: $type\n\tData: $doc" }
+		require(coordinates != null && coordinates.size >= 1) { "A GeoJSON Polygon should have at least one ring, but found: $coordinates\n\tData: $doc" }
+
+		val rings = coordinates
+			.asIterable()
+			.map { ringArray ->
+				val pointsArray = ringArray.decodeArray()
+				val points = pointsArray.asIterable().map { it.decodeArray().decodeAsPoint() }
+				Geo.LineString(points)
+			}
+
+		return Geo.Polygon(rings)
+	}
+}
