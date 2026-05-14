@@ -27,7 +27,6 @@ import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonDecodingException
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.*
@@ -321,13 +320,3 @@ internal class BsonCompositeListDecoder(
 		return BsonDecoder(current).decodeNullableSerializableValue(deserializer)
 	}
 }
-
-@ExperimentalSerializationApi
-fun <T : Any> decodeFromBson(factory: BsonFactory, bytes: ByteArray, deserializer: DeserializationStrategy<T>): T {
-	val decoder = BsonDecoderTopLevel(factory, Bytes(bytes.copyOf()))
-	return decoder.decodeSerializableValue(deserializer)
-}
-
-@ExperimentalSerializationApi
-inline fun <reified T : Any> decodeFromBson(factory: BsonFactory, bytes: ByteArray): T =
-	decodeFromBson(factory, bytes, serializer<T>())

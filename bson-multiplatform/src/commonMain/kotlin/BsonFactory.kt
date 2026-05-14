@@ -29,7 +29,7 @@ import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonFieldWrite
 import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformArrayFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformDocumentFieldWriter
-import opensavvy.ktmongo.bson.multiplatform.serialization.encodeToBson
+import opensavvy.ktmongo.bson.multiplatform.serialization.BsonEncoderTopLevel
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KType
@@ -173,8 +173,11 @@ class BsonFactory(
 
 	@ExperimentalSerializationApi
 	@LowLevelApi
-	override fun <T : Any> encode(obj: T, type: KType): BsonDocument =
-		encodeToBson(this, obj, serializer(type))
+	override fun <T : Any> encode(obj: T, type: KType): BsonDocument {
+		val encoder = BsonEncoderTopLevel(this)
+		encoder.encodeSerializableValue(serializer(type), obj)
+		return encoder.out
+	}
 
 	@LowLevelApi
 	@DangerousMongoApi

@@ -26,7 +26,6 @@ import kotlinx.serialization.encoding.AbstractEncoder
 import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.multiplatform.BsonArray
 import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
@@ -43,7 +42,7 @@ import kotlin.uuid.Uuid
 
 @ExperimentalSerializationApi
 @LowLevelApi
-private class BsonEncoderTopLevel(
+internal class BsonEncoderTopLevel(
 	val factory: BsonFactory,
 ) : AbstractEncoder() {
 	lateinit var out: BsonDocument
@@ -300,25 +299,3 @@ private class BsonCompositeEncoderList(
 		BsonEncoder(factory, out).encodeNullableSerializableValue(serializer, value)
 	}
 }
-
-/**
- * Encodes an arbitrary [value] into a [Bson] document.
- *
- * [value] must be serializable using KotlinX.Serialization. For example, using the `@Serializable` annotation.
- */
-@ExperimentalSerializationApi
-@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-fun <T : Any> encodeToBson(factory: BsonFactory, value: T, serializer: SerializationStrategy<T>): BsonDocument {
-	val encoder = BsonEncoderTopLevel(factory)
-	encoder.encodeSerializableValue(serializer, value)
-	return encoder.out
-}
-
-/**
- * Encodes an arbitrary [value] into a [Bson] document.
- *
- * [value] must be serializable using KotlinX.Serialization. For example, using the `@Serializable` annotation.
- */
-@ExperimentalSerializationApi
-inline fun <reified T : Any> encodeToBson(factory: BsonFactory, value: T): BsonDocument =
-	encodeToBson(factory, value, serializer())
