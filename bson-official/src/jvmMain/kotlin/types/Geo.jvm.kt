@@ -18,10 +18,12 @@
 
 package opensavvy.ktmongo.bson.official.types
 
+import opensavvy.ktmongo.bson.decode
 import opensavvy.ktmongo.bson.official.BsonArray
 import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.types.ExperimentalGeoBsonApi
 import opensavvy.ktmongo.bson.types.Geo
+import opensavvy.ktmongo.bson.types.Geo.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonReader
 import org.bson.BsonWriter
@@ -29,7 +31,7 @@ import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
 
-private fun BsonArray.decodeAsPoint(): Geo.Point {
+private fun BsonArray.decodeAsPoint(): Point {
 	require(size == 2) { "A GeoJSON Point should have two coordinates, but found: $this" }
 
 	val x = this[0]?.decodeDouble()
@@ -38,18 +40,18 @@ private fun BsonArray.decodeAsPoint(): Geo.Point {
 	requireNotNull(x) { "Cannot decode the longitude\n\tCoordinates: $this" }
 	requireNotNull(y) { "Cannot decode the latitude\n\tCoordinates: $this" }
 
-	return Geo.Point(
-		Geo.Longitude(x),
-		Geo.Latitude(y),
+	return Point(
+		Longitude(x),
+		Latitude(y),
 	)
 }
 
 @OptIn(LowLevelApi::class)
 internal class KotlinGeoPointCodec(
 	private val factory: BsonFactory,
-) : Codec<Geo.Point> {
+) : Codec<Point> {
 
-	override fun encode(writer: BsonWriter, value: Geo.Point, encoderContext: EncoderContext) {
+	override fun encode(writer: BsonWriter, value: Point, encoderContext: EncoderContext) {
 		factory.writeDocumentTo(writer) {
 			writeString("type", "Point")
 			writeArray("coordinates") {
@@ -59,10 +61,10 @@ internal class KotlinGeoPointCodec(
 		}
 	}
 
-	override fun getEncoderClass(): Class<Geo.Point> =
-		Geo.Point::class.java
+	override fun getEncoderClass(): Class<Point> =
+		Point::class.java
 
-	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.Point {
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Point {
 		val doc = factory.readDocument(reader, decoderContext)
 
 		val type = doc["type"]?.decodeString()
@@ -78,9 +80,9 @@ internal class KotlinGeoPointCodec(
 @OptIn(LowLevelApi::class)
 internal class KotlinGeoLineStringCodec(
 	private val factory: BsonFactory,
-) : Codec<Geo.LineString> {
+) : Codec<LineString> {
 
-	override fun encode(writer: BsonWriter, value: Geo.LineString, encoderContext: EncoderContext) {
+	override fun encode(writer: BsonWriter, value: LineString, encoderContext: EncoderContext) {
 		factory.writeDocumentTo(writer) {
 			writeString("type", "LineString")
 			writeArray("coordinates") {
@@ -94,10 +96,10 @@ internal class KotlinGeoLineStringCodec(
 		}
 	}
 
-	override fun getEncoderClass(): Class<Geo.LineString> =
-		Geo.LineString::class.java
+	override fun getEncoderClass(): Class<LineString> =
+		LineString::class.java
 
-	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.LineString {
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): LineString {
 		val doc = factory.readDocument(reader, decoderContext)
 
 		val type = doc["type"]?.decodeString()
@@ -110,16 +112,16 @@ internal class KotlinGeoLineStringCodec(
 			.asIterable()
 			.map { it.decodeArray().decodeAsPoint() }
 
-		return Geo.LineString(points)
+		return LineString(points)
 	}
 }
 
 @OptIn(LowLevelApi::class)
 internal class KotlinGeoMultiPointCodec(
 	private val factory: BsonFactory,
-) : Codec<Geo.MultiPoint> {
+) : Codec<MultiPoint> {
 
-	override fun encode(writer: BsonWriter, value: Geo.MultiPoint, encoderContext: EncoderContext) {
+	override fun encode(writer: BsonWriter, value: MultiPoint, encoderContext: EncoderContext) {
 		factory.writeDocumentTo(writer) {
 			writeString("type", "MultiPoint")
 			writeArray("coordinates") {
@@ -133,10 +135,10 @@ internal class KotlinGeoMultiPointCodec(
 		}
 	}
 
-	override fun getEncoderClass(): Class<Geo.MultiPoint> =
-		Geo.MultiPoint::class.java
+	override fun getEncoderClass(): Class<MultiPoint> =
+		MultiPoint::class.java
 
-	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.MultiPoint {
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): MultiPoint {
 		val doc = factory.readDocument(reader, decoderContext)
 
 		val type = doc["type"]?.decodeString()
@@ -149,16 +151,16 @@ internal class KotlinGeoMultiPointCodec(
 			.asIterable()
 			.map { it.decodeArray().decodeAsPoint() }
 
-		return Geo.MultiPoint(points)
+		return MultiPoint(points)
 	}
 }
 
 @OptIn(LowLevelApi::class)
 internal class KotlinGeoPolygonCodec(
 	private val factory: BsonFactory,
-) : Codec<Geo.Polygon> {
+) : Codec<Polygon> {
 
-	override fun encode(writer: BsonWriter, value: Geo.Polygon, encoderContext: EncoderContext) {
+	override fun encode(writer: BsonWriter, value: Polygon, encoderContext: EncoderContext) {
 		factory.writeDocumentTo(writer) {
 			writeString("type", "Polygon")
 			writeArray("coordinates") {
@@ -176,10 +178,10 @@ internal class KotlinGeoPolygonCodec(
 		}
 	}
 
-	override fun getEncoderClass(): Class<Geo.Polygon> =
-		Geo.Polygon::class.java
+	override fun getEncoderClass(): Class<Polygon> =
+		Polygon::class.java
 
-	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.Polygon {
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Polygon {
 		val doc = factory.readDocument(reader, decoderContext)
 
 		val type = doc["type"]?.decodeString()
@@ -193,19 +195,19 @@ internal class KotlinGeoPolygonCodec(
 			.map { ringArray ->
 				val pointsArray = ringArray.decodeArray()
 				val points = pointsArray.asIterable().map { it.decodeArray().decodeAsPoint() }
-				Geo.LineString(points)
+				LineString(points)
 			}
 
-		return Geo.Polygon(rings)
+		return Polygon(rings)
 	}
 }
 
 @OptIn(LowLevelApi::class)
 internal class KotlinGeoMultiLineStringCodec(
 	private val factory: BsonFactory,
-) : Codec<Geo.MultiLineString> {
+) : Codec<MultiLineString> {
 
-	override fun encode(writer: BsonWriter, value: Geo.MultiLineString, encoderContext: EncoderContext) {
+	override fun encode(writer: BsonWriter, value: MultiLineString, encoderContext: EncoderContext) {
 		factory.writeDocumentTo(writer) {
 			writeString("type", "MultiLineString")
 			writeArray("coordinates") {
@@ -223,10 +225,10 @@ internal class KotlinGeoMultiLineStringCodec(
 		}
 	}
 
-	override fun getEncoderClass(): Class<Geo.MultiLineString> =
-		Geo.MultiLineString::class.java
+	override fun getEncoderClass(): Class<MultiLineString> =
+		MultiLineString::class.java
 
-	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.MultiLineString {
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): MultiLineString {
 		val doc = factory.readDocument(reader, decoderContext)
 
 		val type = doc["type"]?.decodeString()
@@ -240,19 +242,19 @@ internal class KotlinGeoMultiLineStringCodec(
 			.map { lineStringArray ->
 				val pointsArray = lineStringArray.decodeArray()
 				val points = pointsArray.asIterable().map { it.decodeArray().decodeAsPoint() }
-				Geo.LineString(points)
+				LineString(points)
 			}
 
-		return Geo.MultiLineString(lineStrings)
+		return MultiLineString(lineStrings)
 	}
 }
 
 @OptIn(LowLevelApi::class)
 internal class KotlinGeoMultiPolygonCodec(
 	private val factory: BsonFactory,
-) : Codec<Geo.MultiPolygon> {
+) : Codec<MultiPolygon> {
 
-	override fun encode(writer: BsonWriter, value: Geo.MultiPolygon, encoderContext: EncoderContext) {
+	override fun encode(writer: BsonWriter, value: MultiPolygon, encoderContext: EncoderContext) {
 		factory.writeDocumentTo(writer) {
 			writeString("type", "MultiPolygon")
 			writeArray("coordinates") {
@@ -274,10 +276,10 @@ internal class KotlinGeoMultiPolygonCodec(
 		}
 	}
 
-	override fun getEncoderClass(): Class<Geo.MultiPolygon> =
-		Geo.MultiPolygon::class.java
+	override fun getEncoderClass(): Class<MultiPolygon> =
+		MultiPolygon::class.java
 
-	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.MultiPolygon {
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): MultiPolygon {
 		val doc = factory.readDocument(reader, decoderContext)
 
 		val type = doc["type"]?.decodeString()
@@ -293,11 +295,45 @@ internal class KotlinGeoMultiPolygonCodec(
 				val rings = ringsArray.asIterable().map { ringArray ->
 					val pointsArray = ringArray.decodeArray()
 					val points = pointsArray.asIterable().map { it.decodeArray().decodeAsPoint() }
-					Geo.LineString(points)
+					LineString(points)
 				}
-				Geo.Polygon(rings)
+				Polygon(rings)
 			}
 
-		return Geo.MultiPolygon(polygons)
+		return MultiPolygon(polygons)
+	}
+}
+
+@OptIn(LowLevelApi::class)
+internal class KotlinGeoCodec(
+	private val factory: BsonFactory,
+) : Codec<Geo> {
+	override fun encode(writer: BsonWriter, value: Geo, encoderContext: EncoderContext) {
+		when (value) {
+			is Point -> KotlinGeoPointCodec(factory).encode(writer, value, encoderContext)
+			is MultiPoint -> KotlinGeoMultiPointCodec(factory).encode(writer, value, encoderContext)
+			is LineString -> KotlinGeoLineStringCodec(factory).encode(writer, value, encoderContext)
+			is MultiLineString -> KotlinGeoMultiLineStringCodec(factory).encode(writer, value, encoderContext)
+			is Polygon -> KotlinGeoPolygonCodec(factory).encode(writer, value, encoderContext)
+			is MultiPolygon -> KotlinGeoMultiPolygonCodec(factory).encode(writer, value, encoderContext)
+		}
+	}
+
+	override fun getEncoderClass(): Class<Geo> =
+		Geo::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo {
+		val document = factory.readDocument(reader, decoderContext)
+
+		return when (val type = document["type"]?.decodeString()) {
+			null -> throw IllegalArgumentException("Cannot deserialize Geo: missing 'type' field\n\tData: $document")
+			"Point" -> document.decode<Point>()
+			"LineString" -> document.decode<LineString>()
+			"Polygon" -> document.decode<Polygon>()
+			"MultiPoint" -> document.decode<MultiPoint>()
+			"MultiLineString" -> document.decode<MultiLineString>()
+			"MultiPolygon" -> document.decode<MultiPolygon>()
+			else -> throw IllegalArgumentException("Cannot deserialize Geo: unknown type '$type'\n\tData: $document")
+		}
 	}
 }
