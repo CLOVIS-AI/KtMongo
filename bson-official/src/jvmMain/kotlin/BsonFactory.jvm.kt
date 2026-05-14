@@ -23,9 +23,7 @@ import opensavvy.ktmongo.bson.official.BsonFactory.Companion.setCurrent
 import opensavvy.ktmongo.bson.official.serialization.KotlinSerializerCodecProviderInjector
 import opensavvy.ktmongo.bson.official.types.*
 import opensavvy.ktmongo.dsl.LowLevelApi
-import org.bson.BsonBinaryReader
-import org.bson.BsonDocumentWriter
-import org.bson.BsonSerializationException
+import org.bson.*
 import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
@@ -92,6 +90,14 @@ actual class BsonFactory(
 			KotlinPrimitiveDoubleCodec(),
 			KotlinPrimitiveBooleanCodec(),
 			KotlinPrimitiveCharCodec(),
+			KotlinGeoPointCodec(this),
+			KotlinGeoLineStringCodec(this),
+			KotlinGeoPolygonCodec(this),
+			KotlinGeoMultiPointCodec(this),
+			KotlinGeoMultiLineStringCodec(this),
+			KotlinGeoMultiPolygonCodec(this),
+			KotlinGeoGeometryCollectionCodec(this),
+			KotlinGeoCodec(this),
 		)
 
 		CodecRegistries.fromRegistries(
@@ -116,6 +122,11 @@ actual class BsonFactory(
 	@LowLevelApi
 	actual override fun buildDocument(instance: BsonFieldWriteable): BsonDocument =
 		buildDocument { instance.writeTo(this) }
+
+	@LowLevelApi
+	internal fun writeDocumentTo(writer: BsonWriter, block: BsonFieldWriter.() -> Unit) {
+		JavaBsonDocumentWriter(this, writer).writeDocument(block)
+	}
 
 	@LowLevelApi
 	actual override fun <T : Any> encode(obj: T, type: KType): BsonDocument {
@@ -154,6 +165,16 @@ actual class BsonFactory(
 		} catch (e: BsonSerializationException) {
 			throw BsonDecodingException("Could not read the bytes ${bytes.toHexString()} as a BsonDocument", e)
 		}
+		return readDocument(document)
+	}
+
+	@LowLevelApi
+	internal fun readDocument(reader: BsonReader, context: DecoderContext = DecoderContext.builder().build()): BsonDocument {
+		val codec = codecRegistry.get(org.bson.BsonDocument::class.java)
+		val document = codec.decode(
+			reader,
+			context,
+		)
 		return readDocument(document)
 	}
 

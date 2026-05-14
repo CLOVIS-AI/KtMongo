@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.bson.geo.validateGeo
 import opensavvy.ktmongo.bson.path.verifyBsonPath
 import opensavvy.ktmongo.bson.types.*
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -168,4 +169,5 @@ fun SuiteDsl.verifyBsonFactory(
 
 	verifyBsonPath(prepareFactory)
 	verifyDiffAlgorithms(prepareFactory)
+	validateGeo(prepareFactory)
 }
