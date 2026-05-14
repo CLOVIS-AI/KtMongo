@@ -35,6 +35,8 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.acceptAll
+import kotlin.jvm.JvmMultifileClass
+import kotlin.jvm.JvmName
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.time.Instant

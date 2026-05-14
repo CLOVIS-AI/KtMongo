@@ -30,6 +30,7 @@ import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import org.intellij.lang.annotations.Language
+import kotlin.jvm.JvmName
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 

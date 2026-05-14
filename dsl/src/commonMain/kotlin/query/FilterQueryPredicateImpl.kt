@@ -31,6 +31,8 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import kotlin.jvm.JvmMultifileClass
+import kotlin.jvm.JvmName
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 

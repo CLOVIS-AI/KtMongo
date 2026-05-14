@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import kotlin.jvm.JvmName
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import kotlin.time.Instant

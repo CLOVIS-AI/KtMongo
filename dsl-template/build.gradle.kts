@@ -21,6 +21,10 @@ plugins {
 
 kotlin {
 	jvm()
+	js {
+		browser()
+		nodejs()
+	}
 
 	sourceSets.commonMain.dependencies {
 		api(projects.annotations)
