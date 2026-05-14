@@ -29,5 +29,6 @@ kotlin {
 	sourceSets.commonMain.dependencies {
 		api(projects.annotations)
 		api(projects.bson)
+		implementation(libsCommon.jetbrains.annotations)
 	}
 }
