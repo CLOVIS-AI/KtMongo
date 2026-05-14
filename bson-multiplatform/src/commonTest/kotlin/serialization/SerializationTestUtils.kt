@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,14 @@
 package opensavvy.ktmongo.bson.multiplatform.serialization
 
 import kotlinx.serialization.ExperimentalSerializationApi
+import opensavvy.ktmongo.bson.decode
+import opensavvy.ktmongo.bson.multiplatform.encode
 import opensavvy.ktmongo.bson.multiplatform.factory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.suite.TestDsl
 
 suspend inline fun <reified T : Any> TestDsl.serializeRoundTrip(value: T) {
-	val ctx = factory()
+	val factory = factory()
 
-	check(decodeFromBson<T>(ctx, encodeToBson<T>(ctx, value).toByteArray()) == value)
+	check(factory.encode<T>(value).decode<T>() == value)
 }

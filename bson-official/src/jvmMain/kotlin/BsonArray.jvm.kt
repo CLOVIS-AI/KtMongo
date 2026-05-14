@@ -16,10 +16,21 @@
 
 package opensavvy.ktmongo.bson.official
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import opensavvy.ktmongo.bson.BsonArray
 import opensavvy.ktmongo.bson.BsonDecodingException
+import opensavvy.ktmongo.bson.official.BsonArray.Serializer
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonDocument
+import org.bson.codecs.kotlinx.BsonDecoder
+import org.bson.codecs.kotlinx.BsonEncoder
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import org.bson.BsonArray as OfficialBsonArray
@@ -29,6 +40,7 @@ import org.bson.BsonArray as OfficialBsonArray
  *
  * To create an instance of this class, see [BsonFactory.readArray].
  */
+@Serializable(with = Serializer::class)
 actual class BsonArray internal constructor(
 	val raw: OfficialBsonArray,
 	actual override val factory: BsonFactory,
@@ -239,4 +251,25 @@ actual class BsonArray internal constructor(
 	override fun hashCode(): Int =
 		BsonArray.hashCode(this)
 
+	@OptIn(ExperimentalSerializationApi::class)
+	actual object Serializer : KSerializer<opensavvy.ktmongo.bson.official.BsonArray> {
+		private const val NAME = "opensavvy.ktmongo.bson.official.BsonArray"
+
+		override val descriptor: SerialDescriptor =
+			PrimitiveSerialDescriptor(NAME, PrimitiveKind.STRING)
+
+		override fun serialize(encoder: Encoder, value: opensavvy.ktmongo.bson.official.BsonArray) {
+			require(encoder is BsonEncoder) { "${this::class} only supports org.bson:bson-kotlinx. See its documentation for details. Found encoder: $encoder" }
+
+			encoder.encodeBsonValue(value.raw)
+		}
+
+		@OptIn(LowLevelApi::class)
+		override fun deserialize(decoder: Decoder): opensavvy.ktmongo.bson.official.BsonArray {
+			require(decoder is BsonDecoder) { "${this::class} only supports org.bson:bson-kotlinx. See its documentation for details. Found decoder: $decoder" }
+
+			val decoded = decoder.decodeBsonValue()
+			return BsonArray(decoded as OfficialBsonArray, BsonFactory.current())
+		}
+	}
 }

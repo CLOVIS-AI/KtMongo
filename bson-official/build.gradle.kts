@@ -28,10 +28,12 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.bson)
+		implementation(libs.kotlinx.serialization)
 	}
 
 	sourceSets.jvmMain.dependencies {
 		api(libs.mongodb.bson.jvm)
+		compileOnly(libs.mongodb.kotlinx.serialization)
 	}
 
 	sourceSets.commonTest.dependencies {
@@ -45,7 +47,6 @@ kotlin {
 		implementation(libs.mongodb.sync.jvm)
 		implementation(libs.mongodb.kotlinx.serialization)
 		implementation(libs.mongodb.kotlin.reflection)
-		implementation(libs.kotlinx.serialization)
 	}
 }
 

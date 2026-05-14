@@ -16,6 +16,9 @@
 
 package opensavvy.ktmongo.bson
 
+import kotlinx.serialization.ContextualSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -54,6 +57,9 @@ import kotlin.reflect.typeOf
  * The methods [BsonDocument.Companion.equals] and [BsonDocument.Companion.hashCode] are provided
  * as default implementations.
  */
+@OptIn(ExperimentalSerializationApi::class)
+@Suppress("SERIALIZER_TYPE_INCOMPATIBLE")
+@Serializable(with = ContextualSerializer::class)
 interface BsonDocument {
 
 	/**

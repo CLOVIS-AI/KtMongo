@@ -26,9 +26,7 @@ import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.AbstractDecoder
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonDecodingException
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.*
@@ -41,11 +39,13 @@ import kotlin.uuid.Uuid
 
 @ExperimentalSerializationApi
 internal class BsonDecoderTopLevel(
-	override val serializersModule: SerializersModule,
 	private val factory: BsonFactory,
 	val bytesWithHeader: Bytes,
 ) : AbstractDecoder() {
 	var out: Any? = null
+
+	override val serializersModule: SerializersModule
+		get() = factory.serializersModule
 
 	override fun decodeNull(): Nothing {
 		throw BsonEncodingException("Cannot encode a null value at the top level of BSON")
@@ -58,8 +58,8 @@ internal class BsonDecoderTopLevel(
 	@LowLevelApi
 	override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
 		return when (descriptor.kind) {
-			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, BsonDocument(factory, bytesWithHeader))
-			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, BsonArray(factory, bytesWithHeader))
+			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(BsonDocument(factory, bytesWithHeader))
+			StructureKind.LIST -> BsonCompositeListDecoder(BsonArray(factory, bytesWithHeader))
 			else -> TODO()
 		}
 	}
@@ -72,9 +72,12 @@ internal class BsonDecoderTopLevel(
 @OptIn(ExperimentalTime::class, ExperimentalUuidApi::class)
 @LowLevelApi
 internal class BsonDecoder(
-	override val serializersModule: SerializersModule,
 	val source: BsonValue,
 ) : Decoder {
+
+	override val serializersModule: SerializersModule
+		get() = source.factory.serializersModule
+
 	@ExperimentalSerializationApi
 	override fun decodeNotNullMark(): Boolean {
 		return source.type != BsonType.Null
@@ -131,8 +134,8 @@ internal class BsonDecoder(
 
 	override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder {
 		return when (descriptor.kind) {
-			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(serializersModule, source.decodeDocument())
-			StructureKind.LIST -> BsonCompositeListDecoder(serializersModule, source.decodeArray())
+			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(source.decodeDocument())
+			StructureKind.LIST -> BsonCompositeListDecoder(source.decodeArray())
 			else -> TODO()
 		}
 	}
@@ -146,6 +149,9 @@ internal class BsonDecoder(
 	private val floatVector = FloatVector.serializer().descriptor
 	private val booleanVector = BooleanVector.serializer().descriptor
 	private val byteVector = ByteVector.serializer().descriptor
+	private val bsonDocument = BsonDocument.serializer().descriptor
+	private val bsonArray = BsonArray.serializer().descriptor
+	private val bsonValue = BsonValue.serializer().descriptor
 	override fun <T> decodeSerializableValue(deserializer: DeserializationStrategy<T>): T {
 		@Suppress("UNCHECKED_CAST")
 		return try {
@@ -161,6 +167,9 @@ internal class BsonDecoder(
 				}
 				instant -> source.decodeInstant() as T
 				vector, floatVector, booleanVector, byteVector -> Vector.fromBinaryData(source.decodeBinaryData()) as T
+				bsonDocument -> source.decodeDocument() as T
+				bsonArray -> source.decodeArray() as T
+				bsonValue -> source as T
 
 				// General case: do what the serializer says
 				else -> deserializer.deserialize(this)
@@ -175,9 +184,11 @@ internal class BsonDecoder(
 
 @LowLevelApi
 internal class BsonCompositeDecoder(
-	override val serializersModule: SerializersModule,
-	source: BsonDocument,
+	private val source: BsonDocument,
 ) : CompositeDecoder {
+	override val serializersModule: SerializersModule
+		get() = source.factory.serializersModule
+
 	override fun endStructure(descriptor: SerialDescriptor) {
 	}
 
@@ -226,25 +237,28 @@ internal class BsonCompositeDecoder(
 	}
 
 	override fun decodeInlineElement(descriptor: SerialDescriptor, index: Int): Decoder {
-		return BsonDecoder(serializersModule, current.value)
+		return BsonDecoder(current.value)
 	}
 
 	override fun <T> decodeSerializableElement(descriptor: SerialDescriptor, index: Int, deserializer: DeserializationStrategy<T>, previousValue: T?): T {
-		return BsonDecoder(serializersModule, current.value).decodeSerializableValue(deserializer)
+		return BsonDecoder(current.value).decodeSerializableValue(deserializer)
 	}
 
 	@ExperimentalSerializationApi
 	override fun <T : Any> decodeNullableSerializableElement(descriptor: SerialDescriptor, index: Int, deserializer: DeserializationStrategy<T?>, previousValue: T?): T? {
-		return BsonDecoder(serializersModule, current.value).decodeNullableSerializableValue(deserializer)
+		return BsonDecoder(current.value).decodeNullableSerializableValue(deserializer)
 	}
 
 }
 
 @LowLevelApi
 internal class BsonCompositeListDecoder(
-	override val serializersModule: SerializersModule,
-	source: BsonArray,
+	private val source: BsonArray,
 ) : CompositeDecoder {
+
+	override val serializersModule: SerializersModule
+		get() = source.factory.serializersModule
+
 	override fun endStructure(descriptor: SerialDescriptor) {
 	}
 
@@ -294,25 +308,15 @@ internal class BsonCompositeListDecoder(
 	}
 
 	override fun decodeInlineElement(descriptor: SerialDescriptor, index: Int): Decoder {
-		return BsonDecoder(serializersModule, current)
+		return BsonDecoder(current)
 	}
 
 	override fun <T> decodeSerializableElement(descriptor: SerialDescriptor, index: Int, deserializer: DeserializationStrategy<T>, previousValue: T?): T {
-		return BsonDecoder(serializersModule, current).decodeSerializableValue(deserializer)
+		return BsonDecoder(current).decodeSerializableValue(deserializer)
 	}
 
 	@ExperimentalSerializationApi
 	override fun <T : Any> decodeNullableSerializableElement(descriptor: SerialDescriptor, index: Int, deserializer: DeserializationStrategy<T?>, previousValue: T?): T? {
-		return BsonDecoder(serializersModule, current).decodeNullableSerializableValue(deserializer)
+		return BsonDecoder(current).decodeNullableSerializableValue(deserializer)
 	}
 }
-
-@ExperimentalSerializationApi
-fun <T : Any> decodeFromBson(factory: BsonFactory, bytes: ByteArray, deserializer: DeserializationStrategy<T>): T {
-	val decoder = BsonDecoderTopLevel(EmptySerializersModule(), factory, Bytes(bytes.copyOf()))
-	return decoder.decodeSerializableValue(deserializer)
-}
-
-@ExperimentalSerializationApi
-inline fun <reified T : Any> decodeFromBson(factory: BsonFactory, bytes: ByteArray): T =
-	decodeFromBson(factory, bytes, serializer<T>())

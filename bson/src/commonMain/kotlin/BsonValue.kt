@@ -16,6 +16,9 @@
 
 package opensavvy.ktmongo.bson
 
+import kotlinx.serialization.ContextualSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.bson.types.Vector
@@ -60,6 +63,9 @@ import kotlin.time.Instant
  * The methods [BsonValue.Companion.equals] and [BsonValue.Companion.hashCode] are provided
  * as default implementations.
  */
+@OptIn(ExperimentalSerializationApi::class)
+@Suppress("SERIALIZER_TYPE_INCOMPATIBLE")
+@Serializable(with = ContextualSerializer::class)
 interface BsonValue {
 
 	/**

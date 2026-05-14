@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalBsonPathApi::class)
 @file:Suppress("SENSELESS_COMPARISON")
 
 package opensavvy.ktmongo.bson
@@ -38,6 +38,12 @@ data class BsonArrayUser(
 	val id: String,
 	val profile: BsonArrayProfile,
 	val friends: List<BsonArrayProfile>,
+)
+
+@Serializable
+data class BsonArrayNested(
+	val id: String,
+	val nested: BsonArray,
 )
 
 fun SuiteDsl.verifyBsonArrays(factory: Prepared<BsonFactory>) = suite("BSON arrays") {
@@ -184,6 +190,31 @@ fun SuiteDsl.verifyBsonArrays(factory: Prepared<BsonFactory>) = suite("BSON arra
 		}
 
 		check(user.decode<BsonArrayUser>() == BsonArrayUser("123456", BsonArrayProfile("Bob", 12.0), listOf(BsonArrayProfile("Alice", 13.7), BsonArrayProfile("Charlie", 14.5))))
+	}
+
+	test("Encode and decode a nested BsonArray") {
+		val nested = factory().buildArray {
+			writeDocument {
+				writeString("name", "Bob")
+				writeDouble("score", 12.0)
+			}
+
+			writeDocument {
+				writeString("name", "Alice")
+				writeDouble("score", 13.7)
+			}
+		}
+
+		val wrapped = BsonArrayNested("ao", nested)
+
+		check(wrapped.nested.decodeElements<BsonArrayProfile>() == listOf(BsonArrayProfile("Bob", 12.0), BsonArrayProfile("Alice", 13.7)))
+
+		val encoded = factory().buildDocument {
+			writeSafe("d", wrapped)
+		}
+
+		check(encoded.selectFirst<String>("$.d.nested[0].name") == "Bob")
+		check(encoded["d"]?.decode<BsonArrayNested>()?.nested == nested)
 	}
 
 	suite("Iteration") {

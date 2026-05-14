@@ -32,6 +32,12 @@ data class BsonDocumentUser(
 	val b: Int,
 )
 
+@Serializable
+data class BsonDocumentNested(
+	val name: String,
+	val nested: BsonDocument,
+)
+
 fun SuiteDsl.verifyBsonDocuments(factory: Prepared<BsonFactory>) = suite("BSON documents") {
 
 	test("Decode a simple document") {
@@ -41,6 +47,47 @@ fun SuiteDsl.verifyBsonDocuments(factory: Prepared<BsonFactory>) = suite("BSON d
 		}
 
 		check(document.decode<BsonDocumentUser>() == BsonDocumentUser("Bob", 45))
+	}
+
+	test("Decode a simple document as a BsonDocument instance") {
+		val document = factory().buildDocument {
+			writeString("a", "Bob")
+			writeInt32("b", 45)
+		}
+
+		check(document.decode<BsonDocument>() == document)
+	}
+
+	test("Encode a simple document as a BsonDocument instance") {
+		val document = factory().buildDocument {
+			writeString("a", "Bob")
+			writeInt32("b", 45)
+		}
+
+		val wrapped = factory().buildDocument {
+			writeSafe("d", document)
+		}
+
+		check(wrapped.selectFirst<String>("$.d.a") == "Bob")
+		check(wrapped["d"]?.decode<BsonDocument>() == document)
+	}
+
+	test("Encode and decode a nested BsonDocument") {
+		val nested = factory().buildDocument {
+			writeString("a", "Bob")
+			writeInt32("b", 45)
+		}
+
+		val wrapped = BsonDocumentNested(
+			name = "Test",
+			nested = nested,
+		)
+
+		val encoded = factory().buildDocument {
+			writeSafe("d", wrapped)
+		}
+
+		check(encoded["d"]?.decode<BsonDocumentNested>()?.nested == nested)
 	}
 
 	// TODO in https://gitlab.com/opensavvy/ktmongo/-/work_items/119

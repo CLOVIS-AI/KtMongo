@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package opensavvy.ktmongo.bson.multiplatform.serialization
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import opensavvy.ktmongo.bson.multiplatform.encode
 import opensavvy.ktmongo.bson.multiplatform.factory
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
@@ -36,7 +37,7 @@ val EncoderTest by preparedSuite {
 		@Serializable
 		data class User(val id: Int)
 
-		check(encodeToBson(factory(), User(1234)).toString() == """{"id": 1234}""")
+		check(factory().encode(User(1234)).toString() == """{"id": 1234}""")
 	}
 
 	suite("Complex example") {
