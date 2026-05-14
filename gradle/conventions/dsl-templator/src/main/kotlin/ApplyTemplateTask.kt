@@ -395,7 +395,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 											"@Suppress(\"WRONG_MODIFIER_CONTAINING_DECLARATION\")\n\t" + afterInvisibleRef
 										}
 									} else afterInvisibleRef
-									val jvmNameAnnotation = if (needsJvmName) "@JvmName(\"$vFuncName$receiverSuffix$paramSuffix\")\n\t" else ""
+									val jvmNameAnnotation = if (needsJvmName) "@kotlin.jvm.JvmName(\"$vFuncName$receiverSuffix$paramSuffix\")\n\t" else ""
 									val lowPriorityAnnotation = if (hasResultAlternative) "@kotlin.internal.LowPriorityInOverloadResolution\n\t" else ""
 
 									val docComment = findDocCommentBefore(source, vFuncStart)
@@ -457,7 +457,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 														"@Suppress(\"WRONG_MODIFIER_CONTAINING_DECLARATION\")\n\t" + kpropFinalText
 													}
 												}
-												val kpropJvmNameAnnotation = if (kpropNeedsJvmName) "@JvmName(\"${vFuncName}PropertyReceiver${paramSuffix}\")\n\t" else ""
+												val kpropJvmNameAnnotation = if (kpropNeedsJvmName) "@kotlin.jvm.JvmName(\"${vFuncName}PropertyReceiver${paramSuffix}\")\n\t" else ""
 												valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(kpropJvmNameAnnotation).append(kpropFinalText)
 											}
 										}

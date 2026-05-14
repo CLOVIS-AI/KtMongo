@@ -94,7 +94,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/)
 	 */
-	@JvmName("absByField")
+	@kotlin.jvm.JvmName("absByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -127,7 +127,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/abs/)
 	 */
-	@JvmName("absByProperty")
+	@kotlin.jvm.JvmName("absByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -222,7 +222,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusByField")
+	@kotlin.jvm.JvmName("plusByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -252,7 +252,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusByProperty")
+	@kotlin.jvm.JvmName("plusByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -312,7 +312,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusFieldReceiverByValue")
+	@kotlin.jvm.JvmName("plusFieldReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -342,7 +342,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusFieldReceiverByField")
+	@kotlin.jvm.JvmName("plusFieldReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -372,7 +372,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("plusFieldReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -402,7 +402,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusFieldReceiverByResult")
+	@kotlin.jvm.JvmName("plusFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -432,7 +432,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("plusPropertyReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -462,7 +462,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusPropertyReceiverByField")
+	@kotlin.jvm.JvmName("plusPropertyReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -492,7 +492,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("plusPropertyReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -522,7 +522,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
-	@JvmName("plusPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("plusPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -553,7 +553,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("plusResultReceiverByValue")
+	@kotlin.jvm.JvmName("plusResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -584,7 +584,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("plusResultReceiverByField")
+	@kotlin.jvm.JvmName("plusResultReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -615,7 +615,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("plusResultReceiverByProperty")
+	@kotlin.jvm.JvmName("plusResultReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -646,7 +646,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/add/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("plusResultReceiverByResult")
+	@kotlin.jvm.JvmName("plusResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -744,7 +744,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/)
 	 */
-	@JvmName("ceilByField")
+	@kotlin.jvm.JvmName("ceilByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -774,7 +774,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ceil/)
 	 */
-	@JvmName("ceilByProperty")
+	@kotlin.jvm.JvmName("ceilByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -866,7 +866,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesByField")
+	@kotlin.jvm.JvmName("timesByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -896,7 +896,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesByProperty")
+	@kotlin.jvm.JvmName("timesByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -956,7 +956,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesFieldReceiverByValue")
+	@kotlin.jvm.JvmName("timesFieldReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -986,7 +986,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesFieldReceiverByField")
+	@kotlin.jvm.JvmName("timesFieldReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1016,7 +1016,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("timesFieldReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1046,7 +1046,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesFieldReceiverByResult")
+	@kotlin.jvm.JvmName("timesFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1076,7 +1076,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("timesPropertyReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1106,7 +1106,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesPropertyReceiverByField")
+	@kotlin.jvm.JvmName("timesPropertyReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1136,7 +1136,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("timesPropertyReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1166,7 +1166,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
-	@JvmName("timesPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("timesPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1197,7 +1197,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("timesResultReceiverByValue")
+	@kotlin.jvm.JvmName("timesResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1228,7 +1228,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("timesResultReceiverByField")
+	@kotlin.jvm.JvmName("timesResultReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1259,7 +1259,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("timesResultReceiverByProperty")
+	@kotlin.jvm.JvmName("timesResultReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1290,7 +1290,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/multiply/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("timesResultReceiverByResult")
+	@kotlin.jvm.JvmName("timesResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1392,7 +1392,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
 	 */
-	@JvmName("divByField")
+	@kotlin.jvm.JvmName("divByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1456,7 +1456,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
 	 */
-	@JvmName("divFieldReceiverByValue")
+	@kotlin.jvm.JvmName("divFieldReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1488,7 +1488,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
 	 */
-	@JvmName("divFieldReceiverByField")
+	@kotlin.jvm.JvmName("divFieldReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1520,7 +1520,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
 	 */
-	@JvmName("divFieldReceiverByResult")
+	@kotlin.jvm.JvmName("divFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1553,7 +1553,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("divResultReceiverByValue")
+	@kotlin.jvm.JvmName("divResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1586,7 +1586,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("divResultReceiverByField")
+	@kotlin.jvm.JvmName("divResultReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1619,7 +1619,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/divide/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("divResultReceiverByResult")
+	@kotlin.jvm.JvmName("divResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1705,7 +1705,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusByField")
+	@kotlin.jvm.JvmName("minusByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1738,7 +1738,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusByProperty")
+	@kotlin.jvm.JvmName("minusByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1804,7 +1804,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusFieldReceiverByValue")
+	@kotlin.jvm.JvmName("minusFieldReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1837,7 +1837,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusFieldReceiverByField")
+	@kotlin.jvm.JvmName("minusFieldReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1870,7 +1870,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("minusFieldReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1903,7 +1903,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusFieldReceiverByResult")
+	@kotlin.jvm.JvmName("minusFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -1936,7 +1936,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("minusPropertyReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1969,7 +1969,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusPropertyReceiverByField")
+	@kotlin.jvm.JvmName("minusPropertyReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -2002,7 +2002,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("minusPropertyReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -2035,7 +2035,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
-	@JvmName("minusPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("minusPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -2069,7 +2069,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("minusResultReceiverByValue")
+	@kotlin.jvm.JvmName("minusResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -2103,7 +2103,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("minusResultReceiverByField")
+	@kotlin.jvm.JvmName("minusResultReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -2137,7 +2137,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("minusResultReceiverByProperty")
+	@kotlin.jvm.JvmName("minusResultReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -2171,7 +2171,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/subtract/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("minusResultReceiverByResult")
+	@kotlin.jvm.JvmName("minusResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
@@ -2251,7 +2251,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/)
 	 */
-	@JvmName("floorByField")
+	@kotlin.jvm.JvmName("floorByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -2281,7 +2281,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/floor/)
 	 */
-	@JvmName("floorByProperty")
+	@kotlin.jvm.JvmName("floorByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl

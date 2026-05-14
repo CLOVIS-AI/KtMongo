@@ -102,7 +102,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByValueByValueByField")
+	@kotlin.jvm.JvmName("condByValueByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -142,7 +142,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByValueByValueByProperty")
+	@kotlin.jvm.JvmName("condByValueByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -222,7 +222,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByValueByFieldByValue")
+	@kotlin.jvm.JvmName("condByValueByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -262,7 +262,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByValueByFieldByField")
+	@kotlin.jvm.JvmName("condByValueByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -302,7 +302,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByValueByFieldByProperty")
+	@kotlin.jvm.JvmName("condByValueByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -343,7 +343,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByValueByFieldByResult")
+	@kotlin.jvm.JvmName("condByValueByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -383,7 +383,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByValueByPropertyByValue")
+	@kotlin.jvm.JvmName("condByValueByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -423,7 +423,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByValueByPropertyByField")
+	@kotlin.jvm.JvmName("condByValueByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -463,7 +463,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByValueByPropertyByProperty")
+	@kotlin.jvm.JvmName("condByValueByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -504,7 +504,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByValueByPropertyByResult")
+	@kotlin.jvm.JvmName("condByValueByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -585,7 +585,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByValueByResultByField")
+	@kotlin.jvm.JvmName("condByValueByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -626,7 +626,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByValueByResultByProperty")
+	@kotlin.jvm.JvmName("condByValueByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -706,7 +706,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByFieldByValueByValue")
+	@kotlin.jvm.JvmName("condByFieldByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -746,7 +746,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByFieldByValueByField")
+	@kotlin.jvm.JvmName("condByFieldByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -786,7 +786,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByFieldByValueByProperty")
+	@kotlin.jvm.JvmName("condByFieldByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -827,7 +827,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByFieldByValueByResult")
+	@kotlin.jvm.JvmName("condByFieldByValueByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -867,7 +867,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByFieldByFieldByValue")
+	@kotlin.jvm.JvmName("condByFieldByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -907,7 +907,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByFieldByFieldByField")
+	@kotlin.jvm.JvmName("condByFieldByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -947,7 +947,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByFieldByFieldByProperty")
+	@kotlin.jvm.JvmName("condByFieldByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -988,7 +988,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByFieldByFieldByResult")
+	@kotlin.jvm.JvmName("condByFieldByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1028,7 +1028,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByFieldByPropertyByValue")
+	@kotlin.jvm.JvmName("condByFieldByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1068,7 +1068,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByFieldByPropertyByField")
+	@kotlin.jvm.JvmName("condByFieldByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1108,7 +1108,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByFieldByPropertyByProperty")
+	@kotlin.jvm.JvmName("condByFieldByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1149,7 +1149,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByFieldByPropertyByResult")
+	@kotlin.jvm.JvmName("condByFieldByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1190,7 +1190,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByFieldByResultByValue")
+	@kotlin.jvm.JvmName("condByFieldByResultByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1231,7 +1231,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByFieldByResultByField")
+	@kotlin.jvm.JvmName("condByFieldByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1272,7 +1272,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByFieldByResultByProperty")
+	@kotlin.jvm.JvmName("condByFieldByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1313,7 +1313,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByFieldByResultByResult")
+	@kotlin.jvm.JvmName("condByFieldByResultByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1353,7 +1353,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByPropertyByValueByValue")
+	@kotlin.jvm.JvmName("condByPropertyByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1393,7 +1393,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByPropertyByValueByField")
+	@kotlin.jvm.JvmName("condByPropertyByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1433,7 +1433,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByPropertyByValueByProperty")
+	@kotlin.jvm.JvmName("condByPropertyByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1474,7 +1474,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByPropertyByValueByResult")
+	@kotlin.jvm.JvmName("condByPropertyByValueByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1514,7 +1514,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByPropertyByFieldByValue")
+	@kotlin.jvm.JvmName("condByPropertyByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1554,7 +1554,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByPropertyByFieldByField")
+	@kotlin.jvm.JvmName("condByPropertyByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1594,7 +1594,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByPropertyByFieldByProperty")
+	@kotlin.jvm.JvmName("condByPropertyByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1635,7 +1635,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByPropertyByFieldByResult")
+	@kotlin.jvm.JvmName("condByPropertyByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1675,7 +1675,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByPropertyByPropertyByValue")
+	@kotlin.jvm.JvmName("condByPropertyByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1715,7 +1715,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByPropertyByPropertyByField")
+	@kotlin.jvm.JvmName("condByPropertyByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1755,7 +1755,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch Specify multiple conditions.
 	 */
-	@JvmName("condByPropertyByPropertyByProperty")
+	@kotlin.jvm.JvmName("condByPropertyByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1796,7 +1796,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByPropertyByPropertyByResult")
+	@kotlin.jvm.JvmName("condByPropertyByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1837,7 +1837,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByPropertyByResultByValue")
+	@kotlin.jvm.JvmName("condByPropertyByResultByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1878,7 +1878,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByPropertyByResultByField")
+	@kotlin.jvm.JvmName("condByPropertyByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1919,7 +1919,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByPropertyByResultByProperty")
+	@kotlin.jvm.JvmName("condByPropertyByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1960,7 +1960,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByPropertyByResultByResult")
+	@kotlin.jvm.JvmName("condByPropertyByResultByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2041,7 +2041,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByValueByField")
+	@kotlin.jvm.JvmName("condByResultByValueByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2082,7 +2082,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByValueByProperty")
+	@kotlin.jvm.JvmName("condByResultByValueByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2163,7 +2163,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByFieldByValue")
+	@kotlin.jvm.JvmName("condByResultByFieldByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2204,7 +2204,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByFieldByField")
+	@kotlin.jvm.JvmName("condByResultByFieldByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2245,7 +2245,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByFieldByProperty")
+	@kotlin.jvm.JvmName("condByResultByFieldByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2286,7 +2286,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByFieldByResult")
+	@kotlin.jvm.JvmName("condByResultByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2327,7 +2327,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByPropertyByValue")
+	@kotlin.jvm.JvmName("condByResultByPropertyByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2368,7 +2368,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByPropertyByField")
+	@kotlin.jvm.JvmName("condByResultByPropertyByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2409,7 +2409,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByPropertyByProperty")
+	@kotlin.jvm.JvmName("condByResultByPropertyByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2450,7 +2450,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByPropertyByResult")
+	@kotlin.jvm.JvmName("condByResultByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2531,7 +2531,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByResultByField")
+	@kotlin.jvm.JvmName("condByResultByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2572,7 +2572,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("condByResultByResultByProperty")
+	@kotlin.jvm.JvmName("condByResultByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2723,7 +2723,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see cond Specify a single condition.
 	 * @see then Keyword to declare the different cases.
 	 */
-	@JvmName("switchByField")
+	@kotlin.jvm.JvmName("switchByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
@@ -2765,7 +2765,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see cond Specify a single condition.
 	 * @see then Keyword to declare the different cases.
 	 */
-	@JvmName("switchByProperty")
+	@kotlin.jvm.JvmName("switchByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
@@ -2883,7 +2883,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenByField")
+	@kotlin.jvm.JvmName("thenByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	infix fun <R : Any, T> Value<R, Boolean>.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
@@ -2916,7 +2916,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenByProperty")
+	@kotlin.jvm.JvmName("thenByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	infix fun <R : Any, T> Value<R, Boolean>.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
@@ -2982,7 +2982,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenFieldReceiverByValue")
+	@kotlin.jvm.JvmName("thenFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
@@ -3015,7 +3015,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenFieldReceiverByField")
+	@kotlin.jvm.JvmName("thenFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
@@ -3048,7 +3048,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("thenFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
@@ -3081,7 +3081,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenFieldReceiverByResult")
+	@kotlin.jvm.JvmName("thenFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
 	infix final inline fun <R : Any, reified T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: T): Case<R, T> =
@@ -3114,7 +3114,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("thenPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
@@ -3147,7 +3147,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenPropertyReceiverByField")
+	@kotlin.jvm.JvmName("thenPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
@@ -3180,7 +3180,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("thenPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@KtMongoDsl
 	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
@@ -3213,7 +3213,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@JvmName("thenPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("thenPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
 	infix final inline fun <R : Any, reified T> kotlin.reflect.KProperty1<R, Boolean>.then(value: T): Case<R, T> =
@@ -3247,7 +3247,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("thenResultReceiverByValue")
+	@kotlin.jvm.JvmName("thenResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
 	infix final inline fun <R : Any, T> Boolean.then(value: Value<R, T>): Case<R, T> =
@@ -3281,7 +3281,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("thenResultReceiverByField")
+	@kotlin.jvm.JvmName("thenResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
 	infix final inline fun <R : Any, T> Boolean.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
@@ -3315,7 +3315,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("thenResultReceiverByProperty")
+	@kotlin.jvm.JvmName("thenResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
 	infix final inline fun <R : Any, T> Boolean.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
@@ -3349,7 +3349,7 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("thenResultReceiverByResult")
+	@kotlin.jvm.JvmName("thenResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
 	infix final inline fun <R : Any, reified T> Boolean.then(value: T): Case<R, T> =

@@ -97,7 +97,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
-	@JvmName("averageFieldReceiver")
+	@kotlin.jvm.JvmName("averageFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -127,7 +127,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
-	@JvmName("averagePropertyReceiver")
+	@kotlin.jvm.JvmName("averagePropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -158,7 +158,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("averageResultReceiver")
+	@kotlin.jvm.JvmName("averageResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -265,7 +265,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
-	@JvmName("averageByField")
+	@kotlin.jvm.JvmName("averageByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -295,7 +295,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
-	@JvmName("averageByProperty")
+	@kotlin.jvm.JvmName("averageByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -405,7 +405,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterByField")
+	@kotlin.jvm.JvmName("filterByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -447,7 +447,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterByProperty")
+	@kotlin.jvm.JvmName("filterByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -531,7 +531,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterFieldReceiverByValue")
+	@kotlin.jvm.JvmName("filterFieldReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -573,7 +573,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterFieldReceiverByField")
+	@kotlin.jvm.JvmName("filterFieldReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -615,7 +615,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("filterFieldReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -657,7 +657,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterFieldReceiverByResult")
+	@kotlin.jvm.JvmName("filterFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -699,7 +699,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("filterPropertyReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -741,7 +741,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterPropertyReceiverByField")
+	@kotlin.jvm.JvmName("filterPropertyReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -783,7 +783,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("filterPropertyReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -825,7 +825,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * current element being iterated over. By default, `"this"`. Setting this parameter is only useful when using
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
-	@JvmName("filterPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("filterPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -868,7 +868,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("filterResultReceiverByValue")
+	@kotlin.jvm.JvmName("filterResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -911,7 +911,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("filterResultReceiverByField")
+	@kotlin.jvm.JvmName("filterResultReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -954,7 +954,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("filterResultReceiverByProperty")
+	@kotlin.jvm.JvmName("filterResultReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -997,7 +997,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * nested [filter] or other similar calls, which could otherwise conflict.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("filterResultReceiverByResult")
+	@kotlin.jvm.JvmName("filterResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1114,7 +1114,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takeByField")
+	@kotlin.jvm.JvmName("takeByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1146,7 +1146,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takeByProperty")
+	@kotlin.jvm.JvmName("takeByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1210,7 +1210,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takeFieldReceiverByValue")
+	@kotlin.jvm.JvmName("takeFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1242,7 +1242,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takeFieldReceiverByField")
+	@kotlin.jvm.JvmName("takeFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1274,7 +1274,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takeFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("takeFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1306,7 +1306,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takeFieldReceiverByResult")
+	@kotlin.jvm.JvmName("takeFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1338,7 +1338,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takePropertyReceiverByValue")
+	@kotlin.jvm.JvmName("takePropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1370,7 +1370,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takePropertyReceiverByField")
+	@kotlin.jvm.JvmName("takePropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1402,7 +1402,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takePropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("takePropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1434,7 +1434,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
-	@JvmName("takePropertyReceiverByResult")
+	@kotlin.jvm.JvmName("takePropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1467,7 +1467,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("takeResultReceiverByValue")
+	@kotlin.jvm.JvmName("takeResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1500,7 +1500,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("takeResultReceiverByField")
+	@kotlin.jvm.JvmName("takeResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1533,7 +1533,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("takeResultReceiverByProperty")
+	@kotlin.jvm.JvmName("takeResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1566,7 +1566,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("takeResultReceiverByResult")
+	@kotlin.jvm.JvmName("takeResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1657,7 +1657,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastByField")
+	@kotlin.jvm.JvmName("takeLastByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1689,7 +1689,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastByProperty")
+	@kotlin.jvm.JvmName("takeLastByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1753,7 +1753,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastFieldReceiverByValue")
+	@kotlin.jvm.JvmName("takeLastFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1785,7 +1785,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastFieldReceiverByField")
+	@kotlin.jvm.JvmName("takeLastFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1817,7 +1817,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastFieldReceiverByProperty")
+	@kotlin.jvm.JvmName("takeLastFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1849,7 +1849,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastFieldReceiverByResult")
+	@kotlin.jvm.JvmName("takeLastFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1881,7 +1881,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastPropertyReceiverByValue")
+	@kotlin.jvm.JvmName("takeLastPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1913,7 +1913,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastPropertyReceiverByField")
+	@kotlin.jvm.JvmName("takeLastPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1945,7 +1945,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("takeLastPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -1977,7 +1977,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
-	@JvmName("takeLastPropertyReceiverByResult")
+	@kotlin.jvm.JvmName("takeLastPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2010,7 +2010,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("takeLastResultReceiverByValue")
+	@kotlin.jvm.JvmName("takeLastResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2043,7 +2043,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("takeLastResultReceiverByField")
+	@kotlin.jvm.JvmName("takeLastResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2076,7 +2076,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("takeLastResultReceiverByProperty")
+	@kotlin.jvm.JvmName("takeLastResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2109,7 +2109,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("takeLastResultReceiverByResult")
+	@kotlin.jvm.JvmName("takeLastResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2208,7 +2208,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
 	 */
-	@JvmName("mapFieldReceiver")
+	@kotlin.jvm.JvmName("mapFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2244,7 +2244,7 @@ interface ArrayValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
 	 */
-	@JvmName("mapPropertyReceiver")
+	@kotlin.jvm.JvmName("mapPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2281,7 +2281,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("mapResultReceiver")
+	@kotlin.jvm.JvmName("mapResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2386,7 +2386,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedBy Sort by fields of elements.
 	 * @see sortedDescending Sort by elements in descending order.
 	 */
-	@JvmName("sortedFieldReceiver")
+	@kotlin.jvm.JvmName("sortedFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2422,7 +2422,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedBy Sort by fields of elements.
 	 * @see sortedDescending Sort by elements in descending order.
 	 */
-	@JvmName("sortedPropertyReceiver")
+	@kotlin.jvm.JvmName("sortedPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2459,7 +2459,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedDescending Sort by elements in descending order.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("sortedResultReceiver")
+	@kotlin.jvm.JvmName("sortedResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2533,7 +2533,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedBy Sort by fields of elements.
 	 * @see sortedDescending Sort by fields of elements.
 	 */
-	@JvmName("sortedDescendingFieldReceiver")
+	@kotlin.jvm.JvmName("sortedDescendingFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2569,7 +2569,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedBy Sort by fields of elements.
 	 * @see sortedDescending Sort by fields of elements.
 	 */
-	@JvmName("sortedDescendingPropertyReceiver")
+	@kotlin.jvm.JvmName("sortedDescendingPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2606,7 +2606,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedDescending Sort by fields of elements.
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("sortedDescendingResultReceiver")
+	@kotlin.jvm.JvmName("sortedDescendingResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2686,7 +2686,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sorted Sort by the elements themselves (ascending order).
 	 * @see sortedDescending Sort by the elements themselves (descending order).
 	 */
-	@JvmName("sortedByFieldReceiver")
+	@kotlin.jvm.JvmName("sortedByFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2726,7 +2726,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sorted Sort by the elements themselves (ascending order).
 	 * @see sortedDescending Sort by the elements themselves (descending order).
 	 */
-	@JvmName("sortedByPropertyReceiver")
+	@kotlin.jvm.JvmName("sortedByPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl
@@ -2767,7 +2767,7 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedDescending Sort by the elements themselves (descending order).
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("sortedByResultReceiver")
+	@kotlin.jvm.JvmName("sortedByResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	@KtMongoDsl

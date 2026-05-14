@@ -204,7 +204,7 @@ interface ValueOperators : FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
 	 */
-	@JvmName("divFieldReceiver")
+	@kotlin.jvm.JvmName("divFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
 	operator fun <Context : Any, Root, Child> opensavvy.ktmongo.dsl.path.Field<Context, Root>.div(field: Field<Root, Child>): Value<Context, Child> =
@@ -236,7 +236,7 @@ interface ValueOperators : FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("divResultReceiver")
+	@kotlin.jvm.JvmName("divResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
 	operator final inline fun <Context : Any, reified Root, Child> Root.div(field: Field<Root, Child>): Value<Context, Child> =
@@ -295,7 +295,7 @@ interface ValueOperators : FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
 	 */
-	@JvmName("divFieldReceiver")
+	@kotlin.jvm.JvmName("divFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	operator fun <Context : Any, Root, Child> opensavvy.ktmongo.dsl.path.Field<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
 		of(this).div(field)
@@ -326,7 +326,7 @@ interface ValueOperators : FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/getField/)
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
-	@JvmName("divResultReceiver")
+	@kotlin.jvm.JvmName("divResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	operator final inline fun <Context : Any, reified Root, Child> Root.div(field: KProperty1<Root, Child>): Value<Context, Child> =
 		of(this).div(field)

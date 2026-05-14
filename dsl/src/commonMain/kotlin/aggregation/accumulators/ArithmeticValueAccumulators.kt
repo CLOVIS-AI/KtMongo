@@ -99,7 +99,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
 	 */
-	@JvmName("sumByField")
+	@kotlin.jvm.JvmName("sumByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -132,7 +132,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
 	 */
-	@JvmName("sumPropertyReceiverByField")
+	@kotlin.jvm.JvmName("sumPropertyReceiverByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -165,7 +165,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
 	 */
-	@JvmName("sumByProperty")
+	@kotlin.jvm.JvmName("sumByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -198,7 +198,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sum/#mongodb-group-grp.-sum)
 	 */
-	@JvmName("sumPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("sumPropertyReceiverByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -369,7 +369,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
 	 */
-	@JvmName("averageByField")
+	@kotlin.jvm.JvmName("averageByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -404,7 +404,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
 	 */
-	@JvmName("averagePropertyReceiverByField")
+	@kotlin.jvm.JvmName("averagePropertyReceiverByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -439,7 +439,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
 	 */
-	@JvmName("averageByProperty")
+	@kotlin.jvm.JvmName("averageByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -474,7 +474,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg)
 	 */
-	@JvmName("averagePropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("averagePropertyReceiverByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -651,7 +651,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
 	 */
-	@JvmName("medianByField")
+	@kotlin.jvm.JvmName("medianByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -686,7 +686,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
 	 */
-	@JvmName("medianPropertyReceiverByField")
+	@kotlin.jvm.JvmName("medianPropertyReceiverByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -721,7 +721,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
 	 */
-	@JvmName("medianByProperty")
+	@kotlin.jvm.JvmName("medianByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -756,7 +756,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/median/)
 	 */
-	@JvmName("medianPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("medianPropertyReceiverByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -936,7 +936,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
 	 */
-	@JvmName("percentilesByField")
+	@kotlin.jvm.JvmName("percentilesByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -974,7 +974,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
 	 */
-	@JvmName("percentilesPropertyReceiverByField")
+	@kotlin.jvm.JvmName("percentilesPropertyReceiverByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1012,7 +1012,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
 	 */
-	@JvmName("percentilesByProperty")
+	@kotlin.jvm.JvmName("percentilesByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
@@ -1050,7 +1050,7 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/percentiles/)
 	 */
-	@JvmName("percentilesPropertyReceiverByProperty")
+	@kotlin.jvm.JvmName("percentilesPropertyReceiverByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
 	@KtMongoDsl
