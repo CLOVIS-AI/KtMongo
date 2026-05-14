@@ -246,3 +246,58 @@ internal class KotlinGeoMultiLineStringCodec(
 		return Geo.MultiLineString(lineStrings)
 	}
 }
+
+@OptIn(LowLevelApi::class)
+internal class KotlinGeoMultiPolygonCodec(
+	private val factory: BsonFactory,
+) : Codec<Geo.MultiPolygon> {
+
+	override fun encode(writer: BsonWriter, value: Geo.MultiPolygon, encoderContext: EncoderContext) {
+		factory.writeDocumentTo(writer) {
+			writeString("type", "MultiPolygon")
+			writeArray("coordinates") {
+				for (polygon in value.polygons) {
+					writeArray {
+						for (ring in polygon.rings) {
+							writeArray {
+								for (point in ring.points) {
+									writeArray {
+										writeDouble(point.x.degrees)
+										writeDouble(point.y.degrees)
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	override fun getEncoderClass(): Class<Geo.MultiPolygon> =
+		Geo.MultiPolygon::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.MultiPolygon {
+		val doc = factory.readDocument(reader, decoderContext)
+
+		val type = doc["type"]?.decodeString()
+		val coordinates = doc["coordinates"]?.decodeArray()
+
+		require(type == "MultiPolygon") { "Expected a GeoJSON MultiPolygon, but found: $type\n\tData: $doc" }
+		requireNotNull(coordinates) { "Missing coordinates field in GeoJSON MultiPolygon\n\tData: $doc" }
+
+		val polygons = coordinates
+			.asIterable()
+			.map { polygonArray ->
+				val ringsArray = polygonArray.decodeArray()
+				val rings = ringsArray.asIterable().map { ringArray ->
+					val pointsArray = ringArray.decodeArray()
+					val points = pointsArray.asIterable().map { it.decodeArray().decodeAsPoint() }
+					Geo.LineString(points)
+				}
+				Geo.Polygon(rings)
+			}
+
+		return Geo.MultiPolygon(polygons)
+	}
+}

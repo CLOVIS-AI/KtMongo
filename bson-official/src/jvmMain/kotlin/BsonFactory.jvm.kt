@@ -95,6 +95,7 @@ actual class BsonFactory(
 			KotlinGeoPolygonCodec(this),
 			KotlinGeoMultiPointCodec(this),
 			KotlinGeoMultiLineStringCodec(this),
+			KotlinGeoMultiPolygonCodec(this),
 		)
 
 		CodecRegistries.fromRegistries(
