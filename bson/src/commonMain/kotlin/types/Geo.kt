@@ -628,6 +628,77 @@ sealed class Geo {
 		}
 	}
 
+	/**
+	 * A GeoJSON geometry collection.
+	 *
+	 * A GeometryCollection is a list of [Geo] objects.
+	 *
+	 * It is not recommended to include a [GeometryCollection] inside another.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * Geo.GeometryCollection(
+	 *     Geo.MultiPoint(
+	 *         Geo.Point(Longitude(-73.9580), Latitude(40.8003)),
+	 *         Geo.Point(Longitude(-73.9498), Latitude(40.7968)),
+	 *         Geo.Point(Longitude(-73.9737), Latitude(40.7648)),
+	 *         Geo.Point(Longitude(-73.9814), Latitude(40.7681)),
+	 *     ),
+	 *     Geo.MultiLineString(
+	 *         Geo.LineString(
+	 *             Geo.Point(Longitude(-73.96943), Latitude(40.78519)),
+	 *             Geo.Point(Longitude(-73.96082), Latitude(40.78095)),
+	 *         ),
+	 *         Geo.LineString(
+	 *             Geo.Point(Longitude(-73.96415), Latitude(40.79229)),
+	 *             Geo.Point(Longitude(-73.95544), Latitude(40.78854)),
+	 *         ),
+	 *         Geo.LineString(
+	 *             Geo.Point(Longitude(-73.97162), Latitude(40.78205)),
+	 *             Geo.Point(Longitude(-73.96374), Latitude(40.77715)),
+	 *         ),
+	 *         Geo.LineString(
+	 *             Geo.Point(Longitude(-73.97880), Latitude(40.77247)),
+	 *             Geo.Point(Longitude(-73.97036), Latitude(40.76811)),
+	 *         ),
+	 *     )
+	 * )
+	 * ```
+	 */
+	@Serializable(with = GeometryCollection.Serializer::class)
+	@ExperimentalGeoBsonApi
+	data class GeometryCollection(
+		val geometries: List<Geo>,
+	) : Geo() {
+
+		constructor(vararg geometries: Geo) : this(geometries.asList())
+
+		override fun toString(): String = "GeometryCollection(${geometries.joinToString(", ")})"
+
+		@Serializable
+		private data class Surrogate(
+			val type: String,
+			val geometries: List<Geo>,
+		)
+
+		@LowLevelApi
+		object Serializer : KSerializer<GeometryCollection> {
+			private val surrogateSerializer = Surrogate.serializer()
+			override val descriptor: SerialDescriptor = surrogateSerializer.descriptor
+
+			override fun serialize(encoder: Encoder, value: GeometryCollection) {
+				surrogateSerializer.serialize(encoder, Surrogate("GeometryCollection", value.geometries))
+			}
+
+			override fun deserialize(decoder: Decoder): GeometryCollection {
+				val surrogate = surrogateSerializer.deserialize(decoder)
+				require(surrogate.type == "GeometryCollection") { "Invalid geometry type: ${surrogate.type}" }
+				return GeometryCollection(surrogate.geometries)
+			}
+		}
+	}
+
 	@LowLevelApi
 	object Serializer : KSerializer<Geo> {
 		@OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
@@ -648,6 +719,7 @@ sealed class Geo {
 				is MultiPoint -> encoder.encodeSerializableValue(MultiPoint.serializer(), value)
 				is MultiLineString -> encoder.encodeSerializableValue(MultiLineString.serializer(), value)
 				is MultiPolygon -> encoder.encodeSerializableValue(MultiPolygon.serializer(), value)
+				is GeometryCollection -> encoder.encodeSerializableValue(GeometryCollection.serializer(), value)
 			}
 		}
 
@@ -662,6 +734,7 @@ sealed class Geo {
 				"MultiPoint" -> document.decode<MultiPoint>()
 				"MultiLineString" -> document.decode<MultiLineString>()
 				"MultiPolygon" -> document.decode<MultiPolygon>()
+				"GeometryCollection" -> document.decode<GeometryCollection>()
 				else -> throw IllegalArgumentException("Cannot deserialize Geo: unknown type '$type'\n\tData: $document")
 			}
 		}

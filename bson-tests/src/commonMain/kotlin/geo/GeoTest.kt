@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalGeoBsonApi::class, LowLevelApi::class)
+@file:OptIn(ExperimentalGeoBsonApi::class, LowLevelApi::class, ExperimentalBsonPathApi::class)
 
 package opensavvy.ktmongo.bson.geo
 
 import opensavvy.ktmongo.bson.BsonFactory
+import opensavvy.ktmongo.bson.ExperimentalBsonPathApi
 import opensavvy.ktmongo.bson.decode
+import opensavvy.ktmongo.bson.select
 import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.document
 import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.json
 import opensavvy.ktmongo.bson.types.BsonDeclaration.Companion.serialize
@@ -38,6 +40,7 @@ fun SuiteDsl.validateGeo(factory: Prepared<BsonFactory>) = suite("Geo") {
 	geoMultiPoint(factory)
 	geoMultiLineString(factory)
 	geoMultiPolygon(factory)
+	geoGeometryCollection(factory)
 }
 
 private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
@@ -661,4 +664,116 @@ private fun SuiteDsl.geoMultiPolygon(factory: Prepared<BsonFactory>) = suite("Mu
 			check(decode<Geo>() == expected)
 		}
 	)
+}
+
+private fun SuiteDsl.geoGeometryCollection(factory: Prepared<BsonFactory>) = suite("GeometryCollection") {
+
+	testBson(
+		factory,
+		"Serialize geometry collection",
+		serialize(
+			Geo.GeometryCollection(
+				Geo.MultiPoint(
+					Geo.Point(Geo.Longitude(-73.9580), Geo.Latitude(40.8003)),
+					Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+					Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+					Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+				),
+				Geo.MultiLineString(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.96943), Geo.Latitude(40.78519)),
+						Geo.Point(Geo.Longitude(-73.96082), Geo.Latitude(40.78095)),
+					),
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.96415), Geo.Latitude(40.79229)),
+						Geo.Point(Geo.Longitude(-73.95544), Geo.Latitude(40.78854)),
+					),
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.97162), Geo.Latitude(40.78205)),
+						Geo.Point(Geo.Longitude(-73.96374), Geo.Latitude(40.77715)),
+					),
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.97880), Geo.Latitude(40.77247)),
+						Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)),
+					),
+				)
+			)
+		),
+		json("""{"type": "GeometryCollection", "geometries": [{"type": "MultiPoint", "coordinates": [[-73.958, 40.8003], [-73.9498, 40.7968], [-73.9737, 40.7648], [-73.9814, 40.7681]]}, {"type": "MultiLineString", "coordinates": [[[-73.96943, 40.78519], [-73.96082, 40.78095]], [[-73.96415, 40.79229], [-73.95544, 40.78854]], [[-73.97162, 40.78205], [-73.96374, 40.77715]], [[-73.9788, 40.77247], [-73.97036, 40.76811]]]}]}"""),
+		document {
+			writeString("type", "GeometryCollection")
+			writeArray("geometries") {
+				writeDocument {
+					writeString("type", "MultiPoint")
+					writeArray("coordinates") {
+						writeArray {
+							writeDouble(-73.958)
+							writeDouble(40.8003)
+						}
+						writeArray {
+							writeDouble(-73.9498)
+							writeDouble(40.7968)
+						}
+						writeArray {
+							writeDouble(-73.9737)
+							writeDouble(40.7648)
+						}
+						writeArray {
+							writeDouble(-73.9814)
+							writeDouble(40.7681)
+						}
+					}
+				}
+				writeDocument {
+					writeString("type", "MultiLineString")
+					writeArray("coordinates") {
+						writeArray {
+							writeArray {
+								writeDouble(-73.96943)
+								writeDouble(40.78519)
+							}
+							writeArray {
+								writeDouble(-73.96082)
+								writeDouble(40.78095)
+							}
+						}
+						writeArray {
+							writeArray {
+								writeDouble(-73.96415)
+								writeDouble(40.79229)
+							}
+							writeArray {
+								writeDouble(-73.95544)
+								writeDouble(40.78854)
+							}
+						}
+						writeArray {
+							writeArray {
+								writeDouble(-73.97162)
+								writeDouble(40.78205)
+							}
+							writeArray {
+								writeDouble(-73.96374)
+								writeDouble(40.77715)
+							}
+						}
+						writeArray {
+							writeArray {
+								writeDouble(-73.9788)
+								writeDouble(40.77247)
+							}
+							writeArray {
+								writeDouble(-73.97036)
+								writeDouble(40.76811)
+							}
+						}
+					}
+				}
+			}
+		},
+		verify("Get the coordinates of the MultiPoint") {
+			check(this.select<Double>("$.geometries[0].coordinates.*.*").toList() == listOf(-73.958, 40.8003, -73.9498, 40.7968, -73.9737, 40.7648, -73.9814, 40.7681))
+		}
+	)
+
 }
