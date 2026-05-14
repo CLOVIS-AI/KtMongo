@@ -199,3 +199,50 @@ internal class KotlinGeoPolygonCodec(
 		return Geo.Polygon(rings)
 	}
 }
+
+@OptIn(LowLevelApi::class)
+internal class KotlinGeoMultiLineStringCodec(
+	private val factory: BsonFactory,
+) : Codec<Geo.MultiLineString> {
+
+	override fun encode(writer: BsonWriter, value: Geo.MultiLineString, encoderContext: EncoderContext) {
+		factory.writeDocumentTo(writer) {
+			writeString("type", "MultiLineString")
+			writeArray("coordinates") {
+				for (lineString in value.lineStrings) {
+					writeArray {
+						for (point in lineString.points) {
+							writeArray {
+								writeDouble(point.x.degrees)
+								writeDouble(point.y.degrees)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	override fun getEncoderClass(): Class<Geo.MultiLineString> =
+		Geo.MultiLineString::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.MultiLineString {
+		val doc = factory.readDocument(reader, decoderContext)
+
+		val type = doc["type"]?.decodeString()
+		val coordinates = doc["coordinates"]?.decodeArray()
+
+		require(type == "MultiLineString") { "Expected a GeoJSON MultiLineString, but found: $type\n\tData: $doc" }
+		requireNotNull(coordinates) { "Missing coordinates field in GeoJSON MultiLineString\n\tData: $doc" }
+
+		val lineStrings = coordinates
+			.asIterable()
+			.map { lineStringArray ->
+				val pointsArray = lineStringArray.decodeArray()
+				val points = pointsArray.asIterable().map { it.decodeArray().decodeAsPoint() }
+				Geo.LineString(points)
+			}
+
+		return Geo.MultiLineString(lineStrings)
+	}
+}
