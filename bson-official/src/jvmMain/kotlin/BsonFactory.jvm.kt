@@ -20,6 +20,7 @@ import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.official.BsonFactory.Companion.current
 import opensavvy.ktmongo.bson.official.BsonFactory.Companion.setCurrent
+import opensavvy.ktmongo.bson.official.serialization.KotlinSerializerCodecProviderInjector
 import opensavvy.ktmongo.bson.official.types.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.bson.BsonBinaryReader
@@ -94,7 +95,7 @@ actual class BsonFactory(
 
 		CodecRegistries.fromRegistries(
 			CodecRegistries.fromCodecs(kotlinCodecs),
-			codecRegistry,
+			KotlinSerializerCodecProviderInjector.injectIfPresent(codecRegistry),
 		)
 	}
 
