@@ -21,6 +21,7 @@ import kotlinx.io.readTo
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 import kotlinx.serialization.serializer
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonFieldWriter
@@ -30,6 +31,9 @@ import opensavvy.ktmongo.bson.multiplatform.impl.write.CompletableBsonValueWrite
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformArrayFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.impl.write.MultiplatformDocumentFieldWriter
 import opensavvy.ktmongo.bson.multiplatform.serialization.BsonEncoderTopLevel
+import opensavvy.ktmongo.bson.multiplatform.serialization.CommonBsonArraySerializer
+import opensavvy.ktmongo.bson.multiplatform.serialization.CommonBsonDocumentSerializer
+import opensavvy.ktmongo.bson.multiplatform.serialization.CommonBsonValueSerializer
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KType
@@ -124,6 +128,11 @@ class BsonFactory(
 	 */
 	val serializersModule = SerializersModule {
 		include(serializersModule)
+
+		// Common BsonDocument, BsonArray and BsonValue interfaces
+		contextual(CommonBsonDocumentSerializer)
+		contextual(CommonBsonArraySerializer)
+		contextual(CommonBsonValueSerializer)
 	}
 
 	@Suppress("NOTHING_TO_INLINE")
