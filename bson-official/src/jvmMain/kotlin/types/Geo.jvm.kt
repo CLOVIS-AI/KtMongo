@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalGeoBsonApi::class)
+
 package opensavvy.ktmongo.bson.official.types
 
+import opensavvy.ktmongo.bson.official.BsonArray
 import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.types.ExperimentalGeoBsonApi
 import opensavvy.ktmongo.bson.types.Geo
@@ -26,7 +29,22 @@ import org.bson.codecs.Codec
 import org.bson.codecs.DecoderContext
 import org.bson.codecs.EncoderContext
 
-@OptIn(ExperimentalGeoBsonApi::class, LowLevelApi::class)
+private fun BsonArray.decodeAsPoint(): Geo.Point {
+	require(size == 2) { "A GeoJSON Point should have two coordinates, but found: $this" }
+
+	val x = this[0]?.decodeDouble()
+	val y = this[1]?.decodeDouble()
+
+	requireNotNull(x) { "Cannot decode the longitude\n\tCoordinates: $this" }
+	requireNotNull(y) { "Cannot decode the latitude\n\tCoordinates: $this" }
+
+	return Geo.Point(
+		Geo.Longitude(x),
+		Geo.Latitude(y),
+	)
+}
+
+@OptIn(LowLevelApi::class)
 internal class KotlinGeoPointCodec(
 	private val factory: BsonFactory,
 ) : Codec<Geo.Point> {
@@ -51,17 +69,47 @@ internal class KotlinGeoPointCodec(
 		val coordinates = doc["coordinates"]?.decodeArray()
 
 		require(type == "Point") { "Expected a GeoJSON Point, but found: $type\n\tData: $doc" }
-		require(coordinates?.size == 2) { "A GeoJSON Point should have two coordinates, but found: $coordinates\n\tData: $doc" }
+		requireNotNull(coordinates) { "Missing coordinates field in GeoJSON Point\n\tData: $doc" }
 
-		val x = coordinates[0]?.decodeDouble()
-		val y = coordinates[1]?.decodeDouble()
+		return coordinates.decodeAsPoint()
+	}
+}
 
-		requireNotNull(x) { "Cannot decode the longitude\n\tData: $doc" }
-		requireNotNull(y) { "Cannot decode the latitude\n\tData: $doc" }
+@OptIn(LowLevelApi::class)
+internal class KotlinGeoLineStringCodec(
+	private val factory: BsonFactory,
+) : Codec<Geo.LineString> {
 
-		return Geo.Point(
-			Geo.Longitude(x),
-			Geo.Latitude(y),
-		)
+	override fun encode(writer: BsonWriter, value: Geo.LineString, encoderContext: EncoderContext) {
+		factory.writeDocumentTo(writer) {
+			writeString("type", "LineString")
+			writeArray("coordinates") {
+				for (point in value.points) {
+					writeArray {
+						writeDouble(point.x.degrees)
+						writeDouble(point.y.degrees)
+					}
+				}
+			}
+		}
+	}
+
+	override fun getEncoderClass(): Class<Geo.LineString> =
+		Geo.LineString::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.LineString {
+		val doc = factory.readDocument(reader, decoderContext)
+
+		val type = doc["type"]?.decodeString()
+		val coordinates = doc["coordinates"]?.decodeArray()
+
+		require(type == "LineString") { "Expected a GeoJSON LineString, but found: $type\n\tData: $doc" }
+		require(coordinates != null && coordinates.size >= 2) { "A GeoJSON LineString should have at least two coordinate pairs, but found: $coordinates\n\tData: $doc" }
+
+		val points = coordinates
+			.asIterable()
+			.map { it.decodeArray().decodeAsPoint() }
+
+		return Geo.LineString(points)
 	}
 }
