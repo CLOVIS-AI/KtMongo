@@ -46,6 +46,7 @@ private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
 		factory,
 		"Serialize simple point",
 		serialize(Geo.Point(Geo.Longitude(2.0), Geo.Latitude(3.5))),
+		serialize(Geo.Point(Geo.Longitude(2.0), Geo.Latitude(3.5)) as Geo),
 		document {
 			writeString("type", "Point")
 			writeArray("coordinates") {
@@ -60,6 +61,9 @@ private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
 		verify("The latitude is correct") {
 			check(decode<Geo.Point>().y == Geo.Latitude(3.5))
 		},
+		verify("The longitude is correct (polymorphic)") {
+			check(decode<Geo>() == Geo.Point(Geo.Longitude(2.0), Geo.Latitude(3.5)))
+		}
 	)
 
 }
@@ -70,6 +74,7 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 		factory,
 		"Serialize simple linestring",
 		serialize(Geo.LineString(Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)), Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)))),
+		serialize(Geo.LineString(Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)), Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0))) as Geo),
 		document {
 			writeString("type", "LineString")
 			writeArray("coordinates") {
@@ -91,6 +96,10 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 		verify("The string is not closed") {
 			check(!decode<Geo.LineString>().isClosed)
 		},
+		verify("The coordinates are correct (polymorphic)") {
+			val expected = Geo.LineString(Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)), Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)))
+			check(decode<Geo>() == expected)
+		}
 	)
 
 	testBson(
@@ -103,6 +112,14 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 				Geo.Point(Geo.Longitude(41.5), Geo.Latitude(6.0)),
 				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
 			)
+		),
+		serialize(
+			Geo.LineString(
+				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
+				Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(41.5), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
+			) as Geo
 		),
 		document {
 			writeString("type", "LineString")
@@ -135,6 +152,15 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 		verify("The string is closed") {
 			check(decode<Geo.LineString>().isClosed)
 		},
+		verify("The coordinates are correct (polymorphic)") {
+			val expected = Geo.LineString(
+				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
+				Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(41.5), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
+			)
+			check(decode<Geo>() == expected)
+		}
 	)
 
 }
@@ -151,6 +177,14 @@ private fun SuiteDsl.geoPolygon(factory: Prepared<BsonFactory>) = suite("Polygon
 				Geo.Point(Geo.Longitude(6.0), Geo.Latitude(1.0)),
 				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
 			)
+		),
+		serialize(
+			Geo.Polygon(
+				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+				Geo.Point(Geo.Longitude(3.0), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(6.0), Geo.Latitude(1.0)),
+				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+			) as Geo
 		),
 		document {
 			writeString("type", "Polygon")
@@ -189,6 +223,15 @@ private fun SuiteDsl.geoPolygon(factory: Prepared<BsonFactory>) = suite("Polygon
 			check(polygon.rings[0].points[2] == Geo.Point(Geo.Longitude(6.0), Geo.Latitude(1.0)))
 			check(polygon.rings[0].points[3] == Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)))
 		},
+		verify("The coordinates are correct (polymorphic)") {
+			val expected = Geo.Polygon(
+				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+				Geo.Point(Geo.Longitude(3.0), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(6.0), Geo.Latitude(1.0)),
+				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+			)
+			check(decode<Geo>() == expected)
+		}
 	)
 
 	testBson(
@@ -302,6 +345,14 @@ private fun SuiteDsl.geoMultiPoint(factory: Prepared<BsonFactory>) = suite("Mult
 				Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
 			)
 		),
+		serialize(
+			Geo.MultiPoint(
+				Geo.Point(Geo.Longitude(-73.9580), Geo.Latitude(40.8003)),
+				Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+				Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+				Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+			) as Geo
+		),
 		document {
 			writeString("type", "MultiPoint")
 			writeArray("coordinates") {
@@ -334,6 +385,15 @@ private fun SuiteDsl.geoMultiPoint(factory: Prepared<BsonFactory>) = suite("Mult
 			check(multiPoint.points[2] == Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)))
 			check(multiPoint.points[3] == Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)))
 		},
+		verify("The coordinates are correct (polymorphic)") {
+			val expected = Geo.MultiPoint(
+				Geo.Point(Geo.Longitude(-73.9580), Geo.Latitude(40.8003)),
+				Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+				Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+				Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+			)
+			check(decode<Geo>() == expected)
+		}
 	)
 }
 
@@ -361,6 +421,26 @@ private fun SuiteDsl.geoMultiLineString(factory: Prepared<BsonFactory>) = suite(
 					Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)),
 				),
 			)
+		),
+		serialize(
+			Geo.MultiLineString(
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.96943), Geo.Latitude(40.78519)),
+					Geo.Point(Geo.Longitude(-73.96082), Geo.Latitude(40.78095)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.96415), Geo.Latitude(40.79229)),
+					Geo.Point(Geo.Longitude(-73.95544), Geo.Latitude(40.78854)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.97162), Geo.Latitude(40.78205)),
+					Geo.Point(Geo.Longitude(-73.96374), Geo.Latitude(40.77715)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.97880), Geo.Latitude(40.77247)),
+					Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)),
+				),
+			) as Geo
 		),
 		document {
 			writeString("type", "MultiLineString")
@@ -422,6 +502,27 @@ private fun SuiteDsl.geoMultiLineString(factory: Prepared<BsonFactory>) = suite(
 			check(multiLineString.lineStrings[3].points[0] == Geo.Point(Geo.Longitude(-73.97880), Geo.Latitude(40.77247)))
 			check(multiLineString.lineStrings[3].points[1] == Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)))
 		},
+		verify("The coordinates are correct (polymorphic)") {
+			val expected = Geo.MultiLineString(
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.96943), Geo.Latitude(40.78519)),
+					Geo.Point(Geo.Longitude(-73.96082), Geo.Latitude(40.78095)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.96415), Geo.Latitude(40.79229)),
+					Geo.Point(Geo.Longitude(-73.95544), Geo.Latitude(40.78854)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.97162), Geo.Latitude(40.78205)),
+					Geo.Point(Geo.Longitude(-73.96374), Geo.Latitude(40.77715)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.97880), Geo.Latitude(40.77247)),
+					Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)),
+				),
+			)
+			check(decode<Geo>() == expected)
+		}
 	)
 }
 
@@ -450,6 +551,27 @@ private fun SuiteDsl.geoMultiPolygon(factory: Prepared<BsonFactory>) = suite("Mu
 					),
 				),
 			)
+		),
+		serialize(
+			Geo.MultiPolygon(
+				Geo.Polygon(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+						Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+						Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+						Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+					),
+				),
+				Geo.Polygon(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+						Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+						Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+					),
+				),
+			) as Geo
 		),
 		document {
 			writeString("type", "MultiPolygon")
@@ -516,5 +638,27 @@ private fun SuiteDsl.geoMultiPolygon(factory: Prepared<BsonFactory>) = suite("Mu
 			check(multiPolygon.polygons[1].rings[0].points[2] == Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)))
 			check(multiPolygon.polygons[1].rings[0].points[3] == Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)))
 		},
+		verify("The coordinates are correct (polymorphic)") {
+			val expected = Geo.MultiPolygon(
+				Geo.Polygon(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+						Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+						Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+						Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+					),
+				),
+				Geo.Polygon(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+						Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+						Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+					),
+				),
+			)
+			check(decode<Geo>() == expected)
+		}
 	)
 }

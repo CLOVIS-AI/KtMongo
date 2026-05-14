@@ -16,11 +16,17 @@
 
 package opensavvy.ktmongo.bson.types
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PolymorphicKind
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import opensavvy.ktmongo.bson.BsonDocument
+import opensavvy.ktmongo.bson.decode
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.jvm.JvmInline
 
@@ -42,6 +48,7 @@ annotation class ExperimentalGeoBsonApi
  */
 @OptIn(LowLevelApi::class)
 @ExperimentalGeoBsonApi
+@Serializable(with = Geo.Serializer::class)
 sealed class Geo {
 
 	/**
@@ -617,6 +624,45 @@ sealed class Geo {
 					Polygon(rings)
 				}
 				return MultiPolygon(polygons)
+			}
+		}
+	}
+
+	@LowLevelApi
+	object Serializer : KSerializer<Geo> {
+		@OptIn(InternalSerializationApi::class, ExperimentalSerializationApi::class)
+		override val descriptor: SerialDescriptor = buildSerialDescriptor("opensavvy.ktmongo.bson.types.Geo", PolymorphicKind.SEALED) {
+			element("Point", Point.serializer().descriptor)
+			element("LineString", LineString.serializer().descriptor)
+			element("Polygon", Polygon.serializer().descriptor)
+			element("MultiPoint", MultiPoint.serializer().descriptor)
+			element("MultiLineString", MultiLineString.serializer().descriptor)
+			element("MultiPolygon", MultiPolygon.serializer().descriptor)
+		}
+
+		override fun serialize(encoder: Encoder, value: Geo) {
+			when (value) {
+				is Point -> encoder.encodeSerializableValue(Point.serializer(), value)
+				is LineString -> encoder.encodeSerializableValue(LineString.serializer(), value)
+				is Polygon -> encoder.encodeSerializableValue(Polygon.serializer(), value)
+				is MultiPoint -> encoder.encodeSerializableValue(MultiPoint.serializer(), value)
+				is MultiLineString -> encoder.encodeSerializableValue(MultiLineString.serializer(), value)
+				is MultiPolygon -> encoder.encodeSerializableValue(MultiPolygon.serializer(), value)
+			}
+		}
+
+		override fun deserialize(decoder: Decoder): Geo {
+			val document = BsonDocument.serializer().deserialize(decoder)
+
+			return when (val type = document["type"]?.decodeString()) {
+				null -> throw IllegalArgumentException("Cannot deserialize Geo: missing 'type' field\n\tData: $document")
+				"Point" -> document.decode<Point>()
+				"LineString" -> document.decode<LineString>()
+				"Polygon" -> document.decode<Polygon>()
+				"MultiPoint" -> document.decode<MultiPoint>()
+				"MultiLineString" -> document.decode<MultiLineString>()
+				"MultiPolygon" -> document.decode<MultiPolygon>()
+				else -> throw IllegalArgumentException("Cannot deserialize Geo: unknown type '$type'\n\tData: $document")
 			}
 		}
 	}
