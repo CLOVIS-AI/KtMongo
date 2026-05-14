@@ -26,6 +26,7 @@ import kotlinx.serialization.encoding.AbstractEncoder
 import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.SerializersModule
+import opensavvy.ktmongo.bson.BsonEncodingException
 import opensavvy.ktmongo.bson.multiplatform.BsonArray
 import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
