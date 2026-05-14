@@ -305,6 +305,38 @@ internal class KotlinGeoMultiPolygonCodec(
 }
 
 @OptIn(LowLevelApi::class)
+internal class KotlinGeoGeometryCollectionCodec(
+	private val factory: BsonFactory,
+) : Codec<GeometryCollection> {
+
+	override fun encode(writer: BsonWriter, value: GeometryCollection, encoderContext: EncoderContext) {
+		writer.writeStartDocument()
+		writer.writeString("type", "GeometryCollection")
+		writer.writeStartArray("geometries")
+		for (geometry in value.geometries) {
+			KotlinGeoCodec(factory).encode(writer, geometry, encoderContext)
+		}
+		writer.writeEndArray()
+		writer.writeEndDocument()
+	}
+
+	override fun getEncoderClass(): Class<GeometryCollection> =
+		GeometryCollection::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): GeometryCollection {
+		val doc = factory.readDocument(reader, decoderContext)
+
+		val type = doc["type"]?.decodeString()
+		val geometries = doc["geometries"]?.decodeArray()
+
+		require(type == "GeometryCollection") { "Expected a GeoJSON GeometryCollection, but found: $type\n\tData: $doc" }
+		requireNotNull(geometries) { "Missing geometries field in GeoJSON GeometryCollection\n\tData: $doc" }
+
+		return GeometryCollection(geometries.asIterable().map { it.decode<Geo>() })
+	}
+}
+
+@OptIn(LowLevelApi::class)
 internal class KotlinGeoCodec(
 	private val factory: BsonFactory,
 ) : Codec<Geo> {
@@ -316,6 +348,7 @@ internal class KotlinGeoCodec(
 			is MultiLineString -> KotlinGeoMultiLineStringCodec(factory).encode(writer, value, encoderContext)
 			is Polygon -> KotlinGeoPolygonCodec(factory).encode(writer, value, encoderContext)
 			is MultiPolygon -> KotlinGeoMultiPolygonCodec(factory).encode(writer, value, encoderContext)
+			is GeometryCollection -> KotlinGeoGeometryCollectionCodec(factory).encode(writer, value, encoderContext)
 		}
 	}
 
@@ -333,6 +366,7 @@ internal class KotlinGeoCodec(
 			"MultiPoint" -> document.decode<MultiPoint>()
 			"MultiLineString" -> document.decode<MultiLineString>()
 			"MultiPolygon" -> document.decode<MultiPolygon>()
+			"GeometryCollection" -> document.decode<GeometryCollection>()
 			else -> throw IllegalArgumentException("Cannot deserialize Geo: unknown type '$type'\n\tData: $document")
 		}
 	}
