@@ -115,6 +115,45 @@ internal class KotlinGeoLineStringCodec(
 }
 
 @OptIn(LowLevelApi::class)
+internal class KotlinGeoMultiPointCodec(
+	private val factory: BsonFactory,
+) : Codec<Geo.MultiPoint> {
+
+	override fun encode(writer: BsonWriter, value: Geo.MultiPoint, encoderContext: EncoderContext) {
+		factory.writeDocumentTo(writer) {
+			writeString("type", "MultiPoint")
+			writeArray("coordinates") {
+				for (point in value.points) {
+					writeArray {
+						writeDouble(point.x.degrees)
+						writeDouble(point.y.degrees)
+					}
+				}
+			}
+		}
+	}
+
+	override fun getEncoderClass(): Class<Geo.MultiPoint> =
+		Geo.MultiPoint::class.java
+
+	override fun decode(reader: BsonReader, decoderContext: DecoderContext): Geo.MultiPoint {
+		val doc = factory.readDocument(reader, decoderContext)
+
+		val type = doc["type"]?.decodeString()
+		val coordinates = doc["coordinates"]?.decodeArray()
+
+		require(type == "MultiPoint") { "Expected a GeoJSON MultiPoint, but found: $type\n\tData: $doc" }
+		requireNotNull(coordinates) { "Missing coordinates field in GeoJSON MultiPoint\n\tData: $doc" }
+
+		val points = coordinates
+			.asIterable()
+			.map { it.decodeArray().decodeAsPoint() }
+
+		return Geo.MultiPoint(points)
+	}
+}
+
+@OptIn(LowLevelApi::class)
 internal class KotlinGeoPolygonCodec(
 	private val factory: BsonFactory,
 ) : Codec<Geo.Polygon> {
