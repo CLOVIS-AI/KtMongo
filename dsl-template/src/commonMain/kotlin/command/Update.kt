@@ -22,6 +22,7 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
+import opensavvy.ktmongo.dsl.options.WithArrayFilters
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
@@ -177,4 +178,5 @@ class UpdateMany<Document : Any> private constructor(
  */
 class UpdateOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithWriteConcern
+	WithWriteConcern,
+	WithArrayFilters
