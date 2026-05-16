@@ -70,7 +70,9 @@ interface WithSort<Document : Any> : Options {
 	 * ```kotlin
 	 * collection.find(
 	 *     options = {
-	 *         ascending(User::age)
+	 *         sort {
+	 *             ascending(User::age)
+	 *         }
 	 *     },
 	 *     filter = {
 	 *         User::age.exists()
