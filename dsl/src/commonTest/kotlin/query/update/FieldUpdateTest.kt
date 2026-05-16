@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalTime::class)
+@file:OptIn(ExperimentalTime::class, LowLevelApi::class)
 
 package opensavvy.ktmongo.dsl.query.update
 
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import kotlin.time.ExperimentalTime
@@ -860,6 +861,20 @@ val FieldUpdateTest by multiContextSuite {
 						"modificationTimestamp": {
 							"$type": "timestamp"
 						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite("Array filters") {
+		test("Explicit array filter") {
+			update {
+				User::friends.filter("best") / Friend::money += 0.5f
+			} shouldBeBson $$"""
+				{
+					"$inc": {
+						"friends.$[best].money": 0.5
 					}
 				}
 			""".trimIndent()

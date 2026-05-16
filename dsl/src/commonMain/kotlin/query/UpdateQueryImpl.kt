@@ -28,9 +28,7 @@ import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.path.Field
-import opensavvy.ktmongo.dsl.path.FieldDsl
-import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
@@ -603,6 +601,13 @@ private class UpdateQueryImpl<T>(
 			}
 		}
 	}
+
+	// endregion
+	// region Array filters
+
+	@OptIn(LowLevelApi::class)
+	override fun <V> Field<T, Collection<V>>.filter(id: String): Field<T, V> =
+		FieldImpl(this.path / PathSegment.FilteredPositional(id))
 
 	// endregion
 

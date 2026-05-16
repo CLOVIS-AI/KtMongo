@@ -65,6 +65,7 @@ import kotlin.time.Instant
  * On arrays:
  * - [`$`][selected]
  * - [`$[]`][all]
+ * - [`$[<name>]`][filter]
  * - [`$addToSet`][addToSet]
  * - [`$push`][push]
  *
@@ -1429,6 +1430,59 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		@KtMongoDsl
 		fun descending()
 	}
+
+	// region Array filters
+
+	/**
+	 * Filters an array and performs the specified update only on the filtered items.
+	 *
+	 * Unlike [selected], which only updates a single array element, [filter] can update multiple array elements.
+	 * [filter] can also be nested.
+	 *
+	 * ### Usage
+	 *
+	 * MongoDB doesn't allow specifying the filter within the update itself, it must be specified in the options.
+	 * The parameter [id] must match a declared array filter.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val grades: List<Grade>,
+	 * )
+	 *
+	 * class Grade(
+	 *     val subject: String,
+	 *     val grade: Int,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     options = {
+	 *         arrayFilter("maths") {
+	 *             Grade::subject eq "Maths"
+	 *         }
+	 *     },
+	 *     update = {
+	 *         User::grades.filter("maths") / Grade::grade inc 10
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will increment all grades for the subject `"Maths"` for user `"Bob"`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered)
+	 */
+	@KtMongoDsl
+	@LowLevelApi
+	fun <V> Field<T, Collection<V>>.filter(id: String): Field<T, V>
+
+	// endregion
 
 }
 
