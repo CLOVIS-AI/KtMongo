@@ -39,7 +39,7 @@ import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
  * For more information, see [UpdateQuery.filter] and [WithArrayFilters.arrayFilter].
  */
 class ArrayFiltersOption internal constructor(
-	private val arrayFilters: List<Pair<String, BsonNode>>,
+	internal val arrayFilters: List<Pair<String, BsonNode>>,
 	context: BsonContext,
 ) : AbstractOption("arrayFilters", context) {
 
@@ -120,6 +120,9 @@ interface WithArrayFilters : Options {
 	 *
 	 * Note the `it` parameter in the `arrayFilter` function, which allows declaring a filter
 	 * expression on a given element. The `arrayFilter` block accepts the same syntax as `find()`.
+	 *
+	 * Note that [UpdateQuery.filter] has an overload that registers the option automatically.
+	 * If you use it, you don't need to call this function at all.
 	 *
 	 * ### External resources
 	 *

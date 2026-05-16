@@ -25,6 +25,10 @@ import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.UpdateOptions
+import opensavvy.ktmongo.dsl.options.ArrayFiltersOption
+import opensavvy.ktmongo.dsl.options.ArrayFiltersOptionDsl
+import opensavvy.ktmongo.dsl.options.WithArrayFilters
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
@@ -42,6 +46,7 @@ import kotlin.time.Instant
 @KtMongoDsl
 private class UpdateQueryImpl<T>(
 	context: BsonContext,
+	private val arrayFilterCreator: ArrayFilterCreator?,
 ) : AbstractCompoundBsonNode(context),
 	UpsertQuery<T>,
 	FieldDsl {
@@ -78,7 +83,7 @@ private class UpdateQueryImpl<T>(
 
 		@OptIn(DangerousMongoApi::class)
 		if (simplifiedChildren != children)
-			return UpdateQueryImpl<T>(context).apply {
+			return UpdateQueryImpl<T>(context, arrayFilterCreator).apply {
 				acceptAll(simplifiedChildren)
 			}
 		return this
@@ -606,6 +611,17 @@ private class UpdateQueryImpl<T>(
 	override fun <V> Field<T, Collection<V>>.filter(id: String): Field<T, V> =
 		FieldImpl(this.path / PathSegment.FilteredPositional(id))
 
+	override fun <V> Field<T, Collection<V>>.filter(
+		id: String?,
+		filter: ArrayFiltersOptionDsl<V>.(it: Field<ArrayFiltersOptionDsl.IteratorType<V>, V>) -> Unit,
+	): Field<T, V> {
+		checkNotNull(arrayFilterCreator) { "This update query has not been configured to register array filters. If you're using an UpdateQuery instance provided by the library, please report the problem. If you're create your own UpdateQuery instance with the constructor, consider passing an Options instance." }
+
+		val id = arrayFilterCreator.declare(id, filter)
+
+		return filter(id)
+	}
+
 	// endregion
 
 	companion object {
@@ -652,12 +668,50 @@ private class UpdateQueryImpl<T>(
  * Creates an empty [UpdateQuery].
  */
 @LowLevelApi
-fun <T> UpdateQuery(context: BsonContext): UpdateQuery<T> =
-	UpdateQueryImpl(context)
+fun <T> UpdateQuery(
+	context: BsonContext,
+	options: UpdateOptions<T>? = null,
+): UpdateQuery<T> =
+	UpdateQueryImpl(context, options?.let(::ArrayFilterCreator))
 
 /**
  * Creates an empty [UpsertQuery].
  */
 @LowLevelApi
-fun <T> UpsertQuery(context: BsonContext): UpsertQuery<T> =
-	UpdateQueryImpl(context)
+fun <T> UpsertQuery(
+	context: BsonContext,
+	options: UpdateOptions<T>? = null,
+): UpsertQuery<T> =
+	UpdateQueryImpl(context, options?.let(::ArrayFilterCreator))
+
+private class ArrayFilterCreator(
+	private val option: WithArrayFilters,
+) {
+
+	private var next = 0
+
+	@OptIn(LowLevelApi::class)
+	fun <V> declare(
+		id: String?,
+		filter: ArrayFiltersOptionDsl<V>.(it: Field<ArrayFiltersOptionDsl.IteratorType<V>, V>) -> Unit,
+	): String {
+		val alreadyUsed = option.allOptions
+			.asSequence()
+			.filterIsInstance<ArrayFiltersOption>()
+			.flatMap { it.arrayFilters }
+			.map { (id, _) -> id }
+			.toHashSet()
+
+		var id = id
+
+		if (id == null) {
+			do {
+				id = "f${next++}"
+			} while (id in alreadyUsed)
+		}
+
+		option.arrayFilter(id, filter)
+
+		return id
+	}
+}

@@ -23,6 +23,7 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
@@ -50,17 +51,18 @@ class User(
 	val scores: List<Int>,
 	val creationInstant: Instant,
 	val modificationTimestamp: Timestamp,
+	val recursive: List<User>,
 )
 
 @OptIn(LowLevelApi::class)
 @KtMongoDsl
-suspend fun TestDsl.update(block: UpdateQuery<User>.() -> Unit): String =
-	UpdateQuery<User>(testContext()).apply(block).toString()
+suspend fun TestDsl.update(options: UpdateOptions<User>? = null, block: UpdateQuery<User>.() -> Unit): String =
+	UpdateQuery<User>(testContext(), options).apply(block).toString()
 
 @OptIn(LowLevelApi::class)
 @KtMongoDsl
-suspend fun TestDsl.upsert(block: UpsertQuery<User>.() -> Unit): String =
-	UpsertQuery<User>(testContext()).apply(block).toString()
+suspend fun TestDsl.upsert(options: UpdateOptions<User>? = null, block: UpsertQuery<User>.() -> Unit): String =
+	UpsertQuery<User>(testContext(), options).apply(block).toString()
 
 val EmptyUpdateTest by multiContextSuite {
 	test("Empty update") {
