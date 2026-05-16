@@ -25,10 +25,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
-import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
-import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
-import opensavvy.ktmongo.dsl.tree.BsonNode
-import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import opensavvy.ktmongo.dsl.tree.*
 import kotlin.reflect.KProperty1
 
 /**
@@ -40,10 +37,15 @@ import kotlin.reflect.KProperty1
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/cursor.sort)
  */
-class SortOption<Document : Any>(
-	config: SortOptionDsl<Document>,
+class SortOption<Document : Any> private constructor(
+	private val config: BsonNode,
 	context: BsonContext,
 ) : AbstractCompoundOption("sort", config, context) {
+
+	constructor(
+		config: SortOptionDsl<Document>,
+		context: BsonContext,
+	) : this(config as BsonNode, context)
 
 	/**
 	 * The sort option's configured block.
@@ -52,6 +54,16 @@ class SortOption<Document : Any>(
 	 */
 	@OptIn(LowLevelApi::class)
 	val block: BsonDocument get() = read().decodeDocument()
+
+	@LowLevelApi
+	override fun merge(other: Option): Option {
+		require(other is SortOption<*>) { "Cannot merge sort options of different types: ${this::class} and ${other::class}" }
+
+		return SortOption<Document>(
+			MergedBsonNode(config, other.config),
+			context,
+		)
+	}
 }
 
 /**

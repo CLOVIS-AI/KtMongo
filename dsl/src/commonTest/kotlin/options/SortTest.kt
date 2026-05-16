@@ -98,4 +98,27 @@ val SortTest by multiContextSuite {
 		""".trimIndent()
 	}
 
+	test("If the sort option is specified multiple times, it should be combined into a single call") {
+		val options = FindOptions<Target>(testContext())
+
+		options.sort {
+			ascending(Target::name)
+			descending(Target::_id)
+		}
+
+		options.sort {
+			ascending(Target::age)
+		}
+
+		options.toString() shouldBeBson """
+			{
+				"sort": {
+					"name": 1,
+					"_id": -1,
+					"age": 1
+				}
+			}
+		""".trimIndent()
+	}
+
 }

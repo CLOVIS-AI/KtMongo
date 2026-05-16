@@ -20,14 +20,12 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValue
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.Count
 import opensavvy.ktmongo.dsl.command.CountOptions
-import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
-import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
-import opensavvy.ktmongo.dsl.tree.BsonNode
-import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import opensavvy.ktmongo.dsl.tree.*
 
 /**
  * Additional parameters that are passed to MongoDB operations.
@@ -102,6 +100,27 @@ interface Option : BsonNode {
 	@OptIn(LowLevelApi::class)
 	fun read(): BsonValue
 
+	/**
+	 * Merges this option with another of the same type.
+	 *
+	 * The caller is responsible for only calling this method
+	 * with a parameter of the same concrete type as the current instance.
+	 *
+	 * This method returns a new option, which combines the values of both options.
+	 *
+	 * This method must be called in the same order as the options are defined.
+	 * For example, if `a` is defined before `b`, then `a.merge(b)` is valid, but `b.merge(a)` is not.
+	 *
+	 * By default, this method returns the last declared option.
+	 *
+	 * This method is called by the option holder's [BsonNode.simplify] method.
+	 */
+	@LowLevelApi
+	fun merge(other: Option): Option {
+		require(this::class == other::class) { "Cannot merge options of different types: ${this::class} and ${other::class}" }
+		return other
+	}
+
 }
 
 /**
@@ -162,7 +181,7 @@ abstract class AbstractCompoundOption(
 /**
  * Parent interface for all option containers.
  *
- * Option containers are types that declare a set of options. They are usually tied to a specific MongoDB [command].
+ * Option containers are types that declare a set of options. They are usually tied to a specific MongoDB command.
  *
  * For example, for options related to the [Count] command, see [CountOptions].
  */
@@ -187,6 +206,33 @@ internal class OptionsHolder(context: BsonContext) : AbstractCompoundBsonNode(co
 	@OptIn(LowLevelApi::class)
 	override val allOptions: List<Option>
 		get() = children.filterIsInstance<Option>()
+
+	@OptIn(DangerousMongoApi::class)
+	@LowLevelApi
+	override fun simplify(children: List<BsonNode>): OptionsHolder? {
+		if (children.isEmpty())
+			return null
+
+		val (options, others) = children.partition { it is Option }
+
+		@Suppress("UNCHECKED_CAST") // Guaranteed by the 'partition' call
+		options as List<Option>
+
+		val mergedOptions = options.groupingBy { it::class }
+			.reduce { _, a, b ->
+				a.merge(b)
+			}
+			.values
+
+		if (mergedOptions == options)
+			return this
+
+		return OptionsHolder(context).apply {
+			acceptAll(mergedOptions)
+			acceptAll(others)
+			freeze()
+		}
+	}
 }
 
 /**

@@ -200,3 +200,50 @@ abstract class AbstractBsonNode private constructor(
 
 	companion object
 }
+
+@OptIn(LowLevelApi::class)
+internal class MergedBsonNode(
+	val a: BsonNode,
+	val b: BsonNode,
+) : BsonNode {
+
+	init {
+		require(a.context == b.context) { "Cannot merge nodes with different contexts: ${a.context} and ${b.context}" }
+		a.freeze()
+		b.freeze()
+	}
+
+	@LowLevelApi
+	override val context: BsonContext
+		get() = a.context
+
+	@LowLevelApi
+	override fun freeze() {
+		// Nothing to do, children are frozen on instantiation
+	}
+
+	@LowLevelApi
+	override fun simplify(): BsonNode? {
+		val aSimplified = a.simplify()
+		val bSimplified = b.simplify()
+
+		return when {
+			aSimplified == null -> bSimplified
+			bSimplified == null -> aSimplified
+			aSimplified == a && bSimplified == b -> this
+			else -> MergedBsonNode(aSimplified, bSimplified)
+		}
+	}
+
+	@LowLevelApi
+	override fun writeTo(writer: BsonFieldWriter) {
+		a.writeTo(writer)
+		b.writeTo(writer)
+	}
+
+	override fun toString(): String =
+		context.buildDocument {
+			simplify()?.writeTo(this)
+		}.toString()
+
+}
