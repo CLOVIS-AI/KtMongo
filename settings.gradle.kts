@@ -92,6 +92,7 @@ include(
 	"driver-sync-kmongo",
 	"driver-coroutines",
 	"driver-coroutines-kmongo",
+	"driver-multiplatform-wire",
 
 	"test",
 

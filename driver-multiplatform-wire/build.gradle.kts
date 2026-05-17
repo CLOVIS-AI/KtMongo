@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2026, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,37 +14,61 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(libsCommon.plugins.kotlinx.serialization)
+	alias(libsCommon.plugins.testBalloon)
 }
 
 kotlin {
 	jvm()
+	js {
+		nodejs()
+	}
+	linuxX64()
+	linuxArm64()
+	macosArm64()
+	iosArm64()
+	iosSimulatorArm64()
+	watchosArm32()
+	watchosArm64()
+	watchosSimulatorArm64()
+	tvosArm64()
+	tvosSimulatorArm64()
+	mingwX64()
+	// wasmJs {
+	// 	nodejs()
+	// }
 
 	sourceSets.commonMain.dependencies {
-		api(projects.dsl)
-		api(projects.driverSharedOfficial)
-	}
+		api(projects.bson)
+		api(projects.bsonMultiplatform)
+		api(libs.kotlinx.io)
+		api(libs.kotlinx.coroutines)
 
-	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.sync.jvm)
+		implementation(libs.ktor.network)
 	}
 
 	sourceSets.commonTest.dependencies {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotlin.test)
-		implementation(libsCommon.kotest.assertions)
 	}
 }
 
 library {
-	name.set("KtMongo: MongoDB driver for Kotlin • Synchronous")
-	description.set("Kotlin-first MongoDB driver, based on the official MongoDB driver")
+	name.set("KtMongo: MongoDB driver for Kotlin • Multiplatform wire protocol")
+	description.set("Low-level pure Kotlin implementation of the MongoDB wire protocol")
 	homeUrl.set("https://ktmongo.opensavvy.dev")
 
 	license.set {
 		name.set("Apache 2.0")
 		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
 	}
+
+	coverage.set(45) // TODO: increase coverage when stabilizing
 }
