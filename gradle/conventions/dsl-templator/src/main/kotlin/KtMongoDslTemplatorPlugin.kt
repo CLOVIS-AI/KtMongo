@@ -34,7 +34,8 @@ class KtMongoDslTemplatorPlugin : Plugin<Project> {
 			if (name.contains("compileKotlin", ignoreCase = true) ||
 				name.contains("sourcesJar", ignoreCase = true) ||
 				name.contains("processResources", ignoreCase = true) ||
-				name.contains("dokkaGenerate", ignoreCase = true)) {
+				name.contains("dokkaGenerate", ignoreCase = true) ||
+				name.endsWith("KotlinMetadata", ignoreCase = true)) {
 				dependsOn(templateTask)
 			}
 		}
