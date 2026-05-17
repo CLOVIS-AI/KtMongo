@@ -41,9 +41,9 @@ kotlin {
 	tvosArm64()
 	tvosSimulatorArm64()
 	mingwX64()
-	wasmJs {
-		nodejs()
-	}
+	// wasmJs {
+	// 	nodejs()
+	// }
 
 	sourceSets.commonMain.dependencies {
 		api(projects.bson)
