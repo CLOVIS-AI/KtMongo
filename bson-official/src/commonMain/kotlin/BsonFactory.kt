@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,9 @@ expect class BsonFactory : BsonFactory {
 	override fun readDocument(bytes: ByteArray): BsonDocument
 
 	@LowLevelApi
+	override fun readDocument(document: opensavvy.ktmongo.bson.BsonDocument): BsonDocument
+
+	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray
 
 	@LowLevelApi
@@ -46,4 +49,10 @@ expect class BsonFactory : BsonFactory {
 
 	@LowLevelApi
 	override fun readArray(bytes: ByteArray): BsonArray
+
+	@LowLevelApi
+	override fun readArray(array: opensavvy.ktmongo.bson.BsonArray): BsonArray
+
+	@LowLevelApi
+	override fun readValue(value: opensavvy.ktmongo.bson.BsonValue): BsonValue
 }

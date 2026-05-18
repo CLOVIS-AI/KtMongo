@@ -204,6 +204,9 @@ class BsonFactory(
 	override fun readDocument(bytes: ByteArray): BsonDocument =
 		BsonDocument(this, Bytes(bytes.copyOf()))
 
+	override fun readDocument(document: opensavvy.ktmongo.bson.BsonDocument): BsonDocument =
+		super.readDocument(document) as BsonDocument
+
 	@LowLevelApi
 	override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray =
 		buildArbitraryTopLevel {
@@ -225,6 +228,12 @@ class BsonFactory(
 	@LowLevelApi
 	override fun readArray(bytes: ByteArray): BsonArray =
 		BsonArray(this, Bytes(bytes.copyOf()))
+
+	override fun readArray(array: opensavvy.ktmongo.bson.BsonArray): BsonArray =
+		super.readArray(array) as BsonArray
+
+	override fun readValue(value: opensavvy.ktmongo.bson.BsonValue): BsonValue =
+		super.readValue(value) as BsonValue
 
 	@LowLevelApi
 	@DangerousMongoApi
