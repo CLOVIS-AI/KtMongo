@@ -59,7 +59,10 @@ class UpdateOne<Document : Any> private constructor(
 ) : AbstractBsonNode(context), Command, AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateQuery(context))
+	private constructor(context: BsonContext, options: UpdateOptions<Document>) : this(context, options, FilterQuery(context), UpdateQuery(context, options))
+
+	@OptIn(LowLevelApi::class)
+	constructor(context: BsonContext) : this(context, UpdateOptions(context))
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -107,7 +110,10 @@ class UpsertOne<Document : Any> private constructor(
 ) : Command, AbstractBsonNode(context), AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpsertQuery(context))
+	private constructor(context: BsonContext, options: UpdateOptions<Document>) : this(context, options, FilterQuery(context), UpsertQuery(context, options))
+
+	@OptIn(LowLevelApi::class)
+	constructor(context: BsonContext) : this(context, UpdateOptions(context))
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -155,7 +161,10 @@ class UpdateMany<Document : Any> private constructor(
 ) : Command, AbstractBsonNode(context), AvailableInBulkWrite<Document> {
 
 	@OptIn(LowLevelApi::class)
-	constructor(context: BsonContext) : this(context, UpdateOptions(context), FilterQuery(context), UpdateQuery(context))
+	private constructor(context: BsonContext, options: UpdateOptions<Document>) : this(context, options, FilterQuery(context), UpdateQuery(context, options))
+
+	@OptIn(LowLevelApi::class)
+	constructor(context: BsonContext) : this(context, UpdateOptions(context))
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {
