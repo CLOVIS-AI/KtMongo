@@ -31,6 +31,7 @@ import opensavvy.ktmongo.dsl.command.BulkWriteOptions
 import opensavvy.ktmongo.dsl.command.CountOptions
 import opensavvy.ktmongo.dsl.command.InsertManyOptions
 import opensavvy.ktmongo.dsl.command.InsertOneOptions
+import opensavvy.ktmongo.dsl.options.ArrayFiltersOption
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.options.WriteConcernOption
 import opensavvy.ktmongo.dsl.options.option
@@ -147,7 +148,14 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		val result = inner.withWriteConcern(model.options).updateMany(context.bsonFactory.buildDocument(model.filter).raw, context.bsonFactory.buildDocument(model.update).raw, UpdateOptions())
+		val result = inner
+			.withWriteConcern(model.options)
+			.updateMany(
+				context.bsonFactory.buildDocument(model.filter).raw,
+				context.bsonFactory.buildDocument(model.update).raw,
+				UpdateOptions()
+					.arrayFilters(model.options.option<ArrayFiltersOption>()?.filters.orEmpty().map { context.bsonFactory.readDocument(it).raw })
+			)
 		return JvmUpdateResult(result, context)
 	}
 
@@ -163,7 +171,14 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		val result = inner.withWriteConcern(model.options).updateOne(context.bsonFactory.buildDocument(model.filter).raw, context.bsonFactory.buildDocument(model.update).raw, UpdateOptions())
+		val result = inner
+			.withWriteConcern(model.options)
+			.updateOne(
+				context.bsonFactory.buildDocument(model.filter).raw,
+				context.bsonFactory.buildDocument(model.update).raw,
+				UpdateOptions()
+					.arrayFilters(model.options.option<ArrayFiltersOption>()?.filters.orEmpty().map { context.bsonFactory.readDocument(it).raw })
+			)
 		return JvmUpdateResult(result, context)
 	}
 
@@ -179,7 +194,15 @@ class JvmMongoCollection<Document : Any> internal constructor(
 		model.filter.filter()
 		model.update.update()
 
-		val result = inner.withWriteConcern(model.options).updateOne(context.bsonFactory.buildDocument(model.filter).raw, context.bsonFactory.buildDocument(model.update).raw, UpdateOptions().upsert(true))
+		val result = inner
+			.withWriteConcern(model.options)
+			.updateOne(
+				context.bsonFactory.buildDocument(model.filter).raw,
+				context.bsonFactory.buildDocument(model.update).raw,
+				UpdateOptions()
+					.upsert(true)
+					.arrayFilters(model.options.option<ArrayFiltersOption>()?.filters.orEmpty().map { context.bsonFactory.readDocument(it).raw })
+			)
 		return JvmUpdateResult(result, context)
 	}
 
