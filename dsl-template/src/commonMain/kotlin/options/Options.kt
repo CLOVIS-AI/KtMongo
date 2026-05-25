@@ -205,7 +205,7 @@ interface Options : CompoundBsonNode {
 internal class OptionsHolder(context: BsonContext) : AbstractCompoundBsonNode(context), Options {
 	@OptIn(LowLevelApi::class)
 	override val allOptions: List<Option>
-		get() = children.filterIsInstance<Option>()
+		get() = simplify(children)?.children?.filterIsInstance<Option>() ?: emptyList()
 
 	@OptIn(DangerousMongoApi::class)
 	@LowLevelApi
