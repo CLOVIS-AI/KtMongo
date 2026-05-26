@@ -241,7 +241,7 @@ private class MultiplatformMongoClient(
 				when (val kind = buffer.readUByte()) {
 					MessageSection.Body.kind -> {
 						val size = buffer.peek().readIntLe()
-						sections += MessageSection.Body(factory.readDocument(buffer.readBytes(size))) // TODO: avoid copy
+						sections += MessageSection.Body(eager(factory.readDocument(buffer.readBytes(size)))) // TODO: avoid copy
 					}
 
 					MessageSection.DocumentSequence.kind -> {
@@ -255,10 +255,10 @@ private class MultiplatformMongoClient(
 						read += 1 // null terminator
 
 						// • section documents
-						val documents = ArrayList<BsonDocument>()
+						val documents = ArrayList<Lazy<BsonDocument>>()
 						while (read < size) {
 							val documentSize = buffer.peek().readIntLe()
-							documents += factory.readDocument(buffer.readBytes(documentSize)) // TODO: avoid copy
+							documents += eager(factory.readDocument(buffer.readBytes(documentSize))) // TODO: avoid copy
 						}
 
 						sections += MessageSection.DocumentSequence(id, documents)

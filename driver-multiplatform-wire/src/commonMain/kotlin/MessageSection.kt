@@ -23,10 +23,13 @@ sealed interface MessageSection {
 	val kind: UByte
 
 	class Body(
-		val document: BsonDocument,
+		val lazyDocument: Lazy<BsonDocument>,
 	) : MessageSection {
 		override val kind: UByte
 			get() = Body.kind
+
+		val document: BsonDocument
+			get() = lazyDocument.value
 
 		override fun toString() = "Body($document)"
 
@@ -37,12 +40,15 @@ sealed interface MessageSection {
 
 	class DocumentSequence(
 		val id: String,
-		val documents: List<BsonDocument>,
+		val lazyDocuments: List<Lazy<BsonDocument>>,
 	) : MessageSection {
 		override val kind: UByte
 			get() = DocumentSequence.kind
 
-		override fun toString() = "DocumentSequence('$id': $documents)"
+		val documents: Sequence<BsonDocument>
+			get() = lazyDocuments.asSequence().map { it.value }
+
+		override fun toString() = "DocumentSequence('$id': $lazyDocuments)"
 
 		companion object {
 			const val kind: UByte = 1u

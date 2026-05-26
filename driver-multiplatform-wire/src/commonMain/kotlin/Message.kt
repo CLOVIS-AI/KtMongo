@@ -62,11 +62,13 @@ sealed interface Message {
 		@OptIn(LowLevelApi::class)
 		fun Find() = OpMsg(
 			MessageSection.Body(
-				BsonFactory().buildDocument {
-					writeString("find", "test-basic")
-					writeDocument("filter") {}
-					writeString("\$db", "test-basic")
-				}
+				eager(
+					BsonFactory().buildDocument {
+						writeString("find", "test-basic")
+						writeDocument("filter") {}
+						writeString("\$db", "test-basic")
+					}
+				)
 			)
 		)
 
@@ -80,16 +82,18 @@ sealed interface Message {
 		@OptIn(LowLevelApi::class, ExperimentalTime::class, ExperimentalAtomicApi::class)
 		fun Insert() = OpMsg(
 			MessageSection.Body(
-				BsonFactory().buildDocument {
-					writeString("insert", "test-basic")
-					writeBoolean("ordered", true)
-					writeString("\$db", "test-basic")
-				}
+				eager(
+					BsonFactory().buildDocument {
+						writeString("insert", "test-basic")
+						writeBoolean("ordered", true)
+						writeString("\$db", "test-basic")
+					}
+				)
 			),
 			MessageSection.DocumentSequence(
 				id = "documents",
 				listOf(
-					BsonFactory().encode(DataTest(ObjectIdGenerator.Default().newId(), "Bob", 18)) as BsonDocument
+					eager(BsonFactory().encode(DataTest(ObjectIdGenerator.Default().newId(), "Bob", 18)) as BsonDocument)
 				)
 			)
 		)
@@ -97,10 +101,12 @@ sealed interface Message {
 		@OptIn(LowLevelApi::class)
 		fun Drop() = OpMsg(
 			MessageSection.Body(
-				BsonFactory().buildDocument {
-					writeString("drop", "test-basic")
-					writeString("\$db", "test-basic")
-				}
+				eager(
+					BsonFactory().buildDocument {
+						writeString("drop", "test-basic")
+						writeString("\$db", "test-basic")
+					}
+				)
 			)
 		)
 	}
