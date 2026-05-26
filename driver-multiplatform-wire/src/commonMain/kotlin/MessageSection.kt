@@ -31,7 +31,8 @@ sealed interface MessageSection {
 		val document: BsonDocument
 			get() = lazyDocument.value
 
-		override fun toString() = "Body($document)"
+		override fun toString(): String =
+			"Body($document)"
 
 		companion object {
 			const val kind: UByte = 0u
@@ -48,7 +49,8 @@ sealed interface MessageSection {
 		val documents: Sequence<BsonDocument>
 			get() = lazyDocuments.asSequence().map { it.value }
 
-		override fun toString() = "DocumentSequence('$id': $lazyDocuments)"
+		override fun toString(): String =
+			"DocumentSequence('$id': $lazyDocuments)"
 
 		companion object {
 			const val kind: UByte = 1u

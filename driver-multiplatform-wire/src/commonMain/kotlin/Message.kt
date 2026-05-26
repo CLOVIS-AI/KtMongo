@@ -53,14 +53,14 @@ sealed interface Message {
 		override val opcode: Int
 			get() = 2013
 
-		override fun toString() = sequenceOf(body).plus(sequences)
+		override fun toString(): String = sequenceOf(body).plus(sequences)
 			.joinToString(prefix = "OpMsg(", postfix = ")")
 	}
 
 	companion object {
 
 		@OptIn(LowLevelApi::class)
-		fun Find() = OpMsg(
+		fun Find(): OpMsg = OpMsg(
 			MessageSection.Body(
 				eager(
 					BsonFactory().buildDocument {
@@ -80,7 +80,7 @@ sealed interface Message {
 		)
 
 		@OptIn(LowLevelApi::class, ExperimentalTime::class, ExperimentalAtomicApi::class)
-		fun Insert() = OpMsg(
+		fun Insert(): OpMsg = OpMsg(
 			MessageSection.Body(
 				eager(
 					BsonFactory().buildDocument {
@@ -99,7 +99,7 @@ sealed interface Message {
 		)
 
 		@OptIn(LowLevelApi::class)
-		fun Drop() = OpMsg(
+		fun Drop(): OpMsg = OpMsg(
 			MessageSection.Body(
 				eager(
 					BsonFactory().buildDocument {
