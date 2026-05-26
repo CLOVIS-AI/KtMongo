@@ -56,10 +56,10 @@ val mongoAddress by shared {
 	error("Could not find on which port MongoDB is running.")
 }
 
-val MongoClient by prepared {
+val MongoWireClient by prepared {
 	val socket = mongoAddress()
 
-	MongoClient(
+	MongoWireClient(
 		hostName = socket.hostname,
 		port = socket.port,
 		coroutineContext = backgroundScope.coroutineContext

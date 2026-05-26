@@ -26,7 +26,7 @@ import opensavvy.prepared.runner.testballoon.preparedSuite
 val ConnectTest by preparedSuite {
 
 	test("Connect to the database") {
-		val client = MongoClient()
+		val client = MongoWireClient()
 		println("Connected!")
 
 		println("Disconnecting…")
@@ -35,7 +35,7 @@ val ConnectTest by preparedSuite {
 	}
 
 	test("Send a find on a collection that doesn't exist") {
-		val client = MongoClient()
+		val client = MongoWireClient()
 
 		val output = client.send(Message.Find())
 
@@ -48,7 +48,7 @@ val ConnectTest by preparedSuite {
 	}
 
 	test("Insert an element") {
-		val client = MongoClient()
+		val client = MongoWireClient()
 
 		val output = client.send(Message.Insert())
 
@@ -61,7 +61,7 @@ val ConnectTest by preparedSuite {
 	}
 
 	test("Drop a collection") {
-		val client = MongoClient()
+		val client = MongoWireClient()
 
 		val output = client.send(Message.Drop())
 
@@ -73,7 +73,7 @@ val ConnectTest by preparedSuite {
 	}
 
 	test("Find an element that was just inserted") {
-		val client = MongoClient()
+		val client = MongoWireClient()
 
 		val insertOutput = client.send(Message.Insert())
 		val findOutput = client.send(Message.Find())

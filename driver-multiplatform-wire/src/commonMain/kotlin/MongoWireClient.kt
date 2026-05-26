@@ -33,7 +33,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.coroutines.CoroutineContext
 
 @LowLevelApi
-interface MongoClient : AutoCloseable {
+interface MongoWireClient : AutoCloseable {
 
 	suspend fun send(
 		message: Message,
@@ -56,11 +56,11 @@ interface MongoClient : AutoCloseable {
  * 6. The [parserActor]s deserialize the request and give it back to the original [send] to be returned to the user.
  */
 @LowLevelApi
-private class MultiplatformMongoClient(
+private class SocketWireClient(
 	private val socket: Socket,
 	private val factory: BsonFactory,
 	coroutineScope: CoroutineScope,
-) : MongoClient {
+) : MongoWireClient {
 
 	private class Request(
 		val data: Buffer,
@@ -388,18 +388,18 @@ private class MultiplatformMongoClient(
 		socket.close()
 	}
 
-	override fun toString() = "MongoClient(${socket.remoteAddress})"
+	override fun toString() = "MongoWireClient(${socket.remoteAddress})"
 }
 
 @LowLevelApi
-suspend fun MongoClient(
+suspend fun MongoWireClient(
 	hostName: String,
 	port: Int,
 	factory: BsonFactory = BsonFactory(),
 	coroutineContext: CoroutineContext,
-): MongoClient {
+): MongoWireClient {
 	val selectorManager = SelectorManager(coroutineContext + Dispatchers.Default + CoroutineName("ktmongo-socket"))
 	val socket = aSocket(selectorManager).tcp().connect(hostName, port)
 
-	return MultiplatformMongoClient(socket, factory, CoroutineScope(coroutineContext + CoroutineName("ktmongo-client")))
+	return SocketWireClient(socket, factory, CoroutineScope(coroutineContext + CoroutineName("ktmongo-client")))
 }
