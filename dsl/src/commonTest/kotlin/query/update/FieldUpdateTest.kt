@@ -399,6 +399,48 @@ val FieldUpdateTest by multiContextSuite {
 		}
 	}
 
+	suite($$"$pop") {
+		test("Pop last") {
+			update {
+				User::tokens.popLast()
+			} shouldBeBson $$"""
+				{
+					"$pop": {
+						"tokens": 1
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pop first") {
+			update {
+				User::tokens.popFirst()
+			} shouldBeBson $$"""
+				{
+					"$pop": {
+						"tokens": -1
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pop multiple") {
+			update {
+				User::friends.popFirst()
+				User::tokens.popLast()
+				User::scores.popLast()
+			} shouldBeBson $$"""
+				{
+					"$pop": {
+						"friends": -1,
+						"tokens": 1,
+						"scores": 1
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
 	suite($$"$push") {
 		test("Add a single field") {
 			update {

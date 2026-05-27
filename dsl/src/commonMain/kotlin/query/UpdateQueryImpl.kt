@@ -401,6 +401,37 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
+	// region $pop
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	override fun Field<T, Collection<*>>.popLast() {
+		accept(PopBsonNode(listOf(this.path to 1), context))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun Field<T, Collection<*>>.popFirst() {
+		accept(PopBsonNode(listOf(this.path to -1), context))
+	}
+
+	@LowLevelApi
+	private class PopBsonNode(
+		val mappings: List<Pair<Path, Int>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+
+		override fun simplify() =
+			this.takeUnless { mappings.isEmpty() }
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$pop") {
+				for ((field, direction) in mappings) {
+					writeInt32(field.toString(), direction)
+				}
+			}
+		}
+	}
+
+	// endregion
 	// region $push
 
 	@LowLevelApi
@@ -656,6 +687,9 @@ private class UpdateQueryImpl<T>(
 			},
 			OperatorCombinator(AddToSetBsonNode::class) { sources, context ->
 				AddToSetBsonNode(sources.flatMap { it.mappings }, context)
+			},
+			OperatorCombinator(PopBsonNode::class) { sources, context ->
+				PopBsonNode(sources.flatMap { it.mappings }, context)
 			},
 			OperatorCombinator(PushBsonNode::class) { sources, context ->
 				PushBsonNode(sources.flatMap { it.mappings }, context)

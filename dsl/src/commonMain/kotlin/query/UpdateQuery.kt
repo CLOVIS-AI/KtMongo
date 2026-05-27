@@ -71,6 +71,8 @@ import kotlin.time.Instant
  * - [`$[]`][all]
  * - [`$[<name>]`][filter]
  * - [`$addToSet`][addToSet]
+ * - [`$pop`][popLast] (last)
+ * - [`$pop`][popFirst] (first)
  * - [`$push`][push]
  *
  * Time management:
@@ -1494,6 +1496,127 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.addEachToSet(values: Iterable<V>) {
 		return this.field.addEachToSet(values)
+	}
+
+	// endregion
+	// region $pop
+
+	/**
+	 * Removes the last element in the specified array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     fiilter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores.popLast()
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pop/)
+	 */
+	@KtMongoDsl
+	fun Field<T, Collection<*>>.popLast()
+
+	/**
+	 * Removes the last element in the specified array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     fiilter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores.popLast()
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pop/)
+	 */
+	@KtMongoDsl
+	fun kotlin.reflect.KProperty1<T, Collection<*>>.popLast() {
+		return this.field.popLast()
+	}
+
+	/**
+	 * Removes the first element in the specified array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     fiilter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores.popFirst()
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pop/)
+	 */
+	fun Field<T, Collection<*>>.popFirst()
+
+	/**
+	 * Removes the first element in the specified array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val scores: List<Int>,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     fiilter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::scores.popFirst()
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pop/)
+	 */
+	fun kotlin.reflect.KProperty1<T, Collection<*>>.popFirst() {
+		return this.field.popFirst()
 	}
 
 	// endregion
