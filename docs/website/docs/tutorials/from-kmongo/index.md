@@ -245,3 +245,7 @@ After:  {"name": {"$eq": "Bob"}}
 ```
 
 This transparency makes debugging complex requests much easier.
+
+## Get started
+
+You can start your KtMongo journey with our [**getting started guide**](setup.md).

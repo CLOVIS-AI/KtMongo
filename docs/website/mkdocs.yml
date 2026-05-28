@@ -125,6 +125,7 @@ nav:
 
       - Migrating from KMongo:
           - tutorials/from-kmongo/index.md
+          - Get started: tutorials/from-kmongo/setup.md
           - Finding data: tutorials/from-kmongo/find.md
           - Nested documents: tutorials/from-kmongo/nested-fields.md
           - Updating data: tutorials/from-kmongo/update.md
