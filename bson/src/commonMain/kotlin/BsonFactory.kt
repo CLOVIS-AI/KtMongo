@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.bson
 
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -160,6 +161,27 @@ interface BsonFactory {
 	fun readDocument(bytes: ByteArray): BsonDocument
 
 	/**
+	 * Returns a [BsonDocument] that is tied to this factory, that represents the same data as [document].
+	 *
+	 * This method is useful when you need to convert from a different [BsonDocument] implementation to the
+	 * one returned by this factory. For example, if you have a [BsonDocument] from the Multiplatform driver and you
+	 * want to convert it to one from the official driver.
+	 *
+	 * The returned document may be referentially identical to [document] if [document] was already produced by this factory.
+	 *
+	 * The returned document may share memory with [document].
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	fun readDocument(document: BsonDocument): BsonDocument =
+		buildDocument {
+			for ((name, value) in document) {
+				write(name) {
+					pipe(value)
+				}
+			}
+		}
+
+	/**
 	 * Instantiates a new [BSON array][BsonArray].
 	 *
 	 * ### Example
@@ -204,6 +226,42 @@ interface BsonFactory {
 	 */
 	@LowLevelApi
 	fun readArray(bytes: ByteArray): BsonArray
+
+	/**
+	 * Returns a [BsonArray] that is tied to this factory, that represents the same data as [array].
+	 *
+	 * This method is useful when you need to convert from a different [BsonArray] implementation to the
+	 * one returned by this factory. For example, if you have a [BsonArray] from the Multiplatform driver and you
+	 * want to convert it to one from the official driver.
+	 *
+	 * The returned array may be referentially identical to [array] if [array] was already produced by this factory.
+	 *
+	 * The returned array may share memory with [array].
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	fun readArray(array: BsonArray): BsonArray =
+		buildArray {
+			for (value in array) {
+				pipe(value)
+			}
+		}
+
+	/**
+	 * Returns a [BsonValue] that is tied to this factory, that represents the same data as [value].
+	 *
+	 * This method is useful when you need to convert from a different [BsonValue] implementation to the
+	 * one returned by this factory. For example, if you have a [BsonValue] from the Multiplatform driver and you
+	 * want to convert it to one from the official driver.
+	 *
+	 * The returned value may be referentially identical to [value] if [value] was already produced by this factory.
+	 *
+	 * The returned value may share memory with [value].
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	fun readValue(value: BsonValue): BsonValue =
+		buildArray {
+			pipe(value)
+		}[0]!!
 
 }
 

@@ -179,6 +179,10 @@ actual class BsonFactory(
 	}
 
 	@LowLevelApi
+	actual override fun readDocument(document: opensavvy.ktmongo.bson.BsonDocument): BsonDocument =
+		super.readDocument(document) as BsonDocument
+
+	@LowLevelApi
 	actual override fun buildArray(block: BsonValueWriter.() -> Unit): BsonArray {
 		val nativeArray = org.bson.BsonArray()
 
@@ -208,11 +212,19 @@ actual class BsonFactory(
 	fun readArray(raw: org.bson.BsonArray): BsonArray =
 		BsonArray(raw, this)
 
+	@LowLevelApi
+	actual override fun readArray(array: opensavvy.ktmongo.bson.BsonArray): BsonArray =
+		super.readArray(array) as BsonArray
+
 	/**
 	 * Wraps a [org.bson.BsonValue] from the official MongoDB driver into its KtMongo equivalent.
 	 */
 	fun readValue(raw: org.bson.BsonValue): BsonValue =
 		BsonValue(raw, this)
+
+	@LowLevelApi
+	actual override fun readValue(value: opensavvy.ktmongo.bson.BsonValue): BsonValue =
+		super.readValue(value) as BsonValue
 
 	/**
 	 * Returns the instance of [Codec] (from the official MongoDB driver)

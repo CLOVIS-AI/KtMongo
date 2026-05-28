@@ -23,6 +23,7 @@ import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.options.ArrayFiltersOptionDsl
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.BsonNode
@@ -68,6 +69,7 @@ import kotlin.time.Instant
  * On arrays:
  * - [`$`][selected]
  * - [`$[]`][all]
+ * - [`$[<name>]`][filter]
  * - [`$addToSet`][addToSet]
  * - [`$push`][push]
  *
@@ -2157,6 +2159,262 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		@KtMongoDsl
 		fun descending()
 	}
+
+	// region Array filters
+
+	/**
+	 * Filters an array and performs the specified update only on the filtered items.
+	 *
+	 * Unlike [selected], which only updates a single array element, [filter] can update multiple array elements.
+	 * [filter] can also be nested.
+	 *
+	 * ### Usage
+	 *
+	 * MongoDB doesn't allow specifying the filter within the update itself, it must be specified in the options.
+	 * The parameter [id] must match a declared array filter.
+	 *
+	 * You may prefer using the overload which automatically registers the filter.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val grades: List<Grade>,
+	 * )
+	 *
+	 * class Grade(
+	 *     val subject: String,
+	 *     val grade: Int,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     options = {
+	 *         arrayFilter("maths") {
+	 *             Grade::subject eq "Maths"
+	 *         }
+	 *     },
+	 *     update = {
+	 *         User::grades.filter("maths") / Grade::grade inc 10
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will increment all grades for the subject `"Maths"` for user `"Bob"`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered)
+	 */
+	@KtMongoDsl
+	@LowLevelApi
+	fun <V> Field<T, Collection<V>>.filter(id: String): Field<T, V>
+
+	/**
+	 * Filters an array and performs the specified update only on the filtered items.
+	 *
+	 * Unlike [selected], which only updates a single array element, [filter] can update multiple array elements.
+	 * [filter] can also be nested.
+	 *
+	 * ### Usage
+	 *
+	 * MongoDB doesn't allow specifying the filter within the update itself, it must be specified in the options.
+	 * The parameter [id] must match a declared array filter.
+	 *
+	 * You may prefer using the overload which automatically registers the filter.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val grades: List<Grade>,
+	 * )
+	 *
+	 * class Grade(
+	 *     val subject: String,
+	 *     val grade: Int,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     options = {
+	 *         arrayFilter("maths") {
+	 *             Grade::subject eq "Maths"
+	 *         }
+	 *     },
+	 *     update = {
+	 *         User::grades.filter("maths") / Grade::grade inc 10
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will increment all grades for the subject `"Maths"` for user `"Bob"`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered)
+	 */
+	@KtMongoDsl
+	@LowLevelApi
+	fun <V> kotlin.reflect.KProperty1<T, Collection<V>>.filter(id: String): Field<T, V> {
+		return this.field.filter(id)
+	}
+
+	/**
+	 * Filters an array and performs the specified update only on the filtered items.
+	 *
+	 * Unlike [selected], which only updates a single array element, [filter] can update multiple array elements.
+	 * [filter] can also be nested.
+	 *
+	 * **This overload registers the array filter within the option automatically.**
+	 * There is no need to configure [opensavvy.ktmongo.dsl.options.WithArrayFilters.arrayFilter].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val grades: List<Grade>,
+	 * )
+	 *
+	 * class Grade(
+	 *     val subject: String,
+	 *     val grade: Int,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::grades.filter {
+	 *             it / Grade::subject eq "Maths"
+	 *         } / Grade::grade inc 10
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will increment all grades for the subject `"Maths"` for user `"Bob"`.
+	 *
+	 * ### Operation priority
+	 *
+	 * The operator priority rules in Kotlin mean that the following code:
+	 * ```kotlin
+	 * User::grades / Grade::value.filter { … }
+	 * ```
+	 * is interpreted as:
+	 * ```kotlin
+	 * User::grades / (Grade::value.filter { … })
+	 * ```
+	 * which is incorrect.
+	 *
+	 * To avoid this, either use explicit parentheses:
+	 * ```kotlin
+	 * (User::grades / Grade::value).filter { … }
+	 * ```
+	 * Or use an intermediate variable:
+	 * ```kotlin
+	 * val grades = User::grades / Grade::value
+	 * grades.filter { … }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered)
+	 *
+	 * @param id The identifier of the generated array filter. If `null`, a unique identifier is generated automatically.
+	 * @param filter The filter expression to apply to the array element.
+	 * The lambda passes a parameter that represents the current item during the iteration.
+	 * The operators within this lambda are the same as [FilterQuery].
+	 */
+	@KtMongoDsl
+	fun <V> Field<T, Collection<V>>.filter(
+		id: String? = null,
+		filter: ArrayFiltersOptionDsl<V>.(it: Field<ArrayFiltersOptionDsl.IteratorType<V>, V>) -> Unit,
+	): Field<T, V>
+
+	/**
+	 * Filters an array and performs the specified update only on the filtered items.
+	 *
+	 * Unlike [selected], which only updates a single array element, [filter] can update multiple array elements.
+	 * [filter] can also be nested.
+	 *
+	 * **This overload registers the array filter within the option automatically.**
+	 * There is no need to configure [opensavvy.ktmongo.dsl.options.WithArrayFilters.arrayFilter].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val grades: List<Grade>,
+	 * )
+	 *
+	 * class Grade(
+	 *     val subject: String,
+	 *     val grade: Int,
+	 * )
+	 *
+	 * collection.updateOne(
+	 *     filter = {
+	 *         User::name eq "Bob"
+	 *     },
+	 *     update = {
+	 *         User::grades.filter {
+	 *             it / Grade::subject eq "Maths"
+	 *         } / Grade::grade inc 10
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * This will increment all grades for the subject `"Maths"` for user `"Bob"`.
+	 *
+	 * ### Operation priority
+	 *
+	 * The operator priority rules in Kotlin mean that the following code:
+	 * ```kotlin
+	 * User::grades / Grade::value.filter { … }
+	 * ```
+	 * is interpreted as:
+	 * ```kotlin
+	 * User::grades / (Grade::value.filter { … })
+	 * ```
+	 * which is incorrect.
+	 *
+	 * To avoid this, either use explicit parentheses:
+	 * ```kotlin
+	 * (User::grades / Grade::value).filter { … }
+	 * ```
+	 * Or use an intermediate variable:
+	 * ```kotlin
+	 * val grades = User::grades / Grade::value
+	 * grades.filter { … }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered)
+	 *
+	 * @param id The identifier of the generated array filter. If `null`, a unique identifier is generated automatically.
+	 * @param filter The filter expression to apply to the array element.
+	 * The lambda passes a parameter that represents the current item during the iteration.
+	 * The operators within this lambda are the same as [FilterQuery].
+	 */
+	@KtMongoDsl
+	fun <V> kotlin.reflect.KProperty1<T, Collection<V>>.filter(
+		id: String? = null,
+		filter: ArrayFiltersOptionDsl<V>.(it: Field<ArrayFiltersOptionDsl.IteratorType<V>, V>) -> Unit,
+	): Field<T, V> {
+		return this.field.filter(id, filter)
+	}
+
+	// endregion
 
 }
 

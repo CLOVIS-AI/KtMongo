@@ -44,6 +44,7 @@ fun Path.toBsonPath(): BsonPath {
 			is PathSegment.Indexed -> output[it.index]
 			PathSegment.Positional -> throw IllegalArgumentException($$"The positional operator (.$.) does not have an equivalent in the JSONPath RFC, so it cannot be converted to a BsonPath expression. Found: '$$this'")
 			PathSegment.AllPositional -> output.all
+			is PathSegment.FilteredPositional -> throw IllegalArgumentException($$"The filtered positional operator (.$[<name>].) would require executing the filter server-side, which is not supported yet. Found: '$$this'")
 		}
 	}
 

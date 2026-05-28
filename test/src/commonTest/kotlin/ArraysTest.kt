@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,6 +133,210 @@ val ArraysTest by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
 		}
 
 		check(expected == profiles.find().toList())
+	}
+
+	suite("Array filters") {
+		test("On the value itself") {
+			users().insertOne(
+				ArrayUser("Bob", grades = listOf(1, 2, 3, 4)),
+			)
+
+			users().updateOne {
+				ArrayUser::grades.filter {
+					it gte 3
+				} inc 1
+			}
+
+			check(users().findOne {} == ArrayUser("Bob", grades = listOf(1, 2, 4, 5)))
+		}
+
+		test("On a field of the value") {
+			users().insertOne(
+				ArrayUser(
+					"Bob",
+					friends = listOf(
+						ArrayUser("Alice", grades = listOf(1)),
+						ArrayUser("Nepomucène", grades = listOf(2, 3)),
+						ArrayUser("Archibald", grades = listOf(1, 3)),
+					)
+				),
+			)
+
+			users().updateOne {
+				ArrayUser::friends.filter {
+					(it / ArrayUser::grades).any eq 1
+				} / ArrayUser::name set "Found"
+			}
+
+			val expected = ArrayUser(
+				"Bob",
+				friends = listOf(
+					ArrayUser("Found", grades = listOf(1)),
+					ArrayUser("Nepomucène", grades = listOf(2, 3)),
+					ArrayUser("Found", grades = listOf(1, 3)),
+				)
+			)
+
+			check(users().findOne {} == expected)
+		}
+
+		test("Multiple criteria") {
+			users().insertOne(
+				ArrayUser(
+					"Bob",
+					friends = listOf(
+						ArrayUser("Alice", grades = listOf(1)),
+						ArrayUser("Nepomucène", grades = listOf(2, 3)),
+						ArrayUser("Archibald", grades = listOf(1, 3)),
+					)
+				),
+			)
+
+			users().updateOne {
+				ArrayUser::friends.filter {
+					it / ArrayUser::name lt "B" // Select both that start with A
+					(it / ArrayUser::grades).any eq 3
+				} / ArrayUser::name set "Found"
+			}
+
+			val expected = ArrayUser(
+				"Bob",
+				friends = listOf(
+					ArrayUser("Alice", grades = listOf(1)),
+					ArrayUser("Nepomucène", grades = listOf(2, 3)),
+					ArrayUser("Found", grades = listOf(1, 3)),
+				)
+			)
+
+			check(users().findOne {} == expected)
+		}
+
+		test("Logical or") {
+			users().insertOne(
+				ArrayUser(
+					"Bob",
+					friends = listOf(
+						ArrayUser("Alice", grades = listOf(1)),
+						ArrayUser("Nepomucène", grades = listOf(2, 3)),
+						ArrayUser("Archibald", grades = listOf(4, 5)),
+					)
+				),
+			)
+
+			users().updateOne {
+				ArrayUser::friends.filter {
+					or {
+						it / ArrayUser::name eq "Alice"
+						(it / ArrayUser::grades).any eq 5
+					}
+				} / ArrayUser::name set "Found"
+			}
+
+			val expected = ArrayUser(
+				"Bob",
+				friends = listOf(
+					ArrayUser("Found", grades = listOf(1)),
+					ArrayUser("Nepomucène", grades = listOf(2, 3)),
+					ArrayUser("Found", grades = listOf(4, 5)),
+				)
+			)
+
+			check(users().findOne {} == expected)
+		}
+
+		test("Two different filters") {
+			users().insertOne(
+				ArrayUser(
+					"Bob",
+					friends = listOf(
+						ArrayUser("Alice", friends = listOf(
+							ArrayUser("Jean", grades = listOf(1)),
+							ArrayUser("Jacques", grades = listOf(3)),
+						), grades = listOf(7)),
+						ArrayUser("Nepomucène", friends = listOf(
+							ArrayUser("Jérard", grades = listOf(2)),
+							ArrayUser("Julie", grades = listOf(4)),
+						), grades = listOf(2)),
+						ArrayUser("Archibald", grades = listOf(1, 3)),
+					)
+				),
+			)
+
+			users().upsertOne {
+				val gradesGreaterThanThree = ArrayUser::friends.filter {
+					(it / ArrayUser::grades).any gte 3
+				}
+
+				val friendGradesLesserThanThree = (gradesGreaterThanThree / ArrayUser::friends).filter {
+					(it / ArrayUser::grades).any lt 3
+				}
+
+				friendGradesLesserThanThree / ArrayUser::name set "Found"
+			}
+
+			val expected = ArrayUser(
+				"Bob",
+				friends = listOf(
+					ArrayUser("Alice", friends = listOf(
+						ArrayUser("Found", grades = listOf(1)),
+						ArrayUser("Jacques", grades = listOf(3)),
+					), grades = listOf(7)),
+					ArrayUser("Nepomucène", friends = listOf(
+						ArrayUser("Jérard", grades = listOf(2)),
+						ArrayUser("Julie", grades = listOf(4)),
+					), grades = listOf(2)),
+					ArrayUser("Archibald", grades = listOf(1, 3)),
+				)
+			)
+
+			check(users().findOne {} == expected)
+		}
+
+		test("Combine with the all positional operator") {
+			users().insertOne(
+				ArrayUser(
+					"Bob",
+					friends = listOf(
+						ArrayUser("Alice", friends = listOf(
+							ArrayUser("Jean", grades = listOf(1)),
+							ArrayUser("Jacques", grades = listOf(3)),
+						), grades = listOf(7)),
+						ArrayUser("Nepomucène", friends = listOf(
+							ArrayUser("Jérard", grades = listOf(2)),
+							ArrayUser("Julie", grades = listOf(4)),
+						), grades = listOf(2)),
+						ArrayUser("Archibald", grades = listOf(1, 3)),
+					)
+				),
+			)
+
+			users().updateMany {
+				val allGrades = ArrayUser::friends.all
+
+				val friendGradesLesserThanThree = (allGrades / ArrayUser::friends).filter {
+					(it / ArrayUser::grades).any lt 3
+				}
+
+				friendGradesLesserThanThree / ArrayUser::name set "Found"
+			}
+
+			val expected = ArrayUser(
+				"Bob",
+				friends = listOf(
+					ArrayUser("Alice", friends = listOf(
+						ArrayUser("Found", grades = listOf(1)),
+						ArrayUser("Jacques", grades = listOf(3)),
+					), grades = listOf(7)),
+					ArrayUser("Nepomucène", friends = listOf(
+						ArrayUser("Found", grades = listOf(2)),
+						ArrayUser("Julie", grades = listOf(4)),
+					), grades = listOf(2)),
+					ArrayUser("Archibald", grades = listOf(1, 3)),
+				)
+			)
+
+			check(users().findOne {} == expected)
+		}
 	}
 
 }

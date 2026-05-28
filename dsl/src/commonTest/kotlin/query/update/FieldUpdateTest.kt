@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-@file:OptIn(ExperimentalTime::class)
+@file:OptIn(ExperimentalTime::class, LowLevelApi::class)
 
 package opensavvy.ktmongo.dsl.query.update
 
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.query.shouldBeBson
+import opensavvy.ktmongo.dsl.testContext
 import kotlin.time.ExperimentalTime
 
 val FieldUpdateTest by multiContextSuite {
@@ -861,6 +864,81 @@ val FieldUpdateTest by multiContextSuite {
 							"$type": "timestamp"
 						}
 					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite("Array filters") {
+		test("Explicit array filter") {
+			update {
+				User::friends.filter("best") / Friend::money += 0.5f
+			} shouldBeBson $$"""
+				{
+					"$inc": {
+						"friends.$[best].money": 0.5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Implicit array filter") {
+			val options = UpdateOptions<User>(testContext())
+			update(options) {
+				User::friends.filter {
+					it / Friend::name eq "Bob"
+				} / Friend::money += 0.5f
+			} shouldBeBson $$"""
+				{
+					"$inc": {
+						"friends.$[f0].money": 0.5
+					}
+				}
+			""".trimIndent()
+
+			options shouldBeBson $$"""
+				{
+					"arrayFilters": [
+						{
+							"f0.name": {
+								"$eq": "Bob"
+							}
+						}
+					]
+				}
+			""".trimIndent()
+		}
+
+		test("Two different implicit filters") {
+			val options = UpdateOptions<User>(testContext())
+			update(options) {
+				User::recursive.filter {
+					it / User::name eq "Bob"
+				} / User::friends.filter {
+					it / Friend::name eq "Alice"
+				} / Friend::money += 0.5f
+			} shouldBeBson $$"""
+				{
+					"$inc": {
+						"recursive.$[f0].friends.$[f1].money": 0.5
+					}
+				}
+			""".trimIndent()
+
+			options shouldBeBson $$"""
+				{
+					"arrayFilters": [
+						{
+							"f0.name": {
+								"$eq": "Bob"
+							}
+						},
+						{
+							"f1.name": {
+								"$eq": "Alice"
+							}
+						}
+					]
 				}
 			""".trimIndent()
 		}

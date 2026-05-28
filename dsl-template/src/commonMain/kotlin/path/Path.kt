@@ -83,6 +83,19 @@ sealed class PathSegment {
 		override fun toString() = "\$[]"
 	}
 
+	/**
+	 * Path segment for the "filtered positional" operator (`.$[<filterName>]`).
+	 *
+	 * This class isn't type-safe. Instead, see [opensavvy.ktmongo.dsl.query.UpdateQuery.filter].
+	 *
+	 * Official documentation:
+	 * - [In updates](https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered)
+	 */
+	@LowLevelApi
+	data class FilteredPositional(val filterName: String) : PathSegment() {
+		override fun toString(): String = "\$[$filterName]"
+	}
+
 }
 
 /**
