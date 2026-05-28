@@ -2302,6 +2302,28 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * This will increment all grades for the subject `"Maths"` for user `"Bob"`.
 	 *
+	 * ### Operation priority
+	 *
+	 * The operator priority rules in Kotlin mean that the following code:
+	 * ```kotlin
+	 * User::grades / Grade::value.filter { … }
+	 * ```
+	 * is interpreted as:
+	 * ```kotlin
+	 * User::grades / (Grade::value.filter { … })
+	 * ```
+	 * which is incorrect.
+	 *
+	 * To avoid this, either use explicit parentheses:
+	 * ```kotlin
+	 * (User::grades / Grade::value).filter { … }
+	 * ```
+	 * Or use an intermediate variable:
+	 * ```kotlin
+	 * val grades = User::grades / Grade::value
+	 * grades.filter { … }
+	 * ```
+	 *
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered)
@@ -2352,6 +2374,28 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * ```
 	 *
 	 * This will increment all grades for the subject `"Maths"` for user `"Bob"`.
+	 *
+	 * ### Operation priority
+	 *
+	 * The operator priority rules in Kotlin mean that the following code:
+	 * ```kotlin
+	 * User::grades / Grade::value.filter { … }
+	 * ```
+	 * is interpreted as:
+	 * ```kotlin
+	 * User::grades / (Grade::value.filter { … })
+	 * ```
+	 * which is incorrect.
+	 *
+	 * To avoid this, either use explicit parentheses:
+	 * ```kotlin
+	 * (User::grades / Grade::value).filter { … }
+	 * ```
+	 * Or use an intermediate variable:
+	 * ```kotlin
+	 * val grades = User::grades / Grade::value
+	 * grades.filter { … }
+	 * ```
 	 *
 	 * ### External resources
 	 *
