@@ -73,6 +73,7 @@ import kotlin.time.Instant
  * - [`$addToSet`][addToSet]
  * - [`$pop`][popLast] (last)
  * - [`$pop`][popFirst] (first)
+ * - [`$pull`][pull]
  * - [`$push`][push]
  *
  * Time management:
@@ -2538,7 +2539,291 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	// endregion
+	// region $pull
 
+	/**
+	 * Removes all instances of [value] from the specified array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val tests: List<Int>,
+	 * )
+	 *
+	 * users.updateOne(
+	 *     filter = { User::name eq "Paul" },
+	 *     update = {
+	 *         User::tests pull 10
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.pull(value: V, type: KType)
+
+	/**
+	 * Removes all instances of [value] from the specified array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val tests: List<Int>,
+	 * )
+	 *
+	 * users.updateOne(
+	 *     filter = { User::name eq "Paul" },
+	 *     update = {
+	 *         User::tests pull 10
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.pull(value: V) {
+		this.pull(value, typeOf<V>())
+	}
+
+	/**
+	 * Removes all instances of [value] from the specified array.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val tests: List<Int>,
+	 * )
+	 *
+	 * users.updateOne(
+	 *     filter = { User::name eq "Paul" },
+	 *     update = {
+	 *         User::tests pull 10
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pull(value: V) {
+		return this.field.pull(value)
+	}
+
+	/**
+	 * Removes all items of an array that match [predicate].
+	 *
+	 * To select items based on their own intrinsic value (e.g. whether the item is greater than some value), see [pullValues].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val tests: List<Grade>,
+	 * )
+	 *
+	 * class Grade(
+	 *     val name: String,
+	 *     val score: Int,
+	 * )
+	 *
+	 * users.updateOne(
+	 *     filter = { User::name eq "Paul" },
+	 *     update = {
+	 *         User::tests pull { Gradle::score lte 10 }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.pull(predicate: FilterQuery<V>.() -> Unit, type: KType)
+
+	/**
+	 * Removes all items of an array that match [predicate].
+	 *
+	 * To select items based on their own intrinsic value (e.g. whether the item is greater than some value), see [pullValues].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val tests: List<Grade>,
+	 * )
+	 *
+	 * class Grade(
+	 *     val name: String,
+	 *     val score: Int,
+	 * )
+	 *
+	 * users.updateOne(
+	 *     filter = { User::name eq "Paul" },
+	 *     update = {
+	 *         User::tests pull { Gradle::score lte 10 }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.pull(noinline predicate: FilterQuery<V>.() -> Unit) {
+		this.pull(predicate, typeOf<V>())
+	}
+
+	/**
+	 * Removes all items of an array that match [predicate].
+	 *
+	 * To select items based on their own intrinsic value (e.g. whether the item is greater than some value), see [pullValues].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val tests: List<Grade>,
+	 * )
+	 *
+	 * class Grade(
+	 *     val name: String,
+	 *     val score: Int,
+	 * )
+	 *
+	 * users.updateOne(
+	 *     filter = { User::name eq "Paul" },
+	 *     update = {
+	 *         User::tests pull { Gradle::score lte 10 }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pull(noinline predicate: FilterQuery<V>.() -> Unit) {
+		return this.field.pull(predicate)
+	}
+
+	/**
+	 * Removes all items of an array that match [predicate].
+	 *
+	 * To select items based on a value of one or multiple of their fields, see [pull].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val tests: List<Int>,
+	 * )
+	 *
+	 * users.updateOne(
+	 *     filter = { User::name eq "Paul" },
+	 *     update = {
+	 *         User::tests pullValues { lte(10) }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE")
+	@KtMongoDsl
+	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.pullValues(predicate: FilterQueryPredicate<V>.() -> Unit, type: KType)
+
+	/**
+	 * Removes all items of an array that match [predicate].
+	 *
+	 * To select items based on a value of one or multiple of their fields, see [pull].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val tests: List<Int>,
+	 * )
+	 *
+	 * users.updateOne(
+	 *     filter = { User::name eq "Paul" },
+	 *     update = {
+	 *         User::tests pullValues { lte(10) }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.pullValues(noinline predicate: FilterQueryPredicate<V>.() -> Unit) {
+		this.pullValues(predicate, typeOf<V>())
+	}
+
+	/**
+	 * Removes all items of an array that match [predicate].
+	 *
+	 * To select items based on a value of one or multiple of their fields, see [pull].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val tests: List<Int>,
+	 * )
+	 *
+	 * users.updateOne(
+	 *     filter = { User::name eq "Paul" },
+	 *     update = {
+	 *         User::tests pullValues { lte(10) }
+	 *     }
+	 * )
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
+	 */
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@KtMongoDsl
+	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pullValues(noinline predicate: FilterQueryPredicate<V>.() -> Unit) {
+		return this.field.pullValues(predicate)
+	}
+
+	// endregion
 }
 
 /**

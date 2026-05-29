@@ -657,6 +657,61 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
+	// region $pull
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	override fun <V> Field<T, Collection<V>>.pull(value: V, type: KType) {
+		accept(PullBsonNode(listOf(path to Value(value, type)), emptyList(), context))
+	}
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	override fun <V> Field<T, Collection<V>>.pull(predicate: FilterQuery<V>.() -> Unit, type: KType) {
+		accept(PullBsonNode(emptyList(), listOf(path to FilterQuery<V>(context).apply(predicate)), context))
+	}
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	override fun <V> Field<T, Collection<V>>.pullValues(predicate: FilterQueryPredicate<V>.() -> Unit, type: KType) {
+		accept(PullBsonNode(emptyList(), listOf(path to FilterQueryPredicate<V>(context, type).apply(predicate)), context))
+	}
+
+	@OptIn(LowLevelApi::class)
+	private class PullBsonNode(
+		val valueMappings: List<Pair<Path, Value>>,
+		val predicateMappings: List<Pair<Path, BsonNode>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+
+		override fun simplify(): PullBsonNode? {
+			val simplifiedPredicateMappings = predicateMappings.mapNotNull { (path, value) ->
+				val simplified = value.simplify() ?: return@mapNotNull null
+				path to simplified
+			}
+
+			if (valueMappings.isEmpty() && predicateMappings.isEmpty())
+				return null
+
+			if (predicateMappings == simplifiedPredicateMappings)
+				return this
+
+			return PullBsonNode(valueMappings, simplifiedPredicateMappings, context)
+		}
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$pull") {
+				for ((field, value) in valueMappings) {
+					writeSafe(field.toString(), value.value, value.type)
+				}
+
+				for ((field, predicate) in predicateMappings) {
+					writeDocument(field.toString()) {
+						predicate.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
 
 	companion object {
 		@OptIn(LowLevelApi::class)
@@ -690,6 +745,9 @@ private class UpdateQueryImpl<T>(
 			},
 			OperatorCombinator(PopBsonNode::class) { sources, context ->
 				PopBsonNode(sources.flatMap { it.mappings }, context)
+			},
+			OperatorCombinator(PullBsonNode::class) { sources, context ->
+				PullBsonNode(sources.flatMap { it.valueMappings }, sources.flatMap { it.predicateMappings }, context)
 			},
 			OperatorCombinator(PushBsonNode::class) { sources, context ->
 				PushBsonNode(sources.flatMap { it.mappings }, context)

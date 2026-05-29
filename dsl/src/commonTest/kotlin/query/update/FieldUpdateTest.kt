@@ -441,6 +441,77 @@ val FieldUpdateTest by multiContextSuite {
 		}
 	}
 
+	suite($$"$pull") {
+		test("Pull a single value") {
+			update {
+				User::tokens pull "first"
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"tokens": "first"
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pull multiple different values") {
+			update {
+				User::tokens pull "first"
+				User::scores pull 3
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"tokens": "first",
+						"scores": 3
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pull elements using a condition") {
+			update {
+				User::friends pull {
+					Friend::name eq "Alice"
+				}
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"friends": {
+							"name": {
+								"$eq": "Alice"
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pull elements using a value condition") {
+			update {
+				User::scores pullValues {
+					gte(5)
+					lt(10)
+				}
+
+				User::tokens pullValues {
+					isOneOf("first", "second", "third", "fourth")
+				}
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"scores": {
+							"$gte": 5,
+							"$lt": 10
+						},
+						"tokens": {
+							"$in": ["first", "second", "third", "fourth"]
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
 	suite($$"$push") {
 		test("Add a single field") {
 			update {
