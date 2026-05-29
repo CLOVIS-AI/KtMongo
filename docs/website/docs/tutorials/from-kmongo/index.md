@@ -214,7 +214,7 @@ KtMongo protects against both of these errors at compile-time.
 
 We strive for making KtMongo's documentation as comprehensive as possible. In particular:
 
-- The documentation is split between the website (this page) and the reference.
+- The documentation is split between the guides (this page) and the [reference](../../api/index.md).
 - The website provides guides to discover a concept, then a feature page describing the concepts further, and finally the reference provides an exhaustive description of all methods.
 - Most methods in the reference have at least one example.
 - Most methods in the reference have a link to the official MongoDB documentation.
@@ -245,3 +245,7 @@ After:  {"name": {"$eq": "Bob"}}
 ```
 
 This transparency makes debugging complex requests much easier.
+
+## Get started
+
+You can start your KtMongo journey with our [**getting started guide**](setup.md).

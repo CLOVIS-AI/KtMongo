@@ -4,7 +4,7 @@ KtMongo is a modern DSL for interacting with MongoDB in Kotlin. On the JVM, KtMo
 
 This guide shows you how to create an application that uses the KtMongo driver to connect to a MongoDB instance and interact with data.
 
-If you are a KMongo user, read the [KMongo migration guide](from-kmongo/setup.md) instead.
+If you are a KMongo user, read the [KMongo migration guide](../from-kmongo/setup.md) instead.
 
 ??? tip "TL;DR"
     If you're used to Kotlin projects using Gradle, here are the important steps:

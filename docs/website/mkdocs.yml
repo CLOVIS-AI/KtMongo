@@ -125,9 +125,8 @@ nav:
 
       - Migrating from KMongo:
           - tutorials/from-kmongo/index.md
-          - Finding data: tutorials/from-kmongo/find.md
-          - Nested documents: tutorials/from-kmongo/nested-fields.md
-          - Updating data: tutorials/from-kmongo/update.md
+          - Get started: tutorials/from-kmongo/setup.md
+          - Convert queries: tutorials/from-kmongo/migrate.md
 
       - Kotlin Multiplatform:
           - tutorials/multiplatform/index.md

@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.sync.kmongo
 
 import com.mongodb.kotlin.client.MongoCollection
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.sync.JvmMongoCollection
 import opensavvy.ktmongo.sync.asKtMongo
 import opensavvy.ktmongo.utils.kmongo.KMongoNameStrategy
@@ -24,5 +25,7 @@ import opensavvy.ktmongo.utils.kmongo.KMongoNameStrategy
 /**
  * Converts a collection from the official Java MongoDB driver into a KtMongo collection.
  */
-inline fun <reified T : Any> com.mongodb.client.MongoCollection<T>.asKtMongo(): JvmMongoCollection<T> =
-	MongoCollection(this).asKtMongo(nameStrategy = KMongoNameStrategy())
+inline fun <reified T : Any> com.mongodb.client.MongoCollection<T>.asKtMongo(
+	nameStrategy: PropertyNameStrategy = KMongoNameStrategy(),
+): JvmMongoCollection<T> =
+	MongoCollection(this).asKtMongo(nameStrategy = nameStrategy)
