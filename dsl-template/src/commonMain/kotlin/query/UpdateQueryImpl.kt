@@ -679,18 +679,42 @@ private class UpdateQueryImpl<T>(
 	) : UpdateBsonNodeNode(context) {
 
 		override fun simplify(): PullBsonNode? {
-			val simplifiedPredicateMappings = predicateMappings.mapNotNull { (path, value) ->
+			// ①. If a key appears multiple times in 'valueMappings', combine it with $in and move it into 'predicateMappings'
+
+			val duplicatedValueMappings = valueMappings
+				.groupingBy { it.first }
+				.fold(0 to emptyList<Value>()) { (count, mappings), newMappings ->
+					(count + 1) to (mappings + newMappings.second)
+				}
+				.filterValues { (count, _) -> count > 1 }
+
+			val valueMappingsWithDuplicated = valueMappings.filter { (path, _) ->
+				path !in duplicatedValueMappings
+			}
+
+			val predicateMappingsWithDuplicated = predicateMappings + duplicatedValueMappings
+				.map { (path, data) ->
+					val type = data.second.mapTo(HashSet()) { it.type }.singleOrNull()
+						?: error("Cannot call the pull operator multiple times with values of different types. Please explicitly use the 'pull { isOneOf(…) }' syntax. Values: ${data.second}")
+					path to FilterQueryPredicate<Any?>(context, type).apply {
+						isOneOf(data.second.map { it.value })
+					}
+				}
+
+			// ②. Simplify 'predicateMappings'
+
+			val simplifiedPredicateMappings = predicateMappingsWithDuplicated.mapNotNull { (path, value) ->
 				val simplified = value.simplify() ?: return@mapNotNull null
 				path to simplified
 			}
 
-			if (valueMappings.isEmpty() && predicateMappings.isEmpty())
+			if (valueMappingsWithDuplicated.isEmpty() && predicateMappingsWithDuplicated.isEmpty())
 				return null
 
 			if (predicateMappings == simplifiedPredicateMappings)
 				return this
 
-			return PullBsonNode(valueMappings, simplifiedPredicateMappings, context)
+			return PullBsonNode(valueMappingsWithDuplicated, simplifiedPredicateMappings, context)
 		}
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {

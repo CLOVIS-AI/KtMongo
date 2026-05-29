@@ -468,6 +468,21 @@ val FieldUpdateTest by multiContextSuite {
 			""".trimIndent()
 		}
 
+		test("Pull from the same array multiple times") {
+			update {
+				User::tokens pull "first"
+				User::tokens pull "second"
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"tokens": {
+							"$in": ["first", "second"]
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
 		test("Pull elements using a condition") {
 			update {
 				User::friends pull {
