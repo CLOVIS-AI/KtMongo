@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
+@file:OptIn(ExperimentalGeoBsonApi::class)
+
 package opensavvy.ktmongo.dsl.query.filter
 
+import opensavvy.ktmongo.bson.types.ExperimentalGeoBsonApi
+import opensavvy.ktmongo.bson.types.Geo
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -35,6 +39,7 @@ class User(
 	val grades: List<Int>,
 	val pets: List<Pet>,
 	val isAlive: Boolean = true,
+	val home: Geo.Point,
 )
 
 @OptIn(LowLevelApi::class)

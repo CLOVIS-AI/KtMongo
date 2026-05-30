@@ -21,6 +21,8 @@ package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.types.ExperimentalGeoBsonApi
+import opensavvy.ktmongo.bson.types.Geo
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
@@ -416,6 +418,42 @@ private class FilterQueryPredicateImpl<T>(
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeBinaryData("$$operatorName", 0u.toUByte(), value)
+		}
+	}
+
+	// endregion
+	// region Geopositional operators
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun near(target: Geo.Point, minDistance: Double?, maxDistance: Double?) {
+		accept(GeoNearNode(context, target, minDistance, maxDistance))
+	}
+
+	@ExperimentalGeoBsonApi
+	@LowLevelApi
+	private class GeoNearNode(
+		context: BsonContext,
+		private val target: Geo.Point,
+		private val minDistance: Double?,
+		private val maxDistance: Double?,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$near") {
+				writeDocument($$"$geometry") {
+					target.writeTo(this)
+				}
+
+				if (minDistance != null) {
+					writeDouble($$"$minDistance", minDistance)
+				}
+
+				if (maxDistance != null) {
+					writeDouble($$"$maxDistance", maxDistance)
+				}
+			}
 		}
 	}
 

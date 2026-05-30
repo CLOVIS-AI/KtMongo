@@ -18,6 +18,8 @@ package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.types.ExperimentalGeoBsonApi
+import opensavvy.ktmongo.bson.types.Geo
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
@@ -1019,6 +1021,62 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@KtMongoDsl
 	fun bitsAnySet(mask: ByteArray)
+
+	// endregion
+	// region Geopositional operators
+
+	/**
+	 * Matches documents where a [Geo.Point] is near the [target].
+	 *
+	 * Documents are returned sorted, from the closest to the furthest.
+	 * For the best performance, avoid specifying an additional sort.
+	 *
+	 * This operator should only be called on fields of type [Geo.Point].
+	 *
+	 * ### Example
+	 *
+	 * Find all bear sightings with 1km of Périgueux:
+	 * ```kotlin
+	 * class BearSightings(
+	 *     val _id: ObjectId,
+	 *     val location: Geo.Point,
+	 * )
+	 *
+	 * sightings.find {
+	 *     BearSightings::location {
+	 *         near(
+	 *             target = Geo.Point(Longitude(0.7269), Latitude(45.1828)),
+	 *             maxDistance = 1000.0,
+	 *         )
+	 *     }
+	 * }.toList()
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator requires a `2dsphere` index.
+	 *
+	 * This operator cannot be combined with other operators requiring special indexes, like `$text`.
+	 *
+	 * This operator is not permitted inside an aggregation pipeline.
+	 * Instead, use the `$geoNear` stage.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/near/)
+	 * - [YouTube tutorial](https://www.youtube.com/watch?v=muy9Ls1gbY8)
+	 *
+	 * @param target The point to search near.
+	 * @param minDistance If specified, only matches documents that are further away from the [target] than this distance, in meters.
+	 * @param maxDistance If specified, only matches documents that are closer to the [target] than this distance, in meters.
+	 * @see FilterQuery.near Convenience method with better type-safety.
+	 */
+	@ExperimentalGeoBsonApi
+	fun near(
+		target: Geo.Point,
+		minDistance: Double? = null,
+		maxDistance: Double? = null,
+	)
 
 	// endregion
 

@@ -23,6 +23,8 @@
 package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.types.ExperimentalGeoBsonApi
+import opensavvy.ktmongo.bson.types.Geo
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
@@ -315,6 +317,14 @@ private class FilterQueryImpl<T>(
 				value.writeTo(this)
 			}
 		}
+	}
+
+	// endregion
+	// region Geopositional operators
+
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo.Point>.near(target: Geo.Point, minDistance: Double?, maxDistance: Double?) {
+		this { near(target, minDistance, maxDistance) }
 	}
 
 	// endregion
