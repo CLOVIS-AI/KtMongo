@@ -135,6 +135,46 @@ val ArraysTest by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
 		check(expected == profiles.find().toList())
 	}
 
+	test($$"pull") {
+		users().insertOne(
+			ArrayUser(
+				name = "Bob",
+				grades = listOf(17, 8, 9, 3),
+				friends = listOf(
+					ArrayUser("Fred", grades = listOf(1, 7)),
+					ArrayUser("Alice", grades = listOf(18, 16)),
+					ArrayUser("Julia", grades = listOf(13)),
+				)
+			)
+		)
+
+		users().updateOne {
+			ArrayUser::grades pullValues {
+				gt(4)
+				lte(10)
+			}
+		}
+
+		check(users().findOne {}?.grades == listOf(17, 3))
+
+		users().updateOne {
+			ArrayUser::grades pull 3
+		}
+
+		check(users().findOne {}?.grades == listOf(17))
+
+		users().updateOne {
+			ArrayUser::friends pull {
+				or {
+					ArrayUser::name gte "I"  // Removes Julia
+					ArrayUser::grades.any lt 10  // Removes Fred
+				}
+			}
+		}
+
+		check(users().findOne {}?.friends == listOf(ArrayUser("Alice", grades = listOf(18, 16))))
+	}
+
 	suite("Array filters") {
 		test("On the value itself") {
 			users().insertOne(

@@ -399,6 +399,134 @@ val FieldUpdateTest by multiContextSuite {
 		}
 	}
 
+	suite($$"$pop") {
+		test("Pop last") {
+			update {
+				User::tokens.popLast()
+			} shouldBeBson $$"""
+				{
+					"$pop": {
+						"tokens": 1
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pop first") {
+			update {
+				User::tokens.popFirst()
+			} shouldBeBson $$"""
+				{
+					"$pop": {
+						"tokens": -1
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pop multiple") {
+			update {
+				User::friends.popFirst()
+				User::tokens.popLast()
+				User::scores.popLast()
+			} shouldBeBson $$"""
+				{
+					"$pop": {
+						"friends": -1,
+						"tokens": 1,
+						"scores": 1
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite($$"$pull") {
+		test("Pull a single value") {
+			update {
+				User::tokens pull "first"
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"tokens": "first"
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pull multiple different values") {
+			update {
+				User::tokens pull "first"
+				User::scores pull 3
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"tokens": "first",
+						"scores": 3
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pull from the same array multiple times") {
+			update {
+				User::tokens pull "first"
+				User::tokens pull "second"
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"tokens": {
+							"$in": ["first", "second"]
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pull elements using a condition") {
+			update {
+				User::friends pull {
+					Friend::name eq "Alice"
+				}
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"friends": {
+							"name": {
+								"$eq": "Alice"
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pull elements using a value condition") {
+			update {
+				User::scores pullValues {
+					gte(5)
+					lt(10)
+				}
+
+				User::tokens pullValues {
+					isOneOf("first", "second", "third", "fourth")
+				}
+			} shouldBeBson $$"""
+				{
+					"$pull": {
+						"scores": {
+							"$gte": 5,
+							"$lt": 10
+						},
+						"tokens": {
+							"$in": ["first", "second", "third", "fourth"]
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
 	suite($$"$push") {
 		test("Add a single field") {
 			update {
