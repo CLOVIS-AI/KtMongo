@@ -107,4 +107,88 @@ val GeopositionalFilterTest by multiContextSuite {
 			""".trimIndent()
 		}
 	}
+
+	suite($$"$nearSphere") {
+		test("Unbounded") {
+			filter {
+				User::home.nearSphere(Geo.Point(Geo.Longitude(0.7269), Geo.Latitude(45.1828)))
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$nearSphere": {
+							"$geometry": {
+								"type": "Point",
+								"coordinates": [0.7269, 45.1828]
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("With minimum bound") {
+			filter {
+				User::home.nearSphere(
+					target = Geo.Point(Geo.Longitude(0.7269), Geo.Latitude(45.1828)),
+					minDistance = 100.0,
+				)
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$nearSphere": {
+							"$geometry": {
+								"type": "Point",
+								"coordinates": [0.7269, 45.1828]
+							},
+							"$minDistance": 100.0
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("With maximum bound") {
+			filter {
+				User::home.nearSphere(
+					target = Geo.Point(Geo.Longitude(0.7269), Geo.Latitude(45.1828)),
+					maxDistance = 100.0,
+				)
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$nearSphere": {
+							"$geometry": {
+								"type": "Point",
+								"coordinates": [0.7269, 45.1828]
+							},
+							"$maxDistance": 100.0
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("With both bounds") {
+			filter {
+				User::home.nearSphere(
+					target = Geo.Point(Geo.Longitude(0.7269), Geo.Latitude(45.1828)),
+					minDistance = 17.50,
+					maxDistance = 267.0,
+				)
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$nearSphere": {
+							"$geometry": {
+								"type": "Point",
+								"coordinates": [0.7269, 45.1828]
+							},
+							"$minDistance": 17.5,
+							"$maxDistance": 267.0
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
 }

@@ -140,6 +140,7 @@ import kotlin.reflect.typeOf
  *
  * Geopositional query:
  * - [`$near`][near]
+ * - [`$nearSphere`][nearSphere]
  *
  * If you can't find an operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/4).
  */
@@ -2387,6 +2388,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * Documents are returned sorted, from the closest to the furthest.
 	 * For the best performance, avoid specifying an additional sort.
 	 *
+	 * For large areas, in which the curvature of the Earth becomes significant, consider using [nearSphere] instead.
+	 *
 	 * ### Example
 	 *
 	 * Find all bear sightings with 1km of Périgueux:
@@ -2424,6 +2427,58 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@ExperimentalGeoBsonApi
 	fun Field<T, Geo.Point>.near(
+		target: Geo.Point,
+		minDistance: Double? = null,
+		maxDistance: Double? = null,
+	)
+
+	// endregion
+	// region $nearSphere
+
+	/**
+	 * Matches documents where a [Geo.Point] is near the [target], using spherical geometry.
+	 *
+	 * Unlike [near], uses spherical geometry for distance calculations, so results are accurate across large areas.
+	 *
+	 * Documents are returned sorted, from the closest to the furthest.
+	 * For the best performance, avoid specifying an additional sort.
+	 *
+	 * ### Example
+	 *
+	 * Find all bear sightings with 1km of Périgueux:
+	 * ```kotlin
+	 * class BearSightings(
+	 *     val _id: ObjectId,
+	 *     val location: Geo.Point,
+	 * )
+	 *
+	 * sightings.find {
+	 *     BearSightings::location.nearSphere(
+	 *         target = Geo.Point(Longitude(0.7269), Latitude(45.1828)),
+	 *         maxDistance = 1000.0,
+	 *     )
+	 * }.toList()
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator requires a `2dsphere` index.
+	 *
+	 * This operator cannot be combined with other operators requiring special indexes, like `$text`.
+	 *
+	 * This operator is not permitted inside an aggregation pipeline.
+	 * Instead, use the `$geoNear` stage.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/)
+	 *
+	 * @param target The point to search near.
+	 * @param minDistance If specified, only matches documents that are further away from the [target] than this distance, in meters.
+	 * @param maxDistance If specified, only matches documents that are closer to the [target] than this distance, in meters.
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo.Point>.nearSphere(
 		target: Geo.Point,
 		minDistance: Double? = null,
 		maxDistance: Double? = null,

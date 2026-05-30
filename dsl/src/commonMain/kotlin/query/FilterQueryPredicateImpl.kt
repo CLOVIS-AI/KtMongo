@@ -460,6 +460,39 @@ private class FilterQueryPredicateImpl<T>(
 		}
 	}
 
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun nearSphere(target: Geo.Point, minDistance: Double?, maxDistance: Double?) {
+		accept(GeoNearSphereNode(context, target, minDistance, maxDistance))
+	}
+
+	@ExperimentalGeoBsonApi
+	@LowLevelApi
+	private class GeoNearSphereNode(
+		context: BsonContext,
+		private val target: Geo.Point,
+		private val minDistance: Double?,
+		private val maxDistance: Double?,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$nearSphere") {
+				writeDocument($$"$geometry") {
+					target.writeTo(this)
+				}
+
+				if (minDistance != null) {
+					writeDouble($$"$minDistance", minDistance)
+				}
+
+				if (maxDistance != null) {
+					writeDouble($$"$maxDistance", maxDistance)
+				}
+			}
+		}
+	}
+
 	// endregion
 }
 

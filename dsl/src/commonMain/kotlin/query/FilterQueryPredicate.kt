@@ -1034,6 +1034,8 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * Documents are returned sorted, from the closest to the furthest.
 	 * For the best performance, avoid specifying an additional sort.
 	 *
+	 * For large areas, in which the curvature of the Earth becomes significant, consider using [nearSphere] instead.
+	 *
 	 * This operator should only be called on fields of type [Geo.Point].
 	 *
 	 * ### Example
@@ -1076,6 +1078,61 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@ExperimentalGeoBsonApi
 	fun near(
+		target: Geo.Point,
+		minDistance: Double? = null,
+		maxDistance: Double? = null,
+	)
+
+	/**
+	 * Matches documents where a [Geo.Point] is near the [target], using spherical geometry.
+	 *
+	 * Unlike [near], uses spherical geometry for distance calculations, so results are accurate across large areas.
+	 *
+	 * Documents are returned sorted, from the closest to the furthest.
+	 * For the best performance, avoid specifying an additional sort.
+	 *
+	 * This operator should only be called on fields of type [Geo.Point].
+	 *
+	 * ### Example
+	 *
+	 * Find all bear sightings with 1km of Périgueux:
+	 * ```kotlin
+	 * class BearSightings(
+	 *     val _id: ObjectId,
+	 *     val location: Geo.Point,
+	 * )
+	 *
+	 * sightings.find {
+	 *     BearSightings::location {
+	 *         nearSphere(
+	 *             target = Geo.Point(Longitude(0.7269), Latitude(45.1828)),
+	 *             maxDistance = 1000.0,
+	 *         )
+	 *     }
+	 * }.toList()
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator requires a `2dsphere` index.
+	 *
+	 * This operator cannot be combined with other operators requiring special indexes, like `$text`.
+	 *
+	 * This operator is not permitted inside an aggregation pipeline.
+	 * Instead, use the `$geoNear` stage.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/)
+	 * - [YouTube tutorial](https://www.youtube.com/watch?v=muy9Ls1gbY8)
+	 *
+	 * @param target The point to search near.
+	 * @param minDistance If specified, only matches documents that are further away from the [target] than this distance, in meters.
+	 * @param maxDistance If specified, only matches documents that are closer to the [target] than this distance, in meters.
+	 * @see FilterQuery.nearSphere Convenience method with better type-safety.
+	 */
+	@ExperimentalGeoBsonApi
+	fun nearSphere(
 		target: Geo.Point,
 		minDistance: Double? = null,
 		maxDistance: Double? = null,

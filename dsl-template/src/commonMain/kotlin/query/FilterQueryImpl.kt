@@ -324,6 +324,11 @@ private class FilterQueryImpl<T>(
 		this { near(target, minDistance, maxDistance) }
 	}
 
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo.Point>.nearSphere(target: Geo.Point, minDistance: Double?, maxDistance: Double?) {
+		this { nearSphere(target, minDistance, maxDistance) }
+	}
+
 	// endregion
 
 }
