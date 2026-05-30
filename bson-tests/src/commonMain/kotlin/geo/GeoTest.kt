@@ -57,6 +57,10 @@ private fun SuiteDsl.geoPoint(factory: Prepared<BsonFactory>) = suite("Point") {
 				writeDouble(3.5)
 			}
 		},
+		document {
+			Geo.Point(Geo.Longitude(2.0), Geo.Latitude(3.5))
+				.writeTo(this)
+		},
 		json("""{"type": "Point", "coordinates": [2.0, 3.5]}"""),
 		verify("The longitude is correct") {
 			check(decode<Geo.Point>().x == Geo.Longitude(2.0))
@@ -91,6 +95,10 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 				}
 			}
 		},
+		document {
+			Geo.LineString(Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)), Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)))
+				.writeTo(this)
+		},
 		json("""{"type": "LineString", "coordinates": [[40.0, 5.0], [41.0, 6.0]]}"""),
 		verify("The coordinates are correct") {
 			check(decode<Geo.LineString>().points[0] == Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)))
@@ -124,6 +132,14 @@ private fun SuiteDsl.geoLineString(factory: Prepared<BsonFactory>) = suite("Line
 				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
 			) as Geo
 		),
+		document {
+			Geo.LineString(
+				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
+				Geo.Point(Geo.Longitude(41.0), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(41.5), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(40.0), Geo.Latitude(5.0)),
+			).writeTo(this)
+		},
 		document {
 			writeString("type", "LineString")
 			writeArray("coordinates") {
@@ -189,6 +205,14 @@ private fun SuiteDsl.geoPolygon(factory: Prepared<BsonFactory>) = suite("Polygon
 				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
 			) as Geo
 		),
+		document {
+			Geo.Polygon(
+				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+				Geo.Point(Geo.Longitude(3.0), Geo.Latitude(6.0)),
+				Geo.Point(Geo.Longitude(6.0), Geo.Latitude(1.0)),
+				Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+			).writeTo(this)
+		},
 		document {
 			writeString("type", "Polygon")
 			writeArray("coordinates") {
@@ -258,6 +282,24 @@ private fun SuiteDsl.geoPolygon(factory: Prepared<BsonFactory>) = suite("Polygon
 				),
 			)
 		),
+		document {
+			Geo.Polygon(
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+					Geo.Point(Geo.Longitude(10.0), Geo.Latitude(0.0)),
+					Geo.Point(Geo.Longitude(10.0), Geo.Latitude(10.0)),
+					Geo.Point(Geo.Longitude(0.0), Geo.Latitude(10.0)),
+					Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(2.0), Geo.Latitude(2.0)),
+					Geo.Point(Geo.Longitude(8.0), Geo.Latitude(2.0)),
+					Geo.Point(Geo.Longitude(8.0), Geo.Latitude(8.0)),
+					Geo.Point(Geo.Longitude(2.0), Geo.Latitude(8.0)),
+					Geo.Point(Geo.Longitude(2.0), Geo.Latitude(2.0)),
+				),
+			).writeTo(this)
+		},
 		document {
 			writeString("type", "Polygon")
 			writeArray("coordinates") {
@@ -357,6 +399,14 @@ private fun SuiteDsl.geoMultiPoint(factory: Prepared<BsonFactory>) = suite("Mult
 			) as Geo
 		),
 		document {
+			Geo.MultiPoint(
+				Geo.Point(Geo.Longitude(-73.9580), Geo.Latitude(40.8003)),
+				Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+				Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+				Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+			).writeTo(this)
+		},
+		document {
 			writeString("type", "MultiPoint")
 			writeArray("coordinates") {
 				writeArray {
@@ -445,6 +495,26 @@ private fun SuiteDsl.geoMultiLineString(factory: Prepared<BsonFactory>) = suite(
 				),
 			) as Geo
 		),
+		document {
+			Geo.MultiLineString(
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.96943), Geo.Latitude(40.78519)),
+					Geo.Point(Geo.Longitude(-73.96082), Geo.Latitude(40.78095)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.96415), Geo.Latitude(40.79229)),
+					Geo.Point(Geo.Longitude(-73.95544), Geo.Latitude(40.78854)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.97162), Geo.Latitude(40.78205)),
+					Geo.Point(Geo.Longitude(-73.96374), Geo.Latitude(40.77715)),
+				),
+				Geo.LineString(
+					Geo.Point(Geo.Longitude(-73.97880), Geo.Latitude(40.77247)),
+					Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)),
+				),
+			).writeTo(this)
+		},
 		document {
 			writeString("type", "MultiLineString")
 			writeArray("coordinates") {
@@ -577,6 +647,27 @@ private fun SuiteDsl.geoMultiPolygon(factory: Prepared<BsonFactory>) = suite("Mu
 			) as Geo
 		),
 		document {
+			Geo.MultiPolygon(
+				Geo.Polygon(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+						Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+						Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+						Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+					),
+				),
+				Geo.Polygon(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+						Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+						Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+						Geo.Point(Geo.Longitude(-73.958), Geo.Latitude(40.8003)),
+					),
+				),
+			).writeTo(this)
+		},
+		document {
 			writeString("type", "MultiPolygon")
 			writeArray("coordinates") {
 				writeArray {
@@ -699,6 +790,34 @@ private fun SuiteDsl.geoGeometryCollection(factory: Prepared<BsonFactory>) = sui
 				)
 			)
 		),
+		document {
+			Geo.GeometryCollection(
+				Geo.MultiPoint(
+					Geo.Point(Geo.Longitude(-73.9580), Geo.Latitude(40.8003)),
+					Geo.Point(Geo.Longitude(-73.9498), Geo.Latitude(40.7968)),
+					Geo.Point(Geo.Longitude(-73.9737), Geo.Latitude(40.7648)),
+					Geo.Point(Geo.Longitude(-73.9814), Geo.Latitude(40.7681)),
+				),
+				Geo.MultiLineString(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.96943), Geo.Latitude(40.78519)),
+						Geo.Point(Geo.Longitude(-73.96082), Geo.Latitude(40.78095)),
+					),
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.96415), Geo.Latitude(40.79229)),
+						Geo.Point(Geo.Longitude(-73.95544), Geo.Latitude(40.78854)),
+					),
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.97162), Geo.Latitude(40.78205)),
+						Geo.Point(Geo.Longitude(-73.96374), Geo.Latitude(40.77715)),
+					),
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-73.97880), Geo.Latitude(40.77247)),
+						Geo.Point(Geo.Longitude(-73.97036), Geo.Latitude(40.76811)),
+					),
+				)
+			).writeTo(this)
+		},
 		json("""{"type": "GeometryCollection", "geometries": [{"type": "MultiPoint", "coordinates": [[-73.958, 40.8003], [-73.9498, 40.7968], [-73.9737, 40.7648], [-73.9814, 40.7681]]}, {"type": "MultiLineString", "coordinates": [[[-73.96943, 40.78519], [-73.96082, 40.78095]], [[-73.96415, 40.79229], [-73.95544, 40.78854]], [[-73.97162, 40.78205], [-73.96374, 40.77715]], [[-73.9788, 40.77247], [-73.97036, 40.76811]]]}]}"""),
 		document {
 			writeString("type", "GeometryCollection")

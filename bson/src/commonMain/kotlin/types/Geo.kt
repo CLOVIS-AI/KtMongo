@@ -26,6 +26,8 @@ import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import opensavvy.ktmongo.bson.BsonDocument
+import opensavvy.ktmongo.bson.BsonFieldWriteable
+import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.decode
 import opensavvy.ktmongo.bson.types.Geo.CoordinateReferenceSystem.Companion.MongoDB
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -50,7 +52,7 @@ annotation class ExperimentalGeoBsonApi
 @OptIn(LowLevelApi::class)
 @ExperimentalGeoBsonApi
 @Serializable(with = Geo.Serializer::class)
-sealed class Geo {
+sealed class Geo : BsonFieldWriteable {
 
 	/**
 	 * A longitude.
@@ -177,6 +179,14 @@ sealed class Geo {
 
 		override fun toString() = "Point(${x.degrees}° E, ${y.degrees}° N)"
 
+		override fun writeTo(writer: BsonFieldWriter) = with(writer) {
+			writeString("type", "Point")
+			writeArray("coordinates") {
+				writeDouble(x.degrees)
+				writeDouble(y.degrees)
+			}
+		}
+
 		@Serializable
 		private data class Surrogate(
 			val type: String,
@@ -257,6 +267,18 @@ sealed class Geo {
 		 */
 		val isClosed: Boolean
 			get() = points.first() == points.last()
+
+		override fun writeTo(writer: BsonFieldWriter) = with(writer) {
+			writeString("type", "LineString")
+			writeArray("coordinates") {
+				for (point in points) {
+					writeArray {
+						writeDouble(point.x.degrees)
+						writeDouble(point.y.degrees)
+					}
+				}
+			}
+		}
 
 		override fun toString() = "LineString(${points.joinToString(", ")})"
 
@@ -395,6 +417,22 @@ sealed class Geo {
 			}
 		}
 
+		override fun writeTo(writer: BsonFieldWriter) = with(writer) {
+			writeString("type", "Polygon")
+			writeArray("coordinates") {
+				for (ring in rings) {
+					writeArray {
+						for (point in ring.points) {
+							writeArray {
+								writeDouble(point.x.degrees)
+								writeDouble(point.y.degrees)
+							}
+						}
+					}
+				}
+			}
+		}
+
 		override fun toString() = "Polygon(${rings.joinToString(", ")})"
 
 		@Serializable
@@ -471,6 +509,18 @@ sealed class Geo {
 		 */
 		constructor(vararg points: Point) : this(points.asList())
 
+		override fun writeTo(writer: BsonFieldWriter) = with(writer) {
+			writeString("type", "MultiPoint")
+			writeArray("coordinates") {
+				for (point in points) {
+					writeArray {
+						writeDouble(point.x.degrees)
+						writeDouble(point.y.degrees)
+					}
+				}
+			}
+		}
+
 		override fun toString() = "MultiPoint(${points.joinToString(", ")})"
 
 		@Serializable
@@ -538,6 +588,22 @@ sealed class Geo {
 		 * Constructs a [MultiLineString] instance from multiple [LineString] instances.
 		 */
 		constructor(vararg lineStrings: LineString) : this(lineStrings.asList())
+
+		override fun writeTo(writer: BsonFieldWriter) = with(writer) {
+			writeString("type", "MultiLineString")
+			writeArray("coordinates") {
+				for (lineString in lineStrings) {
+					writeArray {
+						for (point in lineString.points) {
+							writeArray {
+								writeDouble(point.x.degrees)
+								writeDouble(point.y.degrees)
+							}
+						}
+					}
+				}
+			}
+		}
 
 		override fun toString() = "MultiLineString(${lineStrings.joinToString(", ")})"
 
@@ -613,6 +679,26 @@ sealed class Geo {
 		 * Constructs a [MultiPolygon] instance from multiple [Polygon] instances.
 		 */
 		constructor(vararg polygons: Polygon) : this(polygons.asList())
+
+		override fun writeTo(writer: BsonFieldWriter) = with(writer) {
+			writeString("type", "MultiPolygon")
+			writeArray("coordinates") {
+				for (polygon in polygons) {
+					writeArray {
+						for (ring in polygon.rings) {
+							writeArray {
+								for (point in ring.points) {
+									writeArray {
+										writeDouble(point.x.degrees)
+										writeDouble(point.y.degrees)
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
 		override fun toString() = "MultiPolygon(${polygons.joinToString(", ")})"
 
@@ -700,6 +786,17 @@ sealed class Geo {
 	) : Geo() {
 
 		constructor(vararg geometries: Geo) : this(geometries.asList())
+
+		override fun writeTo(writer: BsonFieldWriter) = with(writer) {
+			writeString("type", "GeometryCollection")
+			writeArray("geometries") {
+				for (geometry in geometries) {
+					writeDocument {
+						geometry.writeTo(this)
+					}
+				}
+			}
+		}
 
 		override fun toString(): String = "GeometryCollection(${geometries.joinToString(", ")})"
 
