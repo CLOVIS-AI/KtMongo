@@ -27,6 +27,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.decode
+import opensavvy.ktmongo.bson.types.Geo.CoordinateReferenceSystem.Companion.MongoDB
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.jvm.JvmInline
 
@@ -123,6 +124,32 @@ sealed class Geo {
 		}
 
 		override fun toString() = "Latitude($degrees°)"
+	}
+
+	/**
+	 * A coordinate reference system (CRS) represents the way points are projected.
+	 *
+	 * Some operators allow overriding the CRS.
+	 *
+	 * ### External resources
+	 *
+	 * - [$geoIntersects operator](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/#std-label-geointersects-big-poly)
+	 * - [$geometry operator](https://www.mongodb.com/docs/manual/reference/operator/query/geometry/)
+	 *
+	 * @see MongoDB The `urn:x-mongodb:crs:strictwinding:EPSG:4326` CRS.
+	 */
+	@ExperimentalGeoBsonApi
+	data class CoordinateReferenceSystem(
+		val name: String,
+	) {
+
+		companion object {
+			/**
+			 * Specify this CRS when querying with a polygon larger than a single hemisphere.
+			 * The polygon should be single-ringed and in counter-clockwise winding order.
+			 */
+			val MongoDB = CoordinateReferenceSystem("urn:x-mongodb:crs:strictwinding:EPSG:4326")
+		}
 	}
 
 	/**
