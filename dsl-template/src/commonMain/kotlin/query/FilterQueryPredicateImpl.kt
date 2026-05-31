@@ -490,6 +490,45 @@ private class FilterQueryPredicateImpl<T>(
 		}
 	}
 
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun geoWithin(polygon: Geo.Polygon, crs: Geo.CoordinateReferenceSystem?) {
+		accept(GeoWithinNode(context, polygon, crs))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun geoWithin(polygons: Geo.MultiPolygon) {
+		accept(GeoWithinNode(context, polygons, null))
+	}
+
+	@ExperimentalGeoBsonApi
+	@LowLevelApi
+	private class GeoWithinNode(
+		context: BsonContext,
+		private val target: Geo,
+		private val crs: Geo.CoordinateReferenceSystem?,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$geoWithin") {
+				writeDocument($$"$geometry") {
+					target.writeTo(this)
+
+					if (crs != null) {
+						writeDocument("crs") {
+							writeString("type", "name")
+							writeDocument("properties") {
+								writeString("name", crs.name)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// endregion
 }
 

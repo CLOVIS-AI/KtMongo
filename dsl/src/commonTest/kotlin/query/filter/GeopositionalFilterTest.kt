@@ -191,4 +191,132 @@ val GeopositionalFilterTest by multiContextSuite {
 			""".trimIndent()
 		}
 	}
+
+	suite($$"$geoWithin") {
+		test("Simple") {
+			filter {
+				User::home.geoWithin(
+					Geo.Polygon(
+						Geo.Point(Geo.Longitude(-73.95), Geo.Latitude(40.80)),
+						Geo.Point(Geo.Longitude(-73.94), Geo.Latitude(40.79)),
+						Geo.Point(Geo.Longitude(-73.97), Geo.Latitude(40.79)),
+						Geo.Point(Geo.Longitude(-79.98), Geo.Latitude(40.76)),
+						Geo.Point(Geo.Longitude(-73.95), Geo.Latitude(40.80)),
+					)
+				)
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$geoWithin": {
+							"$geometry": {
+								"type": "Polygon",
+								"coordinates": [
+									[
+										[-73.95, 40.8],
+										[-73.94, 40.79],
+										[-73.97, 40.79],
+										[-79.98, 40.76],
+										[-73.95, 40.8]
+									]
+								]
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Large with CRS") {
+			filter {
+				User::home.geoWithin(
+					Geo.Polygon(
+						Geo.Point(Geo.Longitude(-73.95), Geo.Latitude(40.80)),
+						Geo.Point(Geo.Longitude(-73.94), Geo.Latitude(40.79)),
+						Geo.Point(Geo.Longitude(-73.97), Geo.Latitude(40.79)),
+						Geo.Point(Geo.Longitude(-79.98), Geo.Latitude(40.76)),
+						Geo.Point(Geo.Longitude(-73.95), Geo.Latitude(40.80)),
+					),
+					crs = Geo.CoordinateReferenceSystem.MongoDB
+				)
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$geoWithin": {
+							"$geometry": {
+								"type": "Polygon",
+								"coordinates": [
+									[
+										[-73.95, 40.8],
+										[-73.94, 40.79],
+										[-73.97, 40.79],
+										[-79.98, 40.76],
+										[-73.95, 40.8]
+									]
+								],
+								"crs": {
+									"type": "name",
+									"properties": {
+										"name": "urn:x-mongodb:crs:strictwinding:EPSG:4326"
+									}
+								}
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("MultiPolygon") {
+			filter {
+				User::home.geoWithin(
+					Geo.MultiPolygon(
+						Geo.Polygon(
+							Geo.Point(Geo.Longitude(-73.95), Geo.Latitude(40.80)),
+							Geo.Point(Geo.Longitude(-73.94), Geo.Latitude(40.79)),
+							Geo.Point(Geo.Longitude(-73.97), Geo.Latitude(40.79)),
+							Geo.Point(Geo.Longitude(-79.98), Geo.Latitude(40.76)),
+							Geo.Point(Geo.Longitude(-73.95), Geo.Latitude(40.80)),
+						),
+						Geo.Polygon(
+							Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+							Geo.Point(Geo.Longitude(10.0), Geo.Latitude(0.0)),
+							Geo.Point(Geo.Longitude(10.0), Geo.Latitude(10.0)),
+							Geo.Point(Geo.Longitude(0.0), Geo.Latitude(10.0)),
+							Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+						)
+					)
+				)
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$geoWithin": {
+							"$geometry": {
+								"type": "MultiPolygon",
+								"coordinates": [
+									[
+										[
+											[-73.95, 40.8],
+											[-73.94, 40.79],
+											[-73.97, 40.79],
+											[-79.98, 40.76],
+											[-73.95, 40.8]
+										]
+									],
+									[
+										[
+											[0.0, 0.0],
+											[10.0, 0.0],
+											[10.0, 10.0],
+											[0.0, 10.0],
+											[0.0, 0.0]
+										]
+									]
+								]
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
 }

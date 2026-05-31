@@ -4098,5 +4098,162 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	// endregion
+	// region $geoWithin
+
+	/**
+	 * Matches documents where a [Geo.Point] is within the given [polygon].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Place(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val location: Geo.Point,
+	 *     val category: String,
+	 * )
+	 *
+	 * places.find {
+	 *     Place::location {
+	 *         geoWithin(
+	 *             Geo.Polygon(
+	 *                 Geo.Point(Longitude(-73.95), Latitude(40.80)),
+	 *                 Geo.Point(Longitude(-73.94), Latitude(40.79)),
+	 *                 Geo.Point(Longitude(-73.97), Latitude(40.79)),
+	 *                 Geo.Point(Longitude(-79.98), Latitude(40.76)),
+	 *                 Geo.Point(Longitude(-73.95), Latitude(40.80)),
+	 *             )
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2d` or `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon greater with areas greater than a single hemisphere,
+	 * the default [crs] results in queries for the complimentary geometry.
+	 *
+	 * In these cases, specify a [crs] of [Geo.CoordinateReferenceSystem.MongoDB].
+	 * Only [single-ringed polygons][Geo.Polygon] are supported.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/geojson-bound-by-polygon/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo.Point>.geoWithin(
+		polygon: Geo.Polygon,
+		crs: Geo.CoordinateReferenceSystem? = null,
+	)
+
+	/**
+	 * Matches documents where a [Geo.Point] is within the given [polygon].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Place(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val location: Geo.Point,
+	 *     val category: String,
+	 * )
+	 *
+	 * places.find {
+	 *     Place::location {
+	 *         geoWithin(
+	 *             Geo.Polygon(
+	 *                 Geo.Point(Longitude(-73.95), Latitude(40.80)),
+	 *                 Geo.Point(Longitude(-73.94), Latitude(40.79)),
+	 *                 Geo.Point(Longitude(-73.97), Latitude(40.79)),
+	 *                 Geo.Point(Longitude(-79.98), Latitude(40.76)),
+	 *                 Geo.Point(Longitude(-73.95), Latitude(40.80)),
+	 *             )
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2d` or `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon greater with areas greater than a single hemisphere,
+	 * the default [crs] results in queries for the complimentary geometry.
+	 *
+	 * In these cases, specify a [crs] of [Geo.CoordinateReferenceSystem.MongoDB].
+	 * Only [single-ringed polygons][Geo.Polygon] are supported.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/geojson-bound-by-polygon/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo.Point>.geoWithin(
+		polygon: Geo.Polygon,
+		crs: Geo.CoordinateReferenceSystem? = null,
+	) {
+		return this.field.geoWithin(polygon, crs)
+	}
+
+	/**
+	 * Matches documents where a [Geo.Point] is within the given [polygons].
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2d` or `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon greater with areas greater than a single hemisphere,
+	 * this operator matches the complimentary geometry.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/geojson-bound-by-polygon/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo.Point>.geoWithin(
+		polygons: Geo.MultiPolygon,
+	)
+
+	/**
+	 * Matches documents where a [Geo.Point] is within the given [polygons].
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2d` or `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon greater with areas greater than a single hemisphere,
+	 * this operator matches the complimentary geometry.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/geojson-bound-by-polygon/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo.Point>.geoWithin(
+		polygons: Geo.MultiPolygon,
+	) {
+		return this.field.geoWithin(polygons)
+	}
+
+	// endregion
 	// endregion
 }

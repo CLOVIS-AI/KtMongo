@@ -329,6 +329,16 @@ private class FilterQueryImpl<T>(
 		this { nearSphere(target, minDistance, maxDistance) }
 	}
 
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo.Point>.geoWithin(polygon: Geo.Polygon, crs: Geo.CoordinateReferenceSystem?) {
+		this { geoWithin(polygon, crs) }
+	}
+
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo.Point>.geoWithin(polygons: Geo.MultiPolygon) {
+		this { geoWithin(polygons) }
+	}
+
 	// endregion
 
 }
