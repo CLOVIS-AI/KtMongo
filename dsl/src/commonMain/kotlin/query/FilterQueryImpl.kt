@@ -342,6 +342,16 @@ private class FilterQueryImpl<T>(
 		this { geoWithin(polygons) }
 	}
 
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo>.geoIntersects(geometry: Geo) {
+		this { geoIntersects(geometry) }
+	}
+
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo>.geoIntersects(polygon: Geo.Polygon, crs: Geo.CoordinateReferenceSystem?) {
+		this { geoIntersects(polygon, crs) }
+	}
+
 	// endregion
 
 }

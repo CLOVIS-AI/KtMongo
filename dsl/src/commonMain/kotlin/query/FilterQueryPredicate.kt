@@ -1218,5 +1218,77 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	)
 
 	// endregion
+	// region $geoIntersects
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [geometry].
+	 *
+	 * This operator should only be called on fields containing GeoJSON data.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class GasStation(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val loc: Geo.Point,
+	 * )
+	 *
+	 * gasStations.find {
+	 *     GasStation::loc {
+	 *         geoIntersects(
+	 *             Geo.LineString(
+	 *                 Geo.Point(Longitude(-105.82), Latitude(33.87)),
+	 *                 Geo.Point(Longitude(-106.31), Latitude(35.65)),
+	 *                 Geo.Point(Longitude(-107.39), Latitude(35.98)),
+	 *             )
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun geoIntersects(geometry: Geo)
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [polygon].
+	 *
+	 * This operator should only be called on fields containing GeoJSON data.
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon with an area greater than a single hemisphere,
+	 * the default [crs] results in queries for the complementary geometry.
+	 *
+	 * In these cases, specify a [crs] of [Geo.CoordinateReferenceSystem.MongoDB].
+	 * Only [single-ringed polygons][Geo.Polygon] are supported.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun geoIntersects(
+		polygon: Geo.Polygon,
+		crs: Geo.CoordinateReferenceSystem? = null,
+	)
+
+	// endregion
 
 }

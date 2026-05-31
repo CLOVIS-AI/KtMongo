@@ -142,6 +142,7 @@ import kotlin.reflect.typeOf
  * - [`$regex`][regex]
  *
  * Geopositional query:
+ * - [`$geoWithin`][geoWithin]
  * - [`$near`][near]
  * - [`$nearSphere`][nearSphere]
  *
@@ -4252,6 +4253,139 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		polygons: Geo.MultiPolygon,
 	) {
 		return this.field.geoWithin(polygons)
+	}
+
+	// endregion
+	// region $geoIntersects
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [geometry].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class GasStation(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val loc: Geo.Point,
+	 * )
+	 *
+	 * gasStations.find {
+	 *     GasStation::loc.geoIntersects(
+	 *         Geo.LineString(
+	 *             Geo.Point(Longitude(-105.82), Latitude(33.87)),
+	 *             Geo.Point(Longitude(-106.31), Latitude(35.65)),
+	 *             Geo.Point(Longitude(-107.39), Latitude(35.98)),
+	 *         )
+	 *     )
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo>.geoIntersects(geometry: Geo)
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [geometry].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class GasStation(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val loc: Geo.Point,
+	 * )
+	 *
+	 * gasStations.find {
+	 *     GasStation::loc.geoIntersects(
+	 *         Geo.LineString(
+	 *             Geo.Point(Longitude(-105.82), Latitude(33.87)),
+	 *             Geo.Point(Longitude(-106.31), Latitude(35.65)),
+	 *             Geo.Point(Longitude(-107.39), Latitude(35.98)),
+	 *         )
+	 *     )
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo>.geoIntersects(geometry: Geo) {
+		return this.field.geoIntersects(geometry)
+	}
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [polygon].
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon with an area greater than a single hemisphere,
+	 * the default [crs] results in queries for the complementary geometry.
+	 *
+	 * In these cases, specify a [crs] of [Geo.CoordinateReferenceSystem.MongoDB].
+	 * Only [single-ringed polygons][Geo.Polygon] are supported.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo>.geoIntersects(
+		polygon: Geo.Polygon,
+		crs: Geo.CoordinateReferenceSystem? = null,
+	)
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [polygon].
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon with an area greater than a single hemisphere,
+	 * the default [crs] results in queries for the complementary geometry.
+	 *
+	 * In these cases, specify a [crs] of [Geo.CoordinateReferenceSystem.MongoDB].
+	 * Only [single-ringed polygons][Geo.Polygon] are supported.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo>.geoIntersects(
+		polygon: Geo.Polygon,
+		crs: Geo.CoordinateReferenceSystem? = null,
+	) {
+		return this.field.geoIntersects(polygon, crs)
 	}
 
 	// endregion

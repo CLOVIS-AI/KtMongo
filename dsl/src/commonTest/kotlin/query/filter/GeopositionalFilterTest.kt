@@ -319,4 +319,104 @@ val GeopositionalFilterTest by multiContextSuite {
 			""".trimIndent()
 		}
 	}
+
+	suite($$"$geoIntersects") {
+		test("Simple") {
+			filter {
+				User::home.geoIntersects(
+					Geo.Polygon(
+						Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+						Geo.Point(Geo.Longitude(3.0), Geo.Latitude(6.0)),
+						Geo.Point(Geo.Longitude(6.0), Geo.Latitude(1.0)),
+						Geo.Point(Geo.Longitude(0.0), Geo.Latitude(0.0)),
+					)
+				)
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$geoIntersects": {
+							"$geometry": {
+								"type": "Polygon",
+								"coordinates": [
+									[
+										[0.0, 0.0],
+										[3.0, 6.0],
+										[6.0, 1.0],
+										[0.0, 0.0]
+									]
+								]
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Large with CRS") {
+			filter {
+				User::home.geoIntersects(
+					Geo.Polygon(
+						Geo.Point(Geo.Longitude(-100.0), Geo.Latitude(60.0)),
+						Geo.Point(Geo.Longitude(-100.0), Geo.Latitude(-60.0)),
+						Geo.Point(Geo.Longitude(100.0), Geo.Latitude(-60.0)),
+						Geo.Point(Geo.Longitude(100.0), Geo.Latitude(60.0)),
+						Geo.Point(Geo.Longitude(-100.0), Geo.Latitude(60.0)),
+					),
+					crs = Geo.CoordinateReferenceSystem.MongoDB
+				)
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$geoIntersects": {
+							"$geometry": {
+								"type": "Polygon",
+								"coordinates": [
+									[
+										[-100.0, 60.0],
+										[-100.0, -60.0],
+										[100.0, -60.0],
+										[100.0, 60.0],
+										[-100.0, 60.0]
+									]
+								],
+								"crs": {
+									"type": "name",
+									"properties": {
+										"name": "urn:x-mongodb:crs:strictwinding:EPSG:4326"
+									}
+								}
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("LineString") {
+			filter {
+				User::home.geoIntersects(
+					Geo.LineString(
+						Geo.Point(Geo.Longitude(-105.82), Geo.Latitude(33.87)),
+						Geo.Point(Geo.Longitude(-106.31), Geo.Latitude(35.65)),
+						Geo.Point(Geo.Longitude(-107.39), Geo.Latitude(35.98)),
+					)
+				)
+			} shouldBeBson $$"""
+				{
+					"home": {
+						"$geoIntersects": {
+							"$geometry": {
+								"type": "LineString",
+								"coordinates": [
+									[-105.82, 33.87],
+									[-106.31, 35.65],
+									[-107.39, 35.98]
+								]
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
 }

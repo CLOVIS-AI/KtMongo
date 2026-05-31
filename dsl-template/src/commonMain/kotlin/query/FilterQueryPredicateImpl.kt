@@ -529,6 +529,45 @@ private class FilterQueryPredicateImpl<T>(
 		}
 	}
 
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun geoIntersects(geometry: Geo) {
+		accept(GeoIntersectsNode(context, geometry, null))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun geoIntersects(polygon: Geo.Polygon, crs: Geo.CoordinateReferenceSystem?) {
+		accept(GeoIntersectsNode(context, polygon, crs))
+	}
+
+	@ExperimentalGeoBsonApi
+	@LowLevelApi
+	private class GeoIntersectsNode(
+		context: BsonContext,
+		private val geometry: Geo,
+		private val crs: Geo.CoordinateReferenceSystem?,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$geoIntersects") {
+				writeDocument($$"$geometry") {
+					geometry.writeTo(this)
+
+					if (crs != null) {
+						writeDocument("crs") {
+							writeString("type", "name")
+							writeDocument("properties") {
+								writeString("name", crs.name)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// endregion
 }
 
