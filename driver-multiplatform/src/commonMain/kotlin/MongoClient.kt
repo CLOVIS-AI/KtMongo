@@ -29,6 +29,41 @@ import kotlin.coroutines.CoroutineContext
 
 /**
  * Entry-point to the KtMongo Multiplatform driver.
+ *
+ * ### Organizing data
+ *
+ * Accessing MongoDB data happens in three steps:
+ * - [MongoClient]: represents the connection to the MongoDB application, handles
+ * the lifecycle and the configuration.
+ * - [MongoDatabase] (accessed with [MongoClient.database]): each database groups data together.
+ * This allows deploying multiple applications (or the same application multiple times)
+ * without name collisions.
+ * - [MongoCollection] (accessed with [MongoDatabase.collection]): each collection stores data together.
+ * Documents in a collection may have a different structure.
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * @Serializable
+ * class User(
+ *     val _id: ObjectId,
+ *     val name: String,
+ *     val age: Int,
+ * )
+ *
+ * fun main() = runBlocking {
+ *     val client = MongoClient(
+ *         hostname = "localhost",
+ *         port = 27017,
+ *         coroutineContext = currentCoroutineContext(),
+ *     )
+ *
+ *     val database = client.database("my-app")
+ *     val users = database.collection<User>("users")
+ *
+ *     println("The database contains ${users.count()} users.")
+ * }
+ * ```
  */
 @OptIn(LowLevelApi::class)
 class MongoClient internal constructor(
@@ -36,6 +71,17 @@ class MongoClient internal constructor(
 	val factory: BsonFactory,
 	val context: BsonContext,
 ) {
+
+	/**
+	 * Creates a [MongoDatabase] object.
+	 *
+	 * This method is purely a client-side operation, it does nothing in the MongoDB server.
+	 * In MongoDB, databases and collections are created implicitly on the first insert.
+	 *
+	 * For an example, see [MongoClient].
+	 */
+	fun database(name: String): MongoDatabase =
+		MongoDatabaseImpl(this, name)
 
 }
 
