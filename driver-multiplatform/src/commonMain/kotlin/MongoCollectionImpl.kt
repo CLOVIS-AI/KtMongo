@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.multiplatform
 
-import kotlinx.coroutines.CancellationException
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.InsertOne
 import opensavvy.ktmongo.dsl.command.InsertOneOptions
@@ -48,16 +47,13 @@ internal class MongoCollectionImpl<Document : Any>(
 			}
 		}
 
-		val responses = database.client.wire.send(
+		val message = database.client.wire.sendSingle(
 			Message.OpMsg(
 				body = MessageSection.Body(
 					command,
 				)
 			)
 		)
-
-		val message = responses.receive()
-		responses.cancel(CancellationException("insertOne expects a single response"))
 
 		check(message is Message.OpMsg)
 		check(message.body.document["ok"]?.decodeDouble() == 1.0)
