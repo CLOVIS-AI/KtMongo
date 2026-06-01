@@ -399,7 +399,10 @@ suspend fun MongoWireClient(
 	coroutineContext: CoroutineContext,
 ): MongoWireClient {
 	val selectorManager = SelectorManager(coroutineContext + Dispatchers.Default + CoroutineName("ktmongo-socket"))
-	val socket = aSocket(selectorManager).tcp().connect(hostName, port)
+	val socket = aSocket(selectorManager).tcp().connect(hostName, port) {
+		socketTimeout = 1000
+		keepAlive = true
+	}
 
 	return SocketWireClient(socket, factory, CoroutineScope(coroutineContext + CoroutineName("ktmongo-client")))
 }
