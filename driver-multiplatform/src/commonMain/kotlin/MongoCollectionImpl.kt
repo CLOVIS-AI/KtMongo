@@ -16,7 +16,12 @@
 
 package opensavvy.ktmongo.multiplatform
 
+import kotlinx.coroutines.CancellationException
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.InsertOne
+import opensavvy.ktmongo.dsl.command.InsertOneOptions
+import opensavvy.ktmongo.multiplatform.wire.Message
+import opensavvy.ktmongo.multiplatform.wire.MessageSection
 import kotlin.reflect.KType
 
 @OptIn(LowLevelApi::class)
@@ -25,6 +30,38 @@ internal class MongoCollectionImpl<Document : Any>(
 	override val name: String,
 	override val type: KType,
 ) : MongoCollection<Document> {
+
+	override suspend fun insertOne(
+		document: Document,
+		options: InsertOneOptions<Document>.() -> Unit,
+	) {
+		val command = lazy {
+			database.client.factory.buildDocument {
+				writeString("insert", name)
+				writeString($$"$db", database.name)
+
+				InsertOne(
+					context = database.client.context,
+					document = document,
+					documentType = type,
+				).writeTo(this)
+			}
+		}
+
+		val responses = database.client.wire.send(
+			Message.OpMsg(
+				body = MessageSection.Body(
+					command,
+				)
+			)
+		)
+
+		val message = responses.receive()
+		responses.cancel(CancellationException("insertOne expects a single response"))
+
+		check(message is Message.OpMsg)
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+	}
 
 	override fun toString(): String =
 		"MongoCollection($fullyQualifiedName)"

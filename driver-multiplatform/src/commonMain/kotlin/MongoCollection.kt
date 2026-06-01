@@ -16,7 +16,10 @@
 
 package opensavvy.ktmongo.multiplatform
 
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.InsertOneOptions
 import kotlin.reflect.KType
 
 /**
@@ -38,7 +41,7 @@ import kotlin.reflect.KType
  * You can measure the size of a document with [opensavvy.ktmongo.bson.BsonDocument.toByteArray]
  * followed by [ByteArray.size].
  */
-interface MongoCollection<Document : Any> {
+interface MongoCollection<Document : Any> : ObjectIdGenerator {
 
 	/**
 	 * The [MongoDatabase] that contains this collection.
@@ -57,6 +60,14 @@ interface MongoCollection<Document : Any> {
 	 */
 	val fullyQualifiedName: String
 		get() = "${database.name}.$name"
+
+	override fun newId(): ObjectId =
+		database.client.context.newId()
+
+	suspend fun insertOne(
+		document: Document,
+		options: InsertOneOptions<Document>.() -> Unit = {},
+	)
 
 	/**
 	 * The [KType] instance that corresponds to the collection's document type.
