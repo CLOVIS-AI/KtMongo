@@ -53,20 +53,22 @@ sealed interface Message {
 		override val opcode: Int
 			get() = 2013
 
-		override fun toString() = sequenceOf(body).plus(sequences)
+		override fun toString(): String = sequenceOf(body).plus(sequences)
 			.joinToString(prefix = "OpMsg(", postfix = ")")
 	}
 
 	companion object {
 
 		@OptIn(LowLevelApi::class)
-		fun Find() = OpMsg(
+		fun Find(): OpMsg = OpMsg(
 			MessageSection.Body(
-				BsonFactory().buildDocument {
-					writeString("find", "test-basic")
-					writeDocument("filter") {}
-					writeString("\$db", "test-basic")
-				}
+				eager(
+					BsonFactory().buildDocument {
+						writeString("find", "test-basic")
+						writeDocument("filter") {}
+						writeString("\$db", "test-basic")
+					}
+				)
 			)
 		)
 
@@ -78,29 +80,33 @@ sealed interface Message {
 		)
 
 		@OptIn(LowLevelApi::class, ExperimentalTime::class, ExperimentalAtomicApi::class)
-		fun Insert() = OpMsg(
+		fun Insert(): OpMsg = OpMsg(
 			MessageSection.Body(
-				BsonFactory().buildDocument {
-					writeString("insert", "test-basic")
-					writeBoolean("ordered", true)
-					writeString("\$db", "test-basic")
-				}
+				eager(
+					BsonFactory().buildDocument {
+						writeString("insert", "test-basic")
+						writeBoolean("ordered", true)
+						writeString("\$db", "test-basic")
+					}
+				)
 			),
 			MessageSection.DocumentSequence(
 				id = "documents",
 				listOf(
-					BsonFactory().encode(DataTest(ObjectIdGenerator.Default().newId(), "Bob", 18)) as BsonDocument
+					eager(BsonFactory().encode(DataTest(ObjectIdGenerator.Default().newId(), "Bob", 18)) as BsonDocument)
 				)
 			)
 		)
 
 		@OptIn(LowLevelApi::class)
-		fun Drop() = OpMsg(
+		fun Drop(): OpMsg = OpMsg(
 			MessageSection.Body(
-				BsonFactory().buildDocument {
-					writeString("drop", "test-basic")
-					writeString("\$db", "test-basic")
-				}
+				eager(
+					BsonFactory().buildDocument {
+						writeString("drop", "test-basic")
+						writeString("\$db", "test-basic")
+					}
+				)
 			)
 		)
 	}
