@@ -20,6 +20,8 @@
 package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.types.ExperimentalGeoBsonApi
+import opensavvy.ktmongo.bson.types.Geo
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
@@ -312,6 +314,39 @@ private class FilterQueryImpl<T>(
 				value.writeTo(this)
 			}
 		}
+	}
+
+	// endregion
+	// region Geopositional operators
+
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo.Point>.near(target: Geo.Point, minDistance: Double?, maxDistance: Double?) {
+		this { near(target, minDistance, maxDistance) }
+	}
+
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo.Point>.nearSphere(target: Geo.Point, minDistance: Double?, maxDistance: Double?) {
+		this { nearSphere(target, minDistance, maxDistance) }
+	}
+
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo.Point>.geoWithin(polygon: Geo.Polygon, crs: Geo.CoordinateReferenceSystem?) {
+		this { geoWithin(polygon, crs) }
+	}
+
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo.Point>.geoWithin(polygons: Geo.MultiPolygon) {
+		this { geoWithin(polygons) }
+	}
+
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo>.geoIntersects(geometry: Geo) {
+		this { geoIntersects(geometry) }
+	}
+
+	@ExperimentalGeoBsonApi
+	override fun Field<T, Geo>.geoIntersects(polygon: Geo.Polygon, crs: Geo.CoordinateReferenceSystem?) {
+		this { geoIntersects(polygon, crs) }
 	}
 
 	// endregion

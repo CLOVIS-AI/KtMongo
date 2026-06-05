@@ -24,6 +24,8 @@ package opensavvy.ktmongo.dsl.query
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.types.ExperimentalGeoBsonApi
+import opensavvy.ktmongo.bson.types.Geo
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
@@ -419,6 +421,153 @@ private class FilterQueryPredicateImpl<T>(
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeBinaryData("$$operatorName", 0u.toUByte(), value)
+		}
+	}
+
+	// endregion
+	// region Geopositional operators
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun near(target: Geo.Point, minDistance: Double?, maxDistance: Double?) {
+		accept(GeoNearNode(context, target, minDistance, maxDistance))
+	}
+
+	@ExperimentalGeoBsonApi
+	@LowLevelApi
+	private class GeoNearNode(
+		context: BsonContext,
+		private val target: Geo.Point,
+		private val minDistance: Double?,
+		private val maxDistance: Double?,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$near") {
+				writeDocument($$"$geometry") {
+					target.writeTo(this)
+				}
+
+				if (minDistance != null) {
+					writeDouble($$"$minDistance", minDistance)
+				}
+
+				if (maxDistance != null) {
+					writeDouble($$"$maxDistance", maxDistance)
+				}
+			}
+		}
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun nearSphere(target: Geo.Point, minDistance: Double?, maxDistance: Double?) {
+		accept(GeoNearSphereNode(context, target, minDistance, maxDistance))
+	}
+
+	@ExperimentalGeoBsonApi
+	@LowLevelApi
+	private class GeoNearSphereNode(
+		context: BsonContext,
+		private val target: Geo.Point,
+		private val minDistance: Double?,
+		private val maxDistance: Double?,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$nearSphere") {
+				writeDocument($$"$geometry") {
+					target.writeTo(this)
+				}
+
+				if (minDistance != null) {
+					writeDouble($$"$minDistance", minDistance)
+				}
+
+				if (maxDistance != null) {
+					writeDouble($$"$maxDistance", maxDistance)
+				}
+			}
+		}
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun geoWithin(polygon: Geo.Polygon, crs: Geo.CoordinateReferenceSystem?) {
+		accept(GeoWithinNode(context, polygon, crs))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun geoWithin(polygons: Geo.MultiPolygon) {
+		accept(GeoWithinNode(context, polygons, null))
+	}
+
+	@ExperimentalGeoBsonApi
+	@LowLevelApi
+	private class GeoWithinNode(
+		context: BsonContext,
+		private val target: Geo,
+		private val crs: Geo.CoordinateReferenceSystem?,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$geoWithin") {
+				writeDocument($$"$geometry") {
+					target.writeTo(this)
+
+					if (crs != null) {
+						writeDocument("crs") {
+							writeString("type", "name")
+							writeDocument("properties") {
+								writeString("name", crs.name)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun geoIntersects(geometry: Geo) {
+		accept(GeoIntersectsNode(context, geometry, null))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	@ExperimentalGeoBsonApi
+	override fun geoIntersects(polygon: Geo.Polygon, crs: Geo.CoordinateReferenceSystem?) {
+		accept(GeoIntersectsNode(context, polygon, crs))
+	}
+
+	@ExperimentalGeoBsonApi
+	@LowLevelApi
+	private class GeoIntersectsNode(
+		context: BsonContext,
+		private val geometry: Geo,
+		private val crs: Geo.CoordinateReferenceSystem?,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$geoIntersects") {
+				writeDocument($$"$geometry") {
+					geometry.writeTo(this)
+
+					if (crs != null) {
+						writeDocument("crs") {
+							writeString("type", "name")
+							writeDocument("properties") {
+								writeString("name", crs.name)
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 

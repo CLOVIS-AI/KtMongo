@@ -22,6 +22,8 @@ package opensavvy.ktmongo.dsl.query
 import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
+import opensavvy.ktmongo.bson.types.ExperimentalGeoBsonApi
+import opensavvy.ktmongo.bson.types.Geo
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -138,6 +140,11 @@ import kotlin.reflect.typeOf
  *
  * Text query:
  * - [`$regex`][regex]
+ *
+ * Geopositional query:
+ * - [`$geoWithin`][geoWithin]
+ * - [`$near`][near]
+ * - [`$nearSphere`][nearSphere]
  *
  * If you can't find an operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/4).
  */
@@ -3882,5 +3889,505 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 		return this.field.bitsAnySet(mask)
 	}
 
+	// endregion
+	// region Geopositional operators
+	// region $near
+
+	/**
+	 * Matches documents where a [Geo.Point] is near the [target].
+	 *
+	 * Documents are returned sorted, from the closest to the furthest.
+	 * For the best performance, avoid specifying an additional sort.
+	 *
+	 * For large areas, in which the curvature of the Earth becomes significant, consider using [nearSphere] instead.
+	 *
+	 * ### Example
+	 *
+	 * Find all bear sightings with 1km of Périgueux:
+	 * ```kotlin
+	 * class BearSightings(
+	 *     val _id: ObjectId,
+	 *     val location: Geo.Point,
+	 * )
+	 *
+	 * sightings.find {
+	 *     BearSightings::location.near(
+	 *         target = Geo.Point(Longitude(0.7269), Latitude(45.1828)),
+	 *         maxDistance = 1000.0,
+	 *     )
+	 * }.toList()
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator requires a `2dsphere` index.
+	 *
+	 * This operator cannot be combined with other operators requiring special indexes, like `$text`.
+	 *
+	 * This operator is not permitted inside an aggregation pipeline.
+	 * Instead, use the `$geoNear` stage.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/near/)
+	 * - [YouTube tutorial](https://www.youtube.com/watch?v=muy9Ls1gbY8)
+	 *
+	 * @param target The point to search near.
+	 * @param minDistance If specified, only matches documents that are further away from the [target] than this distance, in meters.
+	 * @param maxDistance If specified, only matches documents that are closer to the [target] than this distance, in meters.
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo.Point>.near(
+		target: Geo.Point,
+		minDistance: Double? = null,
+		maxDistance: Double? = null,
+	)
+
+	/**
+	 * Matches documents where a [Geo.Point] is near the [target].
+	 *
+	 * Documents are returned sorted, from the closest to the furthest.
+	 * For the best performance, avoid specifying an additional sort.
+	 *
+	 * For large areas, in which the curvature of the Earth becomes significant, consider using [nearSphere] instead.
+	 *
+	 * ### Example
+	 *
+	 * Find all bear sightings with 1km of Périgueux:
+	 * ```kotlin
+	 * class BearSightings(
+	 *     val _id: ObjectId,
+	 *     val location: Geo.Point,
+	 * )
+	 *
+	 * sightings.find {
+	 *     BearSightings::location.near(
+	 *         target = Geo.Point(Longitude(0.7269), Latitude(45.1828)),
+	 *         maxDistance = 1000.0,
+	 *     )
+	 * }.toList()
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator requires a `2dsphere` index.
+	 *
+	 * This operator cannot be combined with other operators requiring special indexes, like `$text`.
+	 *
+	 * This operator is not permitted inside an aggregation pipeline.
+	 * Instead, use the `$geoNear` stage.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/near/)
+	 * - [YouTube tutorial](https://www.youtube.com/watch?v=muy9Ls1gbY8)
+	 *
+	 * @param target The point to search near.
+	 * @param minDistance If specified, only matches documents that are further away from the [target] than this distance, in meters.
+	 * @param maxDistance If specified, only matches documents that are closer to the [target] than this distance, in meters.
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo.Point>.near(
+		target: Geo.Point,
+		minDistance: Double? = null,
+		maxDistance: Double? = null,
+	) {
+		return this.field.near(target, minDistance, maxDistance)
+	}
+
+	// endregion
+	// region $nearSphere
+
+	/**
+	 * Matches documents where a [Geo.Point] is near the [target], using spherical geometry.
+	 *
+	 * Unlike [near], uses spherical geometry for distance calculations, so results are accurate across large areas.
+	 *
+	 * Documents are returned sorted, from the closest to the furthest.
+	 * For the best performance, avoid specifying an additional sort.
+	 *
+	 * ### Example
+	 *
+	 * Find all bear sightings with 1km of Périgueux:
+	 * ```kotlin
+	 * class BearSightings(
+	 *     val _id: ObjectId,
+	 *     val location: Geo.Point,
+	 * )
+	 *
+	 * sightings.find {
+	 *     BearSightings::location.nearSphere(
+	 *         target = Geo.Point(Longitude(0.7269), Latitude(45.1828)),
+	 *         maxDistance = 1000.0,
+	 *     )
+	 * }.toList()
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator requires a `2dsphere` index.
+	 *
+	 * This operator cannot be combined with other operators requiring special indexes, like `$text`.
+	 *
+	 * This operator is not permitted inside an aggregation pipeline.
+	 * Instead, use the `$geoNear` stage.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/)
+	 *
+	 * @param target The point to search near.
+	 * @param minDistance If specified, only matches documents that are further away from the [target] than this distance, in meters.
+	 * @param maxDistance If specified, only matches documents that are closer to the [target] than this distance, in meters.
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo.Point>.nearSphere(
+		target: Geo.Point,
+		minDistance: Double? = null,
+		maxDistance: Double? = null,
+	)
+
+	/**
+	 * Matches documents where a [Geo.Point] is near the [target], using spherical geometry.
+	 *
+	 * Unlike [near], uses spherical geometry for distance calculations, so results are accurate across large areas.
+	 *
+	 * Documents are returned sorted, from the closest to the furthest.
+	 * For the best performance, avoid specifying an additional sort.
+	 *
+	 * ### Example
+	 *
+	 * Find all bear sightings with 1km of Périgueux:
+	 * ```kotlin
+	 * class BearSightings(
+	 *     val _id: ObjectId,
+	 *     val location: Geo.Point,
+	 * )
+	 *
+	 * sightings.find {
+	 *     BearSightings::location.nearSphere(
+	 *         target = Geo.Point(Longitude(0.7269), Latitude(45.1828)),
+	 *         maxDistance = 1000.0,
+	 *     )
+	 * }.toList()
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator requires a `2dsphere` index.
+	 *
+	 * This operator cannot be combined with other operators requiring special indexes, like `$text`.
+	 *
+	 * This operator is not permitted inside an aggregation pipeline.
+	 * Instead, use the `$geoNear` stage.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/)
+	 *
+	 * @param target The point to search near.
+	 * @param minDistance If specified, only matches documents that are further away from the [target] than this distance, in meters.
+	 * @param maxDistance If specified, only matches documents that are closer to the [target] than this distance, in meters.
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo.Point>.nearSphere(
+		target: Geo.Point,
+		minDistance: Double? = null,
+		maxDistance: Double? = null,
+	) {
+		return this.field.nearSphere(target, minDistance, maxDistance)
+	}
+
+	// endregion
+	// region $geoWithin
+
+	/**
+	 * Matches documents where a [Geo.Point] is within the given [polygon].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Place(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val location: Geo.Point,
+	 *     val category: String,
+	 * )
+	 *
+	 * places.find {
+	 *     Place::location {
+	 *         geoWithin(
+	 *             Geo.Polygon(
+	 *                 Geo.Point(Longitude(-73.95), Latitude(40.80)),
+	 *                 Geo.Point(Longitude(-73.94), Latitude(40.79)),
+	 *                 Geo.Point(Longitude(-73.97), Latitude(40.79)),
+	 *                 Geo.Point(Longitude(-79.98), Latitude(40.76)),
+	 *                 Geo.Point(Longitude(-73.95), Latitude(40.80)),
+	 *             )
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2d` or `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon greater with areas greater than a single hemisphere,
+	 * the default [crs] results in queries for the complimentary geometry.
+	 *
+	 * In these cases, specify a [crs] of [Geo.CoordinateReferenceSystem.MongoDB].
+	 * Only [single-ringed polygons][Geo.Polygon] are supported.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/geojson-bound-by-polygon/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo.Point>.geoWithin(
+		polygon: Geo.Polygon,
+		crs: Geo.CoordinateReferenceSystem? = null,
+	)
+
+	/**
+	 * Matches documents where a [Geo.Point] is within the given [polygon].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Place(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val location: Geo.Point,
+	 *     val category: String,
+	 * )
+	 *
+	 * places.find {
+	 *     Place::location {
+	 *         geoWithin(
+	 *             Geo.Polygon(
+	 *                 Geo.Point(Longitude(-73.95), Latitude(40.80)),
+	 *                 Geo.Point(Longitude(-73.94), Latitude(40.79)),
+	 *                 Geo.Point(Longitude(-73.97), Latitude(40.79)),
+	 *                 Geo.Point(Longitude(-79.98), Latitude(40.76)),
+	 *                 Geo.Point(Longitude(-73.95), Latitude(40.80)),
+	 *             )
+	 *         )
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2d` or `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon greater with areas greater than a single hemisphere,
+	 * the default [crs] results in queries for the complimentary geometry.
+	 *
+	 * In these cases, specify a [crs] of [Geo.CoordinateReferenceSystem.MongoDB].
+	 * Only [single-ringed polygons][Geo.Polygon] are supported.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/geojson-bound-by-polygon/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo.Point>.geoWithin(
+		polygon: Geo.Polygon,
+		crs: Geo.CoordinateReferenceSystem? = null,
+	) {
+		return this.field.geoWithin(polygon, crs)
+	}
+
+	/**
+	 * Matches documents where a [Geo.Point] is within the given [polygons].
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2d` or `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon greater with areas greater than a single hemisphere,
+	 * this operator matches the complimentary geometry.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/geojson-bound-by-polygon/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo.Point>.geoWithin(
+		polygons: Geo.MultiPolygon,
+	)
+
+	/**
+	 * Matches documents where a [Geo.Point] is within the given [polygons].
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2d` or `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon greater with areas greater than a single hemisphere,
+	 * this operator matches the complimentary geometry.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/geojson-bound-by-polygon/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo.Point>.geoWithin(
+		polygons: Geo.MultiPolygon,
+	) {
+		return this.field.geoWithin(polygons)
+	}
+
+	// endregion
+	// region $geoIntersects
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [geometry].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class GasStation(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val loc: Geo.Point,
+	 * )
+	 *
+	 * gasStations.find {
+	 *     GasStation::loc.geoIntersects(
+	 *         Geo.LineString(
+	 *             Geo.Point(Longitude(-105.82), Latitude(33.87)),
+	 *             Geo.Point(Longitude(-106.31), Latitude(35.65)),
+	 *             Geo.Point(Longitude(-107.39), Latitude(35.98)),
+	 *         )
+	 *     )
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo>.geoIntersects(geometry: Geo)
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [geometry].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class GasStation(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val loc: Geo.Point,
+	 * )
+	 *
+	 * gasStations.find {
+	 *     GasStation::loc.geoIntersects(
+	 *         Geo.LineString(
+	 *             Geo.Point(Longitude(-105.82), Latitude(33.87)),
+	 *             Geo.Point(Longitude(-106.31), Latitude(35.65)),
+	 *             Geo.Point(Longitude(-107.39), Latitude(35.98)),
+	 *         )
+	 *     )
+	 * }
+	 * ```
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo>.geoIntersects(geometry: Geo) {
+		return this.field.geoIntersects(geometry)
+	}
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [polygon].
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon with an area greater than a single hemisphere,
+	 * the default [crs] results in queries for the complementary geometry.
+	 *
+	 * In these cases, specify a [crs] of [Geo.CoordinateReferenceSystem.MongoDB].
+	 * Only [single-ringed polygons][Geo.Polygon] are supported.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun Field<T, Geo>.geoIntersects(
+		polygon: Geo.Polygon,
+		crs: Geo.CoordinateReferenceSystem? = null,
+	)
+
+	/**
+	 * Matches documents whose geospatial data intersects with the given [polygon].
+	 *
+	 * ### Indexing
+	 *
+	 * This operator does not require a `2dsphere` index.
+	 * However, such an index is recommended for performance.
+	 *
+	 * ### Big polygons
+	 *
+	 * For queries that specify a polygon with an area greater than a single hemisphere,
+	 * the default [crs] results in queries for the complementary geometry.
+	 *
+	 * In these cases, specify a [crs] of [Geo.CoordinateReferenceSystem.MongoDB].
+	 * Only [single-ringed polygons][Geo.Polygon] are supported.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/geoIntersects/)
+	 * - [Official tutorial](https://www.mongodb.com/docs/manual/core/indexes/index-types/geospatial/2dsphere/query/intersections-of-geojson-objects/)
+	 */
+	@ExperimentalGeoBsonApi
+	fun kotlin.reflect.KProperty1<T, Geo>.geoIntersects(
+		polygon: Geo.Polygon,
+		crs: Geo.CoordinateReferenceSystem? = null,
+	) {
+		return this.field.geoIntersects(polygon, crs)
+	}
+
+	// endregion
 	// endregion
 }
