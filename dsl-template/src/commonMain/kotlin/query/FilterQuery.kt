@@ -139,6 +139,7 @@ import kotlin.reflect.typeOf
  * - [`$regex`][regex]
  *
  * Geopositional query:
+ * - [`$geoIntersects`][geoIntersects]
  * - [`$geoWithin`][geoWithin]
  * - [`$near`][near]
  * - [`$nearSphere`][nearSphere]
