@@ -114,6 +114,7 @@ import kotlin.reflect.typeOf
  * - [`$lt`][lt]
  * - [`$lte`][lte]
  * - [`$ne`][ne]
+ * - [`$mod`][mod]
  *
  * Logical query:
  * - [`$and`][and]
@@ -2308,6 +2309,129 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	}
 
 	// endregion
+	// endregion
+	// region $mod
+
+	/**
+	 * Selects documents where the value of the field divided by [divisor] has the specified [remainder].
+	 *
+	 * If the value of the field is a floating-point number, it is rounded towards zero before the operation.
+	 *
+	 * ### Example
+	 *
+	 * To find all users with an odd score:
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age.mod(2, 1)
+	 * }
+	 * ```
+	 *
+	 * This request returns elements where `age % 2 == 1`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/mod/)
+	 */
+	@KtMongoDsl
+	fun Field<T, Number>.mod(divisor: Long, remainder: Long) {
+		this { mod(divisor, remainder) }
+	}
+
+	/**
+	 * Selects documents where the value of the field divided by [divisor] has the specified [remainder].
+	 *
+	 * If the value of the field is a floating-point number, it is rounded towards zero before the operation.
+	 *
+	 * ### Example
+	 *
+	 * To find all users with an odd score:
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age.mod(2, 1)
+	 * }
+	 * ```
+	 *
+	 * This request returns elements where `age % 2 == 1`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/mod/)
+	 */
+	@KtMongoDsl
+	fun kotlin.reflect.KProperty1<T, Number>.mod(divisor: Long, remainder: Long) {
+		return this.field.mod(divisor, remainder)
+	}
+
+	/**
+	 * Selects documents where the value of the field divided by [divisor] has the specified [remainder].
+	 *
+	 * If the value of the field is a floating-point number, it is rounded towards zero before the operation.
+	 *
+	 * ### Example
+	 *
+	 * To find all users with an odd score:
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age.mod(2, 1)
+	 * }
+	 * ```
+	 *
+	 * This request returns elements where `age % 2 == 1`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/mod/)
+	 */
+	@KtMongoDsl
+	fun Field<T, Number>.mod(divisor: Int, remainder: Int) {
+		this.mod(divisor.toLong(), remainder.toLong())
+	}
+
+	/**
+	 * Selects documents where the value of the field divided by [divisor] has the specified [remainder].
+	 *
+	 * If the value of the field is a floating-point number, it is rounded towards zero before the operation.
+	 *
+	 * ### Example
+	 *
+	 * To find all users with an odd score:
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int?,
+	 * )
+	 *
+	 * collection.find {
+	 *     User::age.mod(2, 1)
+	 * }
+	 * ```
+	 *
+	 * This request returns elements where `age % 2 == 1`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/mod/)
+	 */
+	@KtMongoDsl
+	fun kotlin.reflect.KProperty1<T, Number>.mod(divisor: Int, remainder: Int) {
+		return this.field.mod(divisor, remainder)
+	}
+
 	// endregion
 	// region $in
 

@@ -278,4 +278,16 @@ val ComparisonFilterTest by multiContextSuite {
 			""".trimIndent()
 		}
 	}
+
+	test($$"$mod") {
+		filter {
+			(User::pets / Pet::age).mod(2, 0)
+		} shouldBeBson $$"""
+			{
+				"pets.age": {
+					"$mod": [2, 0]
+				}
+			}
+		""".trimIndent()
+	}
 }

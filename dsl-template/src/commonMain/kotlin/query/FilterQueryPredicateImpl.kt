@@ -251,6 +251,30 @@ private class FilterQueryPredicateImpl<T>(
 	}
 
 	// endregion
+	// region $mod
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	override fun mod(divisor: Long, remainder: Long) {
+		accept(ModPredicateBsonNode(divisor, remainder, context))
+	}
+
+	@LowLevelApi
+	private class ModPredicateBsonNode(
+		private val divisor: Long,
+		private val remainder: Long,
+		context: BsonContext,
+	) : PredicateBsonNodeNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeArray($$"$mod") {
+				writeSafe(divisor)
+				writeSafe(remainder)
+			}
+		}
+	}
+
+	// endregion
 	// region $in
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
