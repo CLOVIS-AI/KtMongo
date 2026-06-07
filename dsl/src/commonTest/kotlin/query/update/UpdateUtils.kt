@@ -52,6 +52,8 @@ class User(
 	val creationInstant: Instant,
 	val modificationTimestamp: Timestamp,
 	val recursive: List<User>,
+	val score: Int,
+	val externalId: Long = 1,
 )
 
 @OptIn(LowLevelApi::class)

@@ -79,6 +79,11 @@ import kotlin.time.Instant
  * Time management:
  * - [`$currentDate`][setToCurrentDate]
  *
+ * Bitwise operators:
+ * - [`$bit`][bitAnd] (AND)
+ * - [`$bit`][bitOr] (OR)
+ * - [`$bit`][bitXor] (XOR)
+ *
  * If you can't find the operator you're searching for, visit the [tracking issue](https://gitlab.com/opensavvy/ktmongo/-/issues/5).
  *
  * ### External resources
@@ -2821,6 +2826,345 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@KtMongoDsl
 	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pullValues(noinline predicate: FilterQueryPredicate<V>.() -> Unit) {
 		return this.field.pullValues(predicate)
+	}
+
+	// endregion
+	// region Bitwise operators
+
+	/**
+	 * Performs a bitwise AND operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitAnd 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun Field<T, Long>.bitAnd(mask: Long)
+
+	/**
+	 * Performs a bitwise AND operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitAnd 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun kotlin.reflect.KProperty1<T, Long>.bitAnd(mask: Long) {
+		return this.field.bitAnd(mask)
+	}
+
+	/**
+	 * Performs a bitwise AND operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitAnd 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun Field<T, Int>.bitAnd(mask: Int)
+
+	/**
+	 * Performs a bitwise AND operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitAnd 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun kotlin.reflect.KProperty1<T, Int>.bitAnd(mask: Int) {
+		return this.field.bitAnd(mask)
+	}
+
+	/**
+	 * Performs a bitwise OR operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitOr 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun Field<T, Long>.bitOr(mask: Long)
+
+	/**
+	 * Performs a bitwise OR operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitOr 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun kotlin.reflect.KProperty1<T, Long>.bitOr(mask: Long) {
+		return this.field.bitOr(mask)
+	}
+
+	/**
+	 * Performs a bitwise OR operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitOr 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun Field<T, Int>.bitOr(mask: Int)
+
+	/**
+	 * Performs a bitwise OR operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitOr 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun kotlin.reflect.KProperty1<T, Int>.bitOr(mask: Int) {
+		return this.field.bitOr(mask)
+	}
+
+	/**
+	 * Performs a bitwise XOR (exclusive OR) operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitXor 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun Field<T, Long>.bitXor(mask: Long)
+
+	/**
+	 * Performs a bitwise XOR (exclusive OR) operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitXor 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun kotlin.reflect.KProperty1<T, Long>.bitXor(mask: Long) {
+		return this.field.bitXor(mask)
+	}
+
+	/**
+	 * Performs a bitwise XOR (exclusive OR) operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitXor 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun Field<T, Int>.bitXor(mask: Int)
+
+	/**
+	 * Performs a bitwise XOR (exclusive OR) operation on a field.
+	 *
+	 * This operator should always be used with a field of type [Int] or [Long].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Switch(
+	 *     val _id: Int,
+	 *     val expdata: Int,
+	 * )
+	 *
+	 * switches.filter {
+	 *     Switch::_id eq 1
+	 * }.updateOne {
+	 *     Switch::expdata bitXor 10
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
+	 */
+	@KtMongoDsl
+	infix fun kotlin.reflect.KProperty1<T, Int>.bitXor(mask: Int) {
+		return this.field.bitXor(mask)
 	}
 
 	// endregion

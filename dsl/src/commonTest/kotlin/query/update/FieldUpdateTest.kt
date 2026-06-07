@@ -1071,4 +1071,54 @@ val FieldUpdateTest by multiContextSuite {
 			""".trimIndent()
 		}
 	}
+
+	suite($$"$bit") {
+		test("Simple AND on Int") {
+			update {
+				User::score bitAnd 10
+			} shouldBeBson $$"""
+				{
+					"$bit": {
+						"score": {
+							"and": 10
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Two different bit operators on different fields") {
+			update {
+				User::externalId bitOr 7
+				User::score bitXor 1
+			} shouldBeBson $$"""
+				{
+					"$bit": {
+						"externalId": {
+							"or": 7
+						},
+						"score": {
+							"xor": 1
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Two different bit operators on the same field") {
+			update {
+				User::score bitAnd 10
+				User::score bitXor 7
+			} shouldBeBson $$"""
+				{
+					"$bit": {
+						"score": {
+							"and": 10,
+							"xor": 7
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
 }

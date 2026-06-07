@@ -41,6 +41,7 @@ import kotlin.jvm.JvmMultifileClass
 import kotlin.jvm.JvmName
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import kotlin.time.Instant
 
 /**
@@ -736,6 +737,61 @@ private class UpdateQueryImpl<T>(
 	}
 
 	// endregion
+	// region Bitwise operators
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun Field<T, Int>.bitAnd(mask: Int) {
+		accept(BitBsonNode(listOf(Triple(path, "and", Value(mask, typeOf<Int>()))), context))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun Field<T, Long>.bitAnd(mask: Long) {
+		accept(BitBsonNode(listOf(Triple(path, "and", Value(mask, typeOf<Long>()))), context))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun Field<T, Int>.bitOr(mask: Int) {
+		accept(BitBsonNode(listOf(Triple(path, "or", Value(mask, typeOf<Int>()))), context))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun Field<T, Long>.bitOr(mask: Long) {
+		accept(BitBsonNode(listOf(Triple(path, "or", Value(mask, typeOf<Long>()))), context))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun Field<T, Int>.bitXor(mask: Int) {
+		accept(BitBsonNode(listOf(Triple(path, "xor", Value(mask, typeOf<Int>()))), context))
+	}
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override fun Field<T, Long>.bitXor(mask: Long) {
+		accept(BitBsonNode(listOf(Triple(path, "xor", Value(mask, typeOf<Long>()))), context))
+	}
+
+	@LowLevelApi
+	private class BitBsonNode(
+		// List<(field, operatorName, mask)>
+		val mappings: List<Triple<Path, String, Value>>,
+		context: BsonContext,
+	) : UpdateBsonNodeNode(context) {
+
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			val mappingsByField = mappings.groupBy { it.first }
+
+			writeDocument($$"$bit") {
+				for ((field, operators) in mappingsByField) {
+					writeDocument(field.toString()) {
+						for ((_, operator, mask) in operators) {
+							writeSafe(operator, mask.value, mask.type)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// endregion
 
 	companion object {
 		@OptIn(LowLevelApi::class)
@@ -778,6 +834,9 @@ private class UpdateQueryImpl<T>(
 			},
 			OperatorCombinator(CurrentDateBsonNode::class) { sources, context ->
 				CurrentDateBsonNode(sources.flatMap { it.mappings }, context)
+			},
+			OperatorCombinator(BitBsonNode::class) { sources, context ->
+				BitBsonNode(sources.flatMap { it.mappings }, context)
 			},
 		)
 	}
