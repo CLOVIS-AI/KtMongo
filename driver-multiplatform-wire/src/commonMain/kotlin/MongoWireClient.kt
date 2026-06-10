@@ -31,6 +31,7 @@ import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.cancellation.CancellationException
 
 @LowLevelApi
 interface MongoWireClient : AutoCloseable {
@@ -38,6 +39,13 @@ interface MongoWireClient : AutoCloseable {
 	suspend fun send(
 		message: Message,
 	): ReceiveChannel<Message>
+
+	/**
+	 * Sends a [message] that expects a single response.
+	 */
+	suspend fun sendSingle(
+		message: Message,
+	): Message
 
 	companion object
 }
@@ -65,11 +73,13 @@ private class SocketWireClient(
 	private class Request(
 		val data: Buffer,
 		val output: Channel<Message>,
+		val expectsMultipleResponses: Boolean,
 	)
 
 	private class SentMessage(
 		val requestId: Int,
 		val output: Channel<Message>,
+		val expectsMultipleResponses: Boolean,
 	)
 
 	private class Response(
@@ -159,7 +169,7 @@ private class SocketWireClient(
 			writeSocket.flush()
 
 			log("$requestId was sent")
-			sentChannel.send(SentMessage(requestId, request.output))
+			sentChannel.send(SentMessage(requestId, request.output, expectsMultipleResponses = request.expectsMultipleResponses))
 		}
 	}
 
@@ -197,6 +207,7 @@ private class SocketWireClient(
 		triagedChannel: SendChannel<ResponseWithHandler>,
 	) {
 		val waiting = HashMap<Int, SendChannel<Message>>()
+		val requestsExpectingMultipleResponses = HashSet<Int>()
 
 		while (currentCoroutineContext().isActive && socket.isActive) {
 			select {
@@ -207,12 +218,18 @@ private class SocketWireClient(
 				sentChannel.onReceive { message ->
 					log("${message.requestId} expects an answer")
 					waiting[message.requestId] = message.output
+					if (message.expectsMultipleResponses)
+						requestsExpectingMultipleResponses.add(message.requestId)
 				}
 
 				receivedChannel.onReceive { response ->
 					val handler = waiting[response.responseTo]
 						?: error("Received the message ${response.requestId} in response to ${response.responseTo}, but no known message with ID ${response.responseTo} has been sent by this client.\nCurrently in-flight requests: ${waiting.keys.sorted()}")
 					triagedChannel.send(ResponseWithHandler(response, handler))
+					if (response.responseTo !in requestsExpectingMultipleResponses) {
+						requestsExpectingMultipleResponses.remove(response.responseTo)
+						waiting.remove(response.responseTo)
+					}
 				}
 			}
 		}
@@ -380,8 +397,18 @@ private class SocketWireClient(
 		val output = Channel<Message>()
 		log("Preparing to write $message…")
 		val buffer = writeMessage(message)
-		requestChannel.send(Request(buffer, output))
+		requestChannel.send(Request(buffer, output, expectsMultipleResponses = true))
 		return output
+	}
+
+	override suspend fun sendSingle(message: Message): Message {
+		val output = Channel<Message>()
+		log("Preparing to write $message…")
+		val buffer = writeMessage(message)
+		requestChannel.send(Request(buffer, output, expectsMultipleResponses = false))
+		val message = output.receive()
+		output.close(CancellationException("We expected a single response, and we received it, so this channel was closed."))
+		return message
 	}
 
 	override fun close() {
@@ -399,7 +426,10 @@ suspend fun MongoWireClient(
 	coroutineContext: CoroutineContext,
 ): MongoWireClient {
 	val selectorManager = SelectorManager(coroutineContext + Dispatchers.Default + CoroutineName("ktmongo-socket"))
-	val socket = aSocket(selectorManager).tcp().connect(hostName, port)
+	val socket = aSocket(selectorManager).tcp().connect(hostName, port) {
+		socketTimeout = 1000
+		keepAlive = true
+	}
 
 	return SocketWireClient(socket, factory, CoroutineScope(coroutineContext + CoroutineName("ktmongo-client")))
 }
