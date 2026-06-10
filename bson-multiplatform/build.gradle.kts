@@ -75,3 +75,48 @@ library {
 
 	coverage.set(75)
 }
+
+// region Workaround KT-86874
+// https://youtrack.jetbrains.com/issue/KT-86874/WASI-Test-running-process-exited-unexpectedly
+
+// KGP 2.4.0 generates a WASM test runner that fails to deliver all test output.
+// Root cause: Node.js ESM init sets O_NONBLOCK on fd 1 (stdout pipe). WASI's fd_write
+// calls uv_fs_write(NULL,...) directly on fd 1, so writes return EAGAIN when KGP's
+// 1 MB pipe buffer is full, silently dropping the remaining ~1.4 MB of output.
+// Fix: reset fd 1 to blocking mode before wasi.start() so fd_write blocks until
+// the pipe drains, ensuring all 2.5 MB of test output is delivered.
+// returnOnExit: true is kept so proc_exit(0) unwinds via exception rather than
+// calling process.exit() mid-execution.
+val patchWasmWasiTestMjs by tasks.registering {
+	description = "Workaround KT-86874 by patching the generated JS launcher for WASI"
+
+	dependsOn("compileTestDevelopmentExecutableKotlinWasmWasi")
+
+	val kotlinDir = layout.buildDirectory
+		.dir("compileSync/wasmWasi/test/testDevelopmentExecutable/kotlin")
+
+	doLast {
+		val dir = kotlinDir.get().asFile
+
+		val mainMjs = dir.resolve("KtMongo-bson-multiplatform-test.mjs")
+		if (mainMjs.exists()) {
+			mainMjs.writeText(
+				mainMjs.readText()
+					.replace(
+						"new WASI({ version: 'preview1', args: argv, env, })",
+						"new WASI({ version: 'preview1', args: argv, env, returnOnExit: true })",
+					)
+					.replace(
+						"\nwasi.start(wasmInstance);",
+						"\nif (typeof process.stdout._handle?.setBlocking === 'function') process.stdout._handle.setBlocking(true);\nwasi.start(wasmInstance);",
+					),
+			)
+		}
+	}
+}
+
+tasks.named("wasmWasiNodeTest") {
+	dependsOn(patchWasmWasiTestMjs)
+}
+
+// endregion
