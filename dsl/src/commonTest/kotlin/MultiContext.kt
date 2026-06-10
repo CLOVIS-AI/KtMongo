@@ -16,9 +16,9 @@
 
 package opensavvy.ktmongo.dsl
 
-import de.infix.testBalloon.framework.shared.TestDisplayName
 import de.infix.testBalloon.framework.shared.TestElementName
 import de.infix.testBalloon.framework.shared.TestRegistering
+import de.infix.testBalloon.framework.shared.TestSuitePropertyName
 import kotlinx.coroutines.currentCoroutineContext
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.prepared.runner.testballoon.preparedSuite
@@ -38,11 +38,11 @@ import kotlin.coroutines.CoroutineContext
 @PreparedDslMarker
 @TestRegistering
 fun multiContextSuite(
-	@TestElementName name: String = "",
-	@TestDisplayName displayName: String = name,
+	@TestElementName name: String? = null,
 	config: TestConfig = TestConfig.Empty,
+	@TestSuitePropertyName qualifiedPropertyName: String = "",
 	content: SuiteDsl.() -> Unit,
-) = preparedSuite(name, displayName, preparedConfig = config) {
+) = preparedSuite(name, preparedConfig = config, qualifiedPropertyName = qualifiedPropertyName) {
 	MultiContextSuite(this).content()
 }
 
