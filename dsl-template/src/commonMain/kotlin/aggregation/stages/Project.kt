@@ -24,13 +24,12 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.path.Field
-import opensavvy.ktmongo.dsl.path.FieldDsl
-import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import kotlin.jvm.JvmName
 import kotlin.reflect.KProperty1
 
 /**
@@ -206,6 +205,107 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	fun include(field: KProperty1<Document, *>) {
 		include(field.field)
 	}
+
+	/**
+	 * Refers to [child] as a nested field of the current collection field.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val id: Int,
+	 *     val profiles: List<Profile>,
+	 * )
+	 *
+	 * class Profile(
+	 *     val name: String,
+	 * )
+	 *
+	 * // Refer to the name
+	 * println(User::profiles / Profile::name)
+	 * // → `profiles.name`
+	 * ```
+	 */
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("divFieldArrayIntoField")
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	operator fun <T : Any, V> Field<Document, Collection<T>>.div(child: Field<T, V>): Field<Document, V> =
+		FieldImpl(this.path / child.path)
+
+	/**
+	 * Refers to [child] as a nested field of the current collection field.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val id: Int,
+	 *     val profiles: List<Profile>,
+	 * )
+	 *
+	 * class Profile(
+	 *     val name: String,
+	 * )
+	 *
+	 * // Refer to the name
+	 * println(User::profiles / Profile::name)
+	 * // → `profiles.name`
+	 * ```
+	 */
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("divFieldArrayIntoProperty")
+	operator fun <T : Any, V> Field<Document, Collection<T>>.div(child: KProperty1<T, V>): Field<Document, V> =
+		this / child.field
+
+	/**
+	 * Refers to [child] as a nested field of the current collection field.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val id: Int,
+	 *     val profiles: List<Profile>,
+	 * )
+	 *
+	 * class Profile(
+	 *     val name: String,
+	 * )
+	 *
+	 * // Refer to the name
+	 * println(User::profiles / Profile::name)
+	 * // → `profiles.name`
+	 * ```
+	 */
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("divPropertyArrayIntoField")
+	operator fun <T : Any, V> KProperty1<Document, Collection<T>>.div(child: Field<T, V>): Field<Document, V> =
+		this.field / child
+
+	/**
+	 * Refers to [child] as a nested field of the current collection field.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val id: Int,
+	 *     val profiles: List<Profile>,
+	 * )
+	 *
+	 * class Profile(
+	 *     val name: String,
+	 * )
+	 *
+	 * // Refer to the name
+	 * println(User::profiles / Profile::name)
+	 * // → `profiles.name`
+	 * ```
+	 */
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	@JvmName("divPropertyArrayIntoProperty")
+	operator fun <T : Any, V> KProperty1<Document, Collection<T>>.div(child: KProperty1<T, V>): Field<Document, V> =
+		this.field / child
 
 }
 
