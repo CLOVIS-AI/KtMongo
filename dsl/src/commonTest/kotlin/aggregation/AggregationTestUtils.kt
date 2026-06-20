@@ -22,6 +22,8 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.stages.LookupStageOperators
+import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.testContext
 import opensavvy.ktmongo.dsl.tree.BsonNode
@@ -31,6 +33,7 @@ import org.intellij.lang.annotations.Language
 class TestPipeline<Document : Any>(
 	context: BsonContext,
 	chain: PipelineChainLink,
+	private val collectionName: String,
 ) : AbstractPipeline<Document>(
 	context,
 	chain,
@@ -39,7 +42,7 @@ class TestPipeline<Document : Any>(
 	@DangerousMongoApi
 	@LowLevelApi
 	override fun withStage(stage: BsonNode): TestPipeline<Document> =
-		TestPipeline(context, chain.withStage(stage))
+		TestPipeline(context, chain.withStage(stage), collectionName)
 
 	@Suppress("UNCHECKED_CAST")
 	@DangerousMongoApi
@@ -47,17 +50,24 @@ class TestPipeline<Document : Any>(
 	override fun <New : Any> reinterpret(): TestPipeline<New> =
 		this as TestPipeline<New>
 
+	override fun <ForeignDocument : Any> lookup(into: Field<Document, List<ForeignDocument>>, block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): TestPipeline<Document> =
+		super.lookup(into, block) as TestPipeline<Document>
+
 	override fun embedInUnionWith(writer: BsonFieldWriter) = with(writer) {
-		writeString("coll", "other")
+		writeString("coll", collectionName)
 		writeArray("pipeline") {
 			this@TestPipeline.writeTo(this)
 		}
 	}
 
+	@LowLevelApi
+	override fun embedInLookup(writer: BsonFieldWriter) = with(writer) {
+		writeString("from", collectionName)
+	}
 }
 
-suspend fun <Document : Any> TestDsl.TestPipeline(): TestPipeline<Document> =
-	TestPipeline(testContext(), PipelineChainLink(testContext(), null, null))
+suspend fun <Document : Any> TestDsl.TestPipeline(collectionName: String = "other"): TestPipeline<Document> =
+	TestPipeline(testContext(), PipelineChainLink(testContext(), null, null), collectionName)
 
 infix fun Pipeline<*>.shouldBeBson(@Language("MongoDB-JSON") expected: String) {
 	this.toString() shouldBeBson expected

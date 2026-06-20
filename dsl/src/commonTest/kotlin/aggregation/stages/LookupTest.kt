@@ -1,0 +1,97 @@
+/*
+ * Copyright (c) 2026, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opensavvy.ktmongo.dsl.aggregation.stages
+
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.aggregation.TestPipeline
+import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
+import opensavvy.ktmongo.dsl.multiContextSuite
+import opensavvy.ktmongo.dsl.path.Field
+import kotlin.time.Instant
+
+val LookupTest by multiContextSuite {
+
+	class Department(
+		val _id: ObjectId,
+		val name: String,
+		val creationDate: Instant,
+	)
+
+	class User(
+		val _id: ObjectId,
+		val name: String,
+		val department: ObjectId,
+		val departmentResolved: Department? = null,
+		val creationDate: Instant,
+	)
+
+	test($$"Simple join with $lookup") {
+		val departments = TestPipeline<Department>("departments")
+
+		val outputField = Field.unsafe<List<Department>>("departments")
+
+		TestPipeline<User>()
+			.lookup(outputField) {
+				from(departments)
+				on(User::department, Department::_id)
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$lookup": {
+							"from": "departments",
+							"localField": "department",
+							"foreignField": "_id",
+							"as": "departments"
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
+	test($$"Simple join with $lookup with a project to get a single output field") {
+		val departments = TestPipeline<Department>("departments")
+
+		val resultDepartments = Field.unsafe<List<Department>>("departments")
+
+		TestPipeline<User>()
+			.lookup(resultDepartments) {
+				from(departments)
+				on(User::department, Department::_id)
+			}
+			.project {
+				User::departmentResolved set resultDepartments[0]
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$lookup": {
+							"from": "departments",
+							"localField": "department",
+							"foreignField": "_id",
+							"as": "departments"
+						}
+					},
+					{
+						"$project": {
+							"departmentResolved": "$departments.0"
+						}
+					}
+				]
+			""".trimIndent())
+	}
+}

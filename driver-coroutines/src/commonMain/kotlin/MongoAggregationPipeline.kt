@@ -22,11 +22,9 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.*
-import opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWithCompatibility
-import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
+import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
+import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.BsonNode
 
@@ -105,6 +103,13 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 		super.project(block) as MongoAggregationPipeline<Output>
 
 	@KtMongoDsl
+	override fun <ForeignDocument : Any> lookup(
+		into: Field<Output, List<ForeignDocument>>,
+		block: LookupStageOperators<Output, ForeignDocument>.() -> Unit,
+	): MongoAggregationPipeline<Output> =
+		super.lookup(into, block) as MongoAggregationPipeline<Output>
+
+	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Output>): MongoAggregationPipeline<Output> =
 		super.unionWith(other) as MongoAggregationPipeline<Output>
 
@@ -113,10 +118,18 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 		super.group(block) as MongoAggregationPipeline<Out>
 
 	// endregion
+	// region $lookup compatibility
+
+	@LowLevelApi
+	override fun embedInLookup(writer: BsonFieldWriter): Unit = with(writer) {
+		writeString("from", collection)
+	}
+
+	// endregion
 	// region $unionWith support
 
 	@OptIn(LowLevelApi::class)
-	override fun embedInUnionWith(writer: BsonFieldWriter) = with(writer) {
+	override fun embedInUnionWith(writer: BsonFieldWriter): Unit = with(writer) {
 		writeString("coll", collection)
 		writeArray("pipeline") {
 			this@MongoAggregationPipeline.writeTo(this)
