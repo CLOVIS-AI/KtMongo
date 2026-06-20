@@ -219,7 +219,7 @@ class PipelineChainLink internal constructor(
 	 */
 	@LowLevelApi
 	fun toList(): List<BsonNode> =
-		hierarchyReversed().toList().reversed()
+		hierarchyReversed().toList().asReversed()
 
 	/**
 	 * Converts this chain in a list of BSON documents, each representing a stage.
@@ -230,7 +230,8 @@ class PipelineChainLink internal constructor(
 	fun toBsonList(): List<BsonDocument> =
 		hierarchyReversed()
 			.map { context.buildDocument { it.writeTo(this) } }
-			.toList().reversed()
+			.toList()
+			.asReversed()
 
 	/**
 	 * Equivalent to [Pipeline.writeTo].
