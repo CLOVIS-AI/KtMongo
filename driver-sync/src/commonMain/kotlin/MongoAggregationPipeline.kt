@@ -27,6 +27,7 @@ import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.BsonNode
+import kotlin.reflect.KProperty1
 
 class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal constructor(
 	private val collection: String,
@@ -110,6 +111,13 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 		super.lookup(into, block) as MongoAggregationPipeline<Output>
 
 	@KtMongoDsl
+	override fun <ForeignDocument : Any> lookup(
+		into: KProperty1<Output, List<ForeignDocument>>,
+		block: LookupStageOperators<Output, ForeignDocument>.() -> Unit,
+	): MongoAggregationPipeline<Output> =
+		super.lookup(into, block) as MongoAggregationPipeline<Output>
+
+	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Output>): MongoAggregationPipeline<Output> =
 		super.unionWith(other) as MongoAggregationPipeline<Output>
 
@@ -119,6 +127,12 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	@LowLevelApi
 	override fun embedInLookup(writer: BsonFieldWriter): Unit = with(writer) {
 		writeString("from", collection)
+
+		if (chain.isNotEmpty()) {
+			writeArray("pipeline") {
+				this@MongoAggregationPipeline.writeTo(this)
+			}
+		}
 	}
 
 	// endregion

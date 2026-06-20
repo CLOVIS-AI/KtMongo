@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.stages.LookupStageOperators
 import opensavvy.ktmongo.dsl.path.Field
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.shouldBeBson
 import opensavvy.ktmongo.dsl.testContext
 import opensavvy.ktmongo.dsl.tree.BsonNode
@@ -53,6 +54,12 @@ class TestPipeline<Document : Any>(
 	override fun <ForeignDocument : Any> lookup(into: Field<Document, List<ForeignDocument>>, block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): TestPipeline<Document> =
 		super.lookup(into, block) as TestPipeline<Document>
 
+	override fun match(filter: FilterQuery<Document>.() -> Unit): TestPipeline<Document> =
+		super.match(filter) as TestPipeline<Document>
+
+	override fun matchExpr(filter: AggregationOperators.() -> Value<Document, Boolean>): TestPipeline<Document> =
+		super.matchExpr(filter) as TestPipeline<Document>
+
 	override fun embedInUnionWith(writer: BsonFieldWriter) = with(writer) {
 		writeString("coll", collectionName)
 		writeArray("pipeline") {
@@ -63,6 +70,12 @@ class TestPipeline<Document : Any>(
 	@LowLevelApi
 	override fun embedInLookup(writer: BsonFieldWriter) = with(writer) {
 		writeString("from", collectionName)
+
+		if (chain.isNotEmpty()) {
+			writeArray("pipeline") {
+				this@TestPipeline.writeTo(this)
+			}
+		}
 	}
 }
 

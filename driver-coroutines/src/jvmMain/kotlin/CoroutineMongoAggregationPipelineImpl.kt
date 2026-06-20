@@ -144,6 +144,20 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 	}
 
 	// endregion
+	// region $lookup support
+
+	@LowLevelApi
+	override fun embedInLookup(writer: BsonFieldWriter) = with(writer) {
+		writeString("from", collection.name)
+
+		if (chain.isNotEmpty()) {
+			writeArray("pipeline") {
+				this@CoroutineMongoAggregationPipelineImpl.writeTo(this)
+			}
+		}
+	}
+
+	// endregion
 
 	override fun toString(): String =
 		"$collection.aggregate(${super.toString()})"

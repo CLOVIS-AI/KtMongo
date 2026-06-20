@@ -20,19 +20,19 @@
 package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
+import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.path.Path
-import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
-import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
-import opensavvy.ktmongo.dsl.tree.BsonNode
-import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import opensavvy.ktmongo.dsl.tree.*
 import kotlin.reflect.KProperty1
 
 /**
@@ -103,6 +103,7 @@ interface HasLookup<Document : Any> : Pipeline<Document> {
 	 * - [LookupStageOperators.from]: Specifies the foreign collection.
 	 * - [LookupStageOperators.on]: Specifies an equality criteria between a local and a foreign field.
 	 * Documents are only returned if the value of the two fields is strictly equal.
+	 * - [LookupStageOperators.let]: Allow accessing a specific value within `from`.
 	 */
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
@@ -174,6 +175,7 @@ interface HasLookup<Document : Any> : Pipeline<Document> {
 	 * - [LookupStageOperators.from]: Specifies the foreign collection.
 	 * - [LookupStageOperators.on]: Specifies an equality criteria between a local and a foreign field.
 	 * Documents are only returned if the value of the two fields is strictly equal.
+	 * - [LookupStageOperators.let]: Allow accessing a specific value within `from`.
 	 */
 	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
@@ -204,15 +206,17 @@ interface HasLookupPipelineCompatibility<Document : Any> : Pipeline<Document> {
 	 * ### Implementation contract
 	 *
 	 * When a `$lookup` stage embeds this pipeline as its foreign collection, it calls this method
-	 * from within the `$lookup` body. This method should emit at minimum the `from` field:
+	 * from within the `$lookup` body. This method should emit the `from` field, and optionally
+	 * the `pipeline` array when the pipeline has stages:
 	 *
 	 * ```json
 	 * {
-	 *     "from": "<collection>"
+	 *     "from": "<collection>",
+	 *     "pipeline": [ <stage1>, ... ]
 	 * }
 	 * ```
 	 *
-	 * When sub-pipeline support is added, the `pipeline` array will also be written here.
+	 * If the pipeline has no stages, `pipeline` should not be emitted.
 	 *
 	 * @see HasLookup.lookup The `$lookup` stage.
 	 */
@@ -261,6 +265,400 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	fun from(foreignPipeline: HasLookupPipelineCompatibility<ForeignDocument>)
 
 	/**
+	 * Creates a binding allowing to use an arbitrary [value] computed from the local documents
+	 * within the [foreign pipeline][from].
+	 *
+	 * By default, when using a pipeline in [from], each foreign pipeline computes the exact same results.
+	 * Using [let], we can inject an arbitrary value within any stage of the foreign pipeline
+	 * to force it to return different results.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val userCreationDate = let(User::creationDate)
+	 *
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::creationDate gte userCreationDate }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * To perform a simple equality between one local and one foreign field, see [on].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#join-conditions-and-subqueries-on-a-foreign-collection)
+	 *
+	 * @param name The name of the generated variable.
+	 * If `null`, a name is generated automatically.
+	 */
+	fun <T> let(
+		value: Value<LocalDocument, T>,
+		name: String?,
+	): Value<ForeignDocument, T>
+
+	/**
+	 * Creates a binding allowing to use an arbitrary [value] computed from the local documents
+	 * within the [foreign pipeline][from].
+	 *
+	 * By default, when using a pipeline in [from], each foreign pipeline computes the exact same results.
+	 * Using [let], we can inject an arbitrary value within any stage of the foreign pipeline
+	 * to force it to return different results.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val userCreationDate = let(User::creationDate)
+	 *
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::creationDate gte userCreationDate }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * To perform a simple equality between one local and one foreign field, see [on].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#join-conditions-and-subqueries-on-a-foreign-collection)
+	 *
+	 * @param name The name of the generated variable.
+	 * If `null`, a name is generated automatically.
+	 */
+	@kotlin.jvm.JvmName("letByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	fun <T> let(
+		value: opensavvy.ktmongo.dsl.path.Field<LocalDocument, T>,
+		name: String?,
+	): Value<ForeignDocument, T> =
+		let(of(value), name)
+
+	/**
+	 * Creates a binding allowing to use an arbitrary [value] computed from the local documents
+	 * within the [foreign pipeline][from].
+	 *
+	 * By default, when using a pipeline in [from], each foreign pipeline computes the exact same results.
+	 * Using [let], we can inject an arbitrary value within any stage of the foreign pipeline
+	 * to force it to return different results.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val userCreationDate = let(User::creationDate)
+	 *
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::creationDate gte userCreationDate }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * To perform a simple equality between one local and one foreign field, see [on].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#join-conditions-and-subqueries-on-a-foreign-collection)
+	 *
+	 * @param name The name of the generated variable.
+	 * If `null`, a name is generated automatically.
+	 */
+	@kotlin.jvm.JvmName("letByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	fun <T> let(
+		value: kotlin.reflect.KProperty1<LocalDocument, T>,
+		name: String?,
+	): Value<ForeignDocument, T> =
+		let(of(value), name)
+
+	/**
+	 * Creates a binding allowing to use an arbitrary [value] computed from the local documents
+	 * within the [foreign pipeline][from].
+	 *
+	 * By default, when using a pipeline in [from], each foreign pipeline computes the exact same results.
+	 * Using [let], we can inject an arbitrary value within any stage of the foreign pipeline
+	 * to force it to return different results.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val userCreationDate = let(User::creationDate)
+	 *
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::creationDate gte userCreationDate }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * To perform a simple equality between one local and one foreign field, see [on].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#join-conditions-and-subqueries-on-a-foreign-collection)
+	 *
+	 * @param name The name of the generated variable.
+	 * If `null`, a name is generated automatically.
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final inline fun <reified T> let(
+		value: T,
+		name: String?,
+	): Value<ForeignDocument, T> =
+		let(of(value), name)
+
+	/**
+	 * Creates a binding allowing to use an arbitrary [value] computed from the local documents
+	 * within the [foreign pipeline][from].
+	 *
+	 * By default, when using a pipeline in [from], each foreign pipeline computes the exact same results.
+	 * Using [let], we can inject an arbitrary value within any stage of the foreign pipeline
+	 * to force it to return different results.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val userCreationDate = let(User::creationDate)
+	 *
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::creationDate gte userCreationDate }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * To perform a simple equality between one local and one foreign field, see [on].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#join-conditions-and-subqueries-on-a-foreign-collection)
+	 */
+	fun <T> let(
+		value: Value<LocalDocument, T>,
+	): Value<ForeignDocument, T> = let(value, null)
+
+	/**
+	 * Creates a binding allowing to use an arbitrary [value] computed from the local documents
+	 * within the [foreign pipeline][from].
+	 *
+	 * By default, when using a pipeline in [from], each foreign pipeline computes the exact same results.
+	 * Using [let], we can inject an arbitrary value within any stage of the foreign pipeline
+	 * to force it to return different results.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val userCreationDate = let(User::creationDate)
+	 *
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::creationDate gte userCreationDate }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * To perform a simple equality between one local and one foreign field, see [on].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#join-conditions-and-subqueries-on-a-foreign-collection)
+	 */
+	@kotlin.jvm.JvmName("letByField")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	fun <T> let(
+		value: opensavvy.ktmongo.dsl.path.Field<LocalDocument, T>,
+	): Value<ForeignDocument, T> =
+		let(of(value))
+
+	/**
+	 * Creates a binding allowing to use an arbitrary [value] computed from the local documents
+	 * within the [foreign pipeline][from].
+	 *
+	 * By default, when using a pipeline in [from], each foreign pipeline computes the exact same results.
+	 * Using [let], we can inject an arbitrary value within any stage of the foreign pipeline
+	 * to force it to return different results.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val userCreationDate = let(User::creationDate)
+	 *
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::creationDate gte userCreationDate }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * To perform a simple equality between one local and one foreign field, see [on].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#join-conditions-and-subqueries-on-a-foreign-collection)
+	 */
+	@kotlin.jvm.JvmName("letByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME")
+	fun <T> let(
+		value: kotlin.reflect.KProperty1<LocalDocument, T>,
+	): Value<ForeignDocument, T> =
+		let(of(value))
+
+	/**
+	 * Creates a binding allowing to use an arbitrary [value] computed from the local documents
+	 * within the [foreign pipeline][from].
+	 *
+	 * By default, when using a pipeline in [from], each foreign pipeline computes the exact same results.
+	 * Using [let], we can inject an arbitrary value within any stage of the foreign pipeline
+	 * to force it to return different results.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val creationDate: Instant,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val userCreationDate = let(User::creationDate)
+	 *
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::creationDate gte userCreationDate }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * To perform a simple equality between one local and one foreign field, see [on].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#join-conditions-and-subqueries-on-a-foreign-collection)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final inline fun <reified T> let(
+		value: T,
+	): Value<ForeignDocument, T> =
+		let(of(value))
+
+	/**
 	 * Specifies that the field [foreignField] in the [foreign collection][from]
 	 * must have a value that is strictly equal to the value of the local field [localField].
 	 *
@@ -285,6 +683,18 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 *     .lookup(User::departments) {
 	 *         from(departments.aggregate())
 	 *         on(User::department, Department::_id)
+	 *     }
+	 * ```
+	 *
+	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
+	 * ```kotlin
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val department = let(User::department)
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::_id eq department }
+	 *         )
 	 *     }
 	 * ```
 	 *
@@ -322,6 +732,18 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 *     .lookup(User::departments) {
 	 *         from(departments.aggregate())
 	 *         on(User::department, Department::_id)
+	 *     }
+	 * ```
+	 *
+	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
+	 * ```kotlin
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val department = let(User::department)
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::_id eq department }
+	 *         )
 	 *     }
 	 * ```
 	 *
@@ -366,6 +788,18 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 *     }
 	 * ```
 	 *
+	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
+	 * ```kotlin
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val department = let(User::department)
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::_id eq department }
+	 *         )
+	 *     }
+	 * ```
+	 *
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#equality-match-with-a-single-join-condition)
@@ -407,6 +841,18 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 *     }
 	 * ```
 	 *
+	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
+	 * ```kotlin
+	 * users.aggregate()
+	 *     .lookup(User::departments) {
+	 *         val department = let(User::department)
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::_id eq department }
+	 *         )
+	 *     }
+	 * ```
+	 *
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#equality-match-with-a-single-join-condition)
@@ -428,9 +874,19 @@ private class LookupStageBsonNode<LocalDocument : Any, ForeignDocument : Any>(
 	context: BsonContext,
 ) : AbstractCompoundBsonNode(context), LookupStageOperators<LocalDocument, ForeignDocument> {
 
+	private var nextLetIndex = 0
+
 	@OptIn(DangerousMongoApi::class)
 	override fun from(foreignPipeline: HasLookupPipelineCompatibility<ForeignDocument>) {
 		accept(ForeignSourceBsonNode(foreignPipeline, context))
+	}
+
+	@OptIn(DangerousMongoApi::class)
+	override fun <T> let(value: Value<LocalDocument, T>, name: String?): Value<ForeignDocument, T> {
+		val name = name ?: "l${++nextLetIndex}"
+
+		accept(LetBindingBsonNode(listOf(name to value), context))
+		return LetVariable(name, context)
 	}
 
 	@OptIn(DangerousMongoApi::class)
@@ -456,6 +912,39 @@ private class ForeignSourceBsonNode(
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) {
 		pipeline.embedInLookup(writer)
+	}
+}
+
+private class LetBindingBsonNode(
+	val bindings: List<Pair<String, Value<*, *>>>,
+	context: BsonContext,
+) : AbstractBsonNode(context) {
+	@LowLevelApi
+	override fun simplify(): LetBindingBsonNode? =
+		if (bindings.isNotEmpty()) this
+		else null
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeDocument("let") {
+			for ((binding, value) in bindings) {
+				write(binding) {
+					value.writeTo(this)
+				}
+			}
+		}
+	}
+}
+
+@OptIn(LowLevelApi::class)
+private class LetVariable<ForeignDocument : Any, T>(
+	val name: String,
+	context: BsonContext,
+) : AbstractValue<ForeignDocument, T>(context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonValueWriter) {
+		writer.writeString("$$$name")
 	}
 }
 

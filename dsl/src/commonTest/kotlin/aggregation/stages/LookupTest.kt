@@ -94,4 +94,50 @@ val LookupTest by multiContextSuite {
 				]
 			""".trimIndent())
 	}
+
+
+	test($$"Complex join with $lookup and variables") {
+		val departments = TestPipeline<Department>("departments")
+
+		val outputField = Field.unsafe<List<Department>>("departments")
+
+		TestPipeline<User>()
+			.lookup(outputField) {
+				val userCreationDate = let(User::creationDate)
+
+				from(
+					departments
+						.matchExpr { Department::creationDate gt userCreationDate }
+				)
+
+				on(User::department, Department::_id)
+			}
+			.shouldBeBson($$$"""
+				[
+					{
+						"$lookup": {
+							"let": {
+								"l1": "$creationDate"
+							},
+							"from": "departments",
+							"pipeline": [
+								{
+									"$match": {
+										"$expr": {
+											"$gt": [
+												"$creationDate",
+												"$$l1"
+											]
+										}
+									}
+								}
+							],
+							"localField": "department",
+							"foreignField": "_id",
+							"as": "departments"
+						}
+					}
+				]
+			""".trimIndent())
+	}
 }
