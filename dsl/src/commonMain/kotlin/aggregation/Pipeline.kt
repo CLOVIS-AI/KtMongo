@@ -196,6 +196,18 @@ class PipelineChainLink internal constructor(
 	}
 
 	/**
+	 * Semantically equivalent to `chain.toList().isEmpty()`, but faster.
+	 */
+	fun isEmpty(): Boolean =
+		current == null
+
+	/**
+	 * Semantically equivalent to `chain.toList().isNotEmpty()`, but faster.
+	 */
+	fun isNotEmpty(): Boolean =
+		!isEmpty()
+
+	/**
 	 * Iterates through this chain.
 	 *
 	 * The first returned element is the current one, the second returned element is the previous one,
