@@ -21,6 +21,7 @@ package opensavvy.ktmongo.sync.studies
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.coroutines.toList
+import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.Instant
@@ -43,10 +44,28 @@ data class Comment(
 	val date: Instant,
 )
 
+@Serializable
+data class SchoolClass(
+	val _id: ObjectId,
+	val title: String,
+	val students: List<ObjectId>,
+	val studentsData: List<SchoolStudent> = emptyList(),
+)
+
+@Serializable
+data class SchoolStudent(
+	val _id: ObjectId,
+	val name: String,
+	val school: Int,
+	val age: Int,
+)
+
 val AggregationLookup by preparedSuite {
 
 	val movies by testCollection<Movie>("case-lookup-movies")
 	val comments by testCollection<Comment>("case-lookup-comments")
+	val classes by testCollection<SchoolClass>("case-lookup-classes")
+	val students by testCollection<SchoolStudent>("case-lookup-students")
 
 	test($$"Perform a Single Equality Join with $lookup") {
 		// Ported from: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-a-single-equality-join-with--lookup
@@ -116,4 +135,48 @@ val AggregationLookup by preparedSuite {
 		check(moviesWithComments.first { it._id == movieB }.movie_comments.map { it.text } == listOf("B1"))
 	}
 
+
+	test($$"Use $lookup with an Array") {
+		// Ported from: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with-an-array
+
+		val hermine = students().newId()
+		val malcom = students().newId()
+		val sherlock = students().newId()
+		val madame = students().newId()
+
+		students().insertMany(
+			SchoolStudent(_id = hermine, name = "Hermine Gin", school = 1, age = 18),
+			SchoolStudent(_id = malcom, name = "Malcom Fern", school = 2, age = 17),
+			SchoolStudent(_id = sherlock, name = "Sherlock Sym", school = 2, age = 17),
+			SchoolStudent(_id = madame, name = "Madame Rig", school = 1, age = 17),
+		)
+
+		val reading = classes().newId()
+		val writing = classes().newId()
+
+		classes().insertMany(
+			SchoolClass(_id = reading, title = "Reading is ...", students = listOf(hermine, malcom, sherlock)),
+			SchoolClass(_id = writing, title = "But Writing ...", students = listOf(sherlock, madame)),
+		)
+
+		// When 'students' is an array, MongoDB automatically expands each element and matches it
+		// against the foreign '_id' field. Field.unsafe is required because the Kotlin type
+		// of the local field (List<ObjectId>) differs from the join key type (ObjectId).
+		val studentsArrayField = Field.unsafe<ObjectId>("students")
+
+		val allStudents = students().aggregate()
+
+		val result = classes().aggregate()
+			.lookup(SchoolClass::studentsData) {
+				from(allStudents)
+				on(studentsArrayField, SchoolStudent::_id)
+			}
+			.toList()
+
+		val readingClass = result.first { it._id == reading }
+		check(readingClass.studentsData.map { it.name }.sorted() == listOf("Hermine Gin", "Malcom Fern", "Sherlock Sym"))
+
+		val writingClass = result.first { it._id == writing }
+		check(writingClass.studentsData.map { it.name }.sorted() == listOf("Madame Rig", "Sherlock Sym"))
+	}
 }
