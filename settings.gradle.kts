@@ -85,6 +85,7 @@ include(
 	"dsl",
 	"dsl-template",
 
+	"driver-api",
 	"driver-shared-official",
 	"driver-shared-kmongo",
 	"driver-sync",

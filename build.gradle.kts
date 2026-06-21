@@ -47,6 +47,7 @@ dependencies {
 	library(projects.bsonMultiplatform)
 	library(projects.bsonTests)
 	library(projects.dsl)
+	library(projects.driverApi)
 	library(projects.driverSharedOfficial)
 	library(projects.driverSharedKmongo)
 	library(projects.driverSync)
