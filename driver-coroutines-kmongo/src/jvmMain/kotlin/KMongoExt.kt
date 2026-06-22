@@ -18,7 +18,7 @@ package opensavvy.ktmongo.coroutines.kmongo
 
 import com.mongodb.reactivestreams.client.MongoCollection
 import opensavvy.ktmongo.coroutines.JvmMongoCollection
-import opensavvy.ktmongo.coroutines.asKtMongo
+import opensavvy.ktmongo.coroutines.asKtMongoLegacy
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.utils.kmongo.KMongoNameStrategy
 
@@ -28,4 +28,4 @@ import opensavvy.ktmongo.utils.kmongo.KMongoNameStrategy
 inline fun <reified T : Any> MongoCollection<T>.asKtMongo(
 	nameStrategy: PropertyNameStrategy = KMongoNameStrategy(),
 ): JvmMongoCollection<T> =
-	com.mongodb.kotlin.client.coroutine.MongoCollection(this).asKtMongo(nameStrategy)
+	com.mongodb.kotlin.client.coroutine.MongoCollection(this).asKtMongoLegacy(nameStrategy)

@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+@file:JvmMultifileClass
+@file:JvmName("KtMongo")
+
 package opensavvy.ktmongo.coroutines
 
 import com.mongodb.kotlin.client.coroutine.FindFlow

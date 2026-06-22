@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  *
  * To access the inner iterable, see [asKotlinMongoIterable].
  *
- * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongo].
+ * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongoLegacy].
  */
 class JvmMongoIterable<Document : Any> internal constructor(
 	private val inner: com.mongodb.kotlin.client.coroutine.FindFlow<Document>,
@@ -64,5 +64,5 @@ class JvmMongoIterable<Document : Any> internal constructor(
  * Converts a [MongoDB FindFlow][com.mongodb.kotlin.client.coroutine.FindFlow] into a
  * [KtMongo MongoIterable][JvmMongoIterable].
  */
-fun <Document : Any> com.mongodb.kotlin.client.coroutine.FindFlow<Document>.asKtMongo(): JvmMongoIterable<Document> =
+fun <Document : Any> com.mongodb.kotlin.client.coroutine.FindFlow<Document>.asKtMongoLegacy(): JvmMongoIterable<Document> =
 	JvmMongoIterable(this)
