@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+@file:JvmMultifileClass
+@file:JvmName("KtMongo")
+
 package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.api.MongoClient
@@ -46,7 +49,7 @@ import opensavvy.ktmongo.api.MongoClient
  * )
  *
  * fun main() = runBlocking {
- *     val client: CoroutineMongoClient = // TODO
+ *     val client = CoroutineMongoClient("mongodb://localhost:27017")
  *
  *     val database = client.database("my-app")
  *     val users = database.collection<User>("users")
@@ -54,6 +57,8 @@ import opensavvy.ktmongo.api.MongoClient
  *     println("The database contains ${users.count()} users.")
  * }
  * ```
+ *
+ * @see asKtMongo Convert an existing instance from the official Kotlin driver.
  */
 interface CoroutineMongoClient : MongoClient {
 
