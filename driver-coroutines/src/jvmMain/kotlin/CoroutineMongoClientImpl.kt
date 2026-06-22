@@ -28,9 +28,8 @@ private class CoroutineMongoClientImpl(
 	override fun asOfficial(): MongoClient =
 		inner
 
-	override fun database(name: String): CoroutineMongoDatabase {
-		TODO("Not yet implemented")
-	}
+	override fun database(name: String): CoroutineMongoDatabase =
+		inner.getDatabase(name).asKtMongo()
 
 	override fun toString(): String =
 		"CoroutineMongoClient()"

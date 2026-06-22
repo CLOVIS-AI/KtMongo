@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+@file:JvmMultifileClass
+@file:JvmName("KtMongo")
+
 package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.api.MongoClient
@@ -46,6 +49,8 @@ import kotlin.reflect.typeOf
  * ### External resources
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
+ *
+ * @see asKtMongo Convert an existing instance from the official Kotlin driver.
  */
 interface CoroutineMongoDatabase : MongoDatabase {
 
