@@ -21,6 +21,7 @@ package opensavvy.ktmongo.coroutines
 
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 private class CoroutineMongoDatabaseImpl(
@@ -31,9 +32,10 @@ private class CoroutineMongoDatabaseImpl(
 		inner
 
 	@LowLevelApi
-	override fun <Document : Any> collection(name: String, type: KType): CoroutineMongoCollection<Document> {
-		TODO("Not yet implemented")
-	}
+	@Suppress("UNCHECKED_CAST")
+	override fun <Document : Any> collection(name: String, type: KType): CoroutineMongoCollection<Document> =
+		inner.getCollection(name, (type.classifier as KClass<Document>).java)
+			.asKtMongo(type = type)
 
 	override val name: String
 		get() = inner.name

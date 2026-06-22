@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+@file:JvmMultifileClass
+@file:JvmName("KtMongo")
+
 package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.api.MongoCollection
@@ -49,6 +52,8 @@ import opensavvy.ktmongo.bson.official.BsonFactory
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
  * - [Size limits](https://www.mongodb.com/docs/manual/reference/limits/#bson-documents)
+ *
+ * @see asKtMongo Convert an existing instance from the official Kotlin driver.
  */
 interface CoroutineMongoCollection<Document : Any> : MongoCollection<Document> {
 
