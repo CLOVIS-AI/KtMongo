@@ -96,7 +96,7 @@ include(
 	"driver-multiplatform-wire",
 	"driver-multiplatform",
 
-	"test",
+	"test-legacy",
 
 	"docs:website",
 	"gradle:templates:template-app",
