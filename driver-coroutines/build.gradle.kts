@@ -23,6 +23,7 @@ kotlin {
 	jvm()
 
 	sourceSets.commonMain.dependencies {
+		api(projects.driverApi)
 		api(projects.dsl)
 		api(projects.driverSharedOfficial)
 		api(libs.kotlinx.coroutines)
@@ -36,6 +37,10 @@ kotlin {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotest.assertions)
 		implementation(libsCommon.kotlin.test)
+	}
+
+	compilerOptions {
+		freeCompilerArgs.add("-Xexpect-actual-classes")
 	}
 }
 
