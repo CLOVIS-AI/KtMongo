@@ -44,6 +44,11 @@ kotlin {
 	}
 }
 
+dependencies {
+	kover(projects.testCoroutinesKotlinx)
+	kover(projects.testCoroutinesReflection)
+}
+
 library {
 	name.set("KtMongo: MongoDB driver for Kotlin • Coroutines")
 	description.set("Kotlin-first MongoDB driver, based on the official MongoDB Coroutines driver")

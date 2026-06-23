@@ -19,6 +19,7 @@ plugins {
 	alias(opensavvyConventions.plugins.kotlin.internal)
 	alias(libsCommon.plugins.kotlinx.serialization)
 	alias(libsCommon.plugins.testBalloon)
+	id("org.jetbrains.kotlinx.kover")
 }
 
 kotlin {
