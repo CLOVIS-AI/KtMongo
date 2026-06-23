@@ -98,6 +98,8 @@ include(
 
 	"test-legacy",
 	"test",
+	"test-coroutines-kotlinx",
+	"test-coroutines-reflection",
 
 	"docs:website",
 	"gradle:templates:template-app",
