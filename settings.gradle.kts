@@ -97,6 +97,7 @@ include(
 	"driver-multiplatform",
 
 	"test-legacy",
+	"test",
 
 	"docs:website",
 	"gradle:templates:template-app",
