@@ -34,13 +34,16 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 private class CoroutineMongoCollectionImpl<Document : Any>(
-	private val inner: MongoCollection<Document>,
+	inner: MongoCollection<Document>,
 	override val factory: BsonFactory,
 	override val propertyNameStrategy: PropertyNameStrategy,
 	override val objectIdGenerator: ObjectIdGenerator,
 	@property:LowLevelApi
 	override val type: KType,
 ) : CoroutineMongoCollection<Document> {
+
+	private val inner = inner
+		.withCodecRegistry(factory.codecRegistry)
 
 	override fun asOfficial(): MongoCollection<Document> =
 		inner
