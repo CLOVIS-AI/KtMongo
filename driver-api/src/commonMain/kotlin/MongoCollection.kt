@@ -16,10 +16,10 @@
 
 package opensavvy.ktmongo.api
 
+import opensavvy.ktmongo.api.operations.CountOperations
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
-import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import kotlin.reflect.KType
@@ -51,7 +51,8 @@ import kotlin.reflect.KType
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
  * - [Size limits](https://www.mongodb.com/docs/manual/reference/limits/#bson-documents)
  */
-interface MongoCollection<Document : Any> : ObjectIdGenerator {
+interface MongoCollection<Document : Any> : ObjectIdGenerator,
+	CountOperations<Document> {
 
 	/**
 	 * THe name of this collection.
@@ -101,13 +102,6 @@ interface MongoCollection<Document : Any> : ObjectIdGenerator {
 	 * You can also directly call [newId] on the collection itself.
 	 */
 	val objectIdGenerator: ObjectIdGenerator
-
-	/**
-	 * The full BSON configuration, used by the DSL to generate queries.
-	 *
-	 * For more information, see [BsonContext].
-	 */
-	val context: BsonContext
 
 	override fun newId(): ObjectId =
 		objectIdGenerator.newId()

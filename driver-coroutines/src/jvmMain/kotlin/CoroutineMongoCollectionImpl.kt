@@ -25,7 +25,11 @@ import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.Count
+import opensavvy.ktmongo.dsl.command.CountOptions
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.official.options.toJava
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -52,7 +56,34 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 		ObjectIdGenerator by objectIdGenerator,
 		PropertyNameStrategy by propertyNameStrategy
 
+	@LowLevelApi
 	override val context: BsonContext = CoroutineBsonContext()
+
+	// region Count
+
+	override suspend fun count(): Long =
+		inner.countDocuments()
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun count(
+		options: CountOptions<Document>.() -> Unit,
+		predicate: FilterQuery<Document>.() -> Unit,
+	): Long {
+		val model = Count<Document>(context)
+
+		model.options.options()
+		model.filter.predicate()
+
+		return inner.countDocuments(
+			factory.buildDocument(model.filter).raw,
+			model.options.toJava()
+		)
+	}
+
+	override suspend fun countEstimated(): Long =
+		inner.estimatedDocumentCount()
+
+	// endregion
 
 	override fun toString(): String =
 		"CoroutineMongoCollection($fullyQualifiedName)"
