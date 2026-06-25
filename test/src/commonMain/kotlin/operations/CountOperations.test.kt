@@ -22,6 +22,7 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.suite.prepared
 
 @Serializable
 data class CountOperationsUser(
@@ -49,6 +50,120 @@ fun SuiteDsl.verifyCountOperations(
 
 		test("Count (estimated) of an empty collection") {
 			check(collection().countEstimated() == 0L)
+		}
+	}
+
+	suite("Collection with one element") {
+		val createBob by prepared {
+			collection().insertOne(
+				CountOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				)
+			)
+		}
+
+		test("Count should be 1") {
+			createBob()
+
+			check(collection().count() == 1L)
+		}
+
+		test("Count with a predicate that includes the field should be 1") {
+			createBob()
+
+			check(collection().count { CountOperationsUser::name eq "Bob" } == 1L)
+		}
+
+		test("Count with a predicate that doesn't include the field should be 0") {
+			createBob()
+
+			check(collection().count { CountOperationsUser::name eq "Alice" } == 0L)
+		}
+
+		test("Bob exists") {
+			createBob()
+
+			check(collection().exists { CountOperationsUser::name eq "Bob" })
+		}
+
+		test("Alice doesn't exist") {
+			createBob()
+
+			check(!collection().exists { CountOperationsUser::name eq "Alice" })
+		}
+
+		test("Count (estimated) should still be 1") {
+			createBob()
+
+			check(collection().countEstimated() == 1L)
+		}
+	}
+
+	suite("Collection with multiple documents") {
+		val createDocuments by prepared {
+			collection().insertMany(
+				CountOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				),
+				CountOperationsUser(
+					_id = collection().newId(),
+					name = "Alice",
+				),
+				CountOperationsUser(
+					_id = collection().newId(),
+					name = "Fred",
+				),
+			)
+		}
+
+		test("Count should be 3") {
+			createDocuments()
+
+			check(collection().count() == 3L)
+		}
+
+		test("Count should be 3, but with a skip") {
+			createDocuments()
+
+			check(collection().count({ skip(1) }) {} == 2L)
+		}
+
+		test("Count with a predicate that includes two documents") {
+			createDocuments()
+
+			check(collection().count { CountOperationsUser::name gte "Bob" } == 2L)
+		}
+
+		test("Count with a predicate that includes two documents, but with a limit") {
+			createDocuments()
+
+			check(collection().count({ limit(1) }) { CountOperationsUser::name gte "Bob" } == 1L)
+		}
+
+		test("Count with a predicate that doesn't include any document should be 0") {
+			createDocuments()
+
+			check(collection().count { CountOperationsUser::name eq "Absent" } == 0L)
+		}
+
+		test("Bob exists") {
+			createDocuments()
+
+			check(collection().exists { CountOperationsUser::name eq "Bob" })
+		}
+
+		test("Absent doesn't exist") {
+			createDocuments()
+
+			check(!collection().exists { CountOperationsUser::name eq "Absent" })
+		}
+
+		test("Count (estimated) should still be 3") {
+			createDocuments()
+
+			check(collection().countEstimated() == 3L)
 		}
 	}
 }
