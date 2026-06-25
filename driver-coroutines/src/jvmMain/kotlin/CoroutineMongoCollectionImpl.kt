@@ -32,8 +32,10 @@ import opensavvy.ktmongo.dsl.options.WriteConcernOption
 import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.official.options.*
 import opensavvy.ktmongo.official.options.toJava
 import opensavvy.ktmongo.official.toJava
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -89,6 +91,33 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 
 	override suspend fun countEstimated(): Long =
 		inner.estimatedDocumentCount()
+
+	// endregion
+	// region Find
+
+	override fun find(): CoroutineMongoIterable<Document> =
+		inner.find().asKtMongo()
+
+	@OptIn(LowLevelApi::class)
+	override fun find(
+		options: FindOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+	): CoroutineMongoIterable<Document> {
+		val model = Find<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+
+		return inner
+			.withReadConcern(model.options.readReadConcern())
+			.withReadPreference(model.options.readReadPreference())
+			.find(factory.buildDocument(model.filter).raw)
+			.limit(model.options.readLimit())
+			.skip(model.options.readSkip())
+			.maxTime(model.options.readMaxTimeMS().toLong(), TimeUnit.MILLISECONDS)
+			.sort(model.options.readSortDocument())
+			.asKtMongo()
+	}
 
 	// endregion
 	// region Insert
