@@ -18,6 +18,7 @@ package opensavvy.ktmongo.tests.api
 
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.tests.api.operations.verifyCountOperations
+import opensavvy.ktmongo.tests.api.operations.verifyInsertOperations
 import opensavvy.prepared.suite.*
 import kotlin.coroutines.CoroutineContext
 
@@ -48,5 +49,6 @@ fun SuiteDsl.verifyClient(
 	verifyDatabase(client)
 	verifyCollection(client)
 
+	verifyInsertOperations(client)
 	verifyCountOperations(client)
 }

@@ -25,11 +25,14 @@ import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.command.Count
-import opensavvy.ktmongo.dsl.command.CountOptions
+import opensavvy.ktmongo.dsl.command.*
+import opensavvy.ktmongo.dsl.options.WithWriteConcern
+import opensavvy.ktmongo.dsl.options.WriteConcernOption
+import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.official.options.toJava
+import opensavvy.ktmongo.official.toJava
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -85,6 +88,33 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 
 	override suspend fun countEstimated(): Long =
 		inner.estimatedDocumentCount()
+
+	// endregion
+	// region Insert
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun insertOne(document: Document, options: InsertOneOptions<Document>.() -> Unit) {
+		val model = InsertOne(context, document, type)
+
+		model.options.options()
+
+		inner.withWriteConcern(model.options).insertOne(
+			model.document,
+			com.mongodb.client.model.InsertOneOptions()
+		)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) {
+		val model = InsertMany(context, documents.toList(), type)
+
+		model.options.options()
+
+		inner.withWriteConcern(model.options).insertMany(
+			model.documents,
+			com.mongodb.client.model.InsertManyOptions()
+		)
+	}
 
 	// endregion
 
@@ -153,3 +183,11 @@ inline fun <reified Document : Any> MongoCollection<Document>.asKtMongo(
 		objectIdGenerator = objectIdGenerator,
 		type = typeOf<Document>(),
 	)
+
+@LowLevelApi
+private fun <Document : Any> MongoCollection<Document>.withWriteConcern(option: WithWriteConcern): MongoCollection<Document> {
+	val concern = option.option<WriteConcernOption>()?.concern
+		?: return this
+
+	return this.withWriteConcern(concern.toJava())
+}
