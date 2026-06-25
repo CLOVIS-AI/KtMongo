@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.api
 
 import opensavvy.ktmongo.api.operations.CountOperations
+import opensavvy.ktmongo.api.operations.DeleteOperations
 import opensavvy.ktmongo.api.operations.InsertOperations
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectId
@@ -54,6 +55,7 @@ import kotlin.reflect.KType
  */
 interface MongoCollection<Document : Any> : ObjectIdGenerator,
 	CountOperations<Document>,
+	DeleteOperations<Document>,
 	InsertOperations<Document> {
 
 	/**

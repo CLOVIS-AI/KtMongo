@@ -19,6 +19,7 @@
 
 package opensavvy.ktmongo.coroutines
 
+import com.mongodb.client.model.DeleteOptions
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.official.types.Jvm
@@ -113,6 +114,41 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 		inner.withWriteConcern(model.options).insertMany(
 			model.documents,
 			com.mongodb.client.model.InsertManyOptions()
+		)
+	}
+
+	// endregion
+	// region Delete
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun deleteOne(
+		options: DeleteOneOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+	) {
+		val model = DeleteOne<Document>(context)
+
+		model.filter.filter()
+		model.options.options()
+
+		inner.withWriteConcern(model.options).deleteOne(
+			filter = factory.buildDocument(model.filter).raw,
+			options = DeleteOptions()
+		)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun deleteMany(
+		options: DeleteManyOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+	) {
+		val model = DeleteMany<Document>(context)
+
+		model.filter.filter()
+		model.options.options()
+
+		inner.withWriteConcern(model.options).deleteOne(
+			filter = factory.buildDocument(model.filter).raw,
+			options = DeleteOptions()
 		)
 	}
 
