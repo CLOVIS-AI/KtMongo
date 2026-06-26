@@ -20,24 +20,33 @@
 package opensavvy.ktmongo.coroutines
 
 import com.mongodb.client.model.DeleteOptions
+import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.kotlin.client.coroutine.MongoCollection
+import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.official.BsonFactory
+import opensavvy.ktmongo.bson.official.BsonValue
 import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.*
+import opensavvy.ktmongo.dsl.options.ArrayFiltersOption
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.options.WriteConcernOption
 import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
+import opensavvy.ktmongo.official.command.toJava
 import opensavvy.ktmongo.official.options.*
 import opensavvy.ktmongo.official.options.toJava
 import opensavvy.ktmongo.official.toJava
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
+import com.mongodb.client.model.ReplaceOptions as MongoReplaceOptions
+import com.mongodb.client.model.UpdateOptions as MongoUpdateOptions
 
 private class CoroutineMongoCollectionImpl<Document : Any>(
 	inner: MongoCollection<Document>,
@@ -182,9 +191,194 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 	}
 
 	// endregion
+	// region Update
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun updateMany(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
+	): UpdateOperations.UpdateResult {
+		val model = UpdateMany<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		val result = inner
+			.withWriteConcern(model.options)
+			.updateMany(
+				factory.buildDocument(model.filter).raw,
+				factory.buildDocument(model.update).raw,
+				MongoUpdateOptions()
+					.arrayFilters(model.options.option<ArrayFiltersOption>()?.filters.orEmpty().map { factory.readDocument(it).raw }),
+			)
+		return CoroutineUpdateResult(result, factory)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun updateOne(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
+	): UpdateOperations.UpdateResult {
+		val model = UpdateOne<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		val result = inner
+			.withWriteConcern(model.options)
+			.updateOne(
+				factory.buildDocument(model.filter).raw,
+				factory.buildDocument(model.update).raw,
+				MongoUpdateOptions()
+					.arrayFilters(model.options.option<ArrayFiltersOption>()?.filters.orEmpty().map { factory.readDocument(it).raw }),
+			)
+		return CoroutineUpdateResult(result, factory)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun upsertOne(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpsertQuery<Document>.() -> Unit,
+	): CoroutineMongoCollection.UpsertResult {
+		val model = UpsertOne<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		val result = inner
+			.withWriteConcern(model.options)
+			.updateOne(
+				factory.buildDocument(model.filter).raw,
+				factory.buildDocument(model.update).raw,
+				MongoUpdateOptions()
+					.upsert(true)
+					.arrayFilters(model.options.option<ArrayFiltersOption>()?.filters.orEmpty().map { factory.readDocument(it).raw }),
+			)
+		return CoroutineUpdateResult(result, factory)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun replaceOne(
+		options: ReplaceOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		document: Document,
+	) {
+		val model = ReplaceOne(context, document, type)
+
+		model.options.options()
+		model.filter.filter()
+
+		inner.withWriteConcern(model.options).replaceOne(
+			factory.buildDocument(model.filter).raw,
+			document,
+			MongoReplaceOptions(),
+		)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun repsertOne(
+		options: ReplaceOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		document: Document,
+	) {
+		val model = RepsertOne(context, document, type)
+
+		model.options.options()
+		model.filter.filter()
+
+		inner.withWriteConcern(model.options).replaceOne(
+			factory.buildDocument(model.filter).raw,
+			document,
+			MongoReplaceOptions().upsert(true),
+		)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun findOneAndUpdate(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateQuery<Document>.() -> Unit,
+	): Document? {
+		val model = UpdateOne<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		return inner.withWriteConcern(model.options).findOneAndUpdate(
+			factory.buildDocument(model.filter).raw,
+			factory.buildDocument(model.update).raw,
+			FindOneAndUpdateOptions(),
+		)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun bulkWrite(
+		options: BulkWriteOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		operations: BulkWrite<Document>.() -> Unit,
+	) {
+		val model = BulkWrite(context, type, filter)
+
+		model.options.options()
+		model.operations()
+
+		inner.withWriteConcern(model.options).bulkWrite(
+			model.operations.map { it.toJava() }.toList(),
+			options = com.mongodb.client.model.BulkWriteOptions(),
+		)
+	}
+
+	// endregion
 
 	override fun toString(): String =
 		"CoroutineMongoCollection($fullyQualifiedName)"
+}
+
+private class CoroutineUpdateResult(
+	private val inner: com.mongodb.client.result.UpdateResult,
+	private val factory: BsonFactory,
+) : CoroutineMongoCollection.UpsertResult {
+	override val acknowledged: Boolean
+		get() = inner.wasAcknowledged()
+
+	override val matchedCount: Long
+		get() = inner.matchedCount
+
+	override val modifiedCount: Long
+		get() = inner.modifiedCount
+
+	override val upsertedId: BsonValue?
+		get() = inner.upsertedId?.let { factory.readValue(it) }
+
+	override val upsertedCount: Int
+		get() = if (inner.upsertedId == null) 0 else 1
+
+	override fun equals(other: Any?): Boolean {
+		if (this === other) return true
+		if (other !is CoroutineUpdateResult) return false
+
+		if (inner != other.inner) return false
+		if (factory != other.factory) return false
+
+		return true
+	}
+
+	override fun hashCode(): Int {
+		var result = inner.hashCode()
+		result = 31 * result + factory.hashCode()
+		return result
+	}
+
+	override fun toString(): String =
+		if (acknowledged) "UpdateResult(acknowledged=true, matchedCount=$matchedCount, modifiedCount=$modifiedCount, upsertedCount=$upsertedCount, upsertedId=$upsertedId)"
+		else "UpdateResult(acknowledged=false)"
 }
 
 /**

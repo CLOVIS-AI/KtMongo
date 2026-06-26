@@ -21,7 +21,12 @@ package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.api.MongoCollection
 import opensavvy.ktmongo.api.MongoDatabase
+import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.official.BsonFactory
+import opensavvy.ktmongo.bson.official.BsonValue
+import opensavvy.ktmongo.dsl.command.UpdateOptions
+import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
 
 /**
  * A collection stores related documents together.
@@ -63,5 +68,20 @@ interface CoroutineMongoCollection<Document : Any> : MongoCollection<Document> {
 	fun asOfficial(): com.mongodb.kotlin.client.coroutine.MongoCollection<Document>
 
 	override val factory: BsonFactory
+
+	/**
+	 * The return value of [upsertOne].
+	 */
+	interface UpsertResult : UpdateOperations.UpsertResult {
+
+		override val upsertedId: BsonValue?
+	}
+
+	@IgnorableReturnValue
+	override suspend fun upsertOne(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpsertQuery<Document>.() -> Unit,
+	): UpsertResult
 
 }

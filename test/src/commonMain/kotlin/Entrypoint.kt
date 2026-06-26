@@ -20,10 +20,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import opensavvy.ktmongo.api.MongoClient
-import opensavvy.ktmongo.tests.api.operations.verifyCountOperations
-import opensavvy.ktmongo.tests.api.operations.verifyDeleteOperations
-import opensavvy.ktmongo.tests.api.operations.verifyFindOperations
-import opensavvy.ktmongo.tests.api.operations.verifyInsertOperations
+import opensavvy.ktmongo.tests.api.operations.*
 import opensavvy.prepared.suite.*
 import kotlin.coroutines.CoroutineContext
 
@@ -79,4 +76,5 @@ fun SuiteDsl.verifyClient(
 	verifyCountOperations(client)
 	verifyDeleteOperations(client)
 	verifyFindOperations(client)
+	verifyUpdateOperations(client)
 }
