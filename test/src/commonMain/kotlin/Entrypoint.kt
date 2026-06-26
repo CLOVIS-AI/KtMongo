@@ -78,4 +78,5 @@ fun SuiteDsl.verifyClient(
 	verifyFindOperations(client)
 	verifyUpdateOperations(client)
 	verifyUpdatePipelineOperations(client)
+	verifyCollectionOperations(client)
 }

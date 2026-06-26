@@ -52,6 +52,7 @@ import kotlin.reflect.KType
  * - [Size limits](https://www.mongodb.com/docs/manual/reference/limits/#bson-documents)
  */
 interface MongoCollection<Document : Any> : ObjectIdGenerator,
+	CollectionOperations<Document>,
 	CountOperations<Document>,
 	DeleteOperations<Document>,
 	FindOperations<Document>,

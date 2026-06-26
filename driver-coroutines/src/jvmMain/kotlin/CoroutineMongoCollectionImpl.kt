@@ -192,6 +192,18 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 	}
 
 	// endregion
+	// region Collection
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
+		val model = Drop<Document>(context)
+
+		model.options.options()
+
+		inner.withWriteConcern(model.options).drop()
+	}
+
+	// endregion
 	// region Update
 
 	@OptIn(LowLevelApi::class)
