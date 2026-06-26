@@ -16,6 +16,9 @@
 
 package opensavvy.ktmongo.tests.api
 
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.tests.api.operations.verifyCountOperations
 import opensavvy.ktmongo.tests.api.operations.verifyInsertOperations
@@ -27,8 +30,29 @@ fun SuiteDsl.verifyClient(
 	createClient: suspend (connectionString: String, coroutineContext: CoroutineContext) -> MongoClient,
 ) = suite(name) {
 
+	suspend fun verifyClientConnected(client: MongoClient): Boolean = try {
+		val count = client.use {
+			client.database("does-not-exist")
+				.collection<Unit>("does-not-exist")
+				.count()
+		}
+		check(count == 0L) { "Client $client found values in the fake collection. Did you create it yourself?" }
+		true
+	} catch (_: Throwable) {
+		currentCoroutineContext().ensureActive()
+		false
+	}
+
 	val connectionString by shared {
-		"mongodb://localhost:27017"
+		val candidates = listOf(
+			"mongodb://localhost:27017",  // Dev
+			"mongodb://mongo:27017",      // CI
+		)
+
+		coroutineScope {
+			candidates
+				.first { verifyClientConnected(createClient(it, currentCoroutineContext())) }
+		}
 	}
 
 	test("Can connect to the database") {
