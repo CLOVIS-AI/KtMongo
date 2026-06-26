@@ -37,6 +37,7 @@ import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
+import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.official.command.toJava
 import opensavvy.ktmongo.official.options.*
@@ -333,6 +334,75 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 			model.operations.map { it.toJava() }.toList(),
 			options = com.mongodb.client.model.BulkWriteOptions(),
 		)
+	}
+
+	// endregion
+	// region UpdatePipeline
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun updateManyWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
+	): UpdateOperations.UpdateResult {
+		val model = UpdateManyWithPipeline<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		val result = inner
+			.withWriteConcern(model.options)
+			.updateMany(
+				factory.buildDocument(model.filter).raw,
+				model.updates.map { it.toJava() },
+				MongoUpdateOptions(),
+			)
+		return CoroutineUpdateResult(result, factory)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun updateOneWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
+	): UpdateOperations.UpdateResult {
+		val model = UpdateOneWithPipeline<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		val result = inner
+			.withWriteConcern(model.options)
+			.updateOne(
+				factory.buildDocument(model.filter).raw,
+				model.updates.map { it.toJava() },
+				MongoUpdateOptions(),
+			)
+		return CoroutineUpdateResult(result, factory)
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun upsertOneWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
+	): CoroutineMongoCollection.UpsertResult {
+		val model = UpsertOneWithPipeline<Document>(context)
+
+		model.options.options()
+		model.filter.filter()
+		model.update.update()
+
+		val result = inner
+			.withWriteConcern(model.options)
+			.updateOne(
+				factory.buildDocument(model.filter).raw,
+				model.updates.map { it.toJava() },
+				MongoUpdateOptions().upsert(true),
+			)
+		return CoroutineUpdateResult(result, factory)
 	}
 
 	// endregion

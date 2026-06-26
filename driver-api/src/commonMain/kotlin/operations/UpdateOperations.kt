@@ -59,6 +59,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * @param filter Optional filter to select which documents are updated.
 	 * If no filter is specified, all documents are updated.
 	 * @see updateOne
+	 * @see UpdatePipelineOperations.updateManyWithPipeline Identical operation using aggregation operators.
 	 */
 	@IgnorableReturnValue
 	suspend fun updateMany(
@@ -99,6 +100,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * If no filter is specified, the first document found is updated.
 	 * @see updateMany Update more than one document.
 	 * @see findOneAndUpdate Also returns the result of the update.
+	 * @see UpdatePipelineOperations.updateOneWithPipeline Identical operation using aggregation operators.
 	 */
 	@IgnorableReturnValue
 	suspend fun updateOne(
@@ -142,6 +144,7 @@ interface UpdateOperations<Document : Any> : BaseOperations {
 	 * - [The behavior of upsert functions](https://www.mongodb.com/docs/manual/reference/method/db.collection.update/#insert-a-new-document-if-no-match-exists--upsert-)
 	 *
 	 * @see updateOne
+	 * @see UpdatePipelineOperations.upsertOneWithPipeline Identical operation using aggregation operators.
 	 */
 	@IgnorableReturnValue
 	suspend fun upsertOne(

@@ -56,7 +56,8 @@ interface MongoCollection<Document : Any> : ObjectIdGenerator,
 	DeleteOperations<Document>,
 	FindOperations<Document>,
 	InsertOperations<Document>,
-	UpdateOperations<Document> {
+	UpdateOperations<Document>,
+	UpdatePipelineOperations<Document> {
 
 	/**
 	 * THe name of this collection.
