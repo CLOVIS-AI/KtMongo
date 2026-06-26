@@ -29,6 +29,7 @@ import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
 import opensavvy.ktmongo.dsl.options.ArrayFiltersOption
 import opensavvy.ktmongo.dsl.options.WithWriteConcern
@@ -105,14 +106,14 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 	// endregion
 	// region Find
 
-	override fun find(): CoroutineMongoIterable<Document> =
+	override fun find(): CoroutineMongoFindIterable<Document> =
 		inner.find().asKtMongo()
 
 	@OptIn(LowLevelApi::class)
 	override fun find(
 		options: FindOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
-	): CoroutineMongoIterable<Document> {
+	): CoroutineMongoFindIterable<Document> {
 		val model = Find<Document>(context)
 
 		model.options.options()
@@ -416,6 +417,21 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 			)
 		return CoroutineUpdateResult(result, factory)
 	}
+
+	// endregion
+	// region Aggregation
+
+	@OptIn(LowLevelApi::class)
+	override fun aggregate(): CoroutineMongoAggregationPipeline<Document> =
+		CoroutineMongoAggregationPipeline(
+			collectionName = name,
+			context = context,
+			chain = PipelineChainLink(context),
+			executeAggregate = { pipeline, documentClass ->
+				inner.aggregate(pipeline, documentClass)
+					.asKtMongo()
+			},
+		)
 
 	// endregion
 
