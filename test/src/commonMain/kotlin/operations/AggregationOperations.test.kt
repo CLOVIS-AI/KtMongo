@@ -24,6 +24,7 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.suite.assertions.matches
 
 @Serializable
 data class AggregationOperationsUser(
@@ -59,6 +60,8 @@ fun SuiteDsl.verifyAggregationOperations(
 				age = 25,
 			),
 		)
+
+		check(collection().aggregate().toString() matches """.+MongoCollection\(.+\).aggregate\(\[\]\)""")
 
 		val results = collection().aggregate().toList()
 		check(results.size == 2)
@@ -198,5 +201,14 @@ fun SuiteDsl.verifyAggregationOperations(
 			}
 			.first()
 		check(result.total == 60)
+	}
+
+	test("toString representation of a complex aggregation") {
+		val request = collection().aggregate()
+			.sort { ascending(AggregationOperationsUser::age) }
+			.match { AggregationOperationsUser::age gte 18 }
+			.sample(1)
+
+		check(request.toString() matches $$""".+MongoCollection\(.+\).aggregate\(\[\{"\$sort": \{"age": 1\}\}, \{"\$match": \{"age": \{"\$gte": 18\}\}\}, \{"\$sample": \{"size": 1\}\}\]\)""")
 	}
 }

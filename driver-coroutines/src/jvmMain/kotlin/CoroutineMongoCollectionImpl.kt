@@ -424,7 +424,7 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 	@OptIn(LowLevelApi::class)
 	override fun aggregate(): CoroutineMongoAggregationPipeline<Document> =
 		CoroutineMongoAggregationPipeline(
-			collectionName = name,
+			collection = this,
 			context = context,
 			chain = PipelineChainLink(context),
 			executeAggregate = { pipeline, documentClass ->
