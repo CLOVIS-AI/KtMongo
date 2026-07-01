@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.firstOrNull
 
 private class CoroutineMongoFindIterableImpl<Document : Any>(
 	private val inner: FindFlow<Document>,
+	private val lazyStringRepresentation: (() -> String)?,
 ) : CoroutineMongoFindIterable<Document> {
 
 	override fun asOfficial(): FindFlow<Document> =
@@ -42,10 +43,19 @@ private class CoroutineMongoFindIterableImpl<Document : Any>(
 
 	override fun asFlow(): Flow<Document> =
 		inner
+
+	override fun toString(): String = lazyStringRepresentation?.invoke()
+		?: super.toString()
 }
 
 /**
  * Instantiates a KtMongo [CoroutineMongoFindIterable] using an existing flow from the official Kotlin driver.
  */
 fun <Document : Any> FindFlow<Document>.asKtMongo(): CoroutineMongoFindIterable<Document> =
-	CoroutineMongoFindIterableImpl(this)
+	CoroutineMongoFindIterableImpl(this, lazyStringRepresentation = { "$this.asKtMongo()" })
+
+// Same but allows customizing the toString()
+internal fun <Document : Any> FindFlow<Document>.asKtMongo(
+	lazyStringRepresentation: (() -> String)?,
+): CoroutineMongoFindIterable<Document> =
+	CoroutineMongoFindIterableImpl(this, lazyStringRepresentation)

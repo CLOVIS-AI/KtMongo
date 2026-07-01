@@ -107,7 +107,7 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 	// region Find
 
 	override fun find(): CoroutineMongoFindIterable<Document> =
-		inner.find().asKtMongo()
+		inner.find().asKtMongo(lazyStringRepresentation = { "$this.find({})" })
 
 	@OptIn(LowLevelApi::class)
 	override fun find(
@@ -127,7 +127,7 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 			.skip(model.options.readSkip())
 			.maxTime(model.options.readMaxTimeMS().toLong(), TimeUnit.MILLISECONDS)
 			.sort(model.options.readSortDocument())
-			.asKtMongo()
+			.asKtMongo(lazyStringRepresentation = { "$this.find($model)" })
 	}
 
 	// endregion

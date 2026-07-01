@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.options.ReadPreference
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.suite.assertions.matches
 import kotlin.time.Duration.Companion.seconds
 
 @Serializable
@@ -49,6 +50,7 @@ fun SuiteDsl.verifyFindOperations(
 			),
 		)
 
+		check(collection().find().toString() matches """.+MongoCollection\(.+\).find\(\{\}\)""")
 		check(collection().find().toList().isNotEmpty()) { "Expected at least one result, got none" }
 	}
 
@@ -64,9 +66,13 @@ fun SuiteDsl.verifyFindOperations(
 			),
 		)
 
-		val results = collection().find {
+		val request = collection().find {
 			FindOperationsUser::name eq "Alice"
-		}.toList()
+		}
+
+		check(request.toString() matches $$""".+MongoCollection\(.+\).find\(\{"filter": \{"name": \{"\$eq": "Alice"\}\}\}\)""")
+
+		val results = request.toList()
 
 		check(results.size == 1)
 		check(results[0].name == "Alice")
@@ -138,13 +144,17 @@ fun SuiteDsl.verifyFindOperations(
 				FindOperationsUser(_id = collection().newId(), name = "Bob"),
 			)
 
-			val results = collection().find({
+			val request = collection().find({
 				sort {
 					ascending(FindOperationsUser::name)
 				}
 			}) {
 				FindOperationsUser::name.exists()
-			}.toList()
+			}
+
+			check(request.toString() matches $$""".+MongoCollection\(.+\).find\(\{"filter": \{"name": \{"\$exists": true\}\}, "sort": \{"name": 1\}\}\)""")
+
+			val results = request.toList()
 
 			check(results.map { it.name } == listOf("Alice", "Bob", "Carol"))
 		}
