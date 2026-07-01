@@ -78,6 +78,30 @@ fun SuiteDsl.verifyFindOperations(
 		check(results[0].name == "Alice")
 	}
 
+	test("Find with filter (filtered syntax)") {
+		collection().insertMany(
+			FindOperationsUser(
+				_id = collection().newId(),
+				name = "Alice",
+			),
+			FindOperationsUser(
+				_id = collection().newId(),
+				name = "Bob",
+			),
+		)
+
+		val request = collection().filter {
+			FindOperationsUser::name eq "Alice"
+		}.find()
+
+		check(request.toString() matches $$""".+MongoCollection\(.+\).find\(\{"filter": \{"name": \{"\$eq": "Alice"\}\}\}\)""")
+
+		val results = request.toList()
+
+		check(results.size == 1)
+		check(results[0].name == "Alice")
+	}
+
 	test("FindOne returns match") {
 		collection().insertMany(
 			FindOperationsUser(

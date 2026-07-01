@@ -434,6 +434,12 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 		)
 
 	// endregion
+	// region Filter
+
+	override fun filter(filter: FilterQuery<Document>.() -> Unit): CoroutineMongoCollection<Document> =
+		createFilteredCollection(this, filter)
+
+	// endregion
 
 	override fun toString(): String =
 		"CoroutineMongoCollection($fullyQualifiedName)"

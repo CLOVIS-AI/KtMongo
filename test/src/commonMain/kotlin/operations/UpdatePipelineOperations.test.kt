@@ -89,6 +89,31 @@ fun SuiteDsl.verifyUpdatePipelineOperations(
 		check(result.modifiedCount == 1L)
 	}
 
+	test("updateOneWithPipeline (filtered syntax)") {
+		collection().insertMany(
+			UpdatePipelineOperationsUser(
+				_id = collection().newId(),
+				name = "Alice",
+				age = 20,
+			),
+			UpdatePipelineOperationsUser(
+				_id = collection().newId(),
+				name = "Bob",
+				age = 25,
+			),
+		)
+
+		val result = collection()
+			.filter { UpdatePipelineOperationsUser::name eq "Alice" }
+			.updateOneWithPipeline {
+				set { UpdatePipelineOperationsUser::age set 21 }
+			}
+
+		check(result.acknowledged)
+		check(result.matchedCount == 1L)
+		check(result.modifiedCount == 1L)
+	}
+
 	test("upsertOneWithPipeline") {
 		val result = collection().upsertOneWithPipeline(
 			filter = {
