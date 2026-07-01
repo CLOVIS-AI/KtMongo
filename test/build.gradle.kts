@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,22 +23,39 @@ plugins {
 
 kotlin {
 	jvm()
+	js {
+		nodejs()
+	}
+	// linuxX64()
+	// linuxArm64()
+	// macosX64()
+	// macosArm64()
+	// iosArm64()
+	// iosX64()
+	// iosSimulatorArm64()
+	// watchosX64()
+	// watchosArm32()
+	// watchosArm64()
+	// watchosSimulatorArm64()
+	// tvosX64()
+	// tvosArm64()
+	// tvosSimulatorArm64()
+	// mingwX64()
+	// wasmJs {
+	// 	nodejs()
+	// }
 
 	sourceSets.commonMain.dependencies {
-		api(projects.driverSync)
-		api(projects.driverCoroutines)
+		api(projects.driverApi)
 
 		api(libsCommon.opensavvy.prepared.testBalloon)
-		implementation(libsCommon.kotlin.test)
+		implementation(libsCommon.bundles.testBalloon)
 
-		api(libs.kotlinx.serialization)
+		implementation(libs.kotlinx.serialization)
 	}
+}
 
-	sourceSets.jvmMain.dependencies {
-		api(libs.mongodb.kotlinx.serialization)
-	}
-
-	sourceSets.jvmTest.dependencies {
-		runtimeOnly(libs.slf4j.simple)
-	}
+@OptIn(org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi::class)
+powerAssert {
+	includedSourceSets = listOf("commonMain", "commonTest", "jvmMain", "jsMain")
 }

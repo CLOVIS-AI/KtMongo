@@ -148,7 +148,7 @@ gitlabCi {
 
 			script {
 				gradlew.tasks(
-					"check :koverLog :koverHtmlReport koverVerify --rerun",
+					"check :koverLog :koverHtmlReport koverVerify --rerun jvmTest --rerun",
 					"-x jsBrowserTest",
 					"-x jsNodeTest",
 					"-x wasmJsBrowserTest",

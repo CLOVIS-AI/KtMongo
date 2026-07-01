@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import com.mongodb.MongoTimeoutException
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import kotlinx.coroutines.CoroutineName
 import opensavvy.ktmongo.coroutines.MongoCollection
-import opensavvy.ktmongo.coroutines.asKtMongo
+import opensavvy.ktmongo.coroutines.asKtMongoLegacy
 import opensavvy.prepared.suite.PreparedProvider
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.shared
@@ -40,5 +40,5 @@ internal val database by shared(CoroutineName("mongodb-establish-connection")) {
 
 actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>> = prepared(CoroutineName("mongodb-create-collection-$name")) {
 	val collection = database().getCollection<Document>(name)
-	collection.asKtMongo()
+	collection.asKtMongoLegacy()
 }

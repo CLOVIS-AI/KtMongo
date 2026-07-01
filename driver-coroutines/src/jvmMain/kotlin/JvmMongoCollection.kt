@@ -58,7 +58,7 @@ import kotlin.reflect.typeOf
  *
  * To access the inner iterable, see [asKotlinClient].
  *
- * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongo].
+ * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongoLegacy].
  */
 class JvmMongoCollection<Document : Any> internal constructor(
 	inner: com.mongodb.kotlin.client.coroutine.MongoCollection<Document>,
@@ -430,7 +430,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 /**
  * Converts a [MongoDB collection][com.mongodb.kotlin.client.coroutine.MongoCollection] into a [KtMongo collection][JvmMongoCollection].
  */
-fun <Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection<Document>.asKtMongo(
+fun <Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection<Document>.asKtMongoLegacy(
 	nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
 	documentType: KType,
 ): JvmMongoCollection<Document> =
@@ -439,10 +439,10 @@ fun <Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection<Documen
 /**
  * Converts a [MongoDB collection][com.mongodb.kotlin.client.coroutine.MongoCollection] into a [KtMongo collection][JvmMongoCollection].
  */
-inline fun <reified Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection<Document>.asKtMongo(
+inline fun <reified Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection<Document>.asKtMongoLegacy(
 	nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
 ): JvmMongoCollection<Document> =
-	asKtMongo(nameStrategy, typeOf<Document>())
+	asKtMongoLegacy(nameStrategy, typeOf<Document>())
 
 @LowLevelApi
 private fun <Document : Any> com.mongodb.kotlin.client.coroutine.MongoCollection<Document>.withWriteConcern(option: WithWriteConcern): com.mongodb.kotlin.client.coroutine.MongoCollection<Document> {

@@ -85,6 +85,7 @@ include(
 	"dsl",
 	"dsl-template",
 
+	"driver-api",
 	"driver-shared-official",
 	"driver-shared-kmongo",
 	"driver-sync",
@@ -95,7 +96,10 @@ include(
 	"driver-multiplatform-wire",
 	"driver-multiplatform",
 
+	"test-legacy",
 	"test",
+	"test-coroutines-kotlinx",
+	"test-coroutines-reflection",
 
 	"docs:website",
 	"gradle:templates:template-app",

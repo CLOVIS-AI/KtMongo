@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, OpenSavvy and contributors.
+ * Copyright (c) 2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.test
+package opensavvy.ktmongo.tests.api
 
-import opensavvy.ktmongo.coroutines.MongoCollection
-import opensavvy.prepared.suite.PreparedProvider
+import opensavvy.prepared.runner.testballoon.preparedSuite
 
-actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>> {
-	TODO("Not yet implemented")
+val DummyTest by preparedSuite {
+
+	test("Dummy") {
+		// Each test scenario has its own Gradle module.
+		// This module only contains the test sources.
+	}
+
 }

@@ -16,24 +16,22 @@
 
 plugins {
 	alias(opensavvyConventions.plugins.base)
-	id("dev.opensavvy.dokka-mkdocs")
+	alias(opensavvyConventions.plugins.kotlin.internal)
+	alias(libsCommon.plugins.kotlinx.serialization)
+	alias(libsCommon.plugins.testBalloon)
+	id("org.jetbrains.kotlinx.kover")
 }
 
-dependencies {
-	// List the 'library' projects
-	dokka(projects.annotations)
-	dokka(projects.bson)
-	dokka(projects.bsonOfficial)
-	dokka(projects.bsonMultiplatform)
-	dokka(projects.dsl)
-	dokka(projects.driverApi)
-	dokka(projects.driverSharedOfficial)
-	dokka(projects.driverSharedKmongo)
-	dokka(projects.driverSync)
-	dokka(projects.driverSyncJava)
-	dokka(projects.driverSyncKmongo)
-	dokka(projects.driverCoroutines)
-	dokka(projects.driverCoroutinesKmongo)
-	dokka(projects.driverMultiplatformWire)
-	dokka(projects.driverMultiplatform)
+kotlin {
+	jvm()
+
+	sourceSets.commonMain.dependencies {
+		api(projects.test)
+	}
+
+	sourceSets.jvmTest.dependencies {
+		implementation(projects.driverCoroutines)
+		implementation(libs.mongodb.kotlinx.serialization)
+		implementation(libsCommon.bundles.testBalloon)
+	}
 }

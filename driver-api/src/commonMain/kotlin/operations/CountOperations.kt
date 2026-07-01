@@ -1,0 +1,139 @@
+/*
+ * Copyright (c) 2026, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opensavvy.ktmongo.api.operations
+
+import opensavvy.ktmongo.dsl.command.CountOptions
+import opensavvy.ktmongo.dsl.query.FilterQuery
+
+/**
+ * The different MongoDB operations related to counting documents.
+ */
+interface CountOperations<Document : Any> : BaseOperations {
+
+	/**
+	 * Counts how many documents exist in the collection.
+	 *
+	 * ### Implementation
+	 *
+	 * This method, just like in `mongosh`, in syntax sugar for an aggregation pipeline using
+	 * the [countTo][opensavvy.ktmongo.dsl.aggregation.stages.HasCount.countTo] stage.
+	 *
+	 * ### External resources
+	 *
+	 * - [`mongosh` documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.countDocuments/)
+	 *
+	 * @see countEstimated Faster alternative when the result doesn't need to be exact.
+	 */
+	suspend fun count(): Long
+
+	/**
+	 * Counts how many documents match [predicate] in the collection.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.count {
+	 *     User::name eq "foo"
+	 *     User::age eq 10
+	 * }
+	 * ```
+	 *
+	 * ### Implementation
+	 *
+	 * This method, just like in `mongosh`, in syntax sugar for an aggregation pipeline using
+	 * the [match][opensavvy.ktmongo.dsl.aggregation.stages.HasMatch.match] and
+	 * the [countTo][opensavvy.ktmongo.dsl.aggregation.stages.HasCount.countTo] stages.
+	 *
+	 * ### External resources
+	 *
+	 * - [`mongosh` documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.countDocuments/)
+	 */
+	suspend fun count(
+		options: CountOptions<Document>.() -> Unit = {},
+		predicate: FilterQuery<Document>.() -> Unit,
+	): Long
+
+	/**
+	 * Tests if there exists a document that matches [predicate] in the collection.
+	 *
+	 * This method is a convenience function for calling [count] with a [limit][CountOptions.limit] of 1.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.exists {
+	 *     User::name eq "foo"
+	 *     User::age eq 10
+	 * }
+	 * ```
+	 */
+	suspend fun exists(
+		options: CountOptions<Document>.() -> Unit = {},
+		predicate: FilterQuery<Document>.() -> Unit,
+	): Boolean = count(
+		options = {
+			options()
+			limit(1)
+		},
+		predicate = predicate,
+	) == 1L
+
+	/**
+	 * Counts all documents in the collection.
+	 *
+	 * ### Implementation
+	 *
+	 * This function reads collection metadata instead of actually counting through all documents.
+	 * This makes it much more performant (almost no CPU nor RAM usage), but the count may be slightly out of date.
+	 *
+	 * In particular, it may become inaccurate when:
+	 * - there are orphaned documents in a shared cluster,
+	 * - an unclean shutdown happened.
+	 *
+	 * Views do not possess the required metadata.
+	 * When this function is called on a view (either a MongoDB view or a [filter] logical view), a regular [count] is executed instead.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.countEstimated()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [`mongosh` documentation](https://www.mongodb.com/docs/manual/reference/method/db.collection.estimatedDocumentCount/)
+	 *
+	 * @see count Perform the count for real.
+	 */
+	suspend fun countEstimated(): Long
+
+}

@@ -14,26 +14,11 @@
  * limitations under the License.
  */
 
-plugins {
-	alias(opensavvyConventions.plugins.base)
-	id("dev.opensavvy.dokka-mkdocs")
-}
+package opensavvy.ktmongo.test
 
-dependencies {
-	// List the 'library' projects
-	dokka(projects.annotations)
-	dokka(projects.bson)
-	dokka(projects.bsonOfficial)
-	dokka(projects.bsonMultiplatform)
-	dokka(projects.dsl)
-	dokka(projects.driverApi)
-	dokka(projects.driverSharedOfficial)
-	dokka(projects.driverSharedKmongo)
-	dokka(projects.driverSync)
-	dokka(projects.driverSyncJava)
-	dokka(projects.driverSyncKmongo)
-	dokka(projects.driverCoroutines)
-	dokka(projects.driverCoroutinesKmongo)
-	dokka(projects.driverMultiplatformWire)
-	dokka(projects.driverMultiplatform)
+import opensavvy.ktmongo.coroutines.MongoCollection
+import opensavvy.prepared.suite.PreparedProvider
+
+actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>> {
+	TODO("Not yet implemented")
 }
