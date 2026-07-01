@@ -16,8 +16,7 @@
 
 package opensavvy.ktmongo.api
 
-import opensavvy.ktmongo.api.operations.CountOperations
-import opensavvy.ktmongo.api.operations.InsertOperations
+import opensavvy.ktmongo.api.operations.*
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
@@ -53,8 +52,14 @@ import kotlin.reflect.KType
  * - [Size limits](https://www.mongodb.com/docs/manual/reference/limits/#bson-documents)
  */
 interface MongoCollection<Document : Any> : ObjectIdGenerator,
+	AggregationOperations<Document>,
+	CollectionOperations<Document>,
 	CountOperations<Document>,
-	InsertOperations<Document> {
+	DeleteOperations<Document>,
+	FindOperations<Document>,
+	InsertOperations<Document>,
+	UpdateOperations<Document>,
+	UpdatePipelineOperations<Document> {
 
 	/**
 	 * THe name of this collection.

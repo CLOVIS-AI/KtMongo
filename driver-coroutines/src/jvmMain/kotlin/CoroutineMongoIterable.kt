@@ -19,6 +19,7 @@
 
 package opensavvy.ktmongo.coroutines
 
+import com.mongodb.kotlin.client.coroutine.AggregateFlow
 import com.mongodb.kotlin.client.coroutine.FindFlow
 import opensavvy.ktmongo.api.MongoIterable
 
@@ -28,15 +29,40 @@ import opensavvy.ktmongo.api.MongoIterable
  * The Coroutine client provides a coroutine-aware API which internally uses the
  * [official Kotlin driver](https://www.mongodb.com/docs/drivers/kotlin/coroutine/current/).
  *
+ * This type wraps a [FindFlow] from the official driver.
+ * See also [CoroutineMongoAggregateIterable].
+ *
  * ### External resources
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/cursors/)
  */
-interface CoroutineMongoIterable<Document : Any> : MongoIterable<Document> {
+interface CoroutineMongoFindIterable<Document : Any> : MongoIterable<Document> {
 
 	/**
 	 * Obtains the underlying MongoDB flow from the official Kotlin driver.
 	 */
 	fun asOfficial(): FindFlow<Document>
+
+}
+
+/**
+ * Streaming-capable iterable cursor to read data from the database.
+ *
+ * The Coroutine client provides a coroutine-aware API which internally uses the
+ * [official Kotlin driver](https://www.mongodb.com/docs/drivers/kotlin/coroutine/current/).
+ *
+ * This type wraps a [AggregateFlow] from the official driver.
+ * See also [CoroutineMongoFindIterable].
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/core/cursors/)
+ */
+interface CoroutineMongoAggregateIterable<Document : Any> : MongoIterable<Document> {
+
+	/**
+	 * Obtains the underlying MongoDB flow from the official Kotlin driver.
+	 */
+	fun asOfficial(): AggregateFlow<Document>
 
 }

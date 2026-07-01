@@ -19,16 +19,16 @@
 
 package opensavvy.ktmongo.coroutines
 
-import com.mongodb.kotlin.client.coroutine.FindFlow
+import com.mongodb.kotlin.client.coroutine.AggregateFlow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 
-private class CoroutineMongoIterableImpl<Document : Any>(
-	private val inner: FindFlow<Document>,
-) : CoroutineMongoIterable<Document> {
+private class CoroutineMongoAggregateIterableImpl<Document : Any>(
+	private val inner: AggregateFlow<Document>,
+) : CoroutineMongoAggregateIterable<Document> {
 
-	override fun asOfficial(): FindFlow<Document> =
+	override fun asOfficial(): AggregateFlow<Document> =
 		inner
 
 	override suspend fun first(): Document =
@@ -45,7 +45,7 @@ private class CoroutineMongoIterableImpl<Document : Any>(
 }
 
 /**
- * Instantiates a KtMongo [CoroutineMongoIterable] using an existing flow from the official Kotlin driver.
+ * Instantiates a KtMongo [CoroutineMongoAggregateIterable] using an existing flow from the official Kotlin driver.
  */
-fun <Document : Any> FindFlow<Document>.asKtMongo(): CoroutineMongoIterable<Document> =
-	CoroutineMongoIterableImpl(this)
+fun <Document : Any> AggregateFlow<Document>.asKtMongo(): CoroutineMongoAggregateIterable<Document> =
+	CoroutineMongoAggregateIterableImpl(this)
