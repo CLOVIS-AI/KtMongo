@@ -66,6 +66,7 @@ interface MongoWireClient : AutoCloseable {
 @LowLevelApi
 private class SocketWireClient(
 	private val socket: Socket,
+	private val selectorManager: SelectorManager,
 	private val factory: BsonFactory,
 	coroutineScope: CoroutineScope,
 ) : MongoWireClient {
@@ -413,6 +414,7 @@ private class SocketWireClient(
 
 	override fun close() {
 		socket.close()
+		selectorManager.close()
 	}
 
 	override fun toString() = "MongoWireClient(${socket.remoteAddress})"
@@ -431,5 +433,10 @@ suspend fun MongoWireClient(
 		keepAlive = true
 	}
 
-	return SocketWireClient(socket, factory, CoroutineScope(coroutineContext + CoroutineName("ktmongo-client")))
+	return SocketWireClient(
+		socket = socket,
+		selectorManager = selectorManager,
+		factory = factory,
+		coroutineScope = CoroutineScope(coroutineContext + CoroutineName("ktmongo-client"))
+	)
 }
