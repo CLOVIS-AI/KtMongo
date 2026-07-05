@@ -67,8 +67,10 @@ private class SocketWireClient(
 	private val socket: Socket,
 	private val selectorManager: SelectorManager,
 	private val factory: BsonFactory,
-	coroutineScope: CoroutineScope,
+	coroutineScope: CoroutineScope, // Should contain a Job dedicated to this client
 ) : MongoWireClient {
+
+	private val actorsJob = coroutineScope.coroutineContext.job
 
 	private sealed class ResponseHandler {
 		data class Single(val result: CompletableDeferred<Message>) : ResponseHandler()
@@ -108,6 +110,9 @@ private class SocketWireClient(
 	}
 
 	init {
+		// Ensure that no resources can leak
+		actorsJob.invokeOnCompletion { close() }
+
 		/**
 		 * When the [sendActor] has sent a message into the socket, it adds a message in here.
 		 *
@@ -413,6 +418,7 @@ private class SocketWireClient(
 	}
 
 	override fun close() {
+		actorsJob.cancel("${this::class}.close() has been called")
 		socket.close()
 		selectorManager.close()
 	}
@@ -427,7 +433,9 @@ suspend fun MongoWireClient(
 	factory: BsonFactory = BsonFactory(),
 	coroutineContext: CoroutineContext,
 ): MongoWireClient {
-	val selectorManager = SelectorManager(coroutineContext + Dispatchers.Default + CoroutineName("ktmongo-socket"))
+	val innerJob = Job(coroutineContext.job)
+
+	val selectorManager = SelectorManager(coroutineContext + innerJob + Dispatchers.Default + CoroutineName("ktmongo-socket"))
 	val socket = aSocket(selectorManager).tcp().connect(hostName, port) {
 		socketTimeout = 1000
 		keepAlive = true
@@ -437,6 +445,6 @@ suspend fun MongoWireClient(
 		socket = socket,
 		selectorManager = selectorManager,
 		factory = factory,
-		coroutineScope = CoroutineScope(coroutineContext + CoroutineName("ktmongo-client"))
+		coroutineScope = CoroutineScope(coroutineContext + innerJob + CoroutineName("ktmongo-client"))
 	)
 }
