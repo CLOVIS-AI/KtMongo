@@ -16,10 +16,7 @@
 
 package opensavvy.ktmongo.multiplatform.utils
 
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.job
+import kotlinx.coroutines.currentCoroutineContext
 import opensavvy.ktmongo.multiplatform.MongoClient
 import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.foregroundScope
@@ -33,11 +30,7 @@ private suspend fun tryConnect(
 ): Boolean {
 	try {
 		println("KtMongo • Attempting to connect to $hostname")
-		val _ = coroutineScope {
-			val job = Job()
-			this.coroutineContext.job.invokeOnCompletion { e -> job.cancel("Finished searching for the address. (ended with: $e)") }
-			MongoClient(hostname = hostname, coroutineContext = coroutineContext + job)
-		}
+		MongoClient(hostname = hostname, coroutineContext = currentCoroutineContext()).close()
 		return true
 	} catch (e: Throwable) {
 		println("KtMongo • Could not connect to $hostname: $e")
