@@ -20,6 +20,7 @@ import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.multiplatform.utils.MongoClient
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.prepared.suite.random.randomInt
 
 @Serializable
 private data class User(
@@ -30,10 +31,12 @@ private data class User(
 
 val MultiplatformInsert by preparedSuite {
 
+	val collectionPostfix by randomInt(0, Int.MAX_VALUE)
+
 	test("Simple insert") {
 		val client = MongoClient()
 		val database = client.database("ktmongo-test-1")
-		val collection = database.collection<User>("users")
+		val collection = database.collection<User>("users-${collectionPostfix()}")
 
 		collection.insertOne(
 			User(
