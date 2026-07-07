@@ -21,7 +21,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.job
 import opensavvy.ktmongo.multiplatform.MongoClient
-import opensavvy.prepared.suite.backgroundScope
+import opensavvy.prepared.suite.cleanUp
+import opensavvy.prepared.suite.foregroundScope
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.shared
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -55,9 +56,15 @@ private val mongoAddress by shared {
 val MongoClient by prepared {
 	val address = mongoAddress()
 
-	MongoClient(
+	val client = MongoClient(
 		hostname = address,
 		port = 27017,
-		coroutineContext = backgroundScope.coroutineContext,
+		coroutineContext = foregroundScope.coroutineContext,
 	)
+
+	cleanUp("MongoClient") {
+		client.close()
+	}
+
+	client
 }
