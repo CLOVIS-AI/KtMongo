@@ -14,14 +14,31 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class, ExperimentalBsonPathApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalBsonPathApi::class, ExperimentalAtomicApi::class)
 
 package opensavvy.ktmongo.multiplatform.wire
 
+import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.ExperimentalBsonPathApi
+import opensavvy.ktmongo.bson.encode
+import opensavvy.ktmongo.bson.multiplatform.BsonDocument
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.selectFirst
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator.Default
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.multiplatform.wire.Message.OpMsg
+import opensavvy.ktmongo.multiplatform.wire.MessageSection.Body
+import opensavvy.ktmongo.multiplatform.wire.MessageSection.DocumentSequence
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+
+@Serializable
+private data class DataTest(
+	val _id: ObjectId,
+	val name: String,
+	val age: Int,
+)
 
 val ConnectTest by preparedSuite {
 
@@ -37,20 +54,48 @@ val ConnectTest by preparedSuite {
 	test("Send a find on a collection that doesn't exist") {
 		val client = MongoWireClient()
 
-		val output = client.send(Message.Find())
+		val output = client.send(
+			OpMsg(
+				Body(
+					eager(
+						BsonFactory().buildDocument {
+							writeString("find", "test-basic-1")
+							writeDocument("filter") {}
+							writeString("\$db", "test-basic")
+						}
+					)
+				)
+			)
+		)
 
 		println("Awaiting response…")
 		val response = output.receive()
 
 		check(response is Message.OpMsg)
 		check(response.body.document["ok"]?.decodeDouble() == 1.0)
-		check(response.body.document["cursor"]?.decodeDocument()?.get("ns")?.decodeString() == "test-basic.test-basic")
+		check(response.body.document["cursor"]?.decodeDocument()?.get("ns")?.decodeString() == "test-basic.test-basic-1")
 	}
 
 	test("Insert an element") {
 		val client = MongoWireClient()
 
-		val output = client.send(Message.Insert())
+		val output = client.send(OpMsg(
+			Body(
+				eager(
+					BsonFactory().buildDocument {
+						writeString("insert", "test-basic-2")
+						writeBoolean("ordered", true)
+						writeString("\$db", "test-basic")
+					}
+				)
+			),
+			DocumentSequence(
+				id = "documents",
+				listOf(
+					eager(BsonFactory().encode(DataTest(Default().newId(), "Bob", 18)) as BsonDocument)
+				)
+			)
+		))
 
 		println("Awaiting response…")
 		val response = output.receive()
@@ -63,7 +108,16 @@ val ConnectTest by preparedSuite {
 	test("Drop a collection") {
 		val client = MongoWireClient()
 
-		val output = client.send(Message.Drop())
+		val output = client.send(OpMsg(
+			Body(
+				eager(
+					BsonFactory().buildDocument {
+						writeString("drop", "test-basic-2")
+						writeString("\$db", "test-basic")
+					}
+				)
+			)
+		))
 
 		println("Awaiting response…")
 		val response = output.receive()
@@ -75,8 +129,34 @@ val ConnectTest by preparedSuite {
 	test("Find an element that was just inserted") {
 		val client = MongoWireClient()
 
-		val insertOutput = client.send(Message.Insert())
-		val findOutput = client.send(Message.Find())
+		val insertOutput = client.send(OpMsg(
+			Body(
+				eager(
+					BsonFactory().buildDocument {
+						writeString("insert", "test-basic-3")
+						writeBoolean("ordered", true)
+						writeString("\$db", "test-basic")
+					}
+				)
+			),
+			DocumentSequence(
+				id = "documents",
+				listOf(
+					eager(BsonFactory().encode(DataTest(Default().newId(), "Bob", 18)) as BsonDocument)
+				)
+			)
+		))
+		val findOutput = client.send(OpMsg(
+			Body(
+				eager(
+					BsonFactory().buildDocument {
+						writeString("find", "test-basic-3")
+						writeDocument("filter") {}
+						writeString("\$db", "test-basic")
+					}
+				)
+			)
+		))
 
 		println("Awaiting response…")
 		val insertResponse = insertOutput.receive()
@@ -89,6 +169,15 @@ val ConnectTest by preparedSuite {
 		check(findResponse.body.document["ok"]?.decodeDouble() == 1.0)
 		check(findResponse.body.document.selectFirst<String>("$.cursor.firstBatch[0].name") == "Bob")
 
-		val _ = client.send(Message.Drop())
+		val _ = client.send(OpMsg(
+			Body(
+				eager(
+					BsonFactory().buildDocument {
+						writeString("drop", "test-basic-3")
+						writeString("\$db", "test-basic")
+					}
+				)
+			)
+		))
 	}
 }

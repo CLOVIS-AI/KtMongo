@@ -16,16 +16,6 @@
 
 package opensavvy.ktmongo.multiplatform.wire
 
-import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.bson.encode
-import opensavvy.ktmongo.bson.multiplatform.BsonDocument
-import opensavvy.ktmongo.bson.multiplatform.BsonFactory
-import opensavvy.ktmongo.bson.types.ObjectId
-import opensavvy.ktmongo.bson.types.ObjectIdGenerator
-import opensavvy.ktmongo.dsl.LowLevelApi
-import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.time.ExperimentalTime
-
 sealed interface Message {
 
 	/**
@@ -57,57 +47,4 @@ sealed interface Message {
 			.joinToString(prefix = "OpMsg(", postfix = ")")
 	}
 
-	companion object {
-
-		@OptIn(LowLevelApi::class)
-		fun Find(): OpMsg = OpMsg(
-			MessageSection.Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeString("find", "test-basic")
-						writeDocument("filter") {}
-						writeString("\$db", "test-basic")
-					}
-				)
-			)
-		)
-
-		@Serializable
-		data class DataTest @OptIn(ExperimentalTime::class) constructor(
-			val _id: ObjectId,
-			val name: String,
-			val age: Int,
-		)
-
-		@OptIn(LowLevelApi::class, ExperimentalTime::class, ExperimentalAtomicApi::class)
-		fun Insert(): OpMsg = OpMsg(
-			MessageSection.Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeString("insert", "test-basic")
-						writeBoolean("ordered", true)
-						writeString("\$db", "test-basic")
-					}
-				)
-			),
-			MessageSection.DocumentSequence(
-				id = "documents",
-				listOf(
-					eager(BsonFactory().encode(DataTest(ObjectIdGenerator.Default().newId(), "Bob", 18)) as BsonDocument)
-				)
-			)
-		)
-
-		@OptIn(LowLevelApi::class)
-		fun Drop(): OpMsg = OpMsg(
-			MessageSection.Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeString("drop", "test-basic")
-						writeString("\$db", "test-basic")
-					}
-				)
-			)
-		)
-	}
 }
