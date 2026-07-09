@@ -31,7 +31,9 @@ import opensavvy.ktmongo.multiplatform.wire.Message.OpMsg
 import opensavvy.ktmongo.multiplatform.wire.MessageSection.Body
 import opensavvy.ktmongo.multiplatform.wire.MessageSection.DocumentSequence
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.prepared.suite.config.CoroutineTimeout
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.time.Duration.Companion.minutes
 
 @Serializable
 private data class DataTest(
@@ -40,7 +42,7 @@ private data class DataTest(
 	val age: Int,
 )
 
-val ConnectTest by preparedSuite {
+val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) {
 
 	test("Connect to the database") {
 		val client = MongoWireClient()

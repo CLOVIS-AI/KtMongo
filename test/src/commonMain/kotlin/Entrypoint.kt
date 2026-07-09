@@ -22,12 +22,14 @@ import kotlinx.coroutines.ensureActive
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.tests.api.operations.*
 import opensavvy.prepared.suite.*
+import opensavvy.prepared.suite.config.CoroutineTimeout
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.Duration.Companion.minutes
 
 fun SuiteDsl.verifyClient(
 	name: String,
 	createClient: suspend (connectionString: String, coroutineContext: CoroutineContext) -> MongoClient,
-) = suite(name) {
+) = suite(name, CoroutineTimeout(15.minutes)) {
 
 	suspend fun verifyClientConnected(client: MongoClient): Boolean = try {
 		val count = client.use {

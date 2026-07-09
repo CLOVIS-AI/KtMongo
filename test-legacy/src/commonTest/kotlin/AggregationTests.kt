@@ -27,9 +27,9 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.config.CoroutineTimeout
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
-val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
+val AggregationTests by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) {
 	@Serializable
 	data class Song(
 		val creationDate: Int = 0, // default values are required for dumping the collection

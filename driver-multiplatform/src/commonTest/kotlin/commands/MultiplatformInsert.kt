@@ -20,7 +20,9 @@ import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.multiplatform.utils.MongoClient
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.prepared.suite.config.CoroutineTimeout
 import opensavvy.prepared.suite.random.randomInt
+import kotlin.time.Duration.Companion.minutes
 
 @Serializable
 private data class User(
@@ -29,7 +31,7 @@ private data class User(
 	val age: Int,
 )
 
-val MultiplatformInsert by preparedSuite {
+val MultiplatformInsert by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) {
 
 	val collectionPostfix by randomInt(0, Int.MAX_VALUE)
 

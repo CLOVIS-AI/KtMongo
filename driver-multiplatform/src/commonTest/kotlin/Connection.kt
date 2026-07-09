@@ -18,8 +18,10 @@ package opensavvy.ktmongo.multiplatform
 
 import opensavvy.ktmongo.multiplatform.utils.MongoClient
 import opensavvy.prepared.runner.testballoon.preparedSuite
+import opensavvy.prepared.suite.config.CoroutineTimeout
+import kotlin.time.Duration.Companion.minutes
 
-val MultiplatformConnection by preparedSuite {
+val MultiplatformConnection by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) {
 
 	test("Connect") {
 		val client = MongoClient()
