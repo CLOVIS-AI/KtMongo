@@ -31,6 +31,8 @@ import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.coroutines.CoroutineContext
+import kotlin.time.DurationUnit
+import kotlin.time.TimeSource
 
 @LowLevelApi
 interface MongoWireClient : AutoCloseable {
@@ -105,11 +107,16 @@ private class SocketWireClient(
 	 */
 	private val requestChannel = Channel<Request>(Channel.RENDEZVOUS)
 
+	// Helps debugging time-sensitive operations for now. Will need to be removed when stabilizing, and be replaced by a proper observability framework.
+	private val start = TimeSource.Monotonic.markNow()
+
 	private fun log(message: String) {
-		println("KtMongo • $message")
+		println("» KtMongo +${start.elapsedNow().toString(DurationUnit.MILLISECONDS, decimals = 0)} • $message")
 	}
 
 	init {
+		log("Creating client for socket ${socket.remoteAddress}")
+
 		// Ensure that no resources can leak
 		actorsJob.invokeOnCompletion { close() }
 
