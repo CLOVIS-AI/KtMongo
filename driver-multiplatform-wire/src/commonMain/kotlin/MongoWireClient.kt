@@ -444,7 +444,6 @@ suspend fun MongoWireClient(
 
 	val selectorManager = SelectorManager(coroutineContext + innerJob + Dispatchers.Default + CoroutineName("ktmongo-socket"))
 	val socket = aSocket(selectorManager).tcp().connect(hostName, port) {
-		socketTimeout = 1000
 		keepAlive = true
 	}
 
