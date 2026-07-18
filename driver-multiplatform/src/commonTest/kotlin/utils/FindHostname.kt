@@ -16,7 +16,7 @@
 
 package opensavvy.ktmongo.multiplatform.utils
 
-import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.coroutineScope
 import opensavvy.ktmongo.multiplatform.MongoClient
 import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.foregroundScope
@@ -29,11 +29,13 @@ private suspend fun tryConnect(
 	hostname: String,
 ): Boolean {
 	try {
-		println("KtMongo • Attempting to connect to $hostname")
-		MongoClient(hostname = hostname, coroutineContext = currentCoroutineContext()).close()
+		println("  Attempting to connect to $hostname")
+		coroutineScope {
+			MongoClient(hostname = hostname, coroutineContext = coroutineContext).close()
+		}
 		return true
 	} catch (e: Throwable) {
-		println("KtMongo • Could not connect to $hostname: $e")
+		println("  Could not connect to $hostname: ${e.stackTraceToString()}")
 		return false
 	}
 }
