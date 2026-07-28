@@ -64,7 +64,7 @@ pluginManagement {
 }
 
 plugins {
-	id("dev.opensavvy.conventions.settings") version "2.3.6"
+	id("dev.opensavvy.conventions.settings") version "2.4.0"
 }
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
