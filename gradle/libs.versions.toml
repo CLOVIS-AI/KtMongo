@@ -10,7 +10,7 @@ io = "0.9.1"                    # https://github.com/Kotlin/kotlinx-io/releases
 
 ktor = "3.5.1"                  # https://ktor.io/docs/releases.html#release-details
 
-mongodb-jvm = "5.6.2"           # https://central.sonatype.com/artifact/org.mongodb/bson/versions
+mongodb-jvm = "5.9.1"           # https://central.sonatype.com/artifact/org.mongodb/bson/versions
 
 mongodb-js = "6.10.3"           # https://www.npmjs.com/package/bson
 
