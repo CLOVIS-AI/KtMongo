@@ -4,7 +4,7 @@
 
 coroutines = "1.11.0"           # https://github.com/Kotlin/kotlinx.coroutines/releases
 
-serialization = "1.9.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
+serialization = "1.11.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
 
 io = "0.8.0"                    # https://github.com/Kotlin/kotlinx-io/releases
 
