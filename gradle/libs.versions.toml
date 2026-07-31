@@ -6,7 +6,7 @@ coroutines = "1.11.0"           # https://github.com/Kotlin/kotlinx.coroutines/r
 
 serialization = "1.11.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
 
-io = "0.8.0"                    # https://github.com/Kotlin/kotlinx-io/releases
+io = "0.9.1"                    # https://github.com/Kotlin/kotlinx-io/releases
 
 ktor = "3.3.0"                  # https://ktor.io/docs/releases.html#release-details
 
