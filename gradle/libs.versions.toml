@@ -22,7 +22,7 @@ junit-platform-launcher = "1.13.4" # https://central.sonatype.com/artifact/org.j
 
 meanmirror = "1.0.0"            # https://github.com/meanbeanlib/meanmirror/tags
 
-slf4j = "2.0.17"                # https://central.sonatype.com/artifact/org.slf4j/slf4j-simple
+slf4j = "2.0.18"                # https://central.sonatype.com/artifact/org.slf4j/slf4j-simple
 
 antlr = "4.13.2"                # https://github.com/antlr/antlr4/releases
 
