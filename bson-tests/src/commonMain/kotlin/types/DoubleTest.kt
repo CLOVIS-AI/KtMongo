@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ fun SuiteDsl.verifyDoubles(factory: Prepared<BsonFactory>) = suite("Double") {
 		document { writeDouble("d", 1.2345678921232E+18) },
 		serialize(D(1.2345678921232E+18)),
 		hex("100000000164002A1BF5F41022B14300"),
-		json("""{"d": 1.2345678921232E18}"""),
+		json("""{"d": 1.2345678921232E+18}"""),
 		verify("Read value") {
 			check(this["d"]?.decodeDouble() == 1.2345678921232E+18)
 		}
@@ -105,7 +105,7 @@ fun SuiteDsl.verifyDoubles(factory: Prepared<BsonFactory>) = suite("Double") {
 		document { writeDouble("d", -1.2345678921232E+18) },
 		serialize(D(-1.2345678921232E+18)),
 		hex("100000000164002A1BF5F41022B1C300"),
-		json("""{"d": -1.2345678921232E18}"""),
+		json("""{"d": -1.2345678921232E+18}"""),
 		verify("Read value") {
 			check(this["d"]?.decodeDouble() == -1.2345678921232E+18)
 		}

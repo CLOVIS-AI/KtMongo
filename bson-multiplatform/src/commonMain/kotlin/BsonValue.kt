@@ -299,7 +299,7 @@ class BsonValue internal constructor(
 		if (abs(value) > 1_000_000.0) {
 			val exponent = floor(log10(abs(value))).toInt()
 			val scientific = value / 10.0.pow(exponent)
-			return """${scientific}E$exponent"""
+			return """${scientific}E+$exponent"""
 		}
 
 		var str = value.toString()

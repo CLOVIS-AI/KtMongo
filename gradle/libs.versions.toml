@@ -1,19 +1,29 @@
 # List of dependencies of the project
 
 [versions]
-coroutines = "1.10.2"           # https://github.com/Kotlin/kotlinx.coroutines/releases
-serialization = "1.9.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
-io = "0.8.0"                    # https://github.com/Kotlin/kotlinx-io/releases
-ktor = "3.3.0"                  # https://ktor.io/docs/releases.html#release-details
-mongodb-bson-jvm = "5.6.2"      # https://central.sonatype.com/artifact/org.mongodb/bson/versions
-mongodb-bson-js = "6.10.3"      # https://www.npmjs.com/package/bson
-mongodb-driver = "5.6.2"        # https://central.sonatype.com/artifact/org.mongodb/mongodb-driver-kotlin-coroutine
-mongodb-serialization = "5.6.2" # https://central.sonatype.com/artifact/org.mongodb/bson-kotlinx
-kmongo = "5.5.1"                # https://github.com/Litote/kmongo/releases
+
+coroutines = "1.11.0"           # https://github.com/Kotlin/kotlinx.coroutines/releases
+
+serialization = "1.11.0"         # https://github.com/Kotlin/kotlinx.serialization/releases
+
+io = "0.9.1"                    # https://github.com/Kotlin/kotlinx-io/releases
+
+ktor = "3.5.1"                  # https://ktor.io/docs/releases.html#release-details
+
+mongodb-jvm = "5.9.1"           # https://central.sonatype.com/artifact/org.mongodb/bson/versions
+
+mongodb-js = "6.10.3"           # https://www.npmjs.com/package/bson
+
+kmongo = "5.6.0"                # https://github.com/Litote/kmongo/releases
+
 junit = "5.13.4"                # https://central.sonatype.com/artifact/org.junit.jupiter/junit-jupiter-api/versions
+
 junit-platform-launcher = "1.13.4" # https://central.sonatype.com/artifact/org.junit.platform/junit-platform-launcher/versions
+
 meanmirror = "1.0.0"            # https://github.com/meanbeanlib/meanmirror/tags
-slf4j = "2.0.17"                # https://central.sonatype.com/artifact/org.slf4j/slf4j-simple
+
+slf4j = "2.0.18"                # https://central.sonatype.com/artifact/org.slf4j/slf4j-simple
+
 antlr = "4.13.2"                # https://github.com/antlr/antlr4/releases
 
 [plugins]
@@ -26,12 +36,12 @@ kotlinx-io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "
 
 ktor-network = { module = "io.ktor:ktor-network", version.ref = "ktor" }
 
-mongodb-bson-jvm = { module = "org.mongodb:bson", version.ref = "mongodb-bson-jvm" }
-mongodb-core-jvm = { module = "org.mongodb:mongodb-driver-core", version.ref = "mongodb-driver" }
-mongodb-coroutines-jvm = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb-driver" }
-mongodb-sync-jvm = { module = "org.mongodb:mongodb-driver-kotlin-sync", version.ref = "mongodb-driver" }
-mongodb-kotlinx-serialization = { module = "org.mongodb:bson-kotlinx", version.ref = "mongodb-serialization" }
-mongodb-kotlin-reflection = { module = "org.mongodb:bson-kotlin", version.ref = "mongodb-serialization" }
+mongodb-bson-jvm = { module = "org.mongodb:bson", version.ref = "mongodb-jvm" }
+mongodb-core-jvm = { module = "org.mongodb:mongodb-driver-core", version.ref = "mongodb-jvm" }
+mongodb-coroutines-jvm = { module = "org.mongodb:mongodb-driver-kotlin-coroutine", version.ref = "mongodb-jvm" }
+mongodb-sync-jvm = { module = "org.mongodb:mongodb-driver-kotlin-sync", version.ref = "mongodb-jvm" }
+mongodb-kotlinx-serialization = { module = "org.mongodb:bson-kotlinx", version.ref = "mongodb-jvm" }
+mongodb-kotlin-reflection = { module = "org.mongodb:bson-kotlin", version.ref = "mongodb-jvm" }
 
 kmongo-property = { module = "org.litote.kmongo:kmongo-property", version.ref = "kmongo" }
 kmongo-sync = { module = "org.litote.kmongo:kmongo", version.ref = "kmongo" }
