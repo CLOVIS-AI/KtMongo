@@ -63,7 +63,6 @@ private class FilterQueryImpl<T>(
 	// region $and, $or
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun and(block: FilterQuery<T>.() -> Unit) {
 		accept(AndFilterBsonNodeNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
 	}
@@ -110,7 +109,6 @@ private class FilterQueryImpl<T>(
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun or(block: FilterQuery<T>.() -> Unit) {
 		accept(OrFilterBsonNodeNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
 	}
@@ -144,7 +142,6 @@ private class FilterQueryImpl<T>(
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun nor(block: FilterQuery<T>.() -> Unit) {
 		accept(NorFilterBsonNodeNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
 	}
@@ -179,7 +176,6 @@ private class FilterQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	override operator fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.invoke(block: FilterQueryPredicate<V>.() -> Unit, type: KType) {
 		accept(PredicateInFilterBsonNode(path, FilterQueryPredicate<V>(context, type).apply(block), context))
 	}
@@ -206,13 +202,11 @@ private class FilterQueryImpl<T>(
 	// region $elemMatch
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun <V> Field<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit, type: KType) {
 		accept(ElementMatchBsonNodeNode<V>(this.path, FilterQueryPredicate<V>(context, type).apply(block), context))
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun <V> Field<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit) {
 		accept(ElementMatchBsonNodeNode<V>(path, FilterQueryImpl<V>(context).apply(block), context))
 	}
@@ -242,7 +236,6 @@ private class FilterQueryImpl<T>(
 	// region $all
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun <V> Field<T, Collection<V>>.containsAll(values: Collection<V>, type: KType) {
 		accept(ArrayAllBsonNodeNode(path, values, context, type))
 	}
@@ -270,7 +263,6 @@ private class FilterQueryImpl<T>(
 	// region $size
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun Field<T, Collection<*>>.size(size: Int) {
 		accept(ArraySizeBsonNode<T>(path, size, context))
 	}
@@ -293,7 +285,6 @@ private class FilterQueryImpl<T>(
 	// region $expr
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun expr(block: AggregationOperators.() -> Value<T & Any, Boolean>) {
 		val value = ExprEvaluator(context).block()
 		accept(ExprBsonNodeNode(value, context))

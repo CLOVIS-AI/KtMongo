@@ -96,7 +96,6 @@ interface WithSort<Document : Any> : Options {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/method/cursor.sort)
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun sort(
 		block: SortOptionDsl<Document>.() -> Unit,
@@ -183,7 +182,6 @@ interface SortOptionDsl<Document : Any> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see descending To return documents in descending order.
 	 */
-	@KtMongoDsl
 	fun ascending(field: Field<Document, *>)
 
 	/**
@@ -216,7 +214,6 @@ interface SortOptionDsl<Document : Any> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see descending To return documents in descending order.
 	 */
-	@KtMongoDsl
 	fun ascending(field: KProperty1<Document, *>) {
 		ascending(field.field)
 	}
@@ -251,7 +248,6 @@ interface SortOptionDsl<Document : Any> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see ascending To return documents in ascending order.
 	 */
-	@KtMongoDsl
 	fun descending(field: Field<Document, *>)
 
 	/**
@@ -284,7 +280,6 @@ interface SortOptionDsl<Document : Any> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see ascending To return documents in ascending order.
 	 */
-	@KtMongoDsl
 	fun descending(field: KProperty1<Document, *>) {
 		descending(field.field)
 	}

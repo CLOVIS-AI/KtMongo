@@ -61,7 +61,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see BsonType List of possible types.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> Value<R, *>.type: Value<R, BsonType>
 		get() = TypeValue(context, this)
 
@@ -104,7 +103,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get a value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> Value<R, *>.isArray: Value<R, Boolean>
 		get() = IsArrayValue(context, this)
 
@@ -153,7 +151,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get a value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> Value<R, *>.isNumber: Value<R, Boolean>
 		get() = IsNumberValue(context, this)
 
@@ -207,7 +204,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toBoolean(): Value<R, Boolean> =
 		ConvertToValue(context, this, "Bool")
 
@@ -263,7 +259,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toInstant(): Value<R, Instant> =
 		ConvertToValue(context, this, "Date")
 
@@ -313,7 +308,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toDouble(): Value<R, Double> =
 		ConvertToValue(context, this, "Double")
 
@@ -364,7 +358,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toInt(): Value<R, Int> =
 		ConvertToValue(context, this, "Int")
 
@@ -414,7 +407,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toLong(): Value<R, Long> =
 		ConvertToValue(context, this, "Long")
 
@@ -452,7 +444,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toObjectId(): Value<R, ObjectId> =
 		ConvertToValue(context, this, "ObjectId")
 
@@ -495,7 +486,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toText(): Value<R, String> =
 		ConvertToValue(context, this, "String")
 
@@ -526,7 +516,6 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@ExperimentalUuidApi
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toUuid(): Value<R, Uuid> =
 		ConvertToValue(context, this, "UUID")
 

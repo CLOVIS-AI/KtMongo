@@ -62,7 +62,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -130,7 +129,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see cond Specify a single condition.
 	 * @see then Keyword to declare the different cases.
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	fun <R : Any, T> switch(
 		vararg cases: Case<R, T>,
@@ -173,7 +171,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@KtMongoDsl
 	infix fun <R : Any, T> Value<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
 		Case(this, value)
 

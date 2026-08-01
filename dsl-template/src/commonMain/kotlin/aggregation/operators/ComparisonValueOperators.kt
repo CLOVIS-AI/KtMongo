@@ -18,7 +18,6 @@ package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
@@ -62,7 +61,6 @@ interface ComparisonValueOperators : ValueOperators {
 	 * @see FilterQuery.eq Equivalent operator in regular queries.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	infix fun <Context : Any, Result> Value<Context, Result>.eq(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "eq")
 
@@ -96,29 +94,24 @@ interface ComparisonValueOperators : ValueOperators {
 	 * @see FilterQuery.ne Equivalent operator in regular queries.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	infix fun <Context : Any, Result> Value<Context, Result>.ne(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "ne")
 
 	// TODO: document the other operators once 'project' is implemented, since the official examples use 'project' to demonstrate them
 
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	infix fun <Context : Any, Result> Value<Context, Result>.gt(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "gt")
 
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	infix fun <Context : Any, Result> Value<Context, Result>.gte(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "gte")
 
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	infix fun <Context : Any, Result> Value<Context, Result>.lt(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "lt")
 
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	infix fun <Context : Any, Result> Value<Context, Result>.lte(other: Value<Context, Result>): Value<Context, Boolean> =
 		ComparisonValueOperator(context, this, other, "lte")
 

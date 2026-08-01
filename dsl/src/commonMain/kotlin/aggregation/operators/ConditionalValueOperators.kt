@@ -65,7 +65,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see switch Specify multiple conditions.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -105,7 +104,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -145,7 +143,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -185,7 +182,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -225,7 +221,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -265,7 +260,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -305,7 +299,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -346,7 +339,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -386,7 +378,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -426,7 +417,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -466,7 +456,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -507,7 +496,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -547,7 +535,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: T,
@@ -588,7 +575,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: T,
@@ -629,7 +615,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByValueByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: T,
@@ -669,7 +654,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Value<R, Boolean>,
 		ifTrue: T,
@@ -709,7 +693,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -749,7 +732,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -789,7 +771,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -830,7 +811,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByValueByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -870,7 +850,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -910,7 +889,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -950,7 +928,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -991,7 +968,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -1031,7 +1007,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -1071,7 +1046,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -1111,7 +1085,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -1152,7 +1125,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -1193,7 +1165,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByResultByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: T,
@@ -1234,7 +1205,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: T,
@@ -1275,7 +1245,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: T,
@@ -1316,7 +1285,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByFieldByResultByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: opensavvy.ktmongo.dsl.path.Field<R, Boolean>,
 		ifTrue: T,
@@ -1356,7 +1324,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByValueByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -1396,7 +1363,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -1436,7 +1402,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -1477,7 +1442,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByValueByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: Value<R, T>,
@@ -1517,7 +1481,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -1557,7 +1520,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -1597,7 +1559,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -1638,7 +1599,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -1678,7 +1638,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -1718,7 +1677,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -1758,7 +1716,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any, T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -1799,7 +1756,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -1840,7 +1796,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByResultByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: T,
@@ -1881,7 +1836,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: T,
@@ -1922,7 +1876,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: T,
@@ -1963,7 +1916,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByPropertyByResultByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: kotlin.reflect.KProperty1<R, Boolean>,
 		ifTrue: T,
@@ -2003,7 +1955,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, T> cond(
 		condition: Boolean,
 		ifTrue: Value<R, T>,
@@ -2044,7 +1995,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByValueByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, T> cond(
 		condition: Boolean,
 		ifTrue: Value<R, T>,
@@ -2085,7 +2035,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByValueByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, T> cond(
 		condition: Boolean,
 		ifTrue: Value<R, T>,
@@ -2125,7 +2074,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Boolean,
 		ifTrue: Value<R, T>,
@@ -2166,7 +2114,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByFieldByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, T> cond(
 		condition: Boolean,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -2207,7 +2154,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByFieldByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, T> cond(
 		condition: Boolean,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -2248,7 +2194,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByFieldByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, T> cond(
 		condition: Boolean,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -2289,7 +2234,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByFieldByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Boolean,
 		ifTrue: opensavvy.ktmongo.dsl.path.Field<R, T>,
@@ -2330,7 +2274,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByPropertyByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, T> cond(
 		condition: Boolean,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -2371,7 +2314,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByPropertyByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, T> cond(
 		condition: Boolean,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -2412,7 +2354,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByPropertyByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, T> cond(
 		condition: Boolean,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -2453,7 +2394,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByPropertyByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Boolean,
 		ifTrue: kotlin.reflect.KProperty1<R, T>,
@@ -2493,7 +2433,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Boolean,
 		ifTrue: T,
@@ -2534,7 +2473,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByResultByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Boolean,
 		ifTrue: T,
@@ -2575,7 +2513,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("condByResultByResultByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Boolean,
 		ifTrue: T,
@@ -2615,7 +2552,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <R : Any, reified T> cond(
 		condition: Boolean,
 		ifTrue: T,
@@ -2683,7 +2619,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 * @see cond Specify a single condition.
 	 * @see then Keyword to declare the different cases.
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	fun <R : Any, T> switch(
 		vararg cases: Case<R, T>,
@@ -2725,7 +2660,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("switchByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	fun <R : Any, T> switch(
 		vararg cases: Case<R, T>,
@@ -2767,7 +2701,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("switchByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	fun <R : Any, T> switch(
 		vararg cases: Case<R, T>,
@@ -2809,7 +2742,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	final inline fun <R : Any, reified T> switch(
 		vararg cases: Case<R, T>,
@@ -2852,7 +2784,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 *
 	 * @see switch
 	 */
-	@KtMongoDsl
 	infix fun <R : Any, T> Value<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
 		Case(this, value)
 
@@ -2885,7 +2816,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	infix fun <R : Any, T> Value<R, Boolean>.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
 		this.then(of(value))
 
@@ -2918,7 +2848,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	infix fun <R : Any, T> Value<R, Boolean>.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
 		this.then(of(value))
 
@@ -2951,7 +2880,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <R : Any, reified T> Value<R, Boolean>.then(value: T): Case<R, T> =
 		this.then(of(value))
 
@@ -2984,7 +2912,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
 		of(this).then(value)
 
@@ -3017,7 +2944,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
 		of(this).then(of(value))
 
@@ -3050,7 +2976,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	infix fun <R : Any, T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
 		of(this).then(of(value))
 
@@ -3083,7 +3008,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <R : Any, reified T> opensavvy.ktmongo.dsl.path.Field<R, Boolean>.then(value: T): Case<R, T> =
 		of(this).then(of(value))
 
@@ -3116,7 +3040,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: Value<R, T>): Case<R, T> =
 		of(this).then(value)
 
@@ -3149,7 +3072,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
 		of(this).then(of(value))
 
@@ -3182,7 +3104,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
-	@KtMongoDsl
 	infix fun <R : Any, T> kotlin.reflect.KProperty1<R, Boolean>.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
 		of(this).then(of(value))
 
@@ -3215,7 +3136,6 @@ interface ConditionalValueOperators : ValueOperators {
 	 */
 	@kotlin.jvm.JvmName("thenPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <R : Any, reified T> kotlin.reflect.KProperty1<R, Boolean>.then(value: T): Case<R, T> =
 		of(this).then(of(value))
 
@@ -3249,7 +3169,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("thenResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <R : Any, T> Boolean.then(value: Value<R, T>): Case<R, T> =
 		of(this).then(value)
 
@@ -3283,7 +3202,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("thenResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <R : Any, T> Boolean.then(value: opensavvy.ktmongo.dsl.path.Field<R, T>): Case<R, T> =
 		of(this).then(of(value))
 
@@ -3317,7 +3235,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("thenResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <R : Any, T> Boolean.then(value: kotlin.reflect.KProperty1<R, T>): Case<R, T> =
 		of(this).then(of(value))
 
@@ -3351,7 +3268,6 @@ interface ConditionalValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("thenResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <R : Any, reified T> Boolean.then(value: T): Case<R, T> =
 		of(this).then(of(value))
 

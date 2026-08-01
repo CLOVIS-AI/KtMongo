@@ -61,7 +61,6 @@ private class FilterQueryPredicateImpl<T>(
 	// region $eq
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun eq(value: T) {
 		accept(EqualityBsonNodeNode(value, context, type))
 	}
@@ -82,7 +81,6 @@ private class FilterQueryPredicateImpl<T>(
 	// region $ne
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun ne(value: T) {
 		accept(InequalityBsonNodeNode(value, context, type))
 	}
@@ -103,7 +101,6 @@ private class FilterQueryPredicateImpl<T>(
 	// region $exists
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun exists() {
 		accept(ExistsPredicateBsonNodeNode(true, context))
 	}
@@ -120,7 +117,6 @@ private class FilterQueryPredicateImpl<T>(
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun doesNotExist() {
 		accept(ExistsPredicateBsonNodeNode(false, context))
 	}
@@ -129,7 +125,6 @@ private class FilterQueryPredicateImpl<T>(
 	// region $type
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun hasType(type: BsonType) {
 		accept(TypePredicateBsonNodeNode(type, context))
 	}
@@ -149,7 +144,6 @@ private class FilterQueryPredicateImpl<T>(
 	// region $not
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun not(expression: FilterQueryPredicate<T>.() -> Unit) {
 		accept(NotPredicateBsonNodeNode(FilterQueryPredicateImpl<T>(context, type).apply(expression), context))
 	}
@@ -178,7 +172,6 @@ private class FilterQueryPredicateImpl<T>(
 	// region $gt, $gte, $lt, $lte
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun gt(value: T) {
 		accept(GtPredicateBsonNodeNode(value, context, type))
 	}
@@ -197,7 +190,6 @@ private class FilterQueryPredicateImpl<T>(
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun gte(value: T) {
 		accept(GtePredicateBsonNodeNode(value, context, type))
 	}
@@ -216,7 +208,6 @@ private class FilterQueryPredicateImpl<T>(
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun lt(value: T) {
 		accept(LtPredicateBsonNodeNode(value, context, type))
 	}
@@ -235,7 +226,6 @@ private class FilterQueryPredicateImpl<T>(
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun lte(value: T) {
 		accept(LtePredicateBsonNodeNode(value, context, type))
 	}
@@ -281,7 +271,6 @@ private class FilterQueryPredicateImpl<T>(
 	// region $in
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun isOneOf(values: Collection<T>) {
 		accept(OneOfPredicateBsonNodeNode(values, context, type))
 	}
@@ -306,7 +295,6 @@ private class FilterQueryPredicateImpl<T>(
 	// region $nin
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	override fun isNotOneOf(values: Collection<T>) {
 		accept(NotOneOfPredicateExpressionNode(values, context, type))
 	}
@@ -331,7 +319,6 @@ private class FilterQueryPredicateImpl<T>(
 	// region $regex
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@KtMongoDsl
 	override fun regex(
 		pattern: String,
 		caseInsensitive: Boolean,
@@ -378,7 +365,6 @@ private class FilterQueryPredicateImpl<T>(
 	// endregion
 	// region Bitwise operators
 
-	@KtMongoDsl
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun bitsAllClear(mask: UInt) {
 		accept(BitwiseIntNode(context, mask, "bitsAllClear"))
@@ -389,7 +375,6 @@ private class FilterQueryPredicateImpl<T>(
 		accept(BitwiseByteArrayNode(context, mask, "bitsAllClear"))
 	}
 
-	@KtMongoDsl
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun bitsAllSet(mask: UInt) {
 		accept(BitwiseIntNode(context, mask, "bitsAllSet"))
@@ -400,7 +385,6 @@ private class FilterQueryPredicateImpl<T>(
 		accept(BitwiseByteArrayNode(context, mask, "bitsAllSet"))
 	}
 
-	@KtMongoDsl
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun bitsAnyClear(mask: UInt) {
 		accept(BitwiseIntNode(context, mask, "bitsAnyClear"))
@@ -411,7 +395,6 @@ private class FilterQueryPredicateImpl<T>(
 		accept(BitwiseByteArrayNode(context, mask, "bitsAnyClear"))
 	}
 
-	@KtMongoDsl
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun bitsAnySet(mask: UInt) {
 		accept(BitwiseIntNode(context, mask, "bitsAnySet"))

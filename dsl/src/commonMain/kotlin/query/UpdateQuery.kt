@@ -1412,7 +1412,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.addEachToSet(values: Iterable<V>, type: KType) {
 		for (value in values)
 			this.addToSet(value, type)
@@ -1456,7 +1455,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.addEachToSet(values: Iterable<V>) {
 		this.addEachToSet(values, typeOf<V>())
 	}
@@ -1499,7 +1497,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.addEachToSet(values: Iterable<V>) {
 		return this.field.addEachToSet(values)
 	}
@@ -1659,7 +1656,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.push(value: V, type: KType)
 
 	/**
@@ -1693,7 +1689,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.push(value: V) {
 		this.push(value, typeOf<V>())
 	}
@@ -1729,7 +1724,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.push(value: V) {
 		return this.field.push(value)
 	}
@@ -1767,7 +1761,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.pushEach(values: Iterable<V>, type: KType) {
 		for (value in values)
 			this.push(value, type)
@@ -1806,7 +1799,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.pushEach(values: Iterable<V>) {
 		this.pushEach(values, typeOf<V>())
 	}
@@ -1844,7 +1836,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.pushEach(values: Iterable<V>) {
 		return this.field.pushEach(values)
 	}
@@ -1883,7 +1874,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.push(builder: PushBuilder<V>.() -> Unit, type: KType)
 
 	/**
@@ -1920,7 +1910,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
 		push(builder, typeOf<V>())
 	}
@@ -1959,7 +1948,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/push/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
 		return this.field.push(builder)
 	}
@@ -2017,7 +2005,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		 *
 		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/push/)
 		 */
-		@KtMongoDsl
 		fun each(vararg values: V) {
 			each(values.asIterable())
 		}
@@ -2065,7 +2052,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		 *
 		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/push/)
 		 */
-		@KtMongoDsl
 		fun each(values: Iterable<V>)
 
 		/**
@@ -2107,7 +2093,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		 *
 		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/slice)
 		 */
-		@KtMongoDsl
 		fun slice(count: Int)
 
 		/**
@@ -2160,7 +2145,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		 *
 		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/position/)
 		 */
-		@KtMongoDsl
 		fun position(index: Int)
 
 		/**
@@ -2222,7 +2206,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		 *
 		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/sort/)
 		 */
-		@KtMongoDsl
 		fun sort(block: PushSortDsl<V & Any>.() -> Unit)
 	}
 
@@ -2258,7 +2241,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		 * )
 		 * ```
 		 */
-		@KtMongoDsl
 		fun ascending()
 
 		/**
@@ -2285,7 +2267,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 		 * )
 		 * ```
 		 */
-		@KtMongoDsl
 		fun descending()
 	}
 
@@ -2338,7 +2319,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered)
 	 */
-	@KtMongoDsl
 	@LowLevelApi
 	fun <V> Field<T, Collection<V>>.filter(id: String): Field<T, V>
 
@@ -2389,7 +2369,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/positional-filtered)
 	 */
-	@KtMongoDsl
 	@LowLevelApi
 	fun <V> kotlin.reflect.KProperty1<T, Collection<V>>.filter(id: String): Field<T, V> {
 		return this.field.filter(id)
@@ -2462,7 +2441,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * The lambda passes a parameter that represents the current item during the iteration.
 	 * The operators within this lambda are the same as [FilterQuery].
 	 */
-	@KtMongoDsl
 	fun <V> Field<T, Collection<V>>.filter(
 		id: String? = null,
 		filter: ArrayFiltersOptionDsl<V>.(it: Field<ArrayFiltersOptionDsl.IteratorType<V>, V>) -> Unit,
@@ -2535,7 +2513,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * The lambda passes a parameter that represents the current item during the iteration.
 	 * The operators within this lambda are the same as [FilterQuery].
 	 */
-	@KtMongoDsl
 	fun <V> kotlin.reflect.KProperty1<T, Collection<V>>.filter(
 		id: String? = null,
 		filter: ArrayFiltersOptionDsl<V>.(it: Field<ArrayFiltersOptionDsl.IteratorType<V>, V>) -> Unit,
@@ -2570,7 +2547,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.Exact V> Field<T, Collection<V>>.pull(value: V, type: KType)
 
 	/**
@@ -2597,7 +2573,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <@kotlin.internal.Exact reified V> Field<T, Collection<V>>.pull(value: V) {
 		this.pull(value, typeOf<V>())
 	}
@@ -2626,7 +2601,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <@kotlin.internal.Exact reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pull(value: V) {
 		return this.field.pull(value)
 	}
@@ -2662,7 +2636,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.Exact V> Field<T, Collection<V>>.pull(predicate: FilterQuery<V>.() -> Unit, type: KType)
 
 	/**
@@ -2696,7 +2669,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <@kotlin.internal.Exact reified V> Field<T, Collection<V>>.pull(noinline predicate: FilterQuery<V>.() -> Unit) {
 		this.pull(predicate, typeOf<V>())
 	}
@@ -2732,7 +2704,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <@kotlin.internal.Exact reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pull(noinline predicate: FilterQuery<V>.() -> Unit) {
 		return this.field.pull(predicate)
 	}
@@ -2763,7 +2734,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.Exact V> Field<T, Collection<V>>.pullValues(predicate: FilterQueryPredicate<V>.() -> Unit, type: KType)
 
 	/**
@@ -2792,7 +2762,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <@kotlin.internal.Exact reified V> Field<T, Collection<V>>.pullValues(noinline predicate: FilterQueryPredicate<V>.() -> Unit) {
 		this.pullValues(predicate, typeOf<V>())
 	}
@@ -2823,7 +2792,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pull/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <@kotlin.internal.Exact reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pullValues(noinline predicate: FilterQueryPredicate<V>.() -> Unit) {
 		return this.field.pullValues(predicate)
 	}
@@ -2855,7 +2823,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun Field<T, Long>.bitAnd(mask: Long)
 
 	/**
@@ -2882,7 +2849,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun kotlin.reflect.KProperty1<T, Long>.bitAnd(mask: Long) {
 		return this.field.bitAnd(mask)
 	}
@@ -2911,7 +2877,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun Field<T, Int>.bitAnd(mask: Int)
 
 	/**
@@ -2938,7 +2903,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun kotlin.reflect.KProperty1<T, Int>.bitAnd(mask: Int) {
 		return this.field.bitAnd(mask)
 	}
@@ -2967,7 +2931,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun Field<T, Long>.bitOr(mask: Long)
 
 	/**
@@ -2994,7 +2957,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun kotlin.reflect.KProperty1<T, Long>.bitOr(mask: Long) {
 		return this.field.bitOr(mask)
 	}
@@ -3023,7 +2985,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun Field<T, Int>.bitOr(mask: Int)
 
 	/**
@@ -3050,7 +3011,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun kotlin.reflect.KProperty1<T, Int>.bitOr(mask: Int) {
 		return this.field.bitOr(mask)
 	}
@@ -3079,7 +3039,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun Field<T, Long>.bitXor(mask: Long)
 
 	/**
@@ -3106,7 +3065,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun kotlin.reflect.KProperty1<T, Long>.bitXor(mask: Long) {
 		return this.field.bitXor(mask)
 	}
@@ -3135,7 +3093,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun Field<T, Int>.bitXor(mask: Int)
 
 	/**
@@ -3162,7 +3119,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/bit/)
 	 */
-	@KtMongoDsl
 	infix fun kotlin.reflect.KProperty1<T, Int>.bitXor(mask: Int) {
 		return this.field.bitXor(mask)
 	}
@@ -3209,7 +3165,6 @@ interface UpsertQuery<T> : UpdateQuery<T> {
 	 * @see set Always set the value.
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V> Field<T, @kotlin.internal.Exact V>.setOnInsert(value: V, type: KType)
 
 	/**
@@ -3239,7 +3194,6 @@ interface UpsertQuery<T> : UpdateQuery<T> {
 	 * @see set Always set the value.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> Field<T, @kotlin.internal.Exact V>.setOnInsert(value: V) {
 		this.setOnInsert(value, typeOf<V>())
 	}
@@ -3271,7 +3225,6 @@ interface UpsertQuery<T> : UpdateQuery<T> {
 	 * @see set Always set the value.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.setOnInsert(value: V) {
 		return this.field.setOnInsert(value)
 	}

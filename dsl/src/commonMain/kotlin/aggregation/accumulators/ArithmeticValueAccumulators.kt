@@ -68,7 +68,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: Value<From, Number?>) {
 		accept(ArithmeticValueAccumulator("\$sum", value, this.path, context))
 	}
@@ -102,7 +101,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("sumByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
 		sum(of(value))
 
@@ -135,7 +133,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("sumPropertyReceiverByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
 		this.field.sum(of(value))
 
@@ -168,7 +165,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("sumByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: kotlin.reflect.KProperty1<From, Number?>) =
 		sum(of(value))
 
@@ -201,7 +197,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("sumPropertyReceiverByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: kotlin.reflect.KProperty1<From, Number?>) =
 		this.field.sum(of(value))
 
@@ -234,7 +229,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: Number?) =
 		sum(of(value))
 
@@ -266,7 +260,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: Number?) =
 		this.field.sum(of(value))
 
@@ -298,7 +291,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.sum(value: Value<From, Number?>) {
 		return this.field.sum(value)
 	}
@@ -336,7 +328,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: Value<From, Number?>) {
 		accept(ArithmeticValueAccumulator("\$avg", value, this.path, context))
 	}
@@ -372,7 +363,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("averageByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
 		average(of(value))
 
@@ -407,7 +397,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("averagePropertyReceiverByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
 		this.field.average(of(value))
 
@@ -442,7 +431,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("averageByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: kotlin.reflect.KProperty1<From, Number?>) =
 		average(of(value))
 
@@ -477,7 +465,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("averagePropertyReceiverByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: kotlin.reflect.KProperty1<From, Number?>) =
 		this.field.average(of(value))
 
@@ -512,7 +499,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: Number?) =
 		average(of(value))
 
@@ -546,7 +532,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: Number?) =
 		this.field.average(of(value))
 
@@ -580,7 +565,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.average(value: Value<From, Number?>) {
 		return this.field.average(value)
 	}
@@ -618,7 +602,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: Value<From, Number?>) {
 		accept(MedianValueAccumulator(value, this.path, context))
 	}
@@ -654,7 +637,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("medianByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
 		median(of(value))
 
@@ -689,7 +671,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("medianPropertyReceiverByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: opensavvy.ktmongo.dsl.path.Field<From, Number?>) =
 		this.field.median(of(value))
 
@@ -724,7 +705,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("medianByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: kotlin.reflect.KProperty1<From, Number?>) =
 		median(of(value))
 
@@ -759,7 +739,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("medianPropertyReceiverByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: kotlin.reflect.KProperty1<From, Number?>) =
 		this.field.median(of(value))
 
@@ -794,7 +773,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: Number?) =
 		median(of(value))
 
@@ -828,7 +806,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	infix final inline fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: Number?) =
 		this.field.median(of(value))
 
@@ -862,7 +839,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, T>.median(value: Value<From, Number?>) {
 		return this.field.median(value)
 	}
@@ -900,7 +876,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
 		value: Value<From, Number?>,
 		vararg percentiles: Double,
@@ -939,7 +914,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("percentilesByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
 		value: opensavvy.ktmongo.dsl.path.Field<From, Number?>,
 		vararg percentiles: Double,
@@ -977,7 +951,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("percentilesPropertyReceiverByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
 		value: opensavvy.ktmongo.dsl.path.Field<From, Number?>,
 		vararg percentiles: Double,
@@ -1015,7 +988,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("percentilesByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
 		value: kotlin.reflect.KProperty1<From, Number?>,
 		vararg percentiles: Double,
@@ -1053,7 +1025,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.jvm.JvmName("percentilesPropertyReceiverByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
 		value: kotlin.reflect.KProperty1<From, Number?>,
 		vararg percentiles: Double,
@@ -1091,7 +1062,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
 		value: Number?,
 		vararg percentiles: Double,
@@ -1128,7 +1098,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
 		value: Number?,
 		vararg percentiles: Double,
@@ -1165,7 +1134,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes T : Number> kotlin.reflect.KProperty1<Into, List<T>>.percentiles(
 		value: Value<From, Number?>,
 		vararg percentiles: Double,

@@ -57,7 +57,6 @@ interface UpdateWithPipelineQuery<Document : Any> : CompoundBsonNode {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/)
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun set(
 		block: SetStageOperators<Document>.() -> Unit,
@@ -98,7 +97,6 @@ interface UpdateWithPipelineQuery<Document : Any> : CompoundBsonNode {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project)
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	fun project(
 		block: ProjectStageOperators<Document>.() -> Unit,
 	) {
@@ -131,7 +129,6 @@ interface UpdateWithPipelineQuery<Document : Any> : CompoundBsonNode {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset)
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	fun unset(
 		block: UnsetStageOperators<Document>.() -> Unit,
 	) {
@@ -192,8 +189,6 @@ interface UpdateWithPipelineQuery<Document : Any> : CompoundBsonNode {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset)
 	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	fun unset(vararg properties: KProperty1<Document, *>) {
 		unset {
 			for (property in properties) {
@@ -256,8 +251,6 @@ interface UpdateWithPipelineQuery<Document : Any> : CompoundBsonNode {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset)
 	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	fun unset(vararg fields: Field<Document, *>) {
 		unset {
 			for (field in fields) {

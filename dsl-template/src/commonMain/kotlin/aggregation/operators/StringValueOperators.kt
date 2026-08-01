@@ -58,7 +58,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trim(): Value<Context, String?> =
 		TrimValueOperator(context, this, null, trimStart = true, trimEnd = true)
 
@@ -90,7 +89,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trim(vararg characters: Char): Value<Context, String?> =
 		TrimValueOperator(context, this, of(characters.joinToString(separator = "")), trimStart = true, trimEnd = true)
 
@@ -125,7 +123,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/trim/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trim(characters: Value<Context, String?>): Value<Context, String?> =
 		TrimValueOperator(context, this, characters, trimStart = true, trimEnd = true)
 
@@ -155,7 +152,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trimStart(): Value<Context, String?> =
 		TrimValueOperator(context, this, null, trimStart = true, trimEnd = false)
 
@@ -187,7 +183,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trimStart(vararg characters: Char): Value<Context, String?> =
 		TrimValueOperator(context, this, of(characters.joinToString(separator = "")), trimStart = true, trimEnd = false)
 
@@ -222,7 +217,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/ltrim/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trimStart(characters: Value<Context, String?>): Value<Context, String?> =
 		TrimValueOperator(context, this, characters, trimStart = true, trimEnd = false)
 
@@ -252,7 +246,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trimEnd(): Value<Context, String?> =
 		TrimValueOperator(context, this, null, trimStart = false, trimEnd = true)
 
@@ -284,7 +277,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trimEnd(vararg characters: Char): Value<Context, String?> =
 		TrimValueOperator(context, this, of(characters.joinToString(separator = "")), trimStart = false, trimEnd = true)
 
@@ -319,7 +311,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/rtrim/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.trimEnd(characters: Value<Context, String?>): Value<Context, String?> =
 		TrimValueOperator(context, this, characters, trimStart = false, trimEnd = true)
 
@@ -349,7 +340,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toLower/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.lowercase(): Value<Context, String?> =
 		UnaryStringValueOperator(context, "toLower", this)
 
@@ -379,7 +369,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/toUpper/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.uppercase(): Value<Context, String?> =
 		UnaryStringValueOperator(context, "toUpper", this)
 
@@ -423,7 +412,6 @@ interface StringValueOperators : ValueOperators {
 	 * @see lengthUTF8
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <Context : Any> Value<Context, String?>.length: Value<Context, Int?>
 		get() = StrLenCPValueOperator(context, this)
 
@@ -467,7 +455,6 @@ interface StringValueOperators : ValueOperators {
 	 * @see length
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <Context : Any> Value<Context, String?>.lengthUTF8: Value<Context, Int?>
 		get() = StrLenBytesValueOperator(context, this)
 
@@ -512,7 +499,6 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.substring(startIndex: Value<Context, Int>, length: Value<Context, Int>): Value<Context, String?> =
 		SubstrCPValueOperator(context, this, startIndex, length)
 
@@ -552,7 +538,6 @@ interface StringValueOperators : ValueOperators {
 	 * @see substringUTF8
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.substring(indexes: IntRange): Value<Context, String?> =
 		SubstrCPValueOperator(context, this, of(indexes.first), of(indexes.last - indexes.first))
 
@@ -599,7 +584,6 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.substringUTF8(startIndex: Value<Context, Int>, byteCount: Value<Context, Int>): Value<Context, String?> =
 		SubstrBytesValueOperator(context, this, startIndex, byteCount)
 
@@ -641,7 +625,6 @@ interface StringValueOperators : ValueOperators {
 	 * @see substring
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.substringUTF8(indexes: IntRange): Value<Context, String?> =
 		SubstrBytesValueOperator(context, this, of(indexes.first), of(indexes.last - indexes.first))
 
@@ -675,7 +658,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
 		SplitValueOperator(context, this, delimiter)
 
@@ -708,7 +690,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceOne/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.replaceFirst(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		ReplaceValueOperator(context, "\$replaceOne", this, find, replacement)
 
@@ -741,7 +722,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceAll/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, String?>.replace(find: Value<Context, String?>, replacement: Value<Context, String?>): Value<Context, String?> =
 		ReplaceValueOperator(context, "\$replaceAll", this, find, replacement)
 
@@ -934,7 +914,6 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> concat(strings: List<Value<Context, String?>>): Value<Context, String?> =
 		ConcatValueOperator(context, strings)
 
@@ -963,8 +942,6 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> concat(vararg strings: Value<Context, String?>): Value<Context, String?> =
 		concat(strings.asList())
 
@@ -993,8 +970,6 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
-	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	infix fun <Context : Any> Value<Context, String?>.concat(other: Value<Context, String?>): Value<Context, String?> =
 		concat(listOf(this, other))
 

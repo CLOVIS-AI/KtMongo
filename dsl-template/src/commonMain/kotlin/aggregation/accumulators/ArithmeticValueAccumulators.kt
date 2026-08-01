@@ -65,7 +65,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.sum(value: Value<From, Number?>) {
 		accept(ArithmeticValueAccumulator("\$sum", value, this.path, context))
 	}
@@ -103,7 +102,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.average(value: Value<From, Number?>) {
 		accept(ArithmeticValueAccumulator("\$avg", value, this.path, context))
 	}
@@ -141,7 +139,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, T>.median(value: Value<From, Number?>) {
 		accept(MedianValueAccumulator(value, this.path, context))
 	}
@@ -179,7 +176,6 @@ interface ArithmeticValueAccumulators<From : Any, Into : Any> : ValueAccumulator
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes T : Number> Field<Into, List<T>>.percentiles(
 		value: Value<From, Number?>,
 		vararg percentiles: Double,
