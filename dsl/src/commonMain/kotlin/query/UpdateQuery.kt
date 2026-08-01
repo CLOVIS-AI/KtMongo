@@ -123,7 +123,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V, type: KType)
+	fun <V> Field<T, @kotlin.internal.Exact V>.set(value: V, type: KType)
 
 	/**
 	 * Replaces the value of a field with the specified [value].
@@ -151,7 +151,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.set(value: V) {
+	final inline infix fun <reified V> Field<T, @kotlin.internal.Exact V>.set(value: V) {
 		set(value, typeOf<V>())
 	}
 
@@ -181,7 +181,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.set(value: V) {
+	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.set(value: V) {
 		return this.field.set(value)
 	}
 
@@ -213,7 +213,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setIf(condition: Boolean, value: V) {
+	final inline fun <reified V> Field<T, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: V) {
 		if (condition)
 			this set value
 	}
@@ -246,7 +246,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setIf(condition: Boolean, value: V) {
+	final inline fun <reified V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: V) {
 		return this.field.setIf(condition, value)
 	}
 
@@ -278,7 +278,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setUnless(condition: Boolean, value: V) {
+	final inline fun <reified V> Field<T, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: V) {
 		if (!condition)
 			this set value
 	}
@@ -311,7 +311,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setUnless(condition: Boolean, value: V) {
+	final inline fun <reified V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: V) {
 		return this.field.setUnless(condition, value)
 	}
 
@@ -348,7 +348,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.inc(amount: V, type: KType)
+	fun <V : Number> Field<T, @kotlin.internal.Exact V>.inc(amount: V, type: KType)
 
 	/**
 	 * Increments a field by the specified [amount].
@@ -380,7 +380,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Number> Field<T, V>.inc(amount: V) {
+	final inline infix fun <reified V : Number> Field<T, @kotlin.internal.Exact V>.inc(amount: V) {
 		this.inc(amount, typeOf<V>())
 	}
 
@@ -414,7 +414,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Number> kotlin.reflect.KProperty1<T, V>.inc(amount: V) {
+	final inline infix fun <reified V : Number> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.inc(amount: V) {
 		return this.field.inc(amount)
 	}
 
@@ -448,7 +448,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline operator fun <@kotlin.internal.OnlyInputTypes reified V : Number> Field<T, V>.plusAssign(amount: V): Unit =
+	final inline operator fun <reified V : Number> Field<T, @kotlin.internal.Exact V>.plusAssign(amount: V): Unit =
 		this.inc(amount)
 
 	/**
@@ -481,7 +481,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline operator fun <@kotlin.internal.OnlyInputTypes reified V : Number> kotlin.reflect.KProperty1<T, V>.plusAssign(amount: V): Unit {
+	final inline operator fun <reified V : Number> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.plusAssign(amount: V): Unit {
 		return this.field.plusAssign(amount)
 	}
 
@@ -515,7 +515,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.mul(amount: V, type: KType)
+	fun <V : Number> Field<T, @kotlin.internal.Exact V>.mul(amount: V, type: KType)
 
 	/**
 	 * Multiplies a field by the specified [amount].
@@ -544,7 +544,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Number> Field<T, V>.mul(amount: V) {
+	final inline infix fun <reified V : Number> Field<T, @kotlin.internal.Exact V>.mul(amount: V) {
 		this.mul(amount, typeOf<V>())
 	}
 
@@ -575,7 +575,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Number> kotlin.reflect.KProperty1<T, V>.mul(amount: V) {
+	final inline infix fun <reified V : Number> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.mul(amount: V) {
 		return this.field.mul(amount)
 	}
 
@@ -606,7 +606,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline operator fun <@kotlin.internal.OnlyInputTypes reified V : Number> Field<T, V>.timesAssign(amount: V) {
+	final inline operator fun <reified V : Number> Field<T, @kotlin.internal.Exact V>.timesAssign(amount: V) {
 		this mul amount
 	}
 
@@ -637,7 +637,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline operator fun <@kotlin.internal.OnlyInputTypes reified V : Number> kotlin.reflect.KProperty1<T, V>.timesAssign(amount: V) {
+	final inline operator fun <reified V : Number> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.timesAssign(amount: V) {
 		return this.field.timesAssign(amount)
 	}
 
@@ -670,7 +670,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.unset()
+	fun <V> Field<T, @kotlin.internal.Exact V>.unset()
 
 	/**
 	 * Deletes a field.
@@ -698,7 +698,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.unset() {
+	fun <V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.unset() {
 		return this.field.unset()
 	}
 
@@ -729,7 +729,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.min(value: V, type: KType)
+	fun <V : Comparable<V>> Field<T, V?>.min(value: V, type: KType)
 
 	/**
 	 * Updates the value of a field to the specified [value] only if the specified [value] is less than the current value of the field.
@@ -755,7 +755,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> Field<T, V?>.min(value: V) {
+	final inline infix fun <reified V : Comparable<V>> Field<T, V?>.min(value: V) {
 		this.min(value, typeOf<V>())
 	}
 
@@ -783,7 +783,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.min(value: V) {
+	final inline infix fun <reified V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.min(value: V) {
 		return this.field.min(value)
 	}
 
@@ -811,7 +811,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.max(value: V, type: KType)
+	fun <V : Comparable<V>> Field<T, V?>.max(value: V, type: KType)
 
 	/**
 	 * Updates the value of a field to the specified [value] only if the specified [value] is greater than the current value of the field.
@@ -837,7 +837,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> Field<T, V?>.max(value: V) {
+	final inline infix fun <reified V : Comparable<V>> Field<T, V?>.max(value: V) {
 		this.max(value, typeOf<V>())
 	}
 
@@ -865,7 +865,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.max(value: V) {
+	final inline infix fun <reified V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.max(value: V) {
 		return this.field.max(value)
 	}
 
@@ -896,7 +896,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: Field<T, V>)
+	infix fun <V> Field<T, @kotlin.internal.Exact V>.renameTo(newName: Field<T, V>)
 
 	/**
 	 * Renames a field.
@@ -922,7 +922,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.renameTo(newName: Field<T, V>) {
+	infix fun <V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.renameTo(newName: Field<T, V>) {
 		return this.field.renameTo(newName)
 	}
 
@@ -950,7 +950,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: kotlin.reflect.KProperty1<T, V>) {
+	infix fun <V> Field<T, @kotlin.internal.Exact V>.renameTo(newName: kotlin.reflect.KProperty1<T, V>) {
 		return this.renameTo(newName.field)
 	}
 
@@ -978,7 +978,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	infix fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<T, V>.renameTo(newName: kotlin.reflect.KProperty1<T, V>) {
+	infix fun <V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.renameTo(newName: kotlin.reflect.KProperty1<T, V>) {
 		return this.field.renameTo(newName)
 	}
 
@@ -1300,7 +1300,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addToSet(value: V, type: KType)
+	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.addToSet(value: V, type: KType)
 
 	/**
 	 * Adds [value] at the end of the array, unless it is already present, in which case it does nothing.
@@ -1334,7 +1334,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.addToSet(value: V) {
+	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.addToSet(value: V) {
 		this.addToSet(value, typeOf<V>())
 	}
 
@@ -1370,7 +1370,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.addToSet(value: V) {
+	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.addToSet(value: V) {
 		return this.field.addToSet(value)
 	}
 
@@ -1413,7 +1413,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.addEachToSet(values: Iterable<V>, type: KType) {
+	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.addEachToSet(values: Iterable<V>, type: KType) {
 		for (value in values)
 			this.addToSet(value, type)
 	}
@@ -1457,7 +1457,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.addEachToSet(values: Iterable<V>) {
+	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.addEachToSet(values: Iterable<V>) {
 		this.addEachToSet(values, typeOf<V>())
 	}
 
@@ -1500,7 +1500,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.addEachToSet(values: Iterable<V>) {
+	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.addEachToSet(values: Iterable<V>) {
 		return this.field.addEachToSet(values)
 	}
 
@@ -1660,7 +1660,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.push(value: V, type: KType)
+	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.push(value: V, type: KType)
 
 	/**
 	 * Adds [value] at the end of the array.
@@ -1694,7 +1694,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.push(value: V) {
+	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.push(value: V) {
 		this.push(value, typeOf<V>())
 	}
 
@@ -1730,7 +1730,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.push(value: V) {
+	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.push(value: V) {
 		return this.field.push(value)
 	}
 
@@ -1768,7 +1768,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.pushEach(values: Iterable<V>, type: KType) {
+	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.pushEach(values: Iterable<V>, type: KType) {
 		for (value in values)
 			this.push(value, type)
 	}
@@ -1807,7 +1807,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.pushEach(values: Iterable<V>) {
+	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.pushEach(values: Iterable<V>) {
 		this.pushEach(values, typeOf<V>())
 	}
 
@@ -1845,7 +1845,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pushEach(values: Iterable<V>) {
+	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.pushEach(values: Iterable<V>) {
 		return this.field.pushEach(values)
 	}
 
@@ -1884,7 +1884,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.push(builder: PushBuilder<V>.() -> Unit, type: KType)
+	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.push(builder: PushBuilder<V>.() -> Unit, type: KType)
 
 	/**
 	 * Adds values to the end of the array with advanced options.
@@ -1921,7 +1921,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
+	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
 		push(builder, typeOf<V>())
 	}
 
@@ -1960,7 +1960,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
+	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.push(noinline builder: PushBuilder<V>.() -> Unit) {
 		return this.field.push(builder)
 	}
 
@@ -2571,7 +2571,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.pull(value: V, type: KType)
+	fun <@kotlin.internal.Exact V> Field<T, Collection<V>>.pull(value: V, type: KType)
 
 	/**
 	 * Removes all instances of [value] from the specified array.
@@ -2598,7 +2598,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.pull(value: V) {
+	final inline infix fun <@kotlin.internal.Exact reified V> Field<T, Collection<V>>.pull(value: V) {
 		this.pull(value, typeOf<V>())
 	}
 
@@ -2627,7 +2627,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pull(value: V) {
+	final inline infix fun <@kotlin.internal.Exact reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pull(value: V) {
 		return this.field.pull(value)
 	}
 
@@ -2663,7 +2663,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.pull(predicate: FilterQuery<V>.() -> Unit, type: KType)
+	fun <@kotlin.internal.Exact V> Field<T, Collection<V>>.pull(predicate: FilterQuery<V>.() -> Unit, type: KType)
 
 	/**
 	 * Removes all items of an array that match [predicate].
@@ -2697,7 +2697,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.pull(noinline predicate: FilterQuery<V>.() -> Unit) {
+	final inline infix fun <@kotlin.internal.Exact reified V> Field<T, Collection<V>>.pull(noinline predicate: FilterQuery<V>.() -> Unit) {
 		this.pull(predicate, typeOf<V>())
 	}
 
@@ -2733,7 +2733,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pull(noinline predicate: FilterQuery<V>.() -> Unit) {
+	final inline infix fun <@kotlin.internal.Exact reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pull(noinline predicate: FilterQuery<V>.() -> Unit) {
 		return this.field.pull(predicate)
 	}
 
@@ -2764,7 +2764,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, Collection<V>>.pullValues(predicate: FilterQueryPredicate<V>.() -> Unit, type: KType)
+	fun <@kotlin.internal.Exact V> Field<T, Collection<V>>.pullValues(predicate: FilterQueryPredicate<V>.() -> Unit, type: KType)
 
 	/**
 	 * Removes all items of an array that match [predicate].
@@ -2793,7 +2793,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, Collection<V>>.pullValues(noinline predicate: FilterQueryPredicate<V>.() -> Unit) {
+	final inline infix fun <@kotlin.internal.Exact reified V> Field<T, Collection<V>>.pullValues(noinline predicate: FilterQueryPredicate<V>.() -> Unit) {
 		this.pullValues(predicate, typeOf<V>())
 	}
 
@@ -2824,7 +2824,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pullValues(noinline predicate: FilterQueryPredicate<V>.() -> Unit) {
+	final inline infix fun <@kotlin.internal.Exact reified V> kotlin.reflect.KProperty1<T, Collection<V>>.pullValues(noinline predicate: FilterQueryPredicate<V>.() -> Unit) {
 		return this.field.pullValues(predicate)
 	}
 
@@ -3210,7 +3210,7 @@ interface UpsertQuery<T> : UpdateQuery<T> {
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	@KtMongoDsl
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setOnInsert(value: V, type: KType)
+	fun <V> Field<T, @kotlin.internal.Exact V>.setOnInsert(value: V, type: KType)
 
 	/**
 	 * If an upsert operation results in an insert of a document,
@@ -3240,7 +3240,7 @@ interface UpsertQuery<T> : UpdateQuery<T> {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.setOnInsert(value: V) {
+	final inline infix fun <reified V> Field<T, @kotlin.internal.Exact V>.setOnInsert(value: V) {
 		this.setOnInsert(value, typeOf<V>())
 	}
 
@@ -3272,7 +3272,7 @@ interface UpsertQuery<T> : UpdateQuery<T> {
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@KtMongoDsl
-	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<T, V>.setOnInsert(value: V) {
+	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.setOnInsert(value: V) {
 		return this.field.setOnInsert(value)
 	}
 
