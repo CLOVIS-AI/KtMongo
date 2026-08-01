@@ -33,6 +33,13 @@ data class Movie(
 	val title: String,
 	val year: Int,
 	val movie_comments: List<Comment> = emptyList(),
+	val reboot_of: RebootInformation? = null,
+)
+
+@Serializable
+data class RebootInformation(
+	val movie_id: ObjectId? = null,
+	val movie_info: List<Movie> = emptyList(),
 )
 
 @Serializable
@@ -125,7 +132,8 @@ val AggregationLookup by preparedSuite {
 			//       as: "movie_comments"
 			//    }
 			// },
-			.lookup(Movie::movie_comments) {
+			.lookup {
+				into(Movie::movie_comments)
 				from(allComments)
 				on(Movie::_id, Comment::movieId)
 			}
@@ -167,7 +175,8 @@ val AggregationLookup by preparedSuite {
 		val allStudents = students().aggregate()
 
 		val result = classes().aggregate()
-			.lookup(SchoolClass::studentsData) {
+			.lookup {
+				into(SchoolClass::studentsData)
 				from(allStudents)
 				on(studentsArrayField, SchoolStudent::_id)
 			}
@@ -178,5 +187,39 @@ val AggregationLookup by preparedSuite {
 
 		val writingClass = result.first { it._id == writing }
 		check(writingClass.studentsData.map { it.name }.sorted() == listOf("Madame Rig", "Sherlock Sym"))
+	}
+
+	test($$"$lookup into a nested document") {
+		val movieA = movies().newId()
+		val movieB = movies().newId()
+
+		movies().insertMany(
+			Movie(
+				_id = movieA,
+				runtime = 3500,
+				title = "A",
+				year = 2008,
+			),
+			Movie(
+				_id = movieB,
+				runtime = 2700,
+				title = "B",
+				year = 2017,
+				reboot_of = RebootInformation(movieA),
+			)
+		)
+
+		val allMovies = movies().aggregate()
+
+		val moviesWithSequel = movies().aggregate()
+			.lookup {
+				into(Movie::reboot_of / RebootInformation::movie_info)
+				from(allMovies)
+				on(Movie::reboot_of / RebootInformation::movie_id, Movie::_id)
+			}
+			.toList()
+
+		check(moviesWithSequel.first { it._id == movieA }.reboot_of?.movie_id == null)
+		check(moviesWithSequel.first { it._id == movieB }.reboot_of?.movie_info?.firstOrNull()?.title == "A")
 	}
 }

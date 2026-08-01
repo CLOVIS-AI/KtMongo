@@ -21,6 +21,7 @@ import opensavvy.ktmongo.dsl.aggregation.TestPipeline
 import opensavvy.ktmongo.dsl.aggregation.shouldBeBson
 import opensavvy.ktmongo.dsl.multiContextSuite
 import opensavvy.ktmongo.dsl.path.Field
+import opensavvy.prepared.suite.assertions.checkThrows
 import kotlin.time.Instant
 
 val LookupTest by multiContextSuite {
@@ -39,13 +40,26 @@ val LookupTest by multiContextSuite {
 		val creationDate: Instant,
 	)
 
+	test($$"$lookup without 'into' is not allowed") {
+		val departments = TestPipeline<Department>("departments")
+
+		checkThrows<IllegalStateException> {
+			TestPipeline<User>()
+				.lookup {
+					from(departments)
+					on(User::department, Department::_id)
+				}
+		}
+	}
+
 	test($$"Simple join with $lookup") {
 		val departments = TestPipeline<Department>("departments")
 
 		val outputField = Field.unsafe<List<Department>>("departments")
 
 		TestPipeline<User>()
-			.lookup(outputField) {
+			.lookup {
+				into(outputField)
 				from(departments)
 				on(User::department, Department::_id)
 			}
@@ -69,7 +83,8 @@ val LookupTest by multiContextSuite {
 		val resultDepartments = Field.unsafe<List<Department>>("departments")
 
 		TestPipeline<User>()
-			.lookup(resultDepartments) {
+			.lookup {
+				into(resultDepartments)
 				from(departments)
 				on(User::department, Department::_id)
 			}
@@ -102,7 +117,9 @@ val LookupTest by multiContextSuite {
 		val outputField = Field.unsafe<List<Department>>("departments")
 
 		TestPipeline<User>()
-			.lookup(outputField) {
+			.lookup {
+				into(outputField)
+
 				val userCreationDate = let(User::creationDate)
 
 				from(

@@ -61,7 +61,8 @@ interface HasLookup<Document : Any> : Pipeline<Document> {
 	 * )
 	 *
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         from(departments.aggregate())
 	 *         on(User::department, Department::_id)
 	 *     }
@@ -80,7 +81,8 @@ interface HasLookup<Document : Any> : Pipeline<Document> {
 	 * val temporaryField = Field.unsafe<List<Department>>("departments")
 	 *
 	 * users.aggregate()
-	 *     .lookup(temporaryField) {
+	 *     .lookup {
+	 *         into(temporaryField)
 	 *         from(departments.aggregate())
 	 *         on(User::departmentId, Department::_id)
 	 *     }
@@ -95,8 +97,8 @@ interface HasLookup<Document : Any> : Pipeline<Document> {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/)
 	 *
-	 * @param into The field into which the result of the lookup will be written.
 	 * @param block The operators declaring which lookup to perform.
+	 * - [LookupStageOperators.into]: Specifies in which field the result will be stored. **Mandatory**.
 	 * - [LookupStageOperators.from]: Specifies the foreign collection.
 	 * - [LookupStageOperators.on]: Specifies an equality criteria between a local and a foreign field.
 	 * Documents are only returned if the value of the two fields is strictly equal.
@@ -104,84 +106,9 @@ interface HasLookup<Document : Any> : Pipeline<Document> {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun <ForeignDocument : Any> lookup(
-		into: Field<Document, List<ForeignDocument>>,
 		block: LookupStageOperators<Document, ForeignDocument>.() -> Unit,
 	): Pipeline<Document> =
-		withStage(LookupStageBsonNode<Document, ForeignDocument>(into.path, context).apply(block).apply { freeze() })
-
-	/**
-	 * Performs an equality match join between this collection and another collection.
-	 *
-	 * For each document in this pipeline, matching documents from the foreign collection are appended
-	 * into the new array field [into].
-	 * If [into] already has a value, it is overwritten.
-	 *
-	 * ### Example
-	 *
-	 * ```kotlin
-	 * class Department(
-	 *     val _id: ObjectId,
-	 *     val name: String,
-	 * )
-	 *
-	 * class User(
-	 *     val _id: ObjectId,
-	 *     val name: String,
-	 *     val department: ObjectId,
-	 *     val departments: List<Department>,
-	 * )
-	 *
-	 * users.aggregate()
-	 *     .lookup(User::departments) {
-	 *         from(departments.aggregate())
-	 *         on(User::department, Department::_id)
-	 *     }
-	 * ```
-	 *
-	 * If you want to store the results in a temporary field (for example, for further processing in a subsequent stage),
-	 * you can use [Field.unsafe] to avoid adding the field to the DTO:
-	 * ```kotlin
-	 * class User(
-	 *     val _id: ObjectId,
-	 *     val name: String,
-	 *     val departmentId: ObjectId,
-	 *     val department: Department? = null,
-	 * )
-	 *
-	 * val temporaryField = Field.unsafe<List<Department>>("departments")
-	 *
-	 * users.aggregate()
-	 *     .lookup(temporaryField) {
-	 *         from(departments.aggregate())
-	 *         on(User::departmentId, Department::_id)
-	 *     }
-	 *     .project {
-	 *         // Write '.department' from the first value returned by the lookup.
-	 *         // Because we matched on an _id: ObjectId, we know there can never be multiple results.
-	 *         User::department set temporaryField[0]
-	 *     }
-	 * ```
-	 *
-	 * ### External resources
-	 *
-	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/)
-	 *
-	 * @param into The field into which the result of the lookup will be written.
-	 * @param block The operators declaring which lookup to perform.
-	 * - [LookupStageOperators.from]: Specifies the foreign collection.
-	 * - [LookupStageOperators.on]: Specifies an equality criteria between a local and a foreign field.
-	 * Documents are only returned if the value of the two fields is strictly equal.
-	 * - [LookupStageOperators.let]: Allow accessing a specific value within `from`.
-	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	fun <ForeignDocument : Any> lookup(
-		into: KProperty1<Document, List<ForeignDocument>>,
-		block: LookupStageOperators<Document, ForeignDocument>.() -> Unit,
-	): Pipeline<Document> =
-		lookup(
-			into = with(FieldDsl(context)) { into.field },
-			block = block,
-		)
+		withStage(LookupStageBsonNode<Document, ForeignDocument>(context).apply(block).apply { freeze() })
 }
 
 /**
@@ -227,6 +154,168 @@ interface HasLookupPipelineCompatibility<Document : Any> : Pipeline<Document> {
 interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : CompoundBsonNode, AggregationOperators, FieldDsl {
 
 	/**
+	 * Specifies in which field the result of the lookup will be stored into.
+	 *
+	 * **Specifying this parameter is mandatory.**
+	 *
+	 * To learn more about the `$lookup` stage, see [HasLookup.lookup].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val department: ObjectId,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         from(departments.aggregate())
+	 *         on(User::department, Department::_id)
+	 *     }
+	 * ```
+	 *
+	 * ### Arrays and subdocuments
+	 *
+	 * If you specify a field in a subdocument, the subdocument will be created even if no results are found.
+	 * The field itself will not.
+	 *
+	 * For example:
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * class DepartmentInfo(
+	 *     val _id: ObjectId,
+	 *     val department: Department? = null,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val departmentInfo: DepartmentInfo? = null,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departmentInfo / DepartmentInfo::department)
+	 *         from(departments.aggregate())
+	 *         on(User::departmentInfo / DepartmentInfo::_id, Department::_id)
+	 *     }
+	 *```
+	 *
+	 * If no departments are found, here is a potential returned user:
+	 * ```MongoDB-JSON
+	 * {
+	 *     "_id": { "$oid": "699dfad90ca573f85c0eec1c" },
+	 *     "name": "Bob",
+	 *     "departmentInfo": {}
+	 * }
+	 * ```
+	 *
+	 * Even though no results were found, `"departmentInfo"` is still set to an empty document.
+	 * Since `DepartmentInfo._id` does not have a default value, this request will fail during deserialization (missing mandatory field).
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#syntax): this method corresponds to the parameter `as`.
+	 */
+	fun into(field: Field<LocalDocument, List<ForeignDocument>>)
+
+	/**
+	 * Specifies in which field the result of the lookup will be stored into.
+	 *
+	 * **Specifying this parameter is mandatory.**
+	 *
+	 * To learn more about the `$lookup` stage, see [HasLookup.lookup].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val department: ObjectId,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         from(departments.aggregate())
+	 *         on(User::department, Department::_id)
+	 *     }
+	 * ```
+	 *
+	 * ### Arrays and subdocuments
+	 *
+	 * If you specify a field in a subdocument, the subdocument will be created even if no results are found.
+	 * The field itself will not.
+	 *
+	 * For example:
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * class DepartmentInfo(
+	 *     val _id: ObjectId,
+	 *     val department: Department? = null,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val departmentInfo: DepartmentInfo? = null,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departmentInfo / DepartmentInfo::department)
+	 *         from(departments.aggregate())
+	 *         on(User::departmentInfo / DepartmentInfo::_id, Department::_id)
+	 *     }
+	 *```
+	 *
+	 * If no departments are found, here is a potential returned user:
+	 * ```MongoDB-JSON
+	 * {
+	 *     "_id": { "$oid": "699dfad90ca573f85c0eec1c" },
+	 *     "name": "Bob",
+	 *     "departmentInfo": {}
+	 * }
+	 * ```
+	 *
+	 * Even though no results were found, `"departmentInfo"` is still set to an empty document.
+	 * Since `DepartmentInfo._id` does not have a default value, this request will fail during deserialization (missing mandatory field).
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#syntax): this method corresponds to the parameter `as`.
+	 */
+	fun into(field: KProperty1<LocalDocument, List<ForeignDocument>>) {
+		into(field.field)
+	}
+
+	/**
 	 * Specifies the foreign collection to join with.
 	 *
 	 * To learn more about the `$lookup` stage, see [HasLookup.lookup].
@@ -247,7 +336,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * )
 	 *
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         from(departments.aggregate())
 	 *         on(User::department, Department::_id)
 	 *     }
@@ -284,7 +374,9 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * )
 	 *
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
+	 *
 	 *         val userCreationDate = let(User::creationDate)
 	 *
 	 *         from(
@@ -333,7 +425,9 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * )
 	 *
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
+	 *
 	 *         val userCreationDate = let(User::creationDate)
 	 *
 	 *         from(
@@ -375,7 +469,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * )
 	 *
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         from(departments.aggregate())
 	 *         on(User::department, Department::_id)
 	 *     }
@@ -384,7 +479,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
 	 * ```kotlin
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         val department = let(User::department)
 	 *         from(
 	 *             departments.aggregate()
@@ -424,7 +520,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * )
 	 *
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         from(departments.aggregate())
 	 *         on(User::department, Department::_id)
 	 *     }
@@ -433,7 +530,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
 	 * ```kotlin
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         val department = let(User::department)
 	 *         from(
 	 *             departments.aggregate()
@@ -477,7 +575,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * )
 	 *
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         from(departments.aggregate())
 	 *         on(User::department, Department::_id)
 	 *     }
@@ -486,7 +585,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
 	 * ```kotlin
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         val department = let(User::department)
 	 *         from(
 	 *             departments.aggregate()
@@ -530,7 +630,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * )
 	 *
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         from(departments.aggregate())
 	 *         on(User::department, Department::_id)
 	 *     }
@@ -539,7 +640,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
 	 * ```kotlin
 	 * users.aggregate()
-	 *     .lookup(User::departments) {
+	 *     .lookup {
+	 *         into(User::departments)
 	 *         val department = let(User::department)
 	 *         from(
 	 *             departments.aggregate()
@@ -565,11 +667,20 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 
 @OptIn(LowLevelApi::class)
 private class LookupStageBsonNode<LocalDocument : Any, ForeignDocument : Any>(
-	val outputPath: Path,
 	context: BsonContext,
 ) : AbstractCompoundBsonNode(context), LookupStageOperators<LocalDocument, ForeignDocument> {
 
+	private var outputPath: Path? = null
 	private var nextLetIndex = 0
+
+	override fun into(field: Field<LocalDocument, List<ForeignDocument>>) {
+		outputPath = field.path
+	}
+
+	override fun freeze() {
+		check(outputPath != null) { "Specifying 'into' is mandatory for lookup stages, but found: $this" }
+		super.freeze()
+	}
 
 	@OptIn(DangerousMongoApi::class)
 	override fun from(foreignPipeline: HasLookupPipelineCompatibility<ForeignDocument>) {
