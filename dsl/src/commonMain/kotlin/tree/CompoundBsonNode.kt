@@ -22,7 +22,6 @@ package opensavvy.ktmongo.dsl.tree
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.utils.asImmutable
 
@@ -55,7 +54,6 @@ interface CompoundBsonNode : BsonNode, CompoundNode<BsonNode> {
 	 */
 	@LowLevelApi
 	@DangerousMongoApi
-	@KtMongoDsl
 	override fun accept(node: BsonNode)
 
 	companion object
@@ -80,7 +78,6 @@ abstract class AbstractCompoundBsonNode(
 
 	@LowLevelApi
 	@DangerousMongoApi
-	@KtMongoDsl
 	override fun accept(node: BsonNode) {
 		require(!frozen) { "This expression has already been frozen, it cannot accept the child expression $node" }
 		require(node != this) { "Trying to add an expression to itself!" }

@@ -23,7 +23,6 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
@@ -67,7 +66,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> Value<Context, Collection<Number?>>.average(): Value<Context, T> =
 		AverageArrayValueOperator(
 			input = this,
@@ -100,7 +98,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("averageFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> opensavvy.ktmongo.dsl.path.Field<Context, Collection<Number?>>.average(): Value<Context, T> =
 		of(this).average()
 
@@ -130,7 +127,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("averagePropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> kotlin.reflect.KProperty1<Context, Collection<Number?>>.average(): Value<Context, T> =
 		of(this).average()
 
@@ -161,7 +157,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("averageResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> Collection<Number?>.average(): Value<Context, T> =
 		of(this).average()
 
@@ -204,7 +199,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> Iterable<Value<Context, Number?>>.average(): Value<Context, T> =
 		AverageOfValueOperator(
 			input = this.toList(),
@@ -235,7 +229,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> average(vararg input: Value<Context, Number?>): Value<Context, T> =
 		AverageOfValueOperator(
 			input = input.asList(),
@@ -268,7 +261,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("averageByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> average(vararg input: opensavvy.ktmongo.dsl.path.Field<Context, Number?>): Value<Context, T> =
 		average(input = input.map { of(it) }.toTypedArray())
 
@@ -298,12 +290,10 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("averageByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> average(vararg input: kotlin.reflect.KProperty1<Context, Number?>): Value<Context, T> =
 		average(input = input.map { of(it) }.toTypedArray())
 
 	@Deprecated("Computing the average of 0 elements makes no sense, you should specify the elements to average as the receiver or as arguments.", level = DeprecationLevel.ERROR)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> average(): Value<Context, T> =
 		error("Computing the average of 0 elements makes no sense, did you forget to specify arguments?")
 
@@ -360,7 +350,6 @@ interface ArrayValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
 		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
@@ -408,7 +397,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 		variableName: String = "this",
@@ -450,7 +438,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 		variableName: String = "this",
@@ -492,7 +479,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
 		limit: Int,
 		variableName: String = "this",
@@ -534,7 +520,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterFieldReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.filter(
 		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
@@ -576,7 +561,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterFieldReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.filter(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 		variableName: String = "this",
@@ -618,7 +602,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterFieldReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.filter(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 		variableName: String = "this",
@@ -660,7 +643,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.filter(
 		limit: Int,
 		variableName: String = "this",
@@ -702,7 +684,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterPropertyReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.filter(
 		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
@@ -744,7 +725,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterPropertyReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.filter(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 		variableName: String = "this",
@@ -786,7 +766,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterPropertyReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.filter(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 		variableName: String = "this",
@@ -828,7 +807,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterPropertyReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.filter(
 		limit: Int,
 		variableName: String = "this",
@@ -871,7 +849,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.filter(
 		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
@@ -914,7 +891,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterResultReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.filter(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 		variableName: String = "this",
@@ -957,7 +933,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterResultReceiverByProperty")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.filter(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 		variableName: String = "this",
@@ -1000,7 +975,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("filterResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.filter(
 		limit: Int,
 		variableName: String = "this",
@@ -1081,7 +1055,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.take(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1117,7 +1090,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.take(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1149,7 +1121,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.take(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1181,7 +1152,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <Context : Any, T> Value<Context, Collection<T>>.take(
 		limit: Int,
 	): Value<Context, List<T>> =
@@ -1213,7 +1183,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1245,7 +1214,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1277,7 +1245,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1309,7 +1276,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.take(
 		limit: Int,
 	): Value<Context, List<T>> =
@@ -1341,7 +1307,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takePropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1373,7 +1338,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takePropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1405,7 +1369,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takePropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1437,7 +1400,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takePropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.take(
 		limit: Int,
 	): Value<Context, List<T>> =
@@ -1470,7 +1432,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.take(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1503,7 +1464,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.take(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1536,7 +1496,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.take(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1569,7 +1528,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <Context : Any, T> Collection<T>.take(
 		limit: Int,
 	): Value<Context, List<T>> =
@@ -1624,7 +1582,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1660,7 +1617,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1692,7 +1648,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1724,7 +1679,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
 		limit: Int,
 	): Value<Context, List<T>> =
@@ -1756,7 +1710,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1788,7 +1741,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1820,7 +1772,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1852,7 +1803,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.takeLast(
 		limit: Int,
 	): Value<Context, List<T>> =
@@ -1884,7 +1834,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1916,7 +1865,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1948,7 +1896,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
@@ -1980,7 +1927,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.takeLast(
 		limit: Int,
 	): Value<Context, List<T>> =
@@ -2013,7 +1959,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.takeLast(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -2046,7 +1991,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.takeLast(
 		limit: opensavvy.ktmongo.dsl.path.Field<Context, Int>,
 	): Value<Context, List<T>> =
@@ -2079,7 +2023,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.takeLast(
 		limit: kotlin.reflect.KProperty1<Context, Int>,
 	): Value<Context, List<T>> =
@@ -2112,7 +2055,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("takeLastResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun <Context : Any, T> Collection<T>.takeLast(
 		limit: Int,
 	): Value<Context, List<T>> =
@@ -2170,7 +2112,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T, R> Value<Context, Collection<T>>.map(
 		variableName: String = "this",
 		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
@@ -2211,7 +2152,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("mapFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T, R> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.map(
 		variableName: String = "this",
 		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
@@ -2247,7 +2187,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("mapPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T, R> kotlin.reflect.KProperty1<Context, Collection<T>>.map(
 		variableName: String = "this",
 		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
@@ -2284,7 +2223,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("mapResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T, R> Collection<T>.map(
 		variableName: String = "this",
 		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
@@ -2349,7 +2287,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedDescending Sort by elements in descending order.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.sorted(): Value<Context, List<T>> =
 		SortValueOperator(
 			input = this,
@@ -2389,7 +2326,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sortedFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.sorted(): Value<Context, List<T>> =
 		of(this).sorted()
 
@@ -2425,7 +2361,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sortedPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.sorted(): Value<Context, List<T>> =
 		of(this).sorted()
 
@@ -2462,7 +2397,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sortedResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.sorted(): Value<Context, List<T>> =
 		of(this).sorted()
 
@@ -2496,7 +2430,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedDescending Sort by fields of elements.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.sortedDescending(): Value<Context, List<T>> =
 		SortValueOperator(
 			input = this,
@@ -2536,7 +2469,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sortedDescendingFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.sortedDescending(): Value<Context, List<T>> =
 		of(this).sortedDescending()
 
@@ -2572,7 +2504,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sortedDescendingPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.sortedDescending(): Value<Context, List<T>> =
 		of(this).sortedDescending()
 
@@ -2609,7 +2540,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sortedDescendingResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.sortedDescending(): Value<Context, List<T>> =
 		of(this).sortedDescending()
 
@@ -2645,7 +2575,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedDescending Sort by the elements themselves (descending order).
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.sortedBy(
 		order: SortOptionDsl<T & Any>.() -> Unit,
 	): Value<Context, List<T>> =
@@ -2689,7 +2618,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sortedByFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> opensavvy.ktmongo.dsl.path.Field<Context, Collection<T>>.sortedBy(
 		order: SortOptionDsl<T & Any>.() -> Unit,
 	): Value<Context, List<T>> =
@@ -2729,7 +2657,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sortedByPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> kotlin.reflect.KProperty1<Context, Collection<T>>.sortedBy(
 		order: SortOptionDsl<T & Any>.() -> Unit,
 	): Value<Context, List<T>> =
@@ -2770,7 +2697,6 @@ interface ArrayValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sortedByResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Collection<T>.sortedBy(
 		order: SortOptionDsl<T & Any>.() -> Unit,
 	): Value<Context, List<T>> =

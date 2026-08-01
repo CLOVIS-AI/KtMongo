@@ -17,7 +17,6 @@
 package opensavvy.ktmongo.dsl.tree
 
 import opensavvy.ktmongo.dsl.DangerousMongoApi
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 
 /**
@@ -54,7 +53,6 @@ interface CompoundNode<N : Node> {
 	 */
 	@LowLevelApi
 	@DangerousMongoApi
-	@KtMongoDsl
 	fun accept(node: N)
 
 }
@@ -66,7 +64,6 @@ interface CompoundNode<N : Node> {
  */
 @LowLevelApi
 @DangerousMongoApi
-@KtMongoDsl
 fun <N : Node> CompoundNode<N>.acceptAll(nodes: Iterable<N>) {
 	for (child in nodes) {
 		accept(child)

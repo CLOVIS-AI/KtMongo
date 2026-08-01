@@ -47,7 +47,6 @@ interface HasSkip<Document : Any> : Pipeline<Document> {
 	 *
 	 * @see HasLimit.limit Limit the number of elements.
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun skip(amount: Long): Pipeline<Document> =
 		withStage(SkipStage(amount, context))
@@ -69,7 +68,6 @@ interface HasSkip<Document : Any> : Pipeline<Document> {
 	 *
 	 * @see HasLimit.limit Limit the number of elements.
 	 */
-	@KtMongoDsl
 	fun skip(amount: Int): Pipeline<Document> =
 		skip(amount.toLong())
 

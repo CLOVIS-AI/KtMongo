@@ -85,7 +85,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see FilterQuery.eq Shorthand.
 	 */
-	@KtMongoDsl
 	fun eq(value: T)
 
 	/**
@@ -121,7 +120,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.eqNotNull Shorthand.
 	 * @see eq Equality filter.
 	 */
-	@KtMongoDsl
 	fun eqNotNull(value: T?) {
 		if (value != null) eq(value)
 	}
@@ -155,7 +153,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see FilterQuery.ne Shorthand.
 	 */
-	@KtMongoDsl
 	fun ne(value: T)
 
 	// endregion
@@ -188,7 +185,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see doesNotExist Opposite.
 	 * @see isNotNull Identical, but does not match elements where the field is `null`.
 	 */
-	@KtMongoDsl
 	fun exists()
 
 	/**
@@ -218,7 +214,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see exists Opposite.
 	 * @see isNull Only matches elements that are specifically `null`.
 	 */
-	@KtMongoDsl
 	fun doesNotExist()
 
 	// endregion
@@ -253,7 +248,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see isNull Checks if a value has the type [BsonType.Null].
 	 * @see isUndefined Checks if a value has the type [BsonType.Undefined].
 	 */
-	@KtMongoDsl
 	fun hasType(type: BsonType)
 
 	// endregion
@@ -287,7 +281,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see FilterQuery.not Shorthand.
 	 */
-	@KtMongoDsl
 	fun not(expression: FilterQueryPredicate<T>.() -> Unit)
 
 	// endregion
@@ -317,7 +310,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see doesNotExist Checks if the value is not set.
 	 * @see isNotNull Opposite.
 	 */
-	@KtMongoDsl
 	fun isNull() =
 		hasType(BsonType.Null)
 
@@ -344,7 +336,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.isNotNull Shorthand.
 	 * @see isNull Opposite.
 	 */
-	@KtMongoDsl
 	fun isNotNull() =
 		not { isNull() }
 
@@ -371,7 +362,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.isUndefined Shorthand.
 	 * @see isNotUndefined Opposite.
 	 */
-	@KtMongoDsl
 	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	fun isUndefined() =
@@ -400,7 +390,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.isNotUndefined Shorthand.
 	 * @see isUndefined Opposite.
 	 */
-	@KtMongoDsl
 	@Suppress("DeprecatedCallableAddReplaceWith", "DEPRECATION")
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
 	fun isNotUndefined() =
@@ -432,7 +421,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.gt
 	 * @see gtNotNull
 	 */
-	@KtMongoDsl
 	fun gt(value: T)
 
 	/**
@@ -460,7 +448,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.gtNotNull
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
-	@KtMongoDsl
 	fun gtNotNull(value: T?) {
 		if (value != null)
 			gt(value)
@@ -489,7 +476,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.gte
 	 * @see gteNotNull
 	 */
-	@KtMongoDsl
 	fun gte(value: T)
 
 	/**
@@ -517,7 +503,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.gteNotNull
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
-	@KtMongoDsl
 	fun gteNotNull(value: T?) {
 		if (value != null)
 			gte(value)
@@ -546,7 +531,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.lt
 	 * @see ltNotNull
 	 */
-	@KtMongoDsl
 	fun lt(value: T)
 
 	/**
@@ -574,7 +558,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.ltNotNull
 	 * @see ltNotNull Learn more about the 'notNull' variants
 	 */
-	@KtMongoDsl
 	fun ltNotNull(value: T?) {
 		if (value != null)
 			lt(value)
@@ -603,7 +586,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.lte
 	 * @see lteNotNull
 	 */
-	@KtMongoDsl
 	fun lte(value: T)
 
 	/**
@@ -631,7 +613,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.lteNotNull
 	 * @see eqNotNull Learn more about the 'notNull' variants
 	 */
-	@KtMongoDsl
 	fun lteNotNull(value: T?) {
 		if (value != null)
 			lte(value)
@@ -665,7 +646,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/mod/)
 	 */
-	@KtMongoDsl
 	fun mod(divisor: Long, remainder: Long)
 
 	// endregion
@@ -695,7 +675,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see FilterQuery.isOneOf
 	 */
-	@KtMongoDsl
 	fun isOneOf(values: Collection<T>)
 
 	/**
@@ -722,7 +701,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see FilterQuery.isOneOf
 	 */
-	@KtMongoDsl
 	fun isOneOf(vararg values: T) {
 		isOneOf(values.asList())
 	}
@@ -757,7 +735,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.isNotOneOf
 	 * @see ne
 	 */
-	@KtMongoDsl
 	fun isNotOneOf(values: Collection<T>)
 
 	/**
@@ -787,7 +764,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * @see FilterQuery.isNotOneOf
 	 * @see ne
 	 */
-	@KtMongoDsl
 	fun isNotOneOf(vararg values: T) {
 		isNotOneOf(values.asList())
 	}
@@ -845,7 +821,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 * Therefore, `"^S"` will match `"First line\nSecond line"`, which would not match otherwise.
 	 * @see FilterQuery.regex Shorthand syntax
 	 */
-	@KtMongoDsl
 	fun regex(
 		@Language("JSRegexp") pattern: String,
 		caseInsensitive: Boolean = false,
@@ -886,7 +861,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/)
 	 */
-	@KtMongoDsl
 	fun bitsAllClear(mask: UInt)
 
 	/**
@@ -903,7 +877,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllClear/)
 	 */
-	@KtMongoDsl
 	fun bitsAllClear(mask: ByteArray)
 
 	/**
@@ -935,7 +908,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
 	 */
-	@KtMongoDsl
 	fun bitsAllSet(mask: UInt)
 
 	/**
@@ -952,7 +924,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAllSet/)
 	 */
-	@KtMongoDsl
 	fun bitsAllSet(mask: ByteArray)
 
 	/**
@@ -984,7 +955,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/)
 	 */
-	@KtMongoDsl
 	fun bitsAnyClear(mask: UInt)
 
 	/**
@@ -1001,7 +971,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnyClear/)
 	 */
-	@KtMongoDsl
 	fun bitsAnyClear(mask: ByteArray)
 
 	/**
@@ -1033,7 +1002,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/)
 	 */
-	@KtMongoDsl
 	fun bitsAnySet(mask: UInt)
 
 	/**
@@ -1050,7 +1018,6 @@ interface FilterQueryPredicate<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/bitsAnySet/)
 	 */
-	@KtMongoDsl
 	fun bitsAnySet(mask: ByteArray)
 
 	// endregion

@@ -21,7 +21,6 @@ package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
@@ -65,7 +64,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> acos(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "acos", value)
 
@@ -100,7 +98,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("acosByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> acos(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		acos(of(value))
 
@@ -135,7 +132,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("acosByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> acos(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		acos(of(value))
 
@@ -170,7 +166,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun acos(value: Double?): Value<Any, Double?> =
 		acos(of(value))
 
@@ -201,7 +196,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> acosh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "acosh", value)
 
@@ -234,7 +228,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("acoshByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> acosh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		acosh(of(value))
 
@@ -267,7 +260,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("acoshByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> acosh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		acosh(of(value))
 
@@ -300,7 +292,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun acosh(value: Double?): Value<Any, Double?> =
 		acosh(of(value))
 
@@ -331,7 +322,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> cos(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "cos", value)
 
@@ -364,7 +354,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("cosByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> cos(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		cos(of(value))
 
@@ -397,7 +386,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("cosByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> cos(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		cos(of(value))
 
@@ -430,7 +418,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun cos(value: Double?): Value<Any, Double?> =
 		cos(of(value))
 
@@ -459,7 +446,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> cosh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "cosh", value)
 
@@ -490,7 +476,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("coshByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> cosh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		cosh(of(value))
 
@@ -521,7 +506,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("coshByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> cosh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		cosh(of(value))
 
@@ -552,7 +536,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun cosh(value: Double?): Value<Any, Double?> =
 		cosh(of(value))
 
@@ -585,7 +568,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> asin(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "asin", value)
 
@@ -620,7 +602,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("asinByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> asin(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		asin(of(value))
 
@@ -655,7 +636,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("asinByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> asin(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		asin(of(value))
 
@@ -690,7 +670,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun asin(value: Double?): Value<Any, Double?> =
 		asin(of(value))
 
@@ -719,7 +698,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> asinh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "asinh", value)
 
@@ -750,7 +728,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("asinhByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> asinh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		asinh(of(value))
 
@@ -781,7 +758,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("asinhByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> asinh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		asinh(of(value))
 
@@ -812,7 +788,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun asinh(value: Double?): Value<Any, Double?> =
 		asinh(of(value))
 
@@ -843,7 +818,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> sin(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "sin", value)
 
@@ -876,7 +850,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sinByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> sin(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		sin(of(value))
 
@@ -909,7 +882,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sinByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> sin(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		sin(of(value))
 
@@ -942,7 +914,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun sin(value: Double?): Value<Any, Double?> =
 		sin(of(value))
 
@@ -971,7 +942,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> sinh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "sinh", value)
 
@@ -1002,7 +972,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sinhByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> sinh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		sinh(of(value))
 
@@ -1033,7 +1002,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("sinhByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> sinh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		sinh(of(value))
 
@@ -1064,7 +1032,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun sinh(value: Double?): Value<Any, Double?> =
 		sinh(of(value))
 
@@ -1095,7 +1062,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> atan(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "atan", value)
 
@@ -1128,7 +1094,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("atanByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> atan(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		atan(of(value))
 
@@ -1161,7 +1126,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("atanByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> atan(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		atan(of(value))
 
@@ -1194,7 +1158,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun atan(value: Double?): Value<Any, Double?> =
 		atan(of(value))
 
@@ -1225,7 +1188,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> atanh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "atanh", value)
 
@@ -1258,7 +1220,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("atanhByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> atanh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		atanh(of(value))
 
@@ -1291,7 +1252,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("atanhByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> atanh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		atanh(of(value))
 
@@ -1324,7 +1284,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun atanh(value: Double?): Value<Any, Double?> =
 		atanh(of(value))
 
@@ -1355,7 +1314,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> tan(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "tan", value)
 
@@ -1388,7 +1346,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("tanByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> tan(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		tan(of(value))
 
@@ -1421,7 +1378,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("tanByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> tan(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		tan(of(value))
 
@@ -1454,7 +1410,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun tan(value: Double?): Value<Any, Double?> =
 		tan(of(value))
 
@@ -1483,7 +1438,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> tanh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "tanh", value)
 
@@ -1514,7 +1468,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("tanhByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> tanh(value: opensavvy.ktmongo.dsl.path.Field<Context, Double?>): Value<Context, Double?> =
 		tanh(of(value))
 
@@ -1545,7 +1498,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("tanhByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> tanh(value: kotlin.reflect.KProperty1<Context, Double?>): Value<Context, Double?> =
 		tanh(of(value))
 
@@ -1576,7 +1528,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun tanh(value: Double?): Value<Any, Double?> =
 		tanh(of(value))
 
@@ -1608,7 +1559,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * @see toDegrees Opposite operation
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, Double>.toRadians(): Value<Context, Double> =
 		UnaryTrigonometryOperator(context, "degreesToRadians", this)
 
@@ -1639,7 +1589,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toRadiansFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, Double>.toRadians(): Value<Context, Double> =
 		of(this).toRadians()
 
@@ -1670,7 +1619,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toRadiansPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> kotlin.reflect.KProperty1<Context, Double>.toRadians(): Value<Context, Double> =
 		of(this).toRadians()
 
@@ -1702,7 +1650,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toRadiansResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Double.toRadians(): Value<Any, Double> =
 		of(this).toRadians()
 
@@ -1731,7 +1678,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * @see toRadians Opposite operation
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, Double>.toDegrees(): Value<Context, Double> =
 		UnaryTrigonometryOperator(context, "radiansToDegrees", this)
 
@@ -1762,7 +1708,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toDegreesFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, Double>.toDegrees(): Value<Context, Double> =
 		of(this).toDegrees()
 
@@ -1793,7 +1738,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toDegreesPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> kotlin.reflect.KProperty1<Context, Double>.toDegrees(): Value<Context, Double> =
 		of(this).toDegrees()
 
@@ -1825,7 +1769,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toDegreesResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Double.toDegrees(): Value<Any, Double> =
 		of(this).toDegrees()
 

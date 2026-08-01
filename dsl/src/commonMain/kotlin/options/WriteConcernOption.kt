@@ -335,6 +335,7 @@ sealed class WriteAcknowledgment {
  *
  * See [writeConcern].
  */
+@KtMongoDsl
 interface WithWriteConcern : Options {
 
 	/**
@@ -376,7 +377,6 @@ interface WithWriteConcern : Options {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/write-concern)
 	 */
-	@KtMongoDsl
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun writeConcern(concern: WriteConcern) {
 		accept(WriteConcernOption(concern, context))

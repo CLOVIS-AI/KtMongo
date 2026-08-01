@@ -45,7 +45,6 @@ interface HasSet<Document : Any> : Pipeline<Document> {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/)
 	 */
-	@KtMongoDsl
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun set(
 		block: SetStageOperators<Document>.() -> Unit,
@@ -85,7 +84,6 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: Value<T, V>)
 
 	// endregion
@@ -102,7 +100,6 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Value<T, Boolean>, value: Value<T, V>) =
 		this set cond(condition, value, of(this))
 
@@ -117,7 +114,6 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Value<T, Boolean>, value: Value<T, V>) =
 		this set cond(condition, of(this), value)
 

@@ -35,6 +35,7 @@ import kotlin.reflect.KProperty1
 /**
  * Pipeline implementing the `$unset` stage.
  */
+@KtMongoDsl
 interface HasUnset<Document : Any> : Pipeline<Document> {
 
 	/**
@@ -66,7 +67,6 @@ interface HasUnset<Document : Any> : Pipeline<Document> {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unset)
 	 */
-	@KtMongoDsl
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun unset(
 		block: UnsetStageOperators<Document>.() -> Unit,

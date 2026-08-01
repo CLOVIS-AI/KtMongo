@@ -18,7 +18,6 @@ package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
@@ -62,7 +61,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acos/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> acos(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "acos", value)
 
@@ -93,7 +91,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/acosh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> acosh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "acosh", value)
 
@@ -124,7 +121,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cos/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> cos(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "cos", value)
 
@@ -153,7 +149,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cosh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> cosh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "cosh", value)
 
@@ -186,7 +181,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asin/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> asin(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "asin", value)
 
@@ -215,7 +209,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/asinh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> asinh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "asinh", value)
 
@@ -246,7 +239,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sin/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> sin(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "sin", value)
 
@@ -275,7 +267,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sinh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> sinh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "sinh", value)
 
@@ -306,7 +297,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atan/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> atan(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "atan", value)
 
@@ -337,7 +327,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/atanh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> atanh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "atanh", value)
 
@@ -368,7 +357,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tan/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> tan(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "tan", value)
 
@@ -397,7 +385,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/tanh/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> tanh(value: Value<Context, Double?>): Value<Context, Double?> =
 		UnaryTrigonometryOperator(context, "tanh", value)
 
@@ -429,7 +416,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * @see toDegrees Opposite operation
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, Double>.toRadians(): Value<Context, Double> =
 		UnaryTrigonometryOperator(context, "degreesToRadians", this)
 
@@ -458,7 +444,6 @@ interface TrigonometryValueOperators : ValueOperators {
 	 * @see toRadians Opposite operation
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any> Value<Context, Double>.toDegrees(): Value<Context, Double> =
 		UnaryTrigonometryOperator(context, "radiansToDegrees", this)
 

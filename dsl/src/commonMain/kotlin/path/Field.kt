@@ -22,7 +22,6 @@ package opensavvy.ktmongo.dsl.path
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.path.Field.Companion.unsafe
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import kotlin.reflect.KProperty1
 
@@ -159,6 +158,7 @@ interface Field<in Root, out Type> {
  * In most situations, an instance of this interface should be provided in all operations that require it.
  * For example, the `find {}` method provides an instance of [FilterQuery], which implements this interface.
  */
+@KtMongoDsl
 interface FieldDsl {
 
 	/**
@@ -220,7 +220,6 @@ interface FieldDsl {
 	 * @see get Access a specific element of an array
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	operator fun <Root, Type, Child> Field<Root, Type>.div(child: Field<Type, Child>): Field<Root, Child> =
 		FieldImpl(path / child.path)
 
@@ -252,7 +251,6 @@ interface FieldDsl {
 	 * @see get Access a specific element of an array
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	operator fun <Root, Type, Child> Field<Root, Type>.div(child: KProperty1<in Type & Any, Child>): Field<Root, Child> =
 		FieldImpl(path / context.pathOf(child))
 
@@ -294,7 +292,6 @@ interface FieldDsl {
 	 *
 	 * @see Field.Companion.unsafe Similar, but for accessing a field of the root document.
 	 */
-	@OptIn(LowLevelApi::class)
 	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: String): Field<Root, Child> =
 		this.field.unsafe(child)
 
@@ -330,7 +327,6 @@ interface FieldDsl {
 	 *
 	 * @see div The recommended type-safe accessor.
 	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	infix fun <Root, Child> Field<Root, *>.unsafe(child: KProperty1<*, Child>): Field<Root, Child> =
 		this.unsafe(child.field)
 
@@ -348,7 +344,6 @@ interface FieldDsl {
 	 *
 	 * @see div The recommended type-safe accessor.
 	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: Field<*, Child>): Field<Root, Child> =
 		this.field.unsafe(child)
 
@@ -366,7 +361,6 @@ interface FieldDsl {
 	 *
 	 * @see div The recommended type-safe accessor.
 	 */
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: KProperty1<*, Child>): Field<Root, Child> =
 		this.field.unsafe(child)
 
@@ -401,7 +395,6 @@ interface FieldDsl {
 	 *
 	 * @see get Access a specific element of an array
 	 */
-	@KtMongoDsl
 	operator fun <Root, Parent, Child> KProperty1<Root, Parent>.div(child: KProperty1<Parent & Any, Child>): Field<Root, Child> =
 		this.field / child
 
@@ -429,7 +422,6 @@ interface FieldDsl {
 	 * // → 'friends.2.name'
 	 * ```
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	operator fun <Root, Type> Field<Root, Collection<Type>>.get(index: Int): Field<Root, Type> =
 		FieldImpl(this.path / PathSegment.Indexed(index))
@@ -458,7 +450,6 @@ interface FieldDsl {
 	 * // → 'friends.$2.name'
 	 * ```
 	 */
-	@KtMongoDsl
 	operator fun <Root, Type> KProperty1<Root, Collection<Type>>.get(index: Int): Field<Root, Type> =
 		this.field[index]
 
@@ -486,7 +477,6 @@ interface FieldDsl {
 	 * // → 'friends.bob.name'
 	 * ```
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class)
 	operator fun <Root, Type> Field<Root, Map<String, Type>>.get(key: String): Field<Root, Type> =
 		FieldImpl(this.path / PathSegment.Field(key))
@@ -515,7 +505,6 @@ interface FieldDsl {
 	 * // → 'friends.bob.name'
 	 * ```
 	 */
-	@KtMongoDsl
 	operator fun <Root, Type> KProperty1<Root, Map<String, Type>>.get(index: String): Field<Root, Type> =
 		this.field[index]
 

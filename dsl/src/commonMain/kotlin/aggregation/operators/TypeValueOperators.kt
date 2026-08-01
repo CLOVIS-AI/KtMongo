@@ -64,7 +64,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see BsonType List of possible types.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> Value<R, *>.type: Value<R, BsonType>
 		get() = TypeValue(context, this)
 
@@ -92,7 +91,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see BsonType List of possible types.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.type: Value<R, BsonType>
 		get() = of(this).type
 
@@ -120,7 +118,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see BsonType List of possible types.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> kotlin.reflect.KProperty1<R, *>.type: Value<R, BsonType>
 		get() = of(this).type
 
@@ -150,7 +147,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val Any?.type: Value<Any, BsonType>
 		get() = of(this).type
 
@@ -193,7 +189,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get a value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> Value<R, *>.isArray: Value<R, Boolean>
 		get() = IsArrayValue(context, this)
 
@@ -220,7 +215,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get a value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.isArray: Value<R, Boolean>
 		get() = of(this).isArray
 
@@ -247,7 +241,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get a value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> kotlin.reflect.KProperty1<R, *>.isArray: Value<R, Boolean>
 		get() = of(this).isArray
 
@@ -276,7 +269,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val Any?.isArray: Value<Any, Boolean>
 		get() = of(this).isArray
 
@@ -325,7 +317,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get a value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> Value<R, *>.isNumber: Value<R, Boolean>
 		get() = IsNumberValue(context, this)
 
@@ -358,7 +349,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get a value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.isNumber: Value<R, Boolean>
 		get() = of(this).isNumber
 
@@ -391,7 +381,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get a value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val <R : Any> kotlin.reflect.KProperty1<R, *>.isNumber: Value<R, Boolean>
 		get() = of(this).isNumber
 
@@ -426,7 +415,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	val Any?.isNumber: Value<Any, Boolean>
 		get() = of(this).isNumber
 
@@ -480,7 +468,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toBoolean(): Value<R, Boolean> =
 		ConvertToValue(context, this, "Bool")
 
@@ -520,7 +507,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toBooleanFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toBoolean(): Value<R, Boolean> =
 		of(this).toBoolean()
 
@@ -560,7 +546,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toBooleanPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toBoolean(): Value<R, Boolean> =
 		of(this).toBoolean()
 
@@ -601,7 +586,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toBooleanResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Any?.toBoolean(): Value<Any, Boolean> =
 		of(this).toBoolean()
 
@@ -657,7 +641,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toInstant(): Value<R, Instant> =
 		ConvertToValue(context, this, "Date")
 
@@ -715,7 +698,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toInstantFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toInstant(): Value<R, Instant> =
 		of(this).toInstant()
 
@@ -773,7 +755,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toInstantPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toInstant(): Value<R, Instant> =
 		of(this).toInstant()
 
@@ -832,7 +813,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toInstantResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Any?.toInstant(): Value<Any, Instant> =
 		of(this).toInstant()
 
@@ -882,7 +862,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toDouble(): Value<R, Double> =
 		ConvertToValue(context, this, "Double")
 
@@ -934,7 +913,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toDoubleFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toDouble(): Value<R, Double> =
 		of(this).toDouble()
 
@@ -986,7 +964,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toDoublePropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toDouble(): Value<R, Double> =
 		of(this).toDouble()
 
@@ -1039,7 +1016,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toDoubleResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Any?.toDouble(): Value<Any, Double> =
 		of(this).toDouble()
 
@@ -1090,7 +1066,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toInt(): Value<R, Int> =
 		ConvertToValue(context, this, "Int")
 
@@ -1143,7 +1118,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toIntFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toInt(): Value<R, Int> =
 		of(this).toInt()
 
@@ -1196,7 +1170,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toIntPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toInt(): Value<R, Int> =
 		of(this).toInt()
 
@@ -1250,7 +1223,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toIntResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Any?.toInt(): Value<Any, Int> =
 		of(this).toInt()
 
@@ -1300,7 +1272,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toLong(): Value<R, Long> =
 		ConvertToValue(context, this, "Long")
 
@@ -1352,7 +1323,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toLongFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toLong(): Value<R, Long> =
 		of(this).toLong()
 
@@ -1404,7 +1374,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toLongPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toLong(): Value<R, Long> =
 		of(this).toLong()
 
@@ -1457,7 +1426,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toLongResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Any?.toLong(): Value<Any, Long> =
 		of(this).toLong()
 
@@ -1495,7 +1463,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toObjectId(): Value<R, ObjectId> =
 		ConvertToValue(context, this, "ObjectId")
 
@@ -1535,7 +1502,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toObjectIdFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toObjectId(): Value<R, ObjectId> =
 		of(this).toObjectId()
 
@@ -1575,7 +1541,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toObjectIdPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toObjectId(): Value<R, ObjectId> =
 		of(this).toObjectId()
 
@@ -1616,7 +1581,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toObjectIdResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Any?.toObjectId(): Value<Any, ObjectId> =
 		of(this).toObjectId()
 
@@ -1659,7 +1623,6 @@ interface TypeValueOperators : ValueOperators {
 	 * @see type Get the value's type.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toText(): Value<R, String> =
 		ConvertToValue(context, this, "String")
 
@@ -1704,7 +1667,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toTextFieldReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toText(): Value<R, String> =
 		of(this).toText()
 
@@ -1749,7 +1711,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toTextPropertyReceiver")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toText(): Value<R, String> =
 		of(this).toText()
 
@@ -1795,7 +1756,6 @@ interface TypeValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("toTextResultReceiver")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Any?.toText(): Value<Any, String> =
 		of(this).toText()
 
@@ -1826,7 +1786,6 @@ interface TypeValueOperators : ValueOperators {
 	 */
 	@ExperimentalUuidApi
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> Value<R, *>.toUuid(): Value<R, Uuid> =
 		ConvertToValue(context, this, "UUID")
 
@@ -1859,7 +1818,6 @@ interface TypeValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@ExperimentalUuidApi
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> opensavvy.ktmongo.dsl.path.Field<R, *>.toUuid(): Value<R, Uuid> =
 		of(this).toUuid()
 
@@ -1892,7 +1850,6 @@ interface TypeValueOperators : ValueOperators {
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@ExperimentalUuidApi
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <R : Any> kotlin.reflect.KProperty1<R, *>.toUuid(): Value<R, Uuid> =
 		of(this).toUuid()
 
@@ -1926,7 +1883,6 @@ interface TypeValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@ExperimentalUuidApi
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	final inline fun Any?.toUuid(): Value<Any, Uuid> =
 		of(this).toUuid()
 

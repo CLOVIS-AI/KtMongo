@@ -20,7 +20,6 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
@@ -64,7 +63,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> Value<Context, Collection<Number?>>.average(): Value<Context, T> =
 		AverageArrayValueOperator(
 			input = this,
@@ -110,7 +108,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> Iterable<Value<Context, Number?>>.average(): Value<Context, T> =
 		AverageOfValueOperator(
 			input = this.toList(),
@@ -141,7 +138,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/avg/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> average(vararg input: Value<Context, Number?>): Value<Context, T> =
 		AverageOfValueOperator(
 			input = input.asList(),
@@ -149,7 +145,6 @@ interface ArrayValueOperators : ValueOperators {
 		)
 
 	@Deprecated("Computing the average of 0 elements makes no sense, you should specify the elements to average as the receiver or as arguments.", level = DeprecationLevel.ERROR)
-	@KtMongoDsl
 	fun <Context : Any, T : Number> average(): Value<Context, T> =
 		error("Computing the average of 0 elements makes no sense, did you forget to specify arguments?")
 
@@ -206,7 +201,6 @@ interface ArrayValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.filter(
 		limit: Value<Context, Int>? = null,
 		variableName: String = "this",
@@ -293,7 +287,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/firstN/#array-operator)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.take(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -352,7 +345,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lastN/#array-operator)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.takeLast(
 		limit: Value<Context, Int>,
 	): Value<Context, List<T>> =
@@ -414,7 +406,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/map/)
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T, R> Value<Context, Collection<T>>.map(
 		variableName: String = "this",
 		transform: AggregationOperators.(Value<Any, T>) -> Value<Context, R>,
@@ -484,7 +475,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedDescending Sort by elements in descending order.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.sorted(): Value<Context, List<T>> =
 		SortValueOperator(
 			input = this,
@@ -522,7 +512,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedDescending Sort by fields of elements.
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.sortedDescending(): Value<Context, List<T>> =
 		SortValueOperator(
 			input = this,
@@ -562,7 +551,6 @@ interface ArrayValueOperators : ValueOperators {
 	 * @see sortedDescending Sort by the elements themselves (descending order).
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Context : Any, T> Value<Context, Collection<T>>.sortedBy(
 		order: SortOptionDsl<T & Any>.() -> Unit,
 	): Value<Context, List<T>> =

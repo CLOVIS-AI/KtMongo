@@ -18,7 +18,6 @@ package opensavvy.ktmongo.dsl.aggregation.operators
 
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
@@ -61,7 +60,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> abs(value: Value<Context, Result>): Value<Context, Result> =
 		UnarySameTypeValueOperator(context, "abs", value)
 
@@ -93,7 +91,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.plus(other: Value<Context, Result>): Value<Context, Result> =
 		AdditionValueOperator(context, listOf(this, other))
 
@@ -161,7 +158,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> ceil(value: Value<Context, Result>): Value<Context, Result> =
 		UnarySameTypeValueOperator(context, "ceil", value)
 
@@ -193,7 +189,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.times(other: Value<Context, Result>): Value<Context, Result> =
 		MultiplicationValueOperator(context, listOf(this, other))
 
@@ -263,7 +258,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
 		DivisionValueOperator(context, this, other)
 
@@ -316,7 +310,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.minus(other: Value<Context, Result>): Value<Context, Result> =
 		SubtractionValueOperator(context, this, other)
 
@@ -366,7 +359,6 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <Context : Any, @kotlin.internal.OnlyInputTypes Result : Number?> floor(value: Value<Context, Result>): Value<Context, Result> =
 		UnarySameTypeValueOperator(context, "floor", value)
 

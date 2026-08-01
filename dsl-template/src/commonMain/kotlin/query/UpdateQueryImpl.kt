@@ -106,7 +106,6 @@ private class UpdateQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V, type: KType) {
 		accept(SetBsonNodeNode(listOf(this.path to Value(value, type)), context))
 	}
@@ -134,7 +133,6 @@ private class UpdateQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setOnInsert(value: V, type: KType) {
 		accept(SetOnInsertBsonNodeNode(listOf(this.path to Value(value, type)), context))
 	}
@@ -161,7 +159,6 @@ private class UpdateQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.inc(amount: V, type: KType) {
 		accept(IncrementBsonNodeNode(listOf(this.path to Value(amount, type)), context))
 	}
@@ -188,7 +185,6 @@ private class UpdateQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.mul(amount: V, type: KType) {
 		accept(MultiplyBsonNodeNode(listOf(this.path to Value(amount, type)), context))
 	}
@@ -215,7 +211,6 @@ private class UpdateQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.unset() {
 		accept(UnsetBsonNodeNode(listOf(this.path), context))
 	}
@@ -242,7 +237,6 @@ private class UpdateQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.min(value: V, type: KType) {
 		accept(MinBsonNodeNode(listOf(this.path to Value(value, type)), context))
 	}
@@ -269,7 +263,6 @@ private class UpdateQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	override fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.max(value: V, type: KType) {
 		accept(MaxBsonNodeNode(listOf(this.path to Value(value, type)), context))
 	}
@@ -296,7 +289,6 @@ private class UpdateQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	override infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: Field<T, V>) {
 		accept(RenameBsonNodeNode(listOf(this.path to newName.path), context))
 	}

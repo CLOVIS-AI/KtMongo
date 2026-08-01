@@ -153,7 +153,6 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#_id-field)
 	 */
-	@KtMongoDsl
 	fun excludeId()
 
 	/**
@@ -179,7 +178,6 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-fields)
 	 */
-	@KtMongoDsl
 	fun include(field: Field<Document, *>)
 
 	/**
@@ -205,7 +203,6 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-fields)
 	 */
-	@KtMongoDsl
 	fun include(field: KProperty1<Document, *>) {
 		include(field.field)
 	}
