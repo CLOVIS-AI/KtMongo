@@ -186,7 +186,7 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 		model.filter.filter()
 		model.options.options()
 
-		inner.withWriteConcern(model.options).deleteOne(
+		inner.withWriteConcern(model.options).deleteMany(
 			filter = factory.buildDocument(model.filter).raw,
 			options = DeleteOptions()
 		)

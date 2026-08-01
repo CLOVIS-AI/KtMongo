@@ -18,6 +18,7 @@ package opensavvy.ktmongo.tests.api
 
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.prepared.suite.Prepared
+import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.random.randomInt
 
@@ -26,7 +27,16 @@ val testId by randomInt(0, Int.MAX_VALUE)
 inline fun <reified Document : Any> Prepared<MongoClient>.collection(
 	prefix: String,
 ) = prepared {
-	this@collection()
+	val collection = this@collection()
 		.database("ktmongo-integration-tests")
 		.collection<Document>("$prefix-${testId()}")
+
+	cleanUp("Dump collection ${collection.fullyQualifiedName}", onSuccess = false) {
+		println("First 100 documents:")
+		collection.find(options = { limit(100) }, filter = {}).forEach {
+			println(" • $it")
+		}
+	}
+
+	collection
 }

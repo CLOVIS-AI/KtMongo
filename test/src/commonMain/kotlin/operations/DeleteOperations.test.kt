@@ -49,6 +49,8 @@ fun SuiteDsl.verifyDeleteOperations(
 		collection().deleteOne {
 			DeleteOperationsUser::name eq "Ali Dantic"
 		}
+
+		check(collection().count() == 1L)
 	}
 
 	test("Delete many") {
@@ -71,8 +73,10 @@ fun SuiteDsl.verifyDeleteOperations(
 			),
 		)
 
-		collection().deleteOne {
+		collection().deleteMany {
 			DeleteOperationsUser::name lte "Az"
 		}
+
+		check(collection().count() == 1L)
 	}
 }
