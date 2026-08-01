@@ -24,7 +24,9 @@ import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
+import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
@@ -57,6 +59,46 @@ interface HasMatch<Document : Any> : Pipeline<Document> {
 		filter: FilterQuery<Document>.() -> Unit,
 	): Pipeline<Document> =
 		withStage(MatchStage(FilterQuery<Document>(context).apply(filter), context))
+
+	/**
+	 * Filters documents based on a specific [filter], written using [aggregation syntax][AggregationOperators].
+	 *
+	 * Matched documents are passed to the next pipeline stage.
+	 *
+	 * This method is a helper to combine the [match] stage with the [expr][FilterQuery.expr] operator.
+	 *
+	 * ### Example
+	 *
+	 * Find all incoherent users: users modified before they were created.
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val creationDate: Instant,
+	 *     val modificationDate: Instant,
+	 * )
+	 *
+	 * val incoherent = users.aggregate()
+	 *     .matchExpr { User::modificationDate lt User::creationDate }
+	 *     .toList()
+	 * ```
+	 *
+	 * The above query is syntax sugar for this identical query:
+	 * ```kotlin
+	 * val incoherent = users.aggregate()
+	 *     .match {
+	 *         expr { User::modificationDate lt User::creationDate }
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * @see match The `$match` stage.
+	 * @see FilterQuery.expr The `$expr` operator, allowing to use aggregation syntax in a filter.
+	 */
+	@KtMongoDsl
+	fun matchExpr(
+		filter: AggregationOperators.() -> Value<Document, Boolean>,
+	): Pipeline<Document> =
+		match { expr(filter) }
 
 }
 

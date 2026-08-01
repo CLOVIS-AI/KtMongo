@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,7 @@ import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.AbstractPipeline
-import opensavvy.ktmongo.dsl.aggregation.AggregationPipeline
-import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
+import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWithCompatibility
 import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
 import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
@@ -73,6 +71,10 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	@KtMongoDsl
 	override fun match(filter: FilterQuery<Output>.() -> Unit): MongoAggregationPipeline<Output> =
 		super.match(filter) as MongoAggregationPipeline<Output>
+
+	@KtMongoDsl
+	override fun matchExpr(filter: AggregationOperators.() -> Value<Output, Boolean>): MongoAggregationPipeline<Output> =
+		super.matchExpr(filter) as MongoAggregationPipeline<Output>
 
 	@KtMongoDsl
 	override fun sample(size: Int): MongoAggregationPipeline<Output> =
