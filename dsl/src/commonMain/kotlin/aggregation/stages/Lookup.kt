@@ -998,6 +998,35 @@ private class LookupStageBsonNode<LocalDocument : Any, ForeignDocument : Any>(
 	}
 
 	@OptIn(DangerousMongoApi::class)
+	override fun simplify(children: List<BsonNode>): AbstractBsonNode? {
+		val bindings = combineBindings(children)
+
+		return if (bindings != null) {
+			LookupStageBsonNode<LocalDocument, ForeignDocument>(context).also {
+				it.outputPath = outputPath
+				it.nextLetIndex = nextLetIndex
+				it.accept(bindings)
+				it.acceptAll(children.filter { child -> child !is LetBindingBsonNode })
+			}
+		} else this
+	}
+
+	private fun combineBindings(children: List<BsonNode>): LetBindingBsonNode? {
+		val allBindings = children.filterIsInstance<LetBindingBsonNode>()
+
+		if (allBindings.size <= 1) {
+			// 0: no variables at all
+			// 1: a single variable, nothing to combine
+			return null
+		}
+
+		return LetBindingBsonNode(
+			allBindings.flatMap { it.bindings },
+			context,
+		)
+	}
+
+	@OptIn(DangerousMongoApi::class)
 	override fun from(foreignPipeline: HasLookupPipelineCompatibility<ForeignDocument>) {
 		accept(ForeignSourceBsonNode(foreignPipeline, context))
 	}
