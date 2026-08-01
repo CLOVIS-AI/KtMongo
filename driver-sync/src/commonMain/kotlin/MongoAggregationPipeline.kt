@@ -110,14 +110,12 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	): MongoAggregationPipeline<Output> =
 		super.lookup(into, block) as MongoAggregationPipeline<Output>
 
-	@KtMongoDsl
 	override fun <ForeignDocument : Any> lookup(
 		into: KProperty1<Output, List<ForeignDocument>>,
 		block: LookupStageOperators<Output, ForeignDocument>.() -> Unit,
 	): MongoAggregationPipeline<Output> =
 		super.lookup(into, block) as MongoAggregationPipeline<Output>
 
-	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Output>): MongoAggregationPipeline<Output> =
 		super.unionWith(other) as MongoAggregationPipeline<Output>
 

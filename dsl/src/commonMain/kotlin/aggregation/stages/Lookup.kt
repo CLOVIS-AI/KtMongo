@@ -105,7 +105,6 @@ interface HasLookup<Document : Any> : Pipeline<Document> {
 	 * Documents are only returned if the value of the two fields is strictly equal.
 	 * - [LookupStageOperators.let]: Allow accessing a specific value within `from`.
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun <ForeignDocument : Any> lookup(
 		into: Field<Document, List<ForeignDocument>>,
@@ -177,7 +176,6 @@ interface HasLookup<Document : Any> : Pipeline<Document> {
 	 * Documents are only returned if the value of the two fields is strictly equal.
 	 * - [LookupStageOperators.let]: Allow accessing a specific value within `from`.
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun <ForeignDocument : Any> lookup(
 		into: KProperty1<Document, List<ForeignDocument>>,

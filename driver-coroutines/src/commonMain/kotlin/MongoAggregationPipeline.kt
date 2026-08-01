@@ -103,14 +103,12 @@ class MongoAggregationPipeline<Output : Any> @OptIn(LowLevelApi::class) internal
 	override fun project(block: ProjectStageOperators<Output>.() -> Unit): MongoAggregationPipeline<Output> =
 		super.project(block) as MongoAggregationPipeline<Output>
 
-	@KtMongoDsl
 	override fun <ForeignDocument : Any> lookup(
 		into: Field<Output, List<ForeignDocument>>,
 		block: LookupStageOperators<Output, ForeignDocument>.() -> Unit,
 	): MongoAggregationPipeline<Output> =
 		super.lookup(into, block) as MongoAggregationPipeline<Output>
 
-	@KtMongoDsl
 	override fun <ForeignDocument : Any> lookup(
 		into: KProperty1<Output, List<ForeignDocument>>,
 		block: LookupStageOperators<Output, ForeignDocument>.() -> Unit,
