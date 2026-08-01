@@ -328,7 +328,7 @@ abstract class AbstractPipeline<Output : Any> @OptIn(LowLevelApi::class) constru
 	 * JSON representation of this pipeline.
 	 */
 	@OptIn(LowLevelApi::class)
-	final override fun toString(): String =
+	override fun toString(): String =
 		chain.toString()
 
 }

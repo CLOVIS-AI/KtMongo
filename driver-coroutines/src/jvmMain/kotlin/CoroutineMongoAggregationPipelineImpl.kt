@@ -19,6 +19,7 @@
 
 package opensavvy.ktmongo.coroutines
 
+import opensavvy.ktmongo.api.MongoCollection
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -43,7 +44,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 
 private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelApi::class) constructor(
-	private val collectionName: String,
+	private val collection: MongoCollection<*>,
 	context: BsonContext,
 	chain: PipelineChainLink,
 	private val executeAggregate: (List<Bson>, Class<Document>) -> CoroutineMongoAggregateIterable<Document>,
@@ -64,7 +65,7 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 	@LowLevelApi
 	@DangerousMongoApi
 	override fun withStage(stage: BsonNode): CoroutineMongoAggregationPipelineImpl<Document> =
-		CoroutineMongoAggregationPipelineImpl(collectionName, context, chain.withStage(stage), executeAggregate)
+		CoroutineMongoAggregationPipelineImpl(collection, context, chain.withStage(stage), executeAggregate)
 
 	@Suppress("UNCHECKED_CAST")
 	@LowLevelApi
@@ -136,7 +137,7 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 
 	@OptIn(LowLevelApi::class)
 	override fun embedInUnionWith(writer: BsonFieldWriter) = with(writer) {
-		writeString("coll", collectionName)
+		writeString("coll", collection.name)
 		writeArray("pipeline") {
 			this@CoroutineMongoAggregationPipelineImpl.writeTo(this)
 		}
@@ -144,13 +145,15 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 
 	// endregion
 
+	override fun toString(): String =
+		"$collection.aggregate(${super.toString()})"
 }
 
 @LowLevelApi
 internal fun <Document : Any> CoroutineMongoAggregationPipeline(
-	collectionName: String,
+	collection: MongoCollection<*>,
 	context: BsonContext,
 	chain: PipelineChainLink,
 	executeAggregate: (List<Bson>, Class<Document>) -> CoroutineMongoAggregateIterable<Document>,
 ): CoroutineMongoAggregationPipeline<Document> =
-	CoroutineMongoAggregationPipelineImpl(collectionName, context, chain, executeAggregate)
+	CoroutineMongoAggregationPipelineImpl(collection, context, chain, executeAggregate)
