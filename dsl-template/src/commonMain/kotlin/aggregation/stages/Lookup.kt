@@ -447,6 +447,8 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 		value: Value<LocalDocument, T>,
 	): Value<ForeignDocument, T> = let(value, null)
 
+	// region 'on' clause
+
 	/**
 	 * Specifies that the field [foreignField] in the [foreign collection][from]
 	 * must have a value that is strictly equal to the value of the local field [localField].
@@ -659,6 +661,224 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 		localField = localField.field,
 		foreignField = foreignField.field,
 	)
+
+	// endregion
+	// region 'on' clause on array
+
+	/**
+	 * Specifies that the field [foreignField] in the [foreign collection][from]
+	 * must have a value that is strictly equal to one of the elements of the local array [localField].
+	 *
+	 * To learn more about the `$lookup` stage, see [HasLookup.lookup].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val departmentIds: List<ObjectId>,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         from(departments.aggregate())
+	 *         onEach(User::departmentIds, Department::_id)
+	 *     }
+	 * ```
+	 *
+	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
+	 * ```kotlin
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         val departmentIds = let(User::departmentIds)
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::_id isOneOf departmentIds }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with-an-array)
+	 */
+	fun <Key> onEach(
+		localField: Field<LocalDocument, Collection<Key>>,
+		foreignField: Field<ForeignDocument, Key>,
+	) {
+		// MongoDB decides on this behavior based on the actual type at read time, the query syntax is the exact same
+		on(localField.unsafeCast(), foreignField)
+	}
+
+	/**
+	 * Specifies that the field [foreignField] in the [foreign collection][from]
+	 * must have a value that is strictly equal to one of the elements of the local array [localField].
+	 *
+	 * To learn more about the `$lookup` stage, see [HasLookup.lookup].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val departmentIds: List<ObjectId>,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         from(departments.aggregate())
+	 *         onEach(User::departmentIds, Department::_id)
+	 *     }
+	 * ```
+	 *
+	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
+	 * ```kotlin
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         val departmentIds = let(User::departmentIds)
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::_id isOneOf departmentIds }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with-an-array)
+	 */
+	fun <Key> onEach(
+		localField: KProperty1<LocalDocument, Collection<Key>>,
+		foreignField: Field<ForeignDocument, Key>,
+	) {
+		onEach(localField.field, foreignField)
+	}
+
+	/**
+	 * Specifies that the field [foreignField] in the [foreign collection][from]
+	 * must have a value that is strictly equal to one of the elements of the local array [localField].
+	 *
+	 * To learn more about the `$lookup` stage, see [HasLookup.lookup].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val departmentIds: List<ObjectId>,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         from(departments.aggregate())
+	 *         onEach(User::departmentIds, Department::_id)
+	 *     }
+	 * ```
+	 *
+	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
+	 * ```kotlin
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         val departmentIds = let(User::departmentIds)
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::_id isOneOf departmentIds }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with-an-array)
+	 */
+	fun <Key> onEach(
+		localField: Field<LocalDocument, Collection<Key>>,
+		foreignField: KProperty1<ForeignDocument, Key>,
+	) {
+		onEach(localField, foreignField.field)
+	}
+
+	/**
+	 * Specifies that the field [foreignField] in the [foreign collection][from]
+	 * must have a value that is strictly equal to one of the elements of the local array [localField].
+	 *
+	 * To learn more about the `$lookup` stage, see [HasLookup.lookup].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Department(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val departmentIds: List<ObjectId>,
+	 *     val departments: List<Department>,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         from(departments.aggregate())
+	 *         onEach(User::departmentIds, Department::_id)
+	 *     }
+	 * ```
+	 *
+	 * The `on` operator is semantically equivalent to a [match][HasMatch.matchExpr] stage using a [let] binding:
+	 * ```kotlin
+	 * users.aggregate()
+	 *     .lookup {
+	 *         into(User::departments)
+	 *         val departmentIds = let(User::departmentIds)
+	 *         from(
+	 *             departments.aggregate()
+	 *                 .matchExpr { Department::_id isOneOf departmentIds }
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use--lookup-with-an-array)
+	 */
+	fun <Key> onEach(
+		localField: KProperty1<LocalDocument, Collection<Key>>,
+		foreignField: KProperty1<ForeignDocument, Key>,
+	) {
+		onEach(localField.field, foreignField)
+	}
+
+	// endregion
 
 }
 

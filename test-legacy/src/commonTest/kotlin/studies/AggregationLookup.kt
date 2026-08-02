@@ -21,7 +21,6 @@ package opensavvy.ktmongo.sync.studies
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.coroutines.toList
-import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.Instant
@@ -167,18 +166,13 @@ val AggregationLookup by preparedSuite {
 			SchoolClass(_id = writing, title = "But Writing ...", students = listOf(sherlock, madame)),
 		)
 
-		// When 'students' is an array, MongoDB automatically expands each element and matches it
-		// against the foreign '_id' field. Field.unsafe is required because the Kotlin type
-		// of the local field (List<ObjectId>) differs from the join key type (ObjectId).
-		val studentsArrayField = Field.unsafe<ObjectId>("students")
-
 		val allStudents = students().aggregate()
 
 		val result = classes().aggregate()
 			.lookup {
 				into(SchoolClass::studentsData)
 				from(allStudents)
-				on(studentsArrayField, SchoolStudent::_id)
+				onEach(SchoolClass::students, SchoolStudent::_id)
 			}
 			.toList()
 
