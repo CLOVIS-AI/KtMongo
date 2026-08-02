@@ -53,6 +53,14 @@ data class Comment(
 )
 
 @Serializable
+data class User(
+	val _id: ObjectId,
+	val name: String,
+	val email: String,
+	val long_movies: List<Movie> = emptyList(),
+)
+
+@Serializable
 data class SchoolClass(
 	val _id: ObjectId,
 	val title: String,
@@ -74,6 +82,7 @@ val AggregationLookup by preparedSuite {
 	val comments by testCollection<Comment>("case-lookup-comments")
 	val classes by testCollection<SchoolClass>("case-lookup-classes")
 	val students by testCollection<SchoolStudent>("case-lookup-students")
+	val users by testCollection<User>("case-lookup-users")
 
 	test($$"Perform a Single Equality Join with $lookup") {
 		// Ported from: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-a-single-equality-join-with--lookup
@@ -281,5 +290,58 @@ val AggregationLookup by preparedSuite {
 		check(result.first { it._id == classAction }.post_release_comments.map { it.name } == listOf("Khal Drogo"))
 		check(result.first { it._id == kafka }.post_release_comments.map { it.name } == listOf("Khal Drogo"))
 		check(result.first { it._id == corpseBride }.post_release_comments.isEmpty())
+	}
+
+	test($$"Perform an Uncorrelated Subquery with $lookup") {
+		// Ported from: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#perform-an-uncorrelated-subquery-with--lookup
+
+		val robert = users().newId()
+		val cersei = users().newId()
+		val other = users().newId()
+
+		users().insertMany(
+			User(_id = robert, name = "Robert Baratheon", email = "mark_addy@gameofthron.es"),
+			User(_id = cersei, name = "Cersei Lannister", email = "lena_headey@gameofthron.es"),
+			User(_id = other, name = "Someone Else", email = "someone@example.com"),
+		)
+
+		val centennial = movies().newId()
+		val baseball = movies().newId()
+		val shortMovie = movies().newId()
+
+		movies().insertMany(
+			Movie(_id = centennial, runtime = 1200, title = "Centennial", year = 1978),
+			Movie(_id = baseball, runtime = 1140, title = "Baseball", year = 1994),
+			Movie(_id = shortMovie, runtime = 100, title = "Short Movie", year = 2000),
+		)
+
+		val allMovies = movies().aggregate()
+
+		val result = users().aggregate()
+			// { $match: { email: { $in: [ "mark_addy@gameofthron.es", "lena_headey@gameofthron.es" ] } } },
+			.match { User::email isOneOf listOf("mark_addy@gameofthron.es", "lena_headey@gameofthron.es") }
+			// {
+			//    $lookup: {
+			//       from: "movies",
+			//       pipeline: [
+			//          { $match: { runtime: { $gt: 1000 } } },
+			//          { $project: { _id: 0, title: 1, year: 1 } }
+			//       ],
+			//       as: "long_movies"
+			//    }
+			// },
+			.lookup {
+				into(User::long_movies)
+				from(
+					allMovies
+						.match { Movie::runtime gt 1000 }
+				)
+			}
+			.toList()
+
+		check(result.none { it._id == other })
+
+		check(result.first { it._id == robert }.long_movies.map { it.title }.sorted() == listOf("Baseball", "Centennial"))
+		check(result.first { it._id == cersei }.long_movies.map { it.title }.sorted() == listOf("Baseball", "Centennial"))
 	}
 }
