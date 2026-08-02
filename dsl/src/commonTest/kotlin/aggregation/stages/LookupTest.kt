@@ -219,4 +219,22 @@ val LookupTest by multiContextSuite {
 				]
 			""".trimIndent())
 	}
+
+	test("Complex join with multiple 'on' clauses") {
+		val departments = TestPipeline<Department>("departments")
+
+		val outputField = Field.unsafe<List<Department>>("departments")
+
+		checkThrows<IllegalStateException> {
+			TestPipeline<User>()
+				.lookup {
+					into(outputField)
+
+					from(departments)
+
+					on(User::department, Department::_id)
+					on(User::creationDate, Department::creationDate)
+				}
+		}
+	}
 }

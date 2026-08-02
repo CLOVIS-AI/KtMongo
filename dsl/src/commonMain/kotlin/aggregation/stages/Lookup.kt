@@ -994,6 +994,7 @@ private class LookupStageBsonNode<LocalDocument : Any, ForeignDocument : Any>(
 
 	override fun freeze() {
 		check(outputPath != null) { "Specifying 'into' is mandatory for lookup stages, but found: $this" }
+		check(children.count { it is EqualityJoinCriteriaBsonNode } <= 1) { "The 'on' clause must only be specified once, but found: $this" }
 		super.freeze()
 	}
 
