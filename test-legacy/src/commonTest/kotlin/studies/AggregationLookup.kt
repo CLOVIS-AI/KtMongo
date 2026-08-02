@@ -33,6 +33,7 @@ data class Movie(
 	val year: Int,
 	val movie_comments: List<Comment> = emptyList(),
 	val reboot_of: RebootInformation? = null,
+	val post_release_comments: List<Comment> = emptyList(),
 )
 
 @Serializable
@@ -48,6 +49,7 @@ data class Comment(
 	val name: String,
 	val text: String,
 	val date: Instant,
+	val year: Int = 0,
 )
 
 @Serializable
@@ -215,5 +217,69 @@ val AggregationLookup by preparedSuite {
 
 		check(moviesWithSequel.first { it._id == movieA }.reboot_of?.movie_id == null)
 		check(moviesWithSequel.first { it._id == movieB }.reboot_of?.movie_info?.firstOrNull()?.title == "A")
+	}
+
+	test($$"Use Multiple Join Conditions and a Correlated Subquery") {
+		// Ported from: https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#use-multiple-join-conditions-and-a-correlated-subquery
+
+		val classAction = movies().newId()
+		val kafka = movies().newId()
+		val corpseBride = movies().newId()
+		val otherMovie = movies().newId()
+
+		movies().insertMany(
+			Movie(_id = classAction, runtime = 100, title = "Class Action", year = 1991),
+			Movie(_id = kafka, runtime = 100, title = "Kafka", year = 1991),
+			Movie(_id = corpseBride, runtime = 100, title = "Corpse Bride", year = 2005),
+			Movie(_id = otherMovie, runtime = 100, title = "Other Movie", year = 1980),
+		)
+
+		comments().insertMany(
+			// pre-release comment for Class Action -> must be excluded
+			Comment(_id = comments().newId(), movieId = classAction, name = "Bob", text = "...", date = Instant.parse("1990-01-01T00:00:00Z"), year = 1990),
+			// post-release comment for Class Action -> must be included
+			Comment(_id = comments().newId(), movieId = classAction, name = "Khal Drogo", text = "...", date = Instant.parse("2016-12-06T07:17:03Z"), year = 2016),
+			// post-release comment for Kafka -> must be included
+			Comment(_id = comments().newId(), movieId = kafka, name = "Khal Drogo", text = "...", date = Instant.parse("1998-05-10T03:10:20Z"), year = 1998),
+			// pre-release comment for Corpse Bride -> must be excluded (empty result)
+			Comment(_id = comments().newId(), movieId = corpseBride, name = "Ygritte", text = "...", date = Instant.parse("2004-01-01T00:00:00Z"), year = 2004),
+		)
+
+		val allComments = comments().aggregate()
+
+		val result = movies().aggregate()
+			// { $match: { title: { $in: [ "Class Action", "Kafka", "Corpse Bride" ] } } },
+			.match { Movie::title isOneOf listOf("Class Action", "Kafka", "Corpse Bride") }
+			// {
+			//    $lookup: {
+			//       from: "comments",
+			//       localField: "_id",
+			//       foreignField: "movie_id",
+			//       let: { movie_year: "$year" },
+			//       pipeline: [
+			//          { $match: { $expr: { $gt: [ { $year: "$date" }, "$$movie_year" ] } } },
+			//       ],
+			//       as: "post_release_comments"
+			//    }
+			// },
+			.lookup {
+				into(Movie::post_release_comments)
+
+				val movieYear = let(Movie::year)
+
+				from(
+					allComments
+						.matchExpr { Comment::year gt movieYear }
+				)
+
+				on(Movie::_id, Comment::movieId)
+			}
+			.toList()
+
+		check(result.none { it._id == otherMovie })
+
+		check(result.first { it._id == classAction }.post_release_comments.map { it.name } == listOf("Khal Drogo"))
+		check(result.first { it._id == kafka }.post_release_comments.map { it.name } == listOf("Khal Drogo"))
+		check(result.first { it._id == corpseBride }.post_release_comments.isEmpty())
 	}
 }
