@@ -544,13 +544,12 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#equality-match-with-a-single-join-condition)
 	 */
-	@OptIn(LowLevelApi::class)
 	fun <Key> on(
 		localField: Field<LocalDocument, Key>,
 		foreignField: KProperty1<ForeignDocument, Key>,
 	) = on(
 		localField = localField,
-		foreignField = with(FieldDsl(context)) { foreignField.field },
+		foreignField = foreignField.field,
 	)
 
 	/**
@@ -599,12 +598,11 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#equality-match-with-a-single-join-condition)
 	 */
-	@OptIn(LowLevelApi::class)
 	fun <Key> on(
 		localField: KProperty1<LocalDocument, Key>,
 		foreignField: Field<ForeignDocument, Key>,
 	) = on(
-		localField = with(FieldDsl(context)) { localField.field },
+		localField = localField.field,
 		foreignField = foreignField,
 	)
 
@@ -654,13 +652,12 @@ interface LookupStageOperators<LocalDocument : Any, ForeignDocument : Any> : Com
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/#equality-match-with-a-single-join-condition)
 	 */
-	@OptIn(LowLevelApi::class)
 	fun <Key> on(
 		localField: KProperty1<LocalDocument, Key>,
 		foreignField: KProperty1<ForeignDocument, Key>,
 	) = on(
-		localField = with(FieldDsl(context)) { localField.field },
-		foreignField = with(FieldDsl(context)) { foreignField.field },
+		localField = localField.field,
+		foreignField = foreignField.field,
 	)
 
 }
