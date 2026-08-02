@@ -23,37 +23,45 @@ import io.ktor.network.sockets.*
 import kotlinx.coroutines.*
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
-import opensavvy.prepared.suite.backgroundScope
 import opensavvy.prepared.suite.cleanUp
+import opensavvy.prepared.suite.foregroundScope
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.shared
 
 val mongoAddress by shared {
-	val job = Job()
-	currentCoroutineContext().job.invokeOnCompletion { e -> job.cancel("Finished searching for the address. (ended with: $e)") }
-	val manager = SelectorManager(Dispatchers.Default + job + CoroutineName("FindMongoAddressManager"))
-
-	val candidateHostNames = listOf("localhost", "mongo")
-
-	println("Searching for the address of the running MongoDB instance…")
-	for (hostName in candidateHostNames) {
-		val address = InetSocketAddress(hostName, 27017)
-
-		try {
-			println("» Trying $address…")
-			aSocket(manager).tcp().connect(address.hostname, address.port) {
-				socketTimeout = 100
-			}.use {
-				println("  Connected successfully!")
-			}
-			println("  Closed the socket.")
-			return@shared address
-		} catch (e: Exception) {
-			println("  Could not connect to MongoDB on socket $address • $e")
+	coroutineScope {
+		val manager = CompletableDeferred<SelectorManager>()
+		val managerJob = launch(Dispatchers.Default + CoroutineName("FindMongoAddressManager")) {
+			SelectorManager(currentCoroutineContext())
+				.also { manager.complete(it) }
 		}
-	}
 
-	error("Could not find on which port MongoDB is running.")
+		val candidateHostNames = listOf("localhost", "mongo")
+
+		println("  Searching for the address of the running MongoDB instance…")
+		for (hostName in candidateHostNames) {
+			val address = InetSocketAddress(hostName, 27017)
+
+			try {
+				println("» Trying $address…")
+				aSocket(manager.await()).tcp().connect(address.hostname, address.port) {
+					socketTimeout = 100
+				}.use {
+					println("  Connected successfully!")
+				}
+				manager.await().close()
+				managerJob.cancel("We found a valid address.")
+				println("  Closed the socket.")
+				return@coroutineScope address
+			} catch (e: Exception) {
+				println("  Could not connect to MongoDB on socket $address • $e")
+			}
+		}
+
+		manager.await().close()
+		error("Could not find on which port MongoDB is running.")
+		// No need to cancel the manager, it will be killed by the exception
+	}
 }
 
 val MongoWireClient by prepared {
@@ -62,7 +70,7 @@ val MongoWireClient by prepared {
 	MongoWireClient(
 		hostName = socket.hostname,
 		port = socket.port,
-		coroutineContext = backgroundScope.coroutineContext
+		coroutineContext = foregroundScope.coroutineContext
 	).also {
 		cleanUp("Close $it") {
 			it.close()
@@ -73,7 +81,7 @@ val MongoWireClient by prepared {
 val SocketTest by preparedSuite {
 	test("Create and close a socket") {
 		println("Creating socket manager…")
-		val manager = SelectorManager(backgroundScope.coroutineContext + Dispatchers.Default + CoroutineName("FindMongoAddressManager"))
+		val manager = SelectorManager(currentCoroutineContext() + Dispatchers.Default + CoroutineName("FindMongoAddressManager"))
 
 		println("Creating address…")
 		val address = InetSocketAddress("google.com", 80)
@@ -83,5 +91,7 @@ val SocketTest by preparedSuite {
 			println("Connected!")
 		}
 		println("Disconnected!")
+
+		manager.close()
 	}
 }

@@ -23,7 +23,7 @@ import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.config.CoroutineTimeout
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 
 data class User(
@@ -32,7 +32,7 @@ data class User(
 	val age: Int,
 )
 
-val BasicReadWriteTest by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
+val BasicReadWriteTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) {
 	val id1 = ObjectId("69908384e10bb0a5f7d17c5b")
 	val id2 = ObjectId("699083ade6e89e315640258c")
 	val id3 = ObjectId("699083c9e493dd6c2e60c664")

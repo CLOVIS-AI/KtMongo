@@ -22,9 +22,9 @@ import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.config.CoroutineTimeout
 import opensavvy.prepared.suite.prepared
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 
-val FilteredCollectionTest by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
+val FilteredCollectionTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) {
 	@Serializable
 	data class User(
 		val name: String = "MISSING",

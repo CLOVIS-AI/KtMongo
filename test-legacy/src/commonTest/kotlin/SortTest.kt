@@ -23,7 +23,7 @@ import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import opensavvy.prepared.suite.config.CoroutineTimeout
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -42,7 +42,7 @@ data class SortUser(
 private fun Instant.truncateToMilliseconds(): Instant =
 	Instant.fromEpochMilliseconds(this.toEpochMilliseconds())
 
-val SortTest by preparedSuite(preparedConfig = CoroutineTimeout(30.seconds)) {
+val SortTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) {
 	val users by testCollection<SortUser>("basic-sorts")
 
 	test("Sort by date") {

@@ -31,7 +31,8 @@ import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.DurationUnit
+import kotlin.time.TimeSource
 
 @LowLevelApi
 interface MongoWireClient : AutoCloseable {
@@ -68,19 +69,24 @@ private class SocketWireClient(
 	private val socket: Socket,
 	private val selectorManager: SelectorManager,
 	private val factory: BsonFactory,
-	coroutineScope: CoroutineScope,
+	coroutineScope: CoroutineScope, // Should contain a Job dedicated to this client
 ) : MongoWireClient {
+
+	private val actorsJob = coroutineScope.coroutineContext.job
+
+	private sealed class ResponseHandler {
+		data class Single(val result: CompletableDeferred<Message>) : ResponseHandler()
+		data class Multiple(val result: SendChannel<Message>) : ResponseHandler()
+	}
 
 	private class Request(
 		val data: Buffer,
-		val output: Channel<Message>,
-		val expectsMultipleResponses: Boolean,
+		val output: ResponseHandler,
 	)
 
 	private class SentMessage(
 		val requestId: Int,
-		val output: Channel<Message>,
-		val expectsMultipleResponses: Boolean,
+		val output: ResponseHandler,
 	)
 
 	private class Response(
@@ -91,7 +97,7 @@ private class SocketWireClient(
 
 	private class ResponseWithHandler(
 		val response: Response,
-		val output: SendChannel<Message>,
+		val output: ResponseHandler,
 	)
 
 	/**
@@ -101,11 +107,19 @@ private class SocketWireClient(
 	 */
 	private val requestChannel = Channel<Request>(Channel.RENDEZVOUS)
 
+	// Helps debugging time-sensitive operations for now. Will need to be removed when stabilizing, and be replaced by a proper observability framework.
+	private val start = TimeSource.Monotonic.markNow()
+
 	private fun log(message: String) {
-		println("KtMongo • $message")
+		println("» KtMongo +${start.elapsedNow().toString(DurationUnit.MILLISECONDS, decimals = 0)} • $message")
 	}
 
 	init {
+		log("Creating client for socket ${socket.remoteAddress}")
+
+		// Ensure that no resources can leak
+		actorsJob.invokeOnCompletion { close() }
+
 		/**
 		 * When the [sendActor] has sent a message into the socket, it adds a message in here.
 		 *
@@ -170,7 +184,7 @@ private class SocketWireClient(
 			writeSocket.flush()
 
 			log("$requestId was sent")
-			sentChannel.send(SentMessage(requestId, request.output, expectsMultipleResponses = request.expectsMultipleResponses))
+			sentChannel.send(SentMessage(requestId, request.output))
 		}
 	}
 
@@ -207,8 +221,7 @@ private class SocketWireClient(
 		receivedChannel: ReceiveChannel<Response>,
 		triagedChannel: SendChannel<ResponseWithHandler>,
 	) {
-		val waiting = HashMap<Int, SendChannel<Message>>()
-		val requestsExpectingMultipleResponses = HashSet<Int>()
+		val waiting = HashMap<Int, ResponseHandler>()
 
 		while (currentCoroutineContext().isActive && socket.isActive) {
 			select {
@@ -219,16 +232,13 @@ private class SocketWireClient(
 				sentChannel.onReceive { message ->
 					log("${message.requestId} expects an answer")
 					waiting[message.requestId] = message.output
-					if (message.expectsMultipleResponses)
-						requestsExpectingMultipleResponses.add(message.requestId)
 				}
 
 				receivedChannel.onReceive { response ->
 					val handler = waiting[response.responseTo]
 						?: error("Received the message ${response.requestId} in response to ${response.responseTo}, but no known message with ID ${response.responseTo} has been sent by this client.\nCurrently in-flight requests: ${waiting.keys.sorted()}")
 					triagedChannel.send(ResponseWithHandler(response, handler))
-					if (response.responseTo !in requestsExpectingMultipleResponses) {
-						requestsExpectingMultipleResponses.remove(response.responseTo)
+					if (handler is ResponseHandler.Single) {
 						waiting.remove(response.responseTo)
 					}
 				}
@@ -291,13 +301,16 @@ private class SocketWireClient(
 			val body = sections.singleOrNull { it is MessageSection.Body } as? MessageSection.Body
 				?: error("An OP_MSG message must have a single body section, found: $sections")
 
-			received.output.send(
-				Message.OpMsg(
-					body,
-					sections.asSequence()
-						.filterIsInstance<MessageSection.DocumentSequence>(),
-				)
+			val response = Message.OpMsg(
+				body,
+				sections.asSequence()
+					.filterIsInstance<MessageSection.DocumentSequence>(),
 			)
+
+			when (received.output) {
+				is ResponseHandler.Single -> received.output.result.complete(response)
+				is ResponseHandler.Multiple -> received.output.result.send(response)
+			}
 		}
 	}
 
@@ -398,21 +411,21 @@ private class SocketWireClient(
 		val output = Channel<Message>()
 		log("Preparing to write $message…")
 		val buffer = writeMessage(message)
-		requestChannel.send(Request(buffer, output, expectsMultipleResponses = true))
+		requestChannel.send(Request(buffer, ResponseHandler.Multiple(output)))
 		return output
 	}
 
 	override suspend fun sendSingle(message: Message): Message {
-		val output = Channel<Message>()
+		val output = CompletableDeferred<Message>()
 		log("Preparing to write $message…")
 		val buffer = writeMessage(message)
-		requestChannel.send(Request(buffer, output, expectsMultipleResponses = false))
-		val message = output.receive()
-		output.close(CancellationException("We expected a single response, and we received it, so this channel was closed."))
+		requestChannel.send(Request(buffer, ResponseHandler.Single(output)))
+		val message = output.await()
 		return message
 	}
 
 	override fun close() {
+		actorsJob.cancel("${this::class}.close() has been called")
 		socket.close()
 		selectorManager.close()
 	}
@@ -427,9 +440,10 @@ suspend fun MongoWireClient(
 	factory: BsonFactory = BsonFactory(),
 	coroutineContext: CoroutineContext,
 ): MongoWireClient {
-	val selectorManager = SelectorManager(coroutineContext + Dispatchers.Default + CoroutineName("ktmongo-socket"))
+	val innerJob = Job(coroutineContext.job)
+
+	val selectorManager = SelectorManager(coroutineContext + innerJob + Dispatchers.Default + CoroutineName("ktmongo-socket"))
 	val socket = aSocket(selectorManager).tcp().connect(hostName, port) {
-		socketTimeout = 1000
 		keepAlive = true
 	}
 
@@ -437,6 +451,6 @@ suspend fun MongoWireClient(
 		socket = socket,
 		selectorManager = selectorManager,
 		factory = factory,
-		coroutineScope = CoroutineScope(coroutineContext + CoroutineName("ktmongo-client"))
+		coroutineScope = CoroutineScope(coroutineContext + innerJob + CoroutineName("ktmongo-client"))
 	)
 }
