@@ -39,6 +39,7 @@ val mongoAddress by shared {
 		val candidateHostNames = listOf("localhost", "mongo")
 
 		println("  Searching for the address of the running MongoDB instance…")
+		val errors = mutableListOf<Throwable>()
 		for (hostName in candidateHostNames) {
 			val address = InetSocketAddress(hostName, 27017)
 
@@ -55,11 +56,15 @@ val mongoAddress by shared {
 				return@coroutineScope address
 			} catch (e: Exception) {
 				println("  Could not connect to MongoDB on socket $address • $e")
+				errors += AssertionError("Could not connect to MongoDB on socket $address", e)
 			}
 		}
 
 		manager.await().close()
-		error("Could not find on which port MongoDB is running.")
+		throw AssertionError("Could not find on which port MongoDB is running.").apply {
+			for (error in errors)
+				addSuppressed(error)
+		}
 		// No need to cancel the manager, it will be killed by the exception
 	}
 }
