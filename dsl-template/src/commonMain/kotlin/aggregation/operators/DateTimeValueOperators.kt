@@ -130,6 +130,109 @@ interface DateTimeValueOperators : ValueOperators {
 		get() = UnaryOperator(context, "year", this)
 
 	// endregion
+	// region $week
+
+	/**
+	 * Returns the week of the year for a date, ranging from `0` to `53`.
+	 *
+	 * Weeks begin on Sundays, and week `1` begins with the first Sunday of the year. Days
+	 * preceding the first Sunday of the year are in week `0`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweek set User::birthdate.week
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.week: Value<R, Int>
+		get() = UnaryOperator(context, "week", this)
+
+	/**
+	 * Returns the week of the year for a date, ranging from `0` to `53`.
+	 *
+	 * Weeks begin on Sundays, and week `1` begins with the first Sunday of the year. Days
+	 * preceding the first Sunday of the year are in week `0`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweek set User::birthdate.week
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.week: Value<R, Int>
+		get() = UnaryOperator(context, "week", this)
+
+	/**
+	 * Returns the week of the year for a date, ranging from `0` to `53`.
+	 *
+	 * Weeks begin on Sundays, and week `1` begins with the first Sunday of the year. Days
+	 * preceding the first Sunday of the year are in week `0`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweek set User::birthdate.week
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.week: Value<R, Int>
+		get() = UnaryOperator(context, "week", this)
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryOperator<Root : Any, Input, Output>(

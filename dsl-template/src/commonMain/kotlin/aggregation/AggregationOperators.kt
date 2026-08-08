@@ -137,6 +137,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * - [`$toUUID`][TypeValueOperators.toUuid]
  *
  * Date and time operators:
+ * - [`$week`][DateTimeValueOperators.week]
  * - [`$year`][DateTimeValueOperators.year]
  *
  * Trigonometric operators and angle management:
