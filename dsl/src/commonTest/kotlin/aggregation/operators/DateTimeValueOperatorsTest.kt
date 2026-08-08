@@ -29,6 +29,7 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 		val week: Int,
 		val second: Int,
 		val month: Int,
+		val minute: Int,
 	)
 
 	test($$"$year") {
@@ -96,6 +97,24 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 						"$set": {
 							"month": {
 								"$month": "$date"
+							}
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
+	test($$"$minute") {
+		TestPipeline<Target>()
+			.set {
+				Target::minute set Target::date.minute
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$set": {
+							"minute": {
+								"$minute": "$date"
 							}
 						}
 					}

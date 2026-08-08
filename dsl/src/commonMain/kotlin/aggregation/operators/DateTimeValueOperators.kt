@@ -1559,6 +1559,377 @@ interface DateTimeValueOperators : ValueOperators {
 		get() = of(this).month
 
 	// endregion
+	// region $minute
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.minute: Value<R, Int>
+		get() = UnaryOperator(context, "minute", this)
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, Instant>.minute: Value<R, Int>
+		get() = of(this).minute
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> kotlin.reflect.KProperty1<R, Instant>.minute: Value<R, Int>
+		get() = of(this).minute
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	val Instant.minute: Value<Any, Int>
+		get() = of(this).minute
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("minuteOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.minute: Value<R, Int>
+		get() = UnaryOperator(context, "minute", this)
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("minuteOfObjectId")
+	final val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, ObjectId>.minute: Value<R, Int>
+		get() = of(this).minute
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("minuteOfObjectId")
+	final val <R : Any> kotlin.reflect.KProperty1<R, ObjectId>.minute: Value<R, Int>
+		get() = of(this).minute
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("minuteOfObjectId")
+	final val ObjectId.minute: Value<Any, Int>
+		get() = of(this).minute
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("minuteOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.minute: Value<R, Int>
+		get() = UnaryOperator(context, "minute", this)
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("minuteOfTimestamp")
+	final val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, Timestamp>.minute: Value<R, Int>
+		get() = of(this).minute
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("minuteOfTimestamp")
+	final val <R : Any> kotlin.reflect.KProperty1<R, Timestamp>.minute: Value<R, Int>
+		get() = of(this).minute
+
+	/**
+	 * Returns the minute portion of a date as a number between `0` and `59`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthminute: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthminute set User::birthdate.minute
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/minute/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("minuteOfTimestamp")
+	final val Timestamp.minute: Value<Any, Int>
+		get() = of(this).minute
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryOperator<Root : Any, Input, Output>(
