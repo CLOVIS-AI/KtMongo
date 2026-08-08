@@ -136,6 +136,9 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * - [`$toString`][TypeValueOperators.toText]
  * - [`$toUUID`][TypeValueOperators.toUuid]
  *
+ * Date and time operators:
+ * - [`$year`][DateTimeValueOperators.year]
+ *
  * Trigonometric operators and angle management:
  * - [`$acos`][TrigonometryValueOperators.acos]
  * - [`$acosh`][TrigonometryValueOperators.acosh]
@@ -159,6 +162,7 @@ interface AggregationOperators : ValueOperators,
 	ArrayValueOperators,
 	ComparisonValueOperators,
 	ConditionalValueOperators,
+	DateTimeValueOperators,
 	ArithmeticValueOperators,
 	StringValueOperators,
 	TrigonometryValueOperators,

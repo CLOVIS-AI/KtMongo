@@ -1,0 +1,150 @@
+/*
+ * Copyright (c) 2026, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opensavvy.ktmongo.dsl.aggregation.operators
+
+import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.types.Timestamp
+import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.KtMongoDsl
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AbstractValue
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
+import opensavvy.ktmongo.dsl.aggregation.Value
+import kotlin.jvm.JvmName
+import kotlin.time.Instant
+
+/**
+ * Operators to manage date and time values.
+ *
+ * To learn more about aggregation operators, view [AggregationOperators].
+ */
+@KtMongoDsl
+interface DateTimeValueOperators : ValueOperators {
+
+	// region $year
+
+	/**
+	 * Returns the year portion of a date.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthyear: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthyear set User::birthdate.year
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/year/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.year: Value<R, Int>
+		get() = UnaryOperator(context, "year", this)
+
+	/**
+	 * Returns the year portion of a date.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthyear: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthyear set User::birthdate.year
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/year/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("yearOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.year: Value<R, Int>
+		get() = UnaryOperator(context, "year", this)
+
+	/**
+	 * Returns the year portion of a date.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthyear: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthyear set User::birthdate.year
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/year/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("yearOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.year: Value<R, Int>
+		get() = UnaryOperator(context, "year", this)
+
+	// endregion
+
+	@LowLevelApi
+	private class UnaryOperator<Root : Any, Input, Output>(
+		context: BsonContext,
+		private val operator: String,
+		private val input: Value<Root, Input>,
+	) : AbstractValue<Root, Output>(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonValueWriter) = with(writer) {
+			writeDocument {
+				write("$$operator") {
+					input.writeTo(this)
+				}
+			}
+		}
+	}
+}
