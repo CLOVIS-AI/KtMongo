@@ -53,6 +53,25 @@ fun SuiteDsl.verifyDeleteOperations(
 		check(collection().count() == 1L)
 	}
 
+	test("Delete one (filtered syntax)") {
+		collection().insertMany(
+			DeleteOperationsUser(
+				_id = collection().newId(),
+				name = "Ali Dantic",
+			),
+			DeleteOperationsUser(
+				_id = collection().newId(),
+				name = "Edgard Atoi",
+			),
+		)
+
+		collection().filter {
+			DeleteOperationsUser::name eq "Ali Dantic"
+		}.deleteOne {}
+
+		check(collection().count() == 1L)
+	}
+
 	test("Delete many") {
 		collection().insertMany(
 			DeleteOperationsUser(
@@ -76,6 +95,33 @@ fun SuiteDsl.verifyDeleteOperations(
 		collection().deleteMany {
 			DeleteOperationsUser::name lte "Az"
 		}
+
+		check(collection().count() == 1L)
+	}
+
+	test("Delete many (filtered syntax)") {
+		collection().insertMany(
+			DeleteOperationsUser(
+				_id = collection().newId(),
+				name = "Ali Dantic",
+			),
+			DeleteOperationsUser(
+				_id = collection().newId(),
+				name = "Edgard Atoi",
+			),
+			DeleteOperationsUser(
+				_id = collection().newId(),
+				name = "Alain Térieur",
+			),
+			DeleteOperationsUser(
+				_id = collection().newId(),
+				name = "Agathe De Blouze",
+			),
+		)
+
+		collection().filter {
+			DeleteOperationsUser::name lte "Az"
+		}.deleteMany {}
 
 		check(collection().count() == 1L)
 	}

@@ -22,6 +22,7 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import kotlin.reflect.KType
 
 /**
@@ -53,6 +54,7 @@ import kotlin.reflect.KType
  */
 interface MongoCollection<Document : Any> : ObjectIdGenerator,
 	AggregationOperations<Document>,
+	ClientSideViewOperations<Document>,
 	CollectionOperations<Document>,
 	CountOperations<Document>,
 	DeleteOperations<Document>,
@@ -123,5 +125,11 @@ interface MongoCollection<Document : Any> : ObjectIdGenerator,
 	 */
 	@LowLevelApi
 	val type: KType
+
+	// region Specializations
+
+	override fun filter(filter: FilterQuery<Document>.() -> Unit): MongoCollection<Document>
+
+	// endregion
 
 }

@@ -59,6 +59,29 @@ fun SuiteDsl.verifyUpdateOperations(
 		check(result.modifiedCount == 1L)
 	}
 
+	test("Update one (filtered syntax)") {
+		collection().insertMany(
+			UpdateOperationsUser(
+				_id = collection().newId(),
+				name = "Ali Dantic",
+				age = 30,
+			),
+			UpdateOperationsUser(
+				_id = collection().newId(),
+				name = "Edgard Atoi",
+				age = 25,
+			),
+		)
+
+		val result = collection()
+			.filter { UpdateOperationsUser::name eq "Ali Dantic" }
+			.updateOne { UpdateOperationsUser::age set 31 }
+
+		check(result.acknowledged)
+		check(result.matchedCount == 1L)
+		check(result.modifiedCount == 1L)
+	}
+
 	test("Update many") {
 		collection().insertMany(
 			UpdateOperationsUser(

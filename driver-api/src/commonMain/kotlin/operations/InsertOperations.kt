@@ -38,6 +38,10 @@ interface InsertOperations<Document : Any> : BaseOperations {
 	 * collection.insertOne(User(name = "Bob", age = 18))
 	 * ```
 	 *
+	 * ### Filtered collections
+	 *
+	 * Insert operations ignore the configured [filter][ClientSideViewOperations.filter]: the document will be inserted even if it does not match the filter.
+	 *
 	 * ### External resources
 	 *
 	 * - [Protocol documentation](https://www.mongodb.com/docs/manual/reference/command/insert/)
@@ -63,6 +67,10 @@ interface InsertOperations<Document : Any> : BaseOperations {
 	 *
 	 * collection.insertMany(users)
 	 * ```
+	 *
+	 * ### Filtered collections
+	 *
+	 * Insert operations ignore the configured [filter][ClientSideViewOperations.filter]: the document will be inserted even if it does not match the filter.
 	 *
 	 * ### External resources
 	 *
@@ -92,6 +100,10 @@ interface InsertOperations<Document : Any> : BaseOperations {
 	 *     User(name = "Alice", age = 17)
 	 * )
 	 * ```
+	 *
+	 * ### Filtered collections
+	 *
+	 * Insert operations ignore the configured [filter][ClientSideViewOperations.filter]: the document will be inserted even if it does not match the filter.
 	 *
 	 * ### External resources
 	 *

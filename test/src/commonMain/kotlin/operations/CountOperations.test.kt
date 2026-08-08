@@ -75,10 +75,22 @@ fun SuiteDsl.verifyCountOperations(
 			check(collection().count { CountOperationsUser::name eq "Bob" } == 1L)
 		}
 
+		test("Count with a predicate that includes the field should be 1 (filtered syntax)") {
+			createBob()
+
+			check(collection().filter { CountOperationsUser::name eq "Bob" }.count() == 1L)
+		}
+
 		test("Count with a predicate that doesn't include the field should be 0") {
 			createBob()
 
 			check(collection().count { CountOperationsUser::name eq "Alice" } == 0L)
+		}
+
+		test("Count with a predicate that doesn't include the field should be 0 (filtered syntax)") {
+			createBob()
+
+			check(collection().filter { CountOperationsUser::name eq "Alice" }.count() == 0L)
 		}
 
 		test("Bob exists") {
@@ -136,6 +148,12 @@ fun SuiteDsl.verifyCountOperations(
 			check(collection().count { CountOperationsUser::name gte "Bob" } == 2L)
 		}
 
+		test("Count with a predicate that includes two documents (filtered syntax)") {
+			createDocuments()
+
+			check(collection().filter { CountOperationsUser::name gte "Bob" }.count() == 2L)
+		}
+
 		test("Count with a predicate that includes two documents, but with a limit") {
 			createDocuments()
 
@@ -164,6 +182,12 @@ fun SuiteDsl.verifyCountOperations(
 			createDocuments()
 
 			check(collection().countEstimated() == 3L)
+		}
+
+		test("Count (estimated) falls back to regular count when a filter is present") {
+			createDocuments()
+
+			check(collection().filter { CountOperationsUser::name gte "Bob" }.countEstimated() == 2L)
 		}
 	}
 }

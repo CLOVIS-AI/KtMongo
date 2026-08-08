@@ -211,4 +211,12 @@ fun SuiteDsl.verifyAggregationOperations(
 
 		check(request.toString() matches $$""".+MongoCollection\(.+\).aggregate\(\[\{"\$sort": \{"age": 1\}\}, \{"\$match": \{"age": \{"\$gte": 18\}\}\}, \{"\$sample": \{"size": 1\}\}\]\)""")
 	}
+
+	test("toString representation of a filtered aggregation") {
+		val request = collection()
+			.filter { AggregationOperationsUser::name gt "Bob" }
+			.aggregate()
+
+		check(request.toString() matches $$""".+MongoCollection\(.+\).aggregate\(\[\{"\$match": \{"name": \{"\$gt": "Bob"\}\}\}\]\)""")
+	}
 }
