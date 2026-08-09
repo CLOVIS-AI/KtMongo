@@ -1210,6 +1210,107 @@ interface DateTimeValueOperators : ValueOperators {
 
 	// endregion
 
+	// region $dayOfYear
+
+	/**
+	 * Returns the day of the year for a date as a number between `1` and `366`.
+	 *
+	 * The year starts on January 1st, so January 1st is day `1`, and December 31st is day `365` (or `366` in a leap year).
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfYear: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfYear set User::birthdate.dayOfYear
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfYear/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.dayOfYear: Value<R, Int>
+		get() = UnaryOperator(context, "dayOfYear", this)
+
+	/**
+	 * Returns the day of the year for a date as a number between `1` and `366`.
+	 *
+	 * The year starts on January 1st, so January 1st is day `1`, and December 31st is day `365` (or `366` in a leap year).
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfYear: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfYear set User::birthdate.dayOfYear
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfYear/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfYearOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.dayOfYear: Value<R, Int>
+		get() = UnaryOperator(context, "dayOfYear", this)
+
+	/**
+	 * Returns the day of the year for a date as a number between `1` and `366`.
+	 *
+	 * The year starts on January 1st, so January 1st is day `1`, and December 31st is day `365` (or `366` in a leap year).
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfYear: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfYear set User::birthdate.dayOfYear
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfYear/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfYearOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.dayOfYear: Value<R, Int>
+		get() = UnaryOperator(context, "dayOfYear", this)
+
+	// endregion
+
 	@LowLevelApi
 	private class UnaryOperator<Root : Any, Input, Output>(
 		context: BsonContext,
