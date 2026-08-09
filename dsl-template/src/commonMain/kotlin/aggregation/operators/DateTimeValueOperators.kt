@@ -515,6 +515,100 @@ interface DateTimeValueOperators : ValueOperators {
 		get() = UnaryOperator(context, "minute", this)
 
 	// endregion
+	// region $millisecond
+
+	/**
+	 * Returns the millisecond portion of a date as a number between `0` and `999`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthmillisecond: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthmillisecond set User::birthdate.millisecond
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/millisecond/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.millisecond: Value<R, Int>
+		get() = UnaryOperator(context, "millisecond", this)
+
+	/**
+	 * Returns the millisecond portion of a date as a number between `0` and `999`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthmillisecond: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthmillisecond set User::birthdate.millisecond
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/millisecond/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("millisecondOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.millisecond: Value<R, Int>
+		get() = UnaryOperator(context, "millisecond", this)
+
+	/**
+	 * Returns the millisecond portion of a date as a number between `0` and `999`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthmillisecond: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthmillisecond set User::birthdate.millisecond
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/millisecond/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("millisecondOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.millisecond: Value<R, Int>
+		get() = UnaryOperator(context, "millisecond", this)
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryOperator<Root : Any, Input, Output>(
