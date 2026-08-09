@@ -3534,6 +3534,377 @@ interface DateTimeValueOperators : ValueOperators {
 		get() = of(this).dayOfWeekIso
 
 	// endregion
+	// region $hour
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.hour: Value<R, Int>
+		get() = UnaryOperator(context, "hour", this)
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, Instant>.hour: Value<R, Int>
+		get() = of(this).hour
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> kotlin.reflect.KProperty1<R, Instant>.hour: Value<R, Int>
+		get() = of(this).hour
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	val Instant.hour: Value<Any, Int>
+		get() = of(this).hour
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("hourOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.hour: Value<R, Int>
+		get() = UnaryOperator(context, "hour", this)
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("hourOfObjectId")
+	final val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, ObjectId>.hour: Value<R, Int>
+		get() = of(this).hour
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("hourOfObjectId")
+	final val <R : Any> kotlin.reflect.KProperty1<R, ObjectId>.hour: Value<R, Int>
+		get() = of(this).hour
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("hourOfObjectId")
+	final val ObjectId.hour: Value<Any, Int>
+		get() = of(this).hour
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("hourOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.hour: Value<R, Int>
+		get() = UnaryOperator(context, "hour", this)
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("hourOfTimestamp")
+	final val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, Timestamp>.hour: Value<R, Int>
+		get() = of(this).hour
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("hourOfTimestamp")
+	final val <R : Any> kotlin.reflect.KProperty1<R, Timestamp>.hour: Value<R, Int>
+		get() = of(this).hour
+
+	/**
+	 * Returns the hour portion of a date as a number between `0` and `23`.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthhour: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthhour set User::birthdate.hour
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/hour/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("hourOfTimestamp")
+	final val Timestamp.hour: Value<Any, Int>
+		get() = of(this).hour
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryOperator<Root : Any, Input, Output>(

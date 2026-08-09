@@ -34,6 +34,7 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 		val weekIso: Int,
 		val yearOfIsoWeek: Int,
 		val dayOfWeekIso: Int,
+		val hour: Int,
 	)
 
 	test($$"$year") {
@@ -191,6 +192,24 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 						"$set": {
 							"dayOfWeekIso": {
 								"$isoDayOfWeek": "$date"
+							}
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
+	test($$"$hour") {
+		TestPipeline<Target>()
+			.set {
+				Target::hour set Target::date.hour
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$set": {
+							"hour": {
+								"$hour": "$date"
 							}
 						}
 					}
