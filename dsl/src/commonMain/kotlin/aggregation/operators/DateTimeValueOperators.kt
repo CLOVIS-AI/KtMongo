@@ -2301,6 +2301,413 @@ interface DateTimeValueOperators : ValueOperators {
 		get() = of(this).millisecond
 
 	// endregion
+	// region $isoWeek
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.weekIso: Value<R, Int>
+		get() = UnaryOperator(context, "isoWeek", this)
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, Instant>.weekIso: Value<R, Int>
+		get() = of(this).weekIso
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> kotlin.reflect.KProperty1<R, Instant>.weekIso: Value<R, Int>
+		get() = of(this).weekIso
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	val Instant.weekIso: Value<Any, Int>
+		get() = of(this).weekIso
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekIsoOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.weekIso: Value<R, Int>
+		get() = UnaryOperator(context, "isoWeek", this)
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekIsoOfObjectId")
+	final val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, ObjectId>.weekIso: Value<R, Int>
+		get() = of(this).weekIso
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekIsoOfObjectId")
+	final val <R : Any> kotlin.reflect.KProperty1<R, ObjectId>.weekIso: Value<R, Int>
+		get() = of(this).weekIso
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekIsoOfObjectId")
+	final val ObjectId.weekIso: Value<Any, Int>
+		get() = of(this).weekIso
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekIsoOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.weekIso: Value<R, Int>
+		get() = UnaryOperator(context, "isoWeek", this)
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekIsoOfTimestamp")
+	final val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, Timestamp>.weekIso: Value<R, Int>
+		get() = of(this).weekIso
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekIsoOfTimestamp")
+	final val <R : Any> kotlin.reflect.KProperty1<R, Timestamp>.weekIso: Value<R, Int>
+		get() = of(this).weekIso
+
+	/**
+	 * Returns the week number in ISO 8601 format, ranging from `1` to `53`.
+	 *
+	 * Week numbers start at `1` with the week (Monday through Sunday) that contains the year's
+	 * first Thursday.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthweekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthweekIso set User::birthdate.weekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("weekIsoOfTimestamp")
+	final val Timestamp.weekIso: Value<Any, Int>
+		get() = of(this).weekIso
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryOperator<Root : Any, Input, Output>(

@@ -140,6 +140,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * - [`$toUUID`][TypeValueOperators.toUuid]
  *
  * Date and time operators:
+ * - [`$isoWeek`][DateTimeValueOperators.weekIso]
  * - [`$millisecond`][DateTimeValueOperators.millisecond]
  * - [`$minute`][DateTimeValueOperators.minute]
  * - [`$month`][DateTimeValueOperators.month]
