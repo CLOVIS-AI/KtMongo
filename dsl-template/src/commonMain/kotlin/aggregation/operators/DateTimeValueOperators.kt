@@ -821,6 +821,106 @@ interface DateTimeValueOperators : ValueOperators {
 		get() = UnaryOperator(context, "isoWeekYear", this)
 
 	// endregion
+	// region $isoDayOfWeek
+
+	/**
+	 * Returns the day of the week in ISO 8601 format, ranging from `1` (for Monday) to `7` (for Sunday).
+	 *
+	 * To get the current week number, see [weekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeekIso set User::birthdate.dayOfWeekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.dayOfWeekIso: Value<R, Int>
+		get() = UnaryOperator(context, "isoDayOfWeek", this)
+
+	/**
+	 * Returns the day of the week in ISO 8601 format, ranging from `1` (for Monday) to `7` (for Sunday).
+	 *
+	 * To get the current week number, see [weekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeekIso set User::birthdate.dayOfWeekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekIsoOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.dayOfWeekIso: Value<R, Int>
+		get() = UnaryOperator(context, "isoDayOfWeek", this)
+
+	/**
+	 * Returns the day of the week in ISO 8601 format, ranging from `1` (for Monday) to `7` (for Sunday).
+	 *
+	 * To get the current week number, see [weekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeekIso: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeekIso set User::birthdate.dayOfWeekIso
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekIsoOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.dayOfWeekIso: Value<R, Int>
+		get() = UnaryOperator(context, "isoDayOfWeek", this)
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryOperator<Root : Any, Input, Output>(
