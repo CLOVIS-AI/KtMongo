@@ -4276,6 +4276,401 @@ interface DateTimeValueOperators : ValueOperators {
 		get() = of(this).dayOfMonth
 
 	// endregion
+	// region $dayOfWeek
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.dayOfWeek: Value<R, Int>
+		get() = UnaryOperator(context, "dayOfWeek", this)
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, Instant>.dayOfWeek: Value<R, Int>
+		get() = of(this).dayOfWeek
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> kotlin.reflect.KProperty1<R, Instant>.dayOfWeek: Value<R, Int>
+		get() = of(this).dayOfWeek
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE")
+	@OptIn(LowLevelApi::class)
+	val Instant.dayOfWeek: Value<Any, Int>
+		get() = of(this).dayOfWeek
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.dayOfWeek: Value<R, Int>
+		get() = UnaryOperator(context, "dayOfWeek", this)
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekOfObjectId")
+	final val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, ObjectId>.dayOfWeek: Value<R, Int>
+		get() = of(this).dayOfWeek
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekOfObjectId")
+	final val <R : Any> kotlin.reflect.KProperty1<R, ObjectId>.dayOfWeek: Value<R, Int>
+		get() = of(this).dayOfWeek
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekOfObjectId")
+	final val ObjectId.dayOfWeek: Value<Any, Int>
+		get() = of(this).dayOfWeek
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.dayOfWeek: Value<R, Int>
+		get() = UnaryOperator(context, "dayOfWeek", this)
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekOfTimestamp")
+	final val <R : Any> opensavvy.ktmongo.dsl.path.Field<R, Timestamp>.dayOfWeek: Value<R, Int>
+		get() = of(this).dayOfWeek
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekOfTimestamp")
+	final val <R : Any> kotlin.reflect.KProperty1<R, Timestamp>.dayOfWeek: Value<R, Int>
+		get() = of(this).dayOfWeek
+
+	/**
+	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
+	 *
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthdayOfWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("dayOfWeekOfTimestamp")
+	final val Timestamp.dayOfWeek: Value<Any, Int>
+		get() = of(this).dayOfWeek
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryOperator<Root : Any, Input, Output>(

@@ -141,6 +141,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  *
  * Date and time operators:
  * - [`$dayOfMonth`][DateTimeValueOperators.dayOfMonth]
+ * - [`$dayOfWeek`][DateTimeValueOperators.dayOfWeek]
  * - [`$hour`][DateTimeValueOperators.hour]
  * - [`$isoDayOfWeek`][DateTimeValueOperators.dayOfWeekIso]
  * - [`$isoWeek`][DateTimeValueOperators.weekIso]

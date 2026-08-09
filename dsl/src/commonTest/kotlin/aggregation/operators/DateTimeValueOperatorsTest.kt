@@ -36,6 +36,7 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 		val dayOfWeekIso: Int,
 		val hour: Int,
 		val dayOfMonth: Int,
+		val dayOfWeek: Int,
 	)
 
 	test($$"$year") {
@@ -229,6 +230,24 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 						"$set": {
 							"dayOfMonth": {
 								"$dayOfMonth": "$date"
+							}
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
+	test($$"$dayOfWeek") {
+		TestPipeline<Target>()
+			.set {
+				Target::dayOfWeek set Target::date.dayOfWeek
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$set": {
+							"dayOfWeek": {
+								"$dayOfWeek": "$date"
 							}
 						}
 					}
