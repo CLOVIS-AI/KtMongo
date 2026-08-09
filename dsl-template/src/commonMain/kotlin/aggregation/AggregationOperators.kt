@@ -138,6 +138,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  *
  * Date and time operators:
  * - [`$isoWeek`][DateTimeValueOperators.weekIso]
+ * - [`$isoWeekYear`][DateTimeValueOperators.yearOfIsoWeek]
  * - [`$millisecond`][DateTimeValueOperators.millisecond]
  * - [`$minute`][DateTimeValueOperators.minute]
  * - [`$month`][DateTimeValueOperators.month]

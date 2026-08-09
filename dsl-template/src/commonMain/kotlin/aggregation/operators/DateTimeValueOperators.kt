@@ -712,6 +712,115 @@ interface DateTimeValueOperators : ValueOperators {
 		get() = UnaryOperator(context, "isoWeek", this)
 
 	// endregion
+	// region $isoWeekYear
+
+	/**
+	 * Returns the year in ISO 8601 format, corresponding to the ISO week number returned by
+	 * [weekIso].
+	 *
+	 * The year always starts on the first day of [weekIso] 1, which must be a Monday.
+	 * This means that the year may start anywhere between January 1st and January 7th (if January 1st was a Tuesday).
+	 * The year ends on the last synday of the last week, which may be at the start of January for the same reason.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthyearOfIsoWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthyearOfIsoWeek set User::birthdate.yearOfIsoWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeekYear/)
+	 */
+	@OptIn(LowLevelApi::class)
+	val <R : Any> Value<R, Instant>.yearOfIsoWeek: Value<R, Int>
+		get() = UnaryOperator(context, "isoWeekYear", this)
+
+	/**
+	 * Returns the year in ISO 8601 format, corresponding to the ISO week number returned by
+	 * [weekIso].
+	 *
+	 * The year always starts on the first day of [weekIso] 1, which must be a Monday.
+	 * This means that the year may start anywhere between January 1st and January 7th (if January 1st was a Tuesday).
+	 * The year ends on the last synday of the last week, which may be at the start of January for the same reason.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthyearOfIsoWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthyearOfIsoWeek set User::birthdate.yearOfIsoWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeekYear/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("yearOfIsoWeekOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.yearOfIsoWeek: Value<R, Int>
+		get() = UnaryOperator(context, "isoWeekYear", this)
+
+	/**
+	 * Returns the year in ISO 8601 format, corresponding to the ISO week number returned by
+	 * [weekIso].
+	 *
+	 * The year always starts on the first day of [weekIso] 1, which must be a Monday.
+	 * This means that the year may start anywhere between January 1st and January 7th (if January 1st was a Tuesday).
+	 * The year ends on the last synday of the last week, which may be at the start of January for the same reason.
+	 *
+	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val birthdate: Instant,
+	 *     val birthyearOfIsoWeek: Int? = null,
+	 * )
+	 *
+	 * users.updateManyWithPipeline {
+	 *     set {
+	 *         User::birthyearOfIsoWeek set User::birthdate.yearOfIsoWeek
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeekYear/)
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("yearOfIsoWeekOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.yearOfIsoWeek: Value<R, Int>
+		get() = UnaryOperator(context, "isoWeekYear", this)
+
+	// endregion
 
 	@LowLevelApi
 	private class UnaryOperator<Root : Any, Input, Output>(

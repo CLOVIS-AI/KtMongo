@@ -32,6 +32,7 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 		val minute: Int,
 		val millisecond: Int,
 		val weekIso: Int,
+		val yearOfIsoWeek: Int,
 	)
 
 	test($$"$year") {
@@ -153,6 +154,24 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 						"$set": {
 							"weekIso": {
 								"$isoWeek": "$date"
+							}
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
+	test($$"$isoWeekYear") {
+		TestPipeline<Target>()
+			.set {
+				Target::yearOfIsoWeek set Target::date.yearOfIsoWeek
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$set": {
+							"yearOfIsoWeek": {
+								"$isoWeekYear": "$date"
 							}
 						}
 					}
