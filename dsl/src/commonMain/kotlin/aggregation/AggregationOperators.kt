@@ -139,6 +139,21 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * - [`$toString`][TypeValueOperators.toText]
  * - [`$toUUID`][TypeValueOperators.toUuid]
  *
+ * Date and time operators:
+ * - [`$dayOfMonth`][DateTimeValueOperators.dayOfMonth]
+ * - [`$dayOfWeek`][DateTimeValueOperators.dayOfWeekUS]
+ * - [`$dayOfYear`][DateTimeValueOperators.dayOfYear]
+ * - [`$hour`][DateTimeValueOperators.hour]
+ * - [`$isoDayOfWeek`][DateTimeValueOperators.dayOfWeekISO]
+ * - [`$isoWeek`][DateTimeValueOperators.weekISO]
+ * - [`$isoWeekYear`][DateTimeValueOperators.yearOfISOWeek]
+ * - [`$millisecond`][DateTimeValueOperators.millisecond]
+ * - [`$minute`][DateTimeValueOperators.minute]
+ * - [`$month`][DateTimeValueOperators.month]
+ * - [`$second`][DateTimeValueOperators.second]
+ * - [`$week`][DateTimeValueOperators.weekUS]
+ * - [`$year`][DateTimeValueOperators.year]
+ *
  * Trigonometric operators and angle management:
  * - [`$acos`][TrigonometryValueOperators.acos]
  * - [`$acosh`][TrigonometryValueOperators.acosh]
@@ -162,6 +177,7 @@ interface AggregationOperators : ValueOperators,
 	ArrayValueOperators,
 	ComparisonValueOperators,
 	ConditionalValueOperators,
+	DateTimeValueOperators,
 	ArithmeticValueOperators,
 	StringValueOperators,
 	TrigonometryValueOperators,
