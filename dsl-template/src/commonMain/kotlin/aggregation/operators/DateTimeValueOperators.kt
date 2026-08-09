@@ -146,12 +146,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthweek: Int? = null,
+	 *     val birthweekUS: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthweek set User::birthdate.week
+	 *         User::birthweekUS set User::birthdate.weekUS
 	 *     }
 	 * }
 	 * ```
@@ -161,7 +161,7 @@ interface DateTimeValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/week/)
 	 */
 	@OptIn(LowLevelApi::class)
-	val <R : Any> Value<R, Instant>.week: Value<R, Int>
+	val <R : Any> Value<R, Instant>.weekUS: Value<R, Int>
 		get() = UnaryOperator(context, "week", this)
 
 	/**
@@ -178,12 +178,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthweek: Int? = null,
+	 *     val birthweekUS: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthweek set User::birthdate.week
+	 *         User::birthweekUS set User::birthdate.weekUS
 	 *     }
 	 * }
 	 * ```
@@ -194,8 +194,8 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("weekOfObjectId")
-	final val <R : Any> Value<R, ObjectId>.week: Value<R, Int>
+	@get:JvmName("weekUSOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.weekUS: Value<R, Int>
 		get() = UnaryOperator(context, "week", this)
 
 	/**
@@ -212,12 +212,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthweek: Int? = null,
+	 *     val birthweekUS: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthweek set User::birthdate.week
+	 *         User::birthweekUS set User::birthdate.weekUS
 	 *     }
 	 * }
 	 * ```
@@ -228,8 +228,8 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("weekOfTimestamp")
-	final val <R : Any> Value<R, Timestamp>.week: Value<R, Int>
+	@get:JvmName("weekUSOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.weekUS: Value<R, Int>
 		get() = UnaryOperator(context, "week", this)
 
 	// endregion
@@ -625,12 +625,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthweekIso: Int? = null,
+	 *     val birthweekISO: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthweekIso set User::birthdate.weekIso
+	 *         User::birthweekISO set User::birthdate.weekISO
 	 *     }
 	 * }
 	 * ```
@@ -640,7 +640,7 @@ interface DateTimeValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeek/)
 	 */
 	@OptIn(LowLevelApi::class)
-	val <R : Any> Value<R, Instant>.weekIso: Value<R, Int>
+	val <R : Any> Value<R, Instant>.weekISO: Value<R, Int>
 		get() = UnaryOperator(context, "isoWeek", this)
 
 	/**
@@ -657,12 +657,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthweekIso: Int? = null,
+	 *     val birthweekISO: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthweekIso set User::birthdate.weekIso
+	 *         User::birthweekISO set User::birthdate.weekISO
 	 *     }
 	 * }
 	 * ```
@@ -673,8 +673,8 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("weekIsoOfObjectId")
-	final val <R : Any> Value<R, ObjectId>.weekIso: Value<R, Int>
+	@get:JvmName("weekISOOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.weekISO: Value<R, Int>
 		get() = UnaryOperator(context, "isoWeek", this)
 
 	/**
@@ -691,12 +691,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthweekIso: Int? = null,
+	 *     val birthweekISO: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthweekIso set User::birthdate.weekIso
+	 *         User::birthweekISO set User::birthdate.weekISO
 	 *     }
 	 * }
 	 * ```
@@ -707,8 +707,8 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("weekIsoOfTimestamp")
-	final val <R : Any> Value<R, Timestamp>.weekIso: Value<R, Int>
+	@get:JvmName("weekISOOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.weekISO: Value<R, Int>
 		get() = UnaryOperator(context, "isoWeek", this)
 
 	// endregion
@@ -716,9 +716,9 @@ interface DateTimeValueOperators : ValueOperators {
 
 	/**
 	 * Returns the year in ISO 8601 format, corresponding to the ISO week number returned by
-	 * [weekIso].
+	 * [weekISO].
 	 *
-	 * The year always starts on the first day of [weekIso] 1, which must be a Monday.
+	 * The year always starts on the first day of [weekISO] 1, which must be a Monday.
 	 * This means that the year may start anywhere between January 1st and January 7th (if January 1st was a Tuesday).
 	 * The year ends on the last synday of the last week, which may be at the start of January for the same reason.
 	 *
@@ -730,12 +730,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthyearOfIsoWeek: Int? = null,
+	 *     val birthyearOfISOWeek: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthyearOfIsoWeek set User::birthdate.yearOfIsoWeek
+	 *         User::birthyearOfISOWeek set User::birthdate.yearOfISOWeek
 	 *     }
 	 * }
 	 * ```
@@ -745,14 +745,14 @@ interface DateTimeValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoWeekYear/)
 	 */
 	@OptIn(LowLevelApi::class)
-	val <R : Any> Value<R, Instant>.yearOfIsoWeek: Value<R, Int>
+	val <R : Any> Value<R, Instant>.yearOfISOWeek: Value<R, Int>
 		get() = UnaryOperator(context, "isoWeekYear", this)
 
 	/**
 	 * Returns the year in ISO 8601 format, corresponding to the ISO week number returned by
-	 * [weekIso].
+	 * [weekISO].
 	 *
-	 * The year always starts on the first day of [weekIso] 1, which must be a Monday.
+	 * The year always starts on the first day of [weekISO] 1, which must be a Monday.
 	 * This means that the year may start anywhere between January 1st and January 7th (if January 1st was a Tuesday).
 	 * The year ends on the last synday of the last week, which may be at the start of January for the same reason.
 	 *
@@ -764,12 +764,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthyearOfIsoWeek: Int? = null,
+	 *     val birthyearOfISOWeek: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthyearOfIsoWeek set User::birthdate.yearOfIsoWeek
+	 *         User::birthyearOfISOWeek set User::birthdate.yearOfISOWeek
 	 *     }
 	 * }
 	 * ```
@@ -780,15 +780,15 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("yearOfIsoWeekOfObjectId")
-	final val <R : Any> Value<R, ObjectId>.yearOfIsoWeek: Value<R, Int>
+	@get:JvmName("yearOfISOWeekOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.yearOfISOWeek: Value<R, Int>
 		get() = UnaryOperator(context, "isoWeekYear", this)
 
 	/**
 	 * Returns the year in ISO 8601 format, corresponding to the ISO week number returned by
-	 * [weekIso].
+	 * [weekISO].
 	 *
-	 * The year always starts on the first day of [weekIso] 1, which must be a Monday.
+	 * The year always starts on the first day of [weekISO] 1, which must be a Monday.
 	 * This means that the year may start anywhere between January 1st and January 7th (if January 1st was a Tuesday).
 	 * The year ends on the last synday of the last week, which may be at the start of January for the same reason.
 	 *
@@ -800,12 +800,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthyearOfIsoWeek: Int? = null,
+	 *     val birthyearOfISOWeek: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthyearOfIsoWeek set User::birthdate.yearOfIsoWeek
+	 *         User::birthyearOfISOWeek set User::birthdate.yearOfISOWeek
 	 *     }
 	 * }
 	 * ```
@@ -816,8 +816,8 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("yearOfIsoWeekOfTimestamp")
-	final val <R : Any> Value<R, Timestamp>.yearOfIsoWeek: Value<R, Int>
+	@get:JvmName("yearOfISOWeekOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.yearOfISOWeek: Value<R, Int>
 		get() = UnaryOperator(context, "isoWeekYear", this)
 
 	// endregion
@@ -826,7 +826,7 @@ interface DateTimeValueOperators : ValueOperators {
 	/**
 	 * Returns the day of the week in ISO 8601 format, ranging from `1` (for Monday) to `7` (for Sunday).
 	 *
-	 * To get the current week number, see [weekIso].
+	 * To get the current week number, see [weekISO].
 	 *
 	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
 	 *
@@ -836,12 +836,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthdayOfWeekIso: Int? = null,
+	 *     val birthdayOfWeekISO: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthdayOfWeekIso set User::birthdate.dayOfWeekIso
+	 *         User::birthdayOfWeekISO set User::birthdate.dayOfWeekISO
 	 *     }
 	 * }
 	 * ```
@@ -851,13 +851,13 @@ interface DateTimeValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/isoDayOfWeek/)
 	 */
 	@OptIn(LowLevelApi::class)
-	val <R : Any> Value<R, Instant>.dayOfWeekIso: Value<R, Int>
+	val <R : Any> Value<R, Instant>.dayOfWeekISO: Value<R, Int>
 		get() = UnaryOperator(context, "isoDayOfWeek", this)
 
 	/**
 	 * Returns the day of the week in ISO 8601 format, ranging from `1` (for Monday) to `7` (for Sunday).
 	 *
-	 * To get the current week number, see [weekIso].
+	 * To get the current week number, see [weekISO].
 	 *
 	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
 	 *
@@ -867,12 +867,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthdayOfWeekIso: Int? = null,
+	 *     val birthdayOfWeekISO: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthdayOfWeekIso set User::birthdate.dayOfWeekIso
+	 *         User::birthdayOfWeekISO set User::birthdate.dayOfWeekISO
 	 *     }
 	 * }
 	 * ```
@@ -883,14 +883,14 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("dayOfWeekIsoOfObjectId")
-	final val <R : Any> Value<R, ObjectId>.dayOfWeekIso: Value<R, Int>
+	@get:JvmName("dayOfWeekISOOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.dayOfWeekISO: Value<R, Int>
 		get() = UnaryOperator(context, "isoDayOfWeek", this)
 
 	/**
 	 * Returns the day of the week in ISO 8601 format, ranging from `1` (for Monday) to `7` (for Sunday).
 	 *
-	 * To get the current week number, see [weekIso].
+	 * To get the current week number, see [weekISO].
 	 *
 	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
 	 *
@@ -900,12 +900,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthdayOfWeekIso: Int? = null,
+	 *     val birthdayOfWeekISO: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthdayOfWeekIso set User::birthdate.dayOfWeekIso
+	 *         User::birthdayOfWeekISO set User::birthdate.dayOfWeekISO
 	 *     }
 	 * }
 	 * ```
@@ -916,8 +916,8 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("dayOfWeekIsoOfTimestamp")
-	final val <R : Any> Value<R, Timestamp>.dayOfWeekIso: Value<R, Int>
+	@get:JvmName("dayOfWeekISOOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.dayOfWeekISO: Value<R, Int>
 		get() = UnaryOperator(context, "isoDayOfWeek", this)
 
 	// endregion
@@ -1114,7 +1114,7 @@ interface DateTimeValueOperators : ValueOperators {
 	/**
 	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
 	 *
-	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekISO].
 	 *
 	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
 	 *
@@ -1124,12 +1124,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthdayOfWeek: Int? = null,
+	 *     val birthdayOfWeekUS: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *         User::birthdayOfWeekUS set User::birthdate.dayOfWeekUS
 	 *     }
 	 * }
 	 * ```
@@ -1139,13 +1139,13 @@ interface DateTimeValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/dayOfWeek/)
 	 */
 	@OptIn(LowLevelApi::class)
-	val <R : Any> Value<R, Instant>.dayOfWeek: Value<R, Int>
+	val <R : Any> Value<R, Instant>.dayOfWeekUS: Value<R, Int>
 		get() = UnaryOperator(context, "dayOfWeek", this)
 
 	/**
 	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
 	 *
-	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekISO].
 	 *
 	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
 	 *
@@ -1155,12 +1155,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthdayOfWeek: Int? = null,
+	 *     val birthdayOfWeekUS: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *         User::birthdayOfWeekUS set User::birthdate.dayOfWeekUS
 	 *     }
 	 * }
 	 * ```
@@ -1171,14 +1171,14 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("dayOfWeekOfObjectId")
-	final val <R : Any> Value<R, ObjectId>.dayOfWeek: Value<R, Int>
+	@get:JvmName("dayOfWeekUSOfObjectId")
+	final val <R : Any> Value<R, ObjectId>.dayOfWeekUS: Value<R, Int>
 		get() = UnaryOperator(context, "dayOfWeek", this)
 
 	/**
 	 * Returns the day of the week for a date as a number between `1` (Sunday) and `7` (Saturday).
 	 *
-	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekIso].
+	 * To use ISO 8601 day-of-week numbering (`1` for Monday to `7` for Sunday), see [dayOfWeekISO].
 	 *
 	 * The accepted date types are [Instant], [ObjectId] and [Timestamp].
 	 *
@@ -1188,12 +1188,12 @@ interface DateTimeValueOperators : ValueOperators {
 	 * class User(
 	 *     val name: String,
 	 *     val birthdate: Instant,
-	 *     val birthdayOfWeek: Int? = null,
+	 *     val birthdayOfWeekUS: Int? = null,
 	 * )
 	 *
 	 * users.updateManyWithPipeline {
 	 *     set {
-	 *         User::birthdayOfWeek set User::birthdate.dayOfWeek
+	 *         User::birthdayOfWeekUS set User::birthdate.dayOfWeekUS
 	 *     }
 	 * }
 	 * ```
@@ -1204,8 +1204,8 @@ interface DateTimeValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@get:JvmName("dayOfWeekOfTimestamp")
-	final val <R : Any> Value<R, Timestamp>.dayOfWeek: Value<R, Int>
+	@get:JvmName("dayOfWeekUSOfTimestamp")
+	final val <R : Any> Value<R, Timestamp>.dayOfWeekUS: Value<R, Int>
 		get() = UnaryOperator(context, "dayOfWeek", this)
 
 	// endregion

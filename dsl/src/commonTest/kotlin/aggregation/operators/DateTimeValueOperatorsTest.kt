@@ -26,17 +26,17 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 	class Target(
 		val date: Instant,
 		val year: Int,
-		val week: Int,
+		val weekUS: Int,
 		val second: Int,
 		val month: Int,
 		val minute: Int,
 		val millisecond: Int,
-		val weekIso: Int,
-		val yearOfIsoWeek: Int,
-		val dayOfWeekIso: Int,
+		val weekISO: Int,
+		val yearOfISOWeek: Int,
+		val dayOfWeekISO: Int,
 		val hour: Int,
 		val dayOfMonth: Int,
-		val dayOfWeek: Int,
+		val dayOfWeekUS: Int,
 		val dayOfYear: Int,
 	)
 
@@ -61,13 +61,13 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 	test($$"$week") {
 		TestPipeline<Target>()
 			.set {
-				Target::week set Target::date.week
+				Target::weekUS set Target::date.weekUS
 			}
 			.shouldBeBson($$"""
 				[
 					{
 						"$set": {
-							"week": {
+							"weekUS": {
 								"$week": "$date"
 							}
 						}
@@ -151,13 +151,13 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 	test($$"$isoWeek") {
 		TestPipeline<Target>()
 			.set {
-				Target::weekIso set Target::date.weekIso
+				Target::weekISO set Target::date.weekISO
 			}
 			.shouldBeBson($$"""
 				[
 					{
 						"$set": {
-							"weekIso": {
+							"weekISO": {
 								"$isoWeek": "$date"
 							}
 						}
@@ -169,13 +169,13 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 	test($$"$isoWeekYear") {
 		TestPipeline<Target>()
 			.set {
-				Target::yearOfIsoWeek set Target::date.yearOfIsoWeek
+				Target::yearOfISOWeek set Target::date.yearOfISOWeek
 			}
 			.shouldBeBson($$"""
 				[
 					{
 						"$set": {
-							"yearOfIsoWeek": {
+							"yearOfISOWeek": {
 								"$isoWeekYear": "$date"
 							}
 						}
@@ -187,13 +187,13 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 	test($$"$isoDayOfWeek") {
 		TestPipeline<Target>()
 			.set {
-				Target::dayOfWeekIso set Target::date.dayOfWeekIso
+				Target::dayOfWeekISO set Target::date.dayOfWeekISO
 			}
 			.shouldBeBson($$"""
 				[
 					{
 						"$set": {
-							"dayOfWeekIso": {
+							"dayOfWeekISO": {
 								"$isoDayOfWeek": "$date"
 							}
 						}
@@ -241,13 +241,13 @@ val DateTimeValueOperatorsTest by multiContextSuite {
 	test($$"$dayOfWeek") {
 		TestPipeline<Target>()
 			.set {
-				Target::dayOfWeek set Target::date.dayOfWeek
+				Target::dayOfWeekUS set Target::date.dayOfWeekUS
 			}
 			.shouldBeBson($$"""
 				[
 					{
 						"$set": {
-							"dayOfWeek": {
+							"dayOfWeekUS": {
 								"$dayOfWeek": "$date"
 							}
 						}

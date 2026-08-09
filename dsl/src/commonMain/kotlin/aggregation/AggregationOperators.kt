@@ -141,17 +141,17 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  *
  * Date and time operators:
  * - [`$dayOfMonth`][DateTimeValueOperators.dayOfMonth]
- * - [`$dayOfWeek`][DateTimeValueOperators.dayOfWeek]
+ * - [`$dayOfWeek`][DateTimeValueOperators.dayOfWeekUS]
  * - [`$dayOfYear`][DateTimeValueOperators.dayOfYear]
  * - [`$hour`][DateTimeValueOperators.hour]
- * - [`$isoDayOfWeek`][DateTimeValueOperators.dayOfWeekIso]
- * - [`$isoWeek`][DateTimeValueOperators.weekIso]
- * - [`$isoWeekYear`][DateTimeValueOperators.yearOfIsoWeek]
+ * - [`$isoDayOfWeek`][DateTimeValueOperators.dayOfWeekISO]
+ * - [`$isoWeek`][DateTimeValueOperators.weekISO]
+ * - [`$isoWeekYear`][DateTimeValueOperators.yearOfISOWeek]
  * - [`$millisecond`][DateTimeValueOperators.millisecond]
  * - [`$minute`][DateTimeValueOperators.minute]
  * - [`$month`][DateTimeValueOperators.month]
  * - [`$second`][DateTimeValueOperators.second]
- * - [`$week`][DateTimeValueOperators.week]
+ * - [`$week`][DateTimeValueOperators.weekUS]
  * - [`$year`][DateTimeValueOperators.year]
  *
  * Trigonometric operators and angle management:
