@@ -6,7 +6,13 @@ MongoDB is a flexible database, allowing the Kotlin compiler to take control of 
 
 KtMongo represents your schema, your data and your requests in a single unified, type-safe Kotlin DSL.
 
-There are multiple flavors of KtMongo, each with its own advantages and use cases.
+There are multiple flavors of KtMongo, each with its own advantages and use cases:
+
+<div markdown style="width: 100%; text-align: center">
+
+[Official driver](#based-on-the-official-driver) • [for KMongo users](#migrating-from-kmongo) • [Multiplatform driver](#going-multiplatform) • [for Java developers](#for-java-developers)
+
+</div>
 
 ## Based on the official driver
 
