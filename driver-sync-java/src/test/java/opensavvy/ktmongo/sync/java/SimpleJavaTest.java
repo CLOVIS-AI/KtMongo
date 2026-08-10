@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync;
+package opensavvy.ktmongo.sync.java;
 
 import com.mongodb.MongoTimeoutException;
 import com.mongodb.client.MongoClient;
@@ -23,8 +23,8 @@ import kotlin.Unit;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 
-import static opensavvy.ktmongo.sync.Query.filter;
-import static opensavvy.ktmongo.sync.Query.options;
+import static opensavvy.ktmongo.sync.java.Query.filter;
+import static opensavvy.ktmongo.sync.java.Query.options;
 
 public class SimpleJavaTest {
 

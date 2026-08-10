@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync
+package opensavvy.ktmongo.sync.java
 
 import com.mongodb.client.MongoCollection
 import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.official.types.Jvm
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import opensavvy.ktmongo.sync.SyncMongoCollection
+import opensavvy.ktmongo.sync.asKtMongo
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
 import kotlin.reflect.KType

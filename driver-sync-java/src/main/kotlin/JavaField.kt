@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.sync
+package opensavvy.ktmongo.sync.java
 
 import com.github.meanbeanlib.mirror.Executables
 import com.github.meanbeanlib.mirror.SerializableLambdas
