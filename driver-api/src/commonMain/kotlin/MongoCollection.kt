@@ -47,6 +47,31 @@ import kotlin.reflect.KType
  * The maximum nesting is 100 levels.
  * Each document or array adds a level.
  *
+ * ### Operations
+ *
+ * The following lists the available operations using the `mongosh` equivalent:
+ *
+ * - [aggregate][AggregationOperations.aggregate]
+ * - [bulkWrite][UpdateOperations.bulkWrite]
+ * - [countDocuments][CountOperations.count]
+ * - [deleteOne][DeleteOperations.deleteOne]
+ * - [deleteMany][DeleteOperations.deleteMany]
+ * - [drop][CollectionOperations.drop]
+ * - [estimatedDocumentCount][CountOperations.countEstimated]
+ * - [find][FindOperations.find]
+ * - [findOne][FindOperations.findOne]
+ * - [findOneAndUpdate][UpdateOperations.findOneAndUpdate]
+ * - [insertOne][InsertOperations.insertOne]
+ * - [insertMany][InsertOperations.insertMany]
+ * - [updateOne][UpdateOperations.updateOne]
+ * - [updateOne][UpdatePipelineOperations.updateOneWithPipeline] with an aggregation pipeline
+ * - [updateOne][UpdateOperations.upsertOne] with `upsert: true`
+ * - [updateOne][UpdatePipelineOperations.upsertOneWithPipeline] with `upsert: true` and an aggregation pipeline
+ * - [updateMany][UpdateOperations.updateMany]
+ * - [updateMany][UpdatePipelineOperations.updateManyWithPipeline] with an aggregation pipeline
+ * - [replaceOne][UpdateOperations.replaceOne]
+ * - [replaceOne][UpdateOperations.repsertOne] with `upsert: true`
+ *
  * ### External resources
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
