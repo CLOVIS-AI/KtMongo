@@ -19,9 +19,8 @@
 package opensavvy.ktmongo.sync
 
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.coroutines.filter
-import opensavvy.ktmongo.coroutines.first
-import opensavvy.ktmongo.coroutines.toList
+import opensavvy.ktmongo.api.first
+import opensavvy.ktmongo.api.toList
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.test.testCollection

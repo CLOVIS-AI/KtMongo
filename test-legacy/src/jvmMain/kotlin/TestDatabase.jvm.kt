@@ -19,8 +19,8 @@ package opensavvy.ktmongo.test
 import com.mongodb.MongoTimeoutException
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import kotlinx.coroutines.CoroutineName
-import opensavvy.ktmongo.coroutines.MongoCollection
-import opensavvy.ktmongo.coroutines.asKtMongoLegacy
+import opensavvy.ktmongo.coroutines.CoroutineMongoCollection
+import opensavvy.ktmongo.coroutines.asKtMongo
 import opensavvy.prepared.suite.PreparedProvider
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.shared
@@ -38,7 +38,7 @@ internal val database by shared(CoroutineName("mongodb-establish-connection")) {
 	client.getDatabase("ktmongo-sync-tests")
 }
 
-actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>> = prepared(CoroutineName("mongodb-create-collection-$name")) {
+actual inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<CoroutineMongoCollection<Document>> = prepared(CoroutineName("mongodb-create-collection-$name")) {
 	val collection = database().getCollection<Document>(name)
-	collection.asKtMongoLegacy()
+	collection.asKtMongo()
 }

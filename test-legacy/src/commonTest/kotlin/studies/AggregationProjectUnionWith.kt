@@ -17,8 +17,8 @@
 package opensavvy.ktmongo.sync.studies
 
 import kotlinx.serialization.Serializable
-import opensavvy.ktmongo.coroutines.MongoAggregationPipeline
-import opensavvy.ktmongo.coroutines.toList
+import opensavvy.ktmongo.api.toList
+import opensavvy.ktmongo.coroutines.CoroutineMongoAggregationPipeline
 import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.test.testCollection
@@ -201,7 +201,7 @@ val AggregationProjectUnionWith by preparedSuite {
 	 * const commonSort = {$sort: {'customer.name': -1}};
 	 * ```
 	 */
-	fun MongoAggregationPipeline<Invoice>.commonSort() = sort {
+	fun CoroutineMongoAggregationPipeline<Invoice>.commonSort() = sort {
 		descending(Invoice::customer / Customer::name)
 	}
 
@@ -212,7 +212,7 @@ val AggregationProjectUnionWith by preparedSuite {
 	 * const commonLimit = {$limit: 20};
 	 * ```
 	 */
-	fun MongoAggregationPipeline<Invoice>.commonLimit() = limit(20)
+	fun CoroutineMongoAggregationPipeline<Invoice>.commonLimit() = limit(20)
 
 	test("Case study with \$unionWith") {
 		drafts().insertOne(
