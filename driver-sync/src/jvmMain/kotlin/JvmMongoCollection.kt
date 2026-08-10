@@ -56,7 +56,7 @@ import kotlin.reflect.typeOf
  *
  * To access the inner iterable, see [asKotlinClient].
  *
- * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongo].
+ * To convert an existing MongoDB iterable into an instance of this class, see [asKtMongoLegacy].
  */
 class JvmMongoCollection<Document : Any> internal constructor(
 	inner: com.mongodb.kotlin.client.MongoCollection<Document>,
@@ -404,7 +404,7 @@ class JvmMongoCollection<Document : Any> internal constructor(
 				inner.aggregate(
 					pipeline = pipeline.chain.toBsonList().map { it.toJava() },
 					resultClass = documentType,
-				).asKtMongo()
+				).asKtMongoLegacy()
 			}
 		)
 

@@ -24,6 +24,7 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.dsl)
+		api(projects.driverSyncApi)
 		api(projects.driverSharedOfficial)
 	}
 
