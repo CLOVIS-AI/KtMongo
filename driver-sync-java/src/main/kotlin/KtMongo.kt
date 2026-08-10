@@ -17,6 +17,9 @@
 package opensavvy.ktmongo.sync
 
 import com.mongodb.client.MongoCollection
+import opensavvy.ktmongo.bson.official.BsonFactory
+import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import kotlin.reflect.KClass
 import kotlin.reflect.KClassifier
@@ -58,7 +61,7 @@ object KtMongo {
 		driver: MongoCollection<T>,
 		documentType: KType,
 		nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
-	): JvmMongoCollection<T> =
+	): SyncMongoCollection<T> =
 		from(com.mongodb.kotlin.client.MongoCollection(driver), documentType, nameStrategy)
 
 	/**
@@ -85,8 +88,13 @@ object KtMongo {
 		driver: com.mongodb.kotlin.client.MongoCollection<T>,
 		documentType: KType,
 		nameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
-	): JvmMongoCollection<T> =
-		driver.asKtMongo(nameStrategy, documentType)
+	): SyncMongoCollection<T> =
+		driver.asKtMongo(
+			propertyNameStrategy = nameStrategy,
+			type = documentType,
+			factory = BsonFactory(driver.codecRegistry),
+			objectIdGenerator = ObjectIdGenerator.Jvm(),
+		)
 
 	private val typeOfNull: KType = kotlin.reflect.typeOf<Any?>()
 
