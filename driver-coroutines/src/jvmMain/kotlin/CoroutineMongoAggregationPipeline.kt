@@ -22,10 +22,7 @@ package opensavvy.ktmongo.coroutines
 import opensavvy.ktmongo.api.MongoAggregationPipeline
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AccumulationOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWithCompatibility
-import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
+import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
@@ -69,6 +66,8 @@ interface CoroutineMongoAggregationPipeline<Document : Any> : MongoAggregationPi
 	override fun project(block: ProjectStageOperators<Document>.() -> Unit): CoroutineMongoAggregationPipeline<Document>
 
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): CoroutineMongoAggregationPipeline<Document>
+
+	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): CoroutineMongoAggregationPipeline<Document>
 
 	override fun <Out : Any> group(block: AccumulationOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipeline<Out>
 

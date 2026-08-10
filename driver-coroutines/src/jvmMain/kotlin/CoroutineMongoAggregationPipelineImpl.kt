@@ -29,10 +29,7 @@ import opensavvy.ktmongo.dsl.aggregation.AbstractPipeline
 import opensavvy.ktmongo.dsl.aggregation.AccumulationOperators
 import opensavvy.ktmongo.dsl.aggregation.AggregationPipeline
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
-import opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWithCompatibility
-import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
+import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
@@ -119,6 +116,10 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.unionWith(other) as CoroutineMongoAggregationPipelineImpl<Document>
+
+	@KtMongoDsl
+	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Document> =
+		super<AggregationPipeline>.lookup(block) as CoroutineMongoAggregationPipelineImpl<Document>
 
 	@KtMongoDsl
 	override fun <Out : Any> group(block: AccumulationOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Out> =
