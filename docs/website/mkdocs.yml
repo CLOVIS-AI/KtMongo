@@ -132,6 +132,7 @@ nav:
           - tutorials/multiplatform/index.md
 
   - Features:
+      - features/index.md
       - CRUD operations: features/crud.md
       - Bulk writes: features/bulk-writes.md
       - Optional filters: features/optional-filters.md
