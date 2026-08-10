@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.coroutines
 
-import opensavvy.ktmongo.api.MongoCollection
 import opensavvy.ktmongo.api.MongoIterable
 import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.official.BsonFactory
@@ -52,7 +51,7 @@ private class CoroutineFilteredMongoCollectionImpl<Document : Any>(
 	override val type: KType
 		get() = upstream.type
 
-	override fun filter(filter: FilterQuery<Document>.() -> Unit): MongoCollection<Document> =
+	override fun filter(filter: FilterQuery<Document>.() -> Unit): CoroutineMongoCollection<Document> =
 		upstream.filter {
 			globalFilter()
 			filter()

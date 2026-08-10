@@ -93,4 +93,6 @@ interface CoroutineMongoCollection<Document : Any> : MongoCollection<Document> {
 	): UpsertResult
 
 	override fun aggregate(): CoroutineMongoAggregationPipeline<Document>
+
+	override fun filter(filter: FilterQuery<Document>.() -> Unit): CoroutineMongoCollection<Document>
 }
