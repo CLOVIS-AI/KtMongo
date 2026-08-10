@@ -19,8 +19,8 @@
 package opensavvy.ktmongo.sync.studies
 
 import kotlinx.serialization.Serializable
+import opensavvy.ktmongo.api.toList
 import opensavvy.ktmongo.bson.types.ObjectId
-import opensavvy.ktmongo.coroutines.toList
 import opensavvy.ktmongo.test.testCollection
 import opensavvy.prepared.runner.testballoon.preparedSuite
 import kotlin.time.Instant

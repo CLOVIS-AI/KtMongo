@@ -25,14 +25,8 @@ import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.AbstractPipeline
-import opensavvy.ktmongo.dsl.aggregation.AccumulationOperators
-import opensavvy.ktmongo.dsl.aggregation.AggregationPipeline
-import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
-import opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWithCompatibility
-import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
+import opensavvy.ktmongo.dsl.aggregation.*
+import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
@@ -89,6 +83,10 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 		super<AggregationPipeline>.match(filter) as CoroutineMongoAggregationPipelineImpl<Document>
 
 	@KtMongoDsl
+	override fun matchExpr(filter: AggregationOperators.() -> Value<Document, Boolean>): CoroutineMongoAggregationPipelineImpl<Document> =
+		super<AggregationPipeline>.matchExpr(filter) as CoroutineMongoAggregationPipelineImpl<Document>
+
+	@KtMongoDsl
 	override fun sample(size: Int): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.sample(size) as CoroutineMongoAggregationPipelineImpl<Document>
 
@@ -119,6 +117,10 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.unionWith(other) as CoroutineMongoAggregationPipelineImpl<Document>
+
+	@KtMongoDsl
+	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Document> =
+		super<AggregationPipeline>.lookup(block) as CoroutineMongoAggregationPipelineImpl<Document>
 
 	@KtMongoDsl
 	override fun <Out : Any> group(block: AccumulationOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Out> =

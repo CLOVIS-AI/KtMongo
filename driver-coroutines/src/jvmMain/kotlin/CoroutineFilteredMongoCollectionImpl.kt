@@ -16,7 +16,6 @@
 
 package opensavvy.ktmongo.coroutines
 
-import opensavvy.ktmongo.api.MongoAggregationPipeline
 import opensavvy.ktmongo.api.MongoCollection
 import opensavvy.ktmongo.api.MongoIterable
 import opensavvy.ktmongo.api.operations.UpdateOperations
@@ -85,7 +84,7 @@ private class CoroutineFilteredMongoCollectionImpl<Document : Any>(
 			update = update
 		)
 
-	override fun aggregate(): MongoAggregationPipeline<Document> =
+	override fun aggregate(): CoroutineMongoAggregationPipeline<Document> =
 		upstream.aggregate()
 			.match { globalFilter() }
 

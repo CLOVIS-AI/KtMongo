@@ -17,17 +17,17 @@
 package opensavvy.ktmongo.test
 
 import kotlinx.coroutines.ensureActive
-import opensavvy.ktmongo.coroutines.MongoCollection
+import opensavvy.ktmongo.coroutines.CoroutineMongoCollection
 import opensavvy.prepared.suite.PreparedProvider
 import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.random.randomInt
 import kotlin.coroutines.coroutineContext
 
-expect inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<MongoCollection<Document>>
+expect inline fun <reified Document : Any> testCollectionExact(name: String): PreparedProvider<CoroutineMongoCollection<Document>>
 
 val collectionPostfix by randomInt(0, Int.MAX_VALUE)
-inline fun <reified Document : Any> testCollection(name: String): PreparedProvider<MongoCollection<Document>> = prepared {
+inline fun <reified Document : Any> testCollection(name: String): PreparedProvider<CoroutineMongoCollection<Document>> = prepared {
 	val name = "$name-${collectionPostfix()}"
 
 	val realCollection by testCollectionExact<Document>(name)
