@@ -92,4 +92,5 @@ interface CoroutineMongoCollection<Document : Any> : MongoCollection<Document> {
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	): UpsertResult
 
+	override fun aggregate(): CoroutineMongoAggregationPipeline<Document>
 }
