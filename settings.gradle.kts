@@ -102,6 +102,7 @@ include(
 	"test",
 	"test-coroutines-kotlinx",
 	"test-coroutines-reflection",
+	"test-sync-kotlinx",
 
 	"docs:website",
 	"gradle:templates:template-app",
