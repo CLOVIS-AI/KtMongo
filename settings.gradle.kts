@@ -89,6 +89,7 @@ include(
 	"driver-shared-official",
 	"driver-shared-kmongo",
 	"driver-sync-api",
+	"driver-sync-api-adapter",
 	"driver-sync",
 	"driver-sync-java",
 	"driver-sync-kmongo",
