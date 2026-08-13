@@ -17,17 +17,17 @@
 @file:JvmMultifileClass
 @file:JvmName("KtMongo")
 
-package opensavvy.ktmongo.coroutines
+package opensavvy.ktmongo.sync
 
-import opensavvy.ktmongo.api.MongoCollection
-import opensavvy.ktmongo.api.MongoDatabase
-import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.official.BsonValue
+import opensavvy.ktmongo.dsl.command.FindOptions
 import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
+import opensavvy.ktmongo.sync.api.MongoCollection
+import opensavvy.ktmongo.sync.api.operations.UpdateOperations
 
 /**
  * A collection stores related documents together.
@@ -59,14 +59,14 @@ import opensavvy.ktmongo.dsl.query.UpsertQuery
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
  * - [Size limits](https://www.mongodb.com/docs/manual/reference/limits/#bson-documents)
  *
- * @see asKtMongo Convert an existing instance from the official Kotlin driver.
+ * @see asKtMongoLegacy Convert an existing instance from the official Kotlin driver.
  */
-interface CoroutineMongoCollection<Document : Any> : MongoCollection<Document> {
+interface SyncMongoCollection<Document : Any> : MongoCollection<Document> {
 
 	/**
 	 * Obtains the underlying MongoDB collection from the official Kotlin driver.
 	 */
-	fun asOfficial(): com.mongodb.kotlin.client.coroutine.MongoCollection<Document>
+	fun asOfficial(): com.mongodb.kotlin.client.MongoCollection<Document>
 
 	override val factory: BsonFactory
 
@@ -79,20 +79,24 @@ interface CoroutineMongoCollection<Document : Any> : MongoCollection<Document> {
 	}
 
 	@IgnorableReturnValue
-	override suspend fun upsertOne(
+	override fun upsertOne(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpsertQuery<Document>.() -> Unit,
 	): UpsertResult
 
 	@IgnorableReturnValue
-	override suspend fun upsertOneWithPipeline(
+	override fun upsertOneWithPipeline(
 		options: UpdateOptions<Document>.() -> Unit,
 		filter: FilterQuery<Document>.() -> Unit,
 		update: UpdateWithPipelineQuery<Document>.() -> Unit,
 	): UpsertResult
 
-	override fun aggregate(): CoroutineMongoAggregationPipeline<Document>
+	override fun aggregate(): SyncMongoAggregationPipeline<Document>
 
-	override fun filter(filter: FilterQuery<Document>.() -> Unit): CoroutineMongoCollection<Document>
+	override fun filter(filter: FilterQuery<Document>.() -> Unit): SyncMongoCollection<Document>
+
+	override fun find(): SyncMongoFindIterable<Document>
+
+	override fun find(options: FindOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit): SyncMongoFindIterable<Document>
 }

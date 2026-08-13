@@ -8,3 +8,5 @@ services:
     image: "mongo:7.0.31"
     ports:
       - "27017:27017"
+    ulimits:
+      nofile: 64000

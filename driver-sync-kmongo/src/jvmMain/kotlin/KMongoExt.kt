@@ -18,7 +18,7 @@ package opensavvy.ktmongo.sync.kmongo
 
 import com.mongodb.kotlin.client.MongoCollection
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
-import opensavvy.ktmongo.sync.JvmMongoCollection
+import opensavvy.ktmongo.sync.SyncMongoCollection
 import opensavvy.ktmongo.sync.asKtMongo
 import opensavvy.ktmongo.utils.kmongo.KMongoNameStrategy
 
@@ -27,5 +27,5 @@ import opensavvy.ktmongo.utils.kmongo.KMongoNameStrategy
  */
 inline fun <reified T : Any> com.mongodb.client.MongoCollection<T>.asKtMongo(
 	nameStrategy: PropertyNameStrategy = KMongoNameStrategy(),
-): JvmMongoCollection<T> =
-	MongoCollection(this).asKtMongo(nameStrategy = nameStrategy)
+): SyncMongoCollection<T> =
+	MongoCollection(this).asKtMongo(propertyNameStrategy = nameStrategy)

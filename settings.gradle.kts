@@ -88,6 +88,8 @@ include(
 	"driver-api",
 	"driver-shared-official",
 	"driver-shared-kmongo",
+	"driver-sync-api",
+	"driver-sync-api-adapter",
 	"driver-sync",
 	"driver-sync-java",
 	"driver-sync-kmongo",
@@ -100,6 +102,8 @@ include(
 	"test",
 	"test-coroutines-kotlinx",
 	"test-coroutines-reflection",
+	"test-sync-kotlinx",
+	"test-sync-reflection",
 
 	"docs:website",
 	"gradle:templates:template-app",
