@@ -20,6 +20,7 @@
 package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.api.MongoAggregationPipeline
+import opensavvy.ktmongo.api.MongoIterable
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AccumulationOperators
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators

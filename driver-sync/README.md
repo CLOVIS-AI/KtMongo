@@ -39,7 +39,7 @@ dependencies {
 
 ## Basic usage
 
-Once you have obtained an instance of [MongoCollection][opensavvy.ktmongo.sync.MongoCollection] (see platform-specific instructions on how to do this), you can use it to access the database:
+Once you have obtained an instance of [SyncMongoCollection][opensavvy.ktmongo.sync.SyncMongoCollection] (see platform-specific instructions on how to do this), you can use it to access the database:
 
 ```kotlin
 class User(
@@ -62,7 +62,7 @@ collection.update(
 )
 ```
 
-[Learn more about the available operations][opensavvy.ktmongo.sync.MongoCollection].
+[Learn more about the available operations][opensavvy.ktmongo.sync.SyncMongoCollection].
 
 # Package opensavvy.ktmongo.sync
 

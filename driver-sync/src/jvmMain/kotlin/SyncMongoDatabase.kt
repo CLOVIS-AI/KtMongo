@@ -32,7 +32,7 @@ import kotlin.reflect.typeOf
  *
  * ### What is a database?
  *
- * [Collections][MongoCollection] are grouped into databases to avoid name collisions.
+ * [Collections][SyncMongoCollection] are grouped into databases to avoid name collisions.
  * Databases are similar to Kotlin packages.
  * If multiple applications are deployed in the same MongoDB instance in their own database,
  * they can use the same collection names (e.g. `users`) without conflicts.
@@ -41,7 +41,7 @@ import kotlin.reflect.typeOf
  *
  * ### Access
  *
- * To obtain a database, see [MongoClient.database].
+ * To obtain a database, see [SyncMongoClient.database].
  *
  * To obtain a collection, see [collection].
  *
@@ -49,7 +49,7 @@ import kotlin.reflect.typeOf
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
  *
- * @see asKtMongoLegacy Convert an existing instance from the official Kotlin driver.
+ * @see asKtMongo Convert an existing instance from the official Kotlin driver.
  */
 interface SyncMongoDatabase : MongoDatabase {
 
@@ -62,12 +62,12 @@ interface SyncMongoDatabase : MongoDatabase {
 	override fun <Document : Any> collection(name: String, type: KType): SyncMongoCollection<Document>
 
 	/**
-	 * Creates a [MongoCollection] object.
+	 * Creates a [SyncMongoCollection] object.
 	 *
 	 * This method is purely a client-side operation, it does nothing in the MongoDB server.
 	 * In MongoDB, databases and collections are created implicitly on the first insert.
 	 *
-	 * For an example, see [MongoClient].
+	 * For an example, see [SyncMongoClient].
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")

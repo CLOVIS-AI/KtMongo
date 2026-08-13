@@ -33,7 +33,7 @@ import kotlin.reflect.typeOf
  *
  * ### What is a database?
  *
- * [Collections][MongoCollection] are grouped into databases to avoid name collisions.
+ * [Collections][CoroutineMongoCollection] are grouped into databases to avoid name collisions.
  * Databases are similar to Kotlin packages.
  * If multiple applications are deployed in the same MongoDB instance in their own database,
  * they can use the same collection names (e.g. `users`) without conflicts.
@@ -63,7 +63,7 @@ interface CoroutineMongoDatabase : MongoDatabase {
 	override fun <Document : Any> collection(name: String, type: KType): CoroutineMongoCollection<Document>
 
 	/**
-	 * Creates a [MongoCollection] object.
+	 * Creates a [CoroutineMongoCollection] object.
 	 *
 	 * This method is purely a client-side operation, it does nothing in the MongoDB server.
 	 * In MongoDB, databases and collections are created implicitly on the first insert.

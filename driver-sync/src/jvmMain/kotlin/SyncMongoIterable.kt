@@ -28,7 +28,7 @@ import com.mongodb.kotlin.client.FindIterable
  * The Coroutine client provides a coroutine-aware API which internally uses the
  * [official Kotlin driver](https://www.mongodb.com/docs/drivers/kotlin/coroutine/current/).
  *
- * This type wraps a [FindFlow] from the official driver.
+ * This type wraps a [FindIterable] from the official driver.
  * See also [SyncMongoAggregateIterable].
  *
  * ### External resources
@@ -50,7 +50,7 @@ interface SyncMongoFindIterable<Document : Any> : opensavvy.ktmongo.sync.api.Mon
  * The Coroutine client provides a coroutine-aware API which internally uses the
  * [official Kotlin driver](https://www.mongodb.com/docs/drivers/kotlin/coroutine/current/).
  *
- * This type wraps a [AggregateFlow] from the official driver.
+ * This type wraps an [AggregateIterable] from the official driver.
  * See also [SyncMongoFindIterable].
  *
  * ### External resources

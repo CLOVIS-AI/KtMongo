@@ -40,9 +40,9 @@ import opensavvy.ktmongo.sync.api.operations.UpdateOperations
  * - Kotlin collections, like [List] and [Set], the embed an arbitrary number of items.
  * - Polymorphism, for example with `sealed class`, to have different fields based on a discriminator.
  *
- * To avoid name collisions, collections are grouped into [databases][MongoDatabase].
+ * To avoid name collisions, collections are grouped into [databases][SyncMongoDatabase].
  *
- * To obtain a collection, see [MongoDatabase.collection].
+ * To obtain a collection, see [SyncMongoDatabase.collection].
  *
  * ### Size limit
  *
@@ -59,7 +59,7 @@ import opensavvy.ktmongo.sync.api.operations.UpdateOperations
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
  * - [Size limits](https://www.mongodb.com/docs/manual/reference/limits/#bson-documents)
  *
- * @see asKtMongoLegacy Convert an existing instance from the official Kotlin driver.
+ * @see asKtMongo Convert an existing instance from the official Kotlin driver.
  */
 interface SyncMongoCollection<Document : Any> : MongoCollection<Document> {
 

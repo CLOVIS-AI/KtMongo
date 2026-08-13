@@ -39,7 +39,7 @@ dependencies {
 
 ## Basic usage
 
-Once you have obtained an instance of [MongoCollection][opensavvy.ktmongo.coroutines.MongoCollection] (see platform-specific instructions on how to do this), you can use it to access the database:
+Once you have obtained an instance of [CoroutineMongoCollection][opensavvy.ktmongo.coroutines.CoroutineMongoCollection] (see platform-specific instructions on how to do this), you can use it to access the database:
 
 ```kotlin
 class User(
@@ -62,7 +62,7 @@ collection.update(
 )
 ```
 
-[Learn more about the available operations][opensavvy.ktmongo.coroutines.MongoCollection].
+[Learn more about the available operations][opensavvy.ktmongo.coroutines.CoroutineMongoCollection].
 
 # Package opensavvy.ktmongo.coroutines
 

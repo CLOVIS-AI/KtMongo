@@ -91,7 +91,7 @@ interface MongoCollection<Document : Any> : ObjectIdGenerator,
 	/**
 	 * THe name of this collection.
 	 *
-	 * The collection name must be unique within a single [database] (otherwise, the two instances refer to the same data).
+	 * The collection name must be unique within a single [MongoDatabase] (otherwise, the two instances refer to the same data).
 	 *
 	 * - The name should begin with a letter or an underscore (`_`).
 	 * - The name cannot be empty.

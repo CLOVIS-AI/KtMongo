@@ -24,7 +24,6 @@ val database = client.getDatabase("my_project")
 val collection = database.getCollection<User>("users").asKtMongo()
 ```
 
-Note the call to [`asKtMongo()`][opensavvy.ktmongo.sync.asKtMongo] which is the only difference from the official usage.
-From then on, all methods from this driver are available on the `collection` variable: see [MongoCollection][opensavvy.ktmongo.sync.MongoCollection].
+Note the call to [`asKtMongo()`][opensavvy.ktmongo.sync.asKtMongo] which is the only difference from the official usage. From then on, all methods from this driver are available on the `collection` variable: see [SyncMongoCollection][opensavvy.ktmongo.sync.SyncMongoCollection].
 
 This means you are able to use KtMongo DSLs within your existing repositories: simply convert into a KtMongo equivalent where you need KtMongo functionality.
