@@ -87,7 +87,8 @@ users.aggregate()
 	}
 	.toList()
 ```
-To learn more about aggregation operators and their syntax, see [`ValueDsl`][opensavvy.ktmongo.dsl.aggregation.ValueDsl].
+
+To learn more about aggregation operators and their syntax, see [`AggregationOperators`][opensavvy.ktmongo.dsl.aggregation.AggregationOperators].
 
 You may also be interested in reading the [official documentation on aggregations](https://www.mongodb.com/docs/manual/aggregation/).
 
@@ -100,8 +101,7 @@ All operators are declared as interface members. Each interface groups the opera
 - [FilterQuery][opensavvy.ktmongo.dsl.query.FilterQuery] is used in `find()`, `count()`, `delete()` and as the filter in `updateMany()`
 - [UpdateQuery][opensavvy.ktmongo.dsl.query.UpdateQuery] is used as the update in `updateMany()`
 - [UpsertQuery][opensavvy.ktmongo.dsl.query.UpsertQuery] is used as the update in `upsertOne()`
-- [UpdateWithPipelineQuery][opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery] is used as the update in `updateManyWithPipeline()`
-- [UpsertWithPipelineQuery][opensavvy.ktmongo.dsl.query.UpsertWithPipelineQuery] is used as the update in `upsertOneWithPipeline()`
+- [UpdateWithPipelineQuery][opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery] is used as the update in `updateOneWithPipeline()` and similar
 
 # Package opensavvy.ktmongo.dsl.path
 

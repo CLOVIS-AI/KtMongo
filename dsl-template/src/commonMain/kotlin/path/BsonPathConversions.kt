@@ -128,7 +128,7 @@ inline fun <reified T> BsonDocument.selectFirst(field: Field<*, T>): T =
 	selectFirst(field.toBsonPath())
 
 /**
- * Finds the first value that matches [path] in a given [BsonDocument].
+ * Finds the first value that matches [field] in a given [BsonDocument].
  *
  * ### Example
  *

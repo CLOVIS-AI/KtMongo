@@ -45,8 +45,8 @@ interface HasLookup<Document : Any> : Pipeline<Document> {
 	 * Performs an equality match join between this collection and another collection.
 	 *
 	 * For each document in this pipeline, matching documents from the foreign collection are appended
-	 * into the new array field [into].
-	 * If [into] already has a value, it is overwritten.
+	 * into the new array field [into][LookupStageOperators.into].
+	 * If [into][LookupStageOperators.into] already has a value, it is overwritten.
 	 *
 	 * ### Example
 	 *
