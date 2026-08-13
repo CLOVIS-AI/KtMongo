@@ -47,14 +47,14 @@ KtMongo and KMongo are compatible, meaning that both can be used in the same pro
 
 === "Without coroutines"
 
-	Add the dependency ([list of versions](../../news)):
+	Add the dependency ([list of versions](../../news/index.md)):
 	```kotlin
 	implementation("dev.opensavvy.ktmongo:driver-sync-kmongo:VERSION")
 	```
 
 === "With coroutines"
 
-	Add the dependency ([list of versions](../../news)):
+	Add the dependency ([list of versions](../../news/index.md)):
 	```kotlin
 	implementation("dev.opensavvy.ktmongo:driver-coroutines-kmongo:VERSION")
 	```
