@@ -58,7 +58,7 @@ import opensavvy.ktmongo.sync.api.MongoClient
  * }
  * ```
  *
- * @see asKtMongoLegacy Convert an existing instance from the official Kotlin driver.
+ * @see asKtMongo Convert an existing instance from the official Kotlin driver.
  */
 interface SyncMongoClient : MongoClient {
 

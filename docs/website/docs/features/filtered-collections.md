@@ -16,8 +16,7 @@ We can use [delete operations](crud.md#delete) to remove documents from a collec
 
 In all these situations, we want to hide documents and ensure no requests can impact them. The traditional approach is to have a shared BSON filter and remember to apply it to all operations. Using this approach, it is very easy to forget one request, creating hard to trace bugs. To alleviate this, KtMongo introduces filtered collections.
 
-As an example, let's imagine a list of invoices. Users can trash invoices, but we cannot actually delete them because they may need to be inspected later.
-We use the [`filter`](../api/driver-coroutines/opensavvy.ktmongo.coroutines/-mongo-collection/index.md#filter) method to create a filtered collection containing only "live" invoices:
+As an example, let's imagine a list of invoices. Users can trash invoices, but we cannot actually delete them because they may need to be inspected later. We use the [`filter`](../api/driver-api/opensavvy.ktmongo.api/-mongo-collection/index.md#filter) method to create a filtered collection containing only "live" invoices:
 ```kotlin
 val allInvoices = database.getCollection<Invoice>("invoices").asKtMongo()
 val liveInvoices = allInvoices.filter { Invoice::isLive ne false }
@@ -38,7 +37,7 @@ trashedInvoices.deleteMany {
 ```
 
 !!! note "Implementation"
-    [`.filter {}`](../api/driver-coroutines/opensavvy.ktmongo.coroutines/-mongo-collection/index.md#filter) is implemented by combining the filter criteria with the command's own criteria using an [`$and`](../api/dsl/opensavvy.ktmongo.dsl.query/-filter-query/index.md#and) operator.
+[`.filter {}`](../api/driver-api/opensavvy.ktmongo.api/-mongo-collection/index.md#filter) is implemented by combining the filter criteria with the command's own criteria using an [`$and`](../api/dsl/opensavvy.ktmongo.dsl.query/-filter-query/index.md#and) operator.
 
 ## Bulk writes
 

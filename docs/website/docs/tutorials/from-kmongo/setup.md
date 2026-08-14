@@ -13,21 +13,21 @@ KtMongo and KMongo are compatible, meaning that both can be used in the same pro
 
 === "Without coroutines"
 
-	Add the dependency ([list of versions](../../news)):
+	Add the dependency ([list of versions](../../news/index.md)):
 	```kotlin
 	implementation("dev.opensavvy.ktmongo:driver-sync-kmongo:VERSION")
 	```
 
-    This will add the [`MongoCollection.asKtMongo()`](../../api/driver-sync-kmongo/opensavvy.ktmongo.sync.kmongo/as-kt-mongo.md) extension function which converts from a KMongo `MongoCollection` to a KtMongo [`JvmMongoCollection`](../../api/driver-sync/opensavvy.ktmongo.sync/-jvm-mongo-collection/index.md).
+    This will add the [`MongoCollection.asKtMongo()`](../../api/driver-sync-kmongo/opensavvy.ktmongo.sync.kmongo/as-kt-mongo.md) extension function which converts from a KMongo `MongoCollection` to a KtMongo [`SyncMongoCollection`](../../api/driver-sync/opensavvy.ktmongo.sync/-sync-mongo-collection/index.md).
 
 === "With coroutines"
 
-	Add the dependency ([list of versions](../../news)):
+	Add the dependency ([list of versions](../../news/index.md)):
 	```kotlin
 	implementation("dev.opensavvy.ktmongo:driver-coroutines-kmongo:VERSION")
 	```
 
-    This will add the [`MongoCollection.asKtMongo()`](../../api/driver-coroutines-kmongo/opensavvy.ktmongo.coroutines.kmongo/as-kt-mongo.md) extension function which converts from a KMongo `MongoCollection` to a KtMongo [`JvmMongoCollection`](../../api/driver-coroutines/opensavvy.ktmongo.coroutines/-jvm-mongo-collection/index.md).
+    This will add the [`MongoCollection.asKtMongo()`](../../api/driver-coroutines-kmongo/opensavvy.ktmongo.coroutines.kmongo/as-kt-mongo.md) extension function which converts from a KMongo `MongoCollection` to a KtMongo [`CoroutineMongoCollection`](../../api/driver-coroutines/opensavvy.ktmongo.coroutines/-coroutine-mongo-collection/index.md).
 
 ## Serialization
 

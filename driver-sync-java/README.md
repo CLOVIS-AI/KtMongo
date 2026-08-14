@@ -42,7 +42,7 @@ dependencies {
 
 Start by creating a `com.mongodb.client.MongoCollection` instance by following the instructions from the official Java driver.
 
-Use the method [`KtMongo.from`][opensavvy.ktmongo.sync.KtMongo.from] to convert it into a KtMongo collection.
+Use the method [`KtMongo.from`][opensavvy.ktmongo.sync.java.KtMongo.from] to convert it into a KtMongo collection.
 
 Because Java doesn't provide optional parameters, and because Java and Kotlin lambdas are slightly different, we offer convenience methods.
 
@@ -54,4 +54,4 @@ collection.find(options(), filter(filter -> {
 
 You can find more complex examples in the [test directory](https://gitlab.com/opensavvy/ktmongo/-/tree/main/driver-sync-java/src/test/java/opensavvy/ktmongo/sync?ref_type=heads).
 
-Java doesn't support operator overloading, so the `User::profile / Profile::name` syntax isn't possible. It is replaced by the [`JavaField`][opensavvy.ktmongo.sync.JavaField] class, which provides similar functionality.
+Java doesn't support operator overloading, so the `User::profile / Profile::name` syntax isn't possible. It is replaced by the [`JavaField`][opensavvy.ktmongo.sync.java.JavaField] class, which provides similar functionality.

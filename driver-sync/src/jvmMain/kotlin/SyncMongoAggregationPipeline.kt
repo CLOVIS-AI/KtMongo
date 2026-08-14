@@ -28,6 +28,7 @@ import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.sync.api.MongoAggregationPipeline
+import opensavvy.ktmongo.sync.api.MongoIterable
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf

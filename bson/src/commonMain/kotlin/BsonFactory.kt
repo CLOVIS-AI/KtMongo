@@ -221,8 +221,6 @@ interface BsonFactory {
 
 	/**
 	 * Instantiates a new [BSON array][BsonArray] by reading its [bytes] representation.
-	 *
-	 * The reverse operation is available as [BsonArray.toByteArray].
 	 */
 	@LowLevelApi
 	fun readArray(bytes: ByteArray): BsonArray

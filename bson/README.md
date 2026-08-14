@@ -20,7 +20,7 @@ The module `:bson-tests` provides unit tests to verify any new BSON implementati
 
 Utilities and primitives to read and write BSON documents.
 
-[`Bson`][opensavvy.ktmongo.bson.Bson] and [`BsonArray`][opensavvy.ktmongo.bson.BsonArray] respectively represent BSON documents and arrays.
+[`BsonDocument`][opensavvy.ktmongo.bson.BsonDocument] and [`BsonArray`][opensavvy.ktmongo.bson.BsonArray] respectively represent BSON documents and arrays.
 
 [`BsonFactory`][opensavvy.ktmongo.bson.BsonFactory] is the entry point to create new BSON documents.
 
