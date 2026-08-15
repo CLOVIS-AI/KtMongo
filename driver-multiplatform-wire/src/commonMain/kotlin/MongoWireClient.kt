@@ -64,8 +64,7 @@ interface MongoWireClient : AutoCloseable {
  */
 @LowLevelApi
 private class SocketWireClient(
-	private val socket: Socket,
-	private val selectorManager: SelectorManager,
+	private val socket: MongoSocket,
 	private val factory: BsonFactory,
 	coroutineScope: CoroutineScope, // Should contain a Job dedicated to this client
 ) : MongoWireClient {
@@ -113,7 +112,7 @@ private class SocketWireClient(
 	}
 
 	init {
-		log("Creating client for socket ${socket.remoteAddress}")
+		log("Creating client for socket $socket")
 
 		// Ensure that no resources can leak
 		actorsJob.invokeOnCompletion { close() }
@@ -288,10 +287,9 @@ private class SocketWireClient(
 	override fun close() {
 		actorsJob.cancel("${this::class}.close() has been called")
 		socket.close()
-		selectorManager.close()
 	}
 
-	override fun toString() = "MongoWireClient(${socket.remoteAddress})"
+	override fun toString() = "MongoWireClient($socket)"
 }
 
 @LowLevelApi
@@ -309,8 +307,7 @@ suspend fun MongoWireClient(
 	}
 
 	return SocketWireClient(
-		socket = socket,
-		selectorManager = selectorManager,
+		socket = MongoSocket(socket, selectorManager),
 		factory = factory,
 		coroutineScope = CoroutineScope(coroutineContext + innerJob + CoroutineName("ktmongo-client"))
 	)
