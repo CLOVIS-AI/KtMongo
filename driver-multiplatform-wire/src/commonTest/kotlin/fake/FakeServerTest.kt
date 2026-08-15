@@ -18,11 +18,9 @@
 
 package opensavvy.ktmongo.multiplatform.wire.fake
 
-import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.multiplatform.wire.Message
-import opensavvy.ktmongo.multiplatform.wire.MessageSection
-import opensavvy.ktmongo.multiplatform.wire.eager
+import opensavvy.ktmongo.multiplatform.wire.OpMsg
 import opensavvy.ktmongo.multiplatform.wire.fake.FakeServer.Companion.fakeServer
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
@@ -40,25 +38,13 @@ val FakeServerTest by preparedSuite {
 	}
 
 	test("Round-trip hello") {
-		val helloMessage = Message.OpMsg(
-			MessageSection.Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeInt32("hello", 1)
-					}
-				)
-			)
-		)
+		val helloMessage = OpMsg {
+			writeInt32("hello", 1)
+		}
 
-		val okMessage = Message.OpMsg(
-			MessageSection.Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeDouble("ok", 1.0)
-					}
-				)
-			)
-		)
+		val okMessage = OpMsg {
+			writeDouble("ok", 1.0)
+		}
 
 		val server = fakeServer {
 			expect(helloMessage)
