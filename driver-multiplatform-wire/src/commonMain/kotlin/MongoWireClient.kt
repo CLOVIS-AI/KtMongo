@@ -19,15 +19,13 @@ package opensavvy.ktmongo.multiplatform.wire
 import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
-import io.ktor.utils.io.core.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.selects.select
-import kotlinx.io.*
 import kotlinx.io.Buffer
-import opensavvy.ktmongo.bson.multiplatform.BsonDocument
+import kotlinx.io.writeIntLe
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.coroutines.CoroutineContext
@@ -66,8 +64,7 @@ interface MongoWireClient : AutoCloseable {
  */
 @LowLevelApi
 private class SocketWireClient(
-	private val socket: Socket,
-	private val selectorManager: SelectorManager,
+	private val socket: MongoSocket,
 	private val factory: BsonFactory,
 	coroutineScope: CoroutineScope, // Should contain a Job dedicated to this client
 ) : MongoWireClient {
@@ -115,7 +112,7 @@ private class SocketWireClient(
 	}
 
 	init {
-		log("Creating client for socket ${socket.remoteAddress}")
+		log("Creating client for socket $socket")
 
 		// Ensure that no resources can leak
 		actorsJob.invokeOnCompletion { close() }
@@ -199,14 +196,11 @@ private class SocketWireClient(
 		val readSocket = socket.openReadChannel()
 
 		while (currentCoroutineContext().isActive && !readSocket.isClosedForRead) {
-			val messageLength = readSocket.readInt().asLittleEndian()
-			val requestId = readSocket.readInt().asLittleEndian()
-			val responseTo = readSocket.readInt().asLittleEndian()
+			val response = readSocket.readResponse()
 
-			log("Received message $requestId in response to $responseTo, of size $messageLength")
+			log("Received message ${response.requestId} in response to ${response.responseTo}, of size ${response.messageLength}")
 
-			val data = readSocket.readBuffer(messageLength - (4 * 3)) // don't read the fields we already read
-			receivedChannel.send(Response(requestId, responseTo, data))
+			receivedChannel.send(Response(response.requestId, response.responseTo, response.data))
 		}
 	}
 
@@ -256,152 +250,18 @@ private class SocketWireClient(
 		receivedChannel: ReceiveChannel<ResponseWithHandler>,
 	) {
 		for (received in receivedChannel) {
-			val buffer = received.response.data
-
-			val opcode = buffer.readIntLe()
-			check(opcode == 2013) { "Currently, only OP_MSG is supported, but found opcode $opcode" }
-
-			buffer.readIntLe() // flag bits
-
-			val sections = ArrayList<MessageSection>()
-
-			while (buffer.canRead()) {
-				when (val kind = buffer.readUByte()) {
-					MessageSection.Body.kind -> {
-						val size = buffer.peek().readIntLe()
-						sections += MessageSection.Body(eager(factory.readDocument(buffer.readBytes(size)))) // TODO: avoid copy
-					}
-
-					MessageSection.DocumentSequence.kind -> {
-						// • section size
-						val size = buffer.readIntLe() - 4
-						var read = 4
-
-						// • section id
-						val id = buffer.readCString()
-						read += id.length
-						read += 1 // null terminator
-
-						// • section documents
-						val documents = ArrayList<Lazy<BsonDocument>>()
-						while (read < size) {
-							val documentSize = buffer.peek().readIntLe()
-							documents += eager(factory.readDocument(buffer.readBytes(documentSize))) // TODO: avoid copy
-						}
-
-						sections += MessageSection.DocumentSequence(id, documents)
-					}
-
-					else -> error("Unrecognized section kind $kind in message ${received.response.requestId} sent as response to ${received.response.responseTo}")
-				}
-			}
-
-			log("Received: $sections")
-
-			val body = sections.singleOrNull { it is MessageSection.Body } as? MessageSection.Body
-				?: error("An OP_MSG message must have a single body section, found: $sections")
-
-			val response = Message.OpMsg(
-				body,
-				sections.asSequence()
-					.filterIsInstance<MessageSection.DocumentSequence>(),
+			val message = received.response.data.parseMessage(
+				factory = factory,
+				requestId = received.response.requestId,
+				responseTo = received.response.responseTo,
 			)
 
+			log("Received: $message")
+
 			when (received.output) {
-				is ResponseHandler.Single -> received.output.result.complete(response)
-				is ResponseHandler.Multiple -> received.output.result.send(response)
+				is ResponseHandler.Single -> received.output.result.complete(message)
+				is ResponseHandler.Multiple -> received.output.result.send(message)
 			}
-		}
-	}
-
-	private fun Int.asLittleEndian(): Int {
-		return ((this and 0xFF) shl 24) or
-			((this and 0xFF00) shl 8) or
-			((this and 0xFF0000) shr 8) or
-			((this and 0xFF000000.toInt()) ushr 24)
-	}
-
-	private fun Buffer.writeCString(value: String) {
-		val text = value
-			.takeUnless { 0.toChar() in it }
-			?: value.filterNot { it == 0.toChar() }
-
-		writeString(text)
-		writeUByte(0u)
-	}
-
-	private fun Buffer.readCString(): String {
-		val peek = peek()
-		var byteCount = 0L
-		while (peek.request(1) && peek.readByte() != 0.toByte())
-			byteCount++
-
-		return readString(byteCount)
-			.also { skip(1) } // null-terminator
-	}
-
-	private fun writeMessage(message: Message): Buffer {
-		val buffer = Buffer()
-
-		// region Message header
-		// https://www.mongodb.com/docs/manual/reference/mongodb-wire-protocol/#standard-message-header
-
-		// Writes the complete message to the buffer EXCEPT the first 2 fields:
-		// • message length
-		// • request ID
-		// The writer actor will add these two fields.
-
-		// • response to
-		buffer.writeIntLe(0)
-
-		// • opcode
-		buffer.writeIntLe(message.opcode)
-
-		// endregion
-		// region Message flags
-		// https://www.mongodb.com/docs/manual/reference/mongodb-wire-protocol/#flag-bits
-
-		buffer.writeIntLe(0)
-
-		// endregion
-		// region Sections
-
-		when (message) {
-			is Message.OpMsg -> {
-				writeOpMsg(message, buffer)
-			}
-		}
-
-		// endregion
-
-		return buffer
-	}
-
-	private fun writeOpMsg(message: Message.OpMsg, buffer: Buffer) {
-		// First, write the body (any order is allowed in the spec)
-
-		// • body section kind
-		buffer.writeUByte(message.body.kind)
-
-		// • body content
-		buffer.write(message.body.document.toByteArray()) // TODO: avoid copy
-
-		// Next, read the sequences, if any
-		for (sequence in message.sequences) {
-			// • section kind
-			buffer.writeUByte(sequence.kind)
-
-			val payload = Buffer()
-			payload.writeCString(sequence.id)
-			for (document in sequence.documents) {
-				payload.write(document.toByteArray()) // TODO: avoid copy
-			}
-
-			// • size
-			buffer.writeIntLe(payload.size.toInt() + 4)
-
-			// • documents
-			buffer.write(payload, payload.size)
 		}
 	}
 
@@ -427,11 +287,27 @@ private class SocketWireClient(
 	override fun close() {
 		actorsJob.cancel("${this::class}.close() has been called")
 		socket.close()
-		selectorManager.close()
 	}
 
-	override fun toString() = "MongoWireClient(${socket.remoteAddress})"
+	override fun toString() = "MongoWireClient($socket)"
 }
+
+/**
+ * Creates a [MongoWireClient] wrapping an existing [socket].
+ *
+ * Used by tests to inject fake sockets instead of connecting to a real server.
+ */
+@LowLevelApi
+internal fun MongoWireClient(
+	socket: MongoSocket,
+	factory: BsonFactory = BsonFactory(),
+	coroutineScope: CoroutineScope,
+): MongoWireClient =
+	SocketWireClient(
+		socket = socket,
+		factory = factory,
+		coroutineScope = coroutineScope,
+	)
 
 @LowLevelApi
 suspend fun MongoWireClient(
@@ -448,8 +324,7 @@ suspend fun MongoWireClient(
 	}
 
 	return SocketWireClient(
-		socket = socket,
-		selectorManager = selectorManager,
+		socket = MongoSocket(socket, selectorManager),
 		factory = factory,
 		coroutineScope = CoroutineScope(coroutineContext + innerJob + CoroutineName("ktmongo-client"))
 	)
