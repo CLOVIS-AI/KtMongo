@@ -292,6 +292,23 @@ private class SocketWireClient(
 	override fun toString() = "MongoWireClient($socket)"
 }
 
+/**
+ * Creates a [MongoWireClient] wrapping an existing [socket].
+ *
+ * Used by tests to inject fake sockets instead of connecting to a real server.
+ */
+@LowLevelApi
+internal fun MongoWireClient(
+	socket: MongoSocket,
+	factory: BsonFactory = BsonFactory(),
+	coroutineScope: CoroutineScope,
+): MongoWireClient =
+	SocketWireClient(
+		socket = socket,
+		factory = factory,
+		coroutineScope = coroutineScope,
+	)
+
 @LowLevelApi
 suspend fun MongoWireClient(
 	hostName: String,
