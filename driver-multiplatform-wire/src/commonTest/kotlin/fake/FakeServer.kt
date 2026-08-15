@@ -130,8 +130,16 @@ class FakeServer private constructor(
 					lastRequestId = verifyExpect(event, readChannel)
 				}
 
+				is FakeServerScenario.Event.ExpectBytes -> {
+					verifyExpectBytes(event, readChannel)
+				}
+
 				is FakeServerScenario.Event.Respond -> {
 					verifyRespond(event, writeChannel, requestId = nextResponseId++, responseTo = lastRequestId)
+				}
+
+				is FakeServerScenario.Event.Death -> {
+					verifyDeath(writeChannel, readChannel)
 				}
 			}
 		}
@@ -185,6 +193,19 @@ class FakeServer private constructor(
 		return responsePayload.requestId
 	}
 
+	private suspend fun verifyExpectBytes(
+		event: FakeServerScenario.Event.ExpectBytes,
+		readChannel: ByteReadChannel,
+	) {
+		val actualBytes = readChannel.readByteArray(event.bytes.size)
+
+		check(actualBytes.contentEquals(event.bytes)) {
+			"The received bytes don't match the expected bytes:\nExpected: ${event.bytes.contentToString()}\nActual: ${actualBytes.contentToString()}"
+		}
+
+		logFake("Byte expectation verified")
+	}
+
 	private suspend fun verifyRespond(
 		event: FakeServerScenario.Event.Respond,
 		writeChannel: ByteWriteChannel,
@@ -200,6 +221,15 @@ class FakeServer private constructor(
 		writeChannel.flush()
 
 		logFake("Response sent")
+	}
+
+	private fun verifyDeath(
+		writeChannel: ByteWriteChannel,
+		readChannel: ByteReadChannel,
+	) {
+		val e = RuntimeException("Fake server died according to the scenario")
+		writeChannel.close(e)
+		readChannel.cancel(e)
 	}
 
 	suspend fun createClient(): MongoWireClient {
@@ -237,9 +267,28 @@ class FakeServerScenario {
 			override fun toString() = "Expect $message"
 		}
 
+		data class ExpectBytes(val bytes: ByteArray) : Event() {
+			override fun toString() = "Expect ${bytes.contentToString()}"
+
+			override fun equals(other: Any?): Boolean {
+				if (this === other) return true
+				if (other !is ExpectBytes) return false
+
+				if (!bytes.contentEquals(other.bytes)) return false
+
+				return true
+			}
+
+			override fun hashCode(): Int {
+				return bytes.contentHashCode()
+			}
+		}
+
 		data class Respond(val message: Message) : Event() {
 			override fun toString() = "Respond $message"
 		}
+
+		data object Death : Event()
 	}
 
 	val events = ArrayList<Event>()
@@ -248,7 +297,15 @@ class FakeServerScenario {
 		events += Event.Expect(message)
 	}
 
+	fun expect(bytes: ByteArray) {
+		events += Event.ExpectBytes(bytes)
+	}
+
 	fun respond(message: Message) {
 		events += Event.Respond(message)
+	}
+
+	fun die() {
+		events += Event.Death
 	}
 }

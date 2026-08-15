@@ -107,4 +107,17 @@ val FakeServerTest by preparedSuite {
 		check(response.body.document["ok"]?.decodeDouble() == 1.0)
 	}
 
+	test("The server dies while a message is being sent") {
+		val server = fakeServer {
+			expect(byteArrayOf(37, 0, 0, 0, 1, 0))
+			die()
+		}
+		val client = server.createClient()
+
+		val e = checkThrows<RuntimeException> {
+			client.sendSingle(OpMsg { writeInt32("hello", 1) })
+		}
+		check(e.message == "Fake server died according to the scenario")
+	}
+
 }
