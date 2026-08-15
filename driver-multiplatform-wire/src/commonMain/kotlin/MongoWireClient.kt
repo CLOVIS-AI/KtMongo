@@ -70,6 +70,7 @@ private class SocketWireClient(
 ) : MongoWireClient {
 
 	private val actorsJob = coroutineScope.coroutineContext.job
+	private val inFlightJob = SupervisorJob(actorsJob)
 
 	private sealed class ResponseHandler {
 		data class Single(val result: CompletableDeferred<Message>) : ResponseHandler()
@@ -276,15 +277,24 @@ private class SocketWireClient(
 	}
 
 	override suspend fun sendSingle(message: Message): Message {
-		val output = CompletableDeferred<Message>()
 		log("Preparing to write $message…")
 		val buffer = writeMessage(message)
-		requestChannel.send(Request(buffer, ResponseHandler.Single(output)))
-		val message = output.await()
-		return message
+
+		val output = CompletableDeferred<Message>(inFlightJob)
+		try {
+			requestChannel.send(Request(buffer, ResponseHandler.Single(output)))
+			output.join() // If the caller cancels, we'll throw an exception here
+		} catch (e: Throwable) {
+			// In case 'send' fails
+			output.cancel("An exception was thrown while sending $message", e)
+			throw e
+		}
+
+		return output.await()
 	}
 
 	override fun close() {
+		inFlightJob.complete()
 		actorsJob.cancel("${this::class}.close() has been called")
 		socket.close()
 	}
