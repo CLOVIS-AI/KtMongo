@@ -53,39 +53,39 @@ private class FilterQueryImpl<T>(
 		when (children.size) {
 			0 -> null
 			1 -> this
-			else -> AndFilterBsonNodeNode<T>(children, context)
+			else -> AndFilterBsonNode<T>(children, context)
 		}
 
 	@LowLevelApi
-	private sealed class FilterBsonNodeNode(context: BsonContext) : AbstractBsonNode(context)
+	private sealed class FilterBsonNode(context: BsonContext) : AbstractBsonNode(context)
 
 	// endregion
 	// region $and, $or
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun and(block: FilterQuery<T>.() -> Unit) {
-		accept(AndFilterBsonNodeNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
+		accept(AndFilterBsonNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
 	}
 
 	@DangerousMongoApi
 	@LowLevelApi
-	private class AndFilterBsonNodeNode<T>(
+	private class AndFilterBsonNode<T>(
 		val declaredChildren: List<BsonNode>,
 		context: BsonContext,
-	) : FilterBsonNodeNode(context) {
+	) : FilterBsonNode(context) {
 
 		override fun simplify(): AbstractBsonNode? {
 			if (declaredChildren.isEmpty())
 				return null
 
 			if (declaredChildren.size == 1)
-				return FilterQueryImpl<T>(context).apply { accept(this@AndFilterBsonNodeNode.declaredChildren.single()) }
+				return FilterQueryImpl<T>(context).apply { accept(this@AndFilterBsonNode.declaredChildren.single()) }
 
 			// If there are nested $and operators, we combine them into the current one
 			val nestedChildren = ArrayList<BsonNode>()
 
 			for (child in declaredChildren) {
-				if (child is AndFilterBsonNodeNode<*>) {
+				if (child is AndFilterBsonNode<*>) {
 					for (nestedChild in child.declaredChildren) {
 						nestedChildren += nestedChild
 					}
@@ -94,7 +94,7 @@ private class FilterQueryImpl<T>(
 				}
 			}
 
-			return AndFilterBsonNodeNode<T>(nestedChildren, context)
+			return AndFilterBsonNode<T>(nestedChildren, context)
 		}
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -110,22 +110,22 @@ private class FilterQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun or(block: FilterQuery<T>.() -> Unit) {
-		accept(OrFilterBsonNodeNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
+		accept(OrFilterBsonNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
 	}
 
 	@DangerousMongoApi
 	@LowLevelApi
-	private class OrFilterBsonNodeNode<T>(
+	private class OrFilterBsonNode<T>(
 		val declaredChildren: List<BsonNode>,
 		context: BsonContext,
-	) : FilterBsonNodeNode(context) {
+	) : FilterBsonNode(context) {
 
 		override fun simplify(): AbstractBsonNode? {
 			if (declaredChildren.isEmpty())
 				return null
 
 			if (declaredChildren.size == 1)
-				return FilterQueryImpl<T>(context).apply { accept(this@OrFilterBsonNodeNode.declaredChildren.single()) }
+				return FilterQueryImpl<T>(context).apply { accept(this@OrFilterBsonNode.declaredChildren.single()) }
 
 			return super.simplify()
 		}
@@ -143,15 +143,15 @@ private class FilterQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun nor(block: FilterQuery<T>.() -> Unit) {
-		accept(NorFilterBsonNodeNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
+		accept(NorFilterBsonNode<T>(FilterQueryImpl<T>(context).apply(block).children, context))
 	}
 
 	@DangerousMongoApi
 	@LowLevelApi
-	private class NorFilterBsonNodeNode<T>(
+	private class NorFilterBsonNode<T>(
 		val declaredChildren: List<BsonNode>,
 		context: BsonContext,
-	) : FilterBsonNodeNode(context) {
+	) : FilterBsonNode(context) {
 
 		override fun simplify(): AbstractBsonNode? {
 			if (declaredChildren.isEmpty())
@@ -185,7 +185,7 @@ private class FilterQueryImpl<T>(
 		val target: Path,
 		val expression: BsonNode,
 		context: BsonContext,
-	) : FilterBsonNodeNode(context) {
+	) : FilterBsonNode(context) {
 
 		override fun simplify(): AbstractBsonNode? =
 			expression.simplify()
@@ -203,25 +203,25 @@ private class FilterQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun <V> Field<T, Collection<V>>.anyValue(block: FilterQueryPredicate<V>.() -> Unit, type: KType) {
-		accept(ElementMatchBsonNodeNode<V>(this.path, FilterQueryPredicate<V>(context, type).apply(block), context))
+		accept(ElementMatchBsonNode<V>(this.path, FilterQueryPredicate<V>(context, type).apply(block), context))
 	}
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun <V> Field<T, Collection<V>>.any(block: FilterQuery<V>.() -> Unit) {
-		accept(ElementMatchBsonNodeNode<V>(path, FilterQueryImpl<V>(context).apply(block), context))
+		accept(ElementMatchBsonNode<V>(path, FilterQueryImpl<V>(context).apply(block), context))
 	}
 
 	@DangerousMongoApi
 	@LowLevelApi
-	private class ElementMatchBsonNodeNode<T>(
+	private class ElementMatchBsonNode<T>(
 		val target: Path,
 		val expression: BsonNode,
 		context: BsonContext,
-	) : FilterBsonNodeNode(context) {
+	) : FilterBsonNode(context) {
 
 		override fun simplify(): AbstractBsonNode =
-			ElementMatchBsonNodeNode<T>(target, expression.simplify()
-				?: OrFilterBsonNodeNode<T>(emptyList(), context), context)
+			ElementMatchBsonNode<T>(target, expression.simplify()
+				?: OrFilterBsonNode<T>(emptyList(), context), context)
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument(target.toString()) {
@@ -237,16 +237,16 @@ private class FilterQueryImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun <V> Field<T, Collection<V>>.containsAll(values: Collection<V>, type: KType) {
-		accept(ArrayAllBsonNodeNode(path, values, context, type))
+		accept(ArrayAllBsonNode(path, values, context, type))
 	}
 
 	@LowLevelApi
-	private class ArrayAllBsonNodeNode<T>(
+	private class ArrayAllBsonNode<T>(
 		val path: Path,
 		val values: Collection<T>,
 		context: BsonContext,
 		val type: KType,
-	) : FilterBsonNodeNode(context) {
+	) : FilterBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument(path.toString()) {
@@ -272,7 +272,7 @@ private class FilterQueryImpl<T>(
 		val path: Path,
 		val size: Int,
 		context: BsonContext,
-	) : FilterBsonNodeNode(context) {
+	) : FilterBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeDocument(path.toString()) {
@@ -287,17 +287,17 @@ private class FilterQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun expr(block: AggregationOperators.() -> Value<T & Any, Boolean>) {
 		val value = ExprEvaluator(context).block()
-		accept(ExprBsonNodeNode(value, context))
+		accept(ExprBsonNode(value, context))
 	}
 
 	@LowLevelApi
 	private class ExprEvaluator(override val context: BsonContext) : AggregationOperators
 
 	@OptIn(LowLevelApi::class)
-	private class ExprBsonNodeNode<T>(
+	private class ExprBsonNode<T>(
 		val value: Value<*, T>,
 		context: BsonContext,
-	) : FilterBsonNodeNode(context) {
+	) : FilterBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {

@@ -47,7 +47,7 @@ private class FilterQueryPredicateImpl<T>(
 	// region Low-level operations
 
 	@LowLevelApi
-	private sealed class PredicateBsonNodeNode(context: BsonContext) : AbstractBsonNode(context)
+	private sealed class PredicateBsonNode(context: BsonContext) : AbstractBsonNode(context)
 
 	@LowLevelApi
 	override fun simplify(children: List<BsonNode>): AbstractBsonNode? =
@@ -59,15 +59,15 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun eq(value: T) {
-		accept(EqualityBsonNodeNode(value, context, type))
+		accept(EqualityBsonNode(value, context, type))
 	}
 
 	@LowLevelApi
-	private class EqualityBsonNodeNode<T>(
+	private class EqualityBsonNode<T>(
 		val value: T,
 		context: BsonContext,
 		val type: KType,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) {
 			writer.writeSafe("\$eq", value, type)
@@ -79,15 +79,15 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun ne(value: T) {
-		accept(InequalityBsonNodeNode(value, context, type))
+		accept(InequalityBsonNode(value, context, type))
 	}
 
 	@LowLevelApi
-	private class InequalityBsonNodeNode<T>(
+	private class InequalityBsonNode<T>(
 		val value: T,
 		context: BsonContext,
 		val type: KType,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) {
 			writer.writeSafe("\$ne", value, type)
@@ -99,14 +99,14 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun exists() {
-		accept(ExistsPredicateBsonNodeNode(true, context))
+		accept(ExistsPredicateBsonNode(true, context))
 	}
 
 	@LowLevelApi
-	private class ExistsPredicateBsonNodeNode(
+	private class ExistsPredicateBsonNode(
 		val exists: Boolean,
 		context: BsonContext,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) {
 			writer.writeBoolean("\$exists", exists)
@@ -115,7 +115,7 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun doesNotExist() {
-		accept(ExistsPredicateBsonNodeNode(false, context))
+		accept(ExistsPredicateBsonNode(false, context))
 	}
 
 	// endregion
@@ -123,14 +123,14 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun hasType(type: BsonType) {
-		accept(TypePredicateBsonNodeNode(type, context))
+		accept(TypePredicateBsonNode(type, context))
 	}
 
 	@LowLevelApi
-	private class TypePredicateBsonNodeNode(
+	private class TypePredicateBsonNode(
 		val type: BsonType,
 		context: BsonContext,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) {
 			writer.writeInt32("\$type", type.code)
@@ -142,14 +142,14 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun not(expression: FilterQueryPredicate<T>.() -> Unit) {
-		accept(NotPredicateBsonNodeNode(FilterQueryPredicateImpl<T>(context, type).apply(expression), context))
+		accept(NotPredicateBsonNode(FilterQueryPredicateImpl<T>(context, type).apply(expression), context))
 	}
 
 	@LowLevelApi
-	private class NotPredicateBsonNodeNode<T>(
+	private class NotPredicateBsonNode<T>(
 		val expression: FilterQueryPredicateImpl<T>,
 		context: BsonContext,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		override fun simplify(): AbstractBsonNode? {
 			if (expression.children.isEmpty())
@@ -170,15 +170,15 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun gt(value: T) {
-		accept(GtPredicateBsonNodeNode(value, context, type))
+		accept(GtPredicateBsonNode(value, context, type))
 	}
 
 	@LowLevelApi
-	private class GtPredicateBsonNodeNode<T>(
+	private class GtPredicateBsonNode<T>(
 		private val value: T,
 		context: BsonContext,
 		val type: KType,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
@@ -188,15 +188,15 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun gte(value: T) {
-		accept(GtePredicateBsonNodeNode(value, context, type))
+		accept(GtePredicateBsonNode(value, context, type))
 	}
 
 	@LowLevelApi
-	private class GtePredicateBsonNodeNode<T>(
+	private class GtePredicateBsonNode<T>(
 		private val value: T,
 		context: BsonContext,
 		val type: KType,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
@@ -206,15 +206,15 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun lt(value: T) {
-		accept(LtPredicateBsonNodeNode(value, context, type))
+		accept(LtPredicateBsonNode(value, context, type))
 	}
 
 	@LowLevelApi
-	private class LtPredicateBsonNodeNode<T>(
+	private class LtPredicateBsonNode<T>(
 		private val value: T,
 		context: BsonContext,
 		val type: KType,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
@@ -224,15 +224,15 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun lte(value: T) {
-		accept(LtePredicateBsonNodeNode(value, context, type))
+		accept(LtePredicateBsonNode(value, context, type))
 	}
 
 	@LowLevelApi
-	private class LtePredicateBsonNodeNode<T>(
+	private class LtePredicateBsonNode<T>(
 		private val value: T,
 		context: BsonContext,
 		val type: KType,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
@@ -253,7 +253,7 @@ private class FilterQueryPredicateImpl<T>(
 		private val divisor: Long,
 		private val remainder: Long,
 		context: BsonContext,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -269,15 +269,15 @@ private class FilterQueryPredicateImpl<T>(
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun isOneOf(values: Collection<T>) {
-		accept(OneOfPredicateBsonNodeNode(values, context, type))
+		accept(OneOfPredicateBsonNode(values, context, type))
 	}
 
 	@LowLevelApi
-	private class OneOfPredicateBsonNodeNode<T>(
+	private class OneOfPredicateBsonNode<T>(
 		val values: Collection<T>,
 		context: BsonContext,
 		val type: KType,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
@@ -301,7 +301,7 @@ private class FilterQueryPredicateImpl<T>(
 		val values: Collection<T>,
 		context: BsonContext,
 		val type: KType,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) {
@@ -334,7 +334,7 @@ private class FilterQueryPredicateImpl<T>(
 		val extended: Boolean,
 		val matchEachLine: Boolean,
 		context: BsonContext,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			writeRegularExpression(
@@ -407,7 +407,7 @@ private class FilterQueryPredicateImpl<T>(
 		context: BsonContext,
 		private val value: UInt,
 		private val operatorName: String,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -420,7 +420,7 @@ private class FilterQueryPredicateImpl<T>(
 		context: BsonContext,
 		private val value: ByteArray,
 		private val operatorName: String,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -444,7 +444,7 @@ private class FilterQueryPredicateImpl<T>(
 		private val target: Geo.Point,
 		private val minDistance: Double?,
 		private val maxDistance: Double?,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -477,7 +477,7 @@ private class FilterQueryPredicateImpl<T>(
 		private val target: Geo.Point,
 		private val minDistance: Double?,
 		private val maxDistance: Double?,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -515,7 +515,7 @@ private class FilterQueryPredicateImpl<T>(
 		context: BsonContext,
 		private val target: Geo,
 		private val crs: Geo.CoordinateReferenceSystem?,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -554,7 +554,7 @@ private class FilterQueryPredicateImpl<T>(
 		context: BsonContext,
 		private val geometry: Geo,
 		private val crs: Geo.CoordinateReferenceSystem?,
-	) : PredicateBsonNodeNode(context) {
+	) : PredicateBsonNode(context) {
 
 		@LowLevelApi
 		override fun write(writer: BsonFieldWriter) = with(writer) {
