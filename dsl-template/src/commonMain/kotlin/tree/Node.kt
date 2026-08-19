@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.dsl.tree
 
 import opensavvy.ktmongo.dsl.LowLevelApi
+import kotlin.concurrent.Volatile
 
 /**
  * An element in an abstract tree.
@@ -48,6 +49,12 @@ interface Node {
 	 * This ensures that nodes cannot change after they have been used within other nodes.
 	 *
 	 * To learn more about this process, see [Node].
+	 *
+	 * ### Thread-safety
+	 *
+	 * **Instances of [Node] are not thread-safe before [freeze] has been called.**
+	 *
+	 * Once the [freeze] function has returned, then the node must be immutable and thread-safe.
 	 */
 	@LowLevelApi
 	fun freeze()
@@ -68,6 +75,7 @@ internal class NodeImpl : Node {
 	 * If this value is `true`, this node should reject any attempt to mutate it.
 	 * It is the responsibility of the implementor to satisfy this invariant.
 	 */
+	@Volatile
 	var frozen: Boolean = false
 		private set
 

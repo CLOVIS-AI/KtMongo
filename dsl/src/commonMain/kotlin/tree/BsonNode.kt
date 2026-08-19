@@ -54,12 +54,6 @@ interface BsonNode : Node, BsonFieldWriteable {
 	@LowLevelApi
 	val context: BsonContext
 
-	/**
-	 * Makes this expression immutable.
-	 *
-	 * After this method has been called, the expression can never be modified again.
-	 * This ensures that expressions cannot change after they have been used within other expressions.
-	 */
 	@LowLevelApi
 	override fun freeze()
 
@@ -179,6 +173,9 @@ abstract class AbstractBsonNode private constructor(
 
 	@LowLevelApi
 	final override fun writeTo(writer: BsonFieldWriter) {
+		// 'frozen' is a memory fence
+		val _ = frozen
+
 		this.simplify()?.write(writer)
 	}
 
