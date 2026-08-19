@@ -274,6 +274,10 @@ private fun ByteArray.readLong(index: Int): Long {
 @BsonWriterDsl
 interface BsonFieldWriter : AnyBsonWriter {
 	@LowLevelApi fun write(name: String, block: BsonValueWriter.() -> Unit)
+	@LowLevelApi
+	fun write(name: String, value: BsonValueWriteable) {
+		write(name) { value.writeTo(this) }
+	}
 
 	@LowLevelApi fun writeBoolean(name: String, value: Boolean)
 	@LowLevelApi fun writeDouble(name: String, value: Double)
