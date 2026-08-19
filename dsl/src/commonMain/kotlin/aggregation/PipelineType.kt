@@ -19,6 +19,7 @@
 
 package opensavvy.ktmongo.dsl.aggregation
 
+import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.aggregation.stages.*
 
 /**
@@ -43,6 +44,7 @@ import opensavvy.ktmongo.dsl.aggregation.stages.*
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/aggregation-pipeline/)
  */
+@KtMongoDsl
 interface AggregationPipeline<Document : Any> : Pipeline<Document>,
 	HasCount<Document>,
 	HasGroup<Document>,
@@ -79,6 +81,7 @@ interface AggregationPipeline<Document : Any> : Pipeline<Document>,
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/update/#update-with-aggregation-pipeline)
  */
+@KtMongoDsl
 interface UpdatePipeline<Document : Any> : Pipeline<Document>,
 	HasProject<Document>,
 	HasSet<Document>,

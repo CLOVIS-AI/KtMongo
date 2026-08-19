@@ -40,7 +40,7 @@ import opensavvy.ktmongo.dsl.tree.NodeImpl
  * Functions from KtMongo which expect aggregation values provide an instance of [AggregationOperators] into scope automatically.
  * For example, see [FilterQuery.expr].
  *
- * ### Difference with Expression
+ * ### Difference with BsonNode
  *
  * This interface and its hierarchy mimic [BsonNode].
  * The main difference is the expected context: [BsonNode] represents an operator, which is stored as a BSON document
