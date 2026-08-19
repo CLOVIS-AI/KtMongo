@@ -85,15 +85,23 @@ private class SocketWireClient(
 	private val inFlightJob = SupervisorJob(actorsJob)
 
 	private sealed class ResponseHandler {
+		abstract val isActive: Boolean
 		abstract fun completeExceptionally(exception: Throwable)
 
 		data class Single(val result: CompletableDeferred<Message>) : ResponseHandler() {
+			override val isActive: Boolean
+				get() = result.isActive
+
 			override fun completeExceptionally(exception: Throwable) {
 				result.completeExceptionally(exception)
 			}
 		}
 
 		data class Multiple(val result: SendChannel<Message>) : ResponseHandler() {
+			@OptIn(DelicateCoroutinesApi::class) // Only used as a heuristic
+			override val isActive: Boolean
+				get() = !result.isClosedForSend
+
 			override fun completeExceptionally(exception: Throwable) {
 				result.close(exception)
 			}
@@ -221,6 +229,10 @@ private class SocketWireClient(
 			requestChannel.consumeEach { request ->
 				val requestId = nextRequestId++
 
+				if (!request.output.isActive) {
+					return@consumeEach // If the output is canceled, give up and don't send the request at all
+				}
+
 				try {
 					val buffer = Buffer()
 					buffer.writeIntLe(request.data.size.toInt() + 8) // + the size itself (4) + the request ID (4)
@@ -228,6 +240,10 @@ private class SocketWireClient(
 					buffer.write(request.data, request.data.size)
 					writeSocket.writeBuffer(buffer)
 					writeSocket.flush()
+
+					if (!request.output.isActive) {
+						return@consumeEach // If the output is canceled, don't send it to the next actor, the response will arrive in the future but be ignored
+					}
 
 					log("$requestId was sent")
 					sentChannel.send(SentMessage(requestId, request.output))
@@ -239,6 +255,8 @@ private class SocketWireClient(
 			log("Successfully sent all requests, shutting down the send actor")
 		} catch (e: Exception) {
 			val decorated = RuntimeException("Exception was thrown in the send actor", e)
+
+			log("Send actor failed with $e")
 
 			log("Purging not-yet-sent requests")
 			runCatching {
