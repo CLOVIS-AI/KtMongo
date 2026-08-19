@@ -20,7 +20,6 @@
 package opensavvy.ktmongo.sync
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.AccumulationOperators
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.stages.*
@@ -74,7 +73,7 @@ interface SyncMongoAggregationPipeline<Document : Any> : MongoAggregationPipelin
 
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): SyncMongoAggregationPipeline<Document>
 
-	override fun <Out : Any> group(block: AccumulationOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipeline<Out>
+	override fun <Out : Any> group(block: GroupStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipeline<Out>
 
 	override fun <Out : Any> countTo(field: Field<Out, Number>): SyncMongoAggregationPipeline<Out>
 
