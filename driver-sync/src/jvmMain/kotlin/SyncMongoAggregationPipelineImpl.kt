@@ -122,7 +122,7 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 		super<AggregationPipeline>.lookup(block) as SyncMongoAggregationPipelineImpl<Document>
 
 	@KtMongoDsl
-	override fun <Out : Any> group(block: AccumulationOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
+	override fun <Out : Any> group(block: GroupStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.group(block) as SyncMongoAggregationPipelineImpl<Out>
 
 	@KtMongoDsl

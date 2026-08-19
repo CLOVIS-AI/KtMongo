@@ -22,11 +22,7 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.AccumulationOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.HasUnionWithCompatibility
-import opensavvy.ktmongo.dsl.aggregation.stages.ProjectStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
-import opensavvy.ktmongo.dsl.aggregation.stages.UnsetStageOperators
+import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
@@ -75,7 +71,7 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): BlockingMongoAggregationPipeline<Document> =
 		BlockingMongoAggregationPipeline(inner.unionWith(other))
 
-	override fun <Out : Any> group(block: AccumulationOperators<Document, Out>.() -> Unit): BlockingMongoAggregationPipeline<Out> =
+	override fun <Out : Any> group(block: GroupStageOperators<Document, Out>.() -> Unit): BlockingMongoAggregationPipeline<Out> =
 		BlockingMongoAggregationPipeline(inner.group(block))
 
 	override fun <Out : Any> countTo(field: Field<Out, Number>): BlockingMongoAggregationPipeline<Out> =

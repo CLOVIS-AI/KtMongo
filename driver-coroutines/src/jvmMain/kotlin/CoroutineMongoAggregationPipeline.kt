@@ -22,7 +22,6 @@ package opensavvy.ktmongo.coroutines
 import opensavvy.ktmongo.api.MongoAggregationPipeline
 import opensavvy.ktmongo.api.MongoIterable
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.aggregation.AccumulationOperators
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.stages.*
@@ -74,7 +73,7 @@ interface CoroutineMongoAggregationPipeline<Document : Any> : MongoAggregationPi
 
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): CoroutineMongoAggregationPipeline<Document>
 
-	override fun <Out : Any> group(block: AccumulationOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipeline<Out>
+	override fun <Out : Any> group(block: GroupStageOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipeline<Out>
 
 	override fun <Out : Any> countTo(field: Field<Out, Number>): CoroutineMongoAggregationPipeline<Out>
 

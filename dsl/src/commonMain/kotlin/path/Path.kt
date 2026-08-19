@@ -126,7 +126,7 @@ data class Path(
 	 * For example, the path `Path(PathSegment.Indexed(5), Path(PathSegment.Field("foo"), null))` represents the path `"foo.5"`.
 	 */
 	val parent: Path?,
-) {
+) : Comparable<Path> {
 
 	@LowLevelApi
 	private suspend fun SequenceScope<PathSegment>.buildSequence(current: Path) {
@@ -143,6 +143,70 @@ data class Path(
 	@LowLevelApi
 	fun asSequence(): Sequence<PathSegment> =
 		sequence { buildSequence(this@Path) }
+
+	/**
+	 * Compares this path with another path.
+	 *
+	 * The paths are compared based on order when walking a filesystem:
+	 * - The paths are compared by their length, with shorter paths being considered "less than" longer paths.
+	 * - If the paths have the same length, they are compared by their segments, in order. The comparison is done by comparing the
+	 *   segment types first, and then the segment values (in alphanumérical order).
+	 *
+	 * Therefore, this is a possible order:
+	 * ```text
+	 * a
+	 * a.b
+	 * a.foo
+	 * a.foo.bar
+	 * a.foo.baz
+	 * d
+	 * d.1
+	 * d.2
+	 * ```
+	 */
+	override fun compareTo(other: Path): Int {
+		val thisIter = asSequence().iterator()
+		val otherIter = other.asSequence().iterator()
+
+		while (thisIter.hasNext() && otherIter.hasNext()) {
+			val thisValue = thisIter.next()
+			val otherValue = otherIter.next()
+
+			if (thisValue == otherValue)
+				continue
+
+			fun scoreOfType(segment: PathSegment): Int = when (segment) {
+				PathSegment.AllPositional -> 0
+				PathSegment.Positional -> 1
+				is PathSegment.Field -> 2
+				is PathSegment.FilteredPositional -> 3
+				is PathSegment.Indexed -> 4
+			}
+
+			val thisTypeScore = scoreOfType(thisValue)
+			val otherTypeScore = scoreOfType(otherValue)
+
+			if (thisTypeScore != otherTypeScore) {
+				return thisTypeScore - otherTypeScore
+			}
+
+			// At this point, both are guaranteed to be the same type but with different values
+			return when (thisValue) {
+				PathSegment.AllPositional -> error("Impossible situation: both paths have a segment of type ${PathSegment.AllPositional::class} that are not equal; comparing $this and $other")
+				is PathSegment.Field -> thisValue.name.compareTo((otherValue as PathSegment.Field).name)
+				is PathSegment.FilteredPositional -> thisValue.filterName.compareTo((otherValue as PathSegment.FilteredPositional).filterName)
+				is PathSegment.Indexed -> thisValue.index.compareTo((otherValue as PathSegment.Indexed).index)
+				PathSegment.Positional -> error("Impossible situation: both paths have a segment of type ${PathSegment.Positional::class} that are not equal; comparing $this and $other")
+			}
+		}
+
+		// We reach here if they don't have the same size, but all the first segments are the same
+		return when {
+			thisIter.hasNext() -> 1
+			otherIter.hasNext() -> -1
+			else -> 0 // Same number of segments, which are each identical
+		}
+	}
 
 	/**
 	 * Returns the string representation of this [Path]. This is the representation that is sent to MongoDB to refer to a [Field].
