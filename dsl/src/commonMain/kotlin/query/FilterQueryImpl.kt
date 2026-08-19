@@ -82,7 +82,7 @@ private class FilterQueryImpl<T>(
 				return null
 
 			if (declaredChildren.size == 1)
-				return FilterQueryImpl<T>(context).apply { accept(declaredChildren.single()) }
+				return FilterQueryImpl<T>(context).apply { accept(this@AndFilterBsonNodeNode.declaredChildren.single()) }
 
 			// If there are nested $and operators, we combine them into the current one
 			val nestedChildren = ArrayList<BsonNode>()
@@ -128,7 +128,7 @@ private class FilterQueryImpl<T>(
 				return null
 
 			if (declaredChildren.size == 1)
-				return FilterQueryImpl<T>(context).apply { accept(declaredChildren.single()) }
+				return FilterQueryImpl<T>(context).apply { accept(this@OrFilterBsonNodeNode.declaredChildren.single()) }
 
 			return super.simplify()
 		}

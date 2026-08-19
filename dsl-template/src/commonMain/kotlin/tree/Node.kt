@@ -38,6 +38,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  *
  * The former category implements this interface, whereas the latter implements [CompoundNode].
  */
+// Not necessarily @KtMongoDsl, could be nodes of anything else
 interface Node {
 
 	/**

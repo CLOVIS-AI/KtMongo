@@ -31,6 +31,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  * Instead, this node should be considered as representing the children itself, as a single unit.
  * Subtypes may decide to provide such a feature, however.
  */
+// Not necessarily @KtMongoDsl, could be nodes of anything else
 interface CompoundNode<N : Node> : Node {
 
 	/**
