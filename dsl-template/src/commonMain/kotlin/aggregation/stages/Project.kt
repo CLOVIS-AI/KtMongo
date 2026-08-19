@@ -97,7 +97,6 @@ interface HasProject<Document : Any> : Pipeline<Document> {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/)
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@KtMongoDsl
 	fun project(
 		block: ProjectStageOperators<Document>.() -> Unit,
 	): Pipeline<Document> =

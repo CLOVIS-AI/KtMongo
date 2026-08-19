@@ -79,13 +79,13 @@ import kotlin.reflect.typeOf
  * Developers should use the request above when they want to match a document similar to:
  * ```json
  * {
- *     favoriteNumbers: [1, 2]
+ *     "favoriteNumbers": [1, 2]
  * }
  * ```
  * The following document will NOT match:
  * ```json
  * {
- *     favoriteNumbers: [3]
+ *     "favoriteNumbers": [3]
  * }
  * ```
  *
@@ -93,7 +93,7 @@ import kotlin.reflect.typeOf
  * that the following document WILL match:
  * ```json
  * {
- *     favoriteNumbers: [
+ *     "favoriteNumbers": [
  *         [3],
  *         [1, 2],
  *         [7, 2]
@@ -2699,14 +2699,14 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * will, as expected, match the following document:
 	 * ```json
 	 * {
-	 *     favoriteNumbers: [1, 4, 5, 10]
+	 *     "favoriteNumbers": [1, 4, 5, 10]
 	 * }
 	 * ```
 	 *
 	 * It is important to note that it WILL also match this document:
 	 * ```json
 	 * {
-	 *     favoriteNumbers: 5
+	 *     "favoriteNumbers": 5
 	 * }
 	 * ```
 	 *
@@ -2777,14 +2777,14 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 * will, as expected, match the following document:
 	 * ```json
 	 * {
-	 *     favoriteNumbers: [1, 4, 5, 10]
+	 *     "favoriteNumbers": [1, 4, 5, 10]
 	 * }
 	 * ```
 	 *
 	 * It is important to note that it WILL also match this document:
 	 * ```json
 	 * {
-	 *     favoriteNumbers: 5
+	 *     "favoriteNumbers": 5
 	 * }
 	 * ```
 	 *

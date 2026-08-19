@@ -47,7 +47,6 @@ interface HasSample<Document : Any> : Pipeline<Document> {
 	 *
 	 * @see HasLimit.limit Selects the first elements found.
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun sample(size: Int): Pipeline<Document> =
 		withStage(SampleStage(size, context))

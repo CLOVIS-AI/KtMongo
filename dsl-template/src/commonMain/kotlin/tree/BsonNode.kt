@@ -20,6 +20,7 @@ import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonFieldWriteable
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQueryPredicate
 
@@ -41,6 +42,7 @@ import opensavvy.ktmongo.dsl.query.FilterQueryPredicate
  *
  * Use [toString][Any.toString] to view the JSON representation of this expression.
  */
+@KtMongoDsl
 interface BsonNode : Node, BsonFieldWriteable {
 
 	/**
@@ -201,6 +203,9 @@ abstract class AbstractBsonNode private constructor(
 	companion object
 }
 
+/**
+ * A [BsonNode] that contains all the fields of [a] and also all the fields of [b].
+ */
 @OptIn(LowLevelApi::class)
 internal class MergedBsonNode(
 	val a: BsonNode,

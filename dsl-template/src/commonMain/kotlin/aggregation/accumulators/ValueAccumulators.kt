@@ -16,6 +16,7 @@
 
 package opensavvy.ktmongo.dsl.aggregation.accumulators
 
+import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.aggregation.AccumulationOperators
 import opensavvy.ktmongo.dsl.aggregation.operators.ValueOperators
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
@@ -29,4 +30,5 @@ import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
  *
  * Because accumulation operators are valued from aggregation operators, this interface extends [ValueOperators].
  */
+@KtMongoDsl
 interface ValueAccumulators<From : Any, Into : Any> : ValueOperators, CompoundBsonNode

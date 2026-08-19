@@ -50,7 +50,6 @@ interface HasLimit<Document : Any> : Pipeline<Document> {
 	 * @see HasSkip.skip Skip over an amount of elements.
 	 * @see HasSample.sample Randomly limit the number of elements.
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun limit(amount: Long): Pipeline<Document> =
 		withStage(LimitStage(amount, context))
@@ -72,8 +71,6 @@ interface HasLimit<Document : Any> : Pipeline<Document> {
 	 * @see HasSkip.skip Skip over an amount of elements.
 	 * @see HasSample.sample Randomly limit the number of elements.
 	 */
-	@KtMongoDsl
-	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun limit(amount: Int): Pipeline<Document> =
 		limit(amount.toLong())
 }

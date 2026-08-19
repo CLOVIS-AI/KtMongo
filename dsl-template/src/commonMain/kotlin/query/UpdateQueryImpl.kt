@@ -72,7 +72,7 @@ private class UpdateQueryImpl<T>(
 			@Suppress("UNCHECKED_CAST") // safe because of the filter
 			val matching = newChildren
 				.filter { it::class == combinator.type }
-				as List<UpdateBsonNodeNode>
+				as List<UpdateBsonNode>
 
 			if (matching.size <= 1)
 			// At least two elements are required to combine them into a single one!
@@ -99,7 +99,7 @@ private class UpdateQueryImpl<T>(
 	}
 
 	@LowLevelApi
-	private sealed class UpdateBsonNodeNode(context: BsonContext) : AbstractBsonNode(context)
+	private sealed class UpdateBsonNode(context: BsonContext) : AbstractBsonNode(context)
 
 	// endregion
 	// region $set
@@ -107,14 +107,14 @@ private class UpdateQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: V, type: KType) {
-		accept(SetBsonNodeNode(listOf(this.path to Value(value, type)), context))
+		accept(SetBsonNode(listOf(this.path to Value(value, type)), context))
 	}
 
 	@LowLevelApi
-	private class SetBsonNodeNode(
+	private class SetBsonNode(
 		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 
 		override fun simplify() =
 			this.takeUnless { mappings.isEmpty() }
@@ -134,14 +134,14 @@ private class UpdateQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setOnInsert(value: V, type: KType) {
-		accept(SetOnInsertBsonNodeNode(listOf(this.path to Value(value, type)), context))
+		accept(SetOnInsertBsonNode(listOf(this.path to Value(value, type)), context))
 	}
 
 	@LowLevelApi
-	private class SetOnInsertBsonNodeNode(
+	private class SetOnInsertBsonNode(
 		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { mappings.isEmpty() }
 
@@ -160,14 +160,14 @@ private class UpdateQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	override fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.inc(amount: V, type: KType) {
-		accept(IncrementBsonNodeNode(listOf(this.path to Value(amount, type)), context))
+		accept(IncrementBsonNode(listOf(this.path to Value(amount, type)), context))
 	}
 
 	@LowLevelApi
-	private class IncrementBsonNodeNode(
+	private class IncrementBsonNode(
 		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { mappings.isEmpty() }
 
@@ -186,14 +186,14 @@ private class UpdateQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	override fun <@kotlin.internal.OnlyInputTypes V : Number> Field<T, V>.mul(amount: V, type: KType) {
-		accept(MultiplyBsonNodeNode(listOf(this.path to Value(amount, type)), context))
+		accept(MultiplyBsonNode(listOf(this.path to Value(amount, type)), context))
 	}
 
 	@LowLevelApi
-	private class MultiplyBsonNodeNode(
+	private class MultiplyBsonNode(
 		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { mappings.isEmpty() }
 
@@ -212,14 +212,14 @@ private class UpdateQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	override fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.unset() {
-		accept(UnsetBsonNodeNode(listOf(this.path), context))
+		accept(UnsetBsonNode(listOf(this.path), context))
 	}
 
 	@LowLevelApi
-	private class UnsetBsonNodeNode(
+	private class UnsetBsonNode(
 		val fields: List<Path>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { fields.isEmpty() }
 
@@ -238,14 +238,14 @@ private class UpdateQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	override fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.min(value: V, type: KType) {
-		accept(MinBsonNodeNode(listOf(this.path to Value(value, type)), context))
+		accept(MinBsonNode(listOf(this.path to Value(value, type)), context))
 	}
 
 	@LowLevelApi
-	private class MinBsonNodeNode(
+	private class MinBsonNode(
 		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { mappings.isEmpty() }
 
@@ -264,14 +264,14 @@ private class UpdateQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	override fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.max(value: V, type: KType) {
-		accept(MaxBsonNodeNode(listOf(this.path to Value(value, type)), context))
+		accept(MaxBsonNode(listOf(this.path to Value(value, type)), context))
 	}
 
 	@LowLevelApi
-	private class MaxBsonNodeNode(
+	private class MaxBsonNode(
 		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { mappings.isEmpty() }
 
@@ -290,14 +290,14 @@ private class UpdateQueryImpl<T>(
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
 	override infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.renameTo(newName: Field<T, V>) {
-		accept(RenameBsonNodeNode(listOf(this.path to newName.path), context))
+		accept(RenameBsonNode(listOf(this.path to newName.path), context))
 	}
 
 	@LowLevelApi
-	private class RenameBsonNodeNode(
+	private class RenameBsonNode(
 		val fields: List<Pair<Path, Path>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 		override fun simplify(): AbstractBsonNode? =
 			this.takeUnless { fields.isEmpty() }
 
@@ -330,7 +330,7 @@ private class UpdateQueryImpl<T>(
 		// `true` = Instant, `false` = Timestamp
 		val mappings: List<Pair<Path, Boolean>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 
 		override fun simplify() =
 			this.takeUnless { mappings.isEmpty() }
@@ -363,7 +363,7 @@ private class UpdateQueryImpl<T>(
 	private class AddToSetBsonNode(
 		val mappings: List<Pair<Path, Value>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 
 		override fun simplify() =
 			this.takeUnless { mappings.isEmpty() }
@@ -407,7 +407,7 @@ private class UpdateQueryImpl<T>(
 	private class PopBsonNode(
 		val mappings: List<Pair<Path, Int>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 
 		override fun simplify() =
 			this.takeUnless { mappings.isEmpty() }
@@ -582,7 +582,7 @@ private class UpdateQueryImpl<T>(
 	private class PushBsonNode(
 		val mappings: List<Pair<Path, PushBuilderImpl<*>>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 		override fun simplify(): PushBsonNode? {
 			if (mappings.isEmpty())
 				return null
@@ -669,7 +669,7 @@ private class UpdateQueryImpl<T>(
 		val valueMappings: List<Pair<Path, Value>>,
 		val predicateMappings: List<Pair<Path, BsonNode>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 
 		override fun simplify(): PullBsonNode? {
 			// ①. If a key appears multiple times in 'valueMappings', combine it with $in and move it into 'predicateMappings'
@@ -763,7 +763,7 @@ private class UpdateQueryImpl<T>(
 		// List<(field, operatorName, mask)>
 		val mappings: List<Triple<Path, String, Value>>,
 		context: BsonContext,
-	) : UpdateBsonNodeNode(context) {
+	) : UpdateBsonNode(context) {
 
 		override fun write(writer: BsonFieldWriter) = with(writer) {
 			val mappingsByField = mappings.groupBy { it.first }
@@ -785,29 +785,29 @@ private class UpdateQueryImpl<T>(
 	companion object {
 		@OptIn(LowLevelApi::class)
 		private val combinators = listOf(
-			OperatorCombinator(SetBsonNodeNode::class) { sources, context ->
-				SetBsonNodeNode(sources.flatMap { it.mappings }, context)
+			OperatorCombinator(SetBsonNode::class) { sources, context ->
+				SetBsonNode(sources.flatMap { it.mappings }, context)
 			},
-			OperatorCombinator(SetOnInsertBsonNodeNode::class) { sources, context ->
-				SetOnInsertBsonNodeNode(sources.flatMap { it.mappings }, context)
+			OperatorCombinator(SetOnInsertBsonNode::class) { sources, context ->
+				SetOnInsertBsonNode(sources.flatMap { it.mappings }, context)
 			},
-			OperatorCombinator(IncrementBsonNodeNode::class) { sources, context ->
-				IncrementBsonNodeNode(sources.flatMap { it.mappings }, context)
+			OperatorCombinator(IncrementBsonNode::class) { sources, context ->
+				IncrementBsonNode(sources.flatMap { it.mappings }, context)
 			},
-			OperatorCombinator(MultiplyBsonNodeNode::class) { sources, context ->
-				MultiplyBsonNodeNode(sources.flatMap { it.mappings }, context)
+			OperatorCombinator(MultiplyBsonNode::class) { sources, context ->
+				MultiplyBsonNode(sources.flatMap { it.mappings }, context)
 			},
-			OperatorCombinator(MinBsonNodeNode::class) { sources, context ->
-				MinBsonNodeNode(sources.flatMap { it.mappings }, context)
+			OperatorCombinator(MinBsonNode::class) { sources, context ->
+				MinBsonNode(sources.flatMap { it.mappings }, context)
 			},
-			OperatorCombinator(MaxBsonNodeNode::class) { sources, context ->
-				MaxBsonNodeNode(sources.flatMap { it.mappings }, context)
+			OperatorCombinator(MaxBsonNode::class) { sources, context ->
+				MaxBsonNode(sources.flatMap { it.mappings }, context)
 			},
-			OperatorCombinator(UnsetBsonNodeNode::class) { sources, context ->
-				UnsetBsonNodeNode(sources.flatMap { it.fields }, context)
+			OperatorCombinator(UnsetBsonNode::class) { sources, context ->
+				UnsetBsonNode(sources.flatMap { it.fields }, context)
 			},
-			OperatorCombinator(RenameBsonNodeNode::class) { sources, context ->
-				RenameBsonNodeNode(sources.flatMap { it.fields }, context)
+			OperatorCombinator(RenameBsonNode::class) { sources, context ->
+				RenameBsonNode(sources.flatMap { it.fields }, context)
 			},
 			OperatorCombinator(AddToSetBsonNode::class) { sources, context ->
 				AddToSetBsonNode(sources.flatMap { it.mappings }, context)

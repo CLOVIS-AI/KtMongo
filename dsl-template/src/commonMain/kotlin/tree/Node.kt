@@ -17,7 +17,6 @@
 package opensavvy.ktmongo.dsl.tree
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.tree.ImmutableNode.freeze
 
 /**
  * An element in an abstract tree.
@@ -39,6 +38,7 @@ import opensavvy.ktmongo.dsl.tree.ImmutableNode.freeze
  *
  * The former category implements this interface, whereas the latter implements [CompoundNode].
  */
+// Not necessarily @KtMongoDsl, could be nodes of anything else
 interface Node {
 
 	/**
@@ -74,16 +74,5 @@ internal class NodeImpl : Node {
 	@LowLevelApi
 	override fun freeze() {
 		frozen = true
-	}
-}
-
-/**
- * Helper to represent a [Node] that can never mutate, even if it hasn't been [frozen][freeze] yet.
- *
- * Should generally be used to implement [Node] by delegation.
- */
-internal object ImmutableNode : Node {
-	@LowLevelApi
-	override fun freeze() {
 	}
 }

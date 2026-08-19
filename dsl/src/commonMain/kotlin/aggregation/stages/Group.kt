@@ -135,7 +135,6 @@ interface HasGroup<Document : Any> : Pipeline<Document> {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	@KtMongoDsl
 	fun <Out : Any> group(
 		block: GroupStageOperators<Document, Out>.() -> Unit,
 	): Pipeline<Out> =

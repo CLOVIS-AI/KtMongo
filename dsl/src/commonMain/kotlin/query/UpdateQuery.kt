@@ -122,7 +122,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V> Field<T, @kotlin.internal.Exact V>.set(value: V, type: KType)
 
 	/**
@@ -150,7 +149,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> Field<T, @kotlin.internal.Exact V>.set(value: V) {
 		set(value, typeOf<V>())
 	}
@@ -180,7 +178,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.set(value: V) {
 		return this.field.set(value)
 	}
@@ -212,7 +209,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline fun <reified V> Field<T, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: V) {
 		if (condition)
 			this set value
@@ -245,7 +241,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline fun <reified V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: V) {
 		return this.field.setIf(condition, value)
 	}
@@ -277,7 +272,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline fun <reified V> Field<T, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: V) {
 		if (!condition)
 			this set value
@@ -310,7 +304,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * @see UpsertQuery.setOnInsert Only set if a new document is created.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline fun <reified V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: V) {
 		return this.field.setUnless(condition, value)
 	}
@@ -347,7 +340,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V : Number> Field<T, @kotlin.internal.Exact V>.inc(amount: V, type: KType)
 
 	/**
@@ -379,7 +371,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V : Number> Field<T, @kotlin.internal.Exact V>.inc(amount: V) {
 		this.inc(amount, typeOf<V>())
 	}
@@ -413,7 +404,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V : Number> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.inc(amount: V) {
 		return this.field.inc(amount)
 	}
@@ -447,7 +437,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline operator fun <reified V : Number> Field<T, @kotlin.internal.Exact V>.plusAssign(amount: V): Unit =
 		this.inc(amount)
 
@@ -480,7 +469,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/inc/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline operator fun <reified V : Number> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.plusAssign(amount: V): Unit {
 		return this.field.plusAssign(amount)
 	}
@@ -514,7 +502,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/mul/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V : Number> Field<T, @kotlin.internal.Exact V>.mul(amount: V, type: KType)
 
 	/**
@@ -543,7 +530,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/mul/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V : Number> Field<T, @kotlin.internal.Exact V>.mul(amount: V) {
 		this.mul(amount, typeOf<V>())
 	}
@@ -574,7 +560,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/mul/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V : Number> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.mul(amount: V) {
 		return this.field.mul(amount)
 	}
@@ -605,7 +590,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/mul/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline operator fun <reified V : Number> Field<T, @kotlin.internal.Exact V>.timesAssign(amount: V) {
 		this mul amount
 	}
@@ -636,7 +620,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/mul/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline operator fun <reified V : Number> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.timesAssign(amount: V) {
 		return this.field.timesAssign(amount)
 	}
@@ -669,7 +652,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/unset/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V> Field<T, @kotlin.internal.Exact V>.unset()
 
 	/**
@@ -697,7 +679,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/unset/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.unset() {
 		return this.field.unset()
 	}
@@ -728,7 +709,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/min/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V : Comparable<V>> Field<T, V?>.min(value: V, type: KType)
 
 	/**
@@ -754,7 +734,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/min/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V : Comparable<V>> Field<T, V?>.min(value: V) {
 		this.min(value, typeOf<V>())
 	}
@@ -782,7 +761,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/min/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.min(value: V) {
 		return this.field.min(value)
 	}
@@ -810,7 +788,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/max/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V : Comparable<V>> Field<T, V?>.max(value: V, type: KType)
 
 	/**
@@ -836,7 +813,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/max/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V : Comparable<V>> Field<T, V?>.max(value: V) {
 		this.max(value, typeOf<V>())
 	}
@@ -864,7 +840,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/max/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V : Comparable<V>> kotlin.reflect.KProperty1<T, V?>.max(value: V) {
 		return this.field.max(value)
 	}
@@ -895,7 +870,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <V> Field<T, @kotlin.internal.Exact V>.renameTo(newName: Field<T, V>)
 
 	/**
@@ -921,7 +895,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.renameTo(newName: Field<T, V>) {
 		return this.field.renameTo(newName)
 	}
@@ -949,7 +922,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <V> Field<T, @kotlin.internal.Exact V>.renameTo(newName: kotlin.reflect.KProperty1<T, V>) {
 		return this.renameTo(newName.field)
 	}
@@ -977,7 +949,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	infix fun <V> kotlin.reflect.KProperty1<T, @kotlin.internal.Exact V>.renameTo(newName: kotlin.reflect.KProperty1<T, V>) {
 		return this.field.renameTo(newName)
 	}
@@ -1011,7 +982,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
 	 */
-	@KtMongoDsl
 	fun Field<T, Instant?>.setToCurrentDate()
 
 	/**
@@ -1040,7 +1010,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/currentDate/)
 	 */
-	@KtMongoDsl
 	fun kotlin.reflect.KProperty1<T, Instant?>.setToCurrentDate() {
 		return this.field.setToCurrentDate()
 	}
@@ -1075,7 +1044,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("setToCurrentTimestamp")
-	@KtMongoDsl
 	fun Field<T, Timestamp?>.setToCurrentDate()
 
 	/**
@@ -1108,7 +1076,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("setToCurrentTimestamp")
-	@KtMongoDsl
 	fun kotlin.reflect.KProperty1<T, Timestamp?>.setToCurrentDate() {
 		return this.field.setToCurrentDate()
 	}
@@ -1299,7 +1266,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	@KtMongoDsl
 	fun <V> Field<T, Collection<@kotlin.internal.Exact V>>.addToSet(value: V, type: KType)
 
 	/**
@@ -1333,7 +1299,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> Field<T, Collection<@kotlin.internal.Exact V>>.addToSet(value: V) {
 		this.addToSet(value, typeOf<V>())
 	}
@@ -1369,7 +1334,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * - [Official documentation](https://www.mongodb.com/docs/v7.0/reference/operator/update/addToSet/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	@KtMongoDsl
 	final inline infix fun <reified V> kotlin.reflect.KProperty1<T, Collection<@kotlin.internal.Exact V>>.addToSet(value: V) {
 		return this.field.addToSet(value)
 	}
@@ -1530,7 +1494,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pop/)
 	 */
-	@KtMongoDsl
 	fun Field<T, Collection<*>>.popLast()
 
 	/**
@@ -1559,7 +1522,6 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/pop/)
 	 */
-	@KtMongoDsl
 	fun kotlin.reflect.KProperty1<T, Collection<*>>.popLast() {
 		return this.field.popLast()
 	}
