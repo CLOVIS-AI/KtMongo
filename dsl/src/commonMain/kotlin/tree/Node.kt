@@ -20,7 +20,6 @@
 package opensavvy.ktmongo.dsl.tree
 
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.tree.ImmutableNode.freeze
 
 /**
  * An element in an abstract tree.
@@ -77,16 +76,5 @@ internal class NodeImpl : Node {
 	@LowLevelApi
 	override fun freeze() {
 		frozen = true
-	}
-}
-
-/**
- * Helper to represent a [Node] that can never mutate, even if it hasn't been [frozen][freeze] yet.
- *
- * Should generally be used to implement [Node] by delegation.
- */
-internal object ImmutableNode : Node {
-	@LowLevelApi
-	override fun freeze() {
 	}
 }
