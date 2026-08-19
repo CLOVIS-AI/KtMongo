@@ -53,7 +53,6 @@ interface HasMatch<Document : Any> : Pipeline<Document> {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/)
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun match(
 		filter: FilterQuery<Document>.() -> Unit,
@@ -94,7 +93,6 @@ interface HasMatch<Document : Any> : Pipeline<Document> {
 	 * @see match The `$match` stage.
 	 * @see FilterQuery.expr The `$expr` operator, allowing to use aggregation syntax in a filter.
 	 */
-	@KtMongoDsl
 	fun matchExpr(
 		filter: AggregationOperators.() -> Value<Document, Boolean>,
 	): Pipeline<Document> =

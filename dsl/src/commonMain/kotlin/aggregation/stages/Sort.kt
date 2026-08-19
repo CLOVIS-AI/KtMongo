@@ -56,7 +56,6 @@ interface HasSort<Document : Any> : Pipeline<Document> {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/)
 	 */
-	@KtMongoDsl
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun sort(
 		block: SortOptionDsl<Document>.() -> Unit,

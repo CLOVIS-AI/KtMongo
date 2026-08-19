@@ -63,7 +63,6 @@ interface HasCount<Document : Any> : Pipeline<Document> {
 	 * ```
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	@KtMongoDsl
 	fun <Output : Any> countTo(field: Field<Output, Number>): Pipeline<Output> =
 		withStage(CountStage(field.path, context)).reinterpret()
 
@@ -92,7 +91,6 @@ interface HasCount<Document : Any> : Pipeline<Document> {
 	 * ```
 	 */
 	@OptIn(LowLevelApi::class)
-	@KtMongoDsl
 	fun <Output : Any> countTo(field: KProperty1<Output, Number>): Pipeline<Output> =
 		countTo(with(FieldDslImpl(context)) { field.field })
 

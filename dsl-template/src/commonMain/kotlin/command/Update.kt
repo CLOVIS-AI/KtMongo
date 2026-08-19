@@ -58,7 +58,6 @@ class UpdateOne<Document : Any> private constructor(
 	@OptIn(LowLevelApi::class)
 	private constructor(context: BsonContext, options: UpdateOptions<Document>) : this(context, options, FilterQuery(context), UpdateQuery(context, options))
 
-	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, UpdateOptions(context))
 
 	@LowLevelApi
@@ -109,7 +108,6 @@ class UpsertOne<Document : Any> private constructor(
 	@OptIn(LowLevelApi::class)
 	private constructor(context: BsonContext, options: UpdateOptions<Document>) : this(context, options, FilterQuery(context), UpsertQuery(context, options))
 
-	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, UpdateOptions(context))
 
 	@LowLevelApi
@@ -160,7 +158,6 @@ class UpdateMany<Document : Any> private constructor(
 	@OptIn(LowLevelApi::class)
 	private constructor(context: BsonContext, options: UpdateOptions<Document>) : this(context, options, FilterQuery(context), UpdateQuery(context, options))
 
-	@OptIn(LowLevelApi::class)
 	constructor(context: BsonContext) : this(context, UpdateOptions(context))
 
 	@LowLevelApi
