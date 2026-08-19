@@ -203,6 +203,9 @@ abstract class AbstractBsonNode private constructor(
 	companion object
 }
 
+/**
+ * A [BsonNode] that contains all the fields of [a] and also all the fields of [b].
+ */
 @OptIn(LowLevelApi::class)
 internal class MergedBsonNode(
 	val a: BsonNode,
