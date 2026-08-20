@@ -5,7 +5,7 @@ services:
     # When downgrading the version, run
     #  docker compose rm -v
     # (all data will be lost)
-    image: "mongo:7.0.31"
+    image: "mongo:7.0.40"
     ports:
       - "27017:27017"
     ulimits:
