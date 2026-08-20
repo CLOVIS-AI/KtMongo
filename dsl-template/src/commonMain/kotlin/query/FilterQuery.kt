@@ -1339,6 +1339,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see gte Only specify the lower bound.
 	 * @see lte Only specify the higher bound.
+	 * @see isOneOf Selects documents in which this field is one of the values of a list.
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.isIn(range: ClosedRange<V>, type: KType) {
@@ -1367,6 +1368,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see gte Only specify the lower bound.
 	 * @see lte Only specify the higher bound.
+	 * @see isOneOf Selects documents in which this field is one of the values of a list.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> Field<T, V?>.isIn(range: ClosedRange<V>) {
@@ -1391,6 +1393,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see gte Only specify the lower bound.
 	 * @see lt Only specify the higher bound.
+	 * @see isOneOf Selects documents in which this field is one of the values of a list.
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	fun <@kotlin.internal.OnlyInputTypes V : Comparable<V>> Field<T, V?>.isIn(range: OpenEndRange<V>, type: KType) {
@@ -1419,6 +1422,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see gte Only specify the lower bound.
 	 * @see lt Only specify the higher bound.
+	 * @see isOneOf Selects documents in which this field is one of the values of a list.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V : Comparable<V>> Field<T, V?>.isIn(range: OpenEndRange<V>) {
@@ -1447,6 +1451,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see gte Only specify the lower bound.
 	 * @see lte Only specify the higher bound.
+	 * @see isOneOf Selects documents in which this field is one of the values of a list.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME")
 	@JvmName("isInSimpleWithType")
@@ -1472,6 +1477,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see gte Only specify the lower bound.
 	 * @see lte Only specify the higher bound.
+	 * @see isOneOf Selects documents in which this field is one of the values of a list.
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@JvmName("isInSimple")
@@ -1559,6 +1565,8 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *     User::name isOneOf listOf("Alfred", "Arthur")
 	 * }
 	 * ```
+	 *
+	 * @see isIn Selects documents for which the field is within a range of values
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
 	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.isOneOf(values: List<V>, type: KType) {
@@ -1587,6 +1595,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see or
 	 * @see eq
+	 * @see isIn Selects documents for which the field is within a range of values
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	final inline infix fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.isOneOf(values: List<V>) {
@@ -1615,6 +1624,7 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 	 *
 	 * @see or
 	 * @see eq
+	 * @see isIn Selects documents for which the field is within a range of values
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<T, V>.isOneOf(vararg values: V) {
