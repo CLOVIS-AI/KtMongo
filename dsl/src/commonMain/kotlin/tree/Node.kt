@@ -20,26 +20,36 @@
 package opensavvy.ktmongo.dsl.tree
 
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.Value
+import kotlin.concurrent.Volatile
 
 /**
  * An element in an abstract tree.
  *
- * It is not expected that users of this library have to deal with this class directly.
+ * It is not expected that users of this library have to deal with this type directly.
  *
  * ### Trees
  *
  * Trees are expected to be built bottom-up: a node is always built before its parents.
- * Once a node has been [accepted][CompoundNode.accept] by a parent, it [freezes][freeze] (becomes forever immutable).
+ * Once a node has been [accepted][CompoundNode.accept] by a parent,
+ * it is [simplified][BsonNode.simplify]
+ * then [freezes][freeze] (becomes forever immutable).
  * The same node may be added to multiple parent nodes.
  *
- * This schemes ensures that trees are always as simplified as possible: we are always building a single node at a time,
- * and all its children are guaranteed to be immutable and fully simplified.
+ * This scheme ensures that trees are always fully simplified: we are always building a single node at a time,
+ * and all its children are guaranteed to already be immutable and simplified themselves.
  *
  * There are two main categories of nodes:
- * - Nodes that represent some data by themselves,
+ * - Nodes that represent some data by themselves.
  * - Nodes that group other nodes into a single larger node.
  *
  * The former category implements this interface, whereas the latter implements [CompoundNode].
+ *
+ * ### Implementations
+ *
+ * The two main implementations of this interface are:
+ * - [BsonNode] is mainly used for operators in queries
+ * - [Value] is mainly used for operators and their results in aggregations
  */
 // Not necessarily @KtMongoDsl, could be nodes of anything else
 interface Node {
@@ -51,6 +61,12 @@ interface Node {
 	 * This ensures that nodes cannot change after they have been used within other nodes.
 	 *
 	 * To learn more about this process, see [Node].
+	 *
+	 * ### Thread-safety
+	 *
+	 * **Instances of [Node] are not thread-safe before [freeze] has been called.**
+	 *
+	 * Once the [freeze] function has returned, then the node must be immutable and thread-safe.
 	 */
 	@LowLevelApi
 	fun freeze()
@@ -71,6 +87,7 @@ internal class NodeImpl : Node {
 	 * If this value is `true`, this node should reject any attempt to mutate it.
 	 * It is the responsibility of the implementor to satisfy this invariant.
 	 */
+	@Volatile
 	var frozen: Boolean = false
 		private set
 

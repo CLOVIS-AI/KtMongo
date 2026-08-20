@@ -23,6 +23,7 @@ import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonFieldWriteable
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQueryPredicate
@@ -32,6 +33,8 @@ import opensavvy.ktmongo.dsl.query.FilterQueryPredicate
  *
  * Each implementation of this interface is a logical BSON node in our own intermediary representation.
  * Each node knows how to [writeTo] itself into a BSON document.
+ *
+ * To learn more about how the tree is formed, see [Node].
  *
  * ### Security
  *
@@ -54,12 +57,6 @@ interface BsonNode : Node, BsonFieldWriteable {
 	@LowLevelApi
 	val context: BsonContext
 
-	/**
-	 * Makes this expression immutable.
-	 *
-	 * After this method has been called, the expression can never be modified again.
-	 * This ensures that expressions cannot change after they have been used within other expressions.
-	 */
 	@LowLevelApi
 	override fun freeze()
 
@@ -135,10 +132,28 @@ interface BsonNode : Node, BsonFieldWriteable {
  * }
  * ```
  *
+ * Since [accept][CompoundBsonNode.accept] is marked [DangerousMongoApi], you will get an error on every usage.
+ * To avoid this, create a high-level operator function that hides your operator implementation:
+ * ```kotlin
+ * @OptIn(DangerousMongoApi::class, LowLevelApi::class) // Accept the warnings since this function has a type-safe API
+ * context(dsl: FilterQueryPredicate<T>) // Important! Find the right type depending on the context in which the operator is used
+ * fun <T> hasType(type: BsonType) {
+ *     dsl.accept(TypePredicateExpressionNode(type))
+ * }
+ *
+ * // Usage
+ * collection.find {
+ *     User::name {
+ *         hasType(BsonType.Undefined)
+ *     }
+ * }
+ * ```
+ *
  * Of course, the operator described above is already made available: [FilterQueryPredicate.hasType].
  *
  * **Note that if your operator accepts a variable number of sub-expressions (e.g. `$and`), you must ensure that it works for any
- * number of expressions, including 1 and 0.** See [simplify].
+ * number of sub-expressions, including 1 and 0.** See [simplify]. For example, a `$and` with a single sub-expression simplifies
+ * itself to that sub-expression; the `$and` operator itself disappears.
  *
  * To create an operator that can accept multiple children operators (for example `$and`), implement [AbstractCompoundBsonNode].
  *
@@ -157,10 +172,17 @@ abstract class AbstractBsonNode private constructor(
 	constructor(context: BsonContext) : this(context, NodeImpl())
 
 	/**
-	 * `true` if [freeze] has been called. Can never become `false` again.
+	 * Starts at `false`. Becomes `true` after [freeze] is called. Can never become `false` again.
 	 *
 	 * If this value is `true`, this node should reject any attempt to mutate it.
 	 * It is the responsibility of the implementor to satisfy this invariant.
+	 *
+	 * ### Thread safety
+	 *
+	 * If `false` is read, no thread safety is guaranteed.
+	 *
+	 * If `true` is read, then happens-after is guaranteed with the first call to [freeze] on this instance.
+	 * Since all mutations are forbidden by contract after a call to [freeze], this instance is considered thread-safe.
 	 */
 	protected val frozen: Boolean
 		get() = node.frozen
@@ -179,6 +201,9 @@ abstract class AbstractBsonNode private constructor(
 
 	@LowLevelApi
 	final override fun writeTo(writer: BsonFieldWriter) {
+		// 'frozen' is a memory fence
+		val _ = frozen
+
 		this.simplify()?.write(writer)
 	}
 

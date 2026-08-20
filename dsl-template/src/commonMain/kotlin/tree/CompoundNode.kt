@@ -18,6 +18,7 @@ package opensavvy.ktmongo.dsl.tree
 
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.Value
 
 /**
  * A [Node] that combines multiple other nodes into a single node.
@@ -37,20 +38,28 @@ interface CompoundNode<N : Node> : Node {
 	/**
 	 * Adds a new [Node] into the current node.
 	 *
-	 * This method is generally considered unsafe, as it allows inserting any kind of node into the current node.
-	 * Since this library is about representing database requests, this method allows inserting any kind
-	 * of operation, without necessarily checking any security or coherence invariants.
+	 * This method is considered unsafe as it allows inserting arbitrary nodes into the current node.
+	 * Since KtMongo is a database driver, this method allows inserting any kind
+	 * of operation without checking any security or coherence invariants.
 	 *
-	 * Users should only interact with this method when they add a new type of node that doesn't exist in the library.
-	 * For example, when adding an operator that is missing from the library.
-	 * In these cases, we highly recommend users to contact the maintainers of KtMongo to ensure the created operator
-	 * respects all invariants.
-	 * If possible, upstreaming the operator would be of benefit to all users, and guarantees future bug fixes.
+	 * **If you are not careful, this method will create database injection risks.**
+	 *
+	 * Users should only interact with this method when they have a custom node that doesn't exist in the library,
+	 * for example, when adding a missing operator.
+	 * In these cases, we highly recommend users to [contact the maintainers of KtMongo](https://gitlab.com/opensavvy/ktmongo/-/work_items/new)
+	 * to ensure the created operator respects all invariants.
+	 * If possible, upstreaming the operator would be of benefit to all users and guarantees future bug fixes.
 	 *
 	 * In all other cases, it is expected that implementations of this interface provide methods for each added functionality
 	 * that are responsible for checking invariants and are safe to call.
 	 *
 	 * For a more detailed explanation of the contract of this method, see [Node].
+	 *
+	 * ### Implementation notes
+	 *
+	 * - Implementations should reject any mutation if [Node.freeze] has been called.
+	 * - If applicable, implementations should simplify the accepted node (see [BsonNode.simplify] and [Value.simplify]).
+	 * - Implementations should call [Node.freeze] on [node] (or its simplification) before accepting it.
 	 */
 	@LowLevelApi
 	@DangerousMongoApi

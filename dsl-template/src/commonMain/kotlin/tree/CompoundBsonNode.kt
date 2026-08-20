@@ -73,11 +73,17 @@ abstract class AbstractCompoundBsonNode(
 
 	@LowLevelApi
 	protected val children: List<BsonNode>
-		get() = _children.asImmutable()
+		get() {
+			// 'frozen' is a memory fence
+			val _ = frozen
+
+			return _children.asImmutable()
+		}
 
 	@LowLevelApi
 	@DangerousMongoApi
 	override fun accept(node: BsonNode) {
+		// 'frozen' check must be first because it acts as a memory fence
 		require(!frozen) { "This expression has already been frozen, it cannot accept the child expression $node" }
 		require(node != this) { "Trying to add an expression to itself!" }
 
@@ -128,6 +134,9 @@ abstract class AbstractCompoundBsonNode(
 
 	@LowLevelApi
 	final override fun write(writer: BsonFieldWriter) {
+		// 'frozen' is a memory fence
+		val _ = frozen
+
 		write(writer, children)
 	}
 
