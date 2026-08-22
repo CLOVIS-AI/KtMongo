@@ -47,7 +47,10 @@ import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
  * Each stage is defined as an extension function on this class.
  * Note that as mentioned, not all stages are available for all pipeline types.
  * The following stages are available:
+ * - [`$count`][opensavvy.ktmongo.dsl.aggregation.stages.HasCount.countTo]
+ * - [`$group`][opensavvy.ktmongo.dsl.aggregation.stages.HasGroup.group]
  * - [`$limit`][opensavvy.ktmongo.dsl.aggregation.stages.HasLimit.limit]
+ * - [`$lookup`][opensavvy.ktmongo.dsl.aggregation.stages.HasLookup.lookup]
  * - [`$match`][opensavvy.ktmongo.dsl.aggregation.stages.HasMatch.match]
  * - [`$project`][opensavvy.ktmongo.dsl.aggregation.stages.HasProject.project]
  * - [`$sample`][opensavvy.ktmongo.dsl.aggregation.stages.HasSample.sample]
