@@ -15,7 +15,6 @@
  */
 
 plugins {
-	`kotlin-dsl`
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.plugin)
 	antlr
