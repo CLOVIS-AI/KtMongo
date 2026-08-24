@@ -7,7 +7,7 @@ for tag in $(git tag --list -n1 | cut -d' ' -f1); do
 	tag_file="docs/news/posts/releases/release-$tag.md"
 
 	git for-each-ref \
-		--format="---%ndate:%n  created: %(taggerdate:short)%nslug: v$tag%ntags: %n - Releases%n---%n%n# $tag • %(subject)%n%n%(contents:body)" \
+		--format="---%ndate:%n  created: %(taggerdate:short)%nsearch:%n  boost: 0.25%nslug: v$tag%ntags: %n - Releases%n---%n%n# $tag • %(subject)%n%n%(contents:body)" \
 		"refs/tags/$tag" \
 		| sed 's/%n/\n/g' \
 		| sed -r "s~\#([0-9]+)~[#\1]($CI_PROJECT_URL/-/issues/\1)~g" \

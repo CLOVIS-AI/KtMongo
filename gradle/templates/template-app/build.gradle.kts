@@ -68,3 +68,24 @@ tasks.withType<AbstractTestTask> {
 	// Kotest doesn't report test correctly as of now
 	failOnNoDiscoveredTests = false
 }
+
+// region Publication test
+// Even though this module is included in all repositories that import the Playground, we
+// don't want to always publish this template.
+
+val appGroup: String? by project
+
+@Suppress("UnstableApiUsage") // 'onlyIf' is unstable
+if (appGroup != "dev.opensavvy.playground") {
+	tasks.configureEach {
+		if (name.startsWith("publish")) {
+			onlyIf("Publishing is only enabled when built as part of the Playground") { false }
+		}
+
+		if (this is AbstractTestTask) {
+			onlyIf("The template tests do not need to run when not building as part of the Playground") { System.getenv("CI") != null }
+		}
+	}
+}
+
+// endregion
