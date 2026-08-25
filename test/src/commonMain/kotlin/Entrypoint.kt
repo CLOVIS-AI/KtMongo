@@ -21,6 +21,7 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.tests.api.operations.*
+import opensavvy.ktmongo.tests.api.scenarii.unionwith.verifyScenarioUnionWith
 import opensavvy.prepared.suite.*
 import opensavvy.prepared.suite.config.CoroutineTimeout
 import kotlin.coroutines.CoroutineContext
@@ -83,4 +84,8 @@ fun SuiteDsl.verifyClient(
 	verifyUpdatePipelineOperations(client)
 	verifyCollectionOperations(client)
 	verifyClientSideViewOperations(client)
+
+	suite("Scenarii") {
+		verifyScenarioUnionWith(client)
+	}
 }
