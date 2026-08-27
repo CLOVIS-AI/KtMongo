@@ -146,6 +146,7 @@ abstract class AbstractValue<Root : Any, Type> private constructor(
 	 */
 	@OptIn(LowLevelApi::class)
 	fun toString(simplified: Boolean): String {
+		// Create an array of a single element because we can't write a value by itself, it needs to be in some kind of container
 		val document = context.buildArray {
 			if (simplified)
 				writeTo(this)
@@ -154,6 +155,10 @@ abstract class AbstractValue<Root : Any, Type> private constructor(
 		}
 
 		return document.toString()
+			// Remove the fake array
+			.trim()
+			.removeSurrounding("[", "]")
+			.trim()
 	}
 
 	final override fun toString(): String =
