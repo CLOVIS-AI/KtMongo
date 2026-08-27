@@ -92,6 +92,15 @@ interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
 	override fun writeTo(writer: BsonValueWriter)
 
 	/**
+	 * Overwrites the represented type of this value.
+	 *
+	 * This method can be useful to bypass type checks.
+	 */
+	@Suppress("UNCHECKED_CAST")
+	fun <New> unsafeCast(): Value<Root, New> =
+		this as Value<Root, New>
+
+	/**
 	 * JSON representation of this expression.
 	 *
 	 * Note that since this class represents a BSON _value_, and BSON libraries often only support _documents_,
