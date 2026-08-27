@@ -31,6 +31,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
+import kotlin.jvm.JvmName
 
 /**
  * Pipeline implementing the `$set` stage.
@@ -40,6 +41,24 @@ interface HasSet<Document : Any> : Pipeline<Document> {
 
 	/**
 	 * Adds new fields to documents, or overwrites existing fields.
+	 *
+	 * See [$project][HasProject.project] to learn more about their differences.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val isAdult: Boolean? = null,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::isAdult set (User::age gte 18)
+	 *     }
+	 * ```
 	 *
 	 * ### External resources
 	 *
@@ -79,12 +98,115 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	/**
 	 * Replaces the value of a field with the specified [value].
 	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val isAdult: Boolean? = null,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::isAdult set (User::age gte 18)
+	 *     }
+	 * ```
+	 *
+	 * If you want to create a temporary field that is only used within the aggregation and not deserialized,
+	 * see [Field.unsafe].
+	 *
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.set(value: Value<T, V>)
+	infix fun <@kotlin.internal.Exact V> Field<T, V>.set(value: Value<T, V>) {
+		accept(SetBsonNode(this.path, value, context))
+	}
+
+	/**
+	 * Replaces the value of an array with the specified list of [values].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val maths: Score,
+	 *     val physics: Score,
+	 *     val scores: List<Score>,
+	 * )
+	 *
+	 * class Score(
+	 *     val subject: String,
+	 *     val value: Double,
+	 *     val max: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::scores set listOf(
+	 *             of(User::maths),
+	 *             of(User::physics),
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@Suppress("INVISIBLE_REFERENCE")
+	infix fun <@kotlin.internal.Exact V> Field<T, Collection<V>>.set(values: Collection<Value<T, V>>) {
+		accept(SetArrayBsonNode(this.path, values, context))
+	}
+
+	/**
+	 * Replaces the value of an array with the specified list of [values].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 *     val maths: Score,
+	 *     val physics: Score,
+	 *     val scores: List<Score>,
+	 * )
+	 *
+	 * class Score(
+	 *     val subject: String,
+	 *     val value: Double,
+	 *     val max: Double,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::scores set listOf(
+	 *             of(User::maths),
+	 *             of(User::physics),
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("setNullable")
+	final infix fun <@kotlin.internal.Exact V> Field<T, Collection<V>?>.set(values: Collection<Value<T, V>?>) {
+		accept(SetArrayBsonNode(this.path, values, context))
+	}
 
 	// endregion
 	// region Conditional $set
@@ -122,23 +244,36 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 
 private class SetStageBsonNode<T : Any>(
 	context: BsonContext,
-) : AbstractCompoundBsonNode(context), SetStageOperators<T> {
+) : AbstractCompoundBsonNode(context), SetStageOperators<T>
 
-	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	override fun <V> Field<T, V>.set(value: Value<T, V>) {
-		accept(SetBsonNode(this.path, value, context))
+@LowLevelApi
+private class SetBsonNode(
+	val path: Path,
+	val value: Value<*, *>,
+	context: BsonContext,
+) : AbstractBsonNode(context) {
+
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		write(path.toString()) {
+			value.writeTo(this)
+		}
 	}
+}
 
-	@LowLevelApi
-	private class SetBsonNode(
-		val path: Path,
-		val value: Value<*, *>,
-		context: BsonContext,
-	) : AbstractBsonNode(context) {
+@LowLevelApi
+private class SetArrayBsonNode(
+	val path: Path,
+	val values: Collection<Value<*, *>?>,
+	context: BsonContext,
+) : AbstractBsonNode(context) {
 
-		override fun write(writer: BsonFieldWriter) = with(writer) {
-			write(path.toString()) {
-				value.writeTo(this)
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeArray(path.toString()) {
+			for (value in values) {
+				if (value != null)
+					value.writeTo(this)
+				else
+					writeNull()
 			}
 		}
 	}
