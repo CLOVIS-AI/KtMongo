@@ -115,6 +115,8 @@ interface MongoAggregationPipeline<Document : Any> : AggregationPipeline<Documen
 
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): MongoAggregationPipeline<Document>
 
+	override fun <Item, Out : Any> unwind(block: UnwindStageOperators<Document, Item, Out>.() -> Unit): MongoAggregationPipeline<Out>
+
 	// endregion
 	// region Debug
 

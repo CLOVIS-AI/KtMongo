@@ -119,6 +119,9 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): SyncMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.countTo(field) as SyncMongoAggregationPipelineImpl<Out>
 
+	override fun <Item, Out : Any> unwind(block: UnwindStageOperators<Document, Item, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
+		super<AggregationPipeline>.unwind(block) as SyncMongoAggregationPipelineImpl<Out>
+
 	// endregion
 	// region $unionWith support
 

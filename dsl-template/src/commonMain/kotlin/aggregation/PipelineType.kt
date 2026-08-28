@@ -56,7 +56,8 @@ interface AggregationPipeline<Document : Any> : Pipeline<Document>,
 	HasSort<Document>,
 	HasUnionWith<Document>,
 	HasUnionWithCompatibility<Document>,
-	HasUnset<Document>
+	HasUnset<Document>,
+	HasUnwind<Document>
 
 /**
  * An update pipeline.

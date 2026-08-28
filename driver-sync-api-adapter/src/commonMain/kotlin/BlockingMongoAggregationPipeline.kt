@@ -88,6 +88,9 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): BlockingMongoAggregationPipeline<Document> =
 		BlockingMongoAggregationPipeline(inner.lookup(block))
 
+	override fun <Item, Out : Any> unwind(block: UnwindStageOperators<Document, Item, Out>.() -> Unit): BlockingMongoAggregationPipeline<Out> =
+		BlockingMongoAggregationPipeline(inner.unwind(block))
+
 	override suspend fun debug(limit: Int): MongoAggregationPipeline.PipelineDebugReport {
 		val upstream = inner.debug(limit)
 

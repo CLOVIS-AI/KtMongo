@@ -89,6 +89,8 @@ interface CoroutineMongoAggregationPipeline<Document : Any> : MongoAggregationPi
 
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): CoroutineMongoAggregationPipeline<Out>
 
+	override fun <Item, Out : Any> unwind(block: UnwindStageOperators<Document, Item, Out>.() -> Unit): CoroutineMongoAggregationPipeline<Out>
+
 }
 
 /**
