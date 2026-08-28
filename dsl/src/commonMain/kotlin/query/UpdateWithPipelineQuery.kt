@@ -62,7 +62,7 @@ interface UpdateWithPipelineQuery<Document : Any> : CompoundBsonNode {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun set(
-		block: SetStageOperators<Document>.() -> Unit,
+		block: SetStageOperators<Document, Document>.() -> Unit,
 	) {
 		accept(createSetStage(context, block))
 	}
@@ -101,7 +101,7 @@ interface UpdateWithPipelineQuery<Document : Any> : CompoundBsonNode {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun project(
-		block: ProjectStageOperators<Document>.() -> Unit,
+		block: ProjectStageOperators<Document, Document>.() -> Unit,
 	) {
 		accept(createProjectStage(context, block))
 	}

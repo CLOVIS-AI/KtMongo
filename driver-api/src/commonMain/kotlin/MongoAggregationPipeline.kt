@@ -78,7 +78,7 @@ interface MongoAggregationPipeline<Document : Any> : AggregationPipeline<Documen
 
 	override fun sample(size: Int): MongoAggregationPipeline<Document>
 
-	override fun set(block: SetStageOperators<Document>.() -> Unit): MongoAggregationPipeline<Document>
+	override fun <Out : Any> set(block: SetStageOperators<Document, Out>.() -> Unit): MongoAggregationPipeline<Out>
 
 	override fun skip(amount: Long): MongoAggregationPipeline<Document>
 
@@ -88,7 +88,7 @@ interface MongoAggregationPipeline<Document : Any> : AggregationPipeline<Documen
 
 	override fun unset(block: UnsetStageOperators<Document>.() -> Unit): MongoAggregationPipeline<Document>
 
-	override fun project(block: ProjectStageOperators<Document>.() -> Unit): MongoAggregationPipeline<Document>
+	override fun <Out : Any> project(block: ProjectStageOperators<Document, Out>.() -> Unit): MongoAggregationPipeline<Out>
 
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): MongoAggregationPipeline<Document>
 

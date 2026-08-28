@@ -186,7 +186,7 @@ val AggregationProjectUnionWith by preparedSuite {
 	 * };
 	 * ```
 	 */
-	fun ProjectStageOperators<Invoice>.commonProjection() {
+	fun ProjectStageOperators<Invoice, Invoice>.commonProjection() {
 		include(Invoice::_id)
 		include(Invoice::subject)
 		include(Invoice::metadata)

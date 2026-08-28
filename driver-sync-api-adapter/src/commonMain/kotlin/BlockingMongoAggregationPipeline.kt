@@ -50,7 +50,7 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 	override fun sample(size: Int): BlockingMongoAggregationPipeline<Document> =
 		BlockingMongoAggregationPipeline(inner.sample(size))
 
-	override fun set(block: SetStageOperators<Document>.() -> Unit): BlockingMongoAggregationPipeline<Document> =
+	override fun <Out : Any> set(block: SetStageOperators<Document, Out>.() -> Unit): BlockingMongoAggregationPipeline<Out> =
 		BlockingMongoAggregationPipeline(inner.set(block))
 
 	override fun skip(amount: Long): BlockingMongoAggregationPipeline<Document> =
@@ -65,7 +65,7 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 	override fun unset(block: UnsetStageOperators<Document>.() -> Unit): BlockingMongoAggregationPipeline<Document> =
 		BlockingMongoAggregationPipeline(inner.unset(block))
 
-	override fun project(block: ProjectStageOperators<Document>.() -> Unit): BlockingMongoAggregationPipeline<Document> =
+	override fun <Out : Any> project(block: ProjectStageOperators<Document, Out>.() -> Unit): BlockingMongoAggregationPipeline<Out> =
 		BlockingMongoAggregationPipeline(inner.project(block))
 
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): BlockingMongoAggregationPipeline<Document> =

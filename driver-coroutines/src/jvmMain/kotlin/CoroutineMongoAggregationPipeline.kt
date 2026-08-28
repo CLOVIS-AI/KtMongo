@@ -57,7 +57,7 @@ interface CoroutineMongoAggregationPipeline<Document : Any> : MongoAggregationPi
 
 	override fun sample(size: Int): CoroutineMongoAggregationPipeline<Document>
 
-	override fun set(block: SetStageOperators<Document>.() -> Unit): CoroutineMongoAggregationPipeline<Document>
+	override fun <Out : Any> set(block: SetStageOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipeline<Out>
 
 	override fun skip(amount: Long): CoroutineMongoAggregationPipeline<Document>
 
@@ -67,7 +67,7 @@ interface CoroutineMongoAggregationPipeline<Document : Any> : MongoAggregationPi
 
 	override fun unset(block: UnsetStageOperators<Document>.() -> Unit): CoroutineMongoAggregationPipeline<Document>
 
-	override fun project(block: ProjectStageOperators<Document>.() -> Unit): CoroutineMongoAggregationPipeline<Document>
+	override fun <Out : Any> project(block: ProjectStageOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipeline<Out>
 
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): CoroutineMongoAggregationPipeline<Document>
 

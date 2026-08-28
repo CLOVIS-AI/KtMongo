@@ -65,16 +65,17 @@ interface HasSet<Document : Any> : Pipeline<Document> {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/)
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	fun set(
-		block: SetStageOperators<Document>.() -> Unit,
-	): Pipeline<Document> =
+	fun <Out : Any> set(
+		block: SetStageOperators<Document, Out>.() -> Unit,
+	): Pipeline<Out> =
 		withStage(createSetStage(context, block))
+			.reinterpret()
 
 }
 
 @OptIn(LowLevelApi::class)
 private class SetStage(
-	val expression: SetStageOperators<*>,
+	val expression: SetStageOperators<*, *>,
 	context: BsonContext,
 ) : AbstractBsonNode(context) {
 	override fun write(writer: BsonFieldWriter) = with(writer) {
@@ -84,14 +85,14 @@ private class SetStage(
 	}
 }
 
-internal fun <Document : Any> createSetStage(context: BsonContext, block: SetStageOperators<Document>.() -> Unit): BsonNode =
-	SetStage(SetStageBsonNode<Document>(context).apply(block), context)
+internal fun <In : Any, Out : Any> createSetStage(context: BsonContext, block: SetStageOperators<In, Out>.() -> Unit): BsonNode =
+	SetStage(SetStageBsonNode<In, Out>(context).apply(block), context)
 
 /**
  * The operators allowed in a [set] stage.
  */
 @KtMongoDsl
-interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, FieldDsl {
+interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, AggregationOperators, FieldDsl {
 
 	// region $set
 
@@ -123,7 +124,7 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<T, V>.set(value: Value<T, V>) {
+	infix fun <@kotlin.internal.Exact V> Field<Out, V>.set(value: Value<In, V>) {
 		accept(SetBsonNode(this.path, value, context))
 	}
 
@@ -163,7 +164,7 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<T, Collection<V>>.set(values: Collection<Value<T, V>>) {
+	infix fun <@kotlin.internal.Exact V> Field<Out, Collection<V>>.set(values: Collection<Value<In, V>>) {
 		accept(SetArrayBsonNode(this.path, values, context))
 	}
 
@@ -204,7 +205,7 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@JvmName("setNullable")
-	final infix fun <@kotlin.internal.Exact V> Field<T, Collection<V>?>.set(values: Collection<Value<T, V>?>) {
+	final infix fun <@kotlin.internal.Exact V> Field<Out, Collection<V>?>.set(values: Collection<Value<In, V>?>) {
 		accept(SetArrayBsonNode(this.path, values, context))
 	}
 
@@ -221,9 +222,9 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setIf(condition: Value<T, Boolean>, value: Value<T, V>) =
-		this set cond(condition, value, of(this))
+	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST")
+	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: Value<In, Boolean>, value: Value<In, V>) =
+		this set cond(condition, value, of(this as Field<In, V>))
 
 	/**
 	 * Replaces the value of a field with the specified [value], if [condition] is `false`.
@@ -235,16 +236,16 @@ interface SetStageOperators<T : Any> : CompoundBsonNode, AggregationOperators, F
 	 * - [`$set`](https://www.mongodb.com/docs/manual/reference/operator/update/set/)
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
-	@Suppress("INVISIBLE_REFERENCE")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<T, V>.setUnless(condition: Value<T, Boolean>, value: Value<T, V>) =
-		this set cond(condition, of(this), value)
+	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST")
+	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: Value<In, Boolean>, value: Value<In, V>) =
+		this set cond(condition, of(this as Field<In, V>), value)
 
 	// endregion
 }
 
-private class SetStageBsonNode<T : Any>(
+private class SetStageBsonNode<In : Any, Out : Any>(
 	context: BsonContext,
-) : AbstractCompoundBsonNode(context), SetStageOperators<T>
+) : AbstractCompoundBsonNode(context), SetStageOperators<In, Out>
 
 @LowLevelApi
 private class SetBsonNode(

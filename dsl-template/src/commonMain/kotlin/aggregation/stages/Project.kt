@@ -97,18 +97,19 @@ interface HasProject<Document : Any> : Pipeline<Document> {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/)
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	fun project(
-		block: ProjectStageOperators<Document>.() -> Unit,
-	): Pipeline<Document> =
+	fun <Out : Any> project(
+		block: ProjectStageOperators<Document, Out>.() -> Unit,
+	): Pipeline<Out> =
 		withStage(createProjectStage(context, block))
+			.reinterpret()
 
 }
 
-internal fun <Document : Any> createProjectStage(context: BsonContext, block: ProjectStageOperators<Document>.() -> Unit): BsonNode =
-	ProjectStage(ProjectStageBsonNode<Document>(context).apply(block), context)
+internal fun <In : Any, Out : Any> createProjectStage(context: BsonContext, block: ProjectStageOperators<In, Out>.() -> Unit): BsonNode =
+	ProjectStage(ProjectStageBsonNode<In, Out>(context).apply(block), context)
 
 private class ProjectStage(
-	val expression: ProjectStageOperators<*>,
+	val expression: ProjectStageOperators<*, *>,
 	context: BsonContext,
 ) : AbstractBsonNode(context) {
 
@@ -124,7 +125,7 @@ private class ProjectStage(
  * The operators allowed in a [`$project` stage][HasProject.project].
  */
 @KtMongoDsl
-interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationOperators, FieldDsl, SetStageOperators<Document> {
+interface ProjectStageOperators<In : Any, Out : Any> : CompoundBsonNode, AggregationOperators, FieldDsl, SetStageOperators<In, Out> {
 
 	/**
 	 * Excludes the `_id` field.
@@ -173,7 +174,7 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-fields)
 	 */
-	fun include(field: Field<Document, *>)
+	fun include(field: Field<Out, *>)
 
 	/**
 	 * Explicitly includes [field].
@@ -198,7 +199,7 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/#include-fields)
 	 */
-	fun include(field: KProperty1<Document, *>) {
+	fun include(field: KProperty1<Out, *>) {
 		include(field.field)
 	}
 
@@ -225,7 +226,7 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("divFieldArrayIntoField")
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	operator fun <T : Any, V> Field<Document, Collection<T>>.div(child: Field<T, V>): Field<Document, V> =
+	operator fun <T : Any, V> Field<In, Collection<T>>.div(child: Field<T, V>): Field<In, V> =
 		FieldImpl(this.path / child.path)
 
 	/**
@@ -250,7 +251,7 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	 */
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("divFieldArrayIntoProperty")
-	operator fun <T : Any, V> Field<Document, Collection<T>>.div(child: KProperty1<T, V>): Field<Document, V> =
+	operator fun <T : Any, V> Field<In, Collection<T>>.div(child: KProperty1<T, V>): Field<In, V> =
 		this / child.field
 
 	/**
@@ -275,7 +276,7 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	 */
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("divPropertyArrayIntoField")
-	operator fun <T : Any, V> KProperty1<Document, Collection<T>>.div(child: Field<T, V>): Field<Document, V> =
+	operator fun <T : Any, V> KProperty1<In, Collection<T>>.div(child: Field<T, V>): Field<In, V> =
 		this.field / child
 
 	/**
@@ -300,14 +301,14 @@ interface ProjectStageOperators<Document : Any> : CompoundBsonNode, AggregationO
 	 */
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@JvmName("divPropertyArrayIntoProperty")
-	operator fun <T : Any, V> KProperty1<Document, Collection<T>>.div(child: KProperty1<T, V>): Field<Document, V> =
+	operator fun <T : Any, V> KProperty1<In, Collection<T>>.div(child: KProperty1<T, V>): Field<In, V> =
 		this.field / child
 
 }
 
-private class ProjectStageBsonNode<Document : Any>(
+private class ProjectStageBsonNode<In : Any, Out : Any>(
 	context: BsonContext,
-) : AbstractCompoundBsonNode(context), ProjectStageOperators<Document> {
+) : AbstractCompoundBsonNode(context), ProjectStageOperators<In, Out> {
 
 	// region Exclude ID
 
@@ -330,7 +331,7 @@ private class ProjectStageBsonNode<Document : Any>(
 	// region Include field
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
-	override fun include(field: Field<Document, *>) {
+	override fun include(field: Field<Out, *>) {
 		accept(ProjectIncludeBsonNode(field.path, context))
 	}
 
@@ -349,7 +350,7 @@ private class ProjectStageBsonNode<Document : Any>(
 	// region Set field
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
-	override fun <V> Field<Document, V>.set(value: Value<Document, V>) {
+	override fun <V> Field<Out, V>.set(value: Value<In, V>) {
 		accept(ProjectSetBsonNode(this.path, value, context))
 	}
 
