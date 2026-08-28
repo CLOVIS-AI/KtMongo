@@ -127,7 +127,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Out, V>.set(value: Value<In, V>) {
+	infix fun <V> Field<Out, @kotlin.internal.Exact V>.set(value: Value<In, V>) {
 		accept(SetBsonNode(this.path, value, context))
 	}
 
@@ -160,7 +160,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.jvm.JvmName("setByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Out, V>.set(value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	infix fun <V> Field<Out, @kotlin.internal.Exact V>.set(value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		set(of(value))
 
 	/**
@@ -192,7 +192,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.jvm.JvmName("setPropertyReceiverByField")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> kotlin.reflect.KProperty1<Out, V>.set(value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	infix fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.set(value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		this.field.set(of(value))
 
 	/**
@@ -224,7 +224,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.jvm.JvmName("setByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Out, V>.set(value: kotlin.reflect.KProperty1<In, V>) =
+	infix fun <V> Field<Out, @kotlin.internal.Exact V>.set(value: kotlin.reflect.KProperty1<In, V>) =
 		set(of(value))
 
 	/**
@@ -256,7 +256,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.jvm.JvmName("setPropertyReceiverByProperty")
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> kotlin.reflect.KProperty1<Out, V>.set(value: kotlin.reflect.KProperty1<In, V>) =
+	infix fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.set(value: kotlin.reflect.KProperty1<In, V>) =
 		this.field.set(of(value))
 
 	/**
@@ -288,7 +288,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	infix final inline fun <@kotlin.internal.Exact reified V> Field<Out, V>.set(value: V) =
+	infix final inline fun <reified V> Field<Out, @kotlin.internal.Exact V>.set(value: V) =
 		set(of(value))
 
 	/**
@@ -319,7 +319,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	infix final inline fun <@kotlin.internal.Exact reified V> kotlin.reflect.KProperty1<Out, V>.set(value: V) =
+	infix final inline fun <reified V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.set(value: V) =
 		this.field.set(of(value))
 
 	/**
@@ -350,7 +350,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> kotlin.reflect.KProperty1<Out, V>.set(value: Value<In, V>) {
+	infix fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.set(value: Value<In, V>) {
 		return this.field.set(value)
 	}
 
@@ -390,7 +390,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Out, Collection<V>>.set(values: Collection<Value<In, V>>) {
+	infix fun <V> Field<Out, Collection<@kotlin.internal.Exact V>>.set(values: Collection<Value<In, V>>) {
 		accept(SetArrayBsonNode(this.path, values, context))
 	}
 
@@ -430,7 +430,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> kotlin.reflect.KProperty1<Out, Collection<V>>.set(values: Collection<Value<In, V>>) {
+	infix fun <V> kotlin.reflect.KProperty1<Out, Collection<@kotlin.internal.Exact V>>.set(values: Collection<Value<In, V>>) {
 		return this.field.set(values)
 	}
 
@@ -471,7 +471,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@JvmName("setNullable")
-	final infix fun <@kotlin.internal.Exact V> Field<Out, Collection<V>?>.set(values: Collection<Value<In, V>?>) {
+	final infix fun <V> Field<Out, Collection<@kotlin.internal.Exact V>?>.set(values: Collection<Value<In, V>?>) {
 		accept(SetArrayBsonNode(this.path, values, context))
 	}
 
@@ -512,7 +512,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@JvmName("setNullable")
-	final infix fun <@kotlin.internal.Exact V> kotlin.reflect.KProperty1<Out, Collection<V>?>.set(values: Collection<Value<In, V>?>) {
+	final infix fun <V> kotlin.reflect.KProperty1<Out, Collection<@kotlin.internal.Exact V>?>.set(values: Collection<Value<In, V>?>) {
 		return this.field.set(values)
 	}
 
@@ -530,7 +530,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: Value<In, Boolean>, value: Value<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: Value<In, Boolean>, value: Value<In, V>) =
 		this set cond(condition, value, of(this as Field<In, V>))
 
 	/**
@@ -545,7 +545,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: Value<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: Value<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		setIf(condition, of(value))
 
 	/**
@@ -560,7 +560,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: Value<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: Value<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		this.field.setIf(condition, of(value))
 
 	/**
@@ -575,7 +575,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: Value<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: Value<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		setIf(condition, of(value))
 
 	/**
@@ -590,7 +590,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: Value<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: Value<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		this.field.setIf(condition, of(value))
 
 	/**
@@ -605,7 +605,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<Out, V>.setIf(condition: Value<In, Boolean>, value: V) =
+	final inline fun <reified V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: Value<In, Boolean>, value: V) =
 		setIf(condition, of(value))
 
 	/**
@@ -619,7 +619,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: Value<In, Boolean>, value: V) =
+	final inline fun <reified V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: Value<In, Boolean>, value: V) =
 		this.field.setIf(condition, of(value))
 
 	/**
@@ -634,7 +634,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: Value<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: Value<In, V>) =
 		setIf(of(condition), value)
 
 	/**
@@ -649,7 +649,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: Value<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: Value<In, V>) =
 		this.field.setIf(of(condition), value)
 
 	/**
@@ -664,7 +664,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -679,7 +679,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -694,7 +694,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -709,7 +709,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -725,7 +725,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("setIfByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<Out, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: V) =
+	final inline fun <reified V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: V) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -740,7 +740,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: V) =
+	final inline fun <reified V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: V) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -755,7 +755,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: Value<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: Value<In, V>) =
 		setIf(of(condition), value)
 
 	/**
@@ -770,7 +770,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: Value<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: Value<In, V>) =
 		this.field.setIf(of(condition), value)
 
 	/**
@@ -785,7 +785,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -800,7 +800,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -815,7 +815,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -830,7 +830,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -846,7 +846,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("setIfByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<Out, V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: V) =
+	final inline fun <reified V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: V) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -861,7 +861,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: V) =
+	final inline fun <reified V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: kotlin.reflect.KProperty1<In, Boolean>, value: V) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -876,7 +876,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: Boolean, value: Value<In, V>) =
+	final inline fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: Value<In, V>) =
 		setIf(of(condition), value)
 
 	/**
@@ -890,7 +890,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: Boolean, value: Value<In, V>) =
+	final inline fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: Value<In, V>) =
 		this.field.setIf(of(condition), value)
 
 	/**
@@ -906,7 +906,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("setIfByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	final inline fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -921,7 +921,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	final inline fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -937,7 +937,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("setIfByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<In, V>) =
+	final inline fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<In, V>) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -952,7 +952,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setIfPropertyReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<In, V>) =
+	final inline fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: kotlin.reflect.KProperty1<In, V>) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -967,7 +967,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<Out, V>.setIf(condition: Boolean, value: V) =
+	final inline fun <reified V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: V) =
 		setIf(of(condition), of(value))
 
 	/**
@@ -981,7 +981,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: Boolean, value: V) =
+	final inline fun <reified V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: Boolean, value: V) =
 		this.field.setIf(of(condition), of(value))
 
 	/**
@@ -995,7 +995,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setIf(condition: Value<In, Boolean>, value: Value<In, V>) {
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setIf(condition: Value<In, Boolean>, value: Value<In, V>) {
 		return this.field.setIf(condition, value)
 	}
 
@@ -1010,7 +1010,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: Value<In, Boolean>, value: Value<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: Value<In, Boolean>, value: Value<In, V>) =
 		this set cond(condition, of(this as Field<In, V>), value)
 
 	/**
@@ -1025,7 +1025,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: Value<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: Value<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		setUnless(condition, of(value))
 
 	/**
@@ -1040,7 +1040,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByValueByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: Value<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: Value<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		this.field.setUnless(condition, of(value))
 
 	/**
@@ -1055,7 +1055,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: Value<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: Value<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		setUnless(condition, of(value))
 
 	/**
@@ -1070,7 +1070,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByValueByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: Value<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: Value<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		this.field.setUnless(condition, of(value))
 
 	/**
@@ -1085,7 +1085,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<Out, V>.setUnless(condition: Value<In, Boolean>, value: V) =
+	final inline fun <reified V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: Value<In, Boolean>, value: V) =
 		setUnless(condition, of(value))
 
 	/**
@@ -1099,7 +1099,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: Value<In, Boolean>, value: V) =
+	final inline fun <reified V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: Value<In, Boolean>, value: V) =
 		this.field.setUnless(condition, of(value))
 
 	/**
@@ -1114,7 +1114,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: Value<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: Value<In, V>) =
 		setUnless(of(condition), value)
 
 	/**
@@ -1129,7 +1129,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByFieldByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: Value<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: Value<In, V>) =
 		this.field.setUnless(of(condition), value)
 
 	/**
@@ -1144,7 +1144,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1159,7 +1159,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByFieldByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1174,7 +1174,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1189,7 +1189,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByFieldByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1205,7 +1205,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("setUnlessByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<Out, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: V) =
+	final inline fun <reified V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: V) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1220,7 +1220,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByFieldByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: V) =
+	final inline fun <reified V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: opensavvy.ktmongo.dsl.path.Field<In, Boolean>, value: V) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1235,7 +1235,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: Value<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: Value<In, V>) =
 		setUnless(of(condition), value)
 
 	/**
@@ -1250,7 +1250,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByPropertyByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: Value<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: Value<In, V>) =
 		this.field.setUnless(of(condition), value)
 
 	/**
@@ -1265,7 +1265,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1280,7 +1280,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByPropertyByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1295,7 +1295,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1310,7 +1310,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByPropertyByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: kotlin.reflect.KProperty1<In, V>) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1326,7 +1326,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("setUnlessByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<Out, V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: V) =
+	final inline fun <reified V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: V) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1341,7 +1341,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByPropertyByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: V) =
+	final inline fun <reified V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: kotlin.reflect.KProperty1<In, Boolean>, value: V) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1356,7 +1356,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: Boolean, value: Value<In, V>) =
+	final inline fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: Value<In, V>) =
 		setUnless(of(condition), value)
 
 	/**
@@ -1370,7 +1370,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: Boolean, value: Value<In, V>) =
+	final inline fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: Value<In, V>) =
 		this.field.setUnless(of(condition), value)
 
 	/**
@@ -1386,7 +1386,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("setUnlessByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	final inline fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1401,7 +1401,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByResultByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
+	final inline fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: opensavvy.ktmongo.dsl.path.Field<In, V>) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1417,7 +1417,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@kotlin.jvm.JvmName("setUnlessByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<In, V>) =
+	final inline fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<In, V>) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1432,7 +1432,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.jvm.JvmName("setUnlessPropertyReceiverByResultByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<In, V>) =
+	final inline fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: kotlin.reflect.KProperty1<In, V>) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1447,7 +1447,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> Field<Out, V>.setUnless(condition: Boolean, value: V) =
+	final inline fun <reified V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: V) =
 		setUnless(of(condition), of(value))
 
 	/**
@@ -1461,7 +1461,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <@kotlin.internal.OnlyInputTypes reified V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: Boolean, value: V) =
+	final inline fun <reified V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: Boolean, value: V) =
 		this.field.setUnless(of(condition), of(value))
 
 	/**
@@ -1475,7 +1475,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> kotlin.reflect.KProperty1<Out, V>.setUnless(condition: Value<In, Boolean>, value: Value<In, V>) {
+	fun <V> kotlin.reflect.KProperty1<Out, @kotlin.internal.Exact V>.setUnless(condition: Value<In, Boolean>, value: Value<In, V>) {
 		return this.field.setUnless(condition, value)
 	}
 

@@ -124,7 +124,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Out, V>.set(value: Value<In, V>) {
+	infix fun <V> Field<Out, @kotlin.internal.Exact V>.set(value: Value<In, V>) {
 		accept(SetBsonNode(this.path, value, context))
 	}
 
@@ -164,7 +164,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Out, Collection<V>>.set(values: Collection<Value<In, V>>) {
+	infix fun <V> Field<Out, Collection<@kotlin.internal.Exact V>>.set(values: Collection<Value<In, V>>) {
 		accept(SetArrayBsonNode(this.path, values, context))
 	}
 
@@ -205,7 +205,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@JvmName("setNullable")
-	final infix fun <@kotlin.internal.Exact V> Field<Out, Collection<V>?>.set(values: Collection<Value<In, V>?>) {
+	final infix fun <V> Field<Out, Collection<@kotlin.internal.Exact V>?>.set(values: Collection<Value<In, V>?>) {
 		accept(SetArrayBsonNode(this.path, values, context))
 	}
 
@@ -223,7 +223,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setIf(condition: Value<In, Boolean>, value: Value<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setIf(condition: Value<In, Boolean>, value: Value<In, V>) =
 		this set cond(condition, value, of(this as Field<In, V>))
 
 	/**
@@ -237,7 +237,7 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	 * - [`$cond`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/cond/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "UNCHECKED_CAST")
-	fun <@kotlin.internal.OnlyInputTypes V> Field<Out, V>.setUnless(condition: Value<In, Boolean>, value: Value<In, V>) =
+	fun <V> Field<Out, @kotlin.internal.Exact V>.setUnless(condition: Value<In, Boolean>, value: Value<In, V>) =
 		this set cond(condition, of(this as Field<In, V>), value)
 
 	// endregion
