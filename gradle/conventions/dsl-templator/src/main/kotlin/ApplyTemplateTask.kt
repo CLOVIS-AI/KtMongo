@@ -46,6 +46,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 	@get:Input
 	abstract val projectRootDir: Property<File>
 
+	private val jvmNameAnnotationRegex = Regex("""@(?:kotlin\.jvm\.)?JvmName\s*\(\s*(?:name\s*=\s*)?"([^"]+)"\s*\)\s*""")
+
 	@TaskAction
 	fun generate(changes: InputChanges) {
 		val src = sourceDir.get().asFile
@@ -136,6 +138,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 								vFuncStart,
 								if (bodyStartInFunc >= 0) vFuncStart + bodyStartInFunc else ctx.stop.stopIndex + 1,
 							)
+							val existingJvmName = jvmNameAnnotationRegex.find(vFuncText)?.groupValues?.get(1)
 							val vParamCtxList = ctx.functionValueParameters()?.functionValueParameter() ?: emptyList()
 
 							// Collect all "Value<...>" positions: receiver first, then each param
@@ -356,8 +359,13 @@ abstract class ApplyTemplateTask : DefaultTask() {
 											}
 										}
 
+									val baseJvmName = existingJvmName ?: vFuncName
 									val needsJvmName = receiverReplaced ||
 										combination.any { it != null && (it.startsWith("opensavvy") || it.startsWith("kotlin.reflect.KProperty1")) }
+
+									if (needsJvmName && existingJvmName != null) {
+										processedFuncText = processedFuncText.replaceFirst(jvmNameAnnotationRegex, "")
+									}
 
 									// Overloads where Result (raw type parameter) appears in any position
 									// are given low priority so navigation operators win on ambiguity.
@@ -369,7 +377,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 									// Merge INAPPLICABLE_JVM_NAME into the existing @Suppress rather than
 									// adding a second (non-repeatable) @Suppress annotation.
-									val afterJvmName = if (needsJvmName) {
+									val afterJvmName = if (needsJvmName && !processedFuncText.contains("INAPPLICABLE_JVM_NAME")) {
 										if (processedFuncText.contains("@Suppress(\"")) {
 											processedFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
 										} else {
@@ -395,7 +403,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 											"@Suppress(\"WRONG_MODIFIER_CONTAINING_DECLARATION\")\n\t" + afterInvisibleRef
 										}
 									} else afterInvisibleRef
-									val jvmNameAnnotation = if (needsJvmName) "@kotlin.jvm.JvmName(\"$vFuncName$receiverSuffix$paramSuffix\")\n\t" else ""
+									val jvmNameAnnotation = if (needsJvmName) "@kotlin.jvm.JvmName(\"$baseJvmName$receiverSuffix$paramSuffix\")\n\t" else ""
 									val lowPriorityAnnotation = if (hasResultAlternative) "@kotlin.internal.LowPriorityInOverloadResolution\n\t" else ""
 
 									val docComment = findDocCommentBefore(source, vFuncStart)
@@ -441,7 +449,10 @@ abstract class ApplyTemplateTask : DefaultTask() {
 													it != null &&
 														(it.startsWith("opensavvy") || it.startsWith("kotlin.reflect.KProperty1"))
 												}
-												var kpropFinalText = if (kpropNeedsJvmName) {
+												if (kpropNeedsJvmName && existingJvmName != null) {
+													kpropNewFuncText = kpropNewFuncText.replaceFirst(jvmNameAnnotationRegex, "")
+												}
+												var kpropFinalText = if (kpropNeedsJvmName && !kpropNewFuncText.contains("INAPPLICABLE_JVM_NAME")) {
 													if (kpropNewFuncText.contains("@Suppress(\"")) {
 														kpropNewFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
 													} else {
@@ -457,7 +468,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 														"@Suppress(\"WRONG_MODIFIER_CONTAINING_DECLARATION\")\n\t" + kpropFinalText
 													}
 												}
-												val kpropJvmNameAnnotation = if (kpropNeedsJvmName) "@kotlin.jvm.JvmName(\"${vFuncName}PropertyReceiver${paramSuffix}\")\n\t" else ""
+												val kpropJvmNameAnnotation = if (kpropNeedsJvmName) "@kotlin.jvm.JvmName(\"${baseJvmName}PropertyReceiver${paramSuffix}\")\n\t" else ""
 												valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(kpropJvmNameAnnotation).append(kpropFinalText)
 											}
 										}
