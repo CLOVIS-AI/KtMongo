@@ -330,8 +330,17 @@ abstract class ApplyTemplateTask : DefaultTask() {
 									val anyWillBeReified = rawResultTypeNames.any { !it.contains('<') }
 									if (hasAnyRawTypeSubstitution && !hasLambdaParams && anyWillBeReified) {
 										val funIdx = processedFuncText.indexOf("fun ")
-										if (funIdx >= 0 && !processedFuncText.take(funIdx).contains("inline ")) {
-											processedFuncText = processedFuncText.substring(0, funIdx) + "final inline " + processedFuncText.substring(funIdx)
+										if (funIdx >= 0) {
+											val prefix = processedFuncText.substring(0, funIdx)
+											val needsFinal = !Regex("""\bfinal\b""").containsMatchIn(prefix)
+											val needsInline = !Regex("""\binline\b""").containsMatchIn(prefix)
+											val modifiersToAdd = buildString {
+												if (needsFinal) append("final ")
+												if (needsInline) append("inline ")
+											}
+											if (modifiersToAdd.isNotEmpty()) {
+												processedFuncText = prefix + modifiersToAdd + processedFuncText.substring(funIdx)
+											}
 										}
 										for (name in rawResultTypeNames) {
 											processedFuncText = addReifiedToTypeParam(processedFuncText, name)
@@ -436,8 +445,17 @@ abstract class ApplyTemplateTask : DefaultTask() {
 												// Apply final inline + reified to KProperty1 variants that delegate via of().
 												if (hasAnyRawTypeSubstitution && !hasLambdaParams) {
 													val funIdx = kpropNewFuncText.indexOf("fun ")
-													if (funIdx >= 0 && !kpropNewFuncText.take(funIdx).contains("inline ")) {
-														kpropNewFuncText = kpropNewFuncText.substring(0, funIdx) + "final inline " + kpropNewFuncText.substring(funIdx)
+													if (funIdx >= 0) {
+														val prefix = kpropNewFuncText.substring(0, funIdx)
+														val needsFinal = !Regex("""\bfinal\b""").containsMatchIn(prefix)
+														val needsInline = !Regex("""\binline\b""").containsMatchIn(prefix)
+														val modifiersToAdd = buildString {
+															if (needsFinal) append("final ")
+															if (needsInline) append("inline ")
+														}
+														if (modifiersToAdd.isNotEmpty()) {
+															kpropNewFuncText = prefix + modifiersToAdd + kpropNewFuncText.substring(funIdx)
+														}
 													}
 													for (name in rawResultTypeNames) {
 														kpropNewFuncText = addReifiedToTypeParam(kpropNewFuncText, name)
