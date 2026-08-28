@@ -107,6 +107,14 @@ interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
 }
 
 /**
+ * Ignores the case where this value is `null`.
+ *
+ * The KtMongo library will trust that the value is non-`null`.
+ */
+fun <Root : Any, Type> Value<Root, Type>.unsafeNonNull(): Value<Root, Type & Any> =
+	this.unsafeCast()
+
+/**
  * Utility implementation of [Value], which handles the [context], [toString] representation and [freezing][freeze].
  *
  * ### Implementing a new operator
