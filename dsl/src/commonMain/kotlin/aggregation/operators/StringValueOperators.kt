@@ -25,6 +25,8 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.Value
+import opensavvy.ktmongo.dsl.aggregation.unsafeNonNull
+import kotlin.jvm.JvmName
 
 /**
  * String aggregation operators.
@@ -2897,6 +2899,175 @@ interface StringValueOperators : ValueOperators {
 	val String?.length: Value<Any, Int?>
 		get() = of(this).length
 
+	/**
+	 * Returns the number of code points in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.length], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the counting behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a length of 7.
+	 * However, according to Kotlin's [String.length], it has a length of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val length: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::length set of(Document::text).length
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 *
+	 * @see lengthUTF8
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthNonNull")
+	final val <Context : Any> Value<Context, String>.length: Value<Context, Int>
+		get() = StrLenCPValueOperator(context, this).unsafeNonNull()
+
+	/**
+	 * Returns the number of code points in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.length], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the counting behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a length of 7.
+	 * However, according to Kotlin's [String.length], it has a length of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val length: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::length set of(Document::text).length
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 *
+	 * @see lengthUTF8
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthNonNull")
+	final val <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.length: Value<Context, Int>
+		get() = of(this).length
+
+	/**
+	 * Returns the number of code points in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.length], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the counting behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a length of 7.
+	 * However, according to Kotlin's [String.length], it has a length of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val length: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::length set of(Document::text).length
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 *
+	 * @see lengthUTF8
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthNonNull")
+	final val <Context : Any> kotlin.reflect.KProperty1<Context, String>.length: Value<Context, Int>
+		get() = of(this).length
+
+	/**
+	 * Returns the number of code points in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.length], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the counting behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a length of 7.
+	 * However, according to Kotlin's [String.length], it has a length of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val length: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::length set of(Document::text).length
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 *
+	 * @see lengthUTF8
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthNonNull")
+	final val String.length: Value<Any, Int>
+		get() = of(this).length
+
 	// endregion
 	// region $strLenBytes
 
@@ -3060,6 +3231,175 @@ interface StringValueOperators : ValueOperators {
 	@Suppress("INVISIBLE_REFERENCE")
 	@OptIn(LowLevelApi::class)
 	val String?.lengthUTF8: Value<Any, Int?>
+		get() = of(this).lengthUTF8
+
+	/**
+	 * Returns the number of UTF-8 encoded bytes in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [length] property which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val byteLength: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::byteLength set of(Document::text).lengthUTF8
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/)
+	 *
+	 * @see length
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthUTF8NonNull")
+	final val <Context : Any> Value<Context, String>.lengthUTF8: Value<Context, Int>
+		get() = StrLenBytesValueOperator(context, this).unsafeNonNull()
+
+	/**
+	 * Returns the number of UTF-8 encoded bytes in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [length] property which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val byteLength: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::byteLength set of(Document::text).lengthUTF8
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/)
+	 *
+	 * @see length
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthUTF8NonNull")
+	final val <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.lengthUTF8: Value<Context, Int>
+		get() = of(this).lengthUTF8
+
+	/**
+	 * Returns the number of UTF-8 encoded bytes in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [length] property which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val byteLength: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::byteLength set of(Document::text).lengthUTF8
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/)
+	 *
+	 * @see length
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthUTF8NonNull")
+	final val <Context : Any> kotlin.reflect.KProperty1<Context, String>.lengthUTF8: Value<Context, Int>
+		get() = of(this).lengthUTF8
+
+	/**
+	 * Returns the number of UTF-8 encoded bytes in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [length] property which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val byteLength: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::byteLength set of(Document::text).lengthUTF8
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/)
+	 *
+	 * @see length
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@OptIn(LowLevelApi::class)
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthUTF8NonNull")
+	final val String.lengthUTF8: Value<Any, Int>
 		get() = of(this).lengthUTF8
 
 	// endregion
@@ -9100,7 +9440,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> Value<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> Value<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>> =
 		SplitValueOperator(context, this, delimiter)
 
 	/**
@@ -9132,7 +9472,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> Value<Context, String>.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> Value<Context, String>.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>> =
 		this.split(of(delimiter))
 
 	/**
@@ -9164,7 +9504,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> Value<Context, String>.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> Value<Context, String>.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>> =
 		this.split(of(delimiter))
 
 	/**
@@ -9196,7 +9536,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	final inline fun <Context : Any> Value<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
+	final inline fun <Context : Any> Value<Context, String>.split(delimiter: String): Value<Context, List<String>> =
 		this.split(of(delimiter))
 
 	/**
@@ -9228,7 +9568,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitFieldReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>> =
 		of(this).split(delimiter)
 
 	/**
@@ -9260,7 +9600,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitFieldReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9292,7 +9632,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitFieldReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9324,7 +9664,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitFieldReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
+	final inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.split(delimiter: String): Value<Context, List<String>> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9356,7 +9696,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitPropertyReceiverByValue")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>> =
 		of(this).split(delimiter)
 
 	/**
@@ -9388,7 +9728,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9420,7 +9760,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9452,7 +9792,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitPropertyReceiverByResult")
 	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: String): Value<Context, List<String>?> =
+	final inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.split(delimiter: String): Value<Context, List<String>> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9485,7 +9825,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitResultReceiverByValue")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	final inline fun <Context : Any> String.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+	final inline fun <Context : Any> String.split(delimiter: Value<Context, String>): Value<Context, List<String>> =
 		of(this).split(delimiter)
 
 	/**
@@ -9518,7 +9858,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitResultReceiverByField")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	final inline fun <Context : Any> String.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>?> =
+	final inline fun <Context : Any> String.split(delimiter: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, List<String>> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9551,7 +9891,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitResultReceiverByProperty")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	final inline fun <Context : Any> String.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>?> =
+	final inline fun <Context : Any> String.split(delimiter: kotlin.reflect.KProperty1<Context, String>): Value<Context, List<String>> =
 		of(this).split(of(delimiter))
 
 	/**
@@ -9584,7 +9924,7 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("splitResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	@OptIn(LowLevelApi::class)
-	final inline fun String.split(delimiter: String): Value<Any, List<String>?> =
+	final inline fun String.split(delimiter: String): Value<Any, List<String>> =
 		of(this).split(of(delimiter))
 
 	// endregion
@@ -13720,7 +14060,7 @@ interface StringValueOperators : ValueOperators {
 		context: BsonContext,
 		private val input: Value<Context, String?>,
 		private val delimiter: Value<Context, String?>,
-	) : AbstractValue<Context, List<String>?>(context) {
+	) : AbstractValue<Context, List<String>>(context) {
 
 		override fun write(writer: BsonValueWriter) = with(writer) {
 			writeDocument {
@@ -13814,6 +14154,36 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("concatNonNull")
+	final fun <Context : Any> concat(strings: List<Value<Context, String>>): Value<Context, String> =
+		concat(strings as List<Value<Context, String?>>).unsafeNonNull()
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
 	fun <Context : Any> concat(vararg strings: Value<Context, String?>): Value<Context, String?> =
 		concat(strings.asList())
 
@@ -13875,6 +14245,96 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("concatByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME")
 	fun <Context : Any> concat(vararg strings: kotlin.reflect.KProperty1<Context, String?>): Value<Context, String?> =
+		concat(strings = strings.map { of(it) }.toTypedArray())
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("concatNonNull")
+	final fun <Context : Any> concat(vararg strings: Value<Context, String>): Value<Context, String> =
+		concat(strings.asList())
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final fun <Context : Any> concat(vararg strings: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, String> =
+		concat(strings = strings.map { of(it) }.toTypedArray())
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final fun <Context : Any> concat(vararg strings: kotlin.reflect.KProperty1<Context, String>): Value<Context, String> =
 		concat(strings = strings.map { of(it) }.toTypedArray())
 
 	/**
@@ -14357,6 +14817,491 @@ interface StringValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("concatResultReceiverByResult")
 	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
 	infix final inline fun String?.concat(other: String?): Value<Any, String?> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("concatNonNull")
+	final infix fun <Context : Any> Value<Context, String>.concat(other: Value<Context, String>): Value<Context, String> =
+		concat(listOf(this, other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix fun <Context : Any> Value<Context, String>.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, String> =
+		this.concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix fun <Context : Any> Value<Context, String>.concat(other: kotlin.reflect.KProperty1<Context, String>): Value<Context, String> =
+		this.concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("concatNonNull")
+	final infix inline fun <Context : Any> Value<Context, String>.concat(other: String): Value<Context, String> =
+		this.concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullFieldReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.concat(other: Value<Context, String>): Value<Context, String> =
+		of(this).concat(other)
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullFieldReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, String> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullFieldReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.concat(other: kotlin.reflect.KProperty1<Context, String>): Value<Context, String> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullFieldReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix inline fun <Context : Any> opensavvy.ktmongo.dsl.path.Field<Context, String>.concat(other: String): Value<Context, String> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullPropertyReceiverByValue")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.concat(other: Value<Context, String>): Value<Context, String> =
+		of(this).concat(other)
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullPropertyReceiverByField")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, String> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullPropertyReceiverByProperty")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.concat(other: kotlin.reflect.KProperty1<Context, String>): Value<Context, String> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.jvm.JvmName("concatNonNullPropertyReceiverByResult")
+	@Suppress("INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix inline fun <Context : Any> kotlin.reflect.KProperty1<Context, String>.concat(other: String): Value<Context, String> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@kotlin.jvm.JvmName("concatNonNullResultReceiverByValue")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix inline fun <Context : Any> String.concat(other: Value<Context, String>): Value<Context, String> =
+		of(this).concat(other)
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@kotlin.jvm.JvmName("concatNonNullResultReceiverByField")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix inline fun <Context : Any> String.concat(other: opensavvy.ktmongo.dsl.path.Field<Context, String>): Value<Context, String> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@kotlin.jvm.JvmName("concatNonNullResultReceiverByProperty")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix inline fun <Context : Any> String.concat(other: kotlin.reflect.KProperty1<Context, String>): Value<Context, String> =
+		of(this).concat(of(other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@kotlin.internal.LowPriorityInOverloadResolution
+	@kotlin.jvm.JvmName("concatNonNullResultReceiverByResult")
+	@Suppress("INVISIBLE_REFERENCE", "INAPPLICABLE_JVM_NAME", "WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final infix inline fun String.concat(other: String): Value<Any, String> =
 		of(this).concat(of(other))
 
 	@LowLevelApi

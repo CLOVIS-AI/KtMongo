@@ -26,14 +26,16 @@ import opensavvy.ktmongo.dsl.multiContextSuite
 val StringValueOperatorsTest by multiContextSuite {
 
 	class Target(
-		val text: String,
+		val text: String?,
 		val description: String?,
 	)
 
 	class LengthTarget(
 		val text: String,
 		val description: String?,
-		val length: Int,
+		val descriptionNN: String,
+		val length: Int?,
+		val lengthNN: Int,
 	)
 
 	class SplitTarget(
@@ -413,14 +415,14 @@ val StringValueOperatorsTest by multiContextSuite {
 		test("Get length of string field") {
 			TestPipeline<LengthTarget>()
 				.set {
-					LengthTarget::length set LengthTarget::description.length
+					LengthTarget::lengthNN set LengthTarget::descriptionNN.length
 				}
 				.shouldBeBson($$"""
 					[
 						{
 							"$set": {
-								"length": {
-									"$strLenCP": "$description"
+								"lengthNN": {
+									"$strLenCP": "$descriptionNN"
 								}
 							}
 						}
