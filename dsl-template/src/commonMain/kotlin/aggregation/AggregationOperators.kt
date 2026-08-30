@@ -98,6 +98,7 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * - [`$subtract`][ArithmeticValueOperators.minus]
  *
  * Array operators:
+ * - [`$arrayElemAt`][ValueOperators.get]
  * - [`$avg`][ArrayValueOperators.average]
  * - [`$filter`][ArrayValueOperators.filter]
  * - [`$firstN`][ArrayValueOperators.take]

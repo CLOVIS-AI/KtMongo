@@ -35,6 +35,8 @@ val ValueTest by multiContextSuite {
 	class User(
 		val name: String,
 		val profile: Profile,
+		val scores: List<Int>,
+		val profiles: List<Profile>,
 	)
 
 	suspend fun TestDsl.value(block: AggregationOperators.() -> Value<User, *>): String {
@@ -80,6 +82,41 @@ val ValueTest by multiContextSuite {
 			} shouldBeBson $$"""
 				{
 					"$literal": null
+				}
+			""".trimIndent()
+		}
+
+		test("Embedding array access (intermediate)") {
+			value {
+				of(User::scores)[1]
+			} shouldBeBson $$"""
+				{
+					"$arrayElemAt": [
+						"$scores",
+						{
+							"$literal": 1
+						}
+					]
+				}
+			""".trimIndent()
+		}
+
+		test("Embedding nested array access (intermediate)") {
+			value {
+				of(User::profiles)[5] / Profile::age
+			} shouldBeBson $$"""
+				{
+					"$getField": {
+						"input": {
+							"$arrayElemAt": [
+								"$profiles",
+								{
+									"$literal": 5
+								}
+							]
+						},
+						"field": "age"
+					}
 				}
 			""".trimIndent()
 		}

@@ -209,6 +209,123 @@ interface ValueOperators : FieldDsl {
 	operator fun <Context : Any, Root, Child> Value<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
 		this / field.field
 
+	/**
+	 * Refers to a specific item in an array, by its index.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class User(
+	 *     val pets: List<Pet>,
+	 *     val favorite: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::favorite set User::pets[0] / Pet::name
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/)
+	 */
+	@OptIn(LowLevelApi::class)
+	operator fun <Context : Any, Result> Value<Context, Collection<Result>>.get(index: Value<Context, Int>): Value<Context, Result> =
+		ArrayElemAtValue(this, index, context)
+
+	/**
+	 * Refers to a specific item in an array, by its index.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class User(
+	 *     val pets: List<Pet>,
+	 *     val favorite: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::favorite set User::pets[0] / Pet::name
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/)
+	 */
+	operator fun <Context : Any, Result> Value<Context, Collection<Result>>.get(index: Field<Context, Int>): Value<Context, Result> =
+		this[of(index)]
+
+	/**
+	 * Refers to a specific item in an array, by its index.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class User(
+	 *     val pets: List<Pet>,
+	 *     val favorite: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::favorite set User::pets[0] / Pet::name
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/)
+	 */
+	operator fun <Context : Any, Result> Value<Context, Collection<Result>>.get(index: KProperty1<Context, Int>): Value<Context, Result> =
+		this[of(index)]
+
+	/**
+	 * Refers to a specific item in an array, by its index.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class User(
+	 *     val pets: List<Pet>,
+	 *     val favorite: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::favorite set User::pets[0] / Pet::name
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/)
+	 */
+	operator fun <Context : Any, Result> Value<Context, Collection<Result>>.get(index: Int): Value<Context, Result> =
+		this[of(index)]
+
 }
 
 @OptIn(LowLevelApi::class)
@@ -271,5 +388,22 @@ private class GetFieldValue<Context : Any, Result>(
 			}
 		}
 	}
+}
 
+@OptIn(LowLevelApi::class)
+private class ArrayElemAtValue<Context : Any, Result>(
+	private val array: Value<Context, *>,
+	private val index: Value<Context, Int>,
+	context: BsonContext,
+) : AbstractValue<Context, Result>(context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonValueWriter) = with(writer) {
+		writeDocument {
+			writeArray("\$arrayElemAt") {
+				array.writeTo(this)
+				index.writeTo(this)
+			}
+		}
+	}
 }
