@@ -86,9 +86,10 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		val rewriter = org.antlr.v4.runtime.TokenStreamRewriter(tokens)
 
 		val sourceFilePath = sourceFile.path.replace('\\', '/')
-		val isValueOverloadTarget = sourceFilePath.contains("aggregation/operators") ||
+		val isValueOperatorsFile = sourceFilePath.endsWith("aggregation/operators/ValueOperators.kt")
+		val isValueOverloadTarget = (sourceFilePath.contains("aggregation/operators") ||
 			sourceFilePath.contains("aggregation/accumulators") ||
-			sourceFilePath.contains("aggregation/stages")
+			sourceFilePath.contains("aggregation/stages")) && !isValueOperatorsFile
 		// Field.kt defines the KProperty1→Field conversion functions themselves, so generating
 		// KProperty1 overloads there would produce recursive or broken delegations.
 		val isFieldDslFile = sourceFilePath.endsWith("path/Field.kt")
@@ -120,6 +121,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		val walker = org.antlr.v4.runtime.tree.ParseTreeWalker()
 		val listener = object : opensavvy.ktmongo.build.kotlin.KotlinParserBaseListener() {
 			override fun exitFunctionDeclaration(ctx: opensavvy.ktmongo.build.kotlin.KotlinParser.FunctionDeclarationContext) {
+				if (isValueOperatorsFile) return
+
 				// region Value<...> overload generation (combinatorial: receiver × params)
 				if (isValueOverloadTarget) {
 					val vFuncStart0 = ctx.start.startIndex
@@ -631,6 +634,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 			}
 
 			override fun exitPropertyDeclaration(ctx: opensavvy.ktmongo.build.kotlin.KotlinParser.PropertyDeclarationContext) {
+				if (isValueOperatorsFile) return
+
 				// For extension properties, the receiver type is accessed via ctx.receiverType() with a DOT following
 				val receiverTypeCtx = ctx.receiverType() ?: return
 				if (ctx.DOT() == null) return
