@@ -23,7 +23,6 @@ import opensavvy.ktmongo.api.MongoCollection
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.ktmongo.dsl.aggregation.stages.*
@@ -70,66 +69,51 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 	// endregion
 	// region Stages
 
-	@KtMongoDsl
 	override fun limit(amount: Long): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.limit(amount) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun limit(amount: Int): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.limit(amount) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun match(filter: FilterQuery<Document>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.match(filter) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun matchExpr(filter: AggregationOperators.() -> Value<Document, Boolean>): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.matchExpr(filter) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun sample(size: Int): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.sample(size) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun <Out : Any> set(block: SetStageOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.set(block) as CoroutineMongoAggregationPipelineImpl<Out>
 
-	@KtMongoDsl
 	override fun skip(amount: Long): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.skip(amount) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun skip(amount: Int): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.skip(amount) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun sort(block: SortOptionDsl<Document>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.sort(block) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun unset(block: UnsetStageOperators<Document>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.unset(block) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun <Out : Any> project(block: ProjectStageOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.project(block) as CoroutineMongoAggregationPipelineImpl<Out>
 
-	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.unionWith(other) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.lookup(block) as CoroutineMongoAggregationPipelineImpl<Document>
 
 	override fun <Out : Any> group(block: GroupStageOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.group(block) as CoroutineMongoAggregationPipelineImpl<Out>
 
-	@KtMongoDsl
 	override fun <Out : Any> countTo(field: Field<Out, Number>): CoroutineMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.countTo(field) as CoroutineMongoAggregationPipelineImpl<Out>
 
-	@KtMongoDsl
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): CoroutineMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.countTo(field) as CoroutineMongoAggregationPipelineImpl<Out>
 
