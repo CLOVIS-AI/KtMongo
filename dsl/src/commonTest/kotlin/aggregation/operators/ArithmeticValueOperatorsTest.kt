@@ -245,7 +245,7 @@ val ArithmeticValueOperatorsTest by multiContextSuite {
 		test("Binary usage") {
 			TestPipeline<Target>()
 				.set {
-					Target::score set of(Target::score) / of(2)
+					Target::score set (of(Target::score) div 2)
 				}
 				.shouldBeBson($$"""
 					[
@@ -268,7 +268,7 @@ val ArithmeticValueOperatorsTest by multiContextSuite {
 		test("Binary usage with doubles") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set of(Target::average) / 2.5
+					Target::average set (of(Target::average) div of(2.5))
 				}
 				.shouldBeBson($$"""
 					[
@@ -291,7 +291,7 @@ val ArithmeticValueOperatorsTest by multiContextSuite {
 		test("Literal divided by literal") {
 			TestPipeline<Target>()
 				.set {
-					Target::average set of(80.0) / 8.0
+					Target::average set (of(80.0) div 8.0)
 				}
 				.shouldBeBson($$"""
 					[

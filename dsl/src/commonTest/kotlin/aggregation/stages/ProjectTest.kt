@@ -46,7 +46,7 @@ val ProjectTest by multiContextSuite {
 
 	test("Exclude the _id field") {
 		TestPipeline<Target>()
-			.project {
+			.project<Target> {
 				excludeId()
 			}
 			.shouldBeBson($$"""

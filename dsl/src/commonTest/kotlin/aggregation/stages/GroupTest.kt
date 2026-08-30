@@ -177,7 +177,7 @@ val GroupTest by multiContextSuite {
 		checkThrows<IllegalArgumentException> {
 			TestPipeline<Score>()
 				.group {
-					Results::total set Score::topic
+					Results::topic set Score::topic
 				}
 		}
 	}
@@ -222,7 +222,7 @@ val GroupTest by multiContextSuite {
 		TestPipeline<Score>()
 			.group {
 				CompoundGroup::_id / CompoundGroupId::topic set Score::topic
-				CompoundGroup::_id / CompoundGroupId::score set ((of(Score::score) / 10).toInt()) * 10
+				CompoundGroup::_id / CompoundGroupId::score set ((of(Score::score) div 10).toInt()) * 10
 				CompoundGroup::average average Score::score
 			}
 			.also {

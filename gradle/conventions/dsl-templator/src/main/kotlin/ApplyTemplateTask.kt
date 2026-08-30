@@ -46,6 +46,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 	@get:Input
 	abstract val projectRootDir: Property<File>
 
+	private val jvmNameAnnotationRegex = Regex("""@(?:kotlin\.jvm\.)?JvmName\s*\(\s*(?:name\s*=\s*)?"([^"]+)"\s*\)\s*""")
+
 	@TaskAction
 	fun generate(changes: InputChanges) {
 		val src = sourceDir.get().asFile
@@ -84,9 +86,10 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		val rewriter = org.antlr.v4.runtime.TokenStreamRewriter(tokens)
 
 		val sourceFilePath = sourceFile.path.replace('\\', '/')
-		val isValueOverloadTarget = sourceFilePath.contains("aggregation/operators") ||
+		val isValueOperatorsFile = sourceFilePath.endsWith("aggregation/operators/ValueOperators.kt")
+		val isValueOverloadTarget = (sourceFilePath.contains("aggregation/operators") ||
 			sourceFilePath.contains("aggregation/accumulators") ||
-			sourceFilePath.contains("aggregation/stages")
+			sourceFilePath.contains("aggregation/stages")) && !isValueOperatorsFile
 		// Field.kt defines the KProperty1→Field conversion functions themselves, so generating
 		// KProperty1 overloads there would produce recursive or broken delegations.
 		val isFieldDslFile = sourceFilePath.endsWith("path/Field.kt")
@@ -118,6 +121,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 		val walker = org.antlr.v4.runtime.tree.ParseTreeWalker()
 		val listener = object : opensavvy.ktmongo.build.kotlin.KotlinParserBaseListener() {
 			override fun exitFunctionDeclaration(ctx: opensavvy.ktmongo.build.kotlin.KotlinParser.FunctionDeclarationContext) {
+				if (isValueOperatorsFile) return
+
 				// region Value<...> overload generation (combinatorial: receiver × params)
 				if (isValueOverloadTarget) {
 					val vFuncStart0 = ctx.start.startIndex
@@ -136,6 +141,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 								vFuncStart,
 								if (bodyStartInFunc >= 0) vFuncStart + bodyStartInFunc else ctx.stop.stopIndex + 1,
 							)
+							val existingJvmName = jvmNameAnnotationRegex.find(vFuncText)?.groupValues?.get(1)
 							val vParamCtxList = ctx.functionValueParameters()?.functionValueParameter() ?: emptyList()
 
 							// Collect all "Value<...>" positions: receiver first, then each param
@@ -327,8 +333,17 @@ abstract class ApplyTemplateTask : DefaultTask() {
 									val anyWillBeReified = rawResultTypeNames.any { !it.contains('<') }
 									if (hasAnyRawTypeSubstitution && !hasLambdaParams && anyWillBeReified) {
 										val funIdx = processedFuncText.indexOf("fun ")
-										if (funIdx >= 0 && !processedFuncText.take(funIdx).contains("inline ")) {
-											processedFuncText = processedFuncText.substring(0, funIdx) + "final inline " + processedFuncText.substring(funIdx)
+										if (funIdx >= 0) {
+											val prefix = processedFuncText.substring(0, funIdx)
+											val needsFinal = !Regex("""\bfinal\b""").containsMatchIn(prefix)
+											val needsInline = !Regex("""\binline\b""").containsMatchIn(prefix)
+											val modifiersToAdd = buildString {
+												if (needsFinal) append("final ")
+												if (needsInline) append("inline ")
+											}
+											if (modifiersToAdd.isNotEmpty()) {
+												processedFuncText = prefix + modifiersToAdd + processedFuncText.substring(funIdx)
+											}
 										}
 										for (name in rawResultTypeNames) {
 											processedFuncText = addReifiedToTypeParam(processedFuncText, name)
@@ -356,8 +371,13 @@ abstract class ApplyTemplateTask : DefaultTask() {
 											}
 										}
 
+									val baseJvmName = existingJvmName ?: vFuncName
 									val needsJvmName = receiverReplaced ||
 										combination.any { it != null && (it.startsWith("opensavvy") || it.startsWith("kotlin.reflect.KProperty1")) }
+
+									if (needsJvmName && existingJvmName != null) {
+										processedFuncText = processedFuncText.replaceFirst(jvmNameAnnotationRegex, "")
+									}
 
 									// Overloads where Result (raw type parameter) appears in any position
 									// are given low priority so navigation operators win on ambiguity.
@@ -369,7 +389,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 
 									// Merge INAPPLICABLE_JVM_NAME into the existing @Suppress rather than
 									// adding a second (non-repeatable) @Suppress annotation.
-									val afterJvmName = if (needsJvmName) {
+									val afterJvmName = if (needsJvmName && !processedFuncText.contains("INAPPLICABLE_JVM_NAME")) {
 										if (processedFuncText.contains("@Suppress(\"")) {
 											processedFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
 										} else {
@@ -395,7 +415,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 											"@Suppress(\"WRONG_MODIFIER_CONTAINING_DECLARATION\")\n\t" + afterInvisibleRef
 										}
 									} else afterInvisibleRef
-									val jvmNameAnnotation = if (needsJvmName) "@kotlin.jvm.JvmName(\"$vFuncName$receiverSuffix$paramSuffix\")\n\t" else ""
+									val jvmNameAnnotation = if (needsJvmName) "@kotlin.jvm.JvmName(\"$baseJvmName$receiverSuffix$paramSuffix\")\n\t" else ""
 									val lowPriorityAnnotation = if (hasResultAlternative) "@kotlin.internal.LowPriorityInOverloadResolution\n\t" else ""
 
 									val docComment = findDocCommentBefore(source, vFuncStart)
@@ -428,8 +448,17 @@ abstract class ApplyTemplateTask : DefaultTask() {
 												// Apply final inline + reified to KProperty1 variants that delegate via of().
 												if (hasAnyRawTypeSubstitution && !hasLambdaParams) {
 													val funIdx = kpropNewFuncText.indexOf("fun ")
-													if (funIdx >= 0 && !kpropNewFuncText.take(funIdx).contains("inline ")) {
-														kpropNewFuncText = kpropNewFuncText.substring(0, funIdx) + "final inline " + kpropNewFuncText.substring(funIdx)
+													if (funIdx >= 0) {
+														val prefix = kpropNewFuncText.substring(0, funIdx)
+														val needsFinal = !Regex("""\bfinal\b""").containsMatchIn(prefix)
+														val needsInline = !Regex("""\binline\b""").containsMatchIn(prefix)
+														val modifiersToAdd = buildString {
+															if (needsFinal) append("final ")
+															if (needsInline) append("inline ")
+														}
+														if (modifiersToAdd.isNotEmpty()) {
+															kpropNewFuncText = prefix + modifiersToAdd + kpropNewFuncText.substring(funIdx)
+														}
 													}
 													for (name in rawResultTypeNames) {
 														kpropNewFuncText = addReifiedToTypeParam(kpropNewFuncText, name)
@@ -441,7 +470,10 @@ abstract class ApplyTemplateTask : DefaultTask() {
 													it != null &&
 														(it.startsWith("opensavvy") || it.startsWith("kotlin.reflect.KProperty1"))
 												}
-												var kpropFinalText = if (kpropNeedsJvmName) {
+												if (kpropNeedsJvmName && existingJvmName != null) {
+													kpropNewFuncText = kpropNewFuncText.replaceFirst(jvmNameAnnotationRegex, "")
+												}
+												var kpropFinalText = if (kpropNeedsJvmName && !kpropNewFuncText.contains("INAPPLICABLE_JVM_NAME")) {
 													if (kpropNewFuncText.contains("@Suppress(\"")) {
 														kpropNewFuncText.replaceFirst("@Suppress(\"", "@Suppress(\"INAPPLICABLE_JVM_NAME\", \"")
 													} else {
@@ -457,7 +489,7 @@ abstract class ApplyTemplateTask : DefaultTask() {
 														"@Suppress(\"WRONG_MODIFIER_CONTAINING_DECLARATION\")\n\t" + kpropFinalText
 													}
 												}
-												val kpropJvmNameAnnotation = if (kpropNeedsJvmName) "@kotlin.jvm.JvmName(\"${vFuncName}PropertyReceiver${paramSuffix}\")\n\t" else ""
+												val kpropJvmNameAnnotation = if (kpropNeedsJvmName) "@kotlin.jvm.JvmName(\"${baseJvmName}PropertyReceiver${paramSuffix}\")\n\t" else ""
 												valueOverloadBuilder.append("\n\n").append(docPart).append("\t").append(kpropJvmNameAnnotation).append(kpropFinalText)
 											}
 										}
@@ -602,6 +634,8 @@ abstract class ApplyTemplateTask : DefaultTask() {
 			}
 
 			override fun exitPropertyDeclaration(ctx: opensavvy.ktmongo.build.kotlin.KotlinParser.PropertyDeclarationContext) {
+				if (isValueOperatorsFile) return
+
 				// For extension properties, the receiver type is accessed via ctx.receiverType() with a DOT following
 				val receiverTypeCtx = ctx.receiverType() ?: return
 				if (ctx.DOT() == null) return

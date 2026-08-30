@@ -243,7 +243,7 @@ interface GroupStageOperators<From : Any, Into : Any> : AccumulationOperators<Fr
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Into, V>.set(value: Value<From, V>)
+	infix fun <V> Field<Into, @kotlin.internal.Exact V>.set(value: Value<From, V>)
 }
 
 @OptIn(LowLevelApi::class)

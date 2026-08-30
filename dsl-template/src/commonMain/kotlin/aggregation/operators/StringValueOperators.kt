@@ -22,6 +22,8 @@ import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.Value
+import opensavvy.ktmongo.dsl.aggregation.unsafeNonNull
+import kotlin.jvm.JvmName
 
 /**
  * String aggregation operators.
@@ -415,6 +417,48 @@ interface StringValueOperators : ValueOperators {
 	val <Context : Any> Value<Context, String?>.length: Value<Context, Int?>
 		get() = StrLenCPValueOperator(context, this)
 
+	/**
+	 * Returns the number of code points in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenCP` operator, which counts characters using Unicode code points.
+	 * This differs from Kotlin's [String.length], which uses UTF-16 code units.
+	 * For strings containing characters outside the Basic Multilingual Plane (like emoji or certain mathematical symbols),
+	 * the counting behavior will differ.
+	 *
+	 * For example, the emoji "👨‍👩‍👧‍👦" (family) is a single Unicode grapheme cluster but consists of multiple code points.
+	 * According to this operator, it has a length of 7.
+	 * However, according to Kotlin's [String.length], it has a length of 11.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val length: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::length set of(Document::text).length
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenCP/)
+	 *
+	 * @see lengthUTF8
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthNonNull")
+	final val <Context : Any> Value<Context, String>.length: Value<Context, Int>
+		get() = StrLenCPValueOperator(context, this).unsafeNonNull()
+
 	// endregion
 	// region $strLenBytes
 
@@ -457,6 +501,48 @@ interface StringValueOperators : ValueOperators {
 	@OptIn(LowLevelApi::class)
 	val <Context : Any> Value<Context, String?>.lengthUTF8: Value<Context, Int?>
 		get() = StrLenBytesValueOperator(context, this)
+
+	/**
+	 * Returns the number of UTF-8 encoded bytes in the specified string.
+	 *
+	 * If the argument resolves to `null`, this function returns `null`.
+	 *
+	 * ### Counting characters
+	 *
+	 * This function uses MongoDB's `$strLenBytes` operator, which counts characters using UTF-8 encoded bytes where
+	 * each code point, or character, may use between one and four bytes to encode.
+	 * This differs from the [length] property which uses Unicode code points.
+	 *
+	 * For example, US-ASCII characters are encoded using one byte.
+	 * Characters with diacritic markings and additional Latin alphabetical characters are encoded using two bytes.
+	 * Chinese, Japanese and Korean characters typically require three bytes, and other planes of Unicode
+	 * (emoji, mathematical symbols, etc.) require four bytes.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val text: String,
+	 *     val byteLength: Int,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::byteLength set of(Document::text).lengthUTF8
+	 *     }.toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/strLenBytes/)
+	 *
+	 * @see length
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@get:JvmName("getLengthUTF8NonNull")
+	final val <Context : Any> Value<Context, String>.lengthUTF8: Value<Context, Int>
+		get() = StrLenBytesValueOperator(context, this).unsafeNonNull()
 
 	// endregion
 	// region $substrCP
@@ -658,7 +744,7 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/split/)
 	 */
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any> Value<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>?> =
+	fun <Context : Any> Value<Context, String>.split(delimiter: Value<Context, String>): Value<Context, List<String>> =
 		SplitValueOperator(context, this, delimiter)
 
 	// endregion
@@ -848,7 +934,7 @@ interface StringValueOperators : ValueOperators {
 		context: BsonContext,
 		private val input: Value<Context, String?>,
 		private val delimiter: Value<Context, String?>,
-	) : AbstractValue<Context, List<String>?>(context) {
+	) : AbstractValue<Context, List<String>>(context) {
 
 		override fun write(writer: BsonValueWriter) = with(writer) {
 			writeDocument {
@@ -942,7 +1028,67 @@ interface StringValueOperators : ValueOperators {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("concatNonNull")
+	final fun <Context : Any> concat(strings: List<Value<Context, String>>): Value<Context, String> =
+		concat(strings as List<Value<Context, String?>>).unsafeNonNull()
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
 	fun <Context : Any> concat(vararg strings: Value<Context, String?>): Value<Context, String?> =
+		concat(strings.asList())
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set concat(of(Document::firstName), of(" "), of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("concatNonNull")
+	final fun <Context : Any> concat(vararg strings: Value<Context, String>): Value<Context, String> =
 		concat(strings.asList())
 
 	/**
@@ -971,6 +1117,36 @@ interface StringValueOperators : ValueOperators {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
 	 */
 	infix fun <Context : Any> Value<Context, String?>.concat(other: Value<Context, String?>): Value<Context, String?> =
+		concat(listOf(this, other))
+
+	/**
+	 * Concatenates strings together.
+	 *
+	 * If any of strings are `null`, the concatenation returns `null`.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Document(
+	 *     val firstName: String,
+	 *     val lastName: String,
+	 *     val fullName: String,
+	 * )
+	 *
+	 * collection.aggregate()
+	 *     .set {
+	 *         Document::fullName set (of(Document::firstName) concat of(" ") concat of(Document::lastName))
+	 *     }
+	 *     .toList()
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/concat/)
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("concatNonNull")
+	final infix fun <Context : Any> Value<Context, String>.concat(other: Value<Context, String>): Value<Context, String> =
 		concat(listOf(this, other))
 
 	@LowLevelApi

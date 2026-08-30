@@ -246,7 +246,7 @@ interface GroupStageOperators<From : Any, Into : Any> : AccumulationOperators<Fr
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Into, V>.set(value: Value<From, V>)
+	infix fun <V> Field<Into, @kotlin.internal.Exact V>.set(value: Value<From, V>)
 
 	/**
 	 * Sets the criteria to group by.
@@ -344,7 +344,7 @@ interface GroupStageOperators<From : Any, Into : Any> : AccumulationOperators<Fr
 	 */
 	@kotlin.jvm.JvmName("setByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Into, V>.set(value: opensavvy.ktmongo.dsl.path.Field<From, V>) =
+	infix fun <V> Field<Into, @kotlin.internal.Exact V>.set(value: opensavvy.ktmongo.dsl.path.Field<From, V>) =
 		set(of(value))
 
 	/**
@@ -443,7 +443,7 @@ interface GroupStageOperators<From : Any, Into : Any> : AccumulationOperators<Fr
 	 */
 	@kotlin.jvm.JvmName("setPropertyReceiverByField")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> kotlin.reflect.KProperty1<Into, V>.set(value: opensavvy.ktmongo.dsl.path.Field<From, V>) =
+	infix fun <V> kotlin.reflect.KProperty1<Into, @kotlin.internal.Exact V>.set(value: opensavvy.ktmongo.dsl.path.Field<From, V>) =
 		this.field.set(of(value))
 
 	/**
@@ -542,7 +542,7 @@ interface GroupStageOperators<From : Any, Into : Any> : AccumulationOperators<Fr
 	 */
 	@kotlin.jvm.JvmName("setByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> Field<Into, V>.set(value: kotlin.reflect.KProperty1<From, V>) =
+	infix fun <V> Field<Into, @kotlin.internal.Exact V>.set(value: kotlin.reflect.KProperty1<From, V>) =
 		set(of(value))
 
 	/**
@@ -641,7 +641,7 @@ interface GroupStageOperators<From : Any, Into : Any> : AccumulationOperators<Fr
 	 */
 	@kotlin.jvm.JvmName("setPropertyReceiverByProperty")
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> kotlin.reflect.KProperty1<Into, V>.set(value: kotlin.reflect.KProperty1<From, V>) =
+	infix fun <V> kotlin.reflect.KProperty1<Into, @kotlin.internal.Exact V>.set(value: kotlin.reflect.KProperty1<From, V>) =
 		this.field.set(of(value))
 
 	/**
@@ -740,7 +740,7 @@ interface GroupStageOperators<From : Any, Into : Any> : AccumulationOperators<Fr
 	 */
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	infix final inline fun <@kotlin.internal.Exact reified V> Field<Into, V>.set(value: V) =
+	infix final inline fun <reified V> Field<Into, @kotlin.internal.Exact V>.set(value: V) =
 		set(of(value))
 
 	/**
@@ -838,7 +838,7 @@ interface GroupStageOperators<From : Any, Into : Any> : AccumulationOperators<Fr
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	infix final inline fun <@kotlin.internal.Exact reified V> kotlin.reflect.KProperty1<Into, V>.set(value: V) =
+	infix final inline fun <reified V> kotlin.reflect.KProperty1<Into, @kotlin.internal.Exact V>.set(value: V) =
 		this.field.set(of(value))
 
 	/**
@@ -936,7 +936,7 @@ interface GroupStageOperators<From : Any, Into : Any> : AccumulationOperators<Fr
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)
 	 */
 	@Suppress("INVISIBLE_REFERENCE")
-	infix fun <@kotlin.internal.Exact V> kotlin.reflect.KProperty1<Into, V>.set(value: Value<From, V>) {
+	infix fun <V> kotlin.reflect.KProperty1<Into, @kotlin.internal.Exact V>.set(value: Value<From, V>) {
 		return this.field.set(value)
 	}
 }

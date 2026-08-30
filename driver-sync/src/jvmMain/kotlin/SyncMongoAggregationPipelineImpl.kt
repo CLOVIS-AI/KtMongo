@@ -90,8 +90,8 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 		super<AggregationPipeline>.sample(size) as SyncMongoAggregationPipelineImpl<Document>
 
 	@KtMongoDsl
-	override fun set(block: SetStageOperators<Document>.() -> Unit): SyncMongoAggregationPipelineImpl<Document> =
-		super<AggregationPipeline>.set(block) as SyncMongoAggregationPipelineImpl<Document>
+	override fun <Out : Any> set(block: SetStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
+		super<AggregationPipeline>.set(block) as SyncMongoAggregationPipelineImpl<Out>
 
 	@KtMongoDsl
 	override fun skip(amount: Long): SyncMongoAggregationPipelineImpl<Document> =
@@ -110,8 +110,8 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 		super<AggregationPipeline>.unset(block) as SyncMongoAggregationPipelineImpl<Document>
 
 	@KtMongoDsl
-	override fun project(block: ProjectStageOperators<Document>.() -> Unit): SyncMongoAggregationPipelineImpl<Document> =
-		super<AggregationPipeline>.project(block) as SyncMongoAggregationPipelineImpl<Document>
+	override fun <Out : Any> project(block: ProjectStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
+		super<AggregationPipeline>.project(block) as SyncMongoAggregationPipelineImpl<Out>
 
 	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): SyncMongoAggregationPipelineImpl<Document> =

@@ -18,8 +18,6 @@ package opensavvy.ktmongo.bson.official
 
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.bson.BsonFactory
-import opensavvy.ktmongo.bson.official.BsonFactory.Companion.current
-import opensavvy.ktmongo.bson.official.BsonFactory.Companion.setCurrent
 import opensavvy.ktmongo.bson.official.serialization.KotlinSerializerCodecProviderInjector
 import opensavvy.ktmongo.bson.official.types.*
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -233,11 +231,12 @@ actual class BsonFactory(
 	 * **If [type] and [T] do not match, the behavior is unspecified.**
 	 * Prefer using the no-argument of this method.
 	 *
+	 * @param value The value we attempt to encode or decode. If provided, it will be used to enhance the error message. It does not impact the result of this function.
 	 * @see codecRegistry The codec registry used by this BSON factory.
 	 * @throws BsonDecodingException If no matching codec is found for the given type.
 	 */
 	@LowLevelApi
-	fun <T> findCodecForType(type: KType): Codec<T> {
+	fun <T> findCodecForType(type: KType, value: Any? = null): Codec<T> {
 		val classifier = type.classifier
 
 		if (classifier !is KClass<*>) {
@@ -251,11 +250,16 @@ actual class BsonFactory(
 			codecRegistry.get(classifier.java)
 		} catch (e: Exception) {
 			throw BsonDecodingException(
-				"""
-					Could not find codec for type $type (${classifier.java})
-					If you're using org.bson:bson-kotlin, are you sure your type is a non-private data class?
-					If you're using org.bson:bson-kotlinx, did you annotate your type with @Serializable and configured the KotlinX.Serialization plugin?
-				""".trimIndent(),
+				buildString {
+					appendLine("Could not find codec for type $type (${classifier.java})")
+
+					if (value != null) {
+						appendLine("While trying to decode $value (${value::class.java})")
+					}
+
+					appendLine("If you're using org.bson:bson-kotlin, are you sure your type is a non-private data class?")
+					append("If you're using org.bson:bson-kotlinx, did you annotate your type with @Serializable and configured the KotlinX.Serialization plugin?")
+				},
 				e,
 			)
 		}
@@ -282,6 +286,26 @@ actual class BsonFactory(
 	@LowLevelApi
 	inline fun <reified T> findCodecForType(): Codec<T> =
 		findCodecForType(typeOf<T>())
+
+	/**
+	 * Returns the instance of [Codec] (from the official MongoDB driver)
+	 * that is used to encode or decode the given type [T].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * val client = MongoClient.create("mongodb://mongo:27017")
+	 * val factory = BsonFactory(client.codecRegistry)
+	 *
+	 * val codec = factory.findCodecForType<String>()
+	 * ```
+	 *
+	 * @see codecRegistry The codec registry used by this BSON factory.
+	 * @throws BsonDecodingException If no matching codec is found for the given type.
+	 */
+	@LowLevelApi
+	inline fun <reified T> findCodecForType(value: T): Codec<T> =
+		findCodecForType(typeOf<T>(), value = value)
 
 	companion object {
 		private val currentFactory = ThreadLocal<opensavvy.ktmongo.bson.official.BsonFactory>()

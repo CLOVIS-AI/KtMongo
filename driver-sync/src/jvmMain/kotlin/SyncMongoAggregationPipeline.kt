@@ -57,7 +57,7 @@ interface SyncMongoAggregationPipeline<Document : Any> : MongoAggregationPipelin
 
 	override fun sample(size: Int): SyncMongoAggregationPipeline<Document>
 
-	override fun set(block: SetStageOperators<Document>.() -> Unit): SyncMongoAggregationPipeline<Document>
+	override fun <Out : Any> set(block: SetStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipeline<Out>
 
 	override fun skip(amount: Long): SyncMongoAggregationPipeline<Document>
 
@@ -67,7 +67,7 @@ interface SyncMongoAggregationPipeline<Document : Any> : MongoAggregationPipelin
 
 	override fun unset(block: UnsetStageOperators<Document>.() -> Unit): SyncMongoAggregationPipeline<Document>
 
-	override fun project(block: ProjectStageOperators<Document>.() -> Unit): SyncMongoAggregationPipeline<Document>
+	override fun <Out : Any> project(block: ProjectStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipeline<Out>
 
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): SyncMongoAggregationPipeline<Document>
 

@@ -89,6 +89,15 @@ interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
 	override fun writeTo(writer: BsonValueWriter)
 
 	/**
+	 * Overwrites the represented type of this value.
+	 *
+	 * This method can be useful to bypass type checks.
+	 */
+	@Suppress("UNCHECKED_CAST")
+	fun <New> unsafeCast(): Value<Root, New> =
+		this as Value<Root, New>
+
+	/**
 	 * JSON representation of this expression.
 	 *
 	 * Note that since this class represents a BSON _value_, and BSON libraries often only support _documents_,
@@ -96,6 +105,14 @@ interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
 	 */
 	override fun toString(): String
 }
+
+/**
+ * Ignores the case where this value is `null`.
+ *
+ * The KtMongo library will trust that the value is non-`null`.
+ */
+fun <Root : Any, Type> Value<Root, Type>.unsafeNonNull(): Value<Root, Type & Any> =
+	this.unsafeCast()
 
 /**
  * Utility implementation of [Value], which handles the [context], [toString] representation and [freezing][freeze].
@@ -146,6 +163,7 @@ abstract class AbstractValue<Root : Any, Type> private constructor(
 	 */
 	@OptIn(LowLevelApi::class)
 	fun toString(simplified: Boolean): String {
+		// Create an array of a single element because we can't write a value by itself, it needs to be in some kind of container
 		val document = context.buildArray {
 			if (simplified)
 				writeTo(this)
@@ -154,6 +172,10 @@ abstract class AbstractValue<Root : Any, Type> private constructor(
 		}
 
 		return document.toString()
+			// Remove the fake array
+			.trim()
+			.removeSurrounding("[", "]")
+			.trim()
 	}
 
 	final override fun toString(): String =

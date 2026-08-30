@@ -91,8 +91,8 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 		super<AggregationPipeline>.sample(size) as CoroutineMongoAggregationPipelineImpl<Document>
 
 	@KtMongoDsl
-	override fun set(block: SetStageOperators<Document>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Document> =
-		super<AggregationPipeline>.set(block) as CoroutineMongoAggregationPipelineImpl<Document>
+	override fun <Out : Any> set(block: SetStageOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Out> =
+		super<AggregationPipeline>.set(block) as CoroutineMongoAggregationPipelineImpl<Out>
 
 	@KtMongoDsl
 	override fun skip(amount: Long): CoroutineMongoAggregationPipelineImpl<Document> =
@@ -111,8 +111,8 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 		super<AggregationPipeline>.unset(block) as CoroutineMongoAggregationPipelineImpl<Document>
 
 	@KtMongoDsl
-	override fun project(block: ProjectStageOperators<Document>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Document> =
-		super<AggregationPipeline>.project(block) as CoroutineMongoAggregationPipelineImpl<Document>
+	override fun <Out : Any> project(block: ProjectStageOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Out> =
+		super<AggregationPipeline>.project(block) as CoroutineMongoAggregationPipelineImpl<Out>
 
 	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): CoroutineMongoAggregationPipelineImpl<Document> =

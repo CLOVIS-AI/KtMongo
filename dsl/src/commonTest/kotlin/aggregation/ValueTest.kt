@@ -50,9 +50,7 @@ val ValueTest by multiContextSuite {
 			value {
 				of(User::name)
 			} shouldBeBson """
-				[
-					"${dollar}name"
-				]
+				"${dollar}name"
 			""".trimIndent()
 		}
 
@@ -60,9 +58,7 @@ val ValueTest by multiContextSuite {
 			value {
 				of(User::profile / Profile::age)
 			} shouldBeBson """
-				[
-					"${dollar}profile.age"
-				]
+				"${dollar}profile.age"
 			""".trimIndent()
 		}
 	}
@@ -72,11 +68,9 @@ val ValueTest by multiContextSuite {
 			value {
 				of(5)
 			} shouldBeBson $$"""
-				[
-					{
-						"$literal": 5
-					}
-				]
+				{
+					"$literal": 5
+				}
 			""".trimIndent()
 		}
 
@@ -84,11 +78,9 @@ val ValueTest by multiContextSuite {
 			value {
 				of(null)
 			} shouldBeBson $$"""
-				[
-					{
-						"$literal": null
-					}
-				]
+				{
+					"$literal": null
+				}
 			""".trimIndent()
 		}
 	}
@@ -97,16 +89,14 @@ val ValueTest by multiContextSuite {
 		value {
 			5 eq User::profile / Profile::age
 		} shouldBeBson $$"""
-			[
-				{
-					"$eq": [
-						{
-							"$literal": 5
-						},
-						"$profile.age"
-					]
-				}
-			]
+			{
+				"$eq": [
+					{
+						"$literal": 5
+					},
+					"$profile.age"
+				]
+			}
 		""".trimIndent()
 	}
 }
