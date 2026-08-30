@@ -22,6 +22,8 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
+import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
@@ -46,6 +48,9 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 
 	override fun match(filter: FilterQuery<Document>.() -> Unit): BlockingMongoAggregationPipeline<Document> =
 		BlockingMongoAggregationPipeline(inner.match(filter))
+
+	override fun matchExpr(filter: AggregationOperators.() -> Value<Document, Boolean>): BlockingMongoAggregationPipeline<Document> =
+		BlockingMongoAggregationPipeline(inner.matchExpr(filter))
 
 	override fun sample(size: Int): BlockingMongoAggregationPipeline<Document> =
 		BlockingMongoAggregationPipeline(inner.sample(size))
@@ -79,6 +84,9 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): BlockingMongoAggregationPipeline<Out> =
 		BlockingMongoAggregationPipeline(inner.countTo(field))
+
+	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): BlockingMongoAggregationPipeline<Document> =
+		BlockingMongoAggregationPipeline(inner.lookup(block))
 
 	@LowLevelApi
 	override val context: BsonContext
