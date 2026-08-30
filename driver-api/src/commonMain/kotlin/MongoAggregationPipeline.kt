@@ -17,12 +17,16 @@
 package opensavvy.ktmongo.api
 
 import kotlinx.coroutines.flow.Flow
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.AggregationPipeline
+import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -70,11 +74,21 @@ interface MongoAggregationPipeline<Document : Any> : AggregationPipeline<Documen
 	// endregion
 	// region Stages
 
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun withStage(stage: BsonNode): MongoAggregationPipeline<Document>
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun <New : Any> reinterpret(): MongoAggregationPipeline<New>
+
 	override fun limit(amount: Long): MongoAggregationPipeline<Document>
 
 	override fun limit(amount: Int): MongoAggregationPipeline<Document>
 
 	override fun match(filter: FilterQuery<Document>.() -> Unit): MongoAggregationPipeline<Document>
+
+	override fun matchExpr(filter: AggregationOperators.() -> Value<Document, Boolean>): MongoAggregationPipeline<Document>
 
 	override fun sample(size: Int): MongoAggregationPipeline<Document>
 
@@ -97,6 +111,8 @@ interface MongoAggregationPipeline<Document : Any> : AggregationPipeline<Documen
 	override fun <Out : Any> countTo(field: Field<Out, Number>): MongoAggregationPipeline<Out>
 
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): MongoAggregationPipeline<Out>
+
+	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): MongoAggregationPipeline<Document>
 
 	// endregion
 }
