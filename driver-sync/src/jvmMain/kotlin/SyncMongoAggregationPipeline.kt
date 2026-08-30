@@ -26,12 +26,10 @@ import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
-import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.sync.api.MongoAggregationPipeline
 import opensavvy.ktmongo.sync.api.MongoIterable
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -90,14 +88,6 @@ interface SyncMongoAggregationPipeline<Document : Any> : MongoAggregationPipelin
 	override fun <Out : Any> countTo(field: Field<Out, Number>): SyncMongoAggregationPipeline<Out>
 
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): SyncMongoAggregationPipeline<Out>
-
-	override fun <Item, Out : Any> unwind(block: UnwindStageOperators<Document, Item, Out>.() -> Unit): SyncMongoAggregationPipeline<Out>
-
-	@OptIn(ExperimentalTypeInference::class)
-	@OverloadResolutionByLambdaReturnType
-	override fun <Item> unwindDirect(array: FieldDsl.() -> Field<Document, Collection<Item>?>): SyncMongoAggregationPipeline<Document>
-
-	override fun <Item> unwindDirect(overloadMarker: Unit, array: FieldDsl.() -> KProperty1<Document, Collection<Item>?>): SyncMongoAggregationPipeline<Document>
 
 }
 
