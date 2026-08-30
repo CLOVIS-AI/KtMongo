@@ -21,6 +21,9 @@ package opensavvy.ktmongo.dsl.aggregation
 
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.aggregation.operators.*
+import opensavvy.ktmongo.dsl.aggregation.stages.HasProject
+import opensavvy.ktmongo.dsl.aggregation.stages.HasSet
+import opensavvy.ktmongo.dsl.aggregation.stages.SetStageOperators
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
@@ -170,6 +173,9 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
  * - [`$tanh`][TrigonometryValueOperators.tanh]
  * - [`$degreesToRadians`][TrigonometryValueOperators.toRadians]
  * - [`$radiansToDegrees`][TrigonometryValueOperators.toDegrees]
+ *
+ * Special variables:
+ * - [`$$REMOVE`][SetStageOperators.Remove] (only available in [`$set`][HasSet.set] and [`$project`][HasProject.project])
  *
  * @see Value Representation of an aggregation value.
  */
