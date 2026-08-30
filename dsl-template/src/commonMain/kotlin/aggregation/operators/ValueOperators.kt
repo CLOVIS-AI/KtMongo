@@ -24,9 +24,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.path.Field
-import opensavvy.ktmongo.dsl.path.FieldDsl
-import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.path.*
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -61,8 +59,55 @@ interface ValueOperators : FieldDsl {
 	 * ```
 	 */
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any, Result> of(field: Field<Context, Result>): Value<Context, Result> =
-		FieldValue(field, context)
+	fun <Context : Any, Result> of(field: Field<Context, Result>): Value<Context, Result> {
+		// A Field can contain multiple kinds of paths
+		// Some of them are supported within aggregations, some are not
+		// Even the ones that are supported may require wrapping
+
+		// The type parameters of this function are incorrect for all intermediate paths,
+		// but since the type doesn't appear in the request itself, that doesn't matter.
+		fun ofPath(path: Path): Value<Context, Result> {
+			if (path.parent == null) {
+				require(path.segment is PathSegment.Field) { "The field '$field' has a root of type ${path.segment::class}, which is not supported in aggregations" }
+				return FieldValue(FieldImpl(path), context)
+			}
+
+			// The root case has been eliminated, let's focus on the recursion
+			val parent = ofPath(path.parent)
+
+			when (path.segment) {
+				is PathSegment.Field if parent is FieldValue<*, *> && "." !in path.segment.name && !path.segment.name.startsWith("$") -> {
+					// Case ….foo.bar <.baz>
+					// We can join the new segment into the previous FieldValue
+					return FieldValue(FieldImpl(parent.field.path / path.segment), context)
+				}
+
+				is PathSegment.Field -> {
+					// Case (….foo × 5) <.bar>
+					return GetFieldValue(
+						root = parent,
+						child = Path(path.segment.name),
+						context = context,
+					)
+				}
+
+				is PathSegment.Indexed -> {
+					// Case (…foo) <[0]>
+					return ArrayElemAtValue(
+						array = parent,
+						index = of(path.segment.index),
+						context = context,
+					)
+				}
+
+				PathSegment.AllPositional, PathSegment.Positional, is PathSegment.FilteredPositional ->
+					throw IllegalArgumentException("The field '$field' contains the segment '${path.segment}', which is not supported in aggregations")
+			}
+		}
+
+
+		return ofPath(field.path)
+	}
 
 	/**
 	 * Refers to a [field] within an [aggregation value][AggregationOperators].
@@ -206,6 +251,123 @@ interface ValueOperators : FieldDsl {
 	operator fun <Context : Any, Root, Child> Value<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
 		this / field.field
 
+	/**
+	 * Refers to a specific item in an array, by its index.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class User(
+	 *     val pets: List<Pet>,
+	 *     val favorite: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::favorite set User::pets[0] / Pet::name
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/)
+	 */
+	@OptIn(LowLevelApi::class)
+	operator fun <Context : Any, Result> Value<Context, Collection<Result>>.get(index: Value<Context, Int>): Value<Context, Result> =
+		ArrayElemAtValue(this, index, context)
+
+	/**
+	 * Refers to a specific item in an array, by its index.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class User(
+	 *     val pets: List<Pet>,
+	 *     val favorite: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::favorite set User::pets[0] / Pet::name
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/)
+	 */
+	operator fun <Context : Any, Result> Value<Context, Collection<Result>>.get(index: Field<Context, Int>): Value<Context, Result> =
+		this[of(index)]
+
+	/**
+	 * Refers to a specific item in an array, by its index.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class User(
+	 *     val pets: List<Pet>,
+	 *     val favorite: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::favorite set User::pets[0] / Pet::name
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/)
+	 */
+	operator fun <Context : Any, Result> Value<Context, Collection<Result>>.get(index: KProperty1<Context, Int>): Value<Context, Result> =
+		this[of(index)]
+
+	/**
+	 * Refers to a specific item in an array, by its index.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class User(
+	 *     val pets: List<Pet>,
+	 *     val favorite: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::favorite set User::pets[0] / Pet::name
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/arrayElemAt/)
+	 */
+	operator fun <Context : Any, Result> Value<Context, Collection<Result>>.get(index: Int): Value<Context, Result> =
+		this[of(index)]
+
 }
 
 @OptIn(LowLevelApi::class)
@@ -268,5 +430,22 @@ private class GetFieldValue<Context : Any, Result>(
 			}
 		}
 	}
+}
 
+@OptIn(LowLevelApi::class)
+private class ArrayElemAtValue<Context : Any, Result>(
+	private val array: Value<Context, *>,
+	private val index: Value<Context, Int>,
+	context: BsonContext,
+) : AbstractValue<Context, Result>(context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonValueWriter) = with(writer) {
+		writeDocument {
+			writeArray("\$arrayElemAt") {
+				array.writeTo(this)
+				index.writeTo(this)
+			}
+		}
+	}
 }

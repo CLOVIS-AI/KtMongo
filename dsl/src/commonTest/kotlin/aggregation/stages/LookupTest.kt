@@ -103,7 +103,14 @@ val LookupTest by multiContextSuite {
 					},
 					{
 						"$project": {
-							"departmentResolved": "$departments.0"
+							"departmentResolved": {
+								"$arrayElemAt": [
+									"$departments",
+									{
+										"$literal": 0
+									}
+								]
+							}
 						}
 					}
 				]

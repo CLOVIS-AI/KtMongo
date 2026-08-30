@@ -20,21 +20,25 @@
 package opensavvy.ktmongo.dsl.aggregation.stages
 
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Pipeline
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.FieldDsl
+import opensavvy.ktmongo.dsl.path.FieldImpl
 import opensavvy.ktmongo.dsl.path.Path
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import kotlin.jvm.JvmName
+import kotlin.reflect.KProperty1
 
 /**
  * Pipeline implementing the `$set` stage.
@@ -1480,6 +1484,112 @@ interface SetStageOperators<In : Any, Out : Any> : CompoundBsonNode, Aggregation
 	}
 
 	// endregion
+	// region $$REMOVE
+
+	/**
+	 * Special variable useful to delete a field.
+	 *
+	 * If any field is valued to this variable, the field is entirely deleted.
+	 *
+	 * To unconditionally delete a field, see the [exclude] syntax sugar.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val isActive: Boolean,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         User::name set cond(
+	 *             condition = User::isActive,
+	 *             ifTrue = User::name,
+	 *             ifFalse = Remove,
+	 *         )
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/aggregation-variables/#mongodb-variable-variable.REMOVE)
+	 * - [Examples with `$addFields`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#mongodb-pipeline-pipe.-addFields)
+	 */
+	@Suppress("PropertyName")
+	@OptIn(LowLevelApi::class)
+	val Remove: Value<In, Nothing>
+		get() = RemoveVarBsonNode(context)
+
+	/**
+	 * Excludes a field from the output document.
+	 *
+	 * If you only want to exclude fields, use the [`$unset` stage][HasUnset.unset] instead.
+	 *
+	 * This function is implemented using the [`$$REMOVE` special variable][Remove].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class UserIsAdult(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val isAdult: Boolean,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         UserIsAdult::isAdult set (User::age gte 18)
+	 *         exclude(User::age)
+	 *     }
+	 * ```
+	 */
+	@OptIn(LowLevelApi::class)
+	fun exclude(field: Field<In, *>) {
+		FieldImpl<Out, Any>(field.path) set Remove
+	}
+
+	/**
+	 * Excludes a field from the output document.
+	 *
+	 * If you only want to exclude fields, use the [`$unset` stage][HasUnset.unset] instead.
+	 *
+	 * This function is implemented using the [`$$REMOVE` special variable][Remove].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class UserIsAdult(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val isAdult: Boolean,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .set {
+	 *         UserIsAdult::isAdult set (User::age gte 18)
+	 *         exclude(User::age)
+	 *     }
+	 * ```
+	 */
+	fun exclude(field: KProperty1<In, *>) {
+		exclude(field.field)
+	}
+
+	// endregion
 }
 
 private class SetStageBsonNode<In : Any, Out : Any>(
@@ -1516,5 +1626,16 @@ private class SetArrayBsonNode(
 					writeNull()
 			}
 		}
+	}
+}
+
+@LowLevelApi
+private class RemoveVarBsonNode<Context : Any>(
+	context: BsonContext,
+) : AbstractValue<Context, Nothing>(context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonValueWriter) = with(writer) {
+		writeString($$$"$$REMOVE")
 	}
 }

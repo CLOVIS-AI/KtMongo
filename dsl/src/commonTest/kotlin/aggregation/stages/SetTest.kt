@@ -159,4 +159,48 @@ val SetTest by multiContextSuite {
 
 	}
 
+	suite("Remove fields") {
+		test("Unconditionally remove a field") {
+			TestPipeline<Target>()
+				.set<Target> {
+					exclude(Target::foo)
+				} shouldBeBson $$$"""
+					[
+						{
+							"$set": {
+								"foo": "$$REMOVE"
+							}
+						}
+					]
+				""".trimIndent()
+		}
+
+		test("Conditionally remove a field") {
+			TestPipeline<Target>()
+				.set<Target> {
+					Target::foo set cond(
+						condition = Target::isAlive,
+						ifTrue = "Alive!",
+						ifFalse = Remove,
+					)
+				} shouldBeBson $$$"""
+					[
+						{
+							"$set": {
+								"foo": {
+									"$cond": {
+										"if": "$isAlive",
+										"then": {
+											"$literal": "Alive!"
+										},
+										"else": "$$REMOVE"
+									}
+								}
+							}
+						}
+					]
+				""".trimIndent()
+		}
+	}
+
 }
