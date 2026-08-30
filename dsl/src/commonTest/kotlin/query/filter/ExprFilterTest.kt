@@ -55,8 +55,22 @@ val ExprFilterTest by multiContextSuite {
 			{
 				"$expr": {
 					"$ne": [
-						"$grades.0",
-						"$grades.1"
+						{
+							"$arrayElemAt": [
+								"$grades",
+								{
+									"$literal": 0
+								}
+							]
+						},
+						{
+							"$arrayElemAt": [
+								"$grades",
+								{
+									"$literal": 1
+								}
+							]
+						}
 					]
 				}
 			}
@@ -72,7 +86,14 @@ val ExprFilterTest by multiContextSuite {
 			{
 				"$expr": {
 					"$ne": [
-						"$grades.0",
+						{
+							"$arrayElemAt": [
+								"$grades",
+								{
+									"$literal": 0
+								}
+							]
+						},
 						{
 							"$literal": 12
 						}
@@ -94,7 +115,14 @@ val ExprFilterTest by multiContextSuite {
 						{
 							"$literal": 12
 						},
-						"$grades.0"
+						{
+							"$arrayElemAt": [
+								"$grades",
+								{
+									"$literal": 0
+								}
+							]
+						}
 					]
 				}
 			}

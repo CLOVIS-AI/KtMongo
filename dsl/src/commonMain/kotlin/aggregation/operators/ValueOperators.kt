@@ -27,9 +27,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
-import opensavvy.ktmongo.dsl.path.Field
-import opensavvy.ktmongo.dsl.path.FieldDsl
-import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.path.*
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -64,8 +62,55 @@ interface ValueOperators : FieldDsl {
 	 * ```
 	 */
 	@OptIn(LowLevelApi::class)
-	fun <Context : Any, Result> of(field: Field<Context, Result>): Value<Context, Result> =
-		FieldValue(field, context)
+	fun <Context : Any, Result> of(field: Field<Context, Result>): Value<Context, Result> {
+		// A Field can contain multiple kinds of paths
+		// Some of them are supported within aggregations, some are not
+		// Even the ones that are supported may require wrapping
+
+		// The type parameters of this function are incorrect for all intermediate paths,
+		// but since the type doesn't appear in the request itself, that doesn't matter.
+		fun ofPath(path: Path): Value<Context, Result> {
+			if (path.parent == null) {
+				require(path.segment is PathSegment.Field) { "The field '$field' has a root of type ${path.segment::class}, which is not supported in aggregations" }
+				return FieldValue(FieldImpl(path), context)
+			}
+
+			// The root case has been eliminated, let's focus on the recursion
+			val parent = ofPath(path.parent)
+
+			when (path.segment) {
+				is PathSegment.Field if parent is FieldValue<*, *> && "." !in path.segment.name && !path.segment.name.startsWith("$") -> {
+					// Case ….foo.bar <.baz>
+					// We can join the new segment into the previous FieldValue
+					return FieldValue(FieldImpl(parent.field.path / path.segment), context)
+				}
+
+				is PathSegment.Field -> {
+					// Case (….foo × 5) <.bar>
+					return GetFieldValue(
+						root = parent,
+						child = Path(path.segment.name),
+						context = context,
+					)
+				}
+
+				is PathSegment.Indexed -> {
+					// Case (…foo) <[0]>
+					return ArrayElemAtValue(
+						array = parent,
+						index = of(path.segment.index),
+						context = context,
+					)
+				}
+
+				PathSegment.AllPositional, PathSegment.Positional, is PathSegment.FilteredPositional ->
+					throw IllegalArgumentException("The field '$field' contains the segment '${path.segment}', which is not supported in aggregations")
+			}
+		}
+
+
+		return ofPath(field.path)
+	}
 
 	/**
 	 * Refers to a [field] within an [aggregation value][AggregationOperators].
