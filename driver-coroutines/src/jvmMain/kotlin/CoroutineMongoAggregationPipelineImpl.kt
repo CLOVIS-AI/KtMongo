@@ -122,7 +122,6 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.lookup(block) as CoroutineMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun <Out : Any> group(block: GroupStageOperators<Document, Out>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.group(block) as CoroutineMongoAggregationPipelineImpl<Out>
 
