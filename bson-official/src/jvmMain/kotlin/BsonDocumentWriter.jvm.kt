@@ -333,7 +333,7 @@ internal class JavaBsonDocumentWriter(
 			writer.writeNull()
 		} else {
 			@Suppress("UNCHECKED_CAST", "UNNECESSARY_NOT_NULL_ASSERTION")
-			val codec = factory.findCodecForType<T>(type)
+			val codec = factory.findCodecForType<T>(type, value = obj)
 			codec.encode(
 				writer,
 				obj,
