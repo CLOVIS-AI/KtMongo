@@ -1308,13 +1308,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -1322,7 +1322,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
+	infix fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
 		DivisionValueOperator(context, this, other)
 
 	/**
@@ -1338,13 +1338,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -1353,7 +1353,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("divByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+	infix fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
 		this.div(of(other))
 
 	/**
@@ -1369,13 +1369,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -1384,7 +1384,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.internal.LowPriorityInOverloadResolution
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Value<Context, Result>.div(other: Result): Value<Context, Result> =
+	infix final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Value<Context, Result>.div(other: Result): Value<Context, Result> =
 		this.div(of(other))
 
 	/**
@@ -1400,13 +1400,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -1415,7 +1415,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("divFieldReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
+	infix fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
 		of(this).div(other)
 
 	/**
@@ -1431,13 +1431,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -1446,7 +1446,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("divFieldReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE")
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+	infix fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
 		of(this).div(of(other))
 
 	/**
@@ -1462,13 +1462,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -1477,7 +1477,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("divFieldReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: Result): Value<Context, Result> =
+	infix final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> opensavvy.ktmongo.dsl.path.Field<Context, Result>.div(other: Result): Value<Context, Result> =
 		of(this).div(of(other))
 
 	/**
@@ -1493,13 +1493,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -1509,7 +1509,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("divResultReceiverByValue")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.div(other: Value<Context, Result>): Value<Context, Result> =
+	infix final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.div(other: Value<Context, Result>): Value<Context, Result> =
 		of(this).div(other)
 
 	/**
@@ -1525,13 +1525,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -1541,7 +1541,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("divResultReceiverByField")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
+	infix final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.div(other: opensavvy.ktmongo.dsl.path.Field<Context, Result>): Value<Context, Result> =
 		of(this).div(of(other))
 
 	/**
@@ -1557,13 +1557,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -1573,7 +1573,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	@kotlin.jvm.JvmName("divResultReceiverByResult")
 	@OptIn(LowLevelApi::class)
 	@Suppress("INAPPLICABLE_JVM_NAME", "INVISIBLE_REFERENCE", "WRONG_MODIFIER_CONTAINING_DECLARATION")
-	operator final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.div(other: Result): Value<Context, Result> =
+	infix final inline fun <Context : Any, @kotlin.internal.OnlyInputTypes reified Result> Result.div(other: Result): Value<Context, Result> =
 		of(this).div(of(other))
 
 	@OptIn(LowLevelApi::class)

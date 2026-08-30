@@ -244,13 +244,13 @@ interface ArithmeticValueOperators : ValueOperators {
 	 *
 	 * collection.updateManyWithPipeline {
 	 *     set {
-	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) / of(8))
+	 *         ConferencePlanning::workdays set (of(ConferencePlanning::hours) div of(8))
 	 *     }
 	 * }
 	 * ```
 	 *
-	 * Note: due to an overload resolution ambiguity with [ValueOperators.div], the [of][ValueOperators.of] operator is
-	 * required for at least one of the arguments.
+	 * Note: because the `/` operator is already used in KtMongo for the field accessor ([ValueOperators.div]), it
+	 * cannot be used for division. Explicitly spell out `div` instead. It needs explicit parentheses.
 	 *
 	 * ### External resources
 	 *
@@ -258,7 +258,7 @@ interface ArithmeticValueOperators : ValueOperators {
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("INVISIBLE_REFERENCE")
-	operator fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
+	infix fun <Context : Any, @kotlin.internal.OnlyInputTypes Result> Value<Context, Result>.div(other: Value<Context, Result>): Value<Context, Result> =
 		DivisionValueOperator(context, this, other)
 
 	@OptIn(LowLevelApi::class)
