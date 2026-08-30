@@ -28,6 +28,7 @@ import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
+import opensavvy.ktmongo.dsl.path.FieldDsl
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.official.toJava
@@ -120,6 +121,18 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 	@KtMongoDsl
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.lookup(block) as SyncMongoAggregationPipelineImpl<Document>
+
+	@KtMongoDsl
+	override fun <Item, Out : Any> unwind(block: UnwindStageOperators<Document, Item, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
+		super<AggregationPipeline>.unwind(block) as SyncMongoAggregationPipelineImpl<Out>
+
+	@KtMongoDsl
+	override fun <Item> unwindDirect(array: FieldDsl.() -> Field<Document, Collection<Item>?>): SyncMongoAggregationPipelineImpl<Document> =
+		super<AggregationPipeline>.unwindDirect(array) as SyncMongoAggregationPipelineImpl<Document >
+
+	@KtMongoDsl
+	override fun <Item> unwindDirect(overloadMarker: Unit, array: FieldDsl.() -> KProperty1<Document, Collection<Item>?>): SyncMongoAggregationPipelineImpl<Document> =
+		super<AggregationPipeline>.unwindDirect(overloadMarker, array) as SyncMongoAggregationPipelineImpl<Document>
 
 	@KtMongoDsl
 	override fun <Out : Any> group(block: GroupStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
