@@ -19,6 +19,7 @@
 
 package opensavvy.ktmongo.sync
 
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
@@ -30,6 +31,8 @@ import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.official.toJava
+import opensavvy.ktmongo.sync.api.MongoAggregationPipeline
+import opensavvy.ktmongo.sync.api.toList
 import org.bson.conversions.Bson
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -139,6 +142,38 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 				this@SyncMongoAggregationPipelineImpl.writeTo(this)
 			}
 		}
+	}
+
+	// endregion
+	// region Debug mode
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override suspend fun debug(limit: Int): MongoAggregationPipeline.PipelineDebugReport {
+		val stages = chain.toList().runningFold(collection.aggregate()) { pipeline, link ->
+			pipeline.withStage(link)
+		}.map { pipeline ->
+			val currentStage = (pipeline as SyncMongoAggregationPipelineImpl<*>).chain.toBsonList().lastOrNull()
+				?: collection.factory.buildDocument {} // Empty document represents the pipeline with no operations at all
+
+			try {
+				val results = pipeline
+					.limit(limit)
+					.reinterpret<BsonDocument>()
+					.toList()
+
+				MongoAggregationPipeline.StageDebugReport.Success(
+					stage = currentStage,
+					results = results,
+				)
+			} catch (e: Exception) {
+				MongoAggregationPipeline.StageDebugReport.Failure(
+					stage = currentStage,
+					failure = e,
+				)
+			}
+		}
+
+		return MongoAggregationPipeline.PipelineDebugReport(stages, limit = limit)
 	}
 
 	// endregion

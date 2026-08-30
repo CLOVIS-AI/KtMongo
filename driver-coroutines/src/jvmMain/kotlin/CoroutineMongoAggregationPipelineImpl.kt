@@ -19,8 +19,15 @@
 
 package opensavvy.ktmongo.coroutines
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.ensureActive
+import opensavvy.ktmongo.api.MongoAggregationPipeline
 import opensavvy.ktmongo.api.MongoCollection
+import opensavvy.ktmongo.api.toList
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.official.BsonDocument
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -140,6 +147,41 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 				this@CoroutineMongoAggregationPipelineImpl.writeTo(this)
 			}
 		}
+	}
+
+	// endregion
+	// region Debug
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override suspend fun debug(limit: Int): MongoAggregationPipeline.PipelineDebugReport = coroutineScope {
+		val stages = chain.toList().runningFold(collection.aggregate()) { pipeline, link ->
+			pipeline.withStage(link)
+		}.map { pipeline ->
+			async {
+				val currentStage = (pipeline as CoroutineMongoAggregationPipelineImpl<*>).chain.toBsonList().lastOrNull()
+					?: collection.factory.buildDocument {} // Empty document represents the pipeline with no operations at all
+
+				try {
+					val results = pipeline
+						.limit(limit)
+						.reinterpret<BsonDocument>()
+						.toList()
+
+					MongoAggregationPipeline.StageDebugReport.Success(
+						stage = currentStage,
+						results = results,
+					)
+				} catch (e: Exception) {
+					ensureActive()
+					MongoAggregationPipeline.StageDebugReport.Failure(
+						stage = currentStage,
+						failure = e,
+					)
+				}
+			}
+		}.awaitAll()
+
+		MongoAggregationPipeline.PipelineDebugReport(stages, limit = limit)
 	}
 
 	// endregion

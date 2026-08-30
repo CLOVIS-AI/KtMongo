@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.tests.api.operations
 
 import kotlinx.serialization.Serializable
+import opensavvy.ktmongo.api.MongoAggregationPipeline
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.api.first
 import opensavvy.ktmongo.api.toList
@@ -218,5 +219,62 @@ fun SuiteDsl.verifyAggregationOperations(
 			.aggregate()
 
 		check(request.toString() matches $$""".+MongoCollection\(.+\).aggregate\(\[\{"\$match": \{"name": \{"\$gt": "Bob"\}\}\}\]\)""")
+	}
+
+	test("Debug mode") {
+		collection().insertMany(
+			AggregationOperationsUser(
+				_id = collection().newId(),
+				name = "Alice",
+				age = 30,
+			),
+			AggregationOperationsUser(
+				_id = collection().newId(),
+				name = "Bob",
+				age = 17,
+			),
+			AggregationOperationsUser(
+				_id = collection().newId(),
+				name = "Charlie",
+				age = 22,
+			),
+		)
+
+		val results = collection().aggregate()
+			.match { AggregationOperationsUser::age gte 18 }
+			.sort { ascending(AggregationOperationsUser::age) }
+			.limit(1)
+			.debug()
+
+		println("Results: $results")
+
+		check(results.stages.size == 4)
+
+		// Raw pipeline: before the first stage
+		val zero = results.stages[0]
+		check(zero is MongoAggregationPipeline.StageDebugReport.Success)
+		check(zero.stage.isEmpty())
+		check(zero.results.size == 3)
+
+		// $match
+		val one = results.stages[1]
+		check(one is MongoAggregationPipeline.StageDebugReport.Success)
+		check(one.stage[$$"$match"] != null)
+		check(one.results.size == 2)
+		check(one.results[0]["name"]?.decodeString() == "Alice")
+
+		// $sort
+		val two = results.stages[2]
+		check(two is MongoAggregationPipeline.StageDebugReport.Success)
+		check(two.stage[$$"$sort"] != null)
+		check(two.results.size == 2)
+		check(two.results[0]["name"]?.decodeString() == "Charlie")
+
+		// $limit
+		val three = results.stages[3]
+		check(three is MongoAggregationPipeline.StageDebugReport.Success)
+		check(three.stage[$$"$limit"] != null)
+		check(three.results.size == 1)
+		check(three.results[0]["name"]?.decodeString() == "Charlie")
 	}
 }

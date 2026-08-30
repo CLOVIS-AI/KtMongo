@@ -88,6 +88,31 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): BlockingMongoAggregationPipeline<Document> =
 		BlockingMongoAggregationPipeline(inner.lookup(block))
 
+	override suspend fun debug(limit: Int): MongoAggregationPipeline.PipelineDebugReport {
+		val upstream = inner.debug(limit)
+
+		return MongoAggregationPipeline.PipelineDebugReport(
+			stages = upstream.stages.map {
+				when (it) {
+					is SyncMongoAggregationPipeline.StageDebugReport.Success -> MongoAggregationPipeline.StageDebugReport.Success(
+						stage = it.stage,
+						results = it.results,
+					)
+
+					is SyncMongoAggregationPipeline.StageDebugReport.Failure -> MongoAggregationPipeline.StageDebugReport.Failure(
+						stage = it.stage,
+						failure = it.failure,
+					)
+				}
+			},
+			limit = upstream.limit,
+		).also {
+			// This module is only used in tests, we don't care about performance, especially of debug mode
+			// Let's make sure the toString() implementation is exactly identical
+			check(it.toString() == upstream.toString())
+		}
+	}
+
 	@LowLevelApi
 	override val context: BsonContext
 		get() = inner.context
