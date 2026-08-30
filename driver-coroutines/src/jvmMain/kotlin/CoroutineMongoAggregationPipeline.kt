@@ -21,6 +21,7 @@ package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.api.MongoAggregationPipeline
 import opensavvy.ktmongo.api.MongoIterable
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
@@ -28,6 +29,7 @@ import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -46,6 +48,14 @@ interface CoroutineMongoAggregationPipeline<Document : Any> : MongoAggregationPi
 
 	@LowLevelApi
 	override fun asIterable(type: KType): CoroutineMongoAggregateIterable<Document>
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun withStage(stage: BsonNode): CoroutineMongoAggregationPipeline<Document>
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun <New : Any> reinterpret(): CoroutineMongoAggregationPipeline<New>
 
 	override fun limit(amount: Long): CoroutineMongoAggregationPipeline<Document>
 

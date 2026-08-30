@@ -17,12 +17,17 @@
 package opensavvy.ktmongo.api
 
 import kotlinx.coroutines.flow.Flow
+import opensavvy.ktmongo.bson.BsonDocument
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.AggregationPipeline
+import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -70,11 +75,21 @@ interface MongoAggregationPipeline<Document : Any> : AggregationPipeline<Documen
 	// endregion
 	// region Stages
 
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun withStage(stage: BsonNode): MongoAggregationPipeline<Document>
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun <New : Any> reinterpret(): MongoAggregationPipeline<New>
+
 	override fun limit(amount: Long): MongoAggregationPipeline<Document>
 
 	override fun limit(amount: Int): MongoAggregationPipeline<Document>
 
 	override fun match(filter: FilterQuery<Document>.() -> Unit): MongoAggregationPipeline<Document>
+
+	override fun matchExpr(filter: AggregationOperators.() -> Value<Document, Boolean>): MongoAggregationPipeline<Document>
 
 	override fun sample(size: Int): MongoAggregationPipeline<Document>
 
@@ -97,6 +112,133 @@ interface MongoAggregationPipeline<Document : Any> : AggregationPipeline<Documen
 	override fun <Out : Any> countTo(field: Field<Out, Number>): MongoAggregationPipeline<Out>
 
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): MongoAggregationPipeline<Out>
+
+	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): MongoAggregationPipeline<Document>
+
+	// endregion
+	// region Debug
+
+	/**
+	 * Creates a [debug report][PipelineDebugReport] for this pipeline.
+	 *
+	 * A debug report helps understand what a pipeline does by displaying intermediate results after each stage.
+	 *
+	 * This method is useful during development, in tests, or to evaluate within the debugger.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .match { User::age gte 18 }
+	 *     .sort { descending(User::age) }
+	 *     .limit(2)
+	 *     .debug()
+	 * ```
+	 * Then, print the debug report to the standard output or view it under the debugger.
+	 *
+	 * @param limit The maximum number of documents to display after each stage.
+	 */
+	suspend fun debug(
+		limit: Int = 10,
+	): PipelineDebugReport
+
+	/**
+	 * A debug report to help understand how this pipeline behaves.
+	 *
+	 * The report lists the different [stages] declared in the pipeline (in order).
+	 * For each stage, the report gives the first few output documents.
+	 *
+	 * To generate a debug report, call [MongoAggregationPipeline.debug].
+	 */
+	data class PipelineDebugReport(
+		/**
+		 * The different stages declared in the pipeline, in order.
+		 *
+		 * The very first item is this list is the initial collection.
+		 * Because it corresponds to no actual stage, it is represented by an empty document.
+		 */
+		val stages: List<StageDebugReport>,
+
+		/**
+		 * The `limit` parameter that was passed to [MongoAggregationPipeline.debug].
+		 */
+		val limit: Int,
+	) {
+
+		init {
+			require(stages.isNotEmpty()) { "Even if the pipeline is empty, the first reported stage should be the direct collection content: Found ${stages.size} stages" }
+		}
+
+		override fun toString(): String = buildString {
+			appendLine("Pipeline debug (first $limit resulting documents after each stage):")
+			for (stage in stages) {
+				appendLine("  ${stage.toString().replace("\n", "\n  ")}")
+			}
+		}
+	}
+
+	/**
+	 * A debug report to help understand how a specific stage behaves.
+	 *
+	 * The report describes a [stage] and its output.
+	 * A stage may be [successful][Success] or a [failure][Failure].
+	 *
+	 * To generate a debug report, call [MongoAggregationPipeline.debug].
+	 */
+	sealed class StageDebugReport {
+
+		/**
+		 * The stage that was executed.
+		 *
+		 * Note that the very first stage in a pipeline is always an empty document.
+		 * See [PipelineDebugReport.stages] for more information.
+		 */
+		abstract val stage: BsonDocument
+
+		/**
+		 * A debug report for a successful stage.
+		 */
+		data class Success(
+			override val stage: BsonDocument,
+			/**
+			 * The first documents output by this stage.
+			 *
+			 * To control the number of documents returned, see the parameters of [MongoAggregationPipeline.debug].
+			 */
+			val results: List<BsonDocument>,
+		) : StageDebugReport() {
+
+			override fun toString(): String = buildString {
+				appendLine("Stage: $stage")
+				for (result in results) {
+					appendLine("  ${result.toString().replace("\n", "\n    ")}")
+				}
+			}
+		}
+
+		/**
+		 * A debug report for a failed stage.
+		 */
+		data class Failure(
+			override val stage: BsonDocument,
+			/**
+			 * The error that was thrown when trying to access the output of this stage.
+			 */
+			val failure: Throwable,
+		) : StageDebugReport() {
+
+			override fun toString(): String = buildString {
+				appendLine("Stage: $stage")
+				appendLine("  ${failure.stackTraceToString().replace("\n", "\n    ")}")
+			}
+		}
+	}
 
 	// endregion
 }

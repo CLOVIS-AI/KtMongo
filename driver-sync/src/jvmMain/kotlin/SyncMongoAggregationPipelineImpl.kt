@@ -19,10 +19,10 @@
 
 package opensavvy.ktmongo.sync
 
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
-import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.*
 import opensavvy.ktmongo.dsl.aggregation.stages.*
@@ -31,6 +31,8 @@ import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.official.toJava
+import opensavvy.ktmongo.sync.api.MongoAggregationPipeline
+import opensavvy.ktmongo.sync.api.toList
 import org.bson.conversions.Bson
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
@@ -69,67 +71,51 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 	// endregion
 	// region Stages
 
-	@KtMongoDsl
 	override fun limit(amount: Long): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.limit(amount) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun limit(amount: Int): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.limit(amount) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun match(filter: FilterQuery<Document>.() -> Unit): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.match(filter) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun matchExpr(filter: AggregationOperators.() -> Value<Document, Boolean>): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.matchExpr(filter) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun sample(size: Int): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.sample(size) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun <Out : Any> set(block: SetStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.set(block) as SyncMongoAggregationPipelineImpl<Out>
 
-	@KtMongoDsl
 	override fun skip(amount: Long): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.skip(amount) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun skip(amount: Int): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.skip(amount) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun sort(block: SortOptionDsl<Document>.() -> Unit): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.sort(block) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun unset(block: UnsetStageOperators<Document>.() -> Unit): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.unset(block) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun <Out : Any> project(block: ProjectStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.project(block) as SyncMongoAggregationPipelineImpl<Out>
 
-	@KtMongoDsl
 	override fun unionWith(other: HasUnionWithCompatibility<Document>): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.unionWith(other) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): SyncMongoAggregationPipelineImpl<Document> =
 		super<AggregationPipeline>.lookup(block) as SyncMongoAggregationPipelineImpl<Document>
 
-	@KtMongoDsl
 	override fun <Out : Any> group(block: GroupStageOperators<Document, Out>.() -> Unit): SyncMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.group(block) as SyncMongoAggregationPipelineImpl<Out>
 
-	@KtMongoDsl
 	override fun <Out : Any> countTo(field: Field<Out, Number>): SyncMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.countTo(field) as SyncMongoAggregationPipelineImpl<Out>
 
-	@KtMongoDsl
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): SyncMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.countTo(field) as SyncMongoAggregationPipelineImpl<Out>
 
@@ -156,6 +142,38 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 				this@SyncMongoAggregationPipelineImpl.writeTo(this)
 			}
 		}
+	}
+
+	// endregion
+	// region Debug mode
+
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	override suspend fun debug(limit: Int): MongoAggregationPipeline.PipelineDebugReport {
+		val stages = chain.toList().runningFold(collection.aggregate()) { pipeline, link ->
+			pipeline.withStage(link)
+		}.map { pipeline ->
+			val currentStage = (pipeline as SyncMongoAggregationPipelineImpl<*>).chain.toBsonList().lastOrNull()
+				?: collection.factory.buildDocument {} // Empty document represents the pipeline with no operations at all
+
+			try {
+				val results = pipeline
+					.limit(limit)
+					.reinterpret<BsonDocument>()
+					.toList()
+
+				MongoAggregationPipeline.StageDebugReport.Success(
+					stage = currentStage,
+					results = results,
+				)
+			} catch (e: Exception) {
+				MongoAggregationPipeline.StageDebugReport.Failure(
+					stage = currentStage,
+					failure = e,
+				)
+			}
+		}
+
+		return MongoAggregationPipeline.PipelineDebugReport(stages, limit = limit)
 	}
 
 	// endregion

@@ -19,6 +19,7 @@
 
 package opensavvy.ktmongo.sync
 
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
@@ -26,6 +27,7 @@ import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.tree.BsonNode
 import opensavvy.ktmongo.sync.api.MongoAggregationPipeline
 import opensavvy.ktmongo.sync.api.MongoIterable
 import kotlin.reflect.KProperty1
@@ -46,6 +48,14 @@ interface SyncMongoAggregationPipeline<Document : Any> : MongoAggregationPipelin
 
 	@LowLevelApi
 	override fun asIterable(type: KType): SyncMongoAggregateIterable<Document>
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun withStage(stage: BsonNode): SyncMongoAggregationPipeline<Document>
+
+	@LowLevelApi
+	@DangerousMongoApi
+	override fun <New : Any> reinterpret(): SyncMongoAggregationPipeline<New>
 
 	override fun limit(amount: Long): SyncMongoAggregationPipeline<Document>
 

@@ -22,6 +22,8 @@ import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
+import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.aggregation.stages.*
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
 import opensavvy.ktmongo.dsl.path.Field
@@ -46,6 +48,9 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 
 	override fun match(filter: FilterQuery<Document>.() -> Unit): BlockingMongoAggregationPipeline<Document> =
 		BlockingMongoAggregationPipeline(inner.match(filter))
+
+	override fun matchExpr(filter: AggregationOperators.() -> Value<Document, Boolean>): BlockingMongoAggregationPipeline<Document> =
+		BlockingMongoAggregationPipeline(inner.matchExpr(filter))
 
 	override fun sample(size: Int): BlockingMongoAggregationPipeline<Document> =
 		BlockingMongoAggregationPipeline(inner.sample(size))
@@ -79,6 +84,34 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): BlockingMongoAggregationPipeline<Out> =
 		BlockingMongoAggregationPipeline(inner.countTo(field))
+
+	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): BlockingMongoAggregationPipeline<Document> =
+		BlockingMongoAggregationPipeline(inner.lookup(block))
+
+	override suspend fun debug(limit: Int): MongoAggregationPipeline.PipelineDebugReport {
+		val upstream = inner.debug(limit)
+
+		return MongoAggregationPipeline.PipelineDebugReport(
+			stages = upstream.stages.map {
+				when (it) {
+					is SyncMongoAggregationPipeline.StageDebugReport.Success -> MongoAggregationPipeline.StageDebugReport.Success(
+						stage = it.stage,
+						results = it.results,
+					)
+
+					is SyncMongoAggregationPipeline.StageDebugReport.Failure -> MongoAggregationPipeline.StageDebugReport.Failure(
+						stage = it.stage,
+						failure = it.failure,
+					)
+				}
+			},
+			limit = upstream.limit,
+		).also {
+			// This module is only used in tests, we don't care about performance, especially of debug mode
+			// Let's make sure the toString() implementation is exactly identical
+			check(it.toString() == upstream.toString())
+		}
+	}
 
 	@LowLevelApi
 	override val context: BsonContext

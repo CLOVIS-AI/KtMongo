@@ -17,6 +17,7 @@
 plugins {
 	alias(opensavvyConventions.plugins.base)
 	alias(opensavvyConventions.plugins.kotlin.library)
+	alias(libsCommon.plugins.testBalloon)
 }
 
 kotlin {
@@ -37,6 +38,10 @@ kotlin {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotest.assertions)
 		implementation(libsCommon.kotlin.test)
+	}
+
+	sourceSets.jvmTest.dependencies {
+		implementation(kotlin("reflect"))
 	}
 
 	compilerOptions {

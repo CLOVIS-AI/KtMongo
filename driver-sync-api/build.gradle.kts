@@ -53,6 +53,15 @@ kotlin {
 		implementation(libsCommon.opensavvy.prepared.testBalloon)
 		implementation(libsCommon.kotlin.test)
 	}
+	
+	sourceSets.jvmTest.dependencies {
+		implementation(kotlin("reflect"))
+	}
+}
+
+dependencies {
+	kover(projects.testSyncKotlinx)
+	kover(projects.testSyncReflection)
 }
 
 library {
@@ -65,5 +74,5 @@ library {
 		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
 	}
 
-	coverage.set(50) // TODO: Increase in the future
+	coverage.set(80)
 }
