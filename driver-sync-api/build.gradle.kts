@@ -59,6 +59,11 @@ kotlin {
 	}
 }
 
+dependencies {
+	kover(projects.testSyncKotlinx)
+	kover(projects.testSyncReflection)
+}
+
 library {
 	name.set("KtMongo: MongoDB driver for Kotlin • Synchronous API")
 	description.set("Kotlin-first MongoDB driver: shared API between the various driver implementations")
@@ -69,5 +74,5 @@ library {
 		url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
 	}
 
-	coverage.set(50) // TODO: Increase in the future
+	coverage.set(80)
 }
