@@ -1,0 +1,524 @@
+/*
+ * Copyright (c) 2026, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opensavvy.ktmongo.dsl.aggregation.stages
+
+import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.KtMongoDsl
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
+import opensavvy.ktmongo.dsl.aggregation.Pipeline
+import opensavvy.ktmongo.dsl.aggregation.Value
+import opensavvy.ktmongo.dsl.path.Field
+import opensavvy.ktmongo.dsl.path.FieldDsl
+import opensavvy.ktmongo.dsl.path.Path
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
+import kotlin.reflect.KProperty1
+
+/**
+ * Pipeline implementing the `$unwind` stage.
+ */
+@KtMongoDsl
+interface HasUnwind<Document : Any> : Pipeline<Document> {
+
+	/**
+	 * Unwinds an array.
+	 *
+	 * The array is specified with the [array][UnwindStageOperators.array] keyword, which is mandatory.
+	 *
+	 * ### Unwinding
+	 *
+	 * Unwinding an array means duplicating the root document the same number of times as there are
+	 * array items, replacing the array in each copy by one of its items.
+	 *
+	 * For example, if the following document is an input:
+	 * ```json
+	 * {
+	 *     "a": 1,
+	 *     "b": 2,
+	 *     "c": [3, 4, 5]
+	 * }
+	 * ```
+	 * and we unwind the array `"c"`, then the output will be three documents:
+	 * ```json
+	 * {
+	 *     "a": 1,
+	 *     "b": 2,
+	 *     "c": 3
+	 * }
+	 * ```
+	 * ```json
+	 * {
+	 *     "a": 1,
+	 *     "b": 2,
+	 *     "c": 4
+	 * }
+	 * ```
+	 * ```json
+	 * {
+	 *     "a": 1,
+	 *     "b": 2,
+	 *     "c": 5
+	 * }
+	 * ```
+	 * Each output document is a copy of the original document, but with the array replaced by one of its items.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val pets: List<Pet>,
+	 * )
+	 *
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class UserPet(
+	 *     // …the fields from User you're interested in…
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *
+	 *     // …a single pet instead of the array.
+	 *     val pet: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .unwind {
+	 *         // Unwind the 'pets' array
+	 *         array(User::pets)
+	 *
+	 *         // Immediately project the unwinding result into the new field 'pet'
+	 *         project {
+	 *             UserPet::pet set it
+	 *         }
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind)
+	 *
+	 * @see block The operators declaring how the array should be unwound.
+	 * - [UnwindStageOperators.array]: Specifies which array will be unwound. **Mandatory**.
+	 * - [UnwindStageOperators.writeArrayIndexTo]: Specifies a new field into which the index of the current unwound item will be stored.
+	 * - [UnwindStageOperators.preserveNullAndEmptyArrays]: Specifies how to behave in the presence of `null`, a missing field, or an empty array.
+	 * - [UnwindStageOperators.project]: Specifies an immediate projection (declaring which fields to keep), which has access to the result of the unwinding.
+	 * - [UnwindStageOperators.set]: Specifies an immediate projection (declaring which fields to overwrite), which has access to the result of the unwinding.
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	fun <Item, Out : Any> unwind(
+		block: UnwindStageOperators<Document, Item, Out>.() -> Unit
+	): Pipeline<Out> {
+		val unwindStage = UnwindStageOperatorsImpl<Document, Item, Out>(context)
+			.apply(block)
+			.apply { freeze() }
+
+		val array = unwindStage.array
+		checkNotNull(array) { $$"The $unwind stage must specify an array to unwind: $$unwindStage" }
+
+		var result = this.withStage(unwindStage)
+			.reinterpret<Out>()
+
+		val setStage = unwindStage.setBlock
+		if (setStage != null) {
+			check(result is HasSet<Out>) { $$"To use a $set projection within an $unwind stage, it must support the $set stage, but found a $${result::class}: $$result" }
+			result = result.set {
+				@Suppress("UNCHECKED_CAST") // We know that the $unwind stage doesn't change the data, so it cannot remove fields expected to be present (except the array itself, but that's expected as well)
+				setStage(
+					this as SetStageOperators<Document, Out>,
+					of(array.unsafeCast())
+				)
+			}
+		}
+
+		val projectStage = unwindStage.projectBlock
+		if (projectStage != null) {
+			check(result is HasProject<Out>) { $$"To use a $project projection within an $unwind stage, it must support the $project stage, but found a $${result::class}: $$result" }
+			result = result.project {
+				@Suppress("UNCHECKED_CAST") // We know that the $unwind stage doesn't change the data, so it cannot remove fields expected to be present (except the array itself, but that's expected as well)
+				projectStage(
+					this as ProjectStageOperators<Document, Out>,
+					of(array.unsafeCast())
+				)
+			}
+		}
+
+		return result
+	}
+}
+
+/**
+ * Operators of the [unwind stage][HasUnwind.unwind].
+ */
+@KtMongoDsl
+interface UnwindStageOperators<In : Any, Item, Out : Any> : BsonNode, AggregationOperators, FieldDsl {
+
+	/**
+	 * The array to be unwound.
+	 *
+	 * Each document that contains the specified array will be duplicated the number of times of the array's length.
+	 * Each generated document is identical to the original except that the specified array is replaced
+	 * by an array of size 1 that corresponds to one of the items of the array.
+	 *
+	 * For more information, see [$unwind][HasUnwind.unwind].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val pets: List<Pet>
+	 * )
+	 *
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val userId: ObjectId,
+	 *     val userName: String,
+	 *     val petName: String,
+	 *     val petAge: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .unwind {
+	 *         array(User::pets)
+	 *
+	 *         project {
+	 *             Result::userId set User::name
+	 *             Result::userName set User::name
+	 *             Result::petName set (it / Pet::name)
+	 *             Result::petAge set (it / Pet::age)
+	 *         }
+	 *     }
+	 * ```
+	 *
+	 * Example input:
+	 * ```kotlin
+	 * User(/* … */, "Alice", listOf(Pet("Bob", 5), Pet("Charlie", 6)))
+	 * User(/* … */, "Damian", listOf(Pet("Eva", 2)))
+	 * ```
+	 * Output:
+	 * ```kotlin
+	 * Result(/* … */, "Alice", "Bob", 5)
+	 * Result(/* … */, "Alice", "Charlie", 6)
+	 * Result(/* … */, "Damian", "Eva", 2)
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#std-label-unwind-path)
+	 */
+	fun array(field: Field<In, Collection<Item>?>)
+	// Value type:
+	//  - Collection<Item> because it must be a MongoDB array
+	//  - Nullable for convenience if the field is missing
+	//    - If the field is missing and preserveXXX() was called, and the array is null, then it remains null after, so the field must be nullable
+
+	/**
+	 * The array to be unwound.
+	 *
+	 * Each document that contains the specified array will be duplicated the number of times of the array's length.
+	 * Each generated document is identical to the original except that the specified array is replaced
+	 * by an array of size 1 that corresponds to one of the items of the array.
+	 *
+	 * For more information, see [$unwind][HasUnwind.unwind].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val pets: List<Pet>
+	 * )
+	 *
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val userId: ObjectId,
+	 *     val userName: String,
+	 *     val petName: String,
+	 *     val petAge: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .unwind {
+	 *         array(User::pets)
+	 *
+	 *         project {
+	 *             Result::userId set User::name
+	 *             Result::userName set User::name
+	 *             Result::petName set (it / Pet::name)
+	 *             Result::petAge set (it / Pet::age)
+	 *         }
+	 *     }
+	 * ```
+	 *
+	 * Example input:
+	 * ```kotlin
+	 * User(/* … */, "Alice", listOf(Pet("Bob", 5), Pet("Charlie", 6)))
+	 * User(/* … */, "Damian", listOf(Pet("Eva", 2)))
+	 * ```
+	 * Output:
+	 * ```kotlin
+	 * Result(/* … */, "Alice", "Bob", 5)
+	 * Result(/* … */, "Alice", "Charlie", 6)
+	 * Result(/* … */, "Damian", "Eva", 2)
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#std-label-unwind-path)
+	 */
+	fun array(field: KProperty1<In, Collection<Item>?>) {
+		array(field.field)
+	}
+
+	/**
+	 * A field in which the index of the [array] item will be written.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#std-label-unwind-includeArrayIndex)
+	 */
+	fun writeArrayIndexTo(field: Field<Out, Int>)
+
+	/**
+	 * A field in which the index of the [array] item will be written.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#std-label-unwind-includeArrayIndex)
+	 */
+	fun writeArrayIndexTo(field: KProperty1<Out, Int>) {
+		writeArrayIndexTo(field.field)
+	}
+
+	/**
+	 * Controls the behavior of this stage when encountering missing fields, `null` and empty arrays.
+	 *
+	 * **By default, if this function is NOT called,** `null`, missing and empty arrays are ignored: no output documents are created for them.
+	 *
+	 * **If this function is called:**
+	 * - If the [array] field is missing or an empty array, a single document is output with the [array] field missing.
+	 * - If the [array] field is `null`, a single document is output with the [array] field set to `null`.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/#std-label-unwind-preserveNullAndEmptyArrays)
+	 */
+	fun preserveNullAndEmptyArrays()
+
+	/**
+	 * Immediately declares a [`$project`][HasProject.project] stage that follows this `$unwind` stage.
+	 *
+	 * The output documents have the fields declared in the projection.
+	 * Fields not declared are removed ([except `_id`][ProjectStageOperators.excludeId]).
+	 *
+	 * If you want to only overwrite fields, use [set] instead.
+	 * [project] is more verbose, but also more performant since it guarantees there are no left-over unused fields.
+	 *
+	 * Using both [project] and [set] in the same `$unwind` is forbidden.
+	 *
+	 * The benefit of using this method instead of manually declaring a subsequent projection is that this method receives
+	 * the correctly-typed variable that contains the unwind result.
+	 *
+	 * The field passed to [array] should not be used within the projection, as it has been unwound and thus doesn't store
+	 * an array anymore: its type is incorrect within this stage.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val pets: List<Pet>
+	 * )
+	 *
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     val userId: ObjectId,
+	 *     val userName: String,
+	 *     val petName: String,
+	 *     val petAge: Int,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .unwind {
+	 *         array(User::pets)
+	 *
+	 *         project {
+	 *             Result::userId set User::name
+	 *             Result::userName set User::name
+	 *             Result::petName set (it / Pet::name)
+	 *             Result::petAge set (it / Pet::age)
+	 *         }
+	 *     }
+	 * ```
+	 *
+	 * Example input:
+	 * ```kotlin
+	 * User(/* … */, "Alice", listOf(Pet("Bob", 5), Pet("Charlie", 6)))
+	 * User(/* … */, "Damian", listOf(Pet("Eva", 2)))
+	 * ```
+	 * Output:
+	 * ```kotlin
+	 * Result(/* … */, "Alice", "Bob", 5)
+	 * Result(/* … */, "Alice", "Charlie", 6)
+	 * Result(/* … */, "Damian", "Eva", 2)
+	 * ```
+	 */
+	fun project(block: ProjectStageOperators<In, Out>.(item: Value<In, Item?>) -> Unit)
+
+	/**
+	 * Immediately declares a [`$set`][HasSet.set] stage that follows this `$unwind` stage.
+	 *
+	 * The output documents have the same fields as the initial documents, except that `$set` may overwrite some fields.
+	 *
+	 * If you want to create and remove fields, use [project] instead.
+	 * [project] is more verbose, but also more performant since it guarantees there are no left-over unused fields.
+	 *
+	 * Using both [project] and [set] in the same `$unwind` is forbidden.
+	 *
+	 * The benefit of using this method instead of manually declaring a subsequent projection is that this method receives
+	 * the correctly-typed variable that contains the unwind result.
+	 *
+	 * The field passed to [array] should not be used within the projection, as it has been unwound and thus doesn't store
+	 * an array anymore: its type is incorrect within this stage.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val pets: List<Pet>
+	 * )
+	 *
+	 * class Pet(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * class Result(
+	 *     // Fields from 'User'
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *
+	 *     // A single pet
+	 *     val pet: Pet,
+	 * )
+	 *
+	 * users.aggregate()
+	 *     .unwind {
+	 *         array(User::pets)
+	 *
+	 *         set {
+	 *             Result::pet set it
+	 *         }
+	 *     }
+	 * ```
+	 *
+	 * Example input:
+	 * ```kotlin
+	 * User(/* … */, "Alice", listOf(Pet("Bob", 5), Pet("Charlie", 6)))
+	 * User(/* … */, "Damian", listOf(Pet("Eva", 2)))
+	 * ```
+	 * Output:
+	 * ```kotlin
+	 * Result(/* … */, "Alice", "Bob", 5)
+	 * Result(/* … */, "Alice", "Charlie", 6)
+	 * Result(/* … */, "Damian", "Eva", 2)
+	 * ```
+	 */
+	fun set(block: SetStageOperators<In, Out>.(item: Value<In, Item?>) -> Unit)
+
+}
+
+@LowLevelApi
+private class UnwindStageOperatorsImpl<In : Any, Item, Out : Any>(
+	context: BsonContext,
+) : UnwindStageOperators<In, Item, Out>, AbstractBsonNode(context) {
+	var array: Field<In, Collection<Item>?>? = null
+	private var writeArrayIndexTo: Path? = null
+	private var preserveNullAndEmptyArrays: Boolean? = null
+	var projectBlock: (ProjectStageOperators<In, Out>.(item: Value<In, Item?>) -> Unit)? = null
+	var setBlock: (SetStageOperators<In, Out>.(item: Value<In, Item?>) -> Unit)? = null
+
+	override fun array(field: Field<In, Collection<Item>?>) {
+		require(!frozen) { "Cannot declare the array on a frozen stage: $this" }
+		require(array == null) { "Cannot declare the array more than once: $this" }
+		array = field
+	}
+
+	override fun writeArrayIndexTo(field: Field<Out, Int>) {
+		require(!frozen) { "Cannot declare the array on a frozen stage: $this" }
+		require(writeArrayIndexTo == null) { "Cannot declare the array index field more than once: $this" }
+		writeArrayIndexTo = field.path
+	}
+
+	override fun preserveNullAndEmptyArrays() {
+		require(!frozen) { "Cannot declare the array on a frozen stage: $this" }
+		require(preserveNullAndEmptyArrays == null) { "Cannot declare preserveNullAndEmptyArrays more than once: $this" }
+		preserveNullAndEmptyArrays = true
+	}
+
+	override fun project(block: ProjectStageOperators<In, Out>.(item: Value<In, Item?>) -> Unit) {
+		require(!frozen) { "Cannot declare the array on a frozen stage: $this" }
+		require(projectBlock == null) { "Cannot declare the project block more than once: $this" }
+		require(setBlock == null) { $$"Cannot declare both a $project and a $set projection on the same $unwind: $$this" }
+		projectBlock = block
+	}
+
+	override fun set(block: SetStageOperators<In, Out>.(item: Value<In, Item?>) -> Unit) {
+		require(!frozen) { "Cannot declare the array on a frozen stage: $this" }
+		require(setBlock == null) { "Cannot declare the set block more than once: $this" }
+		require(projectBlock == null) { $$"Cannot declare both a $project and a $set projection on the same $unwind: $$this" }
+		setBlock = block
+	}
+
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		write($$"$unwind") {
+			if (array != null && writeArrayIndexTo == null && preserveNullAndEmptyArrays == null) {
+				writeString("$" + array!!.path.toString())
+			} else writeDocument {
+				array?.also { writeString("path", "$${it.path}") }
+
+				writeArrayIndexTo?.also { writeString("includeArrayIndex", it.toString()) }
+
+				preserveNullAndEmptyArrays?.also { writeBoolean("preserveNullAndEmptyArrays", it) }
+			}
+		}
+	}
+}

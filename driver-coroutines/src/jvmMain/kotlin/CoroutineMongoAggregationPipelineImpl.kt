@@ -124,6 +124,9 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): CoroutineMongoAggregationPipelineImpl<Out> =
 		super<AggregationPipeline>.countTo(field) as CoroutineMongoAggregationPipelineImpl<Out>
 
+	override fun <Item, Out : Any> unwind(block: UnwindStageOperators<Document, Item, Out>.() -> Unit): CoroutineMongoAggregationPipelineImpl<Out> =
+		super<AggregationPipeline>.unwind(block) as CoroutineMongoAggregationPipelineImpl<Out>
+
 	// endregion
 	// region $unionWith support
 

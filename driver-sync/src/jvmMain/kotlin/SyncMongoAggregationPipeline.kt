@@ -89,6 +89,8 @@ interface SyncMongoAggregationPipeline<Document : Any> : MongoAggregationPipelin
 
 	override fun <Out : Any> countTo(field: KProperty1<Out, Number>): SyncMongoAggregationPipeline<Out>
 
+	override fun <Item, Out : Any> unwind(block: UnwindStageOperators<Document, Item, Out>.() -> Unit): SyncMongoAggregationPipeline<Out>
+
 }
 
 /**
