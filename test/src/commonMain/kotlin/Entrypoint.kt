@@ -24,6 +24,7 @@ import opensavvy.ktmongo.tests.api.operations.*
 import opensavvy.ktmongo.tests.api.scenarii.arrayfilters1.verifyScenarioArrayFilters
 import opensavvy.ktmongo.tests.api.scenarii.documentscount.verifyScenarioDocumentsCount
 import opensavvy.ktmongo.tests.api.scenarii.unionwith.verifyScenarioUnionWith
+import opensavvy.ktmongo.tests.api.scenarii.unwind1.verifyScenarioUnwind
 import opensavvy.prepared.suite.*
 import opensavvy.prepared.suite.config.CoroutineTimeout
 import kotlin.coroutines.CoroutineContext
@@ -91,5 +92,6 @@ fun SuiteDsl.verifyClient(
 		verifyScenarioUnionWith(client)
 		verifyScenarioDocumentsCount(client)
 		verifyScenarioArrayFilters(client)
+		verifyScenarioUnwind(client)
 	}
 }
