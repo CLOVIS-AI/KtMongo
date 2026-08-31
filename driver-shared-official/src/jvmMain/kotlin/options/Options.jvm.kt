@@ -35,9 +35,17 @@ fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongod
 
 @LowLevelApi
 fun InsertOneOptions<*>.toJava(): com.mongodb.client.model.InsertOneOptions = com.mongodb.client.model.InsertOneOptions()
+	.let {
+		val bypass = readBypassDocumentValidation()
+		if (bypass != null) it.bypassDocumentValidation(bypass) else it
+	}
 
 @LowLevelApi
 fun InsertManyOptions<*>.toJava(): com.mongodb.client.model.InsertManyOptions = com.mongodb.client.model.InsertManyOptions()
+	.let {
+		val bypass = readBypassDocumentValidation()
+		if (bypass != null) it.bypassDocumentValidation(bypass) else it
+	}
 	.ordered(readOrdered())
 
 @LowLevelApi
@@ -67,3 +75,7 @@ fun WithReadPreference.readReadPreference(): ReadPreference =
 @LowLevelApi
 fun WithOrdered.readOrdered(): Boolean =
 	option<OrderedOption>()?.ordered ?: true
+
+@LowLevelApi
+fun WithBypassDocumentValidation.readBypassDocumentValidation(): Boolean? =
+	option<BypassDocumentValidationOption>()?.bypassDocumentValidation

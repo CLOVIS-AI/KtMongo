@@ -139,5 +139,35 @@ fun SuiteDsl.verifyInsertOperations(
 			val expected = setOf("Alice", "Bob", "Deborah")
 			check(collection().find().toList().map { it.name }.toSet() == expected)
 		}
+
+		test("insertOne • Bypass schema validation") {
+			collection().insertOne(
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				),
+				options = {
+					writeConcern(WriteConcern.Majority) // Required by the Java driver
+					bypassDocumentValidation()
+				}
+			)
+
+			// TODO: write a test that can check that the option is correctly applied
+		}
+
+		test("insertMany • Bypass schema validation") {
+			collection().insertMany(
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				),
+				options = {
+					writeConcern(WriteConcern.Majority) // Required by the Java driver
+					bypassDocumentValidation()
+				}
+			)
+
+			// TODO: write a test that can check that the option is correctly applied
+		}
 	}
 }

@@ -114,6 +114,7 @@ class InsertMany<Document : Any> private constructor(
  */
 class InsertOneOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
+	WithBypassDocumentValidation,
 	WithMaxTime,
 	WithWriteConcern
 
@@ -122,6 +123,7 @@ class InsertOneOptions<Document>(context: BsonContext) :
  */
 class InsertManyOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
+	WithBypassDocumentValidation,
 	WithMaxTime,
 	WithOrdered,
 	WithWriteConcern
