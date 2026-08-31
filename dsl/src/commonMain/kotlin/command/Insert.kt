@@ -23,10 +23,7 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.Options
-import opensavvy.ktmongo.dsl.options.OptionsHolder
-import opensavvy.ktmongo.dsl.options.WithMaxTime
-import opensavvy.ktmongo.dsl.options.WithWriteConcern
+import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import kotlin.reflect.KType
 
@@ -126,4 +123,5 @@ class InsertOneOptions<Document>(context: BsonContext) :
 class InsertManyOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
 	WithMaxTime,
+	WithOrdered,
 	WithWriteConcern

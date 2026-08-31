@@ -23,6 +23,7 @@ import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.suite.assertions.checkThrows
 import kotlin.time.Duration.Companion.milliseconds
 
 @Serializable
@@ -114,6 +115,29 @@ fun SuiteDsl.verifyInsertOperations(
 
 			// TODO: the MongoDB Java driver does not support this option
 			//       https://jira.mongodb.org/browse/JAVA-6301
+		}
+
+		test("insertMany • Ordered") {
+			val duplicate = collection().newId()
+
+			collection().insertOne(
+				InsertOperationsUser(_id = duplicate, name = "Alice")
+			)
+
+			// Insert three documents, one of which is a duplicate
+			// Because the operations are not ordered, the two others should still be added
+
+			checkThrows<Exception> { // TODO: specify a dedicated KtMongo exception
+				collection().insertMany(
+					InsertOperationsUser(_id = collection().newId(), name = "Bob"),
+					InsertOperationsUser(_id = duplicate, name = "Charlie"),
+					InsertOperationsUser(_id = collection().newId(), name = "Deborah"),
+					options = { unordered() }
+				)
+			}
+
+			val expected = setOf("Alice", "Bob", "Deborah")
+			check(collection().find().toList().map { it.name }.toSet() == expected)
 		}
 	}
 }

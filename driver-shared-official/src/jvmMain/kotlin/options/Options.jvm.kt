@@ -38,6 +38,7 @@ fun InsertOneOptions<*>.toJava(): com.mongodb.client.model.InsertOneOptions = co
 
 @LowLevelApi
 fun InsertManyOptions<*>.toJava(): com.mongodb.client.model.InsertManyOptions = com.mongodb.client.model.InsertManyOptions()
+	.ordered(readOrdered())
 
 @LowLevelApi
 fun WithLimit.readLimit(): Int =
@@ -62,3 +63,7 @@ fun WithReadConcern.readReadConcern(): ReadConcern =
 @LowLevelApi
 fun WithReadPreference.readReadPreference(): ReadPreference =
 	option<ReadPreferenceOption>()?.concern.toJava()
+
+@LowLevelApi
+fun WithOrdered.readOrdered(): Boolean =
+	option<OrderedOption>()?.ordered ?: true
