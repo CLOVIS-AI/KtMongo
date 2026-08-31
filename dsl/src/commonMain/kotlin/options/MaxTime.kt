@@ -51,11 +51,18 @@ interface WithMaxTime : Options {
 	/**
 	 * Specifies a maximum amount of time for processing the request.
 	 *
+	 * ### Example
+	 *
 	 * ```kotlin
-	 * collections.count {
-	 *     options {
-	 *         maxTime(10.seconds)
-	 *     }
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.count(
+	 *     options = { maxTime(10.seconds) }
+	 * ) {
+	 *     User::age eq 10
 	 * }
 	 * ```
 	 */

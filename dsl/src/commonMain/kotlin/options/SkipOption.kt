@@ -50,11 +50,18 @@ interface WithSkip : Options {
 	/**
 	 * The number of documents to skip before processing the request.
 	 *
+	 * ### Example
+	 *
 	 * ```kotlin
-	 * collections.count {
-	 *     options {
-	 *         skip(99)
-	 *     }
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find(
+	 *     options = { skip(5) }
+	 * ) {
+	 *     User::age eq 10
 	 * }
 	 * ```
 	 */
@@ -65,11 +72,18 @@ interface WithSkip : Options {
 	/**
 	 * The number of documents to skip before processing the request.
 	 *
+	 * ### Example
+	 *
 	 * ```kotlin
-	 * collections.count {
-	 *     options {
-	 *         skip(99L)
-	 *     }
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find(
+	 *     options = { skip(5) }
+	 * ) {
+	 *     User::age eq 10
 	 * }
 	 * ```
 	 *
