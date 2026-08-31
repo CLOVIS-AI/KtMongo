@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,16 @@
 
 package opensavvy.ktmongo.official.options
 
+import com.mongodb.ReadConcern
+import com.mongodb.ReadPreference
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
+import opensavvy.ktmongo.dsl.command.InsertManyOptions
+import opensavvy.ktmongo.dsl.command.InsertOneOptions
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.official.toJava
+import org.bson.BsonValue
+import org.bson.conversions.Bson
 import java.util.concurrent.TimeUnit
 
 @LowLevelApi
@@ -29,25 +35,56 @@ fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongod
 	.maxTime(readMaxTimeMS().toLong(), TimeUnit.MILLISECONDS)
 
 @LowLevelApi
-fun WithLimit.readLimit() =
+fun InsertOneOptions<*>.toJava(): com.mongodb.client.model.InsertOneOptions = com.mongodb.client.model.InsertOneOptions()
+	.let {
+		val bypass = readBypassDocumentValidation()
+		if (bypass != null) it.bypassDocumentValidation(bypass) else it
+	}
+	.comment(readComment())
+
+@LowLevelApi
+fun InsertManyOptions<*>.toJava(): com.mongodb.client.model.InsertManyOptions = com.mongodb.client.model.InsertManyOptions()
+	.let {
+		val bypass = readBypassDocumentValidation()
+		if (bypass != null) it.bypassDocumentValidation(bypass) else it
+	}
+	.comment(readComment())
+	.ordered(readOrdered())
+
+@LowLevelApi
+fun WithLimit.readLimit(): Int =
 	option<LimitOption>()?.limit?.toInt() ?: 0
 
 @LowLevelApi
-fun WithSkip.readSkip() =
+fun WithSkip.readSkip(): Int =
 	option<SkipOption>()?.skip?.toInt() ?: 0
 
 @LowLevelApi
-fun WithSkip.readMaxTimeMS() =
+fun WithSkip.readMaxTimeMS(): Int =
 	option<MaxTimeOption>()?.timeout?.inWholeMilliseconds?.toInt() ?: Int.MAX_VALUE
 
 @LowLevelApi
-fun WithSort<*>.readSortDocument() =
+fun WithSort<*>.readSortDocument(): Bson? =
 	option<SortOption<*>>()?.block?.toJava()
 
 @LowLevelApi
-fun WithReadConcern.readReadConcern() =
+fun WithReadConcern.readReadConcern(): ReadConcern =
 	option<ReadConcernOption>()?.concern.toJava()
 
 @LowLevelApi
-fun WithReadPreference.readReadPreference() =
+fun WithReadPreference.readReadPreference(): ReadPreference =
 	option<ReadPreferenceOption>()?.concern.toJava()
+
+@LowLevelApi
+fun WithOrdered.readOrdered(): Boolean =
+	option<OrderedOption>()?.ordered ?: true
+
+@LowLevelApi
+fun WithBypassDocumentValidation.readBypassDocumentValidation(): Boolean? =
+	option<BypassDocumentValidationOption>()?.bypassDocumentValidation
+
+@LowLevelApi
+fun WithComment.readComment(): BsonValue? =
+	option<CommentOption>()?.comment
+		?.let { context.buildArray { it.writeTo(this) }[0]!! as opensavvy.ktmongo.bson.official.BsonValue }
+		?.raw

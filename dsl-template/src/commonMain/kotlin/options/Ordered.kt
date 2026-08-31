@@ -1,0 +1,108 @@
+/*
+ * Copyright (c) 2026, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opensavvy.ktmongo.dsl.options
+
+import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.LowLevelApi
+
+/**
+ * Whether the operations in this bulk are independent.
+ *
+ * See [WithOrdered.ordered].
+ */
+class OrderedOption(
+	val ordered: Boolean,
+	context: BsonContext,
+) : AbstractOption("ordered", context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonValueWriter) = with(writer) {
+		writeBoolean(ordered)
+	}
+}
+
+/**
+ * Specifies whether operations in a bulk are independent.
+ *
+ * See [ordered].
+ */
+interface WithOrdered : Options {
+
+	/**
+	 * Specifies whether the operations in this bulk are independent.
+	 *
+	 * If the operations are ordered, they are executed in the same order as they are specified.
+	 * If an operation fails, the remaining ones are not executed.
+	 *
+	 * If the operations are not ordered, they run in parallel in an arbitrary order.
+	 * If an operation fails, the remaining ones are still executed.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.insertMany(
+	 *     User("John", 25),
+	 *     User("Jane", 30),
+	 *     options = { ordered(false) },
+	 * )
+	 * ```
+	 *
+	 * @see unordered Negation of this operator.
+	 */
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	fun ordered(isOrdered: Boolean = true) {
+		accept(OrderedOption(isOrdered, context))
+	}
+
+	/**
+	 * Specifies whether the operations in this bulk are independent.
+	 *
+	 * If the operations are ordered, they are executed in the same order as they are specified.
+	 * If an operation fails, the remaining ones are not executed.
+	 *
+	 * If the operations are not ordered, they run in parallel in an arbitrary order.
+	 * If an operation fails, the remaining ones are still executed.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.insertMany(
+	 *     User("John", 25),
+	 *     User("Jane", 30),
+	 *     options = { unordered() },
+	 * )
+	 * ```
+	 *
+	 * @see ordered Negation of this operator.
+	 */
+	fun unordered(isUnordered: Boolean = true) {
+		ordered(!isUnordered)
+	}
+
+}

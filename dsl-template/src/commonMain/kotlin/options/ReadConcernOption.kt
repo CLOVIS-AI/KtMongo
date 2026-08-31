@@ -136,6 +136,8 @@ interface WithReadConcern : Options {
 	/**
 	 * Specifies the [ReadConcern] for this operation.
 	 *
+	 * ### Example
+	 *
 	 * ```kotlin
 	 * collections.find(
 	 *     options = {

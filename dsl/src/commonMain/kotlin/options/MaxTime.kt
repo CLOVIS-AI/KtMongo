@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Maximum [timeout] spent processing the request.
@@ -51,17 +52,39 @@ interface WithMaxTime : Options {
 	/**
 	 * Specifies a maximum amount of time for processing the request.
 	 *
+	 * MongoDB does not support sub-millisecond timeouts,
+	 * so any non-zero timeout less than 1 millisecond is treated as 1 full millisecond.
+	 *
+	 * 0 disables the timeout.
+	 *
+	 * ### Support
+	 *
+	 * - The official Kotlin driver does not support this option in insert operations. See [JAVA-6301](https://jira.mongodb.org/browse/JAVA-6301).
+	 *
+	 * ### Example
+	 *
 	 * ```kotlin
-	 * collections.count {
-	 *     options {
-	 *         maxTime(10.seconds)
-	 *     }
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.count(
+	 *     options = { maxTime(10.seconds) }
+	 * ) {
+	 *     User::age eq 10
 	 * }
 	 * ```
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun maxTime(timeout: Duration) {
-		accept(MaxTimeOption(timeout, context))
+		val effectiveTimeout = when (timeout) {
+			Duration.ZERO -> Duration.ZERO
+			in Duration.ZERO..1.milliseconds -> 1.milliseconds
+			else -> timeout
+		}
+
+		accept(MaxTimeOption(effectiveTimeout, context))
 	}
 
 }

@@ -23,6 +23,8 @@ import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.suite.assertions.checkThrows
+import kotlin.time.Duration.Companion.milliseconds
 
 @Serializable
 data class InsertOperationsUser(
@@ -90,6 +92,106 @@ fun SuiteDsl.verifyInsertOperations(
 				),
 				options = {
 					writeConcern(WriteConcern.FireAndForget)
+				}
+			)
+
+			// TODO: write a test that can check that the option is correctly applied
+		}
+
+		test("insertMany • Minuscule delay") {
+			val users = List(1000) {
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				)
+			}
+
+			collection().insertMany(
+				documents = users,
+				options = {
+					maxTime(1.milliseconds)
+				}
+			)
+
+			// TODO: the MongoDB Java driver does not support this option
+			//       https://jira.mongodb.org/browse/JAVA-6301
+		}
+
+		test("insertMany • Ordered") {
+			val duplicate = collection().newId()
+
+			collection().insertOne(
+				InsertOperationsUser(_id = duplicate, name = "Alice")
+			)
+
+			// Insert three documents, one of which is a duplicate
+			// Because the operations are not ordered, the two others should still be added
+
+			checkThrows<Exception> { // TODO: specify a dedicated KtMongo exception
+				collection().insertMany(
+					InsertOperationsUser(_id = collection().newId(), name = "Bob"),
+					InsertOperationsUser(_id = duplicate, name = "Charlie"),
+					InsertOperationsUser(_id = collection().newId(), name = "Deborah"),
+					options = { unordered() }
+				)
+			}
+
+			val expected = setOf("Alice", "Bob", "Deborah")
+			check(collection().find().toList().map { it.name }.toSet() == expected)
+		}
+
+		test("insertOne • Bypass schema validation") {
+			collection().insertOne(
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				),
+				options = {
+					writeConcern(WriteConcern.Majority) // Required by the Java driver
+					bypassDocumentValidation()
+				}
+			)
+
+			// TODO: write a test that can check that the option is correctly applied
+		}
+
+		test("insertMany • Bypass schema validation") {
+			collection().insertMany(
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				),
+				options = {
+					writeConcern(WriteConcern.Majority) // Required by the Java driver
+					bypassDocumentValidation()
+				}
+			)
+
+			// TODO: write a test that can check that the option is correctly applied
+		}
+
+		test("insertOne • Comment") {
+			collection().insertOne(
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				),
+				options = {
+					comment("Create user")
+				}
+			)
+
+			// TODO: write a test that can check that the option is correctly applied
+		}
+
+		test("insertMany • Comment") {
+			collection().insertMany(
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				),
+				options = {
+					comment("Create user")
 				}
 			)
 

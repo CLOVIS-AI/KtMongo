@@ -141,7 +141,7 @@ private class SyncMongoCollectionImpl<Document : Any>(
 
 		inner.withWriteConcern(model.options).insertOne(
 			model.document,
-			com.mongodb.client.model.InsertOneOptions()
+			model.options.toJava(),
 		)
 	}
 
@@ -153,7 +153,7 @@ private class SyncMongoCollectionImpl<Document : Any>(
 
 		inner.withWriteConcern(model.options).insertMany(
 			model.documents,
-			com.mongodb.client.model.InsertManyOptions()
+			model.options.toJava(),
 		)
 	}
 

@@ -50,11 +50,18 @@ interface WithLimit : Options {
 	/**
 	 * The maximum number of matching documents to return.
 	 *
+	 * ### Example
+	 *
 	 * ```kotlin
-	 * collections.count {
-	 *     options {
-	 *         limit(99)
-	 *     }
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find(
+	 *     options = { limit(5) }
+	 * ) {
+	 *     User::age eq 10
 	 * }
 	 * ```
 	 */
@@ -65,11 +72,18 @@ interface WithLimit : Options {
 	/**
 	 * The maximum number of matching documents to return.
 	 *
+	 * ### Example
+	 *
 	 * ```kotlin
-	 * collections.count {
-	 *     options {
-	 *         limit(99L)
-	 *     }
+	 * class User(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * collection.find(
+	 *     options = { limit(5) }
+	 * ) {
+	 *     User::age eq 10
 	 * }
 	 * ```
 	 *

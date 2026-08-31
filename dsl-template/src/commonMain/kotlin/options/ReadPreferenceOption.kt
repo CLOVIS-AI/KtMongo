@@ -127,6 +127,8 @@ interface WithReadPreference : Options {
 	/**
 	 * Specifies the [ReadPreference] for this operation.
 	 *
+	 * ### Example
+	 *
 	 * ```kotlin
 	 * collections.find(
 	 *     options = {
