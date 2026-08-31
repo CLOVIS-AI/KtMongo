@@ -169,5 +169,33 @@ fun SuiteDsl.verifyInsertOperations(
 
 			// TODO: write a test that can check that the option is correctly applied
 		}
+
+		test("insertOne • Comment") {
+			collection().insertOne(
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				),
+				options = {
+					comment("Create user")
+				}
+			)
+
+			// TODO: write a test that can check that the option is correctly applied
+		}
+
+		test("insertMany • Comment") {
+			collection().insertMany(
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				),
+				options = {
+					comment("Create user")
+				}
+			)
+
+			// TODO: write a test that can check that the option is correctly applied
+		}
 	}
 }

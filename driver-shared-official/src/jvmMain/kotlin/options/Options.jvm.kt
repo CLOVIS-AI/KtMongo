@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.command.InsertManyOptions
 import opensavvy.ktmongo.dsl.command.InsertOneOptions
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.official.toJava
+import org.bson.BsonValue
 import org.bson.conversions.Bson
 import java.util.concurrent.TimeUnit
 
@@ -39,6 +40,7 @@ fun InsertOneOptions<*>.toJava(): com.mongodb.client.model.InsertOneOptions = co
 		val bypass = readBypassDocumentValidation()
 		if (bypass != null) it.bypassDocumentValidation(bypass) else it
 	}
+	.comment(readComment())
 
 @LowLevelApi
 fun InsertManyOptions<*>.toJava(): com.mongodb.client.model.InsertManyOptions = com.mongodb.client.model.InsertManyOptions()
@@ -46,6 +48,7 @@ fun InsertManyOptions<*>.toJava(): com.mongodb.client.model.InsertManyOptions = 
 		val bypass = readBypassDocumentValidation()
 		if (bypass != null) it.bypassDocumentValidation(bypass) else it
 	}
+	.comment(readComment())
 	.ordered(readOrdered())
 
 @LowLevelApi
@@ -79,3 +82,9 @@ fun WithOrdered.readOrdered(): Boolean =
 @LowLevelApi
 fun WithBypassDocumentValidation.readBypassDocumentValidation(): Boolean? =
 	option<BypassDocumentValidationOption>()?.bypassDocumentValidation
+
+@LowLevelApi
+fun WithComment.readComment(): BsonValue? =
+	option<CommentOption>()?.comment
+		?.let { context.buildArray { it.writeTo(this) }[0]!! as opensavvy.ktmongo.bson.official.BsonValue }
+		?.raw
