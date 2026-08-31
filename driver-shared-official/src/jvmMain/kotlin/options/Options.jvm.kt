@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, OpenSavvy and contributors.
+ * Copyright (c) 2024-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,15 @@
 
 package opensavvy.ktmongo.official.options
 
+import com.mongodb.ReadConcern
+import com.mongodb.ReadPreference
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
+import opensavvy.ktmongo.dsl.command.InsertManyOptions
+import opensavvy.ktmongo.dsl.command.InsertOneOptions
 import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.official.toJava
+import org.bson.conversions.Bson
 import java.util.concurrent.TimeUnit
 
 @LowLevelApi
@@ -29,25 +34,31 @@ fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongod
 	.maxTime(readMaxTimeMS().toLong(), TimeUnit.MILLISECONDS)
 
 @LowLevelApi
-fun WithLimit.readLimit() =
+fun InsertOneOptions<*>.toJava(): com.mongodb.client.model.InsertOneOptions = com.mongodb.client.model.InsertOneOptions()
+
+@LowLevelApi
+fun InsertManyOptions<*>.toJava(): com.mongodb.client.model.InsertManyOptions = com.mongodb.client.model.InsertManyOptions()
+
+@LowLevelApi
+fun WithLimit.readLimit(): Int =
 	option<LimitOption>()?.limit?.toInt() ?: 0
 
 @LowLevelApi
-fun WithSkip.readSkip() =
+fun WithSkip.readSkip(): Int =
 	option<SkipOption>()?.skip?.toInt() ?: 0
 
 @LowLevelApi
-fun WithSkip.readMaxTimeMS() =
+fun WithSkip.readMaxTimeMS(): Int =
 	option<MaxTimeOption>()?.timeout?.inWholeMilliseconds?.toInt() ?: Int.MAX_VALUE
 
 @LowLevelApi
-fun WithSort<*>.readSortDocument() =
+fun WithSort<*>.readSortDocument(): Bson? =
 	option<SortOption<*>>()?.block?.toJava()
 
 @LowLevelApi
-fun WithReadConcern.readReadConcern() =
+fun WithReadConcern.readReadConcern(): ReadConcern =
 	option<ReadConcernOption>()?.concern.toJava()
 
 @LowLevelApi
-fun WithReadPreference.readReadPreference() =
+fun WithReadPreference.readReadPreference(): ReadPreference =
 	option<ReadPreferenceOption>()?.concern.toJava()

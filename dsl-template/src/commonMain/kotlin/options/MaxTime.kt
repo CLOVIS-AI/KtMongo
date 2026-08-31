@@ -54,6 +54,10 @@ interface WithMaxTime : Options {
 	 *
 	 * 0 disables the timeout.
 	 *
+	 * ### Support
+	 *
+	 * - The official Kotlin driver does not support this option in insert operations. See [JAVA-6301](https://jira.mongodb.org/browse/JAVA-6301).
+	 *
 	 * ### Example
 	 *
 	 * ```kotlin

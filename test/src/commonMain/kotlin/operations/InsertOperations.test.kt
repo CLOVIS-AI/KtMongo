@@ -23,6 +23,7 @@ import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
+import kotlin.time.Duration.Companion.milliseconds
 
 @Serializable
 data class InsertOperationsUser(
@@ -94,6 +95,25 @@ fun SuiteDsl.verifyInsertOperations(
 			)
 
 			// TODO: write a test that can check that the option is correctly applied
+		}
+
+		test("insertMany • Minuscule delay") {
+			val users = List(1000) {
+				InsertOperationsUser(
+					_id = collection().newId(),
+					name = "Bob",
+				)
+			}
+
+			collection().insertMany(
+				documents = users,
+				options = {
+					maxTime(1.milliseconds)
+				}
+			)
+
+			// TODO: the MongoDB Java driver does not support this option
+			//       https://jira.mongodb.org/browse/JAVA-6301
 		}
 	}
 }
