@@ -20,9 +20,9 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.options.HasWriteConcern
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
-import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
@@ -110,11 +110,11 @@ class DeleteMany<Document : Any> private constructor(
  */
 class DeleteOneOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithWriteConcern
+	HasWriteConcern
 
 /**
  * The options for a [DeleteMany] command.
  */
 class DeleteManyOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithWriteConcern
+	HasWriteConcern

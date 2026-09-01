@@ -114,18 +114,18 @@ class InsertMany<Document : Any> private constructor(
  */
 class InsertOneOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithBypassDocumentValidation,
-	WithComment,
-	WithMaxTime,
-	WithWriteConcern
+	HasBypassDocumentValidation,
+	HasComment,
+	HasMaxTime,
+	HasWriteConcern
 
 /**
  * The options for a `collection.insertMany` operation.
  */
 class InsertManyOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithBypassDocumentValidation,
-	WithComment,
-	WithMaxTime,
-	WithOrdered,
-	WithWriteConcern
+	HasBypassDocumentValidation,
+	HasComment,
+	HasMaxTime,
+	HasOrdered,
+	HasWriteConcern

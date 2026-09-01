@@ -20,7 +20,6 @@ package opensavvy.ktmongo.sync.java
 
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.SortOptionDsl
-import opensavvy.ktmongo.dsl.options.WithSort
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import java.util.function.Consumer
 

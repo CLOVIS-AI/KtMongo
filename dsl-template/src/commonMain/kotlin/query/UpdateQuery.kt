@@ -1523,7 +1523,7 @@ interface UpdateQuery<T> : CompoundBsonNode, FieldDsl {
 	 * [filter] can also be nested.
 	 *
 	 * **This overload registers the array filter within the option automatically.**
-	 * There is no need to configure [opensavvy.ktmongo.dsl.options.WithArrayFilters.arrayFilter].
+	 * There is no need to configure [opensavvy.ktmongo.dsl.options.ArrayFilters.arrayFilter].
 	 *
 	 * ### Example
 	 *

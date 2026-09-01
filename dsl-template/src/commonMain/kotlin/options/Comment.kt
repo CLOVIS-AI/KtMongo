@@ -27,7 +27,7 @@ import kotlin.reflect.typeOf
 /**
  * User-defined message associated with an operation, which is repeated in the logs.
  *
- * See [WithComment.comment].
+ * See [HasComment.comment].
  */
 class CommentOption(
 	val comment: BsonValueWriteable,
@@ -43,9 +43,9 @@ class CommentOption(
 /**
  * User-defined message associated with an operation, which is repeated in the logs.
  *
- * See [WithComment.comment].
+ * See [HasComment.comment].
  */
-interface WithComment : Options {
+interface HasComment : Options {
 
 	/**
 	 * Specifies a user-defined message which will be associated with this information in the logs, etc.

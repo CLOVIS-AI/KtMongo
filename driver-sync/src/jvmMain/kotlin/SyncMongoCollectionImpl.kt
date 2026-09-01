@@ -31,7 +31,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
 import opensavvy.ktmongo.dsl.options.ArrayFiltersOption
-import opensavvy.ktmongo.dsl.options.WithWriteConcern
+import opensavvy.ktmongo.dsl.options.HasWriteConcern
 import opensavvy.ktmongo.dsl.options.WriteConcernOption
 import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
@@ -548,7 +548,7 @@ inline fun <reified Document : Any> MongoCollection<Document>.asKtMongo(
 	)
 
 @LowLevelApi
-private fun <Document : Any> MongoCollection<Document>.withWriteConcern(option: WithWriteConcern): MongoCollection<Document> {
+private fun <Document : Any> MongoCollection<Document>.withWriteConcern(option: HasWriteConcern): MongoCollection<Document> {
 	val concern = option.option<WriteConcernOption>()?.concern
 		?: return this
 

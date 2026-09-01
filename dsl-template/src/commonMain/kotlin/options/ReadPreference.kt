@@ -25,7 +25,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  * Specifies the read preference for an operation.
  *
  * To learn more about read preferences, see [ReadPreference].
- * To apply this option, see [WithReadPreference].
+ * To apply this option, see [HasReadPreference].
  */
 class ReadPreferenceOption(
 	val concern: ReadPreference,
@@ -122,7 +122,7 @@ enum class ReadPreference(val bsonName: String) {
  *
  * See [readPreference].
  */
-interface WithReadPreference : Options {
+interface HasReadPreference : Options {
 
 	/**
 	 * Specifies the [ReadPreference] for this operation.

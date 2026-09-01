@@ -31,7 +31,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.options.ArrayFiltersOption
 import opensavvy.ktmongo.dsl.options.ArrayFiltersOptionDsl
-import opensavvy.ktmongo.dsl.options.WithArrayFilters
+import opensavvy.ktmongo.dsl.options.HasArrayFilters
 import opensavvy.ktmongo.dsl.path.*
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
@@ -855,7 +855,7 @@ fun <T> UpsertQuery(
 	UpdateQueryImpl(context, options?.let(::ArrayFilterCreator))
 
 private class ArrayFilterCreator(
-	private val option: WithArrayFilters,
+	private val option: HasArrayFilters,
 ) {
 
 	private var next = 0

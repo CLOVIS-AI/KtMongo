@@ -27,7 +27,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 /**
  * Whether the operations in this bulk are independent.
  *
- * See [WithOrdered.ordered].
+ * See [HasOrdered.ordered].
  */
 class OrderedOption(
 	val ordered: Boolean,
@@ -45,7 +45,7 @@ class OrderedOption(
  *
  * See [ordered].
  */
-interface WithOrdered : Options {
+interface HasOrdered : Options {
 
 	/**
 	 * Specifies whether the operations in this bulk are independent.

@@ -71,6 +71,6 @@ class Count<Document : Any> private constructor(
 @OptIn(LowLevelApi::class)
 class CountOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithLimit,
-	WithSkip,
-	WithMaxTime
+	HasLimit,
+	HasSkip,
+	HasMaxTime

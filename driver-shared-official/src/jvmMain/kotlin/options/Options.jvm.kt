@@ -52,39 +52,39 @@ fun InsertManyOptions<*>.toJava(): com.mongodb.client.model.InsertManyOptions = 
 	.ordered(readOrdered())
 
 @LowLevelApi
-fun WithLimit.readLimit(): Int =
+fun HasLimit.readLimit(): Int =
 	option<LimitOption>()?.limit?.toInt() ?: 0
 
 @LowLevelApi
-fun WithSkip.readSkip(): Int =
+fun HasSkip.readSkip(): Int =
 	option<SkipOption>()?.skip?.toInt() ?: 0
 
 @LowLevelApi
-fun WithSkip.readMaxTimeMS(): Int =
+fun HasSkip.readMaxTimeMS(): Int =
 	option<MaxTimeOption>()?.timeout?.inWholeMilliseconds?.toInt() ?: Int.MAX_VALUE
 
 @LowLevelApi
-fun WithSort<*>.readSortDocument(): Bson? =
+fun HasSort<*>.readSortDocument(): Bson? =
 	option<SortOption<*>>()?.block?.toJava()
 
 @LowLevelApi
-fun WithReadConcern.readReadConcern(): ReadConcern =
+fun HasReadConcern.readReadConcern(): ReadConcern =
 	option<ReadConcernOption>()?.concern.toJava()
 
 @LowLevelApi
-fun WithReadPreference.readReadPreference(): ReadPreference =
+fun HasReadPreference.readReadPreference(): ReadPreference =
 	option<ReadPreferenceOption>()?.concern.toJava()
 
 @LowLevelApi
-fun WithOrdered.readOrdered(): Boolean =
+fun HasOrdered.readOrdered(): Boolean =
 	option<OrderedOption>()?.ordered ?: true
 
 @LowLevelApi
-fun WithBypassDocumentValidation.readBypassDocumentValidation(): Boolean? =
+fun HasBypassDocumentValidation.readBypassDocumentValidation(): Boolean? =
 	option<BypassDocumentValidationOption>()?.bypassDocumentValidation
 
 @LowLevelApi
-fun WithComment.readComment(): BsonValue? =
+fun HasComment.readComment(): BsonValue? =
 	option<CommentOption>()?.comment
 		?.let { context.buildArray { it.writeTo(this) }[0]!! as opensavvy.ktmongo.bson.official.BsonValue }
 		?.raw

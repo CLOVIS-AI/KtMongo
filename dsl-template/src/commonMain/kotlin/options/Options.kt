@@ -97,7 +97,6 @@ interface Option : BsonNode {
 	 *
 	 * Note that this method requires to write this option into a temporary BSON value.
 	 */
-	@OptIn(LowLevelApi::class)
 	fun read(): BsonValue
 
 	/**

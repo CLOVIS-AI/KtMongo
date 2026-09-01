@@ -68,9 +68,9 @@ class Find<Document : Any> private constructor(
 @OptIn(LowLevelApi::class)
 class FindOptions<Document : Any>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithLimit,
-	WithSkip,
-	WithMaxTime,
-	WithSort<Document>,
-	WithReadConcern,
-	WithReadPreference
+	HasLimit,
+	HasSkip,
+	HasMaxTime,
+	HasSort<Document>,
+	HasReadConcern,
+	HasReadPreference
