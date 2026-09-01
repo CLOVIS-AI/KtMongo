@@ -25,7 +25,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
  * Specifies the read concern for an operation.
  *
  * To learn more about read concerns, see [ReadConcern].
- * To apply this option, see [WithReadConcern].
+ * To apply this option, see [HasReadConcern].
  */
 class ReadConcernOption(
 	val concern: ReadConcern,
@@ -102,7 +102,7 @@ enum class ReadConcern(val bsonName: String) {
 	 * linearizable read concern might not read from a consistent snapshot,
 	 * resulting in a document matching the filter not being returned.
 	 *
-	 * Always add a [maxTime][WithMaxTime.maxTime] option in case a majority
+	 * Always add a [maxTime][HasMaxTime.maxTime] option in case a majority
 	 * cannot be elected (e.g. if too many replica set members have crashed) to avoid the read blocking forever.
 	 *
 	 * ### External resources
@@ -131,7 +131,7 @@ enum class ReadConcern(val bsonName: String) {
  *
  * See [readConcern].
  */
-interface WithReadConcern : Options {
+interface HasReadConcern : Options {
 
 	/**
 	 * Specifies the [ReadConcern] for this operation.

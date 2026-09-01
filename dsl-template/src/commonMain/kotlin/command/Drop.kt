@@ -20,9 +20,9 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.options.HasWriteConcern
 import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.options.OptionsHolder
-import opensavvy.ktmongo.dsl.options.WithWriteConcern
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 
 /**
@@ -52,4 +52,4 @@ class Drop<Document : Any> private constructor(
 @OptIn(LowLevelApi::class)
 class DropOptions<Document>(context: BsonContext) :
 	Options by OptionsHolder(context),
-	WithWriteConcern
+	HasWriteConcern

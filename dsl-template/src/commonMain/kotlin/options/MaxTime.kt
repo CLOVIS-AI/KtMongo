@@ -26,7 +26,7 @@ import kotlin.time.Duration.Companion.milliseconds
 /**
  * Maximum [timeout] spent processing the request.
  *
- * For more information, see [WithMaxTime].
+ * For more information, see [HasMaxTime].
  */
 class MaxTimeOption(
 	val timeout: Duration,
@@ -44,7 +44,7 @@ class MaxTimeOption(
  *
  * See [maxTime].
  */
-interface WithMaxTime : Options {
+interface HasMaxTime : Options {
 
 	/**
 	 * Specifies a maximum amount of time for processing the request.

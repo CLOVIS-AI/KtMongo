@@ -27,7 +27,7 @@ import kotlin.time.Duration
  * Specifies the write concern for an operation.
  *
  * To learn more about read concerns, see [WriteConcern].
- * To apply this option, see [WithWriteConcern].
+ * To apply this option, see [HasWriteConcern].
  */
 class WriteConcernOption(
 	val concern: WriteConcern,
@@ -61,7 +61,7 @@ class WriteConcernOption(
 /**
  * The level of acknowledgment requested from a write operation.
  *
- * See [WithWriteConcern.writeConcern].
+ * See [HasWriteConcern.writeConcern].
  */
 class WriteConcern(
 
@@ -92,7 +92,7 @@ class WriteConcern(
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/write-concern/#w-option)
 	 *
-	 * @see WithWriteConcern.writeConcern Specify this option.
+	 * @see HasWriteConcern.writeConcern Specify this option.
 	 */
 	val acknowledgment: WriteAcknowledgment? = null,
 
@@ -127,7 +127,7 @@ class WriteConcern(
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/write-concern/#j-option)
 	 *
-	 * @see WithWriteConcern.writeConcern Specify this option.
+	 * @see HasWriteConcern.writeConcern Specify this option.
 	 */
 	val writeToJournal: Boolean? = null,
 
@@ -140,7 +140,7 @@ class WriteConcern(
 	 * even if the operation may have later succeeded.
 	 * In that case, the operations **are not undone**.
 	 *
-	 * You may also be interested in the [`maxTime`][WithMaxTime.maxTime] option.
+	 * You may also be interested in the [`maxTime`][HasMaxTime.maxTime] option.
 	 *
 	 * If this option is set to `null` and the [acknowledgment] and [writeToJournal] options are unachievable, the write operation
 	 * will block indefinitely.
@@ -163,7 +163,7 @@ class WriteConcern(
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/write-concern/#wtimeout)
 	 *
-	 * @see WithWriteConcern.writeConcern Specify this option.
+	 * @see HasWriteConcern.writeConcern Specify this option.
 	 */
 	val writeTimeout: Duration? = null,
 ) {
@@ -196,7 +196,7 @@ class WriteConcern(
 		 * }
 		 * ```
 		 *
-		 * @see WithWriteConcern.writeConcern Specify this option.
+		 * @see HasWriteConcern.writeConcern Specify this option.
 		 */
 		val Majority = WriteConcern(WriteAcknowledgment.Majority, writeToJournal = true)
 
@@ -222,7 +222,7 @@ class WriteConcern(
 		 * }
 		 * ```
 		 *
-		 * @see WithWriteConcern.writeConcern Specify this option.
+		 * @see HasWriteConcern.writeConcern Specify this option.
 		 */
 		val Primary = WriteConcern(WriteAcknowledgment.Nodes(1), writeToJournal = false)
 
@@ -247,7 +247,7 @@ class WriteConcern(
 		 * }
 		 * ```
 		 *
-		 * @see WithWriteConcern.writeConcern Specify this option.
+		 * @see HasWriteConcern.writeConcern Specify this option.
 		 */
 		val FireAndForget = WriteConcern(WriteAcknowledgment.Nodes(0), writeToJournal = false)
 	}
@@ -278,7 +278,7 @@ sealed class WriteAcknowledgment {
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/write-concern/#mongodb-writeconcern-writeconcern.-majority-)
 	 *
-	 * @see WithWriteConcern.writeConcern Specify this option.
+	 * @see HasWriteConcern.writeConcern Specify this option.
 	 */
 	data object Majority : WriteAcknowledgment()
 
@@ -303,7 +303,7 @@ sealed class WriteAcknowledgment {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/write-concern/#mongodb-writeconcern-writeconcern.-number-)
 	 * - [More about acknowledgment](https://www.mongodb.com/docs/manual/reference/write-concern/#std-label-wc-ack-behavior)
 	 *
-	 * @see WithWriteConcern.writeConcern Specify this option.
+	 * @see HasWriteConcern.writeConcern Specify this option.
 	 */
 	data class Nodes(
 		/**
@@ -320,7 +320,7 @@ sealed class WriteAcknowledgment {
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/write-concern/#mongodb-writeconcern-writeconcern.-custom-write-concern-name-)
 	 * - [Official example](https://www.mongodb.com/docs/manual/tutorial/configure-replica-set-tag-sets/#std-label-configure-custom-write-concern)
 	 *
-	 * @see WithWriteConcern.writeConcern Specify this option.
+	 * @see HasWriteConcern.writeConcern Specify this option.
 	 */
 	data class Tagged(
 		val tag: String,
@@ -333,7 +333,7 @@ sealed class WriteAcknowledgment {
  * See [writeConcern].
  */
 @KtMongoDsl
-interface WithWriteConcern : Options {
+interface HasWriteConcern : Options {
 
 	/**
 	 * Specifies the [WriteConcern] for this operation.

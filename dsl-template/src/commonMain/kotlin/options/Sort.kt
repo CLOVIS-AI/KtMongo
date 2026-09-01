@@ -31,7 +31,7 @@ import kotlin.reflect.KProperty1
 /**
  * Describes in which order elements should be returned.
  *
- * For more information, see [WithSort.sort].
+ * For more information, see [HasSort.sort].
  *
  * ### External resources
  *
@@ -72,7 +72,7 @@ class SortOption<Document : Any> private constructor(
  * See [sort].
  */
 @KtMongoDsl
-interface WithSort<Document : Any> : Options {
+interface HasSort<Document : Any> : Options {
 
 	/**
 	 * The order in which documents should be returned.
@@ -147,7 +147,7 @@ interface WithSort<Document : Any> : Options {
  * will sort users in alphabetical order of their name, and when users have the same name, will sort them in decreasing
  * order of their age.
  *
- * See [WithSort.sort].
+ * See [HasSort.sort].
  */
 @KtMongoDsl
 interface SortOptionDsl<Document : Any> : CompoundBsonNode, FieldDsl {

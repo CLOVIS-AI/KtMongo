@@ -24,7 +24,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 /**
  * Maximum number of elements analyzed by this operation.
  *
- * For more information, see [WithLimit].
+ * For more information, see [HasLimit].
  */
 class LimitOption(
 	val limit: Long,
@@ -42,7 +42,7 @@ class LimitOption(
  *
  * See [limit].
  */
-interface WithLimit : Options {
+interface HasLimit : Options {
 
 	/**
 	 * The maximum number of matching documents to return.

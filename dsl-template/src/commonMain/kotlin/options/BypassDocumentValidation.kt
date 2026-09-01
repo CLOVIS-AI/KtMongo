@@ -24,7 +24,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 /**
  * Whether this operation is allowed to bypass document validation.
  *
- * See [WithBypassDocumentValidation.bypassDocumentValidation].
+ * See [HasBypassDocumentValidation.bypassDocumentValidation].
  */
 class BypassDocumentValidationOption(
 	val bypassDocumentValidation: Boolean,
@@ -40,9 +40,9 @@ class BypassDocumentValidationOption(
 /**
  * Whether this operation is allowed to bypass document validation.
  *
- * See [WithBypassDocumentValidation.bypassDocumentValidation].
+ * See [HasBypassDocumentValidation.bypassDocumentValidation].
  */
-interface WithBypassDocumentValidation : Options {
+interface HasBypassDocumentValidation : Options {
 
 	/**
 	 * Whether this operation is allowed to bypass document validation.
