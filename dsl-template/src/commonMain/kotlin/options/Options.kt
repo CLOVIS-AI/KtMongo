@@ -31,7 +31,7 @@ import opensavvy.ktmongo.dsl.tree.*
  * Additional parameters that are passed to MongoDB operations.
  *
  * Options are usually configured with the `options = {}` optional parameter in a command.
- * For example, if we want to know how many notifications a user has, but can only display "99" because of UI size
+ * For example, if we want to know how many notifications a user has but can only display "99" because of UI size
  * constraints, we can use the following command:
  * ```kotlin
  * notifications.count(
@@ -43,16 +43,17 @@ import opensavvy.ktmongo.dsl.tree.*
  * }
  * ```
  *
- * If the same option is specified multiple times, only the very last one applies:
+ * By default, if the same option is specified multiple times, only the very last one applies:
  * ```kotlin
- * notifications.count {
- *     options {
+ * notifications.count(
+ *     options = {
  *         limit(99)
  *         limit(10)
  *     }
- * }
+ * )
  * ```
  * will only count at most 10 elements.
+ * To customize this behavior, see [merge].
  *
  * ### Accessing the current value of an option
  *
@@ -72,13 +73,14 @@ interface Option : BsonNode {
 	 * The name of this option, as it appears in the BSON representation.
 	 *
 	 * Options always have the form:
-	 * ```json
+	 * ```javascript
 	 * find(
+	 *     { },
+	 *     { },
 	 *     {
 	 *         "limit": 10,
 	 *         "sort": { }
 	 *     },
-	 *     { }
 	 * )
 	 * ```
 	 *
@@ -95,22 +97,31 @@ interface Option : BsonNode {
 	 *
 	 * ### Performance
 	 *
-	 * Note that this method requires to write this option into a temporary BSON value.
+	 * This method requires writing this option into a temporary BSON value.
+	 *
+	 * Typically, most option implementations provide specific inexpensive accessors for their different components
+	 * (e.g. [LimitOption.limit]).
 	 */
 	fun read(): BsonValue
 
 	/**
 	 * Merges this option with another of the same type.
 	 *
+	 * This method is not meant to be called by end-users.
+	 * It allows option implementations to customize the behavior when the same option is specified multiple times.
+	 * This method is called automatically by the KtMongo library.
+	 *
 	 * The caller is responsible for only calling this method
 	 * with a parameter of the same concrete type as the current instance.
 	 *
 	 * This method returns a new option, which combines the values of both options.
+	 * The two options passed as parameters must not be modified.
+	 * This method may return one of the two options passed as parameters.
 	 *
 	 * This method must be called in the same order as the options are defined.
 	 * For example, if `a` is defined before `b`, then `a.merge(b)` is valid, but `b.merge(a)` is not.
 	 *
-	 * By default, this method returns the last declared option.
+	 * By default, this method returns the last declared option ([other]).
 	 *
 	 * This method is called by the option holder's [BsonNode.simplify] method.
 	 */
@@ -124,6 +135,11 @@ interface Option : BsonNode {
 
 /**
  * Helper to implement [Option].
+ *
+ * To learn more about implementing custom KtMongo operators and options, see [AbstractBsonNode].
+ * This class behaves similarly: a user only needs to implement [write].
+ *
+ * An option is immutable and is thus immediately [frozen][freeze] during construction.
  */
 abstract class AbstractOption(
 	override val name: String,
@@ -152,6 +168,8 @@ abstract class AbstractOption(
 
 /**
  * Utility to easily implement options that contain a document as [content].
+ *
+ * To learn more about implementing custom KtMongo operators and options, see [AbstractBsonNode].
  */
 abstract class AbstractCompoundOption(
 	name: String,
@@ -183,6 +201,8 @@ abstract class AbstractCompoundOption(
  * Option containers are types that declare a set of options. They are usually tied to a specific MongoDB command.
  *
  * For example, for options related to the [Count] command, see [CountOptions].
+ *
+ * To access a specific option, see [option].
  */
 @KtMongoDsl
 interface Options : CompoundBsonNode {
@@ -240,13 +260,11 @@ internal class OptionsHolder(context: BsonContext) : AbstractCompoundBsonNode(co
  * For example, if we have a helper function that sets some default options, and we want to know what maximum `limit` it
  * set, we can use:
  * ```kotlin
- * collection.count {
- *     // …
- *
- *     options {
+ * collection.count(
+ *     options = {
  *         println(option<LimitOption>()) // Will print an integer
  *     }
- * }
+ * )
  * ```
  */
 @LowLevelApi
