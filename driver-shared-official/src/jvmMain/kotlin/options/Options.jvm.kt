@@ -20,6 +20,7 @@ import com.mongodb.ReadConcern
 import com.mongodb.ReadPreference
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
+import opensavvy.ktmongo.dsl.command.CreateCollectionOptions
 import opensavvy.ktmongo.dsl.command.InsertManyOptions
 import opensavvy.ktmongo.dsl.command.InsertOneOptions
 import opensavvy.ktmongo.dsl.options.*
@@ -36,20 +37,24 @@ fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongod
 
 @LowLevelApi
 fun InsertOneOptions<*>.toJava(): com.mongodb.client.model.InsertOneOptions = com.mongodb.client.model.InsertOneOptions()
-	.let {
-		val bypass = readBypassDocumentValidation()
-		if (bypass != null) it.bypassDocumentValidation(bypass) else it
-	}
+	.setNotNull(readBypassDocumentValidation(), com.mongodb.client.model.InsertOneOptions::bypassDocumentValidation)
 	.comment(readComment())
 
 @LowLevelApi
 fun InsertManyOptions<*>.toJava(): com.mongodb.client.model.InsertManyOptions = com.mongodb.client.model.InsertManyOptions()
-	.let {
-		val bypass = readBypassDocumentValidation()
-		if (bypass != null) it.bypassDocumentValidation(bypass) else it
-	}
+	.setNotNull(readBypassDocumentValidation(), com.mongodb.client.model.InsertManyOptions::bypassDocumentValidation)
 	.comment(readComment())
 	.ordered(readOrdered())
+
+@LowLevelApi
+fun CreateCollectionOptions<*>.toJava(): com.mongodb.client.model.CreateCollectionOptions = com.mongodb.client.model.CreateCollectionOptions()
+	.capped(readCapped())
+	.setNotNull(readSizeInBytes(), com.mongodb.client.model.CreateCollectionOptions::sizeInBytes)
+	.setNotNull(readMaxSize(), com.mongodb.client.model.CreateCollectionOptions::maxDocuments)
+
+private inline fun <O, V : Any> O.setNotNull(value: V?, setter: O.(V) -> O): O =
+	if (value != null) setter(value)
+	else this
 
 @LowLevelApi
 fun HasLimit.readLimit(): Int =
@@ -88,3 +93,15 @@ fun HasComment.readComment(): BsonValue? =
 	option<CommentOption>()?.comment
 		?.let { context.buildArray { it.writeTo(this) }[0]!! as opensavvy.ktmongo.bson.official.BsonValue }
 		?.raw
+
+@LowLevelApi
+fun HasCapped.readCapped(): Boolean =
+	option<CappedOption>()?.capped ?: false
+
+@LowLevelApi
+fun HasCapped.readSizeInBytes(): Long? =
+	option<CappedSizeOption>()?.sizeBytes
+
+@LowLevelApi
+fun HasCapped.readMaxSize(): Long? =
+	option<CappedMaxOption>()?.max

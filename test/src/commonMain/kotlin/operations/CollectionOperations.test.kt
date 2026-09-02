@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
+@file:OptIn(LowLevelApi::class)
+
 package opensavvy.ktmongo.tests.api.operations
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -53,5 +56,44 @@ fun SuiteDsl.verifyCollectionOperations(
 		collection().drop()
 
 		check(collection().count() == 0L)
+	}
+
+	test("Create a capped collection") {
+		val id = collection().newId()
+
+		val documentSize = collection().factory.buildDocument {
+			writeSafe("user", CollectionOperationsUser(id, "Alice"))
+		}.toByteArray().size
+
+		collection().create {
+			// Roughly the size of two users
+			// Therefore, if we insert 3, the first one should be removed
+			capped(documentSize.toLong() * 2)
+		}
+
+		collection().insertOne(
+			CollectionOperationsUser(
+				_id = collection().newId(),
+				name = "Bob",
+			)
+		)
+
+		collection().insertOne(
+			CollectionOperationsUser(
+				_id = collection().newId(),
+				name = "Charlie",
+			)
+		)
+
+		check(collection().count() == 2L)
+
+		collection().insertOne(
+			CollectionOperationsUser(
+				_id = collection().newId(),
+				name = "Deborah",
+			)
+		)
+
+		check(collection().find().toList().map { it.name }.toSet() == setOf("Charlie", "Deborah"))
 	}
 }

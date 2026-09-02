@@ -22,6 +22,7 @@ package opensavvy.ktmongo.sync
 import com.mongodb.client.model.DeleteOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.kotlin.client.MongoCollection
+import com.mongodb.kotlin.client.MongoDatabase
 import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.official.BsonValue
 import opensavvy.ktmongo.bson.official.types.Jvm
@@ -57,6 +58,7 @@ private class SyncMongoCollectionImpl<Document : Any>(
 	override val objectIdGenerator: ObjectIdGenerator,
 	@property:LowLevelApi
 	override val type: KType,
+	private val innerDatabase: MongoDatabase?,
 ) : SyncMongoCollection<Document> {
 
 	private val inner = inner
@@ -194,6 +196,18 @@ private class SyncMongoCollectionImpl<Document : Any>(
 
 	// endregion
 	// region Collection
+
+	@OptIn(LowLevelApi::class)
+	override fun create(options: CreateCollectionOptions<Document>.() -> Unit) {
+		requireNotNull(innerDatabase) { "Due to limitations of the official Kotlin driver, this method can only be called when the collection was instantiated from a KtMongo database (${opensavvy.ktmongo.sync.api.MongoDatabase::class.qualifiedName}), but this collection was created by calling asKtMongo() on a database from the official driver (${MongoDatabase::class.qualifiedName})" }
+
+		val model = CreateCollection<Document>(context)
+
+		model.options.options()
+
+		innerDatabase.withWriteConcern(model.options)
+			.createCollection(name, model.options.toJava())
+	}
 
 	@OptIn(LowLevelApi::class)
 	override fun drop(options: DropOptions<Document>.() -> Unit) {
@@ -515,6 +529,23 @@ fun <Document : Any> MongoCollection<Document>.asKtMongo(
 		propertyNameStrategy = propertyNameStrategy,
 		objectIdGenerator = objectIdGenerator,
 		type = type,
+		innerDatabase = null,
+	)
+
+internal fun <Document : Any> MongoCollection<Document>.asKtMongo(
+	factory: BsonFactory = BsonFactory(this.codecRegistry),
+	propertyNameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
+	type: KType,
+	database: MongoDatabase,
+): SyncMongoCollection<Document> =
+	SyncMongoCollectionImpl(
+		inner = this,
+		factory = factory,
+		propertyNameStrategy = propertyNameStrategy,
+		objectIdGenerator = objectIdGenerator,
+		type = type,
+		innerDatabase = database,
 	)
 
 /**
@@ -549,6 +580,14 @@ inline fun <reified Document : Any> MongoCollection<Document>.asKtMongo(
 
 @LowLevelApi
 private fun <Document : Any> MongoCollection<Document>.withWriteConcern(option: HasWriteConcern): MongoCollection<Document> {
+	val concern = option.option<WriteConcernOption>()?.concern
+		?: return this
+
+	return this.withWriteConcern(concern.toJava())
+}
+
+@LowLevelApi
+private fun MongoDatabase.withWriteConcern(option: HasWriteConcern): MongoDatabase {
 	val concern = option.option<WriteConcernOption>()?.concern
 		?: return this
 

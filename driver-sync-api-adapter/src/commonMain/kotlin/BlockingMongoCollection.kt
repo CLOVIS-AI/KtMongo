@@ -65,6 +65,10 @@ class BlockingMongoCollection<Document : Any>(
 	override val context: BsonContext
 		get() = inner.context
 
+	override suspend fun create(options: CreateCollectionOptions<Document>.() -> Unit) = wrapBlocking {
+		inner.create(options)
+	}
+
 	override suspend fun drop(options: DropOptions<Document>.() -> Unit) = wrapBlocking {
 		inner.drop(options)
 	}

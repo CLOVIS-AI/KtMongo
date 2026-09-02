@@ -16,12 +16,42 @@
 
 package opensavvy.ktmongo.api.operations
 
+import opensavvy.ktmongo.dsl.command.CreateCollectionOptions
 import opensavvy.ktmongo.dsl.command.DropOptions
 
 /**
  * Interface grouping MongoDB operations relating to collection administration.
  */
 interface CollectionOperations<Document : Any> : BaseOperations {
+
+	/**
+	 * Explicitly creates this collection.
+	 *
+	 * MongoDB will automatically create a collection with default settings on the first write operation.
+	 * This method is useful to create a collection with non-default settings.
+	 *
+	 * If this method is called and the collection already exists with the same options, nothing happens.
+	 * If this method is called and the collection already exists with different options, an error is thrown.
+	 *
+	 * ### Example
+	 *
+	 * Create a capped collection: a collection with a maximum size on disk:
+	 *
+	 * ```kotlin
+	 * database.collection<Log>("logs")
+	 *     .create {
+	 *         capped(sizeBytes = 1024 * 1024) // 1 MiB
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Protocol documentation](https://www.mongodb.com/docs/manual/reference/command/create/)
+	 * - [`mongosh` documentation](https://www.mongodb.com/docs/manual/reference/method/db.createCollection)
+	 */
+	suspend fun create(
+		options: CreateCollectionOptions<Document>.() -> Unit = {},
+	)
 
 	/**
 	 * Removes an entire collection from the database.
