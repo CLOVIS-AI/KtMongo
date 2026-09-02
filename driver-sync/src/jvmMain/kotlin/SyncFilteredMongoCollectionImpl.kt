@@ -91,7 +91,7 @@ private class SyncFilteredMongoCollectionImpl<Document : Any>(
 		get() = upstream.context
 
 	override fun drop(options: DropOptions<Document>.() -> Unit) =
-		upstream.drop(options)
+		error("It is not possible to call 'drop' on the filtered collection $this:\nA filtered collection is a driver-side view, it does not exist in the database itself.")
 
 	override fun count(): Long =
 		upstream.count {

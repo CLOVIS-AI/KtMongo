@@ -22,6 +22,7 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.suite.assertions.checkThrows
 import opensavvy.prepared.suite.assertions.matches
 
 @Serializable
@@ -38,6 +39,14 @@ fun SuiteDsl.verifyClientSideViewOperations(
 
 	test("Filtered collection's toString() representation") {
 		check(collection().filter { ClientSideViewOperationsUser::name gte "Bob" }.toString() matches $$""".+MongoCollection\(.+\).filter\(\{"name": \{"\$gte": "Bob"\}\}\)""")
+	}
+
+	test("Dropping a filtered collection is forbidden") {
+		checkThrows<IllegalStateException> {
+			collection()
+				.filter { ClientSideViewOperationsUser::name gte "Bob" }
+				.drop()
+		}
 	}
 
 }
