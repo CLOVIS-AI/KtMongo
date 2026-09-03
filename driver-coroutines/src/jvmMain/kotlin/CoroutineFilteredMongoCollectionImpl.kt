@@ -91,8 +91,12 @@ private class CoroutineFilteredMongoCollectionImpl<Document : Any>(
 	override val context: BsonContext
 		get() = upstream.context
 
+	override suspend fun create(options: CreateCollectionOptions<Document>.() -> Unit) {
+		error("It is not possible to call 'create' on the filtered collection $this:\nA filtered collection is a driver-side view, it cannot exist in the database itself.")
+	}
+
 	override suspend fun drop(options: DropOptions<Document>.() -> Unit) =
-		upstream.drop(options)
+		error("It is not possible to call 'drop' on the filtered collection $this:\nA filtered collection is a driver-side view, it does not exist in the database itself.")
 
 	override suspend fun count(): Long =
 		upstream.count {

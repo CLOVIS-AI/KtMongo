@@ -35,7 +35,7 @@ private class SyncMongoDatabaseImpl(
 	@Suppress("UNCHECKED_CAST")
 	override fun <Document : Any> collection(name: String, type: KType): SyncMongoCollection<Document> =
 		inner.getCollection(name, (type.classifier as KClass<Document>).java)
-			.asKtMongo(type = type)
+			.asKtMongo(type = type, database = inner)
 
 	override val name: String
 		get() = inner.name

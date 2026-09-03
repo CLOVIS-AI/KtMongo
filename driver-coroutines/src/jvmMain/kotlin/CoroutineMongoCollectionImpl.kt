@@ -22,6 +22,7 @@ package opensavvy.ktmongo.coroutines
 import com.mongodb.client.model.DeleteOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.kotlin.client.coroutine.MongoCollection
+import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.official.BsonValue
@@ -57,6 +58,7 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 	override val objectIdGenerator: ObjectIdGenerator,
 	@property:LowLevelApi
 	override val type: KType,
+	private val innerDatabase: com.mongodb.kotlin.client.coroutine.MongoDatabase?,
 ) : CoroutineMongoCollection<Document> {
 
 	private val inner = inner
@@ -194,6 +196,18 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 
 	// endregion
 	// region Collection
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun create(options: CreateCollectionOptions<Document>.() -> Unit) {
+		requireNotNull(innerDatabase) { "Due to limitations of the official Kotlin driver, this method can only be called when the collection was instantiated from a KtMongo database (${opensavvy.ktmongo.api.MongoDatabase::class.qualifiedName}), but this collection was created by calling asKtMongo() on a database from the official driver (${com.mongodb.kotlin.client.coroutine.MongoDatabase::class.qualifiedName})" }
+
+		val model = CreateCollection<Document>(context)
+
+		model.options.options()
+
+		innerDatabase.withWriteConcern(model.options)
+			.createCollection(name, model.options.toJava())
+	}
 
 	@OptIn(LowLevelApi::class)
 	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
@@ -515,6 +529,23 @@ fun <Document : Any> MongoCollection<Document>.asKtMongo(
 		propertyNameStrategy = propertyNameStrategy,
 		objectIdGenerator = objectIdGenerator,
 		type = type,
+		innerDatabase = null,
+	)
+
+internal fun <Document : Any> MongoCollection<Document>.asKtMongo(
+	factory: BsonFactory = BsonFactory(this.codecRegistry),
+	propertyNameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
+	type: KType,
+	database: MongoDatabase,
+): CoroutineMongoCollection<Document> =
+	CoroutineMongoCollectionImpl(
+		inner = this,
+		factory = factory,
+		propertyNameStrategy = propertyNameStrategy,
+		objectIdGenerator = objectIdGenerator,
+		type = type,
+		innerDatabase = database,
 	)
 
 /**
@@ -549,6 +580,14 @@ inline fun <reified Document : Any> MongoCollection<Document>.asKtMongo(
 
 @LowLevelApi
 private fun <Document : Any> MongoCollection<Document>.withWriteConcern(option: HasWriteConcern): MongoCollection<Document> {
+	val concern = option.option<WriteConcernOption>()?.concern
+		?: return this
+
+	return this.withWriteConcern(concern.toJava())
+}
+
+@LowLevelApi
+private fun com.mongodb.kotlin.client.coroutine.MongoDatabase.withWriteConcern(option: HasWriteConcern): com.mongodb.kotlin.client.coroutine.MongoDatabase {
 	val concern = option.option<WriteConcernOption>()?.concern
 		?: return this
 
