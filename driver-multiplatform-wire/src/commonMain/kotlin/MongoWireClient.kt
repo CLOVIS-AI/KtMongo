@@ -530,14 +530,19 @@ suspend fun MongoWireClient(
 ): MongoWireClient {
 	val innerJob = Job(coroutineContext.job)
 
-	val selectorManager = SelectorManager(coroutineContext + innerJob + Dispatchers.Default + CoroutineName("ktmongo-socket"))
-	val socket = aSocket(selectorManager).tcp().connect(hostName, port) {
-		keepAlive = true
-	}
+	try {
+		val selectorManager = SelectorManager(coroutineContext + innerJob + Dispatchers.Default + CoroutineName("ktmongo-socket"))
+		val socket = aSocket(selectorManager).tcp().connect(hostName, port) {
+			keepAlive = true
+		}
 
-	return SocketWireClient(
-		socket = MongoSocket(socket, selectorManager),
-		factory = factory,
-		coroutineScope = CoroutineScope(coroutineContext + innerJob + CoroutineName("ktmongo-client"))
-	)
+		return SocketWireClient(
+			socket = MongoSocket(socket, selectorManager),
+			factory = factory,
+			coroutineScope = CoroutineScope(coroutineContext + innerJob + CoroutineName("ktmongo-client"))
+		)
+	} catch (e: Exception) {
+		currentCoroutineContext().ensureActive()
+		throw MongoWireException("Could not connect to $hostName:$port", e)
+	}
 }
