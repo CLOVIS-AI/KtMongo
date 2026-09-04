@@ -16,14 +16,14 @@
 
 package opensavvy.ktmongo.multiplatform
 
+import opensavvy.ktmongo.api.MongoCollection
 import opensavvy.ktmongo.bson.types.ObjectId
-import opensavvy.ktmongo.bson.types.ObjectIdGenerator
-import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.command.InsertOneOptions
-import kotlin.reflect.KType
+import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
  * A collection stores related documents together.
+ *
+ * The Multiplatform driver provides a coroutine-aware API which works on all supported Kotlin platforms.
  *
  * Usually, all documents in a collection have the same shape (the same fields).
  * However, heterogeneous structure can be achieved by using:
@@ -40,44 +40,27 @@ import kotlin.reflect.KType
  *
  * You can measure the size of a document with [opensavvy.ktmongo.bson.BsonDocument.toByteArray]
  * followed by [ByteArray.size].
+ *
+ * The maximum nesting is 100 levels.
+ * Each document or array adds a level.
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
+ * - [Size limits](https://www.mongodb.com/docs/manual/reference/limits/#bson-documents)
  */
-interface MultiplatformMongoCollection<Document : Any> : ObjectIdGenerator {
+interface MultiplatformMongoCollection<Document : Any> : MongoCollection<Document> {
 
 	/**
 	 * The [MultiplatformMongoDatabase] that contains this collection.
 	 */
 	val database: MultiplatformMongoDatabase
 
-	/**
-	 * THe name of this collection.
-	 *
-	 * The collection name must be unique within a single [database] (otherwise, the two instances refer to the same data).
-	 */
-	val name: String
-
-	/**
-	 * The concatenation of the database's [name][MultiplatformMongoDatabase.name] and the collection's [name].
-	 */
-	val fullyQualifiedName: String
+	override val fullyQualifiedName: String
 		get() = "${database.name}.$name"
 
 	override fun newId(): ObjectId =
 		database.client.context.newId()
 
-	suspend fun insertOne(
-		document: Document,
-		options: InsertOneOptions<Document>.() -> Unit = {},
-	)
-
-	/**
-	 * The [KType] instance that corresponds to the collection's document type.
-	 *
-	 * This property is used by serialization libraries to know the exact type to deserialize,
-	 * especially in the presence of type parameters.
-	 *
-	 * Everyday users should not need to interact with this property directly.
-	 */
-	@LowLevelApi
-	val type: KType
-
+	override fun filter(filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoCollection<Document>
 }

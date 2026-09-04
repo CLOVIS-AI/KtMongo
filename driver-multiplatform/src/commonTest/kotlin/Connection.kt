@@ -48,7 +48,7 @@ val MultiplatformConnection by preparedSuite(preparedConfig = CoroutineTimeout(1
 		val collection = database.collection<String>("test2")
 		// 'String' isn't a valid document type, but that only matters for actual requests.
 
-		check(collection.toString() == "MongoCollection(test1.test2)")
+		check(collection.toString() == "MultiplatformMongoCollection(test1.test2)")
 	}
 
 }

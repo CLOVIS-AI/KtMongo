@@ -51,6 +51,7 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.dsl)
+		api(projects.driverApi)
 		implementation(projects.driverMultiplatformWire)
 		api(libs.kotlinx.coroutines)
 	}
