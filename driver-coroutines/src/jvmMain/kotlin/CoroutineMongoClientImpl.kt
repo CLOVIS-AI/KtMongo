@@ -31,7 +31,7 @@ private class CoroutineMongoClientImpl(
 	override fun database(name: String): CoroutineMongoDatabase =
 		inner.getDatabase(name).asKtMongo()
 
-	override fun close() {
+	override suspend fun close() {
 		inner.close()
 	}
 

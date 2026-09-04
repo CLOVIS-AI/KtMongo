@@ -25,8 +25,9 @@ class BlockingMongoClient(
 	override fun database(name: String): BlockingMongoDatabase =
 		BlockingMongoDatabase(inner.database(name))
 
-	override fun close() =
+	override suspend fun close() = wrapBlocking {
 		inner.close()
+	}
 
 	override fun toString(): String =
 		inner.toString()
