@@ -14,22 +14,31 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalCoroutinesApi::class)
 
 package opensavvy.ktmongo.tests.api.operations
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.api.MongoClient
+import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.types.InstantAsBsonDatetimeSerializer
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
+import opensavvy.prepared.suite.assertions.checkThrows
+import opensavvy.prepared.suite.now
+import opensavvy.prepared.suite.time
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Serializable
-data class CollectionOperationsUser(
+data class CollectionOperationsUser @OptIn(ExperimentalTime::class) constructor(
 	val _id: ObjectId,
 	val name: String,
+	val birthdate: @Serializable(with = InstantAsBsonDatetimeSerializer::class) Instant,
 )
 
 fun SuiteDsl.verifyCollectionOperations(
@@ -46,10 +55,12 @@ fun SuiteDsl.verifyCollectionOperations(
 			CollectionOperationsUser(
 				_id = collection().newId(),
 				name = "Alice",
+				birthdate = time.now,
 			),
 			CollectionOperationsUser(
 				_id = collection().newId(),
 				name = "Bob",
+				birthdate = time.now,
 			),
 		)
 
@@ -62,7 +73,7 @@ fun SuiteDsl.verifyCollectionOperations(
 		val id = collection().newId()
 
 		val documentSize = collection().factory.buildDocument {
-			writeSafe("user", CollectionOperationsUser(id, "Alice"))
+			writeSafe("user", CollectionOperationsUser(id, "Alice", time.now))
 		}.toByteArray().size
 
 		collection().create {
@@ -75,6 +86,7 @@ fun SuiteDsl.verifyCollectionOperations(
 			CollectionOperationsUser(
 				_id = collection().newId(),
 				name = "Bob",
+				birthdate = time.now,
 			)
 		)
 
@@ -82,6 +94,7 @@ fun SuiteDsl.verifyCollectionOperations(
 			CollectionOperationsUser(
 				_id = collection().newId(),
 				name = "Charlie",
+				birthdate = time.now,
 			)
 		)
 
@@ -91,9 +104,40 @@ fun SuiteDsl.verifyCollectionOperations(
 			CollectionOperationsUser(
 				_id = collection().newId(),
 				name = "Deborah",
+				birthdate = time.now,
 			)
 		)
 
 		check(collection().find().toList().map { it.name }.toSet() == setOf("Charlie", "Deborah"))
+	}
+
+	test("Create a collection with simple validation") {
+		collection().create {
+			validator {
+				CollectionOperationsUser::birthdate hasType BsonType.Datetime
+			}
+		}
+
+		// The type is correct, so this should be successful
+		collection().insertOne(
+			CollectionOperationsUser(
+				_id = collection().newId(),
+				name = "Alice",
+				birthdate = time.now,
+			)
+		)
+
+		// Create a user where the date is a string, should fail
+		checkThrows<Exception> { // TODO specify which exception
+			collection()
+				.filter {
+					CollectionOperationsUser::name eq "Bob"
+				}
+				.upsertOneWithPipeline {
+					set {
+						CollectionOperationsUser::birthdate set of(time.now.toString()).unsafeCast()
+					}
+				}
+		}
 	}
 }
