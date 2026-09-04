@@ -31,7 +31,6 @@ import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
 import opensavvy.ktmongo.multiplatform.wire.Message
-import opensavvy.ktmongo.multiplatform.wire.MessageSection
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.reflect.KType
 
@@ -57,25 +56,19 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		document: Document,
 		options: InsertOneOptions<Document>.() -> Unit,
 	) {
-		val command = lazy {
-			database.client.factory.buildDocument {
-				writeString("insert", name)
-				writeString($$"$db", database.name)
-
-				InsertOne(
-					context = database.client.context,
-					document = document,
-					documentType = type,
-				).writeTo(this)
-			}
-		}
-
 		val message = database.client.wire.sendSingle(
-			Message.OpMsg(
-				body = MessageSection.Body(
-					command,
-				)
-			)
+			database.client.createOpMsg {
+				document {
+					writeString("insert", name)
+					writeString($$"$db", database.name)
+
+					InsertOne(
+						context = database.client.context,
+						document = document,
+						documentType = type,
+					).writeTo(this)
+				}
+			}
 		)
 
 		check(message is Message.OpMsg)
@@ -103,23 +96,17 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun count(): Long {
-		val command = lazy {
-			database.client.factory.buildDocument {
-				writeString("count", name)
-				writeString($$"$db", database.name)
-
-				Count<Document>(
-					context = database.client.context,
-				).writeTo(this)
-			}
-		}
-
 		val message = database.client.wire.sendSingle(
-			Message.OpMsg(
-				body = MessageSection.Body(
-					command,
-				)
-			)
+			database.client.createOpMsg {
+				document {
+					writeString("count", name)
+					writeString($$"$db", database.name)
+
+					Count<Document>(
+						context = database.client.context,
+					).writeTo(this)
+				}
+			}
 		)
 
 		message as Message.OpMsg
