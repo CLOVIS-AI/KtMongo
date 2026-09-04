@@ -17,7 +17,6 @@
 package opensavvy.ktmongo.multiplatform
 
 import opensavvy.ktmongo.api.MongoAggregationPipeline
-import opensavvy.ktmongo.api.MongoIterable
 import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonType
@@ -137,13 +136,24 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		TODO("Not yet implemented")
 	}
 
-	override fun find(): MongoIterable<Document> {
-		TODO("Not yet implemented")
-	}
+	override fun find(): MultiplatformMongoIterable<Document> =
+		MultiplatformMongoIterableFindImpl(
+			collection = this,
+			operation = Find(context),
+			type = type,
+			isDefault = true,
+		)
 
-	override fun find(options: FindOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit): MongoIterable<Document> {
-		TODO("Not yet implemented")
-	}
+	override fun find(options: FindOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoIterable<Document> =
+		MultiplatformMongoIterableFindImpl(
+			collection = this,
+			operation = Find<Document>(context).apply {
+				this.options.options()
+				this.filter.filter()
+			},
+			type = type,
+			isDefault = false,
+		)
 
 	override suspend fun updateMany(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
 		TODO("Not yet implemented")

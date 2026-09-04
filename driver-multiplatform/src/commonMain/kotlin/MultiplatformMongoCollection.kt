@@ -18,6 +18,7 @@ package opensavvy.ktmongo.multiplatform
 
 import opensavvy.ktmongo.api.MongoCollection
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.command.FindOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 
 /**
@@ -61,6 +62,10 @@ interface MultiplatformMongoCollection<Document : Any> : MongoCollection<Documen
 
 	override fun newId(): ObjectId =
 		database.client.context.newId()
+
+	override fun find(): MultiplatformMongoIterable<Document>
+
+	override fun find(options: FindOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoIterable<Document>
 
 	override fun filter(filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoCollection<Document>
 }

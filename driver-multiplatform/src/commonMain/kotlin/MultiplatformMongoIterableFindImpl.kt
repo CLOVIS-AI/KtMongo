@@ -1,0 +1,104 @@
+/*
+ * Copyright (c) 2026, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opensavvy.ktmongo.multiplatform
+
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.Find
+import opensavvy.ktmongo.dsl.options.CommentOption
+import opensavvy.ktmongo.dsl.options.MaxTimeOption
+import opensavvy.ktmongo.dsl.options.option
+import opensavvy.ktmongo.multiplatform.wire.Message
+import kotlin.reflect.KType
+
+internal class MultiplatformMongoIterableFindImpl<Document : Any>(
+	private val collection: MultiplatformMongoCollection<*>,
+	private val operation: Find<Document>,
+	private val type: KType,
+	private val isDefault: Boolean,
+) : MultiplatformMongoIterable<Document> {
+
+	override suspend fun first(): Document {
+		TODO()
+	}
+
+	override suspend fun firstOrNull(): Document? {
+		TODO()
+	}
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun forEach(action: suspend (Document) -> Unit) {
+		val firstBatch = collection.database.client.wire.sendSingle(
+			collection.database.client.createOpMsg {
+				document {
+					writeString("find", collection.name)
+					writeString($$"$db", collection.database.name)
+					operation.writeTo(this)
+				}
+			}
+		)
+
+		firstBatch as Message.OpMsg
+		check(firstBatch.body.document["ok"]?.decodeDouble() == 1.0)
+
+		val cursor = firstBatch.body.document["cursor"]?.decodeDocument()
+
+		val cursorId = cursor?.get("id")?.decodeInt64()
+			?: error("No cursor ID found in $firstBatch")
+
+		val batch = cursor["firstBatch"]?.decodeArray()?.asList().orEmpty()
+
+		if (batch.isEmpty())
+			return
+
+		for (item in batch) {
+			action(item.decode(type))
+		}
+
+		if (cursorId == 0L)
+			return
+
+		while (true) {
+			val nextBatch = collection.database.client.wire.sendSingle(
+				collection.database.client.createOpMsg {
+					document {
+						writeInt64("getMore", cursorId)
+						writeString("collection", collection.name)
+						writeString($$"$db", collection.database.name)
+
+						// TODO re-specify the batch size option
+
+						operation.options.option<MaxTimeOption>()?.writeTo(this)
+						operation.options.option<CommentOption>()?.writeTo(this)
+					}
+				}
+			)
+
+			TODO("Received batch: $nextBatch")
+		}
+	}
+
+	override fun asFlow(): Flow<Document> = flow {
+		forEach {
+			emit(it)
+		}
+	}
+
+	override fun toString(): String =
+		"$collection.find(${if (isDefault) "{}" else operation.toString()})"
+}
