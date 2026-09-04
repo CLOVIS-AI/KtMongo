@@ -24,11 +24,11 @@ import opensavvy.ktmongo.multiplatform.wire.MessageSection
 import kotlin.reflect.KType
 
 @OptIn(LowLevelApi::class)
-internal class MongoCollectionImpl<Document : Any>(
-	override val database: MongoDatabase,
+internal class MultiplatformMongoCollectionImpl<Document : Any>(
+	override val database: MultiplatformMongoDatabase,
 	override val name: String,
 	override val type: KType,
-) : MongoCollection<Document> {
+) : MultiplatformMongoCollection<Document> {
 
 	override suspend fun insertOne(
 		document: Document,

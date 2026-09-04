@@ -33,12 +33,12 @@ import kotlin.coroutines.CoroutineContext
  * ### Organizing data
  *
  * Accessing MongoDB data happens in three steps:
- * - [MongoClient]: represents the connection to the MongoDB application, handles
+ * - [MultiplatformMongoClient]: represents the connection to the MongoDB application, handles
  * the lifecycle and the configuration.
- * - [MongoDatabase] (accessed with [MongoClient.database]): each database groups data together.
+ * - [MultiplatformMongoDatabase] (accessed with [MultiplatformMongoClient.database]): each database groups data together.
  * This allows deploying multiple applications (or the same application multiple times)
  * without name collisions.
- * - [MongoCollection] (accessed with [MongoDatabase.collection]): each collection stores data together.
+ * - [MultiplatformMongoCollection] (accessed with [MultiplatformMongoDatabase.collection]): each collection stores data together.
  * Documents in a collection may have a different structure.
  *
  * ### Example
@@ -66,22 +66,22 @@ import kotlin.coroutines.CoroutineContext
  * ```
  */
 @OptIn(LowLevelApi::class)
-class MongoClient internal constructor(
+class MultiplatformMongoClient internal constructor(
 	internal val wire: MongoWireClient,
 	val factory: BsonFactory,
 	val context: BsonContext,
 ) {
 
 	/**
-	 * Creates a [MongoDatabase] object.
+	 * Creates a [MultiplatformMongoDatabase] object.
 	 *
 	 * This method is purely a client-side operation, it does nothing in the MongoDB server.
 	 * In MongoDB, databases and collections are created implicitly on the first insert.
 	 *
-	 * For an example, see [MongoClient].
+	 * For an example, see [MultiplatformMongoClient].
 	 */
-	fun database(name: String): MongoDatabase =
-		MongoDatabaseImpl(this, name)
+	fun database(name: String): MultiplatformMongoDatabase =
+		MultiplatformMongoDatabaseImpl(this, name)
 
 	suspend fun close() {
 		wire.close()
@@ -115,14 +115,14 @@ class MongoClient internal constructor(
  */
 @ExperimentalAtomicApi
 @OptIn(LowLevelApi::class)
-suspend fun MongoClient(
+suspend fun MultiplatformMongoClient(
 	hostname: String = "localhost",
 	port: Int = 27017,
 	coroutineContext: CoroutineContext,
 	bsonFactory: BsonFactory = BsonFactory(),
 	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Default(),
 	propertyNameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
-): MongoClient = MongoClient(
+): MultiplatformMongoClient = MultiplatformMongoClient(
 	wire = MongoWireClient(
 		hostname,
 		port,

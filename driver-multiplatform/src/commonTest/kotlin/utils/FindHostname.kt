@@ -17,7 +17,7 @@
 package opensavvy.ktmongo.multiplatform.utils
 
 import kotlinx.coroutines.coroutineScope
-import opensavvy.ktmongo.multiplatform.MongoClient
+import opensavvy.ktmongo.multiplatform.MultiplatformMongoClient
 import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.foregroundScope
 import opensavvy.prepared.suite.prepared
@@ -31,7 +31,7 @@ private suspend fun tryConnect(
 	try {
 		println("  Attempting to connect to $hostname")
 		coroutineScope {
-			MongoClient(hostname = hostname, coroutineContext = coroutineContext).close()
+			MultiplatformMongoClient(hostname = hostname, coroutineContext = coroutineContext).close()
 		}
 		return true
 	} catch (e: Throwable) {
@@ -51,7 +51,7 @@ private val mongoAddress by shared {
 val MongoClient by prepared {
 	val address = mongoAddress()
 
-	val client = MongoClient(
+	val client = MultiplatformMongoClient(
 		hostname = address,
 		port = 27017,
 		coroutineContext = foregroundScope.coroutineContext,

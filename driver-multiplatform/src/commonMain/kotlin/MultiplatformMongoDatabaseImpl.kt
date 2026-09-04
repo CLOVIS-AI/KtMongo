@@ -19,14 +19,14 @@ package opensavvy.ktmongo.multiplatform
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KType
 
-internal class MongoDatabaseImpl(
-	override val client: MongoClient,
+internal class MultiplatformMongoDatabaseImpl(
+	override val client: MultiplatformMongoClient,
 	override val name: String,
-) : MongoDatabase {
+) : MultiplatformMongoDatabase {
 
 	@LowLevelApi
-	override fun <Document : Any> collection(name: String, type: KType): MongoCollection<Document> =
-		MongoCollectionImpl(this, name, type)
+	override fun <Document : Any> collection(name: String, type: KType): MultiplatformMongoCollection<Document> =
+		MultiplatformMongoCollectionImpl(this, name, type)
 
 	override fun toString(): String =
 		"MongoDatabase($name)"

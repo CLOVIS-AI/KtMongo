@@ -24,20 +24,20 @@ import kotlin.reflect.typeOf
  * A single MongoDB instance can store multiple databases.
  *
  * Each database has a unique [name] and isolates applications to avoid name collisions even
- * if two applications use the same [MongoCollection] name.
+ * if two applications use the same [MultiplatformMongoCollection] name.
  *
- * To obtain a database, see [MongoClient.database].
+ * To obtain a database, see [MultiplatformMongoClient.database].
  *
  * To obtain a collection, see [collection].
  */
-interface MongoDatabase {
+interface MultiplatformMongoDatabase {
 
 	/**
-	 * The [MongoClient] which created this database.
+	 * The [MultiplatformMongoClient] which created this database.
 	 *
-	 * The [MongoClient] instance is responsible for the global configuration.
+	 * The [MultiplatformMongoClient] instance is responsible for the global configuration.
 	 */
-	val client: MongoClient
+	val client: MultiplatformMongoClient
 
 	/**
 	 * The unique name of this database.
@@ -45,31 +45,31 @@ interface MongoDatabase {
 	val name: String
 
 	/**
-	 * Creates a [MongoCollection] object.
+	 * Creates a [MultiplatformMongoCollection] object.
 	 *
 	 * This method is purely a client-side operation, it does nothing in the MongoDB server.
 	 * In MongoDB, databases and collections are created implicitly on the first insert.
 	 *
-	 * For an example, see [MongoClient].
+	 * For an example, see [MultiplatformMongoClient].
 	 *
 	 * Prefer using the overload that doesn't have a [type] argument.
 	 * If [type] is specified, it must match [Document].
 	 * Otherwise, the behavior is unspecified.
 	 */
 	@LowLevelApi
-	fun <Document : Any> collection(name: String, type: KType): MongoCollection<Document>
+	fun <Document : Any> collection(name: String, type: KType): MultiplatformMongoCollection<Document>
 
 	/**
-	 * Creates a [MongoCollection] object.
+	 * Creates a [MultiplatformMongoCollection] object.
 	 *
 	 * This method is purely a client-side operation, it does nothing in the MongoDB server.
 	 * In MongoDB, databases and collections are created implicitly on the first insert.
 	 *
-	 * For an example, see [MongoClient].
+	 * For an example, see [MultiplatformMongoClient].
 	 */
 	@OptIn(LowLevelApi::class)
 	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
-	final inline fun <reified Document : Any> collection(name: String): MongoCollection<Document> =
+	final inline fun <reified Document : Any> collection(name: String): MultiplatformMongoCollection<Document> =
 		collection(name, type = typeOf<Document>())
 
 }

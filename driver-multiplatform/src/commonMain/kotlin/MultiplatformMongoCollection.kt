@@ -30,9 +30,9 @@ import kotlin.reflect.KType
  * - Kotlin collections, like [List] and [Set], the embed an arbitrary number of items.
  * - Polymorphism, for example with `sealed class`, to have different fields based on a discriminator.
  *
- * To avoid name collisions, collections are grouped into [databases][MongoDatabase].
+ * To avoid name collisions, collections are grouped into [databases][MultiplatformMongoDatabase].
  *
- * To obtain a collection, see [MongoDatabase.collection].
+ * To obtain a collection, see [MultiplatformMongoDatabase.collection].
  *
  * ### Size limit
  *
@@ -41,12 +41,12 @@ import kotlin.reflect.KType
  * You can measure the size of a document with [opensavvy.ktmongo.bson.BsonDocument.toByteArray]
  * followed by [ByteArray.size].
  */
-interface MongoCollection<Document : Any> : ObjectIdGenerator {
+interface MultiplatformMongoCollection<Document : Any> : ObjectIdGenerator {
 
 	/**
-	 * The [MongoDatabase] that contains this collection.
+	 * The [MultiplatformMongoDatabase] that contains this collection.
 	 */
-	val database: MongoDatabase
+	val database: MultiplatformMongoDatabase
 
 	/**
 	 * THe name of this collection.
@@ -56,7 +56,7 @@ interface MongoCollection<Document : Any> : ObjectIdGenerator {
 	val name: String
 
 	/**
-	 * The concatenation of the database's [name][MongoDatabase.name] and the collection's [name].
+	 * The concatenation of the database's [name][MultiplatformMongoDatabase.name] and the collection's [name].
 	 */
 	val fullyQualifiedName: String
 		get() = "${database.name}.$name"
