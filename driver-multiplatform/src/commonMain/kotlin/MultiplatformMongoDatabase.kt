@@ -16,21 +16,36 @@
 
 package opensavvy.ktmongo.multiplatform
 
+import opensavvy.ktmongo.api.MongoDatabase
 import opensavvy.ktmongo.dsl.LowLevelApi
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 /**
- * A single MongoDB instance can store multiple databases.
+ * A grouping of collections with the same theme.
  *
- * Each database has a unique [name] and isolates applications to avoid name collisions even
- * if two applications use the same [MultiplatformMongoCollection] name.
+ * The Multiplatform driver provides a coroutine-aware API which works on all supported Kotlin platforms.
+ *
+ * ### What is a database?
+ *
+ * [Collections][MultiplatformMongoCollection] are grouped into databases to avoid name collisions.
+ * Databases are similar to Kotlin packages.
+ * If multiple applications are deployed in the same MongoDB instance in their own database,
+ * they can use the same collection names (e.g. `users`) without conflicts.
+ *
+ * Each database has a [name] that must be unique within a MongoDB deployment.
+ *
+ * ### Access
  *
  * To obtain a database, see [MultiplatformMongoClient.database].
  *
  * To obtain a collection, see [collection].
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
  */
-interface MultiplatformMongoDatabase {
+interface MultiplatformMongoDatabase : MongoDatabase {
 
 	/**
 	 * The [MultiplatformMongoClient] which created this database.
@@ -38,11 +53,6 @@ interface MultiplatformMongoDatabase {
 	 * The [MultiplatformMongoClient] instance is responsible for the global configuration.
 	 */
 	val client: MultiplatformMongoClient
-
-	/**
-	 * The unique name of this database.
-	 */
-	val name: String
 
 	/**
 	 * Creates a [MultiplatformMongoCollection] object.
@@ -57,7 +67,7 @@ interface MultiplatformMongoDatabase {
 	 * Otherwise, the behavior is unspecified.
 	 */
 	@LowLevelApi
-	fun <Document : Any> collection(name: String, type: KType): MultiplatformMongoCollection<Document>
+	override fun <Document : Any> collection(name: String, type: KType): MultiplatformMongoCollection<Document>
 
 	/**
 	 * Creates a [MultiplatformMongoCollection] object.

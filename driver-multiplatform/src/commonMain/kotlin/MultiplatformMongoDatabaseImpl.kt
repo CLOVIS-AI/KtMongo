@@ -33,5 +33,5 @@ internal class MultiplatformMongoDatabaseImpl(
 		MultiplatformMongoCollectionImpl(this, name, type, client.factory, PropertyNameStrategy.Default, ObjectIdGenerator.Default())
 
 	override fun toString(): String =
-		"MongoDatabase($name)"
+		"MultiplatformMongoDatabase($name)"
 }
