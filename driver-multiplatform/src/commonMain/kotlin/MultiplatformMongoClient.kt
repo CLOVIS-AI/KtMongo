@@ -89,6 +89,9 @@ class MultiplatformMongoClient internal constructor(
 	override suspend fun close() {
 		wire.close()
 	}
+
+	override fun toString(): String =
+		"MultiplatformMongoClient()"
 }
 
 /**
