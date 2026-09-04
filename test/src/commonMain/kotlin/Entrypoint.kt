@@ -45,8 +45,9 @@ fun SuiteDsl.verifyClient(
 		}
 		check(count == 0L) { "Client $client found values in the fake collection. Did you create it yourself?" }
 		true
-	} catch (_: Throwable) {
+	} catch (e: Throwable) {
 		currentCoroutineContext().ensureActive()
+		println("Could not connect to the database • ${e.stackTraceToString()}")
 		false
 	}
 
