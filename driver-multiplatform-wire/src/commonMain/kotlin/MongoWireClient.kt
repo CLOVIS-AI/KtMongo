@@ -139,8 +139,8 @@ private class SocketWireClient(
 	// Helps debugging time-sensitive operations for now. Will need to be removed when stabilizing, and be replaced by a proper observability framework.
 	private val start = TimeSource.Monotonic.markNow()
 
-	private fun log(message: String) {
-		println("» KtMongo +${start.elapsedNow().toString(DurationUnit.MILLISECONDS, decimals = 0)} • $message")
+	private fun log(actorName: String, message: String) {
+		println("» KtMongo +${start.elapsedNow().toString(DurationUnit.MILLISECONDS, decimals = 0)} • $actorName • $message")
 	}
 
 	private val sendActor: Job
@@ -149,7 +149,7 @@ private class SocketWireClient(
 	private val parserActorSupervisor: Job
 
 	init {
-		log("Creating client for socket $socket")
+		log("init", "Creating client for socket $socket")
 
 		// Ensure that no resources can leak
 		actorsJob.invokeOnCompletion { socket.close() }
@@ -206,7 +206,7 @@ private class SocketWireClient(
 				parserActor(triagedChannel)
 			}.invokeOnCompletion {
 				if (it !is CancellationException && it != null) {
-					log("Respawning a parser actor because one crashed with $it")
+					log("Parser spawner", "Respawning a parser actor because one crashed with $it")
 					spawnParserActor(coroutineScope, triagedChannel)
 				}
 			}
@@ -245,27 +245,27 @@ private class SocketWireClient(
 						return@consumeEach // If the output is canceled, don't send it to the next actor, the response will arrive in the future but be ignored
 					}
 
-					log("$requestId was sent")
+					log("Send", "$requestId was sent")
 					sentChannel.send(SentMessage(requestId, request.output))
 				} catch (e: Exception) {
 					request.output.completeExceptionally(e)
 					throw e
 				}
 			}
-			log("Successfully sent all requests, shutting down the send actor")
+			log("Send", "Successfully sent all requests, shutting down the send actor")
 		} catch (e: Exception) {
 			val decorated = RuntimeException("Exception was thrown in the send actor", e)
 
-			log("Send actor failed with $e")
+			log("Send", "Failed with $e")
 
-			log("Purging not-yet-sent requests")
+			log("Send", "Purging not-yet-sent requests")
 			runCatching {
 				requestChannel.consumeEach { request ->
 					request.output.completeExceptionally(decorated)
 				}
 			}.getOrElse { e.addSuppressed(it) }
 
-			log("Closing write socket")
+			log("Send", "Closing write socket")
 			writeSocket.close(decorated)
 
 			sentChannel.close(decorated)
@@ -290,15 +290,15 @@ private class SocketWireClient(
 			while (readSocket.awaitContent(8)) {
 				val response = readSocket.readResponse()
 
-				log("Received message ${response.requestId} in response to ${response.responseTo}, of size ${response.messageLength}")
+				log("Read", "Received message ${response.requestId} in response to ${response.responseTo}, of size ${response.messageLength}")
 
 				receivedChannel.send(Response(response.requestId, response.responseTo, response.data))
 			}
-			log("Successfully read all data in the socket and it was closed, shutting down the read actor")
+			log("Read", "Successfully read all data in the socket and it was closed, shutting down the read actor")
 		} catch (e: Throwable) {
 			val decorated = RuntimeException("Exception was thrown in the read actor", e)
 
-			log("Error reading from socket: $e")
+			log("Read", "Error reading from socket: $e")
 			receivedChannel.close(decorated)
 			throw e // rethrow the *original* exception (could be a cancellation)
 		} finally {
@@ -332,10 +332,10 @@ private class SocketWireClient(
 						sentChannel.onReceiveCatching { message ->
 							if (!message.isClosed) {
 								val message = message.getOrThrow()
-								log("${message.requestId} expects an answer")
+								log("Triage", "${message.requestId} expects an answer")
 								waiting[message.requestId] = message.output
 							} else {
-								log("The triage actor has handled all incoming requests")
+								log("Triage", "All incoming requests have been handled")
 								unacknowledgedRequests = false
 							}
 						}
@@ -345,7 +345,7 @@ private class SocketWireClient(
 						receivedChannel.onReceiveCatching { response ->
 							if (!response.isClosed) {
 								val response = response.getOrThrow()
-								log("Triaging a response to ${response.responseTo}")
+								log("Triage", "Triaging a response to ${response.responseTo}")
 								val handler = waiting[response.responseTo]
 									?: error("Received the message ${response.requestId} in response to ${response.responseTo}, but no known message with ID ${response.responseTo} has been sent by this client.\nCurrently in-flight requests: ${waiting.keys.sorted()}")
 								triagedChannel.send(ResponseWithHandler(response, handler))
@@ -353,7 +353,7 @@ private class SocketWireClient(
 									waiting.remove(response.responseTo)
 								}
 							} else {
-								log("The triage actor has handled all incoming responses")
+								log("Triage", "All incoming responses have been handled")
 								unacknowledgedResponses = false
 							}
 						}
@@ -361,25 +361,27 @@ private class SocketWireClient(
 				}
 			}
 
-			log("Successfully triaged all incoming requests and responses, shutting down the triage actor")
+			log("Triage", "Successfully triaged all incoming requests and responses, shutting down the triage actor")
 		} catch (e: Throwable) {
 			val decorated = RuntimeException("Exception was thrown in the triage actor", e)
 
-			log("Purging in-flight requests")
+			log("Triage", "Failed with $e")
+
+			log("Triage", "Purging in-flight requests")
 			runCatching {
 				for (handler in waiting.values) {
 					handler.completeExceptionally(decorated)
 				}
 			}.getOrElse { e.addSuppressed(it) }
 
-			log("Purging sent requests that have been not yet been acknowledged by the triage actor")
+			log("Triage", "Purging sent requests that have been not yet been acknowledged by the triage actor")
 			runCatching {
 				sentChannel.consumeEach { request ->
 					request.output.completeExceptionally(decorated)
 				}
 			}.getOrElse { e.addSuppressed(it) }
 
-			log("Purging responses that have not yet been triaged")
+			log("Triage", "Purging responses that have not yet been triaged")
 			runCatching {
 				receivedChannel.consumeEach {}
 			}.getOrElse { e.addSuppressed(decorated) }
@@ -408,7 +410,7 @@ private class SocketWireClient(
 					responseTo = received.response.responseTo,
 				)
 
-				log("Received: $message")
+				log("Parser", "Received: $message")
 
 				when (received.output) {
 					is ResponseHandler.Single -> received.output.result.complete(message)
@@ -419,7 +421,7 @@ private class SocketWireClient(
 			}
 		}
 
-		log("Successfully parsed all incoming responses, shutting down the parser actor")
+		log("Parser", "Successfully parsed all incoming responses, shutting down the parser actor")
 
 		// No exception handling for crashed parser actors: if they die, they'll get replaced by a new one
 	}
@@ -428,14 +430,14 @@ private class SocketWireClient(
 		message: Message,
 	): ReceiveChannel<Message> {
 		val output = Channel<Message>()
-		log("Preparing to write $message…")
+		log("send", "Preparing to write $message…")
 		val buffer = writeMessage(message)
 		requestChannel.send(Request(buffer, ResponseHandler.Multiple(output)))
 		return output
 	}
 
 	override suspend fun sendSingle(message: Message): Message {
-		log("Preparing to write $message…")
+		log("sendSingle", "Preparing to write $message…")
 		val buffer = writeMessage(message)
 
 		val output = CompletableDeferred<Message>(inFlightJob)
@@ -443,6 +445,9 @@ private class SocketWireClient(
 			requestChannel.send(Request(buffer, ResponseHandler.Single(output)))
 			output.join() // If the caller cancels, we'll throw an exception here
 		} catch (e: Throwable) {
+			if (!currentCoroutineContext().isActive)
+				log("sendSingle", "Detected a cancelled caller for $message")
+
 			// In case 'send' fails
 			output.cancel("An exception was thrown while sending $message", e)
 			throw e
@@ -468,7 +473,7 @@ private class SocketWireClient(
 	}
 
 	override suspend fun close() = withContext(NonCancellable) {
-		log(".close() has been called")
+		log("close", ".close() has been called")
 
 		// Allow the supervisor to all in-flight requests to complete
 		inFlightJob.complete()

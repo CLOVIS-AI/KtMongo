@@ -164,7 +164,7 @@ class FakeServer private constructor(
 			responseTo = responsePayload.responseTo,
 		)
 
-		logFake("Received  $actual")
+		logFake("Received $actual")
 
 		check(actual is Message.OpMsg) { "Other kinds of messages are not supported yet" }
 		check(actual.body.document == expected.body.document) { "The received document doesn't match the expected document:\n${actual.body.document diff expected.body.document}" }
