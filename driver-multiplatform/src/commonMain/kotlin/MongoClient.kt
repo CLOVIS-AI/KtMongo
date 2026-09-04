@@ -70,7 +70,7 @@ class MongoClient internal constructor(
 	internal val wire: MongoWireClient,
 	val factory: BsonFactory,
 	val context: BsonContext,
-) : AutoCloseable {
+) {
 
 	/**
 	 * Creates a [MongoDatabase] object.
@@ -83,7 +83,7 @@ class MongoClient internal constructor(
 	fun database(name: String): MongoDatabase =
 		MongoDatabaseImpl(this, name)
 
-	override fun close() {
+	suspend fun close() {
 		wire.close()
 	}
 }

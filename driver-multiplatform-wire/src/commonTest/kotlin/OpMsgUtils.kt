@@ -28,9 +28,9 @@ import opensavvy.ktmongo.multiplatform.wire.Message.OpMsg
 fun OpMsg(body: BsonFieldWriter.() -> Unit): OpMsg =
 	OpMsg(
 		MessageSection.Body(
-			eager(
+			lazy {
 				BsonFactory().buildDocument(body)
-			)
+			}
 		),
 		sequences = emptySequence()
 	)
@@ -46,6 +46,6 @@ fun OpMsg.withSequence(
 	body,
 	sequences + MessageSection.DocumentSequence(
 		id,
-		documents.map { eager(BsonFactory().buildDocument(it)) }
+		documents.map { lazy { BsonFactory().buildDocument(it) } }
 	)
 )
