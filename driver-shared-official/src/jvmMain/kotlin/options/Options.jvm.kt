@@ -18,6 +18,7 @@ package opensavvy.ktmongo.official.options
 
 import com.mongodb.ReadConcern
 import com.mongodb.ReadPreference
+import com.mongodb.client.model.ValidationOptions
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
 import opensavvy.ktmongo.dsl.command.CreateCollectionOptions
@@ -28,6 +29,8 @@ import opensavvy.ktmongo.official.toJava
 import org.bson.BsonValue
 import org.bson.conversions.Bson
 import java.util.concurrent.TimeUnit
+import com.mongodb.client.model.ValidationAction as OfficialValidationAction
+import com.mongodb.client.model.ValidationLevel as OfficialValidationLevel
 
 @LowLevelApi
 fun CountOptions<*>.toJava(): com.mongodb.client.model.CountOptions = com.mongodb.client.model.CountOptions()
@@ -51,6 +54,12 @@ fun CreateCollectionOptions<*>.toJava(): com.mongodb.client.model.CreateCollecti
 	.capped(readCapped())
 	.setNotNull(readSizeInBytes(), com.mongodb.client.model.CreateCollectionOptions::sizeInBytes)
 	.setNotNull(readMaxSize(), com.mongodb.client.model.CreateCollectionOptions::maxDocuments)
+	.validationOptions(
+		ValidationOptions()
+			.setNotNull(readValidator(), ValidationOptions::validator)
+			.setNotNull(readValidationLevel(), ValidationOptions::validationLevel)
+			.setNotNull(readValidationAction(), ValidationOptions::validationAction)
+	)
 
 private inline fun <O, V : Any> O.setNotNull(value: V?, setter: O.(V) -> O): O =
 	if (value != null) setter(value)
@@ -105,3 +114,24 @@ fun HasCapped.readSizeInBytes(): Long? =
 @LowLevelApi
 fun HasCapped.readMaxSize(): Long? =
 	option<CappedMaxOption>()?.max
+
+@LowLevelApi
+fun HasValidation<*>.readValidator(): Bson? =
+	option<ValidatorOption>()?.validator?.toJava()
+
+@LowLevelApi
+fun HasValidation<*>.readValidationLevel(): OfficialValidationLevel? =
+	when (option<ValidationLevelOption>()?.level) {
+		null -> null
+		ValidationLevel.Off -> OfficialValidationLevel.OFF
+		ValidationLevel.Moderate -> OfficialValidationLevel.MODERATE
+		ValidationLevel.Strict -> OfficialValidationLevel.STRICT
+	}
+
+@LowLevelApi
+fun HasValidation<*>.readValidationAction(): OfficialValidationAction? =
+	when (option<ValidationActionOption>()?.action) {
+		null -> null
+		ValidationAction.Error -> OfficialValidationAction.ERROR
+		ValidationAction.Warn -> OfficialValidationAction.WARN
+	}

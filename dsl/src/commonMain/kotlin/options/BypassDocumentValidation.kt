@@ -69,6 +69,8 @@ interface HasBypassDocumentValidation : Options {
 	 *     options = { bypassDocumentValidation() }
 	 * )
 	 * ```
+	 *
+	 * @see HasValidation.validator Configure the validation on a collection.
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun bypassDocumentValidation(bypass: Boolean = true) {
