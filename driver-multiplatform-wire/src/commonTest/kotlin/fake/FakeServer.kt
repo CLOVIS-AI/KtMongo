@@ -235,7 +235,13 @@ class FakeServer private constructor(
 	suspend fun createClient(): MongoWireClient {
 		return MongoWireClient(
 			socket = clientSocket,
-			coroutineScope = CoroutineScope(currentTest.foregroundScope.coroutineContext + Job(currentTest.foregroundScope.coroutineContext.job)),
+			coroutineScope = CoroutineScope(
+				currentTest.foregroundScope.coroutineContext +
+					SupervisorJob(currentTest.foregroundScope.coroutineContext.job) +
+					CoroutineExceptionHandler { _, throwable ->
+						logFake("The client died with ${throwable.stackTraceToString()}")
+					}
+			),
 		).also {
 			currentTest.cleanUp("Fake client") {
 				it.close()
