@@ -20,6 +20,7 @@ import opensavvy.ktmongo.api.MongoAggregationPipeline
 import opensavvy.ktmongo.api.MongoIterable
 import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.BsonFactory
+import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -102,7 +103,35 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun count(): Long {
-		TODO("Not yet implemented")
+		val command = lazy {
+			database.client.factory.buildDocument {
+				writeString("count", name)
+				writeString($$"$db", database.name)
+
+				Count<Document>(
+					context = database.client.context,
+				).writeTo(this)
+			}
+		}
+
+		val message = database.client.wire.sendSingle(
+			Message.OpMsg(
+				body = MessageSection.Body(
+					command,
+				)
+			)
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+
+		val count = message.body.document["n"]
+
+		return when (count?.type) {
+			BsonType.Int32 -> count.decodeInt32().toLong()
+			BsonType.Int64 -> count.decodeInt64()
+			else -> error("Unexpected count type: ${count?.type} in $message")
+		}
 	}
 
 	override suspend fun count(options: CountOptions<Document>.() -> Unit, predicate: FilterQuery<Document>.() -> Unit): Long {
