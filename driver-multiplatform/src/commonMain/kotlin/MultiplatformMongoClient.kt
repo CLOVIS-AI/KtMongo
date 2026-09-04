@@ -17,6 +17,7 @@
 package opensavvy.ktmongo.multiplatform
 
 import kotlinx.coroutines.Job
+import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
@@ -29,6 +30,8 @@ import kotlin.coroutines.CoroutineContext
 
 /**
  * Entry-point to the KtMongo Multiplatform driver.
+ *
+ * The Multiplatform driver provides a coroutine-aware API which works on all supported Kotlin platforms.
  *
  * ### Organizing data
  *
@@ -70,7 +73,7 @@ class MultiplatformMongoClient internal constructor(
 	internal val wire: MongoWireClient,
 	val factory: BsonFactory,
 	val context: BsonContext,
-) {
+) : MongoClient {
 
 	/**
 	 * Creates a [MultiplatformMongoDatabase] object.
@@ -80,10 +83,10 @@ class MultiplatformMongoClient internal constructor(
 	 *
 	 * For an example, see [MultiplatformMongoClient].
 	 */
-	fun database(name: String): MultiplatformMongoDatabase =
+	override fun database(name: String): MultiplatformMongoDatabase =
 		MultiplatformMongoDatabaseImpl(this, name)
 
-	suspend fun close() {
+	override suspend fun close() {
 		wire.close()
 	}
 }
