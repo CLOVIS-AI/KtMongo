@@ -194,11 +194,45 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun deleteOne(options: DeleteOneOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
-		TODO("Not yet implemented")
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("delete", name)
+					writeString($$"$db", database.name)
+
+					DeleteOne<Document>(
+						context = database.client.context,
+					).apply {
+						this.options.options()
+						this.filter.filter()
+					}.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
 	}
 
 	override suspend fun deleteMany(options: DeleteManyOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
-		TODO("Not yet implemented")
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("delete", name)
+					writeString($$"$db", database.name)
+
+					DeleteMany<Document>(
+						context = database.client.context,
+					).apply {
+						this.options.options()
+						this.filter.filter()
+					}.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
 	}
 
 	override fun find(): MultiplatformMongoIterable<Document> =
