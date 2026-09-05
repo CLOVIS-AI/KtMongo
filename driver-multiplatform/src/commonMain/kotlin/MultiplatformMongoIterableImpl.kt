@@ -17,12 +17,17 @@
 package opensavvy.ktmongo.multiplatform
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.Find
 import opensavvy.ktmongo.dsl.options.CommentOption
 import opensavvy.ktmongo.dsl.options.MaxTimeOption
 import opensavvy.ktmongo.dsl.options.option
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.multiplatform.wire.Message
 import kotlin.reflect.KType
 
@@ -101,4 +106,77 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 
 	override fun toString(): String =
 		"$collection.find(${if (isDefault) "{}" else operation.toString()})"
+}
+
+@LowLevelApi
+internal class MultiplatformMongoIterableAggregateImpl<Document : Any>(
+	private val collection: MultiplatformMongoCollection<*>,
+	private val chain: PipelineChainLink,
+	private val type: KType,
+) : MultiplatformMongoIterable<Document> {
+
+	override suspend fun first(): Document = firstOrNull()
+		?: throw NoSuchElementException("No element found")
+
+	override suspend fun firstOrNull(): Document? =
+		MultiplatformMongoIterableAggregateImpl<Document>(
+			collection = collection,
+			chain = chain.withStage(LimitOneStage(collection.context)),
+			type = type,
+		).asFlow()
+			.firstOrNull()
+
+	@OptIn(LowLevelApi::class)
+	override suspend fun forEach(action: suspend (Document) -> Unit) {
+		val firstBatch = collection.database.client.wire.sendSingle(
+			collection.database.client.createOpMsg {
+				document {
+					writeString("aggregate", collection.name)
+					writeString($$"$db", collection.database.name)
+					writeArray("pipeline") {
+						chain.writeTo(this)
+					}
+					writeDocument("cursor") {}
+
+					// TODO add options
+				}
+			}
+		)
+
+		firstBatch as Message.OpMsg
+		check(firstBatch.body.document["ok"]?.decodeDouble() == 1.0)
+
+		val cursor = firstBatch.body.document["cursor"]?.decodeDocument()
+
+		val cursorId = cursor?.get("id")?.decodeInt64()
+			?: error("No cursor ID found in $firstBatch")
+
+		val batch = cursor["firstBatch"]?.decodeArray()?.asList().orEmpty()
+
+		if (batch.isEmpty())
+			return
+
+		for (item in batch) {
+			action(item.decode(type))
+		}
+	}
+
+	override fun asFlow(): Flow<Document> = flow {
+		forEach {
+			emit(it)
+		}
+	}
+
+	override fun toString(): String =
+		"$collection.aggregate($chain)"
+}
+
+private class LimitOneStage(
+	context: BsonContext,
+) : AbstractBsonNode(context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeInt64($$"$limit", 1)
+	}
 }

@@ -17,13 +17,22 @@
 package opensavvy.ktmongo.multiplatform
 
 import opensavvy.ktmongo.api.MongoAggregationPipeline
+import opensavvy.ktmongo.api.firstOrNull
 import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.multiplatform.BsonDocument
+import opensavvy.ktmongo.bson.multiplatform.BsonValue
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
+import opensavvy.ktmongo.dsl.options.LimitOption
+import opensavvy.ktmongo.dsl.options.SkipOption
+import opensavvy.ktmongo.dsl.options.option
+import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
@@ -103,9 +112,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		TODO("Not yet implemented")
 	}
 
-	override fun aggregate(): MongoAggregationPipeline<Document> {
-		TODO("Not yet implemented")
-	}
+	override fun aggregate(): MongoAggregationPipeline<Document> =
+		MultiplatformMongoAggregationPipelineImpl(this, PipelineChainLink(context))
 
 	override suspend fun create(options: CreateCollectionOptions<Document>.() -> Unit) {
 		TODO("Not yet implemented")
@@ -115,7 +123,57 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		TODO("Not yet implemented")
 	}
 
+	private fun BsonValue.decodeLong(message: Any?): Long = when (this.type) {
+		BsonType.Int32 -> decodeInt32().toLong()
+		BsonType.Int64 -> decodeInt64()
+		else -> error("Unexpected count type: $type in $message")
+	}
+
+	@OptIn(DangerousMongoApi::class)
 	override suspend fun count(): Long {
+		val result = Field.unsafe<Long>("c")
+
+		val message = this.aggregate()
+			.countTo(result)
+			.reinterpret<BsonDocument>()
+			.firstOrNull()
+
+		return message
+			?.get("c")
+			?.decodeLong(message)
+			?: 0L
+	}
+
+	@OptIn(DangerousMongoApi::class)
+	override suspend fun count(options: CountOptions<Document>.() -> Unit, predicate: FilterQuery<Document>.() -> Unit): Long {
+		val result = Field.unsafe<Long>("c")
+		val model = Count<Document>(context).apply {
+			this.options.options()
+		}
+
+		// TODO handle the maxTime option
+
+		val message = this.aggregate()
+			.match { predicate() }
+			.let {
+				val limit = model.options.option<LimitOption>()
+				if (limit == null) it else it.limit(limit.limit)
+			}
+			.let {
+				val skip = model.options.option<SkipOption>()
+				if (skip == null) it else it.skip(skip.skip)
+			}
+			.countTo(result)
+			.reinterpret<BsonDocument>()
+
+		return message
+			.firstOrNull()
+			?.get("c")
+			?.decodeLong(message)
+			?: 0L
+	}
+
+	override suspend fun countEstimated(): Long {
 		val message = database.client.wire.sendSingle(
 			database.client.createOpMsg {
 				document {
@@ -132,21 +190,9 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		message as Message.OpMsg
 		check(message.body.document["ok"]?.decodeDouble() == 1.0)
 
-		val count = message.body.document["n"]
-
-		return when (count?.type) {
-			BsonType.Int32 -> count.decodeInt32().toLong()
-			BsonType.Int64 -> count.decodeInt64()
-			else -> error("Unexpected count type: ${count?.type} in $message")
-		}
-	}
-
-	override suspend fun count(options: CountOptions<Document>.() -> Unit, predicate: FilterQuery<Document>.() -> Unit): Long {
-		TODO("Not yet implemented")
-	}
-
-	override suspend fun countEstimated(): Long {
-		TODO("Not yet implemented")
+		return message.body.document["n"]
+			?.decodeLong(message)
+			?: error("Missing count in $message")
 	}
 
 	override suspend fun deleteOne(options: DeleteOneOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
