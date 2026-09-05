@@ -24,27 +24,46 @@ import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.Find
+import opensavvy.ktmongo.dsl.command.FindOptions
 import opensavvy.ktmongo.dsl.options.CommentOption
 import opensavvy.ktmongo.dsl.options.MaxTimeOption
 import opensavvy.ktmongo.dsl.options.option
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.multiplatform.wire.Message
 import kotlin.reflect.KType
 
 internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 	private val collection: MultiplatformMongoCollection<*>,
-	private val operation: Find<Document>,
+	private val options: FindOptions<Document>.() -> Unit,
+	private val filter: FilterQuery<Document>.() -> Unit,
 	private val type: KType,
 	private val isDefault: Boolean,
 ) : MultiplatformMongoIterable<Document> {
 
-	override suspend fun first(): Document {
-		TODO()
+	@OptIn(LowLevelApi::class)
+	private val model by lazy(LazyThreadSafetyMode.NONE) {
+		Find<Document>(collection.context).apply {
+			this.options.options()
+			this.filter.filter()
+		}
 	}
 
-	override suspend fun firstOrNull(): Document? {
-		TODO()
-	}
+	override suspend fun first(): Document = firstOrNull()
+		?: throw NoSuchElementException("No element found")
+
+	override suspend fun firstOrNull(): Document? =
+		MultiplatformMongoIterableFindImpl(
+			collection = collection,
+			options = {
+				options()
+				limit(1)
+			},
+			filter = filter,
+			type = type,
+			isDefault = isDefault
+		).asFlow()
+			.firstOrNull()
 
 	@OptIn(LowLevelApi::class)
 	override suspend fun forEach(action: suspend (Document) -> Unit) {
@@ -53,7 +72,8 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 				document {
 					writeString("find", collection.name)
 					writeString($$"$db", collection.database.name)
-					operation.writeTo(this)
+
+					model.writeTo(this)
 				}
 			}
 		)
@@ -88,8 +108,8 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 
 						// TODO re-specify the batch size option
 
-						operation.options.option<MaxTimeOption>()?.writeTo(this)
-						operation.options.option<CommentOption>()?.writeTo(this)
+						model.options.option<MaxTimeOption>()?.writeTo(this)
+						model.options.option<CommentOption>()?.writeTo(this)
 					}
 				}
 			)
@@ -105,7 +125,7 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 	}
 
 	override fun toString(): String =
-		"$collection.find(${if (isDefault) "{}" else operation.toString()})"
+		"$collection.find(${if (isDefault) "{}" else model.toString()})"
 }
 
 @LowLevelApi

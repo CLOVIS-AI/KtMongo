@@ -238,7 +238,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	override fun find(): MultiplatformMongoIterable<Document> =
 		MultiplatformMongoIterableFindImpl(
 			collection = this,
-			operation = Find(context),
+			options = {},
+			filter = {},
 			type = type,
 			isDefault = true,
 		)
@@ -246,10 +247,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	override fun find(options: FindOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoIterable<Document> =
 		MultiplatformMongoIterableFindImpl(
 			collection = this,
-			operation = Find<Document>(context).apply {
-				this.options.options()
-				this.filter.filter()
-			},
+			options = options,
+			filter = filter,
 			type = type,
 			isDefault = false,
 		)
