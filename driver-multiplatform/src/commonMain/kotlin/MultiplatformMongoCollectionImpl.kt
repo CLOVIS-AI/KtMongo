@@ -65,17 +65,38 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 						context = database.client.context,
 						document = document,
 						documentType = type,
-					).writeTo(this)
+					).apply {
+						this.options.options()
+					}.writeTo(this)
 				}
 			}
 		)
 
-		check(message is Message.OpMsg)
+		message as Message.OpMsg
 		check(message.body.document["ok"]?.decodeDouble() == 1.0)
 	}
 
 	override suspend fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) {
-		TODO("Not yet implemented")
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("insert", name)
+					writeString($$"$db", database.name)
+
+					InsertMany(
+						context = database.client.context,
+						documents = documents.toList(),
+						documentType = type,
+					).apply {
+						this.options.options()
+					}.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0) { "Message is not OK: $message" }
+		check(message.body.document["writeErrors"] == null) { "Write errors occurred: $message" }
 	}
 
 	override fun filter(filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoCollection<Document> {
