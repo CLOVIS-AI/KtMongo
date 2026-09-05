@@ -16,12 +16,11 @@
 
 package opensavvy.ktmongo.multiplatform
 
-import opensavvy.ktmongo.api.MongoAggregationPipeline
 import opensavvy.ktmongo.api.firstOrNull
 import opensavvy.ktmongo.api.operations.UpdateOperations
-import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.BsonDocument
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.BsonValue
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
@@ -108,11 +107,10 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		check(message.body.document["writeErrors"] == null) { "Write errors occurred: $message" }
 	}
 
-	override fun filter(filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoCollection<Document> {
-		TODO("Not yet implemented")
-	}
+	override fun filter(filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoCollection<Document> =
+		createFilteredCollection(this, filter)
 
-	override fun aggregate(): MongoAggregationPipeline<Document> =
+	override fun aggregate(): MultiplatformMongoAggregationPipeline<Document> =
 		MultiplatformMongoAggregationPipelineImpl(this, PipelineChainLink(context))
 
 	override suspend fun create(options: CreateCollectionOptions<Document>.() -> Unit) {
