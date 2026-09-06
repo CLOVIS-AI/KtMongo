@@ -329,11 +329,51 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun replaceOne(options: ReplaceOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, document: Document) {
-		TODO("Not yet implemented")
+		val model = ReplaceOne(
+			context = database.client.context,
+			document = document,
+			documentType = type,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+		}
+
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("update", name)
+					writeString($$"$db", database.name)
+					model.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
 	}
 
 	override suspend fun repsertOne(options: ReplaceOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, document: Document) {
-		TODO("Not yet implemented")
+		val model = RepsertOne(
+			context = database.client.context,
+			document = document,
+			documentType = type,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+		}
+
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("update", name)
+					writeString($$"$db", database.name)
+					model.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
 	}
 
 	override suspend fun findOneAndUpdate(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateQuery<Document>.() -> Unit): Document? {
