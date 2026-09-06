@@ -121,12 +121,6 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		TODO("Not yet implemented")
 	}
 
-	private fun BsonValue.decodeLong(message: Any?): Long = when (this.type) {
-		BsonType.Int32 -> decodeInt32().toLong()
-		BsonType.Int64 -> decodeInt64()
-		else -> error("Unexpected count type: $type in $message")
-	}
-
 	@OptIn(DangerousMongoApi::class)
 	override suspend fun count(): Long {
 		val result = Field.unsafe<Long>("c")
@@ -254,15 +248,84 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		)
 
 	override suspend fun updateMany(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
-		TODO("Not yet implemented")
+		val model = UpdateMany<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+			this.update.update()
+		}
+
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("update", name)
+					writeString($$"$db", database.name)
+					model.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+
+		// TODO handle unacknowledged updates
+
+		return MultiplatformAcknowledgedUpdateResult(message.body.document)
 	}
 
 	override suspend fun updateOne(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
-		TODO("Not yet implemented")
+		val model = UpdateOne<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+			this.update.update()
+		}
+
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("update", name)
+					writeString($$"$db", database.name)
+					model.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+
+		// TODO handle unacknowledged updates
+
+		return MultiplatformAcknowledgedUpdateResult(message.body.document)
 	}
 
-	override suspend fun upsertOne(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpsertQuery<Document>.() -> Unit): UpdateOperations.UpsertResult {
-		TODO("Not yet implemented")
+	override suspend fun upsertOne(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpsertQuery<Document>.() -> Unit): MultiplatformMongoCollection.UpsertResult {
+		val model = UpsertOne<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+			this.update.update()
+		}
+
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("update", name)
+					writeString($$"$db", database.name)
+					model.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+
+		// TODO handle unacknowledged updates
+
+		return MultiplatformAcknowledgedUpdateResult(message.body.document)
 	}
 
 	override suspend fun replaceOne(options: ReplaceOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, document: Document) {
@@ -289,10 +352,65 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		TODO("Not yet implemented")
 	}
 
-	override suspend fun upsertOneWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): UpdateOperations.UpsertResult {
+	override suspend fun upsertOneWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): MultiplatformMongoCollection.UpsertResult {
 		TODO("Not yet implemented")
 	}
 
 	override fun toString(): String =
 		"MultiplatformMongoCollection($fullyQualifiedName)"
+}
+
+private data class MultiplatformAcknowledgedUpdateResult(
+	private val doc: BsonDocument,
+) : MultiplatformMongoCollection.UpsertResult {
+
+	override val upsertedId: BsonValue?
+		get() = doc["upserted"]?.decodeArray()
+			?.get(0)?.decodeDocument()
+			?.get("_id")
+
+	override val upsertedCount: Int
+		get() = doc["upserted"]?.decodeArray()
+			?.size ?: 0
+
+	override val acknowledged: Boolean
+		get() = true
+
+	override val matchedCount: Long
+		get() = doc["n"]?.decodeLong(doc)
+			?.minus(upsertedCount) // In the case of an insert, the wire protocol returns 1, but the Java driver reports 0
+			?: 0L
+
+	override val modifiedCount: Long
+		get() = doc["nModified"]?.decodeLong(doc) ?: 0L
+
+	override fun toString(): String =
+		"UpdateResult(acknowledged=true, matchedCount=$matchedCount, modifiedCount=$modifiedCount, upsertedCount=$upsertedCount, upsertedId=$upsertedId; decodedFrom=$doc)"
+}
+
+private data object MultiplatformUnacknowledgedUpdateResult : MultiplatformMongoCollection.UpsertResult {
+
+	override val upsertedId: Nothing
+		get() = throw UnsupportedOperationException("Unacknowledged updates do not provide the upsertedId field")
+
+	override val upsertedCount: Nothing
+		get() = throw UnsupportedOperationException("Unacknowledged updates do not provide the upsertedCount field")
+
+	override val acknowledged: Boolean
+		get() = false
+
+	override val matchedCount: Nothing
+		get() = throw UnsupportedOperationException("Unacknowledged updates do not provide the matchedCount field")
+
+	override val modifiedCount: Nothing
+		get() = throw UnsupportedOperationException("Unacknowledged updates do not provide the modifiedCount field")
+
+	override fun toString(): String =
+		"UpdateResult(acknowledged=false)"
+}
+
+private fun BsonValue.decodeLong(message: Any?): Long = when (this.type) {
+	BsonType.Int32 -> decodeInt32().toLong()
+	BsonType.Int64 -> decodeInt64()
+	else -> error("Unexpected count type: $type in $message")
 }

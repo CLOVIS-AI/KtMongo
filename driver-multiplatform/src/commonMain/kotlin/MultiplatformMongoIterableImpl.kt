@@ -79,7 +79,7 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 		)
 
 		firstBatch as Message.OpMsg
-		check(firstBatch.body.document["ok"]?.decodeDouble() == 1.0)
+		check(firstBatch.body.document["ok"]?.decodeDouble() == 1.0) { "Response is not OK: $firstBatch" }
 
 		val cursor = firstBatch.body.document["cursor"]?.decodeDocument()
 

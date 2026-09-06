@@ -62,7 +62,7 @@ private class MultiplatformFilteredMongoCollectionImpl<Document : Any>(
 	override val factory: BsonFactory
 		get() = upstream.factory
 
-	override suspend fun upsertOne(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpsertQuery<Document>.() -> Unit): UpdateOperations.UpsertResult =
+	override suspend fun upsertOne(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpsertQuery<Document>.() -> Unit): MultiplatformMongoCollection.UpsertResult =
 		upstream.upsertOne(
 			options = options,
 			filter = {
@@ -72,7 +72,7 @@ private class MultiplatformFilteredMongoCollectionImpl<Document : Any>(
 			update = update
 		)
 
-	override suspend fun upsertOneWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): UpdateOperations.UpsertResult =
+	override suspend fun upsertOneWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): MultiplatformMongoCollection.UpsertResult =
 		upstream.upsertOneWithPipeline(
 			options = options,
 			filter = {

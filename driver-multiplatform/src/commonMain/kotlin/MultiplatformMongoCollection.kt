@@ -17,10 +17,15 @@
 package opensavvy.ktmongo.multiplatform
 
 import opensavvy.ktmongo.api.MongoCollection
+import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
+import opensavvy.ktmongo.bson.multiplatform.BsonValue
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.command.FindOptions
+import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
+import opensavvy.ktmongo.dsl.query.UpsertQuery
 
 /**
  * A collection stores related documents together.
@@ -73,4 +78,26 @@ interface MultiplatformMongoCollection<Document : Any> : MongoCollection<Documen
 	override fun find(options: FindOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoIterable<Document>
 
 	override fun filter(filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoCollection<Document>
+
+	/**
+	 * The return value of [upsertOne] and [upsertOneWithPipeline].
+	 */
+	interface UpsertResult : UpdateOperations.UpsertResult {
+
+		override val upsertedId: BsonValue?
+	}
+
+	@IgnorableReturnValue
+	override suspend fun upsertOne(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpsertQuery<Document>.() -> Unit,
+	): UpsertResult
+
+	@IgnorableReturnValue
+	override suspend fun upsertOneWithPipeline(
+		options: UpdateOptions<Document>.() -> Unit,
+		filter: FilterQuery<Document>.() -> Unit,
+		update: UpdateWithPipelineQuery<Document>.() -> Unit,
+	): UpsertResult
 }
