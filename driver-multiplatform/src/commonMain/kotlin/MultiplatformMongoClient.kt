@@ -24,6 +24,7 @@ import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import opensavvy.ktmongo.multiplatform.wire.Message
 import opensavvy.ktmongo.multiplatform.wire.MongoWireClient
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.coroutines.CoroutineContext
@@ -88,6 +89,14 @@ class MultiplatformMongoClient internal constructor(
 
 	override suspend fun close() {
 		wire.close()
+	}
+
+	internal suspend fun sendSingle(
+		message: DriverMessage,
+	): Message {
+		// TODO in the future, send the message to the correct socket based on the readPreferences etc
+
+		return wire.sendSingle(message.message)
 	}
 
 	override fun toString(): String =

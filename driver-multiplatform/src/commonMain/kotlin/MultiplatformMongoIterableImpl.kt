@@ -67,8 +67,8 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 
 	@OptIn(LowLevelApi::class)
 	override suspend fun forEach(action: suspend (Document) -> Unit) {
-		val firstBatch = collection.database.client.wire.sendSingle(
-			collection.database.client.createOpMsg {
+		val firstBatch = collection.database.client.sendSingle(
+			collection.database.client.createDriverMessage {
 				document {
 					writeString("find", collection.name)
 					writeString($$"$db", collection.database.name)
@@ -99,8 +99,8 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 			return
 
 		while (true) {
-			val nextBatch = collection.database.client.wire.sendSingle(
-				collection.database.client.createOpMsg {
+			val nextBatch = collection.database.client.sendSingle(
+				collection.database.client.createDriverMessage {
 					document {
 						writeInt64("getMore", cursorId)
 						writeString("collection", collection.name)
@@ -148,8 +148,8 @@ internal class MultiplatformMongoIterableAggregateImpl<Document : Any>(
 
 	@OptIn(LowLevelApi::class)
 	override suspend fun forEach(action: suspend (Document) -> Unit) {
-		val firstBatch = collection.database.client.wire.sendSingle(
-			collection.database.client.createOpMsg {
+		val firstBatch = collection.database.client.sendSingle(
+			collection.database.client.createDriverMessage {
 				document {
 					writeString("aggregate", collection.name)
 					writeString($$"$db", collection.database.name)

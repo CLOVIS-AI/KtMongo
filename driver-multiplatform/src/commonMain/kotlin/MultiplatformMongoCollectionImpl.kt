@@ -63,8 +63,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		document: Document,
 		options: InsertOneOptions<Document>.() -> Unit,
 	) {
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("insert", name)
 					writeString($$"$db", database.name)
@@ -85,8 +85,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) {
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("insert", name)
 					writeString($$"$db", database.name)
@@ -114,8 +114,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		MultiplatformMongoAggregationPipelineImpl(this, PipelineChainLink(context))
 
 	override suspend fun create(options: CreateCollectionOptions<Document>.() -> Unit) {
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("create", name)
 					writeString($$"$db", database.name)
@@ -134,8 +134,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("drop", name)
 					writeString($$"$db", database.name)
@@ -198,8 +198,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun countEstimated(): Long {
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("count", name)
 					writeString($$"$db", database.name)
@@ -220,8 +220,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun deleteOne(options: DeleteOneOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("delete", name)
 					writeString($$"$db", database.name)
@@ -241,8 +241,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun deleteMany(options: DeleteManyOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("delete", name)
 					writeString($$"$db", database.name)
@@ -288,8 +288,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
@@ -315,8 +315,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
@@ -342,8 +342,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
@@ -370,8 +370,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.filter.filter()
 		}
 
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
@@ -394,8 +394,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.filter.filter()
 		}
 
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
@@ -422,8 +422,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.operations()
 		}
 
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeInt32("bulkWrite", 1)
 					writeString($$"$db", "admin") // Hard-coded, mandatory
@@ -452,8 +452,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
@@ -479,8 +479,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
@@ -506,8 +506,8 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.wire.sendSingle(
-			database.client.createOpMsg {
+		val message = database.client.sendSingle(
+			database.client.createDriverMessage {
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
