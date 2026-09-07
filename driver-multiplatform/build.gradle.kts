@@ -51,6 +51,7 @@ kotlin {
 
 	sourceSets.commonMain.dependencies {
 		api(projects.dsl)
+		api(projects.driverApi)
 		implementation(projects.driverMultiplatformWire)
 		api(libs.kotlinx.coroutines)
 	}
@@ -72,12 +73,4 @@ library {
 	}
 
 	// coverage.set(50) // TODO: Increase in the future
-}
-
-// TODO: re-enable tests
-@Suppress("UnstableApiUsage")
-tasks.configureEach {
-	if (name.endsWith("test", ignoreCase = true)) {
-		onlyIf("Tests for the Multiplatform driver have been temporarily disabled until its closing behavior is stabilized") { false }
-	}
 }

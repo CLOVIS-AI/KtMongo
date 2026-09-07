@@ -55,7 +55,7 @@ package opensavvy.ktmongo.api
  * }
  * ```
  */
-interface MongoClient : AutoCloseable {
+interface MongoClient {
 
 	/**
 	 * Creates a [MongoDatabase] object.
@@ -68,4 +68,11 @@ interface MongoClient : AutoCloseable {
 	 * For an example, see [MongoClient].
 	 */
 	fun database(name: String): MongoDatabase
+
+	/**
+	 * Destroys this client.
+	 *
+	 * Once this method has been called, the client is no longer usable.
+	 */
+	suspend fun close()
 }

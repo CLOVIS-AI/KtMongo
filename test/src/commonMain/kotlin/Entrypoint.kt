@@ -36,10 +36,12 @@ fun SuiteDsl.verifyClient(
 ) = suite(name, CoroutineTimeout(15.minutes)) {
 
 	suspend fun verifyClientConnected(client: MongoClient): Boolean = try {
-		val count = client.use {
+		val count = try {
 			client.database("does-not-exist")
 				.collection<Unit>("does-not-exist")
 				.count()
+		} finally {
+			client.close()
 		}
 		check(count == 0L) { "Client $client found values in the fake collection. Did you create it yourself?" }
 		true

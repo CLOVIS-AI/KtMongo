@@ -36,7 +36,7 @@ val MultiplatformConnection by preparedSuite(preparedConfig = CoroutineTimeout(1
 		// It doesn't create the database in MongoDB, that will happen during the first 'insert'.
 		val database = client.database("test1")
 
-		check(database.toString() == "MongoDatabase(test1)")
+		check(database.toString() == "MultiplatformMongoDatabase(test1)")
 	}
 
 	test("Instantiate a collection") {
@@ -48,7 +48,7 @@ val MultiplatformConnection by preparedSuite(preparedConfig = CoroutineTimeout(1
 		val collection = database.collection<String>("test2")
 		// 'String' isn't a valid document type, but that only matters for actual requests.
 
-		check(collection.toString() == "MongoCollection(test1.test2)")
+		check(collection.toString() == "MultiplatformMongoCollection(test1.test2)")
 	}
 
 }
