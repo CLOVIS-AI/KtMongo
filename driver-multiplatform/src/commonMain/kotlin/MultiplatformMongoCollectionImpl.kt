@@ -412,15 +412,84 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun updateManyWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
-		TODO("Not yet implemented")
+		val model = UpdateManyWithPipeline<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+			this.update.update()
+		}
+
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("update", name)
+					writeString($$"$db", database.name)
+					model.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+
+		// TODO handle unacknowledged updates
+
+		return MultiplatformAcknowledgedUpdateResult(message.body.document)
 	}
 
 	override suspend fun updateOneWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
-		TODO("Not yet implemented")
+		val model = UpdateOneWithPipeline<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+			this.update.update()
+		}
+
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("update", name)
+					writeString($$"$db", database.name)
+					model.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+
+		// TODO handle unacknowledged updates
+
+		return MultiplatformAcknowledgedUpdateResult(message.body.document)
 	}
 
 	override suspend fun upsertOneWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): MultiplatformMongoCollection.UpsertResult {
-		TODO("Not yet implemented")
+		val model = UpsertOneWithPipeline<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+			this.update.update()
+		}
+
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("update", name)
+					writeString($$"$db", database.name)
+					model.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+
+		// TODO handle unacknowledged updates
+
+		return MultiplatformAcknowledgedUpdateResult(message.body.document)
 	}
 
 	override fun toString(): String =
