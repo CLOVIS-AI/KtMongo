@@ -169,7 +169,7 @@ fun SuiteDsl.verifyUpdateOperations(
 		check(result.age == 40)
 	}
 
-	test("Bulk write") {
+	test("Bulk write", Ignored) { // TODO re-enable in MongoDB 8.x when featureFlagBulkWriteCommand is enabled by default
 		collection().insertMany(
 			UpdateOperationsUser(
 				_id = collection().newId(),

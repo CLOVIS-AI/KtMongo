@@ -65,7 +65,6 @@ val BulkWriteTest by multiContextSuite {
 			}
 		} shouldBeBson $$"""
 			{
-				"bulkWrite": 1,
 				"ops": [
 					{
 						"update": 0,

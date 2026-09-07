@@ -381,7 +381,34 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun bulkWrite(options: BulkWriteOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, operations: BulkWrite<Document>.() -> Unit) {
-		TODO("Not yet implemented")
+		val model = BulkWrite(
+			context = database.client.context,
+			documentType = type,
+			globalFilter = filter,
+		).apply {
+			this.options.options()
+			this.operations()
+		}
+
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeInt32("bulkWrite", 1)
+					writeString($$"$db", "admin") // Hard-coded, mandatory
+
+					writeArray("nsInfo") {
+						writeDocument {
+							writeString("ns", fullyQualifiedName)
+						}
+					}
+
+					model.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
 	}
 
 	override suspend fun updateManyWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
