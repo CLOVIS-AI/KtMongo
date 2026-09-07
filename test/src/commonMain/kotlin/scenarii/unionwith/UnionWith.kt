@@ -32,7 +32,7 @@ import opensavvy.prepared.suite.SuiteDsl
 data class Customer(
 	val _id: String,
 	val name: String,
-	val biography: String?,
+	val biography: String? = null,
 )
 
 @Serializable
@@ -53,7 +53,7 @@ data class Invoice(
 	val subject: String,
 	val metadata: String,
 	val customer: Customer,
-	val vendor: Vendor?,
+	val vendor: Vendor? = null,
 	val auditData: AuditData? = null,
 	val paymentStatus: Boolean? = null,
 	val acceptedStatus: Boolean? = null,
