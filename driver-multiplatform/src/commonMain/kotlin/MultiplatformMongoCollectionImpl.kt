@@ -114,7 +114,23 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		MultiplatformMongoAggregationPipelineImpl(this, PipelineChainLink(context))
 
 	override suspend fun create(options: CreateCollectionOptions<Document>.() -> Unit) {
-		TODO("Not yet implemented")
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("create", name)
+					writeString($$"$db", database.name)
+
+					CreateCollection<Document>(
+						context = database.client.context,
+					).apply {
+						this.options.options()
+					}.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
 	}
 
 	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
@@ -502,6 +518,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		message as Message.OpMsg
 		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		check(message.body.document["writeErrors"] == null) { "There were write errors: ${message.body.document["writeErrors"]}" }
 
 		// TODO handle unacknowledged updates
 
