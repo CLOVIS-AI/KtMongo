@@ -118,7 +118,23 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
-		TODO("Not yet implemented")
+		val message = database.client.wire.sendSingle(
+			database.client.createOpMsg {
+				document {
+					writeString("drop", name)
+					writeString($$"$db", database.name)
+
+					Drop<Document>(
+						context = database.client.context,
+					).apply {
+						this.options.options()
+					}.writeTo(this)
+				}
+			}
+		)
+
+		message as Message.OpMsg
+		check(message.body.document["ok"]?.decodeDouble() == 1.0)
 	}
 
 	@OptIn(DangerousMongoApi::class)
