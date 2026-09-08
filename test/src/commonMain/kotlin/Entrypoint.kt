@@ -35,7 +35,9 @@ fun SuiteDsl.verifyClient(
 	createClient: suspend (connectionString: String, coroutineContext: CoroutineContext) -> MongoClient,
 ) = suite(name, CoroutineTimeout(15.minutes)) {
 
-	suspend fun verifyClientConnected(client: MongoClient): Boolean = try {
+	suspend fun verifyClientConnected(clientConstructor: suspend () -> MongoClient): Boolean = try {
+		val client = clientConstructor()
+
 		val count = try {
 			client.database("does-not-exist")
 				.collection<Unit>("does-not-exist")
@@ -59,7 +61,7 @@ fun SuiteDsl.verifyClient(
 
 		coroutineScope {
 			candidates
-				.first { verifyClientConnected(createClient(it, currentCoroutineContext())) }
+				.first { verifyClientConnected { createClient(it, currentCoroutineContext()) } }
 		}
 	}
 
