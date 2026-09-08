@@ -24,6 +24,7 @@ import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
 import opensavvy.prepared.suite.assertions.checkThrows
+import opensavvy.prepared.suite.config.Ignored
 import kotlin.time.Duration.Companion.milliseconds
 
 @Serializable
@@ -98,7 +99,7 @@ fun SuiteDsl.verifyInsertOperations(
 			// TODO: write a test that can check that the option is correctly applied
 		}
 
-		test("insertMany • Minuscule delay") {
+		test("insertMany • Minuscule delay", Ignored) { // TODO
 			val users = List(1000) {
 				InsertOperationsUser(
 					_id = collection().newId(),

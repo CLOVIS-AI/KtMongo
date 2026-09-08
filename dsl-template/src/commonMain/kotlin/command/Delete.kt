@@ -98,6 +98,7 @@ class DeleteMany<Document : Any> private constructor(
 				writeDocument("q") {
 					filter.writeTo(this)
 				}
+				writeInt32("limit", 0)
 			}
 		}
 

@@ -37,7 +37,9 @@ class ReadConcernOption(
 
 	@LowLevelApi
 	override fun write(writer: BsonValueWriter) = with(writer) {
-		writeString(concern.bsonName)
+		writeDocument {
+			writeString("level", concern.bsonName)
+		}
 	}
 }
 

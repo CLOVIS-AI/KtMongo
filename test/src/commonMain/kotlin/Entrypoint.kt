@@ -35,7 +35,9 @@ fun SuiteDsl.verifyClient(
 	createClient: suspend (connectionString: String, coroutineContext: CoroutineContext) -> MongoClient,
 ) = suite(name, CoroutineTimeout(15.minutes)) {
 
-	suspend fun verifyClientConnected(client: MongoClient): Boolean = try {
+	suspend fun verifyClientConnected(clientConstructor: suspend () -> MongoClient): Boolean = try {
+		val client = clientConstructor()
+
 		val count = try {
 			client.database("does-not-exist")
 				.collection<Unit>("does-not-exist")
@@ -45,8 +47,9 @@ fun SuiteDsl.verifyClient(
 		}
 		check(count == 0L) { "Client $client found values in the fake collection. Did you create it yourself?" }
 		true
-	} catch (_: Throwable) {
+	} catch (e: Throwable) {
 		currentCoroutineContext().ensureActive()
+		println("Could not connect to the database • ${e.stackTraceToString()}")
 		false
 	}
 
@@ -56,10 +59,13 @@ fun SuiteDsl.verifyClient(
 			"mongodb://mongo:27017",      // CI
 		)
 
-		coroutineScope {
-			candidates
-				.first { verifyClientConnected(createClient(it, currentCoroutineContext())) }
-		}
+		candidates
+			.first {
+				coroutineScope {
+					println("Attempting to connect to $it")
+					verifyClientConnected { createClient(it, currentCoroutineContext()) }
+				}
+			}
 	}
 
 	test("Can connect to the database") {

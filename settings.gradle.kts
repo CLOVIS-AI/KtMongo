@@ -104,6 +104,7 @@ include(
 	"test-coroutines-reflection",
 	"test-sync-kotlinx",
 	"test-sync-reflection",
+	"test-multiplatform",
 
 	"docs:website",
 	"gradle:templates:template-app",

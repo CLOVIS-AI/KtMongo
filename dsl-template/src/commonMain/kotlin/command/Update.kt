@@ -20,10 +20,7 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
-import opensavvy.ktmongo.dsl.options.HasArrayFilters
-import opensavvy.ktmongo.dsl.options.HasWriteConcern
-import opensavvy.ktmongo.dsl.options.Options
-import opensavvy.ktmongo.dsl.options.OptionsHolder
+import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
@@ -61,7 +58,7 @@ class UpdateOne<Document : Any> private constructor(
 	constructor(context: BsonContext) : this(context, UpdateOptions(context))
 
 	@LowLevelApi
-	override fun write(writer: BsonFieldWriter) = with(writer) {
+	override fun write(writer: BsonFieldWriter): Unit = with(writer) {
 		writeArray("updates") {
 			writeDocument {
 				writeDocument("q") {
@@ -72,10 +69,12 @@ class UpdateOne<Document : Any> private constructor(
 				}
 				writeBoolean("upsert", false)
 				writeBoolean("multi", false)
+
+				options.option<ArrayFiltersOption>()?.writeTo(this)
 			}
 		}
 
-		options.writeTo(this)
+		options.option<WriteConcernOption>()?.writeTo(this)
 	}
 }
 
@@ -111,7 +110,7 @@ class UpsertOne<Document : Any> private constructor(
 	constructor(context: BsonContext) : this(context, UpdateOptions(context))
 
 	@LowLevelApi
-	override fun write(writer: BsonFieldWriter) = with(writer) {
+	override fun write(writer: BsonFieldWriter): Unit = with(writer) {
 		writeArray("updates") {
 			writeDocument {
 				writeDocument("q") {
@@ -122,10 +121,12 @@ class UpsertOne<Document : Any> private constructor(
 				}
 				writeBoolean("upsert", true)
 				writeBoolean("multi", false)
+
+				options.option<ArrayFiltersOption>()?.writeTo(this)
 			}
 		}
 
-		options.writeTo(this)
+		options.option<WriteConcernOption>()?.writeTo(this)
 	}
 }
 
@@ -161,7 +162,7 @@ class UpdateMany<Document : Any> private constructor(
 	constructor(context: BsonContext) : this(context, UpdateOptions(context))
 
 	@LowLevelApi
-	override fun write(writer: BsonFieldWriter) = with(writer) {
+	override fun write(writer: BsonFieldWriter): Unit = with(writer) {
 		writeArray("updates") {
 			writeDocument {
 				writeDocument("q") {
@@ -172,10 +173,12 @@ class UpdateMany<Document : Any> private constructor(
 				}
 				writeBoolean("upsert", false)
 				writeBoolean("multi", true)
+
+				options.option<ArrayFiltersOption>()?.writeTo(this)
 			}
 		}
 
-		options.writeTo(this)
+		options.option<WriteConcernOption>()?.writeTo(this)
 	}
 }
 

@@ -61,7 +61,8 @@ val DeleteTest by multiContextSuite {
 							"age": {
 								"$lt": 3
 							}
-						}
+						},
+						"limit": 0
 					}
 				]
 			}

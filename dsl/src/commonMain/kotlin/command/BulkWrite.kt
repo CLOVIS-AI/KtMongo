@@ -481,8 +481,6 @@ class BulkWrite<Document : Any> private constructor(
 	}
 
 	override fun write(writer: BsonFieldWriter) = with(writer) {
-		writeInt32("bulkWrite", 1)
-
 		writeArray("ops") {
 			for (operation in _operations) {
 				writeDocument {
