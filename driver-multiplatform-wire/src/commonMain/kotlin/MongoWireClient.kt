@@ -543,6 +543,7 @@ suspend fun MongoWireClient(
 		)
 	} catch (e: Exception) {
 		currentCoroutineContext().ensureActive()
+		innerJob.cancel("Could not connect to $hostName:$port", e)
 		throw MongoWireException("Could not connect to $hostName:$port", e)
 	}
 }
