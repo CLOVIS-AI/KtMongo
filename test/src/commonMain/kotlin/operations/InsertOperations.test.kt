@@ -19,6 +19,8 @@ package opensavvy.ktmongo.tests.api.operations
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.command.InsertOne
+import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
 import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
@@ -67,6 +69,30 @@ fun SuiteDsl.verifyInsertOperations(
 					name = "Bob",
 				)
 			)
+		}
+
+		test("Cannot insert two documents with the same ID") {
+			val id = collection().newId()
+
+			val alice = InsertOperationsUser(
+				_id = id,
+				name = "Alice",
+			)
+
+			val bob = InsertOperationsUser(
+				_id = id,
+				name = "Bob",
+			)
+
+			collection().insertOne(alice)
+
+			val e = checkThrows<MongoWriteException> {
+				collection().insertOne(bob)
+			}
+			check((e.command as? InsertOne<*>)?.document == bob)
+			check(e.errors.size == 1)
+			check(e.errors[0].code == 11000)
+			check(e.namespace == collection().fullyQualifiedName)
 		}
 	}
 
