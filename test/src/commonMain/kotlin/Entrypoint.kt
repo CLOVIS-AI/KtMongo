@@ -59,10 +59,13 @@ fun SuiteDsl.verifyClient(
 			"mongodb://mongo:27017",      // CI
 		)
 
-		coroutineScope {
-			candidates
-				.first { verifyClientConnected { createClient(it, currentCoroutineContext()) } }
-		}
+		candidates
+			.first {
+				coroutineScope {
+					println("Attempting to connect to $it")
+					verifyClientConnected { createClient(it, currentCoroutineContext()) }
+				}
+			}
 	}
 
 	test("Can connect to the database") {
