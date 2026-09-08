@@ -23,11 +23,19 @@ import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.errors.MongoException
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.multiplatform.wire.Message
 import opensavvy.ktmongo.multiplatform.wire.MongoWireClient
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.coroutines.CoroutineContext
+
+private data class ServerAddressImpl(
+	override val host: String,
+	override val port: Int,
+) : MongoException.ServerAddress {
+	override fun toString(): String = "$host:$port"
+}
 
 /**
  * Entry-point to the KtMongo Multiplatform driver.
@@ -74,6 +82,7 @@ class MultiplatformMongoClient internal constructor(
 	internal val wire: MongoWireClient,
 	val factory: BsonFactory,
 	val context: BsonContext,
+	internal val serverAddress: MongoException.ServerAddress, // Internal because it will have a breaking change when we support replica sets
 ) : MongoClient {
 
 	/**
@@ -146,4 +155,5 @@ suspend fun MultiplatformMongoClient(
 	),
 	factory = bsonFactory,
 	context = BsonContext(bsonFactory, objectIdGenerator, propertyNameStrategy),
+	serverAddress = ServerAddressImpl(hostname, port),
 )
