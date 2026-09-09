@@ -45,6 +45,7 @@ import opensavvy.ktmongo.official.command.toJava
 import opensavvy.ktmongo.official.options.*
 import opensavvy.ktmongo.official.options.toJava
 import opensavvy.ktmongo.official.toJava
+import opensavvy.ktmongo.official.toKtMongo
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -141,10 +142,14 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 
 		model.options.options()
 
-		inner.withWriteConcern(model.options).insertOne(
-			model.document,
-			model.options.toJava(),
-		)
+		try {
+			inner.withWriteConcern(model.options).insertOne(
+				model.document,
+				model.options.toJava(),
+			)
+		} catch (e: com.mongodb.MongoWriteException) {
+			throw e.toKtMongo(model, fullyQualifiedName)
+		}
 	}
 
 	@OptIn(LowLevelApi::class)

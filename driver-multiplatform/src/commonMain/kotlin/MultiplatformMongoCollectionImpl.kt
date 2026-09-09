@@ -63,25 +63,28 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		document: Document,
 		options: InsertOneOptions<Document>.() -> Unit,
 	) {
+		val model = InsertOne(
+			context = database.client.context,
+			document = document,
+			documentType = type,
+		).apply {
+			this.options.options()
+		}
+
 		val message = database.client.sendSingle(
 			database.client.createDriverMessage {
 				document {
 					writeString("insert", name)
 					writeString($$"$db", database.name)
 
-					InsertOne(
-						context = database.client.context,
-						document = document,
-						documentType = type,
-					).apply {
-						this.options.options()
-					}.writeTo(this)
+					model.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
 		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoWriteErrors(message.body.document, model, this)
 	}
 
 	override suspend fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) {
