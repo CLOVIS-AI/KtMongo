@@ -70,7 +70,7 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 	@Suppress("UNCHECKED_CAST")
 	@LowLevelApi
 	@DangerousMongoApi
-	override fun <New : Any> reinterpret(): CoroutineMongoAggregationPipelineImpl<New> =
+	override fun <New : Any> unsafeCast(): CoroutineMongoAggregationPipelineImpl<New> =
 		this as CoroutineMongoAggregationPipelineImpl<New>
 
 	// endregion
@@ -167,7 +167,7 @@ private class CoroutineMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLe
 				try {
 					val results = pipeline
 						.limit(limit)
-						.reinterpret<BsonDocument>()
+						.unsafeCast<BsonDocument>()
 						.toList()
 
 					MongoAggregationPipeline.StageDebugReport.Success(

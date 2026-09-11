@@ -55,7 +55,7 @@ interface CoroutineMongoAggregationPipeline<Document : Any> : MongoAggregationPi
 
 	@LowLevelApi
 	@DangerousMongoApi
-	override fun <New : Any> reinterpret(): CoroutineMongoAggregationPipeline<New>
+	override fun <New : Any> unsafeCast(): CoroutineMongoAggregationPipeline<New>
 
 	override fun limit(amount: Long): CoroutineMongoAggregationPipeline<Document>
 

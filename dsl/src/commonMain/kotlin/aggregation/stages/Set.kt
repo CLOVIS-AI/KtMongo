@@ -76,7 +76,7 @@ interface HasSet<Document : Any> : Pipeline<Document> {
 		block: SetStageOperators<Document, Out>.() -> Unit,
 	): Pipeline<Out> =
 		withStage(createSetStage(context, block))
-			.reinterpret()
+			.unsafeCast()
 
 }
 

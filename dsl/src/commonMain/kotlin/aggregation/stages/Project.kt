@@ -104,7 +104,7 @@ interface HasProject<Document : Any> : Pipeline<Document> {
 		block: ProjectStageOperators<Document, Out>.() -> Unit,
 	): Pipeline<Out> =
 		withStage(createProjectStage(context, block))
-			.reinterpret()
+			.unsafeCast()
 
 }
 

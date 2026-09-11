@@ -127,8 +127,8 @@ class BlockingMongoAggregationPipeline<Document : Any>(
 
 	@DangerousMongoApi
 	@LowLevelApi
-	override fun <New : Any> reinterpret(): BlockingMongoAggregationPipeline<New> =
-		BlockingMongoAggregationPipeline(inner.reinterpret<New>() as SyncMongoAggregationPipeline<New>)
+	override fun <New : Any> unsafeCast(): BlockingMongoAggregationPipeline<New> =
+		BlockingMongoAggregationPipeline(inner.unsafeCast<New>() as SyncMongoAggregationPipeline<New>)
 
 	@LowLevelApi
 	override fun writeTo(writer: BsonValueWriter) =

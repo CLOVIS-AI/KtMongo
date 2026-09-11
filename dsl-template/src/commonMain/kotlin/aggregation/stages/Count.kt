@@ -61,7 +61,7 @@ interface HasCount<Document : Any> : Pipeline<Document> {
 	 */
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	fun <Output : Any> countTo(field: Field<Output, Number>): Pipeline<Output> =
-		withStage(CountStage(field.path, context)).reinterpret()
+		withStage(CountStage(field.path, context)).unsafeCast()
 
 	/**
 	 * Counts how many elements exist in the pipeline and outputs a single document containing a single [field] containing

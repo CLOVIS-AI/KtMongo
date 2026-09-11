@@ -47,7 +47,7 @@ class TestPipeline<Document : Any>(
 	@Suppress("UNCHECKED_CAST")
 	@DangerousMongoApi
 	@LowLevelApi
-	override fun <New : Any> reinterpret(): TestPipeline<New> =
+	override fun <New : Any> unsafeCast(): TestPipeline<New> =
 		this as TestPipeline<New>
 
 	override fun <ForeignDocument : Any> lookup(block: LookupStageOperators<Document, ForeignDocument>.() -> Unit): TestPipeline<Document> =

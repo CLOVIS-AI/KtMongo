@@ -55,7 +55,7 @@ interface SyncMongoAggregationPipeline<Document : Any> : MongoAggregationPipelin
 
 	@LowLevelApi
 	@DangerousMongoApi
-	override fun <New : Any> reinterpret(): SyncMongoAggregationPipeline<New>
+	override fun <New : Any> unsafeCast(): SyncMongoAggregationPipeline<New>
 
 	override fun limit(amount: Long): SyncMongoAggregationPipeline<Document>
 
