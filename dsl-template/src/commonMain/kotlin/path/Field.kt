@@ -87,7 +87,7 @@ interface Field<in Root, out Type> {
 	/**
 	 * Overwrites the represented type of this field.
 	 *
-	 * This method can be useful to bypass type checks.
+	 * This method can be useful to bypass type checks, it tells KtMongo to treat the field as if it were of some other type.
 	 */
 	@Suppress("UNCHECKED_CAST")
 	fun <O> unsafeCast(): Field<Root, O> =
@@ -360,6 +360,14 @@ interface FieldDsl {
 	 */
 	infix fun <Root, Child> KProperty1<Root, *>.unsafe(child: KProperty1<*, Child>): Field<Root, Child> =
 		this.field.unsafe(child)
+
+	/**
+	 * Overwrites the represented type of this field.
+	 *
+	 * This method can be useful to bypass type checks, it tells KtMongo to treat the field as if it were of some other type.
+	 */
+	fun <Root, NewType> KProperty1<Root, *>.unsafeCast(): Field<Root, NewType> =
+		this.field.unsafeCast()
 
 	/**
 	 * Refers to [child] as a nested field of the current field.
