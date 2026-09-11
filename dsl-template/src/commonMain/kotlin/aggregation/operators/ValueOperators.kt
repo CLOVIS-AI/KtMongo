@@ -195,6 +195,35 @@ interface ValueOperators : FieldDsl {
 		BsonTypeValue(value, context)
 
 	/**
+	 * Overwrites the represented type of this value.
+	 *
+	 * This method can be useful to bypass type checks.
+	 *
+	 * ### Example
+	 *
+	 * If a field has changed type over time, the DTO will use the newer type.
+	 * However, you may still want to write a query using the old type:
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.filter { User::age hasType BsonType.Double }
+	 *     .updateManyWithPipeline {
+	 *         set {
+	 *             User::age set User::age.unsafeCast<Double>() // Reflect the old type
+	 *                .toInt() // Convert to the new type
+	 *         }
+	 *     }
+	 * ```
+	 */
+	fun <Context : Any, NewType> Any?.unsafeCast(): Value<Context, NewType> =
+		of(this).unsafeCast()
+
+	/**
 	 * Refers to [field] as a nested field of the current value.
 	 *
 	 * ### Examples
