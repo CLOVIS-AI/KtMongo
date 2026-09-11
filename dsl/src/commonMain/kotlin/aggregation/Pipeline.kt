@@ -25,6 +25,7 @@ import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.stages.HasProject
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 import opensavvy.ktmongo.dsl.tree.BsonNode
@@ -138,16 +139,13 @@ interface Pipeline<Output : Any> {
 	/**
 	 * Changes the type of the returned document, with no type-safety.
 	 *
-	 * **End-users should not need to call this function.**
-	 * This function is provided to allow stages to change the return document.
-	 * No type verifications are made, it is solely the responsibility of the caller to ensure that the declared return
-	 * type corresponds to the reality.
+	 * Every subsequent step in the pipeline will think the returned document is of type [New].
+	 * It is your responsibility to ensure that this corresponds to the reality; the KtMongo DSL makes no verifications.
+	 *
+	 * If you want to edit the representation of the documents in the pipeline, prefer using [HasProject.project].
 	 *
 	 * @see withStage Add a new stage to this pipeline.
 	 */
-	@Suppress("UNCHECKED_CAST")
-	@DangerousMongoApi
-	@LowLevelApi
 	fun <New : Any> unsafeCast(): Pipeline<New>
 
 	/**
