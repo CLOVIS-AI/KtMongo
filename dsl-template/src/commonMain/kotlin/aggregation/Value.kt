@@ -92,6 +92,27 @@ interface Value<in Root : Any, out Type> : Node, BsonValueWriteable {
 	 * Overwrites the represented type of this value.
 	 *
 	 * This method can be useful to bypass type checks.
+	 *
+	 * ### Example
+	 *
+	 * If a field has changed type over time, the DTO will use the newer type.
+	 * However, you may still want to write a query using the old type:
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.filter { User::age hasType BsonType.Double }
+	 *     .updateManyWithPipeline {
+	 *         set {
+	 *             User::age set User::age.unsafeCast<Double>() // Reflect the old type
+	 *                .toInt() // Convert to the new type
+	 *         }
+	 *     }
+	 * ```
 	 */
 	@Suppress("UNCHECKED_CAST")
 	fun <New> unsafeCast(): Value<Root, New> =
