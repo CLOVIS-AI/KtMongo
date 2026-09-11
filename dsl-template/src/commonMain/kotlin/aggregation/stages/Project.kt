@@ -45,18 +45,6 @@ interface HasProject<Document : Any> : Pipeline<Document> {
 	 *
 	 * `_id` is kept even if not specified. To exclude it, see [ProjectStageOperators.excludeId].
 	 *
-	 * ### Difference with MongoDB
-	 *
-	 * In BSON, the `$project` stage can be used either for declaring an allow-list (by including fields,
-	 * and possibly excluding the `_id`) or a block-list (by excluding fields). MongoDB doesn't allow a single stage
-	 * usage to mix both usages.
-	 *
-	 * Because this is confusing, KtMongo splits both of these use-cases into two different methods.
-	 * The former (selecting fields we want to keep) is performed by this method.
-	 * The latter (selecting fields we want to remove) is performed by the stage [`$unset`][HasUnset.unset].
-	 *
-	 * Note that just like in MongoDB, this stage can use all operators of the [`$set` stage][HasSet.set].
-	 *
 	 * ### Difference with $set
 	 *
 	 * This stage and the [`$set` stage][HasSet.set] are quite similar. In fact, both stages behave the same for fields
@@ -95,6 +83,14 @@ interface HasProject<Document : Any> : Pipeline<Document> {
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/)
+	 *
+	 * @param block The block defining the fields to include.
+	 * - [ProjectStageOperators.include] Include a field in the document.
+	 * - [ProjectStageOperators.excludeId] Exclude the `_id` field (included by default).
+	 * - [ProjectStageOperators.exclude] Explicitly exclude a field (all fields are excluded by default).
+	 * - [ProjectStageOperators.set] Overwrite the value of a field.
+	 * - [ProjectStageOperators.setIf] Overwrite the value of a field if a condition is met.
+	 * - [ProjectStageOperators.setUnless] Overwrite the value of a field if a condition is not met.
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun <Out : Any> project(
