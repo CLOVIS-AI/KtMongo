@@ -59,7 +59,7 @@ internal class MultiplatformMongoAggregationPipelineImpl<Document : Any> @OptIn(
 	@Suppress("UNCHECKED_CAST")
 	@LowLevelApi
 	@DangerousMongoApi
-	override fun <New : Any> reinterpret(): MultiplatformMongoAggregationPipelineImpl<New> =
+	override fun <New : Any> unsafeCast(): MultiplatformMongoAggregationPipelineImpl<New> =
 		this as MultiplatformMongoAggregationPipelineImpl<New>
 
 	// endregion
@@ -156,7 +156,7 @@ internal class MultiplatformMongoAggregationPipelineImpl<Document : Any> @OptIn(
 				try {
 					val results = pipeline
 						.limit(limit)
-						.reinterpret<BsonDocument>()
+						.unsafeCast<BsonDocument>()
 						.toList()
 
 					MongoAggregationPipeline.StageDebugReport.Success(

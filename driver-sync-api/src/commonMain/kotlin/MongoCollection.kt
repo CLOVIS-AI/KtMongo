@@ -24,6 +24,7 @@ import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.sync.api.operations.*
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * A collection stores related documents together.
@@ -151,6 +152,34 @@ interface MongoCollection<Document : Any> : ObjectIdGenerator,
 	@LowLevelApi
 	val type: KType
 
+	// region Type manipulation
+
+	/**
+	 * Overwrites the represented type of this value.
+	 *
+	 * This method can be useful to bypass type checks.
+	 *
+	 * ### Example
+	 *
+	 * If we know there are some documents that have the wrong format, we can use `unsafeCast` to find them
+	 * without needing to add their fields to the production DTO.
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.unsafeCast<BsonDocument>() // Treat all data as arbitrary BSON documents
+	 *     .find { BsonDocument.get<String?>("oldField") ne null }
+	 *     .forEach {
+	 *         println(it["oldField"]?.decodeString())
+	 *     }
+	 * ```
+	 */
+	fun <NewType : Any> unsafeCast(type: KType): MongoCollection<NewType>
+
+	// endregion
 	// region Specializations
 
 	override fun filter(filter: FilterQuery<Document>.() -> Unit): MongoCollection<Document>
@@ -158,3 +187,29 @@ interface MongoCollection<Document : Any> : ObjectIdGenerator,
 	// endregion
 
 }
+
+/**
+ * Overwrites the represented type of this value.
+ *
+ * This method can be useful to bypass type checks.
+ *
+ * ### Example
+ *
+ * If we know there are some documents that have the wrong format, we can use `unsafeCast` to find them
+ * without needing to add their fields to the production DTO.
+ *
+ * ```kotlin
+ * class User(
+ *     val _id: ObjectId,
+ *     val name: String,
+ * )
+ *
+ * users.unsafeCast<BsonDocument>() // Treat all data as arbitrary BSON documents
+ *     .find { BsonDocument.get<String?>("oldField") ne null }
+ *     .forEach {
+ *         println(it["oldField"]?.decodeString())
+ *     }
+ * ```
+ */
+inline fun <reified T : Any> MongoCollection<*>.unsafeCast(): MongoCollection<T> =
+	unsafeCast(typeOf<T>())

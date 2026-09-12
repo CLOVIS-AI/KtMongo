@@ -19,6 +19,8 @@
 
 package opensavvy.ktmongo.dsl.aggregation.operators
 
+import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
@@ -28,6 +30,7 @@ import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.*
+import kotlin.jvm.JvmName
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -198,6 +201,35 @@ interface ValueOperators : FieldDsl {
 		BsonTypeValue(value, context)
 
 	/**
+	 * Overwrites the represented type of this value.
+	 *
+	 * This method can be useful to bypass type checks.
+	 *
+	 * ### Example
+	 *
+	 * If a field has changed type over time, the DTO will use the newer type.
+	 * However, you may still want to write a query using the old type:
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.filter { User::age hasType BsonType.Double }
+	 *     .updateManyWithPipeline {
+	 *         set {
+	 *             User::age set User::age.unsafeCast<Double>() // Reflect the old type
+	 *                .toInt() // Convert to the new type
+	 *         }
+	 *     }
+	 * ```
+	 */
+	fun <Context : Any, NewType> Any?.unsafeCast(): Value<Context, NewType> =
+		of(this).unsafeCast()
+
+	/**
 	 * Refers to [field] as a nested field of the current value.
 	 *
 	 * ### Examples
@@ -253,6 +285,60 @@ interface ValueOperators : FieldDsl {
 	 */
 	operator fun <Context : Any, Root, Child> Value<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
 		this / field.field
+
+	/**
+	 * Refers to a child field of a field of type [BsonDocument].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonDocument,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>("profile") ne null
+	 * }
+	 * ```
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonField")
+	final operator fun <Context : Any, Child> Value<Context, BsonDocument>.get(field: String): Value<Context, Child> =
+		GetFieldValue(
+			root = this,
+			child = Path(field),
+			context = context,
+		)
+
+	/**
+	 * Refers to a child field of a field of type [BsonDocument].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonDocument,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>("profile") ne null
+	 * }
+	 * ```
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonItem")
+	final operator fun <Context : Any, Child> Value<Context, BsonArray>.get(index: Int): Value<Context, Child> =
+		ArrayElemAtValue(
+			array = this,
+			index = of(index),
+			context = context,
+		)
 
 	/**
 	 * Refers to a specific item in an array, by its index.

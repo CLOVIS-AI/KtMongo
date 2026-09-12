@@ -140,7 +140,7 @@ interface HasUnwind<Document : Any> : Pipeline<Document> {
 		checkNotNull(array) { $$"The $unwind stage must specify an array to unwind: $$unwindStage" }
 
 		var result = this.withStage(unwindStage)
-			.reinterpret<Out>()
+			.unsafeCast<Out>()
 
 		val setStage = unwindStage.setBlock
 		if (setStage != null) {

@@ -59,6 +59,9 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		nameStrategy = propertyNameStrategy,
 	)
 
+	override fun <NewType : Any> unsafeCast(type: KType): MultiplatformMongoCollection<NewType> =
+		MultiplatformMongoCollectionImpl(database, name, type, factory, propertyNameStrategy, objectIdGenerator)
+
 	override suspend fun insertOne(
 		document: Document,
 		options: InsertOneOptions<Document>.() -> Unit,
@@ -162,7 +165,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = this.aggregate()
 			.countTo(result)
-			.reinterpret<BsonDocument>()
+			.unsafeCast<BsonDocument>()
 			.firstOrNull()
 
 		return message
@@ -191,7 +194,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 				if (skip == null) it else it.skip(skip.skip)
 			}
 			.countTo(result)
-			.reinterpret<BsonDocument>()
+			.unsafeCast<BsonDocument>()
 
 		return message
 			.firstOrNull()

@@ -137,6 +137,7 @@ nav:
       - Bulk writes: features/bulk-writes.md
       - Optional filters: features/optional-filters.md
       - Filtered collections: features/filtered-collections.md
+      - Type safety: features/type-safety.md
 
       - Data types:
           - Nested documents: features/fields.md

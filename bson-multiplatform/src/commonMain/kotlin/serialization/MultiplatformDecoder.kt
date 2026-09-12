@@ -196,9 +196,17 @@ internal class BsonCompositeDecoder(
 	val iterator = source.iterator()
 	lateinit var current: BsonDocument.Field
 	override fun decodeElementIndex(descriptor: SerialDescriptor): Int {
-		if (!iterator.hasNext()) return CompositeDecoder.DECODE_DONE
-		current = iterator.next()
-		return descriptor.getElementIndex(current.name)
+		// If we find some field that the descriptor doesn't know about,
+		// just skip it entirely, don't try to deserialize it.
+
+		while (iterator.hasNext()) {
+			current = iterator.next()
+			val index = descriptor.getElementIndex(current.name)
+			if (index != CompositeDecoder.UNKNOWN_NAME) {
+				return index
+			}
+		}
+		return CompositeDecoder.DECODE_DONE
 	}
 
 	override fun decodeBooleanElement(descriptor: SerialDescriptor, index: Int): Boolean {

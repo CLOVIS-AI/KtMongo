@@ -90,6 +90,10 @@ private class SyncFilteredMongoCollectionImpl<Document : Any>(
 	override val context: BsonContext
 		get() = upstream.context
 
+	@Suppress("UNCHECKED_CAST")
+	override fun <NewType : Any> unsafeCast(type: KType): SyncMongoCollection<NewType> =
+		SyncFilteredMongoCollectionImpl(upstream.unsafeCast(type), globalFilter as FilterQuery<NewType>.() -> Unit)
+
 	override fun create(options: CreateCollectionOptions<Document>.() -> Unit) =
 		error("It is not possible to call 'create' on the filtered collection $this:\nA filtered collection is a driver-side view, it cannot exist in the database itself.")
 

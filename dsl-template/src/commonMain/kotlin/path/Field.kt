@@ -16,10 +16,13 @@
 
 package opensavvy.ktmongo.dsl.path
 
+import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import kotlin.jvm.JvmName
 import kotlin.reflect.KProperty1
 
 /**
@@ -87,7 +90,7 @@ interface Field<in Root, out Type> {
 	/**
 	 * Overwrites the represented type of this field.
 	 *
-	 * This method can be useful to bypass type checks.
+	 * This method can be useful to bypass type checks, it tells KtMongo to treat the field as if it were of some other type.
 	 */
 	@Suppress("UNCHECKED_CAST")
 	fun <O> unsafeCast(): Field<Root, O> =
@@ -252,6 +255,40 @@ interface FieldDsl {
 		FieldImpl(path / context.pathOf(child))
 
 	/**
+	 * Refers to [child] as a nested field of the current field.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val id: Int,
+	 *     val profile: Profile,
+	 * )
+	 *
+	 * class Profile(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * // Refer to the id
+	 * println(User::id)
+	 * // → 'id'
+	 *
+	 * // Refer to the name
+	 * println(User::profile / Profile::name)
+	 * // → 'profile.name'
+	 *
+	 * // Refer to the age
+	 * println(User::profile / Profile::age)
+	 * // → 'profile.age'
+	 * ```
+	 *
+	 * @see get Access a specific element of an array
+	 */
+	operator fun <Root, Parent, Child> KProperty1<Root, Parent>.div(child: KProperty1<Parent & Any, Child>): Field<Root, Child> =
+		this.field / child
+
+	/**
 	 * Refers to a field [child] of the current field, with no compile-time safety.
 	 *
 	 * Sometimes, we must refer to a field that we don't want to add in the DTO representation.
@@ -362,38 +399,121 @@ interface FieldDsl {
 		this.field.unsafe(child)
 
 	/**
-	 * Refers to [child] as a nested field of the current field.
+	 * Overwrites the represented type of this field.
 	 *
-	 * ### Examples
+	 * This method can be useful to bypass type checks, it tells KtMongo to treat the field as if it were of some other type.
+	 */
+	fun <Root, NewType> KProperty1<Root, *>.unsafeCast(): Field<Root, NewType> =
+		this.field.unsafeCast()
+
+	/**
+	 * Refers to a root field of the document being analyzed.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * val users = database.collection<BsonDocument>("users")
+	 *
+	 * users.find {
+	 *     BsonDocument.get<Int>("age") gte 18
+	 * }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonField")
+	@OptIn(LowLevelApi::class)
+	final operator fun <Child> BsonDocument.Companion.get(field: String): Field<BsonDocument, Child> =
+		FieldImpl(Path(field))
+
+	/**
+	 * Refers to a child field of a field of type [BsonDocument].
+	 *
+	 * ### Example
 	 *
 	 * ```kotlin
 	 * class User(
-	 *     val id: Int,
-	 *     val profile: Profile,
-	 * )
-	 *
-	 * class Profile(
+	 *     val _id: ObjectId,
 	 *     val name: String,
-	 *     val age: Int,
+	 *     val externalData: BsonDocument,
 	 * )
 	 *
-	 * // Refer to the id
-	 * println(User::id)
-	 * // → 'id'
-	 *
-	 * // Refer to the name
-	 * println(User::profile / Profile::name)
-	 * // → 'profile.name'
-	 *
-	 * // Refer to the age
-	 * println(User::profile / Profile::age)
-	 * // → 'profile.age'
+	 * users.find {
+	 *     User::externalData.get<Profile?>("profile") ne null
+	 * }
 	 * ```
-	 *
-	 * @see get Access a specific element of an array
 	 */
-	operator fun <Root, Parent, Child> KProperty1<Root, Parent>.div(child: KProperty1<Parent & Any, Child>): Field<Root, Child> =
-		this.field / child
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonField")
+	@OptIn(LowLevelApi::class)
+	final operator fun <Root, Child> Field<Root, BsonDocument>.get(field: String): Field<Root, Child> =
+		FieldImpl(path / PathSegment.Field(field))
+
+	/**
+	 * Refers to a child field of a field of type [BsonDocument].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonDocument,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>("profile") ne null
+	 * }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonField")
+	final operator fun <Root, Child> KProperty1<Root, BsonDocument>.get(field: String): Field<Root, Child> =
+		this.field[field]
+
+	/**
+	 * Refers to a child item of a field of type [BsonArray].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonArray,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>(0) ne null
+	 * }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonItem")
+	@OptIn(LowLevelApi::class)
+	final operator fun <Root, Child> Field<Root, BsonArray>.get(index: Int): Field<Root, Child> =
+		FieldImpl(path / PathSegment.Indexed(index))
+
+	/**
+	 * Refers to a child item of a field of type [BsonArray].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonArray,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>(0) ne null
+	 * }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonItem")
+	final operator fun <Root, Child> KProperty1<Root, BsonArray>.get(index: Int): Field<Root, Child> =
+		this.field[index]
 
 	/**
 	 * Refers to a specific item in an array, by its index.

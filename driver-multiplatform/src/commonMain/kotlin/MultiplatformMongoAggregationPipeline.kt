@@ -51,7 +51,7 @@ interface MultiplatformMongoAggregationPipeline<Document : Any> : MongoAggregati
 
 	@LowLevelApi
 	@DangerousMongoApi
-	override fun <New : Any> reinterpret(): MultiplatformMongoAggregationPipeline<New>
+	override fun <New : Any> unsafeCast(): MultiplatformMongoAggregationPipeline<New>
 
 	override fun limit(amount: Long): MultiplatformMongoAggregationPipeline<Document>
 

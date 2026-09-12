@@ -136,7 +136,7 @@ interface HasGroup<Document : Any> : Pipeline<Document> {
 		block: GroupStageOperators<Document, Out>.() -> Unit,
 	): Pipeline<Out> =
 		withStage(GroupStage(GroupStageOperatorsImpl<Document, Out>(context).apply(block), context))
-			.reinterpret()
+			.unsafeCast()
 
 }
 

@@ -65,7 +65,7 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 	@Suppress("UNCHECKED_CAST")
 	@LowLevelApi
 	@DangerousMongoApi
-	override fun <New : Any> reinterpret(): SyncMongoAggregationPipelineImpl<New> =
+	override fun <New : Any> unsafeCast(): SyncMongoAggregationPipelineImpl<New> =
 		this as SyncMongoAggregationPipelineImpl<New>
 
 	// endregion
@@ -161,7 +161,7 @@ private class SyncMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelAp
 			try {
 				val results = pipeline
 					.limit(limit)
-					.reinterpret<BsonDocument>()
+					.unsafeCast<BsonDocument>()
 					.toList()
 
 				MongoAggregationPipeline.StageDebugReport.Success(

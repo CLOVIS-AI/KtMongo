@@ -67,13 +67,19 @@ interface HasSet<Document : Any> : Pipeline<Document> {
 	 * ### External resources
 	 *
 	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/)
+	 *
+	 * @param block The block defining the fields to set.
+	 * - [SetStageOperators.set] Overwrite the value of a field.
+	 * - [SetStageOperators.setIf] Overwrite the value of a field if a condition is met.
+	 * - [SetStageOperators.setUnless] Overwrite the value of a field if a condition is not met.
+	 * - [SetStageOperators.exclude] Remove a field.
 	 */
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	fun <Out : Any> set(
 		block: SetStageOperators<Document, Out>.() -> Unit,
 	): Pipeline<Out> =
 		withStage(createSetStage(context, block))
-			.reinterpret()
+			.unsafeCast()
 
 }
 

@@ -81,7 +81,7 @@ interface MongoAggregationPipeline<Document : Any> : AggregationPipeline<Documen
 
 	@LowLevelApi
 	@DangerousMongoApi
-	override fun <New : Any> reinterpret(): MongoAggregationPipeline<New>
+	override fun <New : Any> unsafeCast(): MongoAggregationPipeline<New>
 
 	override fun limit(amount: Long): MongoAggregationPipeline<Document>
 
