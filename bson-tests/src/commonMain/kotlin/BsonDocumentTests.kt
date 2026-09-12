@@ -113,6 +113,16 @@ fun SuiteDsl.verifyBsonDocuments(factory: Prepared<BsonFactory>) = suite("BSON d
 		check(exception.message matches "Could not decode opensavvy.ktmongo.bson.BsonDocumentUser.*\n\tfrom value \\{\"a\": \"Bob\"\\}.*\n*.*")
 	}
 
+	test("Decode a single document with additional fields (must be ignored)") {
+		val document = factory().buildDocument {
+			writeString("a", "Bob")
+			writeInt32("b", 45)
+			writeDouble("ignored", 2.3)
+		}
+
+		check(document.decode<BsonDocumentUser>() == BsonDocumentUser("Bob", 45))
+	}
+
 	test("Read a corrupt document") {
 		checkThrows<BsonDecodingException> {
 			// This document is malformed
