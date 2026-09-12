@@ -47,6 +47,7 @@ import opensavvy.ktmongo.official.toJava
 import opensavvy.ktmongo.official.toKtMongo
 import opensavvy.ktmongo.sync.api.operations.UpdateOperations
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 import com.mongodb.client.model.ReplaceOptions as MongoReplaceOptions
@@ -81,6 +82,10 @@ private class SyncMongoCollectionImpl<Document : Any>(
 
 	@LowLevelApi
 	override val context: BsonContext = CoroutineBsonContext()
+
+	@Suppress("UNCHECKED_CAST")
+	override fun <NewType : Any> unsafeCast(type: KType): SyncMongoCollection<NewType> =
+		SyncMongoCollectionImpl(inner.withDocumentClass((type.classifier as KClass<NewType>).java), factory, propertyNameStrategy, objectIdGenerator, type, innerDatabase)
 
 	// region Count
 

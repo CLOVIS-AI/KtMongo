@@ -170,6 +170,9 @@ class BlockingMongoCollection<Document : Any>(
 		BlockingUpsertResult(inner.upsertOneWithPipeline(options, filter, update))
 	}
 
+	override fun <NewType : Any> unsafeCast(type: KType): BlockingMongoCollection<NewType> =
+		BlockingMongoCollection(inner.unsafeCast(type))
+
 	override fun toString(): String =
 		inner.toString()
 }
