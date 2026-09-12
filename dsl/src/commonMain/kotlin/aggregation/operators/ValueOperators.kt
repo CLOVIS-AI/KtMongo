@@ -19,6 +19,8 @@
 
 package opensavvy.ktmongo.dsl.aggregation.operators
 
+import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.dsl.BsonContext
@@ -28,6 +30,7 @@ import opensavvy.ktmongo.dsl.aggregation.AbstractValue
 import opensavvy.ktmongo.dsl.aggregation.AggregationOperators
 import opensavvy.ktmongo.dsl.aggregation.Value
 import opensavvy.ktmongo.dsl.path.*
+import kotlin.jvm.JvmName
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -282,6 +285,60 @@ interface ValueOperators : FieldDsl {
 	 */
 	operator fun <Context : Any, Root, Child> Value<Context, Root>.div(field: KProperty1<Root, Child>): Value<Context, Child> =
 		this / field.field
+
+	/**
+	 * Refers to a child field of a field of type [BsonDocument].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonDocument,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>("profile") ne null
+	 * }
+	 * ```
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonField")
+	final operator fun <Context : Any, Child> Value<Context, BsonDocument>.get(field: String): Value<Context, Child> =
+		GetFieldValue(
+			root = this,
+			child = Path(field),
+			context = context,
+		)
+
+	/**
+	 * Refers to a child field of a field of type [BsonDocument].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonDocument,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>("profile") ne null
+	 * }
+	 * ```
+	 */
+	@OptIn(LowLevelApi::class)
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonItem")
+	final operator fun <Context : Any, Child> Value<Context, BsonArray>.get(index: Int): Value<Context, Child> =
+		ArrayElemAtValue(
+			array = this,
+			index = of(index),
+			context = context,
+		)
 
 	/**
 	 * Refers to a specific item in an array, by its index.

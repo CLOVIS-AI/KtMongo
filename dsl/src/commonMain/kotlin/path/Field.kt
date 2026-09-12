@@ -19,10 +19,13 @@
 
 package opensavvy.ktmongo.dsl.path
 
+import opensavvy.ktmongo.bson.BsonArray
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.dsl.DangerousMongoApi
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.query.FilterQuery
+import kotlin.jvm.JvmName
 import kotlin.reflect.KProperty1
 
 /**
@@ -405,6 +408,115 @@ interface FieldDsl {
 	 */
 	fun <Root, NewType> KProperty1<Root, *>.unsafeCast(): Field<Root, NewType> =
 		this.field.unsafeCast()
+
+	/**
+	 * Refers to a root field of the document being analyzed.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * val users = database.collection<BsonDocument>("users")
+	 *
+	 * users.find {
+	 *     BsonDocument.get<Int>("age") gte 18
+	 * }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonField")
+	@OptIn(LowLevelApi::class)
+	final operator fun <Child> BsonDocument.Companion.get(field: String): Field<BsonDocument, Child> =
+		FieldImpl(Path(field))
+
+	/**
+	 * Refers to a child field of a field of type [BsonDocument].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonDocument,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>("profile") ne null
+	 * }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonField")
+	@OptIn(LowLevelApi::class)
+	final operator fun <Root, Child> Field<Root, BsonDocument>.get(field: String): Field<Root, Child> =
+		FieldImpl(path / PathSegment.Field(field))
+
+	/**
+	 * Refers to a child field of a field of type [BsonDocument].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonDocument,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>("profile") ne null
+	 * }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonField")
+	final operator fun <Root, Child> KProperty1<Root, BsonDocument>.get(field: String): Field<Root, Child> =
+		this.field[field]
+
+	/**
+	 * Refers to a child item of a field of type [BsonArray].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonArray,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>(0) ne null
+	 * }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonItem")
+	@OptIn(LowLevelApi::class)
+	final operator fun <Root, Child> Field<Root, BsonArray>.get(index: Int): Field<Root, Child> =
+		FieldImpl(path / PathSegment.Indexed(index))
+
+	/**
+	 * Refers to a child item of a field of type [BsonArray].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val externalData: BsonArray,
+	 * )
+	 *
+	 * users.find {
+	 *     User::externalData.get<Profile?>(0) ne null
+	 * }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	@JvmName("bsonItem")
+	final operator fun <Root, Child> KProperty1<Root, BsonArray>.get(index: Int): Field<Root, Child> =
+		this.field[index]
 
 	/**
 	 * Refers to a specific item in an array, by its index.
