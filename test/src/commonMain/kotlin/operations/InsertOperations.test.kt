@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
+@file:OptIn(LowLevelApi::class)
+
 package opensavvy.ktmongo.tests.api.operations
 
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.api.MongoClient
+import opensavvy.ktmongo.api.unsafeCast
+import opensavvy.ktmongo.bson.BsonDocument
+import opensavvy.ktmongo.bson.decode
 import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.InsertOne
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
 import opensavvy.ktmongo.dsl.options.WriteConcern
+import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -94,6 +101,32 @@ fun SuiteDsl.verifyInsertOperations(
 			check(e.errors[0].code == 11000)
 			check(e.namespace == collection().fullyQualifiedName)
 		}
+	}
+
+	test("Decreased type safety") {
+		val docs = collection().unsafeCast<BsonDocument>()
+		val id = docs.newId()
+
+		docs.insertOne(
+			docs.factory.buildDocument {
+				writeString("name", "Bob")
+				writeString("other", "value")
+				writeObjectId("_id", id)
+			}
+		)
+
+		check(docs.count() == 1L)
+		check(collection().find().toList() == listOf(InsertOperationsUser(id, "Bob"))) // The additional field is not visible after deserialization
+
+		val withUnsafeField = collection().find {
+			Field.unsafe<String>("other") eq "value"
+		}
+
+		val withUnsafeDocument = docs.find {
+			BsonDocument.get<String>("other") eq "value"
+		}
+
+		check(withUnsafeField.toList() == withUnsafeDocument.toList().map { it.decode<InsertOperationsUser>() })
 	}
 
 	suite("Options") {
