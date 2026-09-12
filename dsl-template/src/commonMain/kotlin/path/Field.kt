@@ -252,6 +252,40 @@ interface FieldDsl {
 		FieldImpl(path / context.pathOf(child))
 
 	/**
+	 * Refers to [child] as a nested field of the current field.
+	 *
+	 * ### Examples
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val id: Int,
+	 *     val profile: Profile,
+	 * )
+	 *
+	 * class Profile(
+	 *     val name: String,
+	 *     val age: Int,
+	 * )
+	 *
+	 * // Refer to the id
+	 * println(User::id)
+	 * // → 'id'
+	 *
+	 * // Refer to the name
+	 * println(User::profile / Profile::name)
+	 * // → 'profile.name'
+	 *
+	 * // Refer to the age
+	 * println(User::profile / Profile::age)
+	 * // → 'profile.age'
+	 * ```
+	 *
+	 * @see get Access a specific element of an array
+	 */
+	operator fun <Root, Parent, Child> KProperty1<Root, Parent>.div(child: KProperty1<Parent & Any, Child>): Field<Root, Child> =
+		this.field / child
+
+	/**
 	 * Refers to a field [child] of the current field, with no compile-time safety.
 	 *
 	 * Sometimes, we must refer to a field that we don't want to add in the DTO representation.
@@ -368,40 +402,6 @@ interface FieldDsl {
 	 */
 	fun <Root, NewType> KProperty1<Root, *>.unsafeCast(): Field<Root, NewType> =
 		this.field.unsafeCast()
-
-	/**
-	 * Refers to [child] as a nested field of the current field.
-	 *
-	 * ### Examples
-	 *
-	 * ```kotlin
-	 * class User(
-	 *     val id: Int,
-	 *     val profile: Profile,
-	 * )
-	 *
-	 * class Profile(
-	 *     val name: String,
-	 *     val age: Int,
-	 * )
-	 *
-	 * // Refer to the id
-	 * println(User::id)
-	 * // → 'id'
-	 *
-	 * // Refer to the name
-	 * println(User::profile / Profile::name)
-	 * // → 'profile.name'
-	 *
-	 * // Refer to the age
-	 * println(User::profile / Profile::age)
-	 * // → 'profile.age'
-	 * ```
-	 *
-	 * @see get Access a specific element of an array
-	 */
-	operator fun <Root, Parent, Child> KProperty1<Root, Parent>.div(child: KProperty1<Parent & Any, Child>): Field<Root, Child> =
-		this.field / child
 
 	/**
 	 * Refers to a specific item in an array, by its index.
