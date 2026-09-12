@@ -62,6 +62,10 @@ private class MultiplatformFilteredMongoCollectionImpl<Document : Any>(
 	override val factory: BsonFactory
 		get() = upstream.factory
 
+	@Suppress("UNCHECKED_CAST")
+	override fun <NewType : Any> unsafeCast(type: KType): MultiplatformMongoCollection<NewType> =
+		MultiplatformFilteredMongoCollectionImpl(upstream.unsafeCast(type), globalFilter as FilterQuery<NewType>.() -> Unit)
+
 	override suspend fun upsertOne(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpsertQuery<Document>.() -> Unit): MultiplatformMongoCollection.UpsertResult =
 		upstream.upsertOne(
 			options = options,
