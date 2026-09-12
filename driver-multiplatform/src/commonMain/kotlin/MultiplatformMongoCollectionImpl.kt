@@ -59,6 +59,9 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		nameStrategy = propertyNameStrategy,
 	)
 
+	override fun <NewType : Any> unsafeCast(type: KType): MultiplatformMongoCollection<NewType> =
+		MultiplatformMongoCollectionImpl(database, name, type, factory, propertyNameStrategy, objectIdGenerator)
+
 	override suspend fun insertOne(
 		document: Document,
 		options: InsertOneOptions<Document>.() -> Unit,

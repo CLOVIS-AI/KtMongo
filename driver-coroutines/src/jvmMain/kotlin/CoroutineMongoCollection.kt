@@ -28,6 +28,8 @@ import opensavvy.ktmongo.dsl.command.UpdateOptions
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * A collection stores related documents together.
@@ -95,4 +97,57 @@ interface CoroutineMongoCollection<Document : Any> : MongoCollection<Document> {
 	override fun aggregate(): CoroutineMongoAggregationPipeline<Document>
 
 	override fun filter(filter: FilterQuery<Document>.() -> Unit): CoroutineMongoCollection<Document>
+
+	/**
+	 * Overwrites the represented type of this value.
+	 *
+	 * This method can be useful to bypass type checks.
+	 *
+	 * ### Example
+	 *
+	 * If we know there are some documents that have the wrong format, we can use `unsafeCast` to find them
+	 * without needing to add their fields to the production DTO.
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.unsafeCast<BsonDocument>() // Treat all data as arbitrary BSON documents
+	 *     .find { BsonDocument.get<String?>("oldField") ne null }
+	 *     .forEach {
+	 *         println(it["oldField"]?.decodeString())
+	 *     }
+	 * ```
+	 */
+	override fun <NewType : Any> unsafeCast(type: KType): CoroutineMongoCollection<NewType>
+
+	/**
+	 * Overwrites the represented type of this value.
+	 *
+	 * This method can be useful to bypass type checks.
+	 *
+	 * ### Example
+	 *
+	 * If we know there are some documents that have the wrong format, we can use `unsafeCast` to find them
+	 * without needing to add their fields to the production DTO.
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.unsafeCast<BsonDocument>() // Treat all data as arbitrary BSON documents
+	 *     .find { BsonDocument.get<String?>("oldField") ne null }
+	 *     .forEach {
+	 *         println(it["oldField"]?.decodeString())
+	 *     }
+	 * ```
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final inline fun <reified T : Any> unsafeCast(): CoroutineMongoCollection<T> =
+		unsafeCast(typeOf<T>())
+
 }
