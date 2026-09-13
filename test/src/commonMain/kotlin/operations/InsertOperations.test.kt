@@ -105,6 +105,28 @@ fun SuiteDsl.verifyInsertOperations(
 			check(e.namespace == collection().fullyQualifiedName)
 		}
 
+		test("insertMany • Cannot insert two documents with the same ID") {
+			val id = collection().newId()
+
+			val alice = InsertOperationsUser(
+				_id = id,
+				name = "Alice",
+			)
+
+			val bob = InsertOperationsUser(
+				_id = id,
+				name = "Bob",
+			)
+
+			val e = checkThrows<MongoWriteException> {
+				collection().insertMany(alice, bob)
+			}
+			check((e.command as? InsertMany<*>)?.documents == listOf(alice, bob))
+			check(e.errors.size == 1)
+			check(e.errors[0].code == 11000)
+			check(e.namespace == collection().fullyQualifiedName)
+		}
+
 		test("insertOne • Cannot set invalid options") {
 			val e = checkThrows<MongoSyntaxException> {
 				collection().insertOne(

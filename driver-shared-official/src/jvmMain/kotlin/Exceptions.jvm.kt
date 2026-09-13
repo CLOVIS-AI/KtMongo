@@ -22,6 +22,7 @@ import opensavvy.ktmongo.dsl.command.Command
 import opensavvy.ktmongo.dsl.command.errors.MongoException
 import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
+import com.mongodb.MongoBulkWriteException as OfficialMongoBulkWriteException
 import com.mongodb.MongoCommandException as OfficialMongoCommandException
 import com.mongodb.MongoWriteException as OfficialMongoWriteException
 import com.mongodb.ServerAddress as OfficialServerAddress
@@ -59,6 +60,25 @@ fun OfficialMongoWriteException.toKtMongo(
 		server = serverAddress.toKtMongo(),
 		command = command,
 		errors = listOf(errorData),
+		namespace = namespace,
+		cause = this,
+	)
+}
+
+@LowLevelApi
+fun OfficialMongoBulkWriteException.toKtMongo(
+	command: Command,
+	namespace: String,
+): MongoWriteException {
+	return MongoWriteException(
+		server = serverAddress.toKtMongo(),
+		command = command,
+		errors = writeErrors.map {
+			WriteErrorDataImpl(
+				code = it.code,
+				message = it.message,
+			)
+		},
 		namespace = namespace,
 		cause = this,
 	)

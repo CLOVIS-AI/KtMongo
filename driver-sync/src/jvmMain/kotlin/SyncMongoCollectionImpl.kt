@@ -170,6 +170,8 @@ private class SyncMongoCollectionImpl<Document : Any>(
 				model.documents,
 				model.options.toJava(),
 			)
+		} catch (e: com.mongodb.MongoBulkWriteException) {
+			throw e.toKtMongo(model, fullyQualifiedName)
 		} catch (e: com.mongodb.MongoCommandException) {
 			throw e.toKtMongo(model, fullyQualifiedName, factory)
 		}
