@@ -86,31 +86,33 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, model, this)
 		checkNoWriteErrors(message.body.document, model, this)
 	}
 
 	override suspend fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) {
+		val model = InsertMany(
+			context = database.client.context,
+			documents = documents.toList(),
+			documentType = type,
+		).apply {
+			this.options.options()
+		}
+
 		val message = database.client.sendSingle(
 			database.client.createDriverMessage {
 				document {
 					writeString("insert", name)
 					writeString($$"$db", database.name)
 
-					InsertMany(
-						context = database.client.context,
-						documents = documents.toList(),
-						documentType = type,
-					).apply {
-						this.options.options()
-					}.writeTo(this)
+					model.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0) { "Message is not OK: $message" }
-		check(message.body.document["writeErrors"] == null) { "Write errors occurred: $message" }
+		checkNoSyntaxErrors(message.body.document, model, this)
+		checkNoWriteErrors(message.body.document, model, this)
 	}
 
 	override fun filter(filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoCollection<Document> =

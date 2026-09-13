@@ -19,6 +19,7 @@
 
 package opensavvy.ktmongo.dsl.command.errors
 
+import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.dsl.command.Command
 
 /**
@@ -41,6 +42,27 @@ sealed class MongoException(
 }
 
 /**
+ * MongoDB refused to execute a command because it is malformed.
+ */
+class MongoSyntaxException(
+	val errorMessage: String,
+	val code: Int,
+	val codeName: String,
+	val fullResponse: BsonDocument,
+	val server: ServerAddress,
+	val command: Command,
+	val namespace: String,
+	cause: Throwable? = null,
+) : MongoException(
+	message = buildString {
+		appendLine("$code $codeName • $errorMessage")
+		appendLine("\tat ${command::class.simpleName} $command")
+		append("\tat $server $namespace")
+	},
+	cause = cause,
+)
+
+/**
  * A write operation failed.
  */
 class MongoWriteException(
@@ -59,7 +81,7 @@ class MongoWriteException(
 		}
 
 		appendLine("\tat ${command::class.simpleName} $command")
-		appendLine("\tat $server $namespace")
+		append("\tat $server $namespace")
 	},
 	cause = cause,
 ) {

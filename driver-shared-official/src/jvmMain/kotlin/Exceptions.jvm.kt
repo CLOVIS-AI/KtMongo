@@ -16,10 +16,13 @@
 
 package opensavvy.ktmongo.official
 
+import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.Command
 import opensavvy.ktmongo.dsl.command.errors.MongoException
+import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
+import com.mongodb.MongoCommandException as OfficialMongoCommandException
 import com.mongodb.MongoWriteException as OfficialMongoWriteException
 import com.mongodb.ServerAddress as OfficialServerAddress
 
@@ -56,6 +59,24 @@ fun OfficialMongoWriteException.toKtMongo(
 		server = serverAddress.toKtMongo(),
 		command = command,
 		errors = listOf(errorData),
+		namespace = namespace,
+		cause = this,
+	)
+}
+
+@LowLevelApi
+fun OfficialMongoCommandException.toKtMongo(
+	command: Command,
+	namespace: String,
+	factory: BsonFactory,
+): MongoSyntaxException {
+	return MongoSyntaxException(
+		errorMessage = errorMessage,
+		code = errorCode,
+		codeName = errorCodeName,
+		fullResponse = factory.readDocument(response),
+		server = serverAddress.toKtMongo(),
+		command = command,
 		namespace = namespace,
 		cause = this,
 	)

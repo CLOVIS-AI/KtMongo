@@ -25,8 +25,11 @@ import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.bson.decode
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.InsertMany
 import opensavvy.ktmongo.dsl.command.InsertOne
+import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
+import opensavvy.ktmongo.dsl.options.WriteAcknowledgment
 import opensavvy.ktmongo.dsl.options.WriteConcern
 import opensavvy.ktmongo.dsl.path.Field
 import opensavvy.ktmongo.tests.api.collection
@@ -78,7 +81,7 @@ fun SuiteDsl.verifyInsertOperations(
 			)
 		}
 
-		test("Cannot insert two documents with the same ID") {
+		test("insertOne • Cannot insert two documents with the same ID") {
 			val id = collection().newId()
 
 			val alice = InsertOperationsUser(
@@ -100,6 +103,40 @@ fun SuiteDsl.verifyInsertOperations(
 			check(e.errors.size == 1)
 			check(e.errors[0].code == 11000)
 			check(e.namespace == collection().fullyQualifiedName)
+		}
+
+		test("insertOne • Cannot set invalid options") {
+			val e = checkThrows<MongoSyntaxException> {
+				collection().insertOne(
+					InsertOperationsUser(
+						_id = collection().newId(),
+						name = "Alice",
+					),
+					options = {
+						// MongoDB doesn't accept a query with this many nodes
+						writeConcern(WriteAcknowledgment.Nodes(100))
+					}
+				)
+			}
+			check(e.command is InsertOne<*>)
+			check(e.codeName == "FailedToParse")
+		}
+
+		test("insertMany • Cannot set invalid options") {
+			val e = checkThrows<MongoSyntaxException> {
+				collection().insertMany(
+					InsertOperationsUser(
+						_id = collection().newId(),
+						name = "Alice",
+					),
+					options = {
+						// MongoDB doesn't accept a query with this many nodes
+						writeConcern(WriteAcknowledgment.Nodes(100))
+					}
+				)
+			}
+			check(e.command is InsertMany<*>)
+			check(e.codeName == "FailedToParse")
 		}
 	}
 

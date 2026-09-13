@@ -154,6 +154,8 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 			)
 		} catch (e: com.mongodb.MongoWriteException) {
 			throw e.toKtMongo(model, fullyQualifiedName)
+		} catch (e: com.mongodb.MongoCommandException) {
+			throw e.toKtMongo(model, fullyQualifiedName, factory)
 		}
 	}
 
@@ -163,10 +165,14 @@ private class CoroutineMongoCollectionImpl<Document : Any>(
 
 		model.options.options()
 
-		inner.withWriteConcern(model.options).insertMany(
-			model.documents,
-			model.options.toJava(),
-		)
+		try {
+			inner.withWriteConcern(model.options).insertMany(
+				model.documents,
+				model.options.toJava(),
+			)
+		} catch (e: com.mongodb.MongoCommandException) {
+			throw e.toKtMongo(model, fullyQualifiedName, factory)
+		}
 	}
 
 	// endregion
