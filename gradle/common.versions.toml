@@ -17,7 +17,7 @@ compose = "1.11.1"
 kotest = "6.2.5"
 
 # https://github.com/infix-de/testBalloon/releases
-testBalloon = "1.0.1-K2.4.0"
+testBalloon = "1.1.0"
 
 # https://gitlab.com/opensavvy/groundwork/pedestal/-/releases
 pedestal = "3.2.2"
