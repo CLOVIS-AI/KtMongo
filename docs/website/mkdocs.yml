@@ -137,15 +137,14 @@ nav:
       - Bulk writes: features/bulk-writes.md
       - Optional filters: features/optional-filters.md
       - Filtered collections: features/filtered-collections.md
+      - Aggregations: features/aggregations.md
+      - Debugging: features/debugging.md
       - Type safety: features/type-safety.md
 
       - Data types:
           - Nested documents: features/fields.md
           - Arrays: features/arrays.md
           - Maps: features/maps.md
-
-      - Aggregations:
-          - Introduction: features/aggregations.md
 
 # !!! EMBEDDED DOKKA START, DO NOT COMMIT !!! #
 # !!! EMBEDDED DOKKA END, DO NOT COMMIT !!! #
