@@ -20,6 +20,7 @@ import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.dsl.command.Command
 import opensavvy.ktmongo.dsl.command.errors.MongoException
+import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
 
 private class WriteErrorDataImpl(
@@ -55,5 +56,26 @@ internal fun checkNoWriteErrors(
 		command = command,
 		namespace = collection.fullyQualifiedName,
 		errors = errors.map { WriteErrorDataImpl(it) },
+	)
+}
+
+internal fun checkNoSyntaxErrors(
+	doc: BsonDocument,
+	command: Command,
+	collection: MultiplatformMongoCollection<*>,
+	server: MongoException.ServerAddress = collection.database.client.serverAddress,
+) {
+	if (doc["ok"]?.decodeDouble() == 1.0) {
+		return // No errors, nothing to do
+	}
+
+	throw MongoSyntaxException(
+		errorMessage = doc["errmsg"]?.decodeString() ?: "No error message were provided",
+		code = doc["code"]?.decodeInt32() ?: -1,
+		codeName = doc["codeName"]?.decodeString() ?: "<unknown>",
+		fullResponse = doc,
+		command = command,
+		server = server,
+		namespace = collection.fullyQualifiedName,
 	)
 }

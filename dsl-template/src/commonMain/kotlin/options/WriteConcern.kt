@@ -379,4 +379,53 @@ interface HasWriteConcern : Options {
 		accept(WriteConcernOption(concern, context))
 	}
 
+	/**
+	 * Specifies the [WriteConcern] for this operation.
+	 *
+	 * The write concern specifies which nodes must acknowledge having applied this write operation.
+	 * The stronger the write concern, the less chance of data loss, but the higher the latency.
+	 *
+	 * To learn more about the different options, see:
+	 * - [acknowledgement]: how many nodes should acknowledge this request?
+	 * - [writeToJournal]: should the nodes also acknowledge synchronizing their journal?
+	 * - [writeTimeout]: after how long should we give up on the acknowledgment, if it doesn't succeed?
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * collections.updateMany(
+	 *     options = {
+	 *         writeConcern(Majority, writeTimeout = 2.seconds)
+	 *     }
+	 * ) {
+	 *    User::age inc 1
+	 * }
+	 * ```
+	 *
+	 * ### Transactions
+	 *
+	 * In multi-document transactions, only specify a write concern at the transaction level, and not at the level
+	 * of individual operation.
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/write-concern)
+	 */
+	fun writeConcern(
+		/**
+		 * Describes how many nodes must acknowledge the write operation. See [WriteConcern.acknowledgment].
+		 */
+		acknowledgement: WriteAcknowledgment? = null,
+		/**
+		 * Specifies whether the write operation must acknowledge being written to the journal. See [WriteConcern.writeToJournal].
+		 */
+		writeToJournal: Boolean? = null,
+		/**
+		 * Specifies a time limit for a write operation to propagate to enough members to achieve [acknowledgement] and [writeToJournal]. See [WriteConcern.writeTimeout].
+		 */
+		writeTimeout: Duration? = null,
+	) {
+		writeConcern(WriteConcern(acknowledgement, writeToJournal, writeTimeout))
+	}
+
 }
