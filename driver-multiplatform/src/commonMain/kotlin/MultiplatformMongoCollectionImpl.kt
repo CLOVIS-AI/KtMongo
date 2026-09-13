@@ -66,7 +66,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		document: Document,
 		options: InsertOneOptions<Document>.() -> Unit,
 	) {
-		val model = InsertOne(
+		val command = InsertOne(
 			context = database.client.context,
 			document = document,
 			documentType = type,
@@ -80,18 +80,18 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 					writeString("insert", name)
 					writeString($$"$db", database.name)
 
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, model, this)
-		checkNoWriteErrors(message.body.document, model, this)
+		checkNoSyntaxErrors(message.body.document, command, this)
+		checkNoWriteErrors(message.body.document, command, this)
 	}
 
 	override suspend fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) {
-		val model = InsertMany(
+		val command = InsertMany(
 			context = database.client.context,
 			documents = documents.toList(),
 			documentType = type,
@@ -105,14 +105,14 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 					writeString("insert", name)
 					writeString($$"$db", database.name)
 
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, model, this)
-		checkNoWriteErrors(message.body.document, model, this)
+		checkNoSyntaxErrors(message.body.document, command, this)
+		checkNoWriteErrors(message.body.document, command, this)
 	}
 
 	override fun filter(filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoCollection<Document> =
@@ -122,43 +122,47 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		MultiplatformMongoAggregationPipelineImpl(this, PipelineChainLink(context))
 
 	override suspend fun create(options: CreateCollectionOptions<Document>.() -> Unit) {
+		val command = CreateCollection<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+		}
+
 		val message = database.client.sendSingle(
 			database.client.createDriverMessage {
 				document {
 					writeString("create", name)
 					writeString($$"$db", database.name)
 
-					CreateCollection<Document>(
-						context = database.client.context,
-					).apply {
-						this.options.options()
-					}.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 	}
 
 	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
+		val command = Drop<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+		}
+
 		val message = database.client.sendSingle(
 			database.client.createDriverMessage {
 				document {
 					writeString("drop", name)
 					writeString($$"$db", database.name)
 
-					Drop<Document>(
-						context = database.client.context,
-					).apply {
-						this.options.options()
-					}.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 	}
 
 	@OptIn(DangerousMongoApi::class)
@@ -206,21 +210,23 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun countEstimated(): Long {
+		val command = Count<Document>(
+			context = database.client.context,
+		)
+
 		val message = database.client.sendSingle(
 			database.client.createDriverMessage {
 				document {
 					writeString("count", name)
 					writeString($$"$db", database.name)
 
-					Count<Document>(
-						context = database.client.context,
-					).writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 
 		return message.body.document["n"]
 			?.decodeLong(message)
@@ -228,45 +234,49 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun deleteOne(options: DeleteOneOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
+		val command = DeleteOne<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+		}
+
 		val message = database.client.sendSingle(
 			database.client.createDriverMessage {
 				document {
 					writeString("delete", name)
 					writeString($$"$db", database.name)
 
-					DeleteOne<Document>(
-						context = database.client.context,
-					).apply {
-						this.options.options()
-						this.filter.filter()
-					}.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 	}
 
 	override suspend fun deleteMany(options: DeleteManyOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
+		val command = DeleteMany<Document>(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+			this.filter.filter()
+		}
+
 		val message = database.client.sendSingle(
 			database.client.createDriverMessage {
 				document {
 					writeString("delete", name)
 					writeString($$"$db", database.name)
 
-					DeleteMany<Document>(
-						context = database.client.context,
-					).apply {
-						this.options.options()
-						this.filter.filter()
-					}.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 	}
 
 	override fun find(): MultiplatformMongoIterable<Document> =
@@ -288,7 +298,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 		)
 
 	override suspend fun updateMany(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
-		val model = UpdateMany<Document>(
+		val command = UpdateMany<Document>(
 			context = database.client.context,
 		).apply {
 			this.options.options()
@@ -301,13 +311,13 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -315,7 +325,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun updateOne(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
-		val model = UpdateOne<Document>(
+		val command = UpdateOne<Document>(
 			context = database.client.context,
 		).apply {
 			this.options.options()
@@ -328,13 +338,13 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -342,7 +352,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun upsertOne(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpsertQuery<Document>.() -> Unit): MultiplatformMongoCollection.UpsertResult {
-		val model = UpsertOne<Document>(
+		val command = UpsertOne<Document>(
 			context = database.client.context,
 		).apply {
 			this.options.options()
@@ -355,13 +365,13 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -369,7 +379,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun replaceOne(options: ReplaceOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, document: Document) {
-		val model = ReplaceOne(
+		val command = ReplaceOne(
 			context = database.client.context,
 			document = document,
 			documentType = type,
@@ -383,17 +393,17 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 	}
 
 	override suspend fun repsertOne(options: ReplaceOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, document: Document) {
-		val model = RepsertOne(
+		val command = RepsertOne(
 			context = database.client.context,
 			document = document,
 			documentType = type,
@@ -407,13 +417,13 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 	}
 
 	override suspend fun findOneAndUpdate(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateQuery<Document>.() -> Unit): Document? {
@@ -421,7 +431,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun bulkWrite(options: BulkWriteOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, operations: BulkWrite<Document>.() -> Unit) {
-		val model = BulkWrite(
+		val command = BulkWrite(
 			context = database.client.context,
 			documentType = type,
 			globalFilter = filter,
@@ -442,17 +452,17 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 						}
 					}
 
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 	}
 
 	override suspend fun updateManyWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
-		val model = UpdateManyWithPipeline<Document>(
+		val command = UpdateManyWithPipeline<Document>(
 			context = database.client.context,
 		).apply {
 			this.options.options()
@@ -465,13 +475,13 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -479,7 +489,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun updateOneWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
-		val model = UpdateOneWithPipeline<Document>(
+		val command = UpdateOneWithPipeline<Document>(
 			context = database.client.context,
 		).apply {
 			this.options.options()
@@ -492,13 +502,13 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -506,7 +516,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	}
 
 	override suspend fun upsertOneWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): MultiplatformMongoCollection.UpsertResult {
-		val model = UpsertOneWithPipeline<Document>(
+		val command = UpsertOneWithPipeline<Document>(
 			context = database.client.context,
 		).apply {
 			this.options.options()
@@ -519,13 +529,13 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 				document {
 					writeString("update", name)
 					writeString($$"$db", database.name)
-					model.writeTo(this)
+					command.writeTo(this)
 				}
 			}
 		)
 
 		message as Message.OpMsg
-		check(message.body.document["ok"]?.decodeDouble() == 1.0)
+		checkNoSyntaxErrors(message.body.document, command, this)
 		check(message.body.document["writeErrors"] == null) { "There were write errors: ${message.body.document["writeErrors"]}" }
 
 		// TODO handle unacknowledged updates
