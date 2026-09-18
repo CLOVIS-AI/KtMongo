@@ -167,7 +167,9 @@ class FakeServer private constructor(
 		logFake("Received $actual")
 
 		check(actual is Message.OpMsg) { "Other kinds of messages are not supported yet" }
-		check(actual.body.document == expected.body.document) { "The received document doesn't match the expected document:\n${actual.body.document diff expected.body.document}" }
+		val actualBody = actual.body.document.toBson()
+		val expectedBody = expected.body.document.toBson()
+		check(actualBody == expectedBody) { "The received document doesn't match the expected document:\n${actualBody diff expectedBody}" }
 
 		val expectedSequences = expected.sequences.toList()
 			.sortedBy { it.id }
@@ -179,8 +181,8 @@ class FakeServer private constructor(
 		for ((expectedSequence, actualSequence) in expectedSequences.zip(actualSequences)) {
 			check(expectedSequence.id == actualSequence.id)
 
-			val expectedDocuments = expectedSequence.documents.toList()
-			val actualDocuments = actualSequence.documents.toList()
+			val expectedDocuments = expectedSequence.documents.toList().map { it.toBson() }
+			val actualDocuments = actualSequence.documents.toList().map { it.toBson() }
 			check(expectedDocuments.size == actualDocuments.size)
 
 			for ((expectedDocument, actualDocument) in expectedDocuments.zip(actualDocuments)) {

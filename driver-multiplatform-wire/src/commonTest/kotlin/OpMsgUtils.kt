@@ -25,13 +25,12 @@ import opensavvy.ktmongo.multiplatform.wire.Message.OpMsg
  * Creates an [OpMsg] message with the given [body] and no [OpMsg.sequences].
  */
 @OptIn(LowLevelApi::class)
-fun OpMsg(body: BsonFieldWriter.() -> Unit): OpMsg =
+fun OpMsg(
+	factory: BsonFactory,
+	body: BsonFieldWriter.() -> Unit,
+): OpMsg =
 	OpMsg(
-		MessageSection.Body(
-			lazy {
-				BsonFactory().buildDocument(body)
-			}
-		),
+		MessageSection.Body(LazyBsonDocument(factory, body)),
 		sequences = emptySequence()
 	)
 
@@ -46,6 +45,6 @@ fun OpMsg.withSequence(
 	body,
 	sequences + MessageSection.DocumentSequence(
 		id,
-		documents.map { lazy { BsonFactory().buildDocument(it) } }
+		documents.map { LazyBsonDocument(body.document.factory, it) }
 	)
 )

@@ -22,7 +22,6 @@ import kotlinx.io.Buffer
 import kotlinx.io.readIntLe
 import kotlinx.io.readString
 import kotlinx.io.readUByte
-import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 
 internal class ResponsePayload(
@@ -60,7 +59,7 @@ internal fun Buffer.parseMessage(
 		when (val kind = buffer.readUByte()) {
 			MessageSection.Body.kind -> {
 				val size = buffer.peek().readIntLe()
-				sections += MessageSection.Body(eager(factory.readDocument(buffer.readBytes(size)))) // TODO: avoid copy
+				sections += MessageSection.Body(LazyBsonDocument(factory.readDocument(buffer.readBytes(size)))) // TODO: avoid copy
 			}
 
 			MessageSection.DocumentSequence.kind -> {
@@ -74,10 +73,10 @@ internal fun Buffer.parseMessage(
 				read += 1 // null terminator
 
 				// • section documents
-				val documents = ArrayList<Lazy<BsonDocument>>()
+				val documents = ArrayList<LazyBsonDocument>()
 				while (read < size) {
 					val documentSize = buffer.peek().readIntLe()
-					documents += eager(factory.readDocument(buffer.readBytes(documentSize))) // TODO: avoid copy
+					documents += LazyBsonDocument(factory.readDocument(buffer.readBytes(documentSize))) // TODO: avoid copy
 				}
 
 				sections += MessageSection.DocumentSequence(id, documents)

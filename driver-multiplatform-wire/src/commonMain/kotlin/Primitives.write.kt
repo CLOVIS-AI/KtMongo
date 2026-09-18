@@ -65,7 +65,7 @@ internal fun writeOpMsg(message: Message.OpMsg, buffer: Buffer) {
 	buffer.writeUByte(message.body.kind)
 
 	// • body content
-	buffer.write(message.body.document.toByteArray()) // TODO: avoid copy
+	message.body.document.writeTo(buffer)
 
 	// Next, read the sequences, if any
 	for (sequence in message.sequences) {
@@ -75,7 +75,7 @@ internal fun writeOpMsg(message: Message.OpMsg, buffer: Buffer) {
 		val payload = Buffer()
 		payload.writeCString(sequence.id)
 		for (document in sequence.documents) {
-			payload.write(document.toByteArray()) // TODO: avoid copy
+			document.writeTo(payload)
 		}
 
 		// • size
