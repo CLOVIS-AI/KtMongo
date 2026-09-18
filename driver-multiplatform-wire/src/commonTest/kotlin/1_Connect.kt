@@ -72,8 +72,8 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 		val response = output.receive()
 
 		check(response is Message.OpMsg)
-		check(response.body.document.toBson()["ok"]?.decodeDouble() == 1.0)
-		check(response.body.document.toBson()["cursor"]?.decodeDocument()?.get("ns")?.decodeString() == "test-basic.test-basic-1")
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["cursor"]?.decodeDocument()?.get("ns")?.decodeString() == "test-basic.test-basic-1")
 	}
 
 	test("Insert an element") {
@@ -99,8 +99,8 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 		val response = output.receive()
 
 		check(response is Message.OpMsg)
-		check(response.body.document.toBson()["ok"]?.decodeDouble() == 1.0)
-		check(response.body.document.toBson()["writeErrors"] == null)
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["writeErrors"] == null)
 	}
 
 	test("Drop a collection") {
@@ -119,7 +119,7 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 		val response = output.receive()
 
 		check(response is Message.OpMsg)
-		check(response.body.document.toBson()["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
 	}
 
 	test("Find an element that was just inserted") {
@@ -155,11 +155,11 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 		val findResponse = findOutput.receive()
 
 		check(insertResponse is Message.OpMsg)
-		check(insertResponse.body.document.toBson()["ok"]?.decodeDouble() == 1.0)
+		check(insertResponse.bson["ok"]?.decodeDouble() == 1.0)
 
 		check(findResponse is Message.OpMsg)
-		check(findResponse.body.document.toBson()["ok"]?.decodeDouble() == 1.0)
-		check(findResponse.body.document.toBson().selectFirst<String>("$.cursor.firstBatch[0].name") == "Bob")
+		check(findResponse.bson["ok"]?.decodeDouble() == 1.0)
+		check(findResponse.bson.selectFirst<String>("$.cursor.firstBatch[0].name") == "Bob")
 
 		val _ = client.send(OpMsg(
 			Body(

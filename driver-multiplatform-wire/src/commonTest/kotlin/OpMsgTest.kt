@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalBsonPathApi::class)
 
 package opensavvy.ktmongo.multiplatform.wire
 
+import opensavvy.ktmongo.bson.ExperimentalBsonPathApi
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
+import opensavvy.ktmongo.bson.select
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.prepared.runner.testballoon.preparedSuite
 
@@ -44,6 +46,9 @@ val OpMsgTest by preparedSuite {
 		)
 
 		check(msg["users"]?.decodeArray()?.asIterable()?.map { it.decodeDocument()["name"]?.decodeString() } == listOf("Alice", "Bob"))
+
+		check(msg.bson["_id"]?.decodeInt64() == 123456789L)
+		check(msg.bson.select<String>("$.users.*.name").toList() == listOf("Alice", "Bob"))
 	}
 
 	// There is no support for nested sequences

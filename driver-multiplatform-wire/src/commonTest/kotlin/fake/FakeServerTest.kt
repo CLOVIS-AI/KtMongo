@@ -64,7 +64,7 @@ val FakeServerTest by preparedSuite {
 		val response = client.sendSingle(helloMessage)
 
 		check(response is Message.OpMsg)
-		check(response.body.document.toBson()["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
 	}
 
 	test("Write a message that fails serialization") {
@@ -87,7 +87,7 @@ val FakeServerTest by preparedSuite {
 		// Check that the error didn't break the client
 		val response = client.sendSingle(OpMsg(factory) { writeInt32("hello", 1) })
 		check(response is Message.OpMsg)
-		check(response.body.document.toBson()["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
 	}
 
 	test("The caller cancels the message while it's being sent", Ignored) { // TODO
@@ -115,7 +115,7 @@ val FakeServerTest by preparedSuite {
 			// Check that the error didn't break the client
 			val response = client.sendSingle(OpMsg(factory) { writeInt32("hello", 2) })
 			check(response is Message.OpMsg)
-			check(response.body.document.toBson()["ok"]?.decodeDouble() == 1.0)
+			check(response.bson["ok"]?.decodeDouble() == 1.0)
 		}
 	}
 

@@ -47,24 +47,29 @@ sealed interface Message {
 			get() = 2013
 
 		@OptIn(LowLevelApi::class)
-		operator fun get(field: String): BsonValue? {
-			for (sequence in sequences) {
-				if (sequence.id == field) {
-					return body.document.factory.buildArray {
+		val bson by lazy(LazyThreadSafetyMode.PUBLICATION) {
+			body.document.factory.buildDocument {
+				// Write all data from the body
+				body.document.writeTo(this)
+
+				// Append all sequences
+				for (sequence in sequences) {
+					writeArray(sequence.id) {
 						for (item in sequence.documents) {
 							writeDocument {
 								item.writeTo(this)
 							}
 						}
-					}.asValue()
+					}
 				}
 			}
-
-			return body.document.toBson()[field]
 		}
 
-		override fun toString(): String = sequenceOf(body).plus(sequences)
-			.joinToString(prefix = "OpMsg(", postfix = ")")
+		operator fun get(field: String): BsonValue? =
+			bson[field]
+
+		override fun toString(): String =
+			bson.toString()
 	}
 
 }
