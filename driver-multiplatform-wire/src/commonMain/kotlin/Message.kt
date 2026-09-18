@@ -16,6 +16,9 @@
 
 package opensavvy.ktmongo.multiplatform.wire
 
+import opensavvy.ktmongo.bson.multiplatform.BsonValue
+import opensavvy.ktmongo.dsl.LowLevelApi
+
 sealed interface Message {
 
 	/**
@@ -35,13 +38,30 @@ sealed interface Message {
 	 */
 	class OpMsg(
 		val body: MessageSection.Body,
-		val sequences: Sequence<MessageSection.DocumentSequence> = emptySequence(),
+		val sequences: List<MessageSection.DocumentSequence> = emptyList(),
 	) : Message {
 
-		constructor(body: MessageSection.Body, vararg sequences: MessageSection.DocumentSequence) : this(body, sequences.asSequence())
+		constructor(body: MessageSection.Body, vararg sequences: MessageSection.DocumentSequence) : this(body, sequences.asList())
 
 		override val opcode: Int
 			get() = 2013
+
+		@OptIn(LowLevelApi::class)
+		operator fun get(field: String): BsonValue? {
+			for (sequence in sequences) {
+				if (sequence.id == field) {
+					return body.document.factory.buildArray {
+						for (item in sequence.documents) {
+							writeDocument {
+								item.writeTo(this)
+							}
+						}
+					}.asValue()
+				}
+			}
+
+			return body.document.toBson()[field]
+		}
 
 		override fun toString(): String = sequenceOf(body).plus(sequences)
 			.joinToString(prefix = "OpMsg(", postfix = ")")

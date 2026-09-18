@@ -91,8 +91,7 @@ internal fun Buffer.parseMessage(
 
 	val response = Message.OpMsg(
 		body,
-		sections.asSequence()
-			.filterIsInstance<MessageSection.DocumentSequence>(),
+		sections.filterIsInstance<MessageSection.DocumentSequence>(),
 	)
 
 	return response

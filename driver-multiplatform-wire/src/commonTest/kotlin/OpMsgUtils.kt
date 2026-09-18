@@ -31,7 +31,7 @@ fun OpMsg(
 ): OpMsg =
 	OpMsg(
 		MessageSection.Body(LazyBsonDocument(factory, body)),
-		sequences = emptySequence()
+		sequences = emptyList()
 	)
 
 /**

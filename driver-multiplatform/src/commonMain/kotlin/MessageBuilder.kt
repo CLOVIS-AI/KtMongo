@@ -270,7 +270,7 @@ internal fun MultiplatformMongoClient.createDriverMessage(
 	return DriverMessage(
 		message = Message.OpMsg(
 			body = MessageSection.Body(builder.document!!),
-			sequences = builder.sequences.asSequence(),
+			sequences = builder.sequences,
 		),
 		readPreference = builder.readPreference,
 	)
