@@ -59,7 +59,7 @@ internal fun checkNoWriteErrors(
 	throw MongoWriteException(
 		server = server,
 		response = doc,
-		request = request.message.body.document,
+		request = request.message.bson,
 		command = command,
 		namespace = collection.fullyQualifiedName,
 		errors = errors.map { WriteErrorDataImpl(it) },
@@ -82,7 +82,7 @@ internal fun checkNoSyntaxErrors(
 		code = doc["code"]?.decodeInt32() ?: -1,
 		codeName = doc["codeName"]?.decodeString() ?: "<unknown>",
 		response = doc,
-		request = request.message.body.document,
+		request = request.message.bson,
 		command = command,
 		server = server,
 		namespace = collection.fullyQualifiedName,
@@ -103,7 +103,7 @@ internal fun checkOpMsg(
 		throw MongoDriverException(
 			message = "The Multiplatform driver only supports OP_MSG messages (${Message.OpMsg::class}), but it received a ${message::class}\n\tunknown message $message",
 			response = null,
-			request = request.message.body.document,
+			request = request.message.bson,
 			command = command,
 			server = server,
 			namespace = collection.fullyQualifiedName,

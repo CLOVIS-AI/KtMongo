@@ -54,15 +54,15 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 			val request = createFirstBatch()
 			val firstBatch = collection.database.client.sendSingle(request)
 			checkOpMsg(firstBatch, request, command, collection)
-			checkNoSyntaxErrors(firstBatch.body.document, request, command, collection)
+			checkNoSyntaxErrors(firstBatch.bson, request, command, collection)
 
-			val cursor = firstBatch.body.document["cursor"]?.decodeDocument()
+			val cursor = firstBatch.bson["cursor"]?.decodeDocument()
 
 			val cursorId = cursor?.get("id")?.decodeInt64()
 				?: throw MongoDriverException(
 					message = "No cursor ID found in the database response",
-					response = firstBatch.body.document,
-					request = request.message.body.document,
+					response = firstBatch.bson,
+					request = request.message.bson,
 					server = collection.database.client.serverAddress,
 					command = command,
 					namespace = collection.fullyQualifiedName,
@@ -89,7 +89,7 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 			val request = createNextBatch(cursorId)
 			val nextBatch = collection.database.client.sendSingle(request)
 			checkOpMsg(nextBatch, request, command, collection)
-			checkNoSyntaxErrors(nextBatch.body.document, request, command, collection)
+			checkNoSyntaxErrors(nextBatch.bson, request, command, collection)
 
 			TODO("Received batch: $nextBatch")
 		}
