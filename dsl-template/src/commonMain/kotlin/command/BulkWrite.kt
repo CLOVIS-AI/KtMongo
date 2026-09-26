@@ -484,7 +484,7 @@ class BulkWrite<Document : Any> private constructor(
 					when (operation) {
 						is InsertOne<*> -> {
 							writeInt32("insert", 0)
-							writeSafe("document", operation.document)
+							writeSafe("document", operation.document, operation.documentType)
 							operation.options.writeTo(this)
 						}
 
@@ -505,7 +505,7 @@ class BulkWrite<Document : Any> private constructor(
 							writeDocument("filter") {
 								operation.filter.writeTo(this)
 							}
-							writeSafe("updateMods", operation.document)
+							writeSafe("updateMods", operation.document, operation.documentType)
 							writeBoolean("multi", false)
 							operation.options.writeTo(this)
 						}
@@ -515,7 +515,7 @@ class BulkWrite<Document : Any> private constructor(
 							writeDocument("filter") {
 								operation.filter.writeTo(this)
 							}
-							writeSafe("updateMods", operation.document)
+							writeSafe("updateMods", operation.document, operation.documentType)
 							writeBoolean("multi", false)
 							writeBoolean("upsert", true)
 							operation.options.writeTo(this)

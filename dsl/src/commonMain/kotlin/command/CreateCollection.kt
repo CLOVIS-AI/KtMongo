@@ -62,6 +62,7 @@ class CreateCollection<Document : Any> private constructor(
 class CreateCollectionOptions<Document : Any>(context: BsonContext) :
 	Options by OptionsHolder(context),
 	HasCapped,
+	HasTimeSeries<Document>,
 	HasValidation<Document>,
 	HasWriteConcern,
 	HasComment
