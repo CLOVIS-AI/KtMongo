@@ -16,7 +16,9 @@
 
 package opensavvy.ktmongo.multiplatform
 
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
@@ -24,13 +26,20 @@ import kotlin.reflect.KType
 
 internal class MultiplatformMongoDatabaseImpl(
 	override val client: MultiplatformMongoClient,
+	override val factory: BsonFactory,
+	override val objectIdGenerator: ObjectIdGenerator,
+	override val propertyNameStrategy: PropertyNameStrategy,
 	override val name: String,
 ) : MultiplatformMongoDatabase {
 
 	@OptIn(ExperimentalAtomicApi::class)
+	override val context: BsonContext by lazy {
+		BsonContext(factory, objectIdGenerator, propertyNameStrategy)
+	}
+
 	@LowLevelApi
 	override fun <Document : Any> collection(name: String, type: KType): MultiplatformMongoCollection<Document> =
-		MultiplatformMongoCollectionImpl(this, name, type, client.factory, PropertyNameStrategy.Default, ObjectIdGenerator.Default())
+		MultiplatformMongoCollectionImpl(this, name, type, factory, propertyNameStrategy, objectIdGenerator)
 
 	override fun toString(): String =
 		"MultiplatformMongoDatabase($name)"

@@ -16,6 +16,11 @@
 
 package opensavvy.ktmongo.sync.api
 
+import opensavvy.ktmongo.bson.BsonFactory
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import opensavvy.ktmongo.sync.api.operations.BaseOperations
+
 /**
  * Entry-point to the KtMongo drivers.
  *
@@ -55,7 +60,7 @@ package opensavvy.ktmongo.sync.api
  * }
  * ```
  */
-interface MongoClient : AutoCloseable {
+interface MongoClient : AutoCloseable, BaseOperations {
 
 	/**
 	 * Creates a [MongoDatabase] object.
@@ -67,5 +72,10 @@ interface MongoClient : AutoCloseable {
 	 *
 	 * For an example, see [MongoClient].
 	 */
-	fun database(name: String): MongoDatabase
+	fun database(
+		name: String,
+		factory: BsonFactory = this.factory,
+		objectIdGenerator: ObjectIdGenerator = this.objectIdGenerator,
+		propertyNameStrategy: PropertyNameStrategy = this.propertyNameStrategy,
+	): MongoDatabase
 }

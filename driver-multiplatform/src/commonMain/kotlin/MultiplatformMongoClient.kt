@@ -80,10 +80,16 @@ private data class ServerAddressImpl(
 @OptIn(LowLevelApi::class)
 class MultiplatformMongoClient internal constructor(
 	internal val wire: MongoWireClient,
-	val factory: BsonFactory,
-	val context: BsonContext,
+	override val factory: BsonFactory,
+	override val objectIdGenerator: ObjectIdGenerator,
+	override val propertyNameStrategy: PropertyNameStrategy,
 	internal val serverAddress: MongoException.ServerAddress, // Internal because it will have a breaking change when we support replica sets
 ) : MongoClient {
+
+	@OptIn(ExperimentalAtomicApi::class)
+	override val context: BsonContext by lazy {
+		BsonContext(factory, objectIdGenerator, propertyNameStrategy)
+	}
 
 	/**
 	 * Creates a [MultiplatformMongoDatabase] object.
@@ -93,8 +99,15 @@ class MultiplatformMongoClient internal constructor(
 	 *
 	 * For an example, see [MultiplatformMongoClient].
 	 */
-	override fun database(name: String): MultiplatformMongoDatabase =
-		MultiplatformMongoDatabaseImpl(this, name)
+	override fun database(
+		name: String,
+		factory: opensavvy.ktmongo.bson.BsonFactory,
+		objectIdGenerator: ObjectIdGenerator,
+		propertyNameStrategy: PropertyNameStrategy,
+	): MultiplatformMongoDatabase {
+		require(factory is BsonFactory) { "The client $this only supports factories of ${BsonFactory::class}, but ${factory::class} was provided: $factory" }
+		return MultiplatformMongoDatabaseImpl(this, factory, objectIdGenerator, propertyNameStrategy, name)
+	}
 
 	override suspend fun close() {
 		wire.close()
@@ -154,6 +167,7 @@ suspend fun MultiplatformMongoClient(
 		coroutineContext,
 	),
 	factory = bsonFactory,
-	context = BsonContext(bsonFactory, objectIdGenerator, propertyNameStrategy),
+	objectIdGenerator = objectIdGenerator,
+	propertyNameStrategy = propertyNameStrategy,
 	serverAddress = ServerAddressImpl(hostname, port),
 )

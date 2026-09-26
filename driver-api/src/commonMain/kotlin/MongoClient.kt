@@ -16,6 +16,11 @@
 
 package opensavvy.ktmongo.api
 
+import opensavvy.ktmongo.api.operations.BaseOperations
+import opensavvy.ktmongo.bson.BsonFactory
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+
 /**
  * Entry-point to the KtMongo drivers.
  *
@@ -55,7 +60,7 @@ package opensavvy.ktmongo.api
  * }
  * ```
  */
-interface MongoClient {
+interface MongoClient : BaseOperations {
 
 	/**
 	 * Creates a [MongoDatabase] object.
@@ -67,7 +72,12 @@ interface MongoClient {
 	 *
 	 * For an example, see [MongoClient].
 	 */
-	fun database(name: String): MongoDatabase
+	fun database(
+		name: String,
+		factory: BsonFactory = this.factory,
+		objectIdGenerator: ObjectIdGenerator = this.objectIdGenerator,
+		propertyNameStrategy: PropertyNameStrategy = this.propertyNameStrategy,
+	): MongoDatabase
 
 	/**
 	 * Destroys this client.

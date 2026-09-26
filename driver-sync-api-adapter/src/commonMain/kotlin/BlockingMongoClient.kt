@@ -17,13 +17,35 @@
 package opensavvy.ktmongo.sync.api.blocking
 
 import opensavvy.ktmongo.api.MongoClient
+import opensavvy.ktmongo.bson.BsonFactory
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.sync.api.MongoClient as SyncMongoClient
 
 class BlockingMongoClient(
 	private val inner: SyncMongoClient,
 ) : MongoClient {
-	override fun database(name: String): BlockingMongoDatabase =
-		BlockingMongoDatabase(inner.database(name))
+
+	override val factory: BsonFactory
+		get() = inner.factory
+
+	override val objectIdGenerator: ObjectIdGenerator
+		get() = inner.objectIdGenerator
+
+	override val propertyNameStrategy: PropertyNameStrategy
+		get() = inner.propertyNameStrategy
+
+	override val context: BsonContext
+		get() = inner.context
+
+	override fun database(
+		name: String,
+		factory: BsonFactory,
+		objectIdGenerator: ObjectIdGenerator,
+		propertyNameStrategy: PropertyNameStrategy,
+	): BlockingMongoDatabase =
+		BlockingMongoDatabase(inner.database(name, factory, objectIdGenerator, propertyNameStrategy))
 
 	override suspend fun close() = wrapBlocking {
 		inner.close()

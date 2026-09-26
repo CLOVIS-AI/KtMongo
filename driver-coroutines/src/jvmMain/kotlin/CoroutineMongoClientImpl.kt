@@ -20,16 +20,37 @@
 package opensavvy.ktmongo.coroutines
 
 import com.mongodb.kotlin.client.coroutine.MongoClient
+import opensavvy.ktmongo.bson.official.BsonFactory
+import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 private class CoroutineMongoClientImpl(
 	private val inner: MongoClient,
+	override val factory: BsonFactory,
+	override val objectIdGenerator: ObjectIdGenerator,
+	override val propertyNameStrategy: PropertyNameStrategy,
 ) : CoroutineMongoClient {
 
 	override fun asOfficial(): MongoClient =
 		inner
 
-	override fun database(name: String): CoroutineMongoDatabase =
-		inner.getDatabase(name).asKtMongo()
+	@OptIn(ExperimentalAtomicApi::class)
+	override val context: BsonContext by lazy {
+		BsonContext(factory, objectIdGenerator, propertyNameStrategy)
+	}
+
+	override fun database(
+		name: String,
+		factory: opensavvy.ktmongo.bson.BsonFactory,
+		objectIdGenerator: ObjectIdGenerator,
+		propertyNameStrategy: PropertyNameStrategy,
+	): CoroutineMongoDatabase {
+		require(factory is BsonFactory) { "The client $this only supports factories of ${BsonFactory::class}, but ${factory::class} was provided: $factory" }
+		return inner.getDatabase(name).asKtMongo(factory, propertyNameStrategy, objectIdGenerator)
+	}
 
 	override suspend fun close() {
 		inner.close()
@@ -59,8 +80,12 @@ private class CoroutineMongoClientImpl(
  */
 fun CoroutineMongoClient(
 	connectionString: String = "mongodb://localhost:27017",
-): CoroutineMongoClient =
-	CoroutineMongoClientImpl(MongoClient.create(connectionString))
+	factory: BsonFactory? = null,
+	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
+	propertyNameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+): CoroutineMongoClient = MongoClient.create(connectionString)
+	.asKtMongo(factory, objectIdGenerator, propertyNameStrategy)
+
 
 /**
  * Instantiates a KtMongo [CoroutineMongoClient] using an existing client from the official Kotlin driver.
@@ -83,5 +108,14 @@ fun CoroutineMongoClient(
  * }
  * ```
  */
-fun MongoClient.asKtMongo(): CoroutineMongoClient =
-	CoroutineMongoClientImpl(this)
+fun MongoClient.asKtMongo(
+	factory: BsonFactory? = null,
+	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
+	propertyNameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+): CoroutineMongoClient =
+	CoroutineMongoClientImpl(
+		inner = this,
+		factory = factory ?: BsonFactory(this.codecRegistry),
+		objectIdGenerator = objectIdGenerator,
+		propertyNameStrategy = propertyNameStrategy,
+	)

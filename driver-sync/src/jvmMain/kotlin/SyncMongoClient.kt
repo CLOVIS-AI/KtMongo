@@ -19,6 +19,8 @@
 
 package opensavvy.ktmongo.sync
 
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.sync.api.MongoClient
 
 /**
@@ -67,5 +69,10 @@ interface SyncMongoClient : MongoClient {
 	 */
 	fun asOfficial(): com.mongodb.kotlin.client.MongoClient
 
-	override fun database(name: String): SyncMongoDatabase
+	override fun database(
+		name: String,
+		factory: opensavvy.ktmongo.bson.BsonFactory,
+		objectIdGenerator: ObjectIdGenerator,
+		propertyNameStrategy: PropertyNameStrategy,
+	): SyncMongoDatabase
 }
