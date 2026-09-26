@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class, ExperimentalCoroutinesApi::class)
+@file:OptIn(LowLevelApi::class, ExperimentalCoroutinesApi::class, ExperimentalTime::class)
 
 package opensavvy.ktmongo.tests.api.operations
 
@@ -31,6 +31,8 @@ import opensavvy.prepared.suite.SuiteDsl
 import opensavvy.prepared.suite.assertions.checkThrows
 import opensavvy.prepared.suite.now
 import opensavvy.prepared.suite.time
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -39,6 +41,13 @@ data class CollectionOperationsUser @OptIn(ExperimentalTime::class) constructor(
 	val _id: ObjectId,
 	val name: String,
 	val birthdate: @Serializable(with = InstantAsBsonDatetimeSerializer::class) Instant,
+)
+
+@Serializable
+data class CollectionOperationsAuditLog(
+	val timestamp: @Serializable(with = InstantAsBsonDatetimeSerializer::class) Instant,
+	val user: ObjectId,
+	val action: String,
 )
 
 fun SuiteDsl.verifyCollectionOperations(
@@ -139,5 +148,32 @@ fun SuiteDsl.verifyCollectionOperations(
 					}
 				}
 		}
+	}
+
+	val auditLog by client.collection<CollectionOperationsAuditLog>("operation-collection-audit-log")
+
+	test("Create a time-series collection") {
+		auditLog().create {
+			timeSeries {
+				timeField(CollectionOperationsAuditLog::timestamp)
+				metaField(CollectionOperationsAuditLog::user)
+				expiresAfter(30.minutes)
+			}
+		}
+
+		val users = List(3) { auditLog().newId() }
+		val actions = listOf("login", "logout", "failed-login")
+
+		auditLog().insertMany(
+			List(100) {
+				CollectionOperationsAuditLog(
+					timestamp = Clock.System.now(), // purposefully use real time to avoid duplicate documents
+					user = users.random(),
+					action = actions.random(),
+				)
+			}
+		)
+
+		check(auditLog().count() == 100L)
 	}
 }
