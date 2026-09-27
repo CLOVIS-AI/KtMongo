@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2026, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opensavvy.ktmongo.dsl.command
+
+import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import kotlin.reflect.KType
+
+/**
+ * Aggregating over multiple documents.
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * users.aggregate()
+ *     .match { User::age lt 18 }
+ *     .limit(99)
+ * ```
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/core/aggregation-pipeline/)
+ */
+class Aggregate<Document : Any> @OptIn(LowLevelApi::class) constructor(
+	context: BsonContext,
+	val chain: PipelineChainLink,
+	val outputType: KType,
+) : Command, AbstractBsonNode(context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter) = with(writer) {
+		writeArray("pipeline") {
+			chain.writeTo(this)
+		}
+
+		writeDocument("cursor") {}
+	}
+}
