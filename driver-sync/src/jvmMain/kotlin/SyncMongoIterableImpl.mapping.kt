@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-package opensavvy.ktmongo.multiplatform
+package opensavvy.ktmongo.sync
 
-import opensavvy.ktmongo.api.MongoIterable
+internal class SyncMongoIterableMappingImpl<In : Any, Out : Any>(
+	private val upstream: SyncMongoIterable<In>,
+	private val transform: (In) -> Out,
+) : SyncMongoIterable<Out> {
+	override fun first(): Out =
+		transform(upstream.first())
 
-/**
- * Streaming-capable iterable cursor to read data from the database.
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/core/cursors/)
- */
-interface MultiplatformMongoIterable<Document : Any> : MongoIterable<Document> {
+	override fun firstOrNull(): Out? =
+		upstream.firstOrNull()?.let { transform(it) }
 
-	override fun <Out : Any> map(transform: suspend (Document) -> Out): MultiplatformMongoIterable<Out> =
-		MultiplatformMongoIterableMappingImpl(this, transform)
+	override fun forEach(action: (Out) -> Unit) =
+		upstream.forEach { action(transform(it)) }
+
+	override fun toString(): String =
+		upstream.toString()
 }

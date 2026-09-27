@@ -19,6 +19,7 @@ package opensavvy.ktmongo.multiplatform
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
@@ -34,6 +35,26 @@ import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import kotlin.reflect.KType
+
+internal class MultiplatformMongoIterableMappingImpl<In : Any, Out : Any>(
+	private val upstream: MultiplatformMongoIterable<In>,
+	private val transform: suspend (In) -> Out,
+) : MultiplatformMongoIterable<Out> {
+	override suspend fun first(): Out =
+		transform(upstream.first())
+
+	override suspend fun firstOrNull(): Out? =
+		upstream.firstOrNull()?.let { transform(it) }
+
+	override suspend fun forEach(action: suspend (Out) -> Unit) =
+		upstream.forEach { action(transform(it)) }
+
+	override fun asFlow(): Flow<Out> =
+		upstream.asFlow().map(transform)
+
+	override fun toString(): String =
+		upstream.toString()
+}
 
 internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 	protected val namespace: MultiplatformNamespace,

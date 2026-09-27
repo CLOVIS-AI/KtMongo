@@ -21,6 +21,24 @@ package opensavvy.ktmongo.sync
 
 import com.mongodb.kotlin.client.AggregateIterable
 import com.mongodb.kotlin.client.FindIterable
+import opensavvy.ktmongo.sync.api.MongoIterable
+
+/**
+ * Streaming-capable iterable cursor to read data from the database.
+ *
+ * The Coroutine client provides a coroutine-aware API which internally uses the
+ * [official Kotlin driver](https://www.mongodb.com/docs/drivers/kotlin/coroutine/current/).
+ *
+ * ### External resources
+ *
+ * - [Official documentation](https://www.mongodb.com/docs/manual/core/cursors/)
+ */
+interface SyncMongoIterable<Document : Any> : MongoIterable<Document> {
+
+	override fun <Out : Any> map(transform: (Document) -> Out): SyncMongoIterable<Out> =
+		SyncMongoIterableMappingImpl(this, transform)
+
+}
 
 /**
  * Streaming-capable iterable cursor to read data from the database.
@@ -35,7 +53,7 @@ import com.mongodb.kotlin.client.FindIterable
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/cursors/)
  */
-interface SyncMongoFindIterable<Document : Any> : opensavvy.ktmongo.sync.api.MongoIterable<Document> {
+interface SyncMongoFindIterable<Document : Any> : SyncMongoIterable<Document> {
 
 	/**
 	 * Obtains the underlying MongoDB flow from the official Kotlin driver.
@@ -57,7 +75,7 @@ interface SyncMongoFindIterable<Document : Any> : opensavvy.ktmongo.sync.api.Mon
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/cursors/)
  */
-interface SyncMongoAggregateIterable<Document : Any> : opensavvy.ktmongo.sync.api.MongoIterable<Document> {
+interface SyncMongoAggregateIterable<Document : Any> : SyncMongoIterable<Document> {
 
 	/**
 	 * Obtains the underlying MongoDB flow from the official Kotlin driver.

@@ -41,6 +41,11 @@ interface MongoIterable<Document : Any> {
 	fun firstOrNull(): Document?
 
 	/**
+	 * Performs a client-side streaming mapping on the results.
+	 */
+	fun <Out : Any> map(transform: (Document) -> Out): MongoIterable<Out>
+
+	/**
 	 * Executes [action] for each document returned by this query.
 	 *
 	 * This method streams all returned documents into the [action] function.
