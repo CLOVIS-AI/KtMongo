@@ -30,7 +30,10 @@ internal class MultiplatformMongoDatabaseImpl(
 	override val objectIdGenerator: ObjectIdGenerator,
 	override val propertyNameStrategy: PropertyNameStrategy,
 	override val name: String,
-) : MultiplatformMongoDatabase {
+) : MultiplatformMongoDatabase, MultiplatformNamespace {
+
+	override val namespace: String
+		get() = name
 
 	@OptIn(ExperimentalAtomicApi::class)
 	override val context: BsonContext by lazy {

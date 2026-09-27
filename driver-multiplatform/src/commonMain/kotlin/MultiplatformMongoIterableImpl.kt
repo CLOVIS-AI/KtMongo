@@ -36,7 +36,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import kotlin.reflect.KType
 
 internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
-	protected val collection: MultiplatformMongoCollection<*>,
+	protected val namespace: MultiplatformNamespace,
 	protected val outputType: KType,
 ) : MultiplatformMongoIterable<Document> {
 
@@ -52,9 +52,9 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 		val cursorId = run {
 			// Within a 'run' block to free memory of the first batch when the next ones are being computed
 			val request = createFirstBatch()
-			val firstBatch = collection.database.client.sendSingle(request)
-			checkOpMsg(firstBatch, request, command, collection)
-			checkNoSyntaxErrors(firstBatch.bson, request, command, collection)
+			val firstBatch = namespace.client.sendSingle(request)
+			checkOpMsg(firstBatch, request, command, namespace)
+			checkNoSyntaxErrors(firstBatch.bson, request, command, namespace)
 
 			val cursor = firstBatch.bson["cursor"]?.decodeDocument()
 
@@ -63,9 +63,9 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 					message = "No cursor ID found in the database response",
 					response = firstBatch.bson,
 					request = request.message.bson,
-					server = collection.database.client.serverAddress,
+					server = namespace.client.serverAddress,
 					command = command,
-					namespace = collection.fullyQualifiedName,
+					namespace = namespace.namespace,
 				)
 
 			val batch = cursor["firstBatch"]?.decodeArray()?.asList().orEmpty()
@@ -87,9 +87,9 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 
 		while (true) {
 			val request = createNextBatch(cursorId)
-			val nextBatch = collection.database.client.sendSingle(request)
-			checkOpMsg(nextBatch, request, command, collection)
-			checkNoSyntaxErrors(nextBatch.bson, request, command, collection)
+			val nextBatch = namespace.client.sendSingle(request)
+			checkOpMsg(nextBatch, request, command, namespace)
+			checkNoSyntaxErrors(nextBatch.bson, request, command, namespace)
 
 			TODO("Received batch: $nextBatch")
 		}
@@ -106,7 +106,7 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 }
 
 internal class MultiplatformMongoIterableFindImpl<Document : Any>(
-	collection: MultiplatformMongoCollection<*>,
+	private val collection: MultiplatformMongoCollectionImpl<*>,
 	private val options: FindOptions<Document>.() -> Unit,
 	private val filter: FilterQuery<Document>.() -> Unit,
 	outputType: KType,
@@ -163,7 +163,7 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 
 @LowLevelApi
 internal class MultiplatformMongoIterableAggregateImpl<Document : Any>(
-	collection: MultiplatformMongoCollection<*>,
+	private val collection: MultiplatformMongoCollectionImpl<*>,
 	private val chain: PipelineChainLink,
 	outputType: KType,
 ) : AbstractMultiplatformMongoIterable<Document>(collection, outputType) {

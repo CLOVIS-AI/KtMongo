@@ -50,10 +50,15 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 	override val factory: BsonFactory,
 	override val propertyNameStrategy: PropertyNameStrategy,
 	override val objectIdGenerator: ObjectIdGenerator,
-) : MultiplatformMongoCollection<Document> {
+) : MultiplatformMongoCollection<Document>, MultiplatformNamespace {
+
+	override val client: MultiplatformMongoClient
+		get() = database.client
+
+	override val namespace: String
+		get() = fullyQualifiedName
 
 	@OptIn(ExperimentalAtomicApi::class)
-	@LowLevelApi
 	override val context: BsonContext = BsonContext(
 		bsonFactory = factory,
 		objectIdGenerator = objectIdGenerator,
