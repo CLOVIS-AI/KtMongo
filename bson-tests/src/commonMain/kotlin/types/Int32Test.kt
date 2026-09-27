@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, OpenSavvy and contributors.
+ * Copyright (c) 2025-2026, OpenSavvy and contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,9 @@ fun SuiteDsl.verifyInt32s(factory: Prepared<BsonFactory>) = suite("Int32") {
 		json("""{"i": -2147483648}"""),
 		verify("Read value") {
 			check(this["i"]?.decodeInt32() == Int.MIN_VALUE)
+		},
+		verify("Int32 can be read as Int64") {
+			check(this["i"]?.decodeInt64() == Int.MIN_VALUE.toLong())
 		}
 	)
 
@@ -59,6 +62,9 @@ fun SuiteDsl.verifyInt32s(factory: Prepared<BsonFactory>) = suite("Int32") {
 		json("""{"i": 2147483647}"""),
 		verify("Read value") {
 			check(this["i"]?.decodeInt32() == Int.MAX_VALUE)
+		},
+		verify("Int32 can be read as Int64") {
+			check(this["i"]?.decodeInt64() == Int.MAX_VALUE.toLong())
 		}
 	)
 
@@ -71,6 +77,9 @@ fun SuiteDsl.verifyInt32s(factory: Prepared<BsonFactory>) = suite("Int32") {
 		json("""{"i": -1}"""),
 		verify("Read value") {
 			check(this["i"]?.decodeInt32() == -1)
+		},
+		verify("Int32 can be read as Int64") {
+			check(this["i"]?.decodeInt64() == -1L)
 		}
 	)
 
@@ -83,6 +92,9 @@ fun SuiteDsl.verifyInt32s(factory: Prepared<BsonFactory>) = suite("Int32") {
 		json("""{"i": 0}"""),
 		verify("Read value") {
 			check(this["i"]?.decodeInt32() == 0)
+		},
+		verify("Int32 can be read as Int64") {
+			check(this["i"]?.decodeInt64() == 0L)
 		}
 	)
 
@@ -95,6 +107,9 @@ fun SuiteDsl.verifyInt32s(factory: Prepared<BsonFactory>) = suite("Int32") {
 		json("""{"i": 1}"""),
 		verify("Read value") {
 			check(this["i"]?.decodeInt32() == 1)
+		},
+		verify("Int32 can be read as Int64") {
+			check(this["i"]?.decodeInt64() == 1L)
 		}
 	)
 }

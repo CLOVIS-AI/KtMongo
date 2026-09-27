@@ -101,6 +101,9 @@ actual class BsonValue internal constructor(
 	}
 
 	override fun decodeInt64(): Long {
+		if (raw.isInt32)
+			return raw.asInt32().value.toLong()
+
 		ensureType(BsonType.Int64) { raw.isInt64 }
 		return raw.asInt64().value
 	}

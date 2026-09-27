@@ -116,6 +116,9 @@ class BsonValue internal constructor(
 	}
 
 	override fun decodeInt64(): Long {
+		if (type == BsonType.Int32)
+			return bytes.reader.readInt32().toLong()
+
 		checkType(BsonType.Int64)
 		return bytes.reader.readInt64()
 	}
