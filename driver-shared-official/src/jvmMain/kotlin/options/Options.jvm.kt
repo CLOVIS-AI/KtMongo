@@ -18,7 +18,10 @@ package opensavvy.ktmongo.official.options
 
 import com.mongodb.ReadConcern
 import com.mongodb.ReadPreference
+import com.mongodb.client.model.TimeSeriesGranularity
+import com.mongodb.client.model.TimeSeriesOptions
 import com.mongodb.client.model.ValidationOptions
+import opensavvy.ktmongo.bson.official.BsonDocument
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CountOptions
 import opensavvy.ktmongo.dsl.command.CreateCollectionOptions
@@ -54,6 +57,17 @@ fun CreateCollectionOptions<*>.toJava(): com.mongodb.client.model.CreateCollecti
 	.capped(readCapped())
 	.setNotNull(readSizeInBytes(), com.mongodb.client.model.CreateCollectionOptions::sizeInBytes)
 	.setNotNull(readMaxSize(), com.mongodb.client.model.CreateCollectionOptions::maxDocuments)
+	.setNotNull(readExpiresAfterSeconds()) { expireAfter(it, TimeUnit.SECONDS) }
+	.setNotNull(readTimeSeriesDocument()) { timeSeries ->
+		timeSeriesOptions(
+			TimeSeriesOptions(timeSeries["timeField"]?.decodeString()
+				?: error("'timeField' is mandatory for time series"))
+				.setNotNull(timeSeries["metaField"]?.decodeString(), TimeSeriesOptions::metaField)
+				.setNotNull(timeSeries["granularity"]?.decodeString()?.uppercase()?.let(TimeSeriesGranularity::valueOf), TimeSeriesOptions::granularity)
+				.setNotNull(timeSeries["bucketMaxSpanSeconds"]?.decodeInt64()) { bucketMaxSpan(it, TimeUnit.SECONDS) }
+				.setNotNull(timeSeries["bucketRoundingSeconds"]?.decodeInt64()) { bucketRounding(it, TimeUnit.SECONDS) }
+		)
+	}
 	.validationOptions(
 		ValidationOptions()
 			.setNotNull(readValidator(), ValidationOptions::validator)
@@ -135,3 +149,11 @@ fun HasValidation<*>.readValidationAction(): OfficialValidationAction? =
 		ValidationAction.Error -> OfficialValidationAction.ERROR
 		ValidationAction.Warn -> OfficialValidationAction.WARN
 	}
+
+@LowLevelApi
+fun Options.readExpiresAfterSeconds(): Long? =
+	option<ExpiresAfterOption>()?.duration?.inWholeSeconds
+
+@LowLevelApi
+fun HasTimeSeries<*>.readTimeSeriesDocument(): BsonDocument? =
+	option<TimeSeriesOption>()?.node?.toBson() as BsonDocument?
