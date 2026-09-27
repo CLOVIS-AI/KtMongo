@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-@file:OptIn(LowLevelApi::class, ExperimentalCoroutinesApi::class, ExperimentalTime::class)
+@file:OptIn(LowLevelApi::class, ExperimentalCoroutinesApi::class, ExperimentalTime::class, ExperimentalBsonPathApi::class)
 
 package opensavvy.ktmongo.tests.api.operations
 
@@ -22,10 +22,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.ExperimentalBsonPathApi
+import opensavvy.ktmongo.bson.selectFirst
 import opensavvy.ktmongo.bson.types.InstantAsBsonDatetimeSerializer
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CollectionInfo
+import opensavvy.ktmongo.dsl.options.TimeSeriesDsl
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -195,6 +198,7 @@ fun SuiteDsl.verifyCollectionOperations(
 				timeField(CollectionOperationsAuditLog::timestamp)
 				metaField(CollectionOperationsAuditLog::user)
 				expiresAfter(30.minutes)
+				granularity(TimeSeriesDsl.Granularity.Minutes)
 			}
 		}
 
@@ -212,5 +216,29 @@ fun SuiteDsl.verifyCollectionOperations(
 		)
 
 		check(auditLog().count() == 100L)
+
+		val infos = checkNotNull(auditLog().infos())
+		check(infos.options.selectFirst<String>("$.timeseries.timeField") == "timestamp")
+		check(infos.options.selectFirst<String>("$.timeseries.metaField") == "user")
+		check(infos.options.selectFirst<String>("$.timeseries.granularity") == "minutes")
+		check(infos.options.selectFirst<Long>("$.expireAfterSeconds") == 1800L)
+	}
+
+	test("Create a time-series collection using the new granularity options") {
+		auditLog().create {
+			timeSeries {
+				timeField(CollectionOperationsAuditLog::timestamp)
+				metaField(CollectionOperationsAuditLog::user)
+				expiresAfter(30.minutes)
+				bucketMaxSpan(10.minutes)
+			}
+		}
+
+		val infos = checkNotNull(auditLog().infos())
+		check(infos.options.selectFirst<String>("$.timeseries.timeField") == "timestamp")
+		check(infos.options.selectFirst<String>("$.timeseries.metaField") == "user")
+		check(infos.options.selectFirst<Int>("$.timeseries.bucketMaxSpanSeconds") == 600)
+		check(infos.options.selectFirst<Int>("$.timeseries.bucketRoundingSeconds") == 600)
+		check(infos.options.selectFirst<Long>("$.expireAfterSeconds") == 1800L)
 	}
 }
