@@ -1,0 +1,80 @@
+/*
+ * Copyright (c) 2026, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opensavvy.ktmongo.dsl.options
+
+import opensavvy.ktmongo.bson.BsonValueWriter
+import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.LowLevelApi
+
+/**
+ * Specifies whether to only return collections that the user has access to.
+ *
+ * See [HasAuthorizedCollections.onlyAuthorizedCollections].
+ */
+class AuthorizedCollectionsOption(
+	val onlyAuthorized: Boolean,
+	context: BsonContext,
+) : AbstractOption("authorizedCollections", context) {
+
+	@LowLevelApi
+	override fun write(writer: BsonValueWriter) = with(writer) {
+		writeBoolean(onlyAuthorized)
+	}
+}
+
+/**
+ * Specifies whether to only return collections that the user has access to.
+ *
+ * See [onlyAuthorizedCollections].
+ */
+interface HasAuthorizedCollections : Options {
+
+	/**
+	 * Controls whether to return all or only authorized collections.
+	 *
+	 * If `true`, only collections that the user has access to are returned.
+	 * This is useful if the user is not allowed to list collections.
+	 *
+	 * **Additionally, the option [HasNameOnly.nameOnly] must also be specified.**
+	 *
+	 * If `false`, all collections are returned.
+	 * This requires the right to list collections.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * client.database("my-project")
+	 *     .collections {
+	 *         nameOnly()
+	 *         onlyAuthorizedCollections()
+	 *     }
+	 *     .forEach {
+	 *         println("Collection: ${it.name}")
+	 *     }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/command/listcollections/#syntax)
+	 */
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
+	fun onlyAuthorizedCollections(onlyAuthorized: Boolean = true) {
+		accept(AuthorizedCollectionsOption(onlyAuthorized, context))
+	}
+
+}
