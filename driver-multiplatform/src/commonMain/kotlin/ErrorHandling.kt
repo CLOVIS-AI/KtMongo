@@ -19,9 +19,13 @@ package opensavvy.ktmongo.multiplatform
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.dsl.command.Command
+import opensavvy.ktmongo.dsl.command.errors.MongoDriverException
 import opensavvy.ktmongo.dsl.command.errors.MongoException
 import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
+import opensavvy.ktmongo.multiplatform.wire.Message
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 private class WriteErrorDataImpl(
 	private val doc: BsonDocument,
@@ -38,6 +42,7 @@ private class WriteErrorDataImpl(
 
 internal fun checkNoWriteErrors(
 	doc: BsonDocument,
+	request: DriverMessage,
 	command: Command,
 	collection: MultiplatformMongoCollection<*>,
 	server: MongoException.ServerAddress = collection.database.client.serverAddress,
@@ -53,6 +58,8 @@ internal fun checkNoWriteErrors(
 
 	throw MongoWriteException(
 		server = server,
+		response = doc,
+		request = request.message.body.document,
 		command = command,
 		namespace = collection.fullyQualifiedName,
 		errors = errors.map { WriteErrorDataImpl(it) },
@@ -61,6 +68,7 @@ internal fun checkNoWriteErrors(
 
 internal fun checkNoSyntaxErrors(
 	doc: BsonDocument,
+	request: DriverMessage,
 	command: Command,
 	collection: MultiplatformMongoCollection<*>,
 	server: MongoException.ServerAddress = collection.database.client.serverAddress,
@@ -73,9 +81,31 @@ internal fun checkNoSyntaxErrors(
 		errorMessage = doc["errmsg"]?.decodeString() ?: "No error message were provided",
 		code = doc["code"]?.decodeInt32() ?: -1,
 		codeName = doc["codeName"]?.decodeString() ?: "<unknown>",
-		fullResponse = doc,
+		response = doc,
+		request = request.message.body.document,
 		command = command,
 		server = server,
 		namespace = collection.fullyQualifiedName,
 	)
+}
+
+@OptIn(ExperimentalContracts::class)
+internal fun checkOpMsg(
+	message: Message,
+	request: DriverMessage,
+	command: Command,
+	collection: MultiplatformMongoCollection<*>,
+	server: MongoException.ServerAddress = collection.database.client.serverAddress,
+) {
+	contract { returns() implies (message is Message.OpMsg) }
+
+	if (message !is Message.OpMsg)
+		throw MongoDriverException(
+			message = "The Multiplatform driver only supports OP_MSG messages (${Message.OpMsg::class}), but it received a ${message::class}\n\tunknown message $message",
+			response = null,
+			request = request.message.body.document,
+			command = command,
+			server = server,
+			namespace = collection.fullyQualifiedName,
+		)
 }

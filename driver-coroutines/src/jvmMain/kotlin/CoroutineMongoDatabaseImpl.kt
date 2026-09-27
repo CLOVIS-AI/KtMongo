@@ -20,22 +20,36 @@
 package opensavvy.ktmongo.coroutines
 
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import opensavvy.ktmongo.bson.official.BsonFactory
+import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 private class CoroutineMongoDatabaseImpl(
 	private val inner: MongoDatabase,
+	override val factory: BsonFactory,
+	override val objectIdGenerator: ObjectIdGenerator,
+	override val propertyNameStrategy: PropertyNameStrategy,
 ) : CoroutineMongoDatabase {
 
 	override fun asOfficial(): MongoDatabase =
 		inner
 
+	@OptIn(ExperimentalAtomicApi::class)
+	override val context: BsonContext by lazy {
+		BsonContext(factory, objectIdGenerator, propertyNameStrategy)
+	}
+
 	@LowLevelApi
 	@Suppress("UNCHECKED_CAST")
 	override fun <Document : Any> collection(name: String, type: KType): CoroutineMongoCollection<Document> =
 		inner.getCollection(name, (type.classifier as KClass<Document>).java)
-			.asKtMongo(type = type, database = inner)
+			.asKtMongo(type = type, database = inner, factory = factory, propertyNameStrategy = propertyNameStrategy, objectIdGenerator = objectIdGenerator)
 
 	override val name: String
 		get() = inner.name
@@ -63,7 +77,14 @@ private class CoroutineMongoDatabaseImpl(
  * }
  * ```
  */
-fun MongoDatabase.asKtMongo(): CoroutineMongoDatabase =
+fun MongoDatabase.asKtMongo(
+	factory: BsonFactory = BsonFactory(this.codecRegistry),
+	propertyNameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
+): CoroutineMongoDatabase =
 	CoroutineMongoDatabaseImpl(
 		inner = this,
+		factory = factory,
+		propertyNameStrategy = propertyNameStrategy,
+		objectIdGenerator = objectIdGenerator,
 	)

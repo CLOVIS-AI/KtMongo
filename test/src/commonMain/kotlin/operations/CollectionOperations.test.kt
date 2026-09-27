@@ -25,6 +25,7 @@ import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.types.InstantAsBsonDatetimeSerializer
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.CollectionInfo
 import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
@@ -78,6 +79,37 @@ fun SuiteDsl.verifyCollectionOperations(
 		check(collection().count() == 0L)
 	}
 
+	test("Get infos about a collection that doesn't exist") {
+		check(collection().infos() == null)
+	}
+
+	test("Get infos about a collection") {
+		collection().create { }
+
+		val infos = checkNotNull(collection().infos())
+		check(infos.name == collection().name)
+		check(infos.type == CollectionInfo.Type.Collection)
+		check(infos.options.isEmpty())
+		check(infos.uuid != null)
+		check(infos.readOnly == false)
+		check(infos.idIndex != null)
+	}
+
+	test("Get infos about a collection with only the name") {
+		collection().create { }
+
+		val infos = checkNotNull(collection().infos { nameOnly(true) })
+		check(infos.name == collection().name)
+		try {
+			check(infos.type == CollectionInfo.Type.Collection)
+		} catch (_: UnsupportedOperationException) {
+		} // The official driver doesn't return this field
+		check(infos.options.isEmpty())
+		check(infos.uuid == null)
+		check(infos.readOnly == null)
+		check(infos.idIndex == null)
+	}
+
 	test("Create a capped collection") {
 		val id = collection().newId()
 
@@ -118,6 +150,11 @@ fun SuiteDsl.verifyCollectionOperations(
 		)
 
 		check(collection().find().toList().map { it.name }.toSet() == setOf("Charlie", "Deborah"))
+
+		val infos = checkNotNull(collection().infos())
+		check(infos.options["capped"]?.decodeBoolean() == true)
+		check(infos.options["size"]?.decodeInt32() == documentSize * 2)
+		check(infos.options["max"] == null)
 	}
 
 	test("Create a collection with simple validation") {

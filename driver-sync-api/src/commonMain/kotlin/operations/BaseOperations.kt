@@ -16,21 +16,44 @@
 
 package opensavvy.ktmongo.sync.api.operations
 
+import opensavvy.ktmongo.bson.BsonFactory
+import opensavvy.ktmongo.bson.types.ObjectId
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
-import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 
 /**
  * The common interface to all operations interfaces.
- *
- * This interface provides no useful value to end-users.
  */
 interface BaseOperations {
+
+	/**
+	 * The [BsonFactory] used to serialize and deserialize values.
+	 *
+	 * This property stores all serialization configurations and allows creating custom BSON objects.
+	 *
+	 * For more information, see [BsonFactory].
+	 */
+	val factory: BsonFactory
+
+	/**
+	 * The strategy used to convert property names to BSON document keys.
+	 *
+	 * For more information, see [PropertyNameStrategy].
+	 */
+	val propertyNameStrategy: PropertyNameStrategy
+
+	/**
+	 * The algorithm used to generate new [ObjectId] instances.
+	 *
+	 * For more information, see [ObjectIdGenerator].
+	 */
+	val objectIdGenerator: ObjectIdGenerator
 
 	/**
 	 * The full BSON configuration, used by the DSL to generate queries.
 	 *
 	 * For more information, see [BsonContext].
 	 */
-	@LowLevelApi
 	val context: BsonContext
 }

@@ -19,6 +19,7 @@ package opensavvy.ktmongo.multiplatform
 import opensavvy.ktmongo.api.firstOrNull
 import opensavvy.ktmongo.api.operations.UpdateOperations
 import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.decode
 import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.multiplatform.BsonValue
@@ -37,9 +38,9 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
-import opensavvy.ktmongo.multiplatform.wire.Message
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.reflect.KType
+import kotlin.uuid.Uuid
 
 @OptIn(LowLevelApi::class)
 internal class MultiplatformMongoCollectionImpl<Document : Any>(
@@ -74,20 +75,20 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.options.options()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("insert", name)
-					writeString($$"$db", database.name)
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("insert", name)
+				writeString($$"$db", database.name)
 
-					command.writeTo(this)
-				}
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
-		checkNoWriteErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
+		checkNoWriteErrors(message.body.document, request, command, this)
 	}
 
 	override suspend fun insertMany(documents: Iterable<Document>, options: InsertManyOptions<Document>.() -> Unit) {
@@ -99,20 +100,20 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.options.options()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("insert", name)
-					writeString($$"$db", database.name)
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("insert", name)
+				writeString($$"$db", database.name)
 
-					command.writeTo(this)
-				}
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
-		checkNoWriteErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
+		checkNoWriteErrors(message.body.document, request, command, this)
 	}
 
 	override fun filter(filter: FilterQuery<Document>.() -> Unit): MultiplatformMongoCollection<Document> =
@@ -128,19 +129,52 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.options.options()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("create", name)
-					writeString($$"$db", database.name)
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("create", name)
+				writeString($$"$db", database.name)
 
-					command.writeTo(this)
-				}
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
+	}
+
+	override suspend fun infos(options: ListCollectionsOptions.() -> Unit): CollectionInfo? {
+		val command = ListCollections(
+			context = database.client.context,
+		).apply {
+			this.options.options()
+			with(this.filter) {
+				Field.unsafe<String>("name") eq name
+			}
+		}
+
+		val request = database.client.createDriverMessage {
+			document {
+				writeDouble("listCollections", 1.0)
+				writeString($$"$db", database.name)
+
+				command.writeTo(this)
+			}
+		}
+
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
+
+		val batchArray = message.body.document["cursor"]?.decodeDocument()?.get("firstBatch")?.decodeArray()
+		checkNotNull(batchArray) { "No cursor was returned by the command $command, received: ${message.body.document}" }
+
+		val infos = batchArray[0]?.decodeDocument()
+			?: return null
+
+		return MultiplatformCollectionInfo(infos)
 	}
 
 	override suspend fun drop(options: DropOptions<Document>.() -> Unit) {
@@ -150,19 +184,19 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.options.options()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("drop", name)
-					writeString($$"$db", database.name)
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("drop", name)
+				writeString($$"$db", database.name)
 
-					command.writeTo(this)
-				}
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
 	@OptIn(DangerousMongoApi::class)
@@ -214,19 +248,19 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			context = database.client.context,
 		)
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("count", name)
-					writeString($$"$db", database.name)
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("count", name)
+				writeString($$"$db", database.name)
 
-					command.writeTo(this)
-				}
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		return message.body.document["n"]
 			?.decodeLong(message)
@@ -241,19 +275,19 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.filter.filter()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("delete", name)
-					writeString($$"$db", database.name)
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("delete", name)
+				writeString($$"$db", database.name)
 
-					command.writeTo(this)
-				}
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
 	override suspend fun deleteMany(options: DeleteManyOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit) {
@@ -264,19 +298,19 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.filter.filter()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("delete", name)
-					writeString($$"$db", database.name)
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("delete", name)
+				writeString($$"$db", database.name)
 
-					command.writeTo(this)
-				}
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
 	override fun find(): MultiplatformMongoIterable<Document> =
@@ -284,7 +318,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			collection = this,
 			options = {},
 			filter = {},
-			type = type,
+			outputType = type,
 			isDefault = true,
 		)
 
@@ -293,7 +327,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			collection = this,
 			options = options,
 			filter = filter,
-			type = type,
+			outputType = type,
 			isDefault = false,
 		)
 
@@ -306,18 +340,18 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("update", name)
-					writeString($$"$db", database.name)
-					command.writeTo(this)
-				}
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("update", name)
+				writeString($$"$db", database.name)
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -333,18 +367,18 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("update", name)
-					writeString($$"$db", database.name)
-					command.writeTo(this)
-				}
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("update", name)
+				writeString($$"$db", database.name)
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -360,18 +394,18 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("update", name)
-					writeString($$"$db", database.name)
-					command.writeTo(this)
-				}
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("update", name)
+				writeString($$"$db", database.name)
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -388,18 +422,18 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.filter.filter()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("update", name)
-					writeString($$"$db", database.name)
-					command.writeTo(this)
-				}
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("update", name)
+				writeString($$"$db", database.name)
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
 	override suspend fun repsertOne(options: ReplaceOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, document: Document) {
@@ -412,18 +446,18 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.filter.filter()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("update", name)
-					writeString($$"$db", database.name)
-					command.writeTo(this)
-				}
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("update", name)
+				writeString($$"$db", database.name)
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
 	override suspend fun findOneAndUpdate(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateQuery<Document>.() -> Unit): Document? {
@@ -440,25 +474,25 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.operations()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeInt32("bulkWrite", 1)
-					writeString($$"$db", "admin") // Hard-coded, mandatory
+		val request = database.client.createDriverMessage {
+			document {
+				writeInt32("bulkWrite", 1)
+				writeString($$"$db", "admin") // Hard-coded, mandatory
 
-					writeArray("nsInfo") {
-						writeDocument {
-							writeString("ns", fullyQualifiedName)
-						}
+				writeArray("nsInfo") {
+					writeDocument {
+						writeString("ns", fullyQualifiedName)
 					}
-
-					command.writeTo(this)
 				}
-			}
-		)
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+				command.writeTo(this)
+			}
+		}
+
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
 	override suspend fun updateManyWithPipeline(options: UpdateOptions<Document>.() -> Unit, filter: FilterQuery<Document>.() -> Unit, update: UpdateWithPipelineQuery<Document>.() -> Unit): UpdateOperations.UpdateResult {
@@ -470,18 +504,18 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("update", name)
-					writeString($$"$db", database.name)
-					command.writeTo(this)
-				}
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("update", name)
+				writeString($$"$db", database.name)
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -497,18 +531,18 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("update", name)
-					writeString($$"$db", database.name)
-					command.writeTo(this)
-				}
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("update", name)
+				writeString($$"$db", database.name)
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -524,19 +558,19 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			this.update.update()
 		}
 
-		val message = database.client.sendSingle(
-			database.client.createDriverMessage {
-				document {
-					writeString("update", name)
-					writeString($$"$db", database.name)
-					command.writeTo(this)
-				}
+		val request = database.client.createDriverMessage {
+			document {
+				writeString("update", name)
+				writeString($$"$db", database.name)
+				command.writeTo(this)
 			}
-		)
+		}
 
-		message as Message.OpMsg
-		checkNoSyntaxErrors(message.body.document, command, this)
-		check(message.body.document["writeErrors"] == null) { "There were write errors: ${message.body.document["writeErrors"]}" }
+		val message = database.client.sendSingle(request)
+
+		checkOpMsg(message, request, command, this)
+		checkNoSyntaxErrors(message.body.document, request, command, this)
+		checkNoWriteErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
 
@@ -594,6 +628,35 @@ private data object MultiplatformUnacknowledgedUpdateResult : MultiplatformMongo
 
 	override fun toString(): String =
 		"UpdateResult(acknowledged=false)"
+}
+
+internal data class MultiplatformCollectionInfo(
+	private val doc: BsonDocument,
+) : CollectionInfo {
+
+	override val name: String
+		get() = doc["name"]?.decodeString()
+			?: throw NullPointerException("Missing field 'name' in $doc")
+
+	override val type: CollectionInfo.Type
+		get() = doc["type"]?.decodeString()?.let { type -> CollectionInfo.Type.entries.firstOrNull { it.bsonName == type } }
+			?: throw NullPointerException("Missing field 'type' in $doc")
+
+	@OptIn(LowLevelApi::class)
+	override val options: BsonDocument
+		get() = doc["options"]?.decodeDocument() ?: doc.factory.buildDocument { }
+
+	override val readOnly: Boolean?
+		get() = doc["info"]?.decodeDocument()?.get("readOnly")?.decodeBoolean()
+
+	override val uuid: Uuid?
+		get() = doc["info"]?.decodeDocument()?.get("uuid")?.decode<Uuid>()
+
+	override val idIndex: opensavvy.ktmongo.bson.BsonDocument?
+		get() = doc["idIndex"]?.decodeDocument()
+
+	override fun toString(): String =
+		doc.toString()
 }
 
 private fun BsonValue.decodeLong(message: Any?): Long = when (this.type) {

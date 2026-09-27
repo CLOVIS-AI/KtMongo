@@ -58,6 +58,8 @@ fun OfficialMongoWriteException.toKtMongo(
 
 	return MongoWriteException(
 		server = serverAddress.toKtMongo(),
+		response = null,
+		request = null,
 		command = command,
 		errors = listOf(errorData),
 		namespace = namespace,
@@ -72,6 +74,8 @@ fun OfficialMongoBulkWriteException.toKtMongo(
 ): MongoWriteException {
 	return MongoWriteException(
 		server = serverAddress.toKtMongo(),
+		response = null,
+		request = null,
 		command = command,
 		errors = writeErrors.map {
 			WriteErrorDataImpl(
@@ -94,7 +98,8 @@ fun OfficialMongoCommandException.toKtMongo(
 		errorMessage = errorMessage,
 		code = errorCode,
 		codeName = errorCodeName,
-		fullResponse = factory.readDocument(response),
+		response = factory.readDocument(response),
+		request = null,
 		server = serverAddress.toKtMongo(),
 		command = command,
 		namespace = namespace,

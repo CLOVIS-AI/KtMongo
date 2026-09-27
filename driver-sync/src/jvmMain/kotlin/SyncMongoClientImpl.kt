@@ -20,16 +20,37 @@
 package opensavvy.ktmongo.sync
 
 import com.mongodb.kotlin.client.MongoClient
+import opensavvy.ktmongo.bson.official.BsonFactory
+import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 
 private class SyncMongoClientImpl(
 	private val inner: MongoClient,
+	override val factory: BsonFactory,
+	override val objectIdGenerator: ObjectIdGenerator,
+	override val propertyNameStrategy: PropertyNameStrategy,
 ) : SyncMongoClient {
 
 	override fun asOfficial(): MongoClient =
 		inner
 
-	override fun database(name: String): SyncMongoDatabase =
-		inner.getDatabase(name).asKtMongo()
+	@OptIn(ExperimentalAtomicApi::class)
+	override val context: BsonContext by lazy {
+		BsonContext(factory, objectIdGenerator, propertyNameStrategy)
+	}
+
+	override fun database(
+		name: String,
+		factory: opensavvy.ktmongo.bson.BsonFactory,
+		objectIdGenerator: ObjectIdGenerator,
+		propertyNameStrategy: PropertyNameStrategy,
+	): SyncMongoDatabase {
+		require(factory is BsonFactory) { "The client $this only supports factories of ${BsonFactory::class}, but ${factory::class} was provided: $factory" }
+		return inner.getDatabase(name).asKtMongo(factory, propertyNameStrategy, objectIdGenerator)
+	}
 
 	override fun close() {
 		inner.close()
@@ -59,8 +80,11 @@ private class SyncMongoClientImpl(
  */
 fun SyncMongoClient(
 	connectionString: String = "mongodb://localhost:27017",
-): SyncMongoClient =
-	SyncMongoClientImpl(MongoClient.create(connectionString))
+	factory: BsonFactory? = null,
+	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
+	propertyNameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+): SyncMongoClient = MongoClient.create(connectionString)
+	.asKtMongo(factory, objectIdGenerator, propertyNameStrategy)
 
 /**
  * Instantiates a KtMongo [SyncMongoClient] using an existing client from the official Kotlin driver.
@@ -83,5 +107,14 @@ fun SyncMongoClient(
  * }
  * ```
  */
-fun MongoClient.asKtMongo(): SyncMongoClient =
-	SyncMongoClientImpl(this)
+fun MongoClient.asKtMongo(
+	factory: BsonFactory? = null,
+	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
+	propertyNameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+): SyncMongoClient =
+	SyncMongoClientImpl(
+		inner = this,
+		factory = factory ?: BsonFactory(this.codecRegistry),
+		objectIdGenerator = objectIdGenerator,
+		propertyNameStrategy = propertyNameStrategy,
+	)

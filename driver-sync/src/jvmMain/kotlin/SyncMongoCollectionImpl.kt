@@ -21,8 +21,12 @@ package opensavvy.ktmongo.sync
 
 import com.mongodb.client.model.DeleteOptions
 import com.mongodb.client.model.FindOneAndUpdateOptions
+import com.mongodb.kotlin.client.ListCollectionNamesIterable
+import com.mongodb.kotlin.client.ListCollectionsIterable
 import com.mongodb.kotlin.client.MongoCollection
 import com.mongodb.kotlin.client.MongoDatabase
+import opensavvy.ktmongo.bson.decode
+import opensavvy.ktmongo.bson.official.BsonDocument
 import opensavvy.ktmongo.bson.official.BsonFactory
 import opensavvy.ktmongo.bson.official.BsonValue
 import opensavvy.ktmongo.bson.official.types.Jvm
@@ -31,10 +35,7 @@ import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
 import opensavvy.ktmongo.dsl.command.*
-import opensavvy.ktmongo.dsl.options.ArrayFiltersOption
-import opensavvy.ktmongo.dsl.options.HasWriteConcern
-import opensavvy.ktmongo.dsl.options.WriteConcernOption
-import opensavvy.ktmongo.dsl.options.option
+import opensavvy.ktmongo.dsl.options.*
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
@@ -50,6 +51,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
+import kotlin.uuid.Uuid
 import com.mongodb.client.model.ReplaceOptions as MongoReplaceOptions
 import com.mongodb.client.model.UpdateOptions as MongoUpdateOptions
 
@@ -225,6 +227,36 @@ private class SyncMongoCollectionImpl<Document : Any>(
 
 		innerDatabase.withWriteConcern(model.options)
 			.createCollection(name, model.options.toJava())
+	}
+
+	@OptIn(LowLevelApi::class)
+	override fun infos(options: ListCollectionsOptions.() -> Unit): CollectionInfo? {
+		requireNotNull(innerDatabase) { "Due to limitations of the official Kotlin driver, this method can only be called when the collection was instantiated from a KtMongo database (${opensavvy.ktmongo.sync.api.MongoDatabase::class.qualifiedName}), but this collection was created by calling asKtMongo() on a database from the official driver (${MongoDatabase::class.qualifiedName})" }
+
+		val model = ListCollections(context).apply {
+			this.options.options()
+		}
+
+		if (model.options.option<NameOnlyOption>()?.only == true) {
+			return innerDatabase.listCollectionNames()
+				.filter(factory.buildDocument { writeString("name", name) }.raw)
+				.setNotNull(model.options.option<AuthorizedCollectionsOption>()?.onlyAuthorized, ListCollectionNamesIterable::authorizedCollections)
+				.setNotNull(model.options.readComment(), ListCollectionNamesIterable::comment)
+				.batchSize(1)
+				.firstOrNull()
+				?.let {
+					SyncCollectionInfoNameOnly(it, factory)
+				}
+		} else {
+			return innerDatabase.listCollections()
+				.filter(factory.buildDocument { writeString("name", name) }.raw)
+				.setNotNull(model.options.readComment(), ListCollectionsIterable<org.bson.Document>::comment)
+				.batchSize(1)
+				.firstOrNull()
+				?.let {
+					SyncCollectionInfo(factory.readDocument(it.toBsonDocument()))
+				}
+		}
 	}
 
 	@OptIn(LowLevelApi::class)
@@ -515,6 +547,57 @@ private class CoroutineUpdateResult(
 	override fun toString(): String =
 		if (acknowledged) "UpdateResult(acknowledged=true, matchedCount=$matchedCount, modifiedCount=$modifiedCount, upsertedCount=$upsertedCount, upsertedId=$upsertedId)"
 		else "UpdateResult(acknowledged=false)"
+}
+
+private class SyncCollectionInfo(
+	private val doc: BsonDocument,
+) : CollectionInfo {
+
+	override val name: String
+		get() = doc["name"]?.decodeString()
+			?: throw NullPointerException("Missing field 'name' in $doc")
+
+	override val type: CollectionInfo.Type
+		get() = doc["type"]?.decodeString()?.let { type -> CollectionInfo.Type.entries.firstOrNull { it.bsonName == type } }
+			?: throw NullPointerException("Missing field 'type' in $doc")
+
+	@OptIn(LowLevelApi::class)
+	override val options: BsonDocument
+		get() = doc["options"]?.decodeDocument() ?: doc.factory.buildDocument { }
+
+	override val readOnly: Boolean?
+		get() = doc["info"]?.decodeDocument()?.get("readOnly")?.decodeBoolean()
+
+	override val uuid: Uuid?
+		get() = doc["info"]?.decodeDocument()?.get("uuid")?.decode<Uuid>()
+
+	override val idIndex: BsonDocument?
+		get() = doc["idIndex"]?.decodeDocument()
+
+	override fun toString(): String =
+		doc.toString()
+}
+
+private class SyncCollectionInfoNameOnly(
+	override val name: String,
+	private val factory: BsonFactory,
+) : CollectionInfo {
+	override val type: CollectionInfo.Type
+		get() = throw UnsupportedOperationException("The official driver does not return this field when 'nameOnly' is specified, even though the database does")
+
+	@OptIn(LowLevelApi::class)
+	override val options: BsonDocument
+		get() = factory.buildDocument { }
+
+	override val readOnly: Boolean?
+		get() = null
+
+	override val uuid: Uuid?
+		get() = null
+
+	override val idIndex: BsonDocument?
+		get() = null
+
 }
 
 /**

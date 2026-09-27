@@ -241,6 +241,9 @@ private class CoroutineFilteredMongoCollectionImpl<Document : Any>(
 			update = update,
 		)
 
+	override suspend fun infos(options: ListCollectionsOptions.() -> Unit): CollectionInfo? =
+		upstream.infos(options)
+
 	@OptIn(LowLevelApi::class)
 	override fun toString(): String {
 		val filter = FilterQuery<Document>(context)

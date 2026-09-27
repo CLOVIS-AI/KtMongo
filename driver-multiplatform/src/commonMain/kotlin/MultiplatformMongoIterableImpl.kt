@@ -23,34 +23,102 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
+import opensavvy.ktmongo.dsl.command.Aggregate
+import opensavvy.ktmongo.dsl.command.Command
 import opensavvy.ktmongo.dsl.command.Find
 import opensavvy.ktmongo.dsl.command.FindOptions
+import opensavvy.ktmongo.dsl.command.errors.MongoDriverException
 import opensavvy.ktmongo.dsl.options.CommentOption
 import opensavvy.ktmongo.dsl.options.MaxTimeOption
 import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
-import opensavvy.ktmongo.multiplatform.wire.Message
 import kotlin.reflect.KType
 
-internal class MultiplatformMongoIterableFindImpl<Document : Any>(
-	private val collection: MultiplatformMongoCollection<*>,
-	private val options: FindOptions<Document>.() -> Unit,
-	private val filter: FilterQuery<Document>.() -> Unit,
-	private val type: KType,
-	private val isDefault: Boolean,
+internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
+	protected val collection: MultiplatformMongoCollection<*>,
+	protected val outputType: KType,
 ) : MultiplatformMongoIterable<Document> {
 
+	final override suspend fun first(): Document =
+		firstOrNull() ?: throw NoSuchElementException("No element found")
+
+	protected abstract val command: Command
+	protected abstract fun createFirstBatch(): DriverMessage
+	protected abstract fun createNextBatch(cursorId: Long): DriverMessage
+
 	@OptIn(LowLevelApi::class)
-	private val model by lazy(LazyThreadSafetyMode.NONE) {
+	final override suspend fun forEach(action: suspend (Document) -> Unit) {
+		val cursorId = run {
+			// Within a 'run' block to free memory of the first batch when the next ones are being computed
+			val request = createFirstBatch()
+			val firstBatch = collection.database.client.sendSingle(request)
+			checkOpMsg(firstBatch, request, command, collection)
+			checkNoSyntaxErrors(firstBatch.body.document, request, command, collection)
+
+			val cursor = firstBatch.body.document["cursor"]?.decodeDocument()
+
+			val cursorId = cursor?.get("id")?.decodeInt64()
+				?: throw MongoDriverException(
+					message = "No cursor ID found in the database response",
+					response = firstBatch.body.document,
+					request = request.message.body.document,
+					server = collection.database.client.serverAddress,
+					command = command,
+					namespace = collection.fullyQualifiedName,
+				)
+
+			val batch = cursor["firstBatch"]?.decodeArray()?.asList().orEmpty()
+
+			if (batch.isEmpty())
+				return
+
+			for (item in batch) {
+				action(item.decode(outputType))
+			}
+
+			cursorId
+		}
+
+		if (cursorId == 0L) {
+			// MongoDB returns a cursor ID of 0 if there is no further information to read
+			return
+		}
+
+		while (true) {
+			val request = createNextBatch(cursorId)
+			val nextBatch = collection.database.client.sendSingle(request)
+			checkOpMsg(nextBatch, request, command, collection)
+			checkNoSyntaxErrors(nextBatch.body.document, request, command, collection)
+
+			TODO("Received batch: $nextBatch")
+		}
+	}
+
+	final override fun asFlow(): Flow<Document> = flow {
+		forEach {
+			emit(it)
+		}
+	}
+
+	// Force children to override
+	abstract override fun toString(): String
+}
+
+internal class MultiplatformMongoIterableFindImpl<Document : Any>(
+	collection: MultiplatformMongoCollection<*>,
+	private val options: FindOptions<Document>.() -> Unit,
+	private val filter: FilterQuery<Document>.() -> Unit,
+	outputType: KType,
+	private val isDefault: Boolean,
+) : AbstractMultiplatformMongoIterable<Document>(collection, outputType) {
+
+	override val command by lazy {
 		Find<Document>(collection.context).apply {
 			this.options.options()
 			this.filter.filter()
 		}
 	}
-
-	override suspend fun first(): Document = firstOrNull()
-		?: throw NoSuchElementException("No element found")
 
 	override suspend fun firstOrNull(): Document? =
 		MultiplatformMongoIterableFindImpl(
@@ -60,130 +128,80 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 				limit(1)
 			},
 			filter = filter,
-			type = type,
+			outputType = outputType,
 			isDefault = isDefault
 		).asFlow()
 			.firstOrNull()
 
 	@OptIn(LowLevelApi::class)
-	override suspend fun forEach(action: suspend (Document) -> Unit) {
-		val firstBatch = collection.database.client.sendSingle(
-			collection.database.client.createDriverMessage {
-				document {
-					writeString("find", collection.name)
-					writeString($$"$db", collection.database.name)
+	override fun createFirstBatch(): DriverMessage = collection.database.client.createDriverMessage {
+		document {
+			writeString("find", collection.name)
+			writeString($$"$db", collection.database.name)
 
-					model.writeTo(this)
-				}
-			}
-		)
-
-		firstBatch as Message.OpMsg
-		check(firstBatch.body.document["ok"]?.decodeDouble() == 1.0) { "Response is not OK: $firstBatch" }
-
-		val cursor = firstBatch.body.document["cursor"]?.decodeDocument()
-
-		val cursorId = cursor?.get("id")?.decodeInt64()
-			?: error("No cursor ID found in $firstBatch")
-
-		val batch = cursor["firstBatch"]?.decodeArray()?.asList().orEmpty()
-
-		if (batch.isEmpty())
-			return
-
-		for (item in batch) {
-			action(item.decode(type))
-		}
-
-		if (cursorId == 0L)
-			return
-
-		while (true) {
-			val nextBatch = collection.database.client.sendSingle(
-				collection.database.client.createDriverMessage {
-					document {
-						writeInt64("getMore", cursorId)
-						writeString("collection", collection.name)
-						writeString($$"$db", collection.database.name)
-
-						// TODO re-specify the batch size option
-
-						model.options.option<MaxTimeOption>()?.writeTo(this)
-						model.options.option<CommentOption>()?.writeTo(this)
-					}
-				}
-			)
-
-			TODO("Received batch: $nextBatch")
+			command.writeTo(this)
 		}
 	}
 
-	override fun asFlow(): Flow<Document> = flow {
-		forEach {
-			emit(it)
+	@OptIn(LowLevelApi::class)
+	override fun createNextBatch(cursorId: Long): DriverMessage = collection.database.client.createDriverMessage {
+		document {
+			writeInt64("getMore", cursorId)
+			writeString("collection", collection.name)
+			writeString($$"$db", collection.database.name)
+
+			// TODO re-specify the batch size option
+
+			command.options.option<MaxTimeOption>()?.writeTo(this)
+			command.options.option<CommentOption>()?.writeTo(this)
 		}
 	}
 
 	override fun toString(): String =
-		"$collection.find(${if (isDefault) "{}" else model.toString()})"
+		"$collection.find(${if (isDefault) "{}" else command.toString()})"
 }
 
 @LowLevelApi
 internal class MultiplatformMongoIterableAggregateImpl<Document : Any>(
-	private val collection: MultiplatformMongoCollection<*>,
+	collection: MultiplatformMongoCollection<*>,
 	private val chain: PipelineChainLink,
-	private val type: KType,
-) : MultiplatformMongoIterable<Document> {
+	outputType: KType,
+) : AbstractMultiplatformMongoIterable<Document>(collection, outputType) {
 
-	override suspend fun first(): Document = firstOrNull()
-		?: throw NoSuchElementException("No element found")
+	override val command: Command by lazy {
+		Aggregate<Document>(
+			context = collection.context,
+			chain = chain,
+			outputType = outputType,
+		)
+	}
 
 	override suspend fun firstOrNull(): Document? =
 		MultiplatformMongoIterableAggregateImpl<Document>(
 			collection = collection,
 			chain = chain.withStage(LimitOneStage(collection.context)),
-			type = type,
+			outputType = outputType,
 		).asFlow()
 			.firstOrNull()
 
-	@OptIn(LowLevelApi::class)
-	override suspend fun forEach(action: suspend (Document) -> Unit) {
-		val firstBatch = collection.database.client.sendSingle(
-			collection.database.client.createDriverMessage {
-				document {
-					writeString("aggregate", collection.name)
-					writeString($$"$db", collection.database.name)
-					writeArray("pipeline") {
-						chain.writeTo(this)
-					}
-					writeDocument("cursor") {}
+	override fun createFirstBatch(): DriverMessage = collection.database.client.createDriverMessage {
+		document {
+			writeString("aggregate", collection.name)
+			writeString($$"$db", collection.database.name)
 
-					// TODO add options
-				}
-			}
-		)
+			command.writeTo(this)
 
-		firstBatch as Message.OpMsg
-		check(firstBatch.body.document["ok"]?.decodeDouble() == 1.0)
-
-		val cursor = firstBatch.body.document["cursor"]?.decodeDocument()
-
-		val cursorId = cursor?.get("id")?.decodeInt64()
-			?: error("No cursor ID found in $firstBatch")
-
-		val batch = cursor["firstBatch"]?.decodeArray()?.asList().orEmpty()
-
-		if (batch.isEmpty())
-			return
-
-		for (item in batch) {
-			action(item.decode(type))
+			// TODO add options
 		}
 	}
 
-	override fun asFlow(): Flow<Document> = flow {
-		forEach {
-			emit(it)
+	override fun createNextBatch(cursorId: Long): DriverMessage = collection.database.client.createDriverMessage {
+		document {
+			writeInt64("getMore", cursorId)
+			writeString("collection", collection.name)
+			writeString($$"$db", collection.database.name)
+
+			// TODO add options
 		}
 	}
 

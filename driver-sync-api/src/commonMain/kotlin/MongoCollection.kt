@@ -79,6 +79,7 @@ import kotlin.reflect.typeOf
  * - [Size limits](https://www.mongodb.com/docs/manual/reference/limits/#bson-documents)
  */
 interface MongoCollection<Document : Any> : ObjectIdGenerator,
+	BaseOperations,
 	AggregationOperations<Document>,
 	ClientSideViewOperations<Document>,
 	CollectionOperations<Document>,
@@ -120,14 +121,14 @@ interface MongoCollection<Document : Any> : ObjectIdGenerator,
 	 *
 	 * For more information, see [BsonFactory].
 	 */
-	val factory: BsonFactory
+	override val factory: BsonFactory
 
 	/**
 	 * The strategy used to convert property names to BSON document keys.
 	 *
 	 * For more information, see [PropertyNameStrategy].
 	 */
-	val propertyNameStrategy: PropertyNameStrategy
+	override val propertyNameStrategy: PropertyNameStrategy
 
 	/**
 	 * The algorithm used to generate new [ObjectId] instances for this collection.
@@ -136,7 +137,7 @@ interface MongoCollection<Document : Any> : ObjectIdGenerator,
 	 *
 	 * You can also directly call [newId] on the collection itself.
 	 */
-	val objectIdGenerator: ObjectIdGenerator
+	override val objectIdGenerator: ObjectIdGenerator
 
 	override fun newId(): ObjectId =
 		objectIdGenerator.newId()

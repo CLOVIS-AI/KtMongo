@@ -20,6 +20,8 @@
 package opensavvy.ktmongo.coroutines
 
 import opensavvy.ktmongo.api.MongoClient
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
 
 /**
  * Entry-point to the KtMongo Coroutines driver.
@@ -67,5 +69,10 @@ interface CoroutineMongoClient : MongoClient {
 	 */
 	fun asOfficial(): com.mongodb.kotlin.client.coroutine.MongoClient
 
-	override fun database(name: String): CoroutineMongoDatabase
+	override fun database(
+		name: String,
+		factory: opensavvy.ktmongo.bson.BsonFactory,
+		objectIdGenerator: ObjectIdGenerator,
+		propertyNameStrategy: PropertyNameStrategy,
+	): CoroutineMongoDatabase
 }

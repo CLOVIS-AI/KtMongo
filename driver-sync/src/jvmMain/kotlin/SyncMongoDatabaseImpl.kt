@@ -20,22 +20,36 @@
 package opensavvy.ktmongo.sync
 
 import com.mongodb.kotlin.client.MongoDatabase
+import opensavvy.ktmongo.bson.official.BsonFactory
+import opensavvy.ktmongo.bson.official.types.Jvm
+import opensavvy.ktmongo.bson.types.ObjectIdGenerator
+import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 private class SyncMongoDatabaseImpl(
 	private val inner: MongoDatabase,
+	override val factory: BsonFactory,
+	override val objectIdGenerator: ObjectIdGenerator,
+	override val propertyNameStrategy: PropertyNameStrategy,
 ) : SyncMongoDatabase {
 
 	override fun asOfficial(): MongoDatabase =
 		inner
 
+	@OptIn(ExperimentalAtomicApi::class)
+	override val context: BsonContext by lazy {
+		BsonContext(factory, objectIdGenerator, propertyNameStrategy)
+	}
+
 	@LowLevelApi
 	@Suppress("UNCHECKED_CAST")
 	override fun <Document : Any> collection(name: String, type: KType): SyncMongoCollection<Document> =
 		inner.getCollection(name, (type.classifier as KClass<Document>).java)
-			.asKtMongo(type = type, database = inner)
+			.asKtMongo(type = type, database = inner, factory = factory, propertyNameStrategy = propertyNameStrategy, objectIdGenerator = objectIdGenerator)
 
 	override val name: String
 		get() = inner.name
@@ -63,7 +77,14 @@ private class SyncMongoDatabaseImpl(
  * }
  * ```
  */
-fun MongoDatabase.asKtMongo(): SyncMongoDatabase =
+fun MongoDatabase.asKtMongo(
+	factory: BsonFactory = BsonFactory(this.codecRegistry),
+	propertyNameStrategy: PropertyNameStrategy = PropertyNameStrategy.Default,
+	objectIdGenerator: ObjectIdGenerator = ObjectIdGenerator.Jvm(),
+): SyncMongoDatabase =
 	SyncMongoDatabaseImpl(
 		inner = this,
+		factory = factory,
+		propertyNameStrategy = propertyNameStrategy,
+		objectIdGenerator = objectIdGenerator,
 	)
