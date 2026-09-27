@@ -84,6 +84,8 @@ val BsonPathTest by preparedSuite {
 		test("Parse a simple field with dot notation") {
 			check(BsonPath("$.book").toString() == "$.book")
 			check(BsonPath("$.book") == BsonPath["book"])
+
+			check(BsonPath("$.expireAfterSeconds").toString() == "$.expireAfterSeconds")
 		}
 
 		test("Parse a simple field with bracket notation") {

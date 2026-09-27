@@ -17,7 +17,6 @@
 package opensavvy.ktmongo.bson
 
 import opensavvy.ktmongo.bson.BsonPath.PathOrSelector
-import opensavvy.ktmongo.bson.BsonPath.Root.findIn
 import opensavvy.ktmongo.bson.BsonPath.Selector
 import opensavvy.ktmongo.dsl.LowLevelApi
 import org.intellij.lang.annotations.Language
@@ -1608,7 +1607,7 @@ private fun List<String>.getIntNotEmpty(index: Int, default: Int): Int {
 }
 
 private inline fun Char.isAlpha() =
-	this.code in 0x41..0x51 || this.code in 0x61..0x7A
+	this.code in 0x41..0x5a || this.code in 0x61..0x7A
 
 private inline fun Char.isDigit() =
 	this.code in 0x30..0x39
