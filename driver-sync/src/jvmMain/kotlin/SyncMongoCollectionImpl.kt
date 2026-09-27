@@ -549,7 +549,7 @@ private class CoroutineUpdateResult(
 		else "UpdateResult(acknowledged=false)"
 }
 
-private class SyncCollectionInfo(
+internal class SyncCollectionInfo(
 	private val doc: BsonDocument,
 ) : CollectionInfo {
 
@@ -578,7 +578,7 @@ private class SyncCollectionInfo(
 		doc.toString()
 }
 
-private class SyncCollectionInfoNameOnly(
+internal class SyncCollectionInfoNameOnly(
 	override val name: String,
 	private val factory: BsonFactory,
 ) : CollectionInfo {

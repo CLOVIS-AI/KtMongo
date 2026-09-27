@@ -16,17 +16,16 @@
 
 package opensavvy.ktmongo.multiplatform
 
-import opensavvy.ktmongo.api.MongoIterable
-
 /**
- * Streaming-capable iterable cursor to read data from the database.
- *
- * ### External resources
- *
- * - [Official documentation](https://www.mongodb.com/docs/manual/core/cursors/)
+ * Common interface for [MultiplatformMongoDatabaseImpl] and [MultiplatformMongoCollectionImpl].
  */
-interface MultiplatformMongoIterable<Document : Any> : MongoIterable<Document> {
+internal sealed interface MultiplatformNamespace {
 
-	override fun <Out : Any> map(transform: suspend (Document) -> Out): MultiplatformMongoIterable<Out> =
-		MultiplatformMongoIterableMappingImpl(this, transform)
+	val client: MultiplatformMongoClient
+
+	/**
+	 * Either [MultiplatformMongoDatabaseImpl.name] or [MultiplatformMongoCollectionImpl.fullyQualifiedName].
+	 */
+	val namespace: String
+
 }

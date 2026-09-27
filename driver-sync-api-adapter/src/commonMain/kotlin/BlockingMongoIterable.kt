@@ -32,6 +32,9 @@ class BlockingMongoIterable<Document : Any>(
 		inner.firstOrNull()
 	}
 
+	override fun <Out : Any> map(transform: suspend (Document) -> Out): MongoIterable<Out> =
+		BlockingMongoIterableMappingImpl(this, transform)
+
 	override suspend fun forEach(action: suspend (Document) -> Unit) =
 		wrapBlocking {
 			asFlow().collect(action)
@@ -43,4 +46,27 @@ class BlockingMongoIterable<Document : Any>(
 
 	override fun toString(): String =
 		inner.toString()
+}
+
+private class BlockingMongoIterableMappingImpl<In : Any, Out : Any>(
+	private val upstream: MongoIterable<In>,
+	private val transform: suspend (In) -> Out,
+) : MongoIterable<Out> {
+	override suspend fun first(): Out =
+		transform(upstream.first())
+
+	override suspend fun firstOrNull(): Out? =
+		upstream.firstOrNull()?.let { transform(it) }
+
+	override suspend fun forEach(action: suspend (Out) -> Unit) =
+		upstream.forEach { action(transform(it)) }
+
+	override fun asFlow(): Flow<Out> =
+		upstream.asFlow().map(transform)
+
+	override fun <NewOut : Any> map(transform: suspend (Out) -> NewOut): MongoIterable<NewOut> =
+		BlockingMongoIterableMappingImpl(this, transform)
+
+	override fun toString(): String =
+		upstream.toString()
 }

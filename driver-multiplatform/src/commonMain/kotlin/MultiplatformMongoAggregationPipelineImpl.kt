@@ -36,7 +36,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 
 internal class MultiplatformMongoAggregationPipelineImpl<Document : Any> @OptIn(LowLevelApi::class) constructor(
-	private val collection: MultiplatformMongoCollection<*>,
+	private val collection: MultiplatformMongoCollectionImpl<*>,
 	chain: PipelineChainLink,
 ) : AbstractPipeline<Document>(collection.context, chain),
 	AggregationPipeline<Document>,

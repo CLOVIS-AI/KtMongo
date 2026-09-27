@@ -19,14 +19,13 @@ package opensavvy.ktmongo.multiplatform
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
-import opensavvy.ktmongo.dsl.command.Aggregate
-import opensavvy.ktmongo.dsl.command.Command
-import opensavvy.ktmongo.dsl.command.Find
-import opensavvy.ktmongo.dsl.command.FindOptions
+import opensavvy.ktmongo.dsl.command.*
 import opensavvy.ktmongo.dsl.command.errors.MongoDriverException
 import opensavvy.ktmongo.dsl.options.CommentOption
 import opensavvy.ktmongo.dsl.options.MaxTimeOption
@@ -34,9 +33,30 @@ import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
+
+internal class MultiplatformMongoIterableMappingImpl<In : Any, Out : Any>(
+	private val upstream: MultiplatformMongoIterable<In>,
+	private val transform: suspend (In) -> Out,
+) : MultiplatformMongoIterable<Out> {
+	override suspend fun first(): Out =
+		transform(upstream.first())
+
+	override suspend fun firstOrNull(): Out? =
+		upstream.firstOrNull()?.let { transform(it) }
+
+	override suspend fun forEach(action: suspend (Out) -> Unit) =
+		upstream.forEach { action(transform(it)) }
+
+	override fun asFlow(): Flow<Out> =
+		upstream.asFlow().map(transform)
+
+	override fun toString(): String =
+		upstream.toString()
+}
 
 internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
-	protected val collection: MultiplatformMongoCollection<*>,
+	protected val namespace: MultiplatformNamespace,
 	protected val outputType: KType,
 ) : MultiplatformMongoIterable<Document> {
 
@@ -52,9 +72,9 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 		val cursorId = run {
 			// Within a 'run' block to free memory of the first batch when the next ones are being computed
 			val request = createFirstBatch()
-			val firstBatch = collection.database.client.sendSingle(request)
-			checkOpMsg(firstBatch, request, command, collection)
-			checkNoSyntaxErrors(firstBatch.bson, request, command, collection)
+			val firstBatch = namespace.client.sendSingle(request)
+			checkOpMsg(firstBatch, request, command, namespace)
+			checkNoSyntaxErrors(firstBatch.bson, request, command, namespace)
 
 			val cursor = firstBatch.bson["cursor"]?.decodeDocument()
 
@@ -63,9 +83,9 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 					message = "No cursor ID found in the database response",
 					response = firstBatch.bson,
 					request = request.message.bson,
-					server = collection.database.client.serverAddress,
+					server = namespace.client.serverAddress,
 					command = command,
-					namespace = collection.fullyQualifiedName,
+					namespace = namespace.namespace,
 				)
 
 			val batch = cursor["firstBatch"]?.decodeArray()?.asList().orEmpty()
@@ -87,9 +107,9 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 
 		while (true) {
 			val request = createNextBatch(cursorId)
-			val nextBatch = collection.database.client.sendSingle(request)
-			checkOpMsg(nextBatch, request, command, collection)
-			checkNoSyntaxErrors(nextBatch.bson, request, command, collection)
+			val nextBatch = namespace.client.sendSingle(request)
+			checkOpMsg(nextBatch, request, command, namespace)
+			checkNoSyntaxErrors(nextBatch.bson, request, command, namespace)
 
 			TODO("Received batch: $nextBatch")
 		}
@@ -106,7 +126,7 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 }
 
 internal class MultiplatformMongoIterableFindImpl<Document : Any>(
-	collection: MultiplatformMongoCollection<*>,
+	private val collection: MultiplatformMongoCollectionImpl<*>,
 	private val options: FindOptions<Document>.() -> Unit,
 	private val filter: FilterQuery<Document>.() -> Unit,
 	outputType: KType,
@@ -163,7 +183,7 @@ internal class MultiplatformMongoIterableFindImpl<Document : Any>(
 
 @LowLevelApi
 internal class MultiplatformMongoIterableAggregateImpl<Document : Any>(
-	collection: MultiplatformMongoCollection<*>,
+	private val collection: MultiplatformMongoCollectionImpl<*>,
 	private val chain: PipelineChainLink,
 	outputType: KType,
 ) : AbstractMultiplatformMongoIterable<Document>(collection, outputType) {
@@ -217,4 +237,35 @@ private class LimitOneStage(
 	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeInt64($$"$limit", 1)
 	}
+}
+
+@LowLevelApi
+internal class MultiplatformMongoIterableListCollectionsImpl(
+	private val database: MultiplatformMongoDatabaseImpl,
+	override val command: ListCollections,
+) : AbstractMultiplatformMongoIterable<BsonDocument>(database, typeOf<BsonDocument>()) {
+
+	override fun createFirstBatch(): DriverMessage = database.client.createDriverMessage {
+		document {
+			writeInt32("listCollections", 1)
+			writeString($$"$db", database.name)
+
+			command.writeTo(this)
+		}
+	}
+
+	override fun createNextBatch(cursorId: Long): DriverMessage = database.client.createDriverMessage {
+		document {
+			writeInt64("getMore", cursorId)
+			writeString($$"$db", database.name)
+
+			// TODO add options
+		}
+	}
+
+	override suspend fun firstOrNull(): BsonDocument? =
+		asFlow().firstOrNull()
+
+	override fun toString(): String =
+		"$database.listCollections($command)"
 }

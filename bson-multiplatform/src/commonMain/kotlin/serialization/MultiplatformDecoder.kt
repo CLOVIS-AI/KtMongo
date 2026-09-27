@@ -137,7 +137,7 @@ internal class BsonDecoder(
 		return when (descriptor.kind) {
 			StructureKind.CLASS, StructureKind.OBJECT -> BsonCompositeDecoder(source.decodeDocument())
 			StructureKind.LIST -> BsonCompositeListDecoder(source.decodeArray())
-			else -> TODO()
+			else -> TODO("Unsupported structure kind: ${descriptor.kind} for descriptor $descriptor")
 		}
 	}
 

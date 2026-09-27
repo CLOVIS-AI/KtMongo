@@ -44,8 +44,8 @@ internal fun checkNoWriteErrors(
 	doc: BsonDocument,
 	request: DriverMessage,
 	command: Command,
-	collection: MultiplatformMongoCollection<*>,
-	server: MongoException.ServerAddress = collection.database.client.serverAddress,
+	namespace: MultiplatformNamespace,
+	server: MongoException.ServerAddress = namespace.client.serverAddress,
 ) {
 	val field = doc["writeErrors"]
 		?: return // No errors, nothing to do
@@ -61,7 +61,7 @@ internal fun checkNoWriteErrors(
 		response = doc,
 		request = request.message.bson,
 		command = command,
-		namespace = collection.fullyQualifiedName,
+		namespace = namespace.namespace,
 		errors = errors.map { WriteErrorDataImpl(it) },
 	)
 }
@@ -70,8 +70,8 @@ internal fun checkNoSyntaxErrors(
 	doc: BsonDocument,
 	request: DriverMessage,
 	command: Command,
-	collection: MultiplatformMongoCollection<*>,
-	server: MongoException.ServerAddress = collection.database.client.serverAddress,
+	namespace: MultiplatformNamespace,
+	server: MongoException.ServerAddress = namespace.client.serverAddress,
 ) {
 	if (doc["ok"]?.decodeDouble() == 1.0) {
 		return // No errors, nothing to do
@@ -85,7 +85,7 @@ internal fun checkNoSyntaxErrors(
 		request = request.message.bson,
 		command = command,
 		server = server,
-		namespace = collection.fullyQualifiedName,
+		namespace = namespace.namespace,
 	)
 }
 
@@ -94,8 +94,8 @@ internal fun checkOpMsg(
 	message: Message,
 	request: DriverMessage,
 	command: Command,
-	collection: MultiplatformMongoCollection<*>,
-	server: MongoException.ServerAddress = collection.database.client.serverAddress,
+	namespace: MultiplatformNamespace,
+	server: MongoException.ServerAddress = namespace.client.serverAddress,
 ) {
 	contract { returns() implies (message is Message.OpMsg) }
 
@@ -106,6 +106,6 @@ internal fun checkOpMsg(
 			request = request.message.bson,
 			command = command,
 			server = server,
-			namespace = collection.fullyQualifiedName,
+			namespace = namespace.namespace,
 		)
 }

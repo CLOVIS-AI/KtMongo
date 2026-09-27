@@ -149,4 +149,8 @@ interface MongoIterable<Document : Any> {
 	@Deprecated("Kotlin Sequences are not capable of closing a resource after they are done. Using sequences with a MongoIterable will create memory leaks. Instead, use toList, forEach, stream (Java only) or the coroutines driver's asFlow", ReplaceWith("this.toList().asSequence()"), level = DeprecationLevel.ERROR)
 	fun toSequence(): Sequence<Document> = throw UnsupportedOperationException("Sequences are not supported because they create memory lists. Use lists, streams, flows, or simply forEach instead.")
 
+	/**
+	 * Performs a client-side streaming mapping on the results.
+	 */
+	fun <Out : Any> map(transform: suspend (Document) -> Out): MongoIterable<Out>
 }

@@ -19,6 +19,7 @@
 package opensavvy.ktmongo.tests.api.operations
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.Serializable
 import opensavvy.ktmongo.api.MongoClient
 import opensavvy.ktmongo.bson.BsonType
@@ -30,6 +31,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.CollectionInfo
 import opensavvy.ktmongo.dsl.options.TimeSeriesDsl
 import opensavvy.ktmongo.tests.api.collection
+import opensavvy.ktmongo.tests.api.database
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
 import opensavvy.prepared.suite.assertions.checkThrows
@@ -57,6 +59,7 @@ data class CollectionOperationsAuditLog(
 fun SuiteDsl.verifyCollectionOperations(
 	client: Prepared<MongoClient>,
 ) = suite("Collection operations") {
+	val database by client.database()
 	val collection by client.collection<CollectionOperationsUser>("operation-collection-users")
 
 	test("Drop an empty collection") {
@@ -102,6 +105,33 @@ fun SuiteDsl.verifyCollectionOperations(
 		collection().create { }
 
 		val infos = checkNotNull(collection().infos { nameOnly(true) })
+		check(infos.name == collection().name)
+		try {
+			check(infos.type == CollectionInfo.Type.Collection)
+		} catch (_: UnsupportedOperationException) {
+		} // The official driver doesn't return this field
+		check(infos.options.isEmpty())
+		check(infos.uuid == null)
+		check(infos.readOnly == null)
+		check(infos.idIndex == null)
+	}
+
+	test("Get infos about all collections") {
+		collection().create { }
+
+		val infos = checkNotNull(database().collections().asFlow().firstOrNull { it.name == collection().name })
+		check(infos.name == collection().name)
+		check(infos.type == CollectionInfo.Type.Collection)
+		check(infos.options.isEmpty())
+		check(infos.uuid != null)
+		check(infos.readOnly == false)
+		check(infos.idIndex != null)
+	}
+
+	test("Get infos about all collections with only the name") {
+		collection().create { }
+
+		val infos = checkNotNull(database().collections(options = { nameOnly() }).asFlow().firstOrNull { it.name == collection().name })
 		check(infos.name == collection().name)
 		try {
 			check(infos.type == CollectionInfo.Type.Collection)
