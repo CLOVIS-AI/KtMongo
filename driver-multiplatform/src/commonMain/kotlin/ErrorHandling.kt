@@ -22,6 +22,9 @@ import opensavvy.ktmongo.dsl.command.Command
 import opensavvy.ktmongo.dsl.command.errors.MongoException
 import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
+import opensavvy.ktmongo.multiplatform.wire.Message
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 private class WriteErrorDataImpl(
 	private val doc: BsonDocument,
@@ -78,4 +81,11 @@ internal fun checkNoSyntaxErrors(
 		server = server,
 		namespace = collection.fullyQualifiedName,
 	)
+}
+
+@OptIn(ExperimentalContracts::class)
+internal fun checkOpMsg(message: Message) {
+	contract { returns() implies (message is Message.OpMsg) }
+
+	check(message is Message.OpMsg) { "Expected ${Message.OpMsg::class}, got ${message::class}: $message" }
 }

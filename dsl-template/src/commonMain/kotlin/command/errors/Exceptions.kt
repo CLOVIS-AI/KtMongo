@@ -39,6 +39,27 @@ sealed class MongoException(
 }
 
 /**
+ * Generic exception thrown when the driver has a problem.
+ */
+class MongoDriverException(
+	message: String,
+	val response: BsonDocument?,
+	val server: ServerAddress,
+	val command: Command,
+	val namespace: String,
+	cause: Throwable? = null,
+) : MongoException(
+	message = buildString {
+		appendLine(message)
+		if (response != null)
+			appendLine("\tin $response")
+		appendLine("\tat ${command::class.simpleName} $command")
+		append("\tat $server $namespace")
+	},
+	cause = cause,
+)
+
+/**
  * MongoDB refused to execute a command because it is malformed.
  */
 class MongoSyntaxException(

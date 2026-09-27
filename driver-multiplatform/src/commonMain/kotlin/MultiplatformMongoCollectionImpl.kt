@@ -319,7 +319,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			collection = this,
 			options = {},
 			filter = {},
-			type = type,
+			outputType = type,
 			isDefault = true,
 		)
 
@@ -328,7 +328,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 			collection = this,
 			options = options,
 			filter = filter,
-			type = type,
+			outputType = type,
 			isDefault = false,
 		)
 
