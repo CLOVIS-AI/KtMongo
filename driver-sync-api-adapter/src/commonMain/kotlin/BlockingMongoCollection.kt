@@ -119,6 +119,10 @@ class BlockingMongoCollection<Document : Any>(
 		BlockingUpsertResult(inner.upsertOne(options, filter, update))
 	}
 
+	override suspend fun infos(options: ListCollectionsOptions.() -> Unit): CollectionInfo? = wrapBlocking {
+		inner.infos(options)
+	}
+
 	class BlockingUpdateResult(
 		private val inner: opensavvy.ktmongo.sync.api.operations.UpdateOperations.UpdateResult,
 	) : UpdateOperations.UpdateResult {

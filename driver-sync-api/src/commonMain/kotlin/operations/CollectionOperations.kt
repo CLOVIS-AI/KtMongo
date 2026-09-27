@@ -16,8 +16,10 @@
 
 package opensavvy.ktmongo.sync.api.operations
 
+import opensavvy.ktmongo.dsl.command.CollectionInfo
 import opensavvy.ktmongo.dsl.command.CreateCollectionOptions
 import opensavvy.ktmongo.dsl.command.DropOptions
+import opensavvy.ktmongo.dsl.command.ListCollectionsOptions
 
 /**
  * Interface grouping MongoDB operations relating to collection administration.
@@ -52,6 +54,28 @@ interface CollectionOperations<Document : Any> : BaseOperations {
 	fun create(
 		options: CreateCollectionOptions<Document>.() -> Unit = {},
 	)
+
+	/**
+	 * Returns information about this collection.
+	 *
+	 * ### Example
+	 *
+	 * To get the options that were passed when the collection was [created][create]:
+	 *
+	 * ```kotlin
+	 * database.collection<Log>("logs")
+	 *     .infos()
+	 *     .options
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Protocol documentation](https://www.mongodb.com/docs/manual/reference/command/listcollections)
+	 * - [`mongosh` documentation](https://www.mongodb.com/docs/manual/reference/method/db.getcollectioninfos)
+	 */
+	fun infos(
+		options: ListCollectionsOptions.() -> Unit = {},
+	): CollectionInfo?
 
 	/**
 	 * Removes an entire collection from the database.
