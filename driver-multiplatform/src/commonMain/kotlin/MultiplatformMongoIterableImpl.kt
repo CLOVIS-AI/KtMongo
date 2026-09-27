@@ -51,9 +51,10 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 	final override suspend fun forEach(action: suspend (Document) -> Unit) {
 		val cursorId = run {
 			// Within a 'run' block to free memory of the first batch when the next ones are being computed
-			val firstBatch = collection.database.client.sendSingle(createFirstBatch())
+			val request = createFirstBatch()
+			val firstBatch = collection.database.client.sendSingle(request)
 			checkOpMsg(firstBatch)
-			checkNoSyntaxErrors(firstBatch.body.document, command, collection)
+			checkNoSyntaxErrors(firstBatch.body.document, request, command, collection)
 
 			val cursor = firstBatch.body.document["cursor"]?.decodeDocument()
 
@@ -61,6 +62,7 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 				?: throw MongoDriverException(
 					message = "No cursor ID found in the database response",
 					response = firstBatch.body.document,
+					request = request.message.body.document,
 					server = collection.database.client.serverAddress,
 					command = command,
 					namespace = collection.fullyQualifiedName,
@@ -84,9 +86,10 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 		}
 
 		while (true) {
-			val nextBatch = collection.database.client.sendSingle(createNextBatch(cursorId))
+			val request = createNextBatch(cursorId)
+			val nextBatch = collection.database.client.sendSingle(request)
 			checkOpMsg(nextBatch)
-			checkNoSyntaxErrors(nextBatch.body.document, command, collection)
+			checkNoSyntaxErrors(nextBatch.body.document, request, command, collection)
 
 			TODO("Received batch: $nextBatch")
 		}

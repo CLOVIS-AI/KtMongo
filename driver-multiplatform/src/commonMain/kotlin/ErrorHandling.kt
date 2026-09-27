@@ -41,6 +41,7 @@ private class WriteErrorDataImpl(
 
 internal fun checkNoWriteErrors(
 	doc: BsonDocument,
+	request: DriverMessage,
 	command: Command,
 	collection: MultiplatformMongoCollection<*>,
 	server: MongoException.ServerAddress = collection.database.client.serverAddress,
@@ -56,6 +57,8 @@ internal fun checkNoWriteErrors(
 
 	throw MongoWriteException(
 		server = server,
+		response = doc,
+		request = request.message.body.document,
 		command = command,
 		namespace = collection.fullyQualifiedName,
 		errors = errors.map { WriteErrorDataImpl(it) },
@@ -64,6 +67,7 @@ internal fun checkNoWriteErrors(
 
 internal fun checkNoSyntaxErrors(
 	doc: BsonDocument,
+	request: DriverMessage,
 	command: Command,
 	collection: MultiplatformMongoCollection<*>,
 	server: MongoException.ServerAddress = collection.database.client.serverAddress,
@@ -76,7 +80,8 @@ internal fun checkNoSyntaxErrors(
 		errorMessage = doc["errmsg"]?.decodeString() ?: "No error message were provided",
 		code = doc["code"]?.decodeInt32() ?: -1,
 		codeName = doc["codeName"]?.decodeString() ?: "<unknown>",
-		fullResponse = doc,
+		response = doc,
+		request = request.message.body.document,
 		command = command,
 		server = server,
 		namespace = collection.fullyQualifiedName,

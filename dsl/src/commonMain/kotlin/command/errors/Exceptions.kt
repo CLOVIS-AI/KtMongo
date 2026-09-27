@@ -27,8 +27,81 @@ import opensavvy.ktmongo.dsl.command.Command
  */
 sealed class MongoException(
 	message: String,
-	cause: Throwable? = null,
-) : RuntimeException(message, cause) {
+
+	/**
+	 * If this exception corresponds to the processing of a database response, this field contains that response.
+	 */
+	val response: BsonDocument?,
+
+	/**
+	 * If this exception corresponds to the sending of a database request, this field contains that request.
+	 *
+	 * Note that the official drivers do not provide easy access to the exact request that was sent,
+	 * so this field may often be `null` when using it.
+	 */
+	val request: BsonDocument?,
+
+	/**
+	 * The command that was being executed when this exception occurred, from the point of view of KtMongo.
+	 *
+	 * **The various drivers have preprocessing steps that modify the command before it is sent**,
+	 * so this field may not exactly contain what the database received.
+	 *
+	 * For example, the option `readPreference` is never sent to the database, as it specifies which replica
+	 * the driver should send the message to.
+	 *
+	 * To see the exact command sent to the database, see [request], if present.
+	 */
+	val command: Command?,
+
+	/**
+	 * The address of the server that was being contacted when this exception occurred.
+	 *
+	 * When connected to a replica set, this contains the specific replica set member that lead to this exception.
+	 */
+	val server: ServerAddress?,
+
+	/**
+	 * The database or collection that was being accessed when this exception occurred.
+	 */
+	val namespace: String?,
+
+	cause: Throwable?,
+) : RuntimeException(
+	buildString {
+		appendLine(message)
+
+		if (response != null)
+			appendLine("\tin response $response")
+
+		if (request != null) {
+			if (response != null)
+				append("\tto")
+			else
+				append("\tat")
+
+			appendLine(" request $request")
+		}
+
+		if (command != null)
+			appendLine("\tat ${command::class.simpleName} $command")
+
+		if (server != null || namespace != null) {
+			append("\tat")
+
+			if (server != null) {
+				append(" ")
+				append(server)
+			}
+
+			if (namespace != null) {
+				append(" ")
+				append(namespace)
+			}
+		}
+	},
+	cause,
+) {
 
 	/**
 	 * The address of any given server.
@@ -46,19 +119,19 @@ sealed class MongoException(
  */
 class MongoDriverException(
 	message: String,
-	val response: BsonDocument?,
-	val server: ServerAddress,
-	val command: Command,
-	val namespace: String,
+	response: BsonDocument?,
+	request: BsonDocument?,
+	server: ServerAddress?,
+	command: Command,
+	namespace: String,
 	cause: Throwable? = null,
 ) : MongoException(
-	message = buildString {
-		appendLine(message)
-		if (response != null)
-			appendLine("\tin $response")
-		appendLine("\tat ${command::class.simpleName} $command")
-		append("\tat $server $namespace")
-	},
+	message = message,
+	response = response,
+	request = request,
+	server = server,
+	command = command,
+	namespace = namespace,
 	cause = cause,
 )
 
@@ -69,17 +142,19 @@ class MongoSyntaxException(
 	val errorMessage: String,
 	val code: Int,
 	val codeName: String,
-	val fullResponse: BsonDocument,
-	val server: ServerAddress,
-	val command: Command,
-	val namespace: String,
+	response: BsonDocument,
+	request: BsonDocument?,
+	server: ServerAddress,
+	command: Command,
+	namespace: String,
 	cause: Throwable? = null,
 ) : MongoException(
-	message = buildString {
-		appendLine("$code $codeName • $errorMessage")
-		appendLine("\tat ${command::class.simpleName} $command")
-		append("\tat $server $namespace")
-	},
+	message = "$code $codeName: $errorMessage",
+	response = response,
+	request = request,
+	server = server,
+	command = command,
+	namespace = namespace,
 	cause = cause,
 )
 
@@ -88,10 +163,12 @@ class MongoSyntaxException(
  */
 class MongoWriteException(
 	message: String = "Write failed",
-	val server: ServerAddress,
-	val command: Command,
 	val errors: List<WriteErrorData>,
-	val namespace: String,
+	response: BsonDocument?,
+	request: BsonDocument?,
+	server: ServerAddress,
+	command: Command,
+	namespace: String,
 	cause: Throwable? = null,
 ) : MongoException(
 	message = buildString {
@@ -100,10 +177,12 @@ class MongoWriteException(
 		for (error in errors) {
 			appendLine("\tfailed with ${error.message}")
 		}
-
-		appendLine("\tat ${command::class.simpleName} $command")
-		append("\tat $server $namespace")
 	},
+	response = response,
+	request = request,
+	server = server,
+	command = command,
+	namespace = namespace,
 	cause = cause,
 ) {
 
