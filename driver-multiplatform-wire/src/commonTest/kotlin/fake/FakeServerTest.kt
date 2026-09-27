@@ -21,6 +21,7 @@ package opensavvy.ktmongo.multiplatform.wire.fake
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.multiplatform.wire.Message
 import opensavvy.ktmongo.multiplatform.wire.OpMsg
@@ -30,6 +31,8 @@ import opensavvy.prepared.suite.assertions.checkThrows
 import opensavvy.prepared.suite.config.Ignored
 
 val FakeServerTest by preparedSuite {
+
+	val factory = BsonFactory()
 
 	test("Create a fake server") {
 		val server = fakeServer {}
@@ -43,11 +46,11 @@ val FakeServerTest by preparedSuite {
 	}
 
 	test("Round-trip hello") {
-		val helloMessage = OpMsg {
+		val helloMessage = OpMsg(factory) {
 			writeInt32("hello", 1)
 		}
 
-		val okMessage = OpMsg {
+		val okMessage = OpMsg(factory) {
 			writeDouble("ok", 1.0)
 		}
 
@@ -61,18 +64,18 @@ val FakeServerTest by preparedSuite {
 		val response = client.sendSingle(helloMessage)
 
 		check(response is Message.OpMsg)
-		check(response.body.document["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
 	}
 
 	test("Write a message that fails serialization") {
 		val server = fakeServer {
 			// After sending the broken message, we'll send a valid one to verify the broken message didn't break the client
-			expect(OpMsg { writeInt32("hello", 1) })
-			respond(OpMsg { writeDouble("ok", 1.0) })
+			expect(OpMsg(factory) { writeInt32("hello", 1) })
+			respond(OpMsg(factory) { writeDouble("ok", 1.0) })
 		}
 		val client = server.createClient()
 
-		val incorrect = OpMsg {
+		val incorrect = OpMsg(factory) {
 			error("Serialization fails!")
 		}
 
@@ -82,23 +85,23 @@ val FakeServerTest by preparedSuite {
 		check(e.message == "Serialization fails!")
 
 		// Check that the error didn't break the client
-		val response = client.sendSingle(OpMsg { writeInt32("hello", 1) })
+		val response = client.sendSingle(OpMsg(factory) { writeInt32("hello", 1) })
 		check(response is Message.OpMsg)
-		check(response.body.document["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
 	}
 
 	test("The caller cancels the message while it's being sent", Ignored) { // TODO
 		val server = fakeServer {
 			// After sending the canceled message, we'll send a valid one to verify the broken message didn't break the client
-			expect(OpMsg { writeInt32("hello", 2) })
-			respond(OpMsg { writeDouble("ok", 1.0) })
+			expect(OpMsg(factory) { writeInt32("hello", 2) })
+			respond(OpMsg(factory) { writeDouble("ok", 1.0) })
 		}
 		val client = server.createClient()
 
 		println("Sending a first message, which will be immediately cancelled")
 		coroutineScope {
 			val a = launch {
-				val _ = client.sendSingle(OpMsg { writeInt32("hello", 1) })
+				val _ = client.sendSingle(OpMsg(factory) { writeInt32("hello", 1) })
 				error("This point should never be reached, since the request will be cancelled before the database answers")
 			}
 
@@ -110,9 +113,9 @@ val FakeServerTest by preparedSuite {
 		println("Sending a second message, which should get an answer normally")
 		coroutineScope {
 			// Check that the error didn't break the client
-			val response = client.sendSingle(OpMsg { writeInt32("hello", 2) })
+			val response = client.sendSingle(OpMsg(factory) { writeInt32("hello", 2) })
 			check(response is Message.OpMsg)
-			check(response.body.document["ok"]?.decodeDouble() == 1.0)
+			check(response.bson["ok"]?.decodeDouble() == 1.0)
 		}
 	}
 
@@ -124,7 +127,7 @@ val FakeServerTest by preparedSuite {
 		val client = server.createClient()
 
 		val e = checkThrows<RuntimeException> {
-			client.sendSingle(OpMsg { writeInt32("hello", 1) })
+			client.sendSingle(OpMsg(factory) { writeInt32("hello", 1) })
 		}
 		check(e.message == "Fake server died according to the scenario")
 	}

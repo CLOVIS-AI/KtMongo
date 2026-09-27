@@ -19,12 +19,12 @@ package opensavvy.ktmongo.multiplatform
 import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.bson.BsonValueWriter
 import opensavvy.ktmongo.bson.DEPRECATED_IN_BSON_SPEC
-import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectId
 import opensavvy.ktmongo.bson.types.Timestamp
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.options.ReadPreference
+import opensavvy.ktmongo.multiplatform.wire.LazyBsonDocument
 import opensavvy.ktmongo.multiplatform.wire.Message
 import opensavvy.ktmongo.multiplatform.wire.MessageSection
 import kotlin.reflect.KType
@@ -35,13 +35,13 @@ import kotlin.reflect.KType
 internal class MessageBuilder(
 	internal val factory: BsonFactory,
 ) {
-	internal var document: BsonDocument? = null
+	internal var document: LazyBsonDocument? = null
 	internal var readPreference: ReadPreference? = null
 	internal val sequences = ArrayList<MessageSection.DocumentSequence>()
 
 	inline fun document(crossinline block: BsonFieldWriter.() -> Unit) {
 		check(document == null) { "Cannot set 'document' multiple times" }
-		document = factory.buildDocument {
+		document = LazyBsonDocument(factory) {
 			with(captureSpecialOptions(this)) {
 				block()
 			}
@@ -54,7 +54,7 @@ internal class MessageBuilder(
 	inline fun sequence(id: String, block: MessageSequenceBuilder.() -> Unit) {
 		sequences += MessageSection.DocumentSequence(
 			id = id,
-			lazyDocuments = MessageSequenceBuilder(factory).apply(block).documents,
+			documents = MessageSequenceBuilder(factory).apply(block).documents,
 		)
 	}
 
@@ -256,14 +256,10 @@ internal class MessageBuilder(
 internal class MessageSequenceBuilder(
 	internal val factory: BsonFactory,
 ) {
-	internal val documents = ArrayList<Lazy<BsonDocument>>()
+	internal val documents = ArrayList<LazyBsonDocument>()
 
-	inline fun document(crossinline block: BsonFieldWriter.() -> Unit) {
-		documents += eager(
-			factory.buildDocument {
-				block()
-			}
-		)
+	fun document(block: BsonFieldWriter.() -> Unit) {
+		documents += LazyBsonDocument(factory, block)
 	}
 }
 
@@ -273,8 +269,8 @@ internal fun MultiplatformMongoClient.createDriverMessage(
 	val builder = MessageBuilder(factory).apply(block)
 	return DriverMessage(
 		message = Message.OpMsg(
-			body = MessageSection.Body(eager(builder.document!!)),
-			sequences = builder.sequences.asSequence(),
+			body = MessageSection.Body(builder.document!!),
+			sequences = builder.sequences,
 		),
 		readPreference = builder.readPreference,
 	)
@@ -284,23 +280,3 @@ internal class DriverMessage(
 	val message: Message.OpMsg,
 	val readPreference: ReadPreference?,
 )
-
-/**
- * Instantiates a [Lazy] value that isn't lazy.
- *
- * This allows our API to contain lazy values without forcing us to be lazy everywhere.
- *
- * For example, we often want to be lazy during request sending (so all serialization happens as close as possible to the socket)
- * but not during reception (to extract information as quickly as possible and return the lock).
- */
-internal fun <T> eager(value: T): Lazy<T> =
-	object : Lazy<T> {
-		override val value: T
-			get() = value
-
-		override fun isInitialized(): Boolean =
-			true
-
-		override fun toString(): String =
-			"Lazy($value)"
-	}

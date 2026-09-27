@@ -59,13 +59,11 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 		val output = client.send(
 			OpMsg(
 				Body(
-					eager(
-						BsonFactory().buildDocument {
-							writeString("find", "test-basic-1")
-							writeDocument("filter") {}
-							writeString("\$db", "test-basic")
-						}
-					)
+					LazyBsonDocument(BsonFactory()) {
+						writeString("find", "test-basic-1")
+						writeDocument("filter") {}
+						writeString("\$db", "test-basic")
+					}
 				)
 			)
 		)
@@ -74,8 +72,8 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 		val response = output.receive()
 
 		check(response is Message.OpMsg)
-		check(response.body.document["ok"]?.decodeDouble() == 1.0)
-		check(response.body.document["cursor"]?.decodeDocument()?.get("ns")?.decodeString() == "test-basic.test-basic-1")
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["cursor"]?.decodeDocument()?.get("ns")?.decodeString() == "test-basic.test-basic-1")
 	}
 
 	test("Insert an element") {
@@ -83,18 +81,16 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 
 		val output = client.send(OpMsg(
 			Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeString("insert", "test-basic-2")
-						writeBoolean("ordered", true)
-						writeString("\$db", "test-basic")
-					}
-				)
+				LazyBsonDocument(BsonFactory()) {
+					writeString("insert", "test-basic-2")
+					writeBoolean("ordered", true)
+					writeString("\$db", "test-basic")
+				}
 			),
 			DocumentSequence(
 				id = "documents",
 				listOf(
-					eager(BsonFactory().encode(DataTest(Default().newId(), "Bob", 18)) as BsonDocument)
+					LazyBsonDocument(BsonFactory().encode(DataTest(Default().newId(), "Bob", 18)) as BsonDocument)
 				)
 			)
 		))
@@ -103,8 +99,8 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 		val response = output.receive()
 
 		check(response is Message.OpMsg)
-		check(response.body.document["ok"]?.decodeDouble() == 1.0)
-		check(response.body.document["writeErrors"] == null)
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["writeErrors"] == null)
 	}
 
 	test("Drop a collection") {
@@ -112,12 +108,10 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 
 		val output = client.send(OpMsg(
 			Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeString("drop", "test-basic-2")
-						writeString("\$db", "test-basic")
-					}
-				)
+				LazyBsonDocument(BsonFactory()) {
+					writeString("drop", "test-basic-2")
+					writeString("\$db", "test-basic")
+				}
 			)
 		))
 
@@ -125,7 +119,7 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 		val response = output.receive()
 
 		check(response is Message.OpMsg)
-		check(response.body.document["ok"]?.decodeDouble() == 1.0)
+		check(response.bson["ok"]?.decodeDouble() == 1.0)
 	}
 
 	test("Find an element that was just inserted") {
@@ -133,30 +127,26 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 
 		val insertOutput = client.send(OpMsg(
 			Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeString("insert", "test-basic-3")
-						writeBoolean("ordered", true)
-						writeString("\$db", "test-basic")
-					}
-				)
+				LazyBsonDocument(BsonFactory()) {
+					writeString("insert", "test-basic-3")
+					writeBoolean("ordered", true)
+					writeString("\$db", "test-basic")
+				}
 			),
 			DocumentSequence(
 				id = "documents",
 				listOf(
-					eager(BsonFactory().encode(DataTest(Default().newId(), "Bob", 18)) as BsonDocument)
+					LazyBsonDocument(BsonFactory().encode(DataTest(Default().newId(), "Bob", 18)) as BsonDocument)
 				)
 			)
 		))
 		val findOutput = client.send(OpMsg(
 			Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeString("find", "test-basic-3")
-						writeDocument("filter") {}
-						writeString("\$db", "test-basic")
-					}
-				)
+				LazyBsonDocument(BsonFactory()) {
+					writeString("find", "test-basic-3")
+					writeDocument("filter") {}
+					writeString("\$db", "test-basic")
+				}
 			)
 		))
 
@@ -165,20 +155,18 @@ val ConnectTest by preparedSuite(preparedConfig = CoroutineTimeout(15.minutes)) 
 		val findResponse = findOutput.receive()
 
 		check(insertResponse is Message.OpMsg)
-		check(insertResponse.body.document["ok"]?.decodeDouble() == 1.0)
+		check(insertResponse.bson["ok"]?.decodeDouble() == 1.0)
 
 		check(findResponse is Message.OpMsg)
-		check(findResponse.body.document["ok"]?.decodeDouble() == 1.0)
-		check(findResponse.body.document.selectFirst<String>("$.cursor.firstBatch[0].name") == "Bob")
+		check(findResponse.bson["ok"]?.decodeDouble() == 1.0)
+		check(findResponse.bson.selectFirst<String>("$.cursor.firstBatch[0].name") == "Bob")
 
 		val _ = client.send(OpMsg(
 			Body(
-				eager(
-					BsonFactory().buildDocument {
-						writeString("drop", "test-basic-3")
-						writeString("\$db", "test-basic")
-					}
-				)
+				LazyBsonDocument(BsonFactory()) {
+					writeString("drop", "test-basic-3")
+					writeString("\$db", "test-basic")
+				}
 			)
 		))
 	}

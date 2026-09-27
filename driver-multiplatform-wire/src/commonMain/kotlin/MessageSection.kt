@@ -16,20 +16,15 @@
 
 package opensavvy.ktmongo.multiplatform.wire
 
-import opensavvy.ktmongo.bson.multiplatform.BsonDocument
-
 sealed interface MessageSection {
 
 	val kind: UByte
 
 	class Body(
-		val lazyDocument: Lazy<BsonDocument>,
+		val document: LazyBsonDocument,
 	) : MessageSection {
 		override val kind: UByte
 			get() = Body.kind
-
-		val document: BsonDocument
-			get() = lazyDocument.value
 
 		override fun toString(): String =
 			"Body($document)"
@@ -41,16 +36,13 @@ sealed interface MessageSection {
 
 	class DocumentSequence(
 		val id: String,
-		val lazyDocuments: List<Lazy<BsonDocument>>,
+		val documents: List<LazyBsonDocument>,
 	) : MessageSection {
 		override val kind: UByte
 			get() = DocumentSequence.kind
 
-		val documents: Sequence<BsonDocument>
-			get() = lazyDocuments.asSequence().map { it.value }
-
 		override fun toString(): String =
-			"DocumentSequence('$id': $lazyDocuments)"
+			"DocumentSequence('$id': $documents)"
 
 		companion object {
 			const val kind: UByte = 1u
