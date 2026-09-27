@@ -38,7 +38,6 @@ import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.query.UpdateQuery
 import opensavvy.ktmongo.dsl.query.UpdateWithPipelineQuery
 import opensavvy.ktmongo.dsl.query.UpsertQuery
-import opensavvy.ktmongo.multiplatform.wire.Message
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.reflect.KType
 import kotlin.uuid.Uuid
@@ -87,7 +86,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 		checkNoWriteErrors(message.body.document, request, command, this)
 	}
@@ -112,7 +111,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 		checkNoWriteErrors(message.body.document, request, command, this)
 	}
@@ -141,7 +140,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
@@ -166,7 +165,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		val batchArray = message.body.document["cursor"]?.decodeDocument()?.get("firstBatch")?.decodeArray()
@@ -196,7 +195,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
@@ -260,7 +259,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		return message.body.document["n"]
@@ -287,7 +286,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
@@ -310,7 +309,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
@@ -351,7 +350,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
@@ -378,7 +377,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
@@ -405,7 +404,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
@@ -433,7 +432,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
@@ -457,7 +456,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
@@ -492,7 +491,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 	}
 
@@ -515,7 +514,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
@@ -542,7 +541,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 
 		// TODO handle unacknowledged updates
@@ -569,7 +568,7 @@ internal class MultiplatformMongoCollectionImpl<Document : Any>(
 
 		val message = database.client.sendSingle(request)
 
-		message as Message.OpMsg
+		checkOpMsg(message, request, command, this)
 		checkNoSyntaxErrors(message.body.document, request, command, this)
 		checkNoWriteErrors(message.body.document, request, command, this)
 

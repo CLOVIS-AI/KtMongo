@@ -19,6 +19,7 @@ package opensavvy.ktmongo.multiplatform
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.dsl.command.Command
+import opensavvy.ktmongo.dsl.command.errors.MongoDriverException
 import opensavvy.ktmongo.dsl.command.errors.MongoException
 import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
@@ -89,8 +90,22 @@ internal fun checkNoSyntaxErrors(
 }
 
 @OptIn(ExperimentalContracts::class)
-internal fun checkOpMsg(message: Message) {
+internal fun checkOpMsg(
+	message: Message,
+	request: DriverMessage,
+	command: Command,
+	collection: MultiplatformMongoCollection<*>,
+	server: MongoException.ServerAddress = collection.database.client.serverAddress,
+) {
 	contract { returns() implies (message is Message.OpMsg) }
 
-	check(message is Message.OpMsg) { "Expected ${Message.OpMsg::class}, got ${message::class}: $message" }
+	if (message !is Message.OpMsg)
+		throw MongoDriverException(
+			message = "The Multiplatform driver only supports OP_MSG messages (${Message.OpMsg::class}), but it received a ${message::class}\n\tunknown message $message",
+			response = null,
+			request = request.message.body.document,
+			command = command,
+			server = server,
+			namespace = collection.fullyQualifiedName,
+		)
 }

@@ -53,7 +53,7 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 			// Within a 'run' block to free memory of the first batch when the next ones are being computed
 			val request = createFirstBatch()
 			val firstBatch = collection.database.client.sendSingle(request)
-			checkOpMsg(firstBatch)
+			checkOpMsg(firstBatch, request, command, collection)
 			checkNoSyntaxErrors(firstBatch.body.document, request, command, collection)
 
 			val cursor = firstBatch.body.document["cursor"]?.decodeDocument()
@@ -88,7 +88,7 @@ internal abstract class AbstractMultiplatformMongoIterable<Document : Any>(
 		while (true) {
 			val request = createNextBatch(cursorId)
 			val nextBatch = collection.database.client.sendSingle(request)
-			checkOpMsg(nextBatch)
+			checkOpMsg(nextBatch, request, command, collection)
 			checkNoSyntaxErrors(nextBatch.body.document, request, command, collection)
 
 			TODO("Received batch: $nextBatch")
