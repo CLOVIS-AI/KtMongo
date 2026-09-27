@@ -148,7 +148,7 @@ interface BsonValue {
 	/**
 	 * Decodes this value as [Long].
 	 *
-	 * @throws BsonDecodingException If the value is not a [BsonType.Int64].
+	 * @throws BsonDecodingException If the value is not a [BsonType.Int64] or [BsonType.Int32].
 	 */
 	fun decodeInt64(): Long
 
