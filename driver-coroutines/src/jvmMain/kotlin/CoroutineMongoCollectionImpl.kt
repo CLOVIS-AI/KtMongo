@@ -550,7 +550,7 @@ private class CoroutineUpdateResult(
 		else "UpdateResult(acknowledged=false)"
 }
 
-private class CoroutineCollectionInfo(
+internal class CoroutineCollectionInfo(
 	private val doc: BsonDocument,
 ) : CollectionInfo {
 
@@ -579,7 +579,7 @@ private class CoroutineCollectionInfo(
 		doc.toString()
 }
 
-private class CoroutineCollectionInfoNameOnly(
+internal class CoroutineCollectionInfoNameOnly(
 	override val name: String,
 	private val factory: BsonFactory,
 ) : CollectionInfo {

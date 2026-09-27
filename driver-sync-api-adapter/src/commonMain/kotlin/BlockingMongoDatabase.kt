@@ -17,11 +17,15 @@
 package opensavvy.ktmongo.sync.api.blocking
 
 import opensavvy.ktmongo.api.MongoDatabase
+import opensavvy.ktmongo.api.MongoIterable
 import opensavvy.ktmongo.bson.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.CollectionInfo
+import opensavvy.ktmongo.dsl.command.ListCollectionsOptions
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import kotlin.reflect.KType
 import opensavvy.ktmongo.sync.api.MongoDatabase as SyncMongoDatabase
 
@@ -47,6 +51,9 @@ class BlockingMongoDatabase(
 	@LowLevelApi
 	override fun <Document : Any> collection(name: String, type: KType): BlockingMongoCollection<Document> =
 		BlockingMongoCollection(inner.collection(name, type))
+
+	override fun collections(options: ListCollectionsOptions.() -> Unit, filter: FilterQuery<CollectionInfo>.() -> Unit): MongoIterable<CollectionInfo> =
+		BlockingMongoIterable(inner.collections(options, filter))
 
 	override fun toString(): String =
 		inner.toString()

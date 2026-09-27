@@ -18,6 +18,7 @@ package opensavvy.ktmongo.sync.api
 
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.sync.api.operations.BaseOperations
+import opensavvy.ktmongo.sync.api.operations.DatabaseOperations
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -43,7 +44,8 @@ import kotlin.reflect.typeOf
  *
  * - [Official documentation](https://www.mongodb.com/docs/manual/core/databases-and-collections/)
  */
-interface MongoDatabase : BaseOperations {
+interface MongoDatabase : BaseOperations,
+	DatabaseOperations {
 
 	/**
 	 * The unique name of this database.

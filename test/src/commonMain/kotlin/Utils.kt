@@ -22,13 +22,19 @@ import opensavvy.prepared.suite.cleanUp
 import opensavvy.prepared.suite.prepared
 import opensavvy.prepared.suite.random.randomInt
 
+const val INTEGRATION_NAMESPACE = "ktmongo-integration-tests"
+
 val testId by randomInt(0, Int.MAX_VALUE)
+
+fun Prepared<MongoClient>.database() = prepared {
+	this@database().database(INTEGRATION_NAMESPACE)
+}
 
 inline fun <reified Document : Any> Prepared<MongoClient>.collection(
 	prefix: String,
 ) = prepared {
 	val collection = this@collection()
-		.database("ktmongo-integration-tests")
+		.database(INTEGRATION_NAMESPACE)
 		.collection<Document>("$prefix-${testId()}")
 
 	cleanUp("Dump collection ${collection.fullyQualifiedName}", onSuccess = false) {

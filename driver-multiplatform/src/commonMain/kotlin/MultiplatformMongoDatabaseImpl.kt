@@ -16,11 +16,16 @@
 
 package opensavvy.ktmongo.multiplatform
 
+import opensavvy.ktmongo.api.MongoIterable
 import opensavvy.ktmongo.bson.multiplatform.BsonFactory
 import opensavvy.ktmongo.bson.types.ObjectIdGenerator
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.command.CollectionInfo
+import opensavvy.ktmongo.dsl.command.ListCollections
+import opensavvy.ktmongo.dsl.command.ListCollectionsOptions
 import opensavvy.ktmongo.dsl.path.PropertyNameStrategy
+import opensavvy.ktmongo.dsl.query.FilterQuery
 import kotlin.concurrent.atomics.ExperimentalAtomicApi
 import kotlin.reflect.KType
 
@@ -46,4 +51,24 @@ internal class MultiplatformMongoDatabaseImpl(
 
 	override fun toString(): String =
 		"MultiplatformMongoDatabase($name)"
+
+	// region List collections
+
+	@OptIn(LowLevelApi::class)
+	override fun collections(
+		options: ListCollectionsOptions.() -> Unit,
+		filter: FilterQuery<CollectionInfo>.() -> Unit,
+	): MongoIterable<CollectionInfo> {
+		val command = ListCollections(context).apply {
+			this.options.options()
+			this.filter.filter()
+		}
+
+		return MultiplatformMongoIterableListCollectionsImpl(
+			database = this,
+			command = command,
+		).map { MultiplatformCollectionInfo(it) }
+	}
+
+	// endregion
 }

@@ -21,13 +21,11 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.multiplatform.BsonDocument
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
-import opensavvy.ktmongo.dsl.command.Aggregate
-import opensavvy.ktmongo.dsl.command.Command
-import opensavvy.ktmongo.dsl.command.Find
-import opensavvy.ktmongo.dsl.command.FindOptions
+import opensavvy.ktmongo.dsl.command.*
 import opensavvy.ktmongo.dsl.command.errors.MongoDriverException
 import opensavvy.ktmongo.dsl.options.CommentOption
 import opensavvy.ktmongo.dsl.options.MaxTimeOption
@@ -35,6 +33,7 @@ import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.dsl.query.FilterQuery
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 internal class MultiplatformMongoIterableMappingImpl<In : Any, Out : Any>(
 	private val upstream: MultiplatformMongoIterable<In>,
@@ -238,4 +237,35 @@ private class LimitOneStage(
 	override fun write(writer: BsonFieldWriter) = with(writer) {
 		writeInt64($$"$limit", 1)
 	}
+}
+
+@LowLevelApi
+internal class MultiplatformMongoIterableListCollectionsImpl(
+	private val database: MultiplatformMongoDatabaseImpl,
+	override val command: ListCollections,
+) : AbstractMultiplatformMongoIterable<BsonDocument>(database, typeOf<BsonDocument>()) {
+
+	override fun createFirstBatch(): DriverMessage = database.client.createDriverMessage {
+		document {
+			writeInt32("listCollections", 1)
+			writeString($$"$db", database.name)
+
+			command.writeTo(this)
+		}
+	}
+
+	override fun createNextBatch(cursorId: Long): DriverMessage = database.client.createDriverMessage {
+		document {
+			writeInt64("getMore", cursorId)
+			writeString($$"$db", database.name)
+
+			// TODO add options
+		}
+	}
+
+	override suspend fun firstOrNull(): BsonDocument? =
+		asFlow().firstOrNull()
+
+	override fun toString(): String =
+		"$database.listCollections($command)"
 }
