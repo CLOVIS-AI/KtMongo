@@ -38,7 +38,7 @@ telegram-bot = "0.3.1"
 jetbrains-annotations = "26.1.0"
 
 # https://nodejs.org/en/download
-nodejs = "24.15.0"
+nodejs = "24.21.0"
 
 [plugins]
 kotlin = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
