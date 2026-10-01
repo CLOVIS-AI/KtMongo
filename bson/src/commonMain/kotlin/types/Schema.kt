@@ -18,6 +18,7 @@ package opensavvy.ktmongo.bson.types
 
 import opensavvy.ktmongo.bson.*
 import opensavvy.ktmongo.dsl.LowLevelApi
+import org.intellij.lang.annotations.Language
 import kotlin.reflect.KType
 
 @RequiresOptIn("This API is part of the experimental JsonSchema implementation. Please provide feedback in https://gitlab.com/opensavvy/ktmongo/-/work_items/333")
@@ -174,6 +175,67 @@ class Schema<T> internal constructor(
 		override fun writeTo(writer: BsonFieldWriter) = with(writer) {
 			writeSafe("minimum", number, numberType)
 			writeBoolean("exclusiveMinimum", exclusive)
+		}
+	}
+
+	// endregion
+	// region Strings
+
+	/**
+	 * This property must have a value with a length less than or equal to [length].
+	 *
+	 * If the property does not contain a string, this constraint is ignored.
+	 */
+	class MaxLength(
+		val length: Int, // Int because 2 147 000 000 is larger than 16 MiB so longer strings can never appear
+		factory: BsonFactory,
+	) : SimpleConstraint<String>("maxLength", factory) {
+		init {
+			require(length >= 0) { "$name must be non-negative, found: $length" }
+		}
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeInt32(length)
+		}
+	}
+
+	/**
+	 * This property must have a value with a length greater than or equal to [length].
+	 *
+	 * If the property does not contain a string, this constraint is ignored.
+	 */
+	class MinLength(
+		val length: Int,
+		factory: BsonFactory,
+	) : SimpleConstraint<String>("minLength", factory) {
+		init {
+			require(length >= 0) { "$name must be non-negative, found: $length" }
+		}
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeInt32(length)
+		}
+	}
+
+	/**
+	 * This property must have a value that matches the regular expression [pattern], in the `ECMA 262` dialect.
+	 *
+	 * If the property does not contain a string, this constraint is ignored.
+	 */
+	class Pattern(
+		@param:Language("JSRegexp")
+		val pattern: String,
+		factory: BsonFactory,
+	) : SimpleConstraint<String>("pattern", factory) {
+		init {
+			require(pattern.isNotEmpty()) { "$name must not be empty, found: $pattern" }
+		}
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeString(pattern)
 		}
 	}
 
