@@ -119,7 +119,7 @@ fun Job.nativeIosArm64() {
 /**
  * On the JVM, support the last three stable MongoDB versions.
  */
-val supportedMongoDB = listOf("7.0.40")
+val supportedMongoDB = listOf("8.3.11")
 
 /**
  * On other platforms, support only the latest stable MongoDB version.
