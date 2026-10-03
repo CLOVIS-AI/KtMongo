@@ -411,6 +411,244 @@ class Schema<T> internal constructor(
 	}
 
 	// endregion
+	// region Objects
+
+	/**
+	 * The maximum number of properties in an object (inclusive).
+	 *
+	 * If the property does not contain an object, this constraint is ignored.
+	 */
+	class MaxProperties(
+		val count: Int,
+		factory: BsonFactory,
+	) : SimpleConstraint<Any>("maxProperties", factory) {
+		init {
+			require(count >= 0) { "$name must be non-negative, found: $count" }
+		}
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeInt32(count)
+		}
+	}
+
+	/**
+	 * The minimum number of properties in an object (inclusive).
+	 *
+	 * If the property does not contain an object, this constraint is ignored.
+	 */
+	class MinProperties(
+		val count: Int,
+		factory: BsonFactory,
+	) : SimpleConstraint<Any>("minProperties", factory) {
+		init {
+			require(count >= 0) { "$name must be non-negative, found: $count" }
+		}
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeInt32(count)
+		}
+	}
+
+	/**
+	 * The properties that must be present in an object.
+	 *
+	 * If the property does not contain an object, this constraint is ignored.
+	 */
+	class Required(
+		val properties: Set<String>,
+		factory: BsonFactory,
+	) : SimpleConstraint<Any>("required", factory) {
+		init {
+			require(properties.isNotEmpty()) { "$name must not be empty, found: $properties" }
+		}
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeArray {
+				for (property in properties) {
+					writeString(property)
+				}
+			}
+		}
+	}
+
+	/**
+	 * The properties that must be present in an object.
+	 *
+	 * Each key of [properties] is the name of a property of the object; its value must follow the associated schema.
+	 *
+	 * If this property does not contain an object, this constraint is ignored.
+	 *
+	 * If the property [AdditionalProperties] is not present, this constraint is ignored.
+	 */
+	class Properties(
+		val properties: Map<String, Schema<*>>,
+		factory: BsonFactory,
+	) : SimpleConstraint<Any>("properties", factory) {
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeDocument {
+				for ((property, schema) in properties) {
+					writeDocument(property) {
+						schema.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * The properties that must be present in an object, declared by pattern.
+	 *
+	 * Each key of [properties] is a regular expression of the `ECMA 262` dialect.
+	 * Any field in the object that matches the pattern must have a value that follows the associated schema.
+	 *
+	 * If this property does not contain an object, this constraint is ignored.
+	 *
+	 * If the property [AdditionalProperties] is not present, this constraint is ignored.
+	 */
+	class PatternProperties(
+		val properties: Map<String, Schema<*>>,
+		factory: BsonFactory,
+	) : SimpleConstraint<Any>("patternProperties", factory) {
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeDocument {
+				for ((property, schema) in properties) {
+					writeDocument(property) {
+						schema.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Specifies the behavior of [Properties] and [PatternProperties].
+	 *
+	 * If this constraint is not present, any properties are allowed.
+	 *
+	 * If this constraint is present and set to `null`, all properties must either:
+	 * - Have a name present in [Properties], and follow the associated schema.
+	 * - Match a pattern present in [PatternProperties], and follow the associated schema.
+	 *
+	 * If this constraint is present and set to a schema, all properties must either:
+	 * - Be valid according to rules of the `null` case.
+	 * - Match the [schema].
+	 */
+	class AdditionalProperties(
+		val schema: Schema<*>?,
+		factory: BsonFactory,
+	) : SimpleConstraint<Any>("additionalProperties", factory) {
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			if (schema != null) {
+				writeDocument {
+					schema.writeTo(this)
+				}
+			} else {
+				writeBoolean(false)
+			}
+		}
+	}
+
+	/**
+	 * Properties that trigger additional constraints when present.
+	 *
+	 * Each key of [dependencies] is the name of a property.
+	 * If the property is present, then the object must confirm to the associated dependency.
+	 */
+	class Dependencies(
+		/**
+		 * Property dependencies declared in this object.
+		 *
+		 * The keys are property names.
+		 * If such a property is present, then the object must respect the additional dependency constraints.
+		 *
+		 * @see DependOnProperties: other properties become [Required].
+		 * @see DependOnSchema: additional constraints are added to the schema.
+		 */
+		val dependencies: Map<String, DependencyConstraints>,
+		factory: BsonFactory,
+	) : SimpleConstraint<Any>("dependencies", factory) {
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeDocument {
+				for ((property, dependency) in dependencies) {
+					write(property, dependency)
+				}
+			}
+		}
+
+		sealed class DependencyConstraints(
+			private val factory: BsonFactory,
+		) : BsonValueWriteable {
+
+			@OptIn(LowLevelApi::class)
+			override fun toString(): String =
+				factory.buildArray { writeTo(this) }[0].toString()
+		}
+
+		/**
+		 * To be valid, a property requires, when it is present, that other properties are present as well.
+		 *
+		 * For example, if a property `"send_email_notifications"` depends on the property `"email"`,
+		 * validation fails if the `"send_email_notifications"` field is present but `"email"` is not.
+		 *
+		 * This relationship is monodirectional: if `"send_email_notifications"` is not present, then `"email"`
+		 * is allowed to be absent.
+		 *
+		 * This dependency can be seen as a conditional [Required] constraint.
+		 */
+		class DependOnProperties(
+			val properties: List<String>,
+			factory: BsonFactory,
+		) : DependencyConstraints(factory) {
+
+			init {
+				require(properties.isNotEmpty()) { "Cannot declare a dependency on no properties; found: $properties" }
+			}
+
+			@LowLevelApi
+			override fun writeTo(writer: BsonValueWriter) = with(writer) {
+				writeArray {
+					for (property in properties) {
+						writeString(property)
+					}
+				}
+			}
+		}
+
+		/**
+		 * To be valid, a property requires, when it is present, that the object confirms to additional constraints.
+		 *
+		 * For example, if a property `"send_email_notifications"` depends on a [schema] that says a field `"email"`
+		 * must be a string, validation fails if the `"send_email_notifications"` is present but `"email"` is not a string.
+		 *
+		 * This relationship is monodirectional: if `"send_email_notifications"` is not present, then `"email"`
+		 * is allowed to be absent or any other kind of value.
+		 */
+		class DependOnSchema(
+			val schema: Schema<*>,
+			factory: BsonFactory,
+		) : DependencyConstraints(factory) {
+
+			@LowLevelApi
+			override fun writeTo(writer: BsonValueWriter) = with(writer) {
+				writeDocument {
+					schema.writeTo(this)
+				}
+			}
+		}
+	}
+
+	// endregion
 
 	companion object {
 
