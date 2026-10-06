@@ -35,7 +35,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 @KtMongoDsl
 class Drop<Document : Any> private constructor(
 	context: BsonContext,
-	val options: DropOptions<Document>,
+	override val options: DropOptions<Document>,
 ) : Command, AbstractBsonNode(context) {
 
 	constructor(context: BsonContext) : this(context, DropOptions(context))

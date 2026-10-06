@@ -48,7 +48,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 @KtMongoDsl
 class Count<Document : Any> private constructor(
 	context: BsonContext,
-	val options: CountOptions<Document>,
+	override val options: CountOptions<Document>,
 	val filter: FilterQuery<Document>,
 ) : Command, AbstractBsonNode(context) {
 

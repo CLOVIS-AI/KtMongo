@@ -150,14 +150,18 @@ private class SyncMongoCollectionImpl<Document : Any>(
 		model.options.options()
 
 		try {
-			inner.withWriteConcern(model.options).insertOne(
-				model.document,
-				model.options.toJava(),
-			)
+			inner.withWriteConcern(model.options)
+				.withTimeout(model.options)
+				.insertOne(
+					model.document,
+					model.options.toJava(),
+				)
 		} catch (e: com.mongodb.MongoWriteException) {
 			throw e.toKtMongo(model, fullyQualifiedName)
 		} catch (e: com.mongodb.MongoCommandException) {
 			throw e.toKtMongo(model, fullyQualifiedName, factory)
+		} catch (e: com.mongodb.MongoTimeoutException) {
+			throw e.toKtMongo(model.options, model, fullyQualifiedName)
 		}
 	}
 
@@ -168,14 +172,18 @@ private class SyncMongoCollectionImpl<Document : Any>(
 		model.options.options()
 
 		try {
-			inner.withWriteConcern(model.options).insertMany(
-				model.documents,
-				model.options.toJava(),
-			)
+			inner.withWriteConcern(model.options)
+				.withTimeout(model.options)
+				.insertMany(
+					model.documents,
+					model.options.toJava(),
+				)
 		} catch (e: com.mongodb.MongoBulkWriteException) {
 			throw e.toKtMongo(model, fullyQualifiedName)
 		} catch (e: com.mongodb.MongoCommandException) {
 			throw e.toKtMongo(model, fullyQualifiedName, factory)
+		} catch (e: com.mongodb.MongoTimeoutException) {
+			throw e.toKtMongo(model.options, model, fullyQualifiedName)
 		}
 	}
 
@@ -685,6 +693,14 @@ private fun <Document : Any> MongoCollection<Document>.withWriteConcern(option: 
 		?: return this
 
 	return this.withWriteConcern(concern.toJava())
+}
+
+@LowLevelApi
+private fun <Document : Any> MongoCollection<Document>.withTimeout(option: HasMaxTime): MongoCollection<Document> {
+	val timeout = option.option<MaxTimeOption>()?.timeout
+		?: return this
+
+	return this.withTimeout(timeout.inWholeMilliseconds, TimeUnit.MILLISECONDS)
 }
 
 @LowLevelApi

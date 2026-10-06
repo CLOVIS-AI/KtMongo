@@ -18,6 +18,8 @@ package opensavvy.ktmongo.dsl.command.errors
 
 import opensavvy.ktmongo.bson.BsonDocument
 import opensavvy.ktmongo.dsl.command.Command
+import opensavvy.ktmongo.dsl.options.HasMaxTime
+import kotlin.time.Duration
 
 /**
  * Something went wrong while exchanging information with the database.
@@ -195,3 +197,27 @@ class MongoWriteException(
 		val message: String
 	}
 }
+
+/**
+ * An operation failed because it took longer than a specified timeout.
+ *
+ * For example, the timeout could have been configured with the [HasMaxTime.maxTime] option.
+ */
+class MongoTimeoutException(
+	val timeout: Duration?,
+	message: String = if (timeout != null) "Operation timed out after $timeout" else "Operation timed out",
+	response: BsonDocument?,
+	request: BsonDocument?,
+	server: ServerAddress?,
+	command: Command,
+	namespace: String,
+	cause: Throwable? = null,
+) : MongoException(
+	message = message,
+	response = response,
+	request = request,
+	server = server,
+	command = command,
+	namespace = namespace,
+	cause = cause,
+)
