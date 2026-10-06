@@ -48,7 +48,7 @@ import kotlin.reflect.KType
 @KtMongoDsl
 class ReplaceOne<Document : Any> private constructor(
 	context: BsonContext,
-	val options: ReplaceOptions<Document>,
+	override val options: ReplaceOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val document: Document,
 	val documentType: KType,
@@ -96,7 +96,7 @@ class ReplaceOne<Document : Any> private constructor(
 @KtMongoDsl
 class RepsertOne<Document : Any> private constructor(
 	context: BsonContext,
-	val options: ReplaceOptions<Document>,
+	override val options: ReplaceOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val document: Document,
 	val documentType: KType,

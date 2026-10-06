@@ -20,6 +20,8 @@ import opensavvy.ktmongo.bson.BsonFieldWriter
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.aggregation.PipelineChainLink
+import opensavvy.ktmongo.dsl.options.Options
+import opensavvy.ktmongo.dsl.options.OptionsHolder
 import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 import kotlin.reflect.KType
 
@@ -43,6 +45,8 @@ class Aggregate<Document : Any> @OptIn(LowLevelApi::class) constructor(
 	val chain: PipelineChainLink,
 	val outputType: KType,
 ) : Command, AbstractBsonNode(context) {
+
+	override val options: Options = OptionsHolder(context)
 
 	@LowLevelApi
 	override fun write(writer: BsonFieldWriter) = with(writer) {

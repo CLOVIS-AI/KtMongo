@@ -44,7 +44,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 @KtMongoDsl
 class DeleteOne<Document : Any> private constructor(
 	context: BsonContext,
-	val options: DeleteOneOptions<Document>,
+	override val options: DeleteOneOptions<Document>,
 	val filter: FilterQuery<Document>,
 ) : AbstractBsonNode(context), Command, AvailableInBulkWrite<Document> {
 
@@ -84,7 +84,7 @@ class DeleteOne<Document : Any> private constructor(
 @KtMongoDsl
 class DeleteMany<Document : Any> private constructor(
 	context: BsonContext,
-	val options: DeleteManyOptions<Document>,
+	override val options: DeleteManyOptions<Document>,
 	val filter: FilterQuery<Document>,
 ) : AbstractBsonNode(context), Command, AvailableInBulkWrite<Document> {
 

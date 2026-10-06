@@ -46,7 +46,7 @@ import kotlin.uuid.Uuid
  */
 class ListCollections private constructor(
 	context: BsonContext,
-	val options: ListCollectionsOptions,
+	override val options: ListCollectionsOptions,
 	val filter: FilterQuery<CollectionInfo>,
 ) : Command, AbstractBsonNode(context) {
 

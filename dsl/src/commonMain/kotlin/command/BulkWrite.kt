@@ -91,7 +91,7 @@ sealed interface AvailableInBulkWrite<Document> : Node, Command
 class BulkWrite<Document : Any> private constructor(
 	context: BsonContext,
 	private val globalFilter: FilterQuery<Document>.() -> Unit,
-	val options: BulkWriteOptions<Document>,
+	override val options: BulkWriteOptions<Document>,
 	val documentType: KType,
 ) : Command, AbstractBsonNode(context), CompoundNode<AvailableInBulkWrite<Document>> {
 

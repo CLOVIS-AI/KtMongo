@@ -47,7 +47,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 @KtMongoDsl
 class UpdateOne<Document : Any> private constructor(
 	context: BsonContext,
-	val options: UpdateOptions<Document>,
+	override val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val update: UpdateQuery<Document>,
 ) : AbstractBsonNode(context), Command, AvailableInBulkWrite<Document> {
@@ -99,7 +99,7 @@ class UpdateOne<Document : Any> private constructor(
 @KtMongoDsl
 class UpsertOne<Document : Any> private constructor(
 	context: BsonContext,
-	val options: UpdateOptions<Document>,
+	override val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val update: UpsertQuery<Document>,
 ) : Command, AbstractBsonNode(context), AvailableInBulkWrite<Document> {
@@ -151,7 +151,7 @@ class UpsertOne<Document : Any> private constructor(
 @KtMongoDsl
 class UpdateMany<Document : Any> private constructor(
 	context: BsonContext,
-	val options: UpdateOptions<Document>,
+	override val options: UpdateOptions<Document>,
 	val filter: FilterQuery<Document>,
 	val update: UpdateQuery<Document>,
 ) : Command, AbstractBsonNode(context), AvailableInBulkWrite<Document> {

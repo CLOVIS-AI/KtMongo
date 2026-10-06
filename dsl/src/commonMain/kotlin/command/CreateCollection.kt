@@ -45,7 +45,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 @KtMongoDsl
 class CreateCollection<Document : Any> private constructor(
 	context: BsonContext,
-	val options: CreateCollectionOptions<Document>,
+	override val options: CreateCollectionOptions<Document>,
 ) : Command, AbstractBsonNode(context) {
 
 	constructor(context: BsonContext) : this(context, CreateCollectionOptions(context))

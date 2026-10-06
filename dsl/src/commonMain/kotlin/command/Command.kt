@@ -19,9 +19,16 @@
 
 package opensavvy.ktmongo.dsl.command
 
+import opensavvy.ktmongo.dsl.options.Options
 import opensavvy.ktmongo.dsl.tree.BsonNode
 
 /**
  * A command that can be sent to a MongoDB server.
  */
-interface Command : BsonNode
+interface Command : BsonNode {
+
+	/**
+	 * The options to use when sending this command.
+	 */
+	val options: Options
+}

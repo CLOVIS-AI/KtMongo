@@ -43,7 +43,7 @@ import kotlin.reflect.KType
 @KtMongoDsl
 class InsertOne<Document : Any> private constructor(
 	context: BsonContext,
-	val options: InsertOneOptions<Document>,
+	override val options: InsertOneOptions<Document>,
 	val document: Document,
 	val documentType: KType,
 ) : Command, AbstractBsonNode(context), AvailableInBulkWrite<Document> {
@@ -83,7 +83,7 @@ class InsertOne<Document : Any> private constructor(
 @KtMongoDsl
 class InsertMany<Document : Any> private constructor(
 	context: BsonContext,
-	val options: InsertManyOptions<Document>,
+	override val options: InsertManyOptions<Document>,
 	val documents: List<Document>,
 	val documentType: KType,
 ) : Command, AbstractBsonNode(context) {

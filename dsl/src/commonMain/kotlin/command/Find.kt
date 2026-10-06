@@ -48,7 +48,7 @@ import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
 @KtMongoDsl
 class Find<Document : Any> private constructor(
 	context: BsonContext,
-	val options: FindOptions<Document>,
+	override val options: FindOptions<Document>,
 	val filter: FilterQuery<Document>,
 ) : Command, AbstractBsonNode(context) {
 
