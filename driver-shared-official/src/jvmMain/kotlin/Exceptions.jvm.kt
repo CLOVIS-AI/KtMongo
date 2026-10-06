@@ -21,9 +21,14 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.Command
 import opensavvy.ktmongo.dsl.command.errors.MongoException
 import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
+import opensavvy.ktmongo.dsl.command.errors.MongoTimeoutException
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
+import opensavvy.ktmongo.dsl.options.HasMaxTime
+import opensavvy.ktmongo.dsl.options.MaxTimeOption
+import opensavvy.ktmongo.dsl.options.option
 import com.mongodb.MongoBulkWriteException as OfficialMongoBulkWriteException
 import com.mongodb.MongoCommandException as OfficialMongoCommandException
+import com.mongodb.MongoTimeoutException as OfficialMongoTimeoutException
 import com.mongodb.MongoWriteException as OfficialMongoWriteException
 import com.mongodb.ServerAddress as OfficialServerAddress
 
@@ -101,6 +106,23 @@ fun OfficialMongoCommandException.toKtMongo(
 		response = factory.readDocument(response),
 		request = null,
 		server = serverAddress.toKtMongo(),
+		command = command,
+		namespace = namespace,
+		cause = this,
+	)
+}
+
+@LowLevelApi
+fun OfficialMongoTimeoutException.toKtMongo(
+	timeout: HasMaxTime,
+	command: Command,
+	namespace: String,
+): MongoTimeoutException {
+	return MongoTimeoutException(
+		timeout = timeout.option<MaxTimeOption>()?.timeout,
+		server = null,
+		response = null,
+		request = null,
 		command = command,
 		namespace = namespace,
 		cause = this,

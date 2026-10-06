@@ -28,6 +28,7 @@ import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.InsertMany
 import opensavvy.ktmongo.dsl.command.InsertOne
 import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
+import opensavvy.ktmongo.dsl.command.errors.MongoTimeoutException
 import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
 import opensavvy.ktmongo.dsl.options.WriteAcknowledgment
 import opensavvy.ktmongo.dsl.options.WriteConcern
@@ -36,7 +37,6 @@ import opensavvy.ktmongo.tests.api.collection
 import opensavvy.prepared.suite.Prepared
 import opensavvy.prepared.suite.SuiteDsl
 import opensavvy.prepared.suite.assertions.checkThrows
-import opensavvy.prepared.suite.config.Ignored
 import kotlin.time.Duration.Companion.milliseconds
 
 @Serializable
@@ -217,7 +217,7 @@ fun SuiteDsl.verifyInsertOperations(
 			// TODO: write a test that can check that the option is correctly applied
 		}
 
-		test("insertMany • Minuscule delay", Ignored) { // TODO
+		test("insertMany • Minuscule delay") {
 			val users = List(1000) {
 				InsertOperationsUser(
 					_id = collection().newId(),
@@ -225,15 +225,18 @@ fun SuiteDsl.verifyInsertOperations(
 				)
 			}
 
-			collection().insertMany(
-				documents = users,
-				options = {
-					maxTime(1.milliseconds)
-				}
-			)
+			val e = checkThrows<MongoTimeoutException> {
+				collection().insertMany(
+					documents = users,
+					options = {
+						maxTime(1.milliseconds)
+					}
+				)
+			}
 
-			// TODO: the MongoDB Java driver does not support this option
-			//       https://jira.mongodb.org/browse/JAVA-6301
+			check((e.command as? InsertMany<*>)?.documents?.size == 1000)
+			check(e.timeout == 1.milliseconds)
+			check(e.namespace == collection().fullyQualifiedName)
 		}
 
 		test("insertMany • Ordered") {

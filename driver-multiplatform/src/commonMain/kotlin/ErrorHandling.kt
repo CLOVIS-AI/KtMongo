@@ -18,11 +18,11 @@ package opensavvy.ktmongo.multiplatform
 
 import opensavvy.ktmongo.bson.BsonType
 import opensavvy.ktmongo.bson.multiplatform.BsonDocument
+import opensavvy.ktmongo.dsl.LowLevelApi
 import opensavvy.ktmongo.dsl.command.Command
-import opensavvy.ktmongo.dsl.command.errors.MongoDriverException
-import opensavvy.ktmongo.dsl.command.errors.MongoException
-import opensavvy.ktmongo.dsl.command.errors.MongoSyntaxException
-import opensavvy.ktmongo.dsl.command.errors.MongoWriteException
+import opensavvy.ktmongo.dsl.command.errors.*
+import opensavvy.ktmongo.dsl.options.MaxTimeOption
+import opensavvy.ktmongo.dsl.options.option
 import opensavvy.ktmongo.multiplatform.wire.Message
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -66,6 +66,7 @@ internal fun checkNoWriteErrors(
 	)
 }
 
+@OptIn(LowLevelApi::class)
 internal fun checkNoSyntaxErrors(
 	doc: BsonDocument,
 	request: DriverMessage,
@@ -77,16 +78,29 @@ internal fun checkNoSyntaxErrors(
 		return // No errors, nothing to do
 	}
 
-	throw MongoSyntaxException(
-		errorMessage = doc["errmsg"]?.decodeString() ?: "No error message were provided",
-		code = doc["code"]?.decodeInt32() ?: -1,
-		codeName = doc["codeName"]?.decodeString() ?: "<unknown>",
-		response = doc,
-		request = request.message.bson,
-		command = command,
-		server = server,
-		namespace = namespace.namespace,
-	)
+	val code = doc["code"]?.decodeInt32() ?: -1
+
+	when (code) {
+		50 -> throw MongoTimeoutException(
+			timeout = command.options.option<MaxTimeOption>()?.timeout,
+			response = doc,
+			request = request.message.bson,
+			command = command,
+			server = server,
+			namespace = namespace.namespace,
+		)
+
+		else -> throw MongoSyntaxException(
+			errorMessage = doc["errmsg"]?.decodeString() ?: "No error message were provided",
+			code = doc["code"]?.decodeInt32() ?: -1,
+			codeName = doc["codeName"]?.decodeString() ?: "<unknown>",
+			response = doc,
+			request = request.message.bson,
+			command = command,
+			server = server,
+			namespace = namespace.namespace,
+		)
+	}
 }
 
 @OptIn(ExperimentalContracts::class)

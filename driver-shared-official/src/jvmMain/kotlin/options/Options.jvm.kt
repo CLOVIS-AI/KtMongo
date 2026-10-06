@@ -88,7 +88,7 @@ fun HasSkip.readSkip(): Int =
 	option<SkipOption>()?.skip?.toInt() ?: 0
 
 @LowLevelApi
-fun HasSkip.readMaxTimeMS(): Int =
+fun HasMaxTime.readMaxTimeMS(): Int =
 	option<MaxTimeOption>()?.timeout?.inWholeMilliseconds?.toInt() ?: Int.MAX_VALUE
 
 @LowLevelApi
