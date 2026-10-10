@@ -132,6 +132,24 @@ class Schema<T> internal constructor(
 		}
 	}
 
+	/**
+	 * This property must have a value that is equal to one of the given [values].
+	 */
+	class Enum<T>(
+		val values: List<Pair<T, KType>>,
+		factory: BsonFactory,
+	) : SimpleConstraint<T>("enum", factory) {
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeArray {
+				for ((value, type) in values) {
+					writeSafe(value, type)
+				}
+			}
+		}
+	}
+
 	// endregion
 	// region Numeric
 
