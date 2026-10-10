@@ -23,7 +23,7 @@ pedestal = "3.2.2"
 prepared = "2.6.0"
 
 # https://spine.opensavvy.dev/news
-spine = "0.12.1"
+spine = "0.12.2"
 
 # https://ktmongo.opensavvy.dev/news
 ktmongo = "0.32.1"
