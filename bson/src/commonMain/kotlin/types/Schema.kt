@@ -667,6 +667,82 @@ class Schema<T> internal constructor(
 	}
 
 	// endregion
+	// region Combinators
+
+	/**
+	 * The value must confirm to all of the given [schemas].
+	 */
+	class AllOf<T>(
+		val schemas: List<Schema<T>>,
+		factory: BsonFactory,
+	) : SimpleConstraint<T>("allOf", factory) {
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeArray {
+				for (schema in schemas) {
+					writeDocument {
+						schema.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * The value must confirm to at least one of the given [schemas].
+	 */
+	class AnyOf<T>(
+		val schemas: List<Schema<T>>,
+		factory: BsonFactory,
+	) : SimpleConstraint<T>("anyOf", factory) {
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeArray {
+				for (schema in schemas) {
+					writeDocument {
+						schema.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * The value must confirm to exactly one of the given [schemas].
+	 */
+	class OneOf<T>(
+		val schemas: List<Schema<T>>,
+		factory: BsonFactory,
+	) : SimpleConstraint<T>("oneOf", factory) {
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeArray {
+				for (schema in schemas) {
+					writeDocument {
+						schema.writeTo(this)
+					}
+				}
+			}
+		}
+	}
+
+	class Not<T>(
+		val schema: Schema<T>,
+		factory: BsonFactory,
+	) : SimpleConstraint<T>("not", factory) {
+
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeDocument {
+				schema.writeTo(this)
+			}
+		}
+	}
+
+	// endregion
 
 	companion object {
 
