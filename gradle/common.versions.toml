@@ -10,9 +10,6 @@ kotlin = "2.4.21"
 # https://github.com/google/ksp/releases
 ksp = "2.3.12"
 
-# https://github.com/JetBrains/compose-multiplatform/releases
-compose = "1.11.1"
-
 # https://github.com/kotest/kotest/releases
 kotest = "6.2.5"
 
@@ -52,7 +49,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotest = { id = "io.kotest", version.ref = "kotest" }
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
 
 testBalloon = { id = "de.infix.testBalloon", version.ref = "testBalloon" }
 
