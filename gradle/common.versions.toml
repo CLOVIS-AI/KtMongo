@@ -5,19 +5,16 @@
 [versions]
 
 # https://kotlinlang.org/docs/releases.html#release-details
-kotlin = "2.4.10"
+kotlin = "2.4.21"
 
 # https://github.com/google/ksp/releases
-ksp = "2.3.11"
-
-# https://github.com/JetBrains/compose-multiplatform/releases
-compose = "1.11.1"
+ksp = "2.3.12"
 
 # https://github.com/kotest/kotest/releases
-kotest = "6.2.4"
+kotest = "6.2.5"
 
 # https://github.com/infix-de/testBalloon/releases
-testBalloon = "1.0.1-K2.4.0"
+testBalloon = "1.1.0"
 
 # https://gitlab.com/opensavvy/groundwork/pedestal/-/releases
 pedestal = "3.2.2"
@@ -26,10 +23,10 @@ pedestal = "3.2.2"
 prepared = "2.6.0"
 
 # https://spine.opensavvy.dev/news
-spine = "0.12.1"
+spine = "0.12.2"
 
 # https://ktmongo.opensavvy.dev/news
-ktmongo = "0.32.1"
+ktmongo = "0.33.0"
 
 # https://gitlab.com/opensavvy/telegram-bot/-/releases
 telegram-bot = "0.3.1"
@@ -52,7 +49,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotest = { id = "io.kotest", version.ref = "kotest" }
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
 
 testBalloon = { id = "de.infix.testBalloon", version.ref = "testBalloon" }
 
