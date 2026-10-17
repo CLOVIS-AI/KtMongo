@@ -140,14 +140,132 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 
 	// region Generic
 
+	/**
+	 * A value of one of the numeric types: [BsonType.Int32], [BsonType.Int64], [BsonType.Double] or [BsonType.Decimal128].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Number)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see type Specify a constraint on a value's type.
+	 */
 	object Number
 
+	/**
+	 * A value of one of the numeric types: [BsonType.Int32], [BsonType.Int64], [BsonType.Double] or [BsonType.Decimal128].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Number)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * @see type Specify a constraint on a value's type.
+	 */
 	@Suppress("PropertyName")
 	val BsonType.Companion.Number: Number
 		get() = SchemaQuery.Number
 
+	/**
+	 * Verifies that the value has type [bsonType].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Int32)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.5.2)
+	 */
 	fun type(bsonType: BsonType)
 
+	/**
+	 * Verifies that the value has one of the types [BsonType.Int32], [BsonType.Int64], [BsonType.Double] or [BsonType.Decimal128].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Number)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.5.2)
+	 */
 	fun type(bsonType: Number)
 
 	fun enum(values: List<T>)

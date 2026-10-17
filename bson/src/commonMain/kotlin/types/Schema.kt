@@ -125,10 +125,22 @@ class Schema<T> internal constructor(
 	class Type(
 		val bsonType: BsonType,
 		factory: BsonFactory,
-	) : SimpleConstraint<Any?>("type", factory) {
+	) : SimpleConstraint<Any?>("bsonType", factory) {
 		@OptIn(LowLevelApi::class)
 		override fun BsonValueWriter.write() {
-			writeString(bsonType.name.lowercase())
+			writeString(bsonType.alias)
+		}
+	}
+
+	/**
+	 * This property must have a numeric value ([BsonType.Double], [BsonType.Int32], [BsonType.Int64] or [BsonType.Decimal128]).
+	 */
+	class TypeNumber(
+		factory: BsonFactory,
+	) : SimpleConstraint<Any?>("bsonType", factory) {
+		@OptIn(LowLevelApi::class)
+		override fun BsonValueWriter.write() {
+			writeString("number")
 		}
 	}
 

@@ -68,12 +68,14 @@ private class SchemaQueryImpl<T>(
 	// endregion
 	// region Generic
 
+	@OptIn(LowLevelApi::class)
 	override fun type(bsonType: BsonType) {
-		TODO("Not yet implemented")
+		accept(Schema.Type(bsonType, context))
 	}
 
+	@OptIn(LowLevelApi::class)
 	override fun type(bsonType: SchemaQuery.Number) {
-		TODO("Not yet implemented")
+		accept(Schema.TypeNumber(context))
 	}
 
 	override fun enum(values: List<T>) {
