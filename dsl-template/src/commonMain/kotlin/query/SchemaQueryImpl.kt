@@ -1,0 +1,216 @@
+/*
+ * Copyright (c) 2026, OpenSavvy and contributors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package opensavvy.ktmongo.dsl.query
+
+import opensavvy.ktmongo.bson.BsonFieldWriter
+import opensavvy.ktmongo.bson.BsonType
+import opensavvy.ktmongo.bson.types.ExperimentalBsonSchemaApi
+import opensavvy.ktmongo.bson.types.Schema
+import opensavvy.ktmongo.dsl.BsonContext
+import opensavvy.ktmongo.dsl.DangerousMongoApi
+import opensavvy.ktmongo.dsl.LowLevelApi
+import opensavvy.ktmongo.dsl.tree.AbstractBsonNode
+import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
+import opensavvy.ktmongo.dsl.tree.BsonNode
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
+
+@OptIn(ExperimentalBsonSchemaApi::class)
+private class SchemaQueryImpl<T>(
+	context: BsonContext,
+	private val title: String,
+) : AbstractCompoundBsonNode(context), SchemaQuery<T> {
+
+	// region Low-level operations
+
+	@LowLevelApi
+	private sealed class SchemaBsonNode(context: BsonContext) : AbstractBsonNode(context)
+
+	@LowLevelApi
+	override fun simplify(children: List<BsonNode>): AbstractBsonNode? =
+		if (children.isEmpty()) null
+		else this
+
+	@OptIn(DangerousMongoApi::class)
+	@LowLevelApi
+	override fun accept(constraint: Schema.Constraint<T>) {
+		accept(ConstraintBsonNode(constraint, context))
+	}
+
+	@OptIn(LowLevelApi::class)
+	private class ConstraintBsonNode<T>(
+		val constraint: Schema.Constraint<T>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+
+		override fun write(writer: BsonFieldWriter) {
+			constraint.writeTo(writer)
+		}
+	}
+
+	// endregion
+	// region Generic
+
+	override fun type(bsonType: BsonType) {
+		TODO("Not yet implemented")
+	}
+
+	override fun type(bsonType: SchemaQuery.Number) {
+		TODO("Not yet implemented")
+	}
+
+	override fun enum(values: List<T>) {
+		TODO("Not yet implemented")
+	}
+
+	override fun description(description: String) {
+		TODO("Not yet implemented")
+	}
+
+	// endregion
+	// region Numeric
+
+	private fun multipleOf(number: Number, type: KType) {
+		TODO()
+	}
+
+	override fun multipleOf(number: Double) {
+		multipleOf(number, typeOf<Double>())
+	}
+
+	override fun multipleOf(number: Int) {
+		multipleOf(number, typeOf<Int>())
+	}
+
+	override fun multipleOf(number: Long) {
+		multipleOf(number, typeOf<Long>())
+	}
+
+	private fun maximum(number: Number, exclusive: Boolean, type: KType) {
+		TODO()
+	}
+
+	override fun maximum(number: Double, exclusive: Boolean) {
+		maximum(number, exclusive, typeOf<Double>())
+	}
+
+	override fun maximum(number: Int, exclusive: Boolean) {
+		maximum(number, exclusive, typeOf<Int>())
+	}
+
+	override fun maximum(number: Long, exclusive: Boolean) {
+		maximum(number, exclusive, typeOf<Long>())
+	}
+
+	private fun minimum(number: Number, exclusive: Boolean, type: KType) {
+		TODO()
+	}
+
+	override fun minimum(number: Double, exclusive: Boolean) {
+		minimum(number, exclusive, typeOf<Double>())
+	}
+
+	override fun minimum(number: Int, exclusive: Boolean) {
+		minimum(number, exclusive, typeOf<Int>())
+	}
+
+	override fun minimum(number: Long, exclusive: Boolean) {
+		minimum(number, exclusive, typeOf<Long>())
+	}
+
+	// endregion
+	// region Strings
+
+	override fun maxLength(length: Int) {
+		TODO("Not yet implemented")
+	}
+
+	override fun minLength(length: Int) {
+		TODO("Not yet implemented")
+	}
+
+	override fun pattern(pattern: String) {
+		TODO("Not yet implemented")
+	}
+
+	// endregion
+	// region Arrays
+
+	override fun <I> items(title: String, schema: SchemaQuery<I>.() -> Unit) {
+		TODO("Not yet implemented")
+	}
+
+	override fun <I> itemsInOrder(schemas: SchemaQuery.SchemaHostArrayQuery<I>.() -> Unit) {
+		TODO("Not yet implemented")
+	}
+
+	override fun maxItems(size: Int) {
+		TODO("Not yet implemented")
+	}
+
+	override fun minItems(size: Int) {
+		TODO("Not yet implemented")
+	}
+
+	override fun uniqueItems(boolean: Boolean) {
+		TODO("Not yet implemented")
+	}
+
+	// endregion
+	// region Objects
+
+	override fun maxProperties(count: Int) {
+		TODO("Not yet implemented")
+	}
+
+	override fun minProperties(count: Int) {
+		TODO("Not yet implemented")
+	}
+
+	override fun properties(block: SchemaQuery.SchemaPropertiesQuery<T>.() -> Unit) {
+		TODO("Not yet implemented")
+	}
+
+	// endregion
+	// region Combinators
+
+	override fun allOf(block: SchemaQuery.SchemaHostQuery<T>.() -> Unit) {
+		TODO("Not yet implemented")
+	}
+
+	override fun anyOf(block: SchemaQuery.SchemaHostQuery<T>.() -> Unit) {
+		TODO("Not yet implemented")
+	}
+
+	override fun oneOf(block: SchemaQuery.SchemaHostQuery<T>.() -> Unit) {
+		TODO("Not yet implemented")
+	}
+
+	override fun not(title: String, block: SchemaQuery<T>.() -> Unit) {
+		TODO("Not yet implemented")
+	}
+
+	// endregion
+
+}
+
+@LowLevelApi
+fun <T> SchemaQuery(
+	title: String,
+	context: BsonContext,
+): SchemaQuery<T> =
+	SchemaQueryImpl(context = context, title = title)

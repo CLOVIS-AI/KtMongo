@@ -344,6 +344,28 @@ private class FilterQueryImpl<T>(
 	}
 
 	// endregion
+	// region Schema
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	override fun schema(title: String, block: SchemaQuery<T>.() -> Unit) {
+		accept(SchemaBsonNode(SchemaQuery<T>(title, context).apply(block), context))
+	}
+
+	@LowLevelApi
+	private class SchemaBsonNode<T>(
+		val schema: SchemaQuery<T>,
+		context: BsonContext,
+	) : FilterBsonNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument($$"$jsonSchema") {
+				schema.writeTo(this)
+			}
+		}
+	}
+
+	// endregion
 
 }
 
