@@ -36,6 +36,7 @@ val SchemaTest by multiContextSuite {
 				} shouldBeBson $$"""
 					{
 						"$jsonSchema": {
+							"title": "Test",
 							"bsonType": "$$alias"
 						}
 					}
@@ -73,11 +74,27 @@ val SchemaTest by multiContextSuite {
 			} shouldBeBson $$"""
 				{
 					"$jsonSchema": {
+						"title": "Test",
 						"bsonType": "number"
 					}
 				}
 			""".trimIndent()
 		}
+	}
+
+	test("Description") {
+		filter {
+			schema("Test") {
+				description("Hello world")
+			}
+		} shouldBeBson $$"""
+			{
+				"$jsonSchema": {
+					"title": "Test",
+					"description": "Hello world"
+				}
+			}
+		""".trimIndent()
 	}
 
 }

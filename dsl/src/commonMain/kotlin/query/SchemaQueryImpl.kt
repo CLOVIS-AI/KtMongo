@@ -65,6 +65,12 @@ private class SchemaQueryImpl<T>(
 		}
 	}
 
+	@LowLevelApi
+	override fun write(writer: BsonFieldWriter, children: List<BsonNode>) {
+		writer.writeString("title", title)
+		super.write(writer, children)
+	}
+
 	// endregion
 	// region Generic
 
@@ -82,8 +88,21 @@ private class SchemaQueryImpl<T>(
 		TODO("Not yet implemented")
 	}
 
+	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
 	override fun description(description: String) {
-		TODO("Not yet implemented")
+		accept(DescriptionBsonNode(description, context))
+	}
+
+	@OptIn(LowLevelApi::class)
+	private class DescriptionBsonNode(
+		val description: String,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeString("description", description)
+		}
 	}
 
 	// endregion

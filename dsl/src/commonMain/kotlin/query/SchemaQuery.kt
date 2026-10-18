@@ -273,6 +273,42 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 
 	fun enum(values: List<T>)
 
+	/**
+	 * Provides a human-readable description of this schema.
+	 *
+	 * This operator is purely documentation, it does not impact the query.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         description("Information about users")
+	 *
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 description("The age of the user")
+	 *                 type(BsonType.Number)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-6.1)
+	 */
 	fun description(description: String)
 
 	// endregion
