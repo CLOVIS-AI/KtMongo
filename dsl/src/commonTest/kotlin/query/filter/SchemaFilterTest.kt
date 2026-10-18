@@ -753,6 +753,11 @@ val SchemaTest by multiContextSuite {
 				{
 					"$jsonSchema": {
 						"title": "Test",
+						"required": [
+							"custom",
+							"name",
+							"age"
+						],
 						"properties": {
 							"custom": {
 								"title": "custom",
@@ -821,6 +826,9 @@ val SchemaTest by multiContextSuite {
 				{
 					"$jsonSchema": {
 						"title": "Test",
+						"required": [
+							"name"
+						],
 						"properties": {
 							"name": {
 								"title": "name",
@@ -855,6 +863,9 @@ val SchemaTest by multiContextSuite {
 				{
 					"$jsonSchema": {
 						"title": "Test",
+						"required": [
+							"name"
+						],
 						"properties": {
 							"name": {
 								"title": "name",
@@ -871,6 +882,81 @@ val SchemaTest by multiContextSuite {
 							"title": "Extra",
 							"bsonType": "bool"
 						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Optional properties") {
+			filter {
+				schema("Test") {
+					properties {
+						property(User::name, required = false) {
+							type(BsonType.String)
+						}
+						property(User::age, required = false) {
+							type(BsonType.Int32)
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"properties": {
+							"name": {
+								"title": "name",
+								"bsonType": "string"
+							},
+							"age": {
+								"title": "age",
+								"bsonType": "int"
+							}
+						},
+						"additionalProperties": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Mixed required and optional properties") {
+			filter {
+				schema("Test") {
+					properties {
+						property(User::name) {
+							type(BsonType.String)
+						}
+						property(User::age, required = false) {
+							type(BsonType.Int32)
+						}
+						property<String>("custom", required = true) {
+							type(BsonType.String)
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"required": [
+							"name",
+							"custom"
+						],
+						"properties": {
+							"name": {
+								"title": "name",
+								"bsonType": "string"
+							},
+							"age": {
+								"title": "age",
+								"bsonType": "int"
+							},
+							"custom": {
+								"title": "custom",
+								"bsonType": "string"
+							}
+						},
+						"additionalProperties": false
 					}
 				}
 			""".trimIndent()

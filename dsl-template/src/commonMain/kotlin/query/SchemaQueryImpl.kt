@@ -384,6 +384,15 @@ private class SchemaQueryImpl<T>(
 			val patternProperties = children.filterIsInstance<PatternPropertyDeclarationBsonNode>()
 			val additionalProperties = children.filterIsInstance<AdditionalPropertiesDeclarationBsonNode>().singleOrNull()
 
+			val requiredProperties = namedProperties.filter { it.required }.map { it.name }
+			if (requiredProperties.isNotEmpty()) {
+				writeArray("required") {
+					for (name in requiredProperties) {
+						writeString(name)
+					}
+				}
+			}
+
 			if (namedProperties.isNotEmpty()) {
 				writeDocument("properties") {
 					for (prop in namedProperties) {
