@@ -162,16 +162,22 @@ private class SchemaQueryImpl<T>(
 	// endregion
 	// region Strings
 
+	@OptIn(LowLevelApi::class)
 	override fun maxLength(length: Int) {
-		TODO("Not yet implemented")
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.MaxLength(length, context) as Schema.Constraint<T>)
 	}
 
+	@OptIn(LowLevelApi::class)
 	override fun minLength(length: Int) {
-		TODO("Not yet implemented")
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.MinLength(length, context) as Schema.Constraint<T>)
 	}
 
+	@OptIn(LowLevelApi::class)
 	override fun pattern(pattern: String) {
-		TODO("Not yet implemented")
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.Pattern(pattern, context) as Schema.Constraint<T>)
 	}
 
 	// endregion

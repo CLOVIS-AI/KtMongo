@@ -340,4 +340,103 @@ val SchemaTest by multiContextSuite {
 		}
 	}
 
+	suite("String length") {
+		test("maxLength") {
+			filter {
+				schema("Test") {
+					type(BsonType.String)
+					maxLength(5)
+				}
+			} shouldBeBson $$"""
+			{
+				"$jsonSchema": {
+					"title": "Test",
+					"bsonType": "string",
+					"maxLength": 5
+				}
+			}
+		""".trimIndent()
+		}
+
+		test("minLength") {
+			filter {
+				schema("Test") {
+					type(BsonType.String)
+					minLength(2)
+				}
+			} shouldBeBson $$"""
+			{
+				"$jsonSchema": {
+					"title": "Test",
+					"bsonType": "string",
+					"minLength": 2
+				}
+			}
+		""".trimIndent()
+		}
+
+		test("Exact") {
+			filter {
+				schema("Test") {
+					length(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minLength": 5,
+						"maxLength": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("IntRange") {
+			filter {
+				schema("Test") {
+					length(2..5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minLength": 2,
+						"maxLength": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("UIntRange") {
+			filter {
+				schema("Test") {
+					length(2u..5u)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minLength": 2,
+						"maxLength": 5
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	test("pattern") {
+		filter {
+			schema("Test") {
+				pattern("^a.*b$")
+			}
+		} shouldBeBson $$"""
+			{
+				"$jsonSchema": {
+					"title": "Test",
+					"pattern": "^a.*b$"
+				}
+			}
+		""".trimIndent()
+	}
+
 }

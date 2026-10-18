@@ -662,25 +662,226 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 	// endregion
 	// region Strings
 
+	/**
+	 * Restricts this property's value to have at most [length] characters (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.String], this constraint is ignored.
+	 *
+	 * [length] must be non-negative.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::name) {
+	 *                 type(BsonType.String)
+	 *                 maxLength(50)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.2.1)
+	 */
 	fun maxLength(length: Int)
 
+	/**
+	 * Restricts this property's value to have at least [length] characters (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.String], this constraint is ignored.
+	 *
+	 * [length] must be non-negative.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::name) {
+	 *                 type(BsonType.String)
+	 *                 minLength(2)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.2.2)
+	 */
 	fun minLength(length: Int)
 
+	/**
+	 * Restricts this property's value to have exactly [length] characters.
+	 *
+	 * If the property does not contain a [BsonType.String], this constraint is ignored.
+	 *
+	 * [length] must be non-negative.
+	 *
+	 * This function is syntax sugar to set both [minLength] and [maxLength].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val postalCode: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::postalCode) {
+	 *                 type(BsonType.String)
+	 *                 length(5)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 */
 	fun length(length: Int) {
 		minLength(length)
 		maxLength(length)
 	}
 
+	/**
+	 * Restricts this property's value to have a length compatible with [length].
+	 *
+	 * If the property does not contain a [BsonType.String], this constraint is ignored.
+	 *
+	 * This function is syntax sugar to set both [minLength] and [maxLength].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::name) {
+	 *                 type(BsonType.String)
+	 *                 length(2..50)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 */
 	fun length(length: IntRange) {
 		minLength(length.first)
 		maxLength(length.last)
 	}
 
+	/**
+	 * Restricts this property's value to have a length compatible with [length].
+	 *
+	 * If the property does not contain a [BsonType.String], this constraint is ignored.
+	 *
+	 * This function is syntax sugar to set both [minLength] and [maxLength].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::name) {
+	 *                 type(BsonType.String)
+	 *                 length(2..50)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 */
 	fun length(length: UIntRange) {
 		minLength(length.first.toInt())
 		maxLength(length.last.toInt())
 	}
 
+	/**
+	 * Restricts this property's value to match the regular expression [pattern], in the `ECMA 262` dialect.
+	 *
+	 * If the property does not contain a [String], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val email: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::email) {
+	 *                 type(BsonType.String)
+	 *                 pattern("^.+@.+\\..+$")
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.2.3)
+	 */
 	fun pattern(@Language("JSRegexp") pattern: String)
 
 	// endregion
