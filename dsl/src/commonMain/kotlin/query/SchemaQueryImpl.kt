@@ -296,16 +296,158 @@ private class SchemaQueryImpl<T>(
 	// endregion
 	// region Objects
 
+	@OptIn(LowLevelApi::class)
 	override fun maxProperties(count: Int) {
-		TODO("Not yet implemented")
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.MaxProperties(count, context) as Schema.Constraint<T>)
 	}
 
+	@OptIn(LowLevelApi::class)
 	override fun minProperties(count: Int) {
-		TODO("Not yet implemented")
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.MinProperties(count, context) as Schema.Constraint<T>)
 	}
 
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun properties(block: SchemaQuery.SchemaPropertiesQuery<T>.() -> Unit) {
-		TODO("Not yet implemented")
+		accept(SchemaPropertiesQueryImpl<T>(context).apply(block))
+	}
+
+	@OptIn(LowLevelApi::class)
+	private class SchemaPropertiesQueryImpl<T>(
+		context: BsonContext,
+	) : AbstractCompoundBsonNode(context), SchemaQuery.SchemaPropertiesQuery<T> {
+
+		@OptIn(DangerousMongoApi::class)
+		override fun <E> property(
+			name: String,
+			required: Boolean,
+			schema: SchemaQuery<E>.() -> Unit,
+		): SchemaQuery.SchemaPropertiesQuery.Property<T> {
+			accept(PropertyDeclarationBsonNode(name, required, SchemaQuery<E>(name, context).apply(schema), context))
+			return PropertyImpl()
+		}
+
+		@OptIn(DangerousMongoApi::class)
+		override fun <E> properties(
+			pattern: String,
+			schema: SchemaQuery<E>.() -> Unit,
+		) {
+			accept(PatternPropertyDeclarationBsonNode(pattern, SchemaQuery<E>(pattern, context).apply(schema), context))
+		}
+
+		@OptIn(DangerousMongoApi::class)
+		override fun additionalProperties(
+			title: String,
+			schema: SchemaQuery<*>.() -> Unit,
+		) {
+			accept(AdditionalPropertiesDeclarationBsonNode(SchemaQuery<Any?>(title, context).apply(schema), context))
+		}
+
+		private inner class PropertyImpl : AbstractCompoundBsonNode(context), SchemaQuery.SchemaPropertiesQuery.Property<T> {
+			override fun dependsOn(property: SchemaQuery.SchemaPropertiesQuery.Property<T>) {
+				TODO("Not yet implemented")
+			}
+
+			override fun dependsOn(property: String) {
+				TODO("Not yet implemented")
+			}
+
+			override fun dependsOn(schema: SchemaQuery<T>.() -> Unit) {
+				TODO("Not yet implemented")
+			}
+		}
+
+		override fun simplify(children: List<BsonNode>): AbstractBsonNode? {
+			if (children.isEmpty())
+				return null
+
+			val additionalPropertiesCount = children.count { it is AdditionalPropertiesDeclarationBsonNode }
+			check(additionalPropertiesCount <= 1) { "Cannot declare additionalProperties more than once: $this" }
+
+			val propertyNames = HashSet<String>()
+			for (child in children) {
+				if (child is PropertyDeclarationBsonNode) {
+					check(propertyNames.add(child.name)) { "Property '${child.name}' was already declared: $children" }
+				}
+			}
+
+			val patternNames = HashSet<String>()
+			for (child in children) {
+				if (child is PatternPropertyDeclarationBsonNode) {
+					check(patternNames.add(child.pattern)) { "Pattern '${child.pattern}' was already declared: $children" }
+				}
+			}
+
+			return this
+		}
+
+		override fun write(writer: BsonFieldWriter, children: List<BsonNode>) = with(writer) {
+			val namedProperties = children.filterIsInstance<PropertyDeclarationBsonNode>()
+			val patternProperties = children.filterIsInstance<PatternPropertyDeclarationBsonNode>()
+			val additionalProperties = children.filterIsInstance<AdditionalPropertiesDeclarationBsonNode>().singleOrNull()
+
+			if (namedProperties.isNotEmpty()) {
+				writeDocument("properties") {
+					for (prop in namedProperties) {
+						writeDocument(prop.name) {
+							prop.writeTo(this)
+						}
+					}
+				}
+			}
+
+			if (patternProperties.isNotEmpty()) {
+				writeDocument("patternProperties") {
+					for (prop in patternProperties) {
+						writeDocument(prop.pattern) {
+							prop.writeTo(this)
+						}
+					}
+				}
+			}
+
+			if (additionalProperties != null) {
+				writeDocument("additionalProperties") {
+					additionalProperties.writeTo(this)
+				}
+			} else {
+				writeBoolean("additionalProperties", false)
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class PropertyDeclarationBsonNode(
+		val name: String,
+		val required: Boolean,
+		val schema: SchemaQuery<*>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+		override fun write(writer: BsonFieldWriter) {
+			schema.writeTo(writer)
+		}
+	}
+
+	@LowLevelApi
+	private class PatternPropertyDeclarationBsonNode(
+		val pattern: String,
+		val schema: SchemaQuery<*>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+		override fun write(writer: BsonFieldWriter) {
+			schema.writeTo(writer)
+		}
+	}
+
+	@LowLevelApi
+	private class AdditionalPropertiesDeclarationBsonNode(
+		val schema: SchemaQuery<*>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+		override fun write(writer: BsonFieldWriter) {
+			schema.writeTo(writer)
+		}
 	}
 
 	// endregion

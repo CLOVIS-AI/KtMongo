@@ -649,4 +649,232 @@ val SchemaTest by multiContextSuite {
 		}
 	}
 
+	suite("Object size") {
+		test("maxProperties") {
+			filter {
+				schema("Test") {
+					type(BsonType.Document)
+					maxProperties(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"bsonType": "object",
+						"maxProperties": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("minProperties") {
+			filter {
+				schema("Test") {
+					type(BsonType.Document)
+					minProperties(2)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"bsonType": "object",
+						"minProperties": 2
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Exact") {
+			filter {
+				schema("Test") {
+					properties(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minProperties": 5,
+						"maxProperties": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("IntRange") {
+			filter {
+				schema("Test") {
+					properties(2..5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minProperties": 2,
+						"maxProperties": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("UIntRange") {
+			filter {
+				schema("Test") {
+					properties(2u..5u)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minProperties": 2,
+						"maxProperties": 5
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite("Object properties") {
+		test("Properties by name and property reference") {
+			filter {
+				schema("Test") {
+					properties {
+						property<String>("custom") {
+							type(BsonType.String)
+						}
+						property(User::name) {
+							type(BsonType.String)
+						}
+						property(User::age) {
+							type(BsonType.Int32)
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"properties": {
+							"custom": {
+								"title": "custom",
+								"bsonType": "string"
+							},
+							"name": {
+								"title": "name",
+								"bsonType": "string"
+							},
+							"age": {
+								"title": "age",
+								"bsonType": "int"
+							}
+						},
+						"additionalProperties": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Pattern properties") {
+			filter {
+				schema("Test") {
+					properties {
+						properties<String>("^str_.*$") {
+							type(BsonType.String)
+						}
+						properties<Int>("^num_.*$") {
+							type(BsonType.Int32)
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"patternProperties": {
+							"^str_.*$": {
+								"title": "^str_.*$",
+								"bsonType": "string"
+							},
+							"^num_.*$": {
+								"title": "^num_.*$",
+								"bsonType": "int"
+							}
+						},
+						"additionalProperties": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Additional properties (schema)") {
+			filter {
+				schema("Test") {
+					properties {
+						property(User::name) {
+							type(BsonType.String)
+						}
+						additionalProperties("Extra") {
+							type(BsonType.String)
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"properties": {
+							"name": {
+								"title": "name",
+								"bsonType": "string"
+							}
+						},
+						"additionalProperties": {
+							"title": "Extra",
+							"bsonType": "string"
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Properties, patternProperties, and additionalProperties combined") {
+			filter {
+				schema("Test") {
+					properties {
+						property(User::name) {
+							type(BsonType.String)
+						}
+						properties<Int>("^extra_.*$") {
+							type(BsonType.Int32)
+						}
+						additionalProperties("Extra") {
+							type(BsonType.Boolean)
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"properties": {
+							"name": {
+								"title": "name",
+								"bsonType": "string"
+							}
+						},
+						"patternProperties": {
+							"^extra_.*$": {
+								"title": "^extra_.*$",
+								"bsonType": "int"
+							}
+						},
+						"additionalProperties": {
+							"title": "Extra",
+							"bsonType": "bool"
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
 }

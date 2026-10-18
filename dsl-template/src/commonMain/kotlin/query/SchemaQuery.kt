@@ -1333,13 +1333,244 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 	// endregion
 	// region Objects
 
+	/**
+	 * Restricts this property's object value to have at most [count] properties (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.Document], this constraint is ignored.
+	 *
+	 * [count] must be non-negative.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val extraInfo: Map<String, String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::extraInfo) {
+	 *                 type(BsonType.Document)
+	 *                 maxProperties(5)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.1)
+	 */
 	fun maxProperties(count: Int)
 
+	/**
+	 * Restricts this property's object value to have at least [count] properties (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.Document], this constraint is ignored.
+	 *
+	 * [count] must be non-negative.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val extraInfo: Map<String, String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::extraInfo) {
+	 *                 type(BsonType.Document)
+	 *                 minProperties(1)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.2)
+	 */
 	fun minProperties(count: Int)
+
+	/**
+	 * Restricts this property's object value to have exactly [count] properties.
+	 *
+	 * If the property does not contain a [BsonType.Document], this constraint is ignored.
+	 *
+	 * [count] must be non-negative.
+	 *
+	 * This function is syntax sugar to set both [minProperties] and [maxProperties].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val extraInfo: Map<String, String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::extraInfo) {
+	 *                 type(BsonType.Document)
+	 *                 properties(5)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.1)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.2)
+	 */
+	fun properties(count: Int) {
+		minProperties(count)
+		maxProperties(count)
+	}
+
+	/**
+	 * Restricts this property's object value to have between `count.first` and `count.last` properties (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.Document], this constraint is ignored.
+	 *
+	 * [count] must be non-negative.
+	 *
+	 * This function is syntax sugar to set both [minProperties] and [maxProperties].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val extraInfo: Map<String, String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::extraInfo) {
+	 *                 type(BsonType.Document)
+	 *                 properties(1..5)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.1)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.2)
+	 */
+	fun properties(count: IntRange) {
+		minProperties(count.first)
+		maxProperties(count.last)
+	}
+
+	/**
+	 * Restricts this property's object value to have between `count.first` and `count.last` properties (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.Document], this constraint is ignored.
+	 *
+	 * This function is syntax sugar to set both [minProperties] and [maxProperties].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val extraInfo: Map<String, String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::extraInfo) {
+	 *                 type(BsonType.Document)
+	 *                 properties(1u..5u)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.1)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.2)
+	 */
+	fun properties(count: UIntRange) {
+		minProperties(count.first.toInt())
+		maxProperties(count.last.toInt())
+	}
 
 	@KtMongoDsl
 	interface SchemaPropertiesQuery<T> : CompoundBsonNode, FieldDsl {
 
+		/**
+		 * Declares constraints on a property named [name].
+		 *
+		 * If [required] is `true`, the property must be present in the document.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val _id: ObjectId,
+		 *     val name: String,
+		 * )
+		 *
+		 * users.find {
+		 *     schema("User") {
+		 *         properties {
+		 *             property("name") {
+		 *                 type(BsonType.String)
+		 *             }
+		 *         }
+		 *     }
+		 * }
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+		 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.4)
+		 */
 		@IgnorableReturnValue
 		fun <E> property(
 			name: String,
@@ -1347,6 +1578,35 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 			schema: SchemaQuery<E>.() -> Unit,
 		): Property<T>
 
+		/**
+		 * Declares constraints on a property represented by [field].
+		 *
+		 * If [required] is `true`, the property must be present in the document.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val _id: ObjectId,
+		 *     val name: String,
+		 * )
+		 *
+		 * users.find {
+		 *     schema("User") {
+		 *         properties {
+		 *             property(User::name) {
+		 *                 type(BsonType.String)
+		 *             }
+		 *         }
+		 *     }
+		 * }
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+		 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.4)
+		 */
 		@IgnorableReturnValue
 		@OptIn(LowLevelApi::class)
 		fun <E> property(
@@ -1355,11 +1615,40 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 			schema: SchemaQuery<E>.() -> Unit,
 		): Property<T> {
 			val name = (field.path.segment as? PathSegment.Field)?.name
-			requireNotNull(name) { $$"$jsonSchema only supports textual fields, found: $$field" }
+			requireNotNull(name) { "\$jsonSchema only supports textual fields, found: $field" }
 
 			return property(name, required, schema)
 		}
 
+		/**
+		 * Declares constraints on a property represented by [field].
+		 *
+		 * If [required] is `true`, the property must be present in the document.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class User(
+		 *     val _id: ObjectId,
+		 *     val name: String,
+		 * )
+		 *
+		 * users.find {
+		 *     schema("User") {
+		 *         properties {
+		 *             property(User::name) {
+		 *                 type(BsonType.String)
+		 *             }
+		 *         }
+		 *     }
+		 * }
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+		 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.4)
+		 */
 		@IgnorableReturnValue
 		fun <E> property(
 			field: KProperty1<T, E>,
@@ -1369,12 +1658,62 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 			return property(field.field, required, schema)
 		}
 
+		/**
+		 * Declares constraints on any property whose name matches the regular expression [pattern].
+		 *
+		 * [pattern] must follow the `ECMA 262` regular expression dialect.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * users.find {
+		 *     schema("User") {
+		 *         properties {
+		 *             properties("^str_.*$") {
+		 *                 type(BsonType.String)
+		 *             }
+		 *         }
+		 *     }
+		 * }
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+		 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.4)
+		 */
 		fun <E> properties(
 			@Language("JSRegexp") pattern: String,
 			schema: SchemaQuery<E>.() -> Unit,
 		)
 
+		/**
+		 * Declares constraints on any property not explicitly declared with [property] or [properties].
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * users.find {
+		 *     schema("User") {
+		 *         properties {
+		 *             property("name") {
+		 *                 type(BsonType.String)
+		 *             }
+		 *             additionalProperties("Extra") {
+		 *                 type(BsonType.String)
+		 *             }
+		 *         }
+		 *     }
+		 * }
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+		 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.4)
+		 */
 		fun additionalProperties(
+			title: String,
 			schema: SchemaQuery<*>.() -> Unit,
 		)
 
@@ -1390,6 +1729,38 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 		}
 	}
 
+	/**
+	 * Declares constraints on the properties of this object.
+	 *
+	 * If the property does not contain a [BsonType.Document], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *             property(User::name) {
+	 *                 type(BsonType.String)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.4)
+	 */
 	fun properties(block: SchemaPropertiesQuery<T>.() -> Unit)
 
 	// endregion
