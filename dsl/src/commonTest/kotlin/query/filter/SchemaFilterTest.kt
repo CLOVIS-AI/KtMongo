@@ -97,4 +97,247 @@ val SchemaTest by multiContextSuite {
 		""".trimIndent()
 	}
 
+	suite("multipleOf") {
+		test("Int") {
+			filter {
+				schema("Test") {
+					multipleOf(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"multipleOf": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Long") {
+			filter {
+				schema("Test") {
+					multipleOf(5L)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"multipleOf": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Double") {
+			filter {
+				schema("Test") {
+					multipleOf(5.5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"multipleOf": 5.5
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite("maximum") {
+		test("Int (inclusive)") {
+			filter {
+				schema("Test") {
+					maximum(10)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"maximum": 10,
+						"exclusiveMaximum": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Int (exclusive)") {
+			filter {
+				schema("Test") {
+					maximum(10, exclusive = true)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"maximum": 10,
+						"exclusiveMaximum": true
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Long (inclusive)") {
+			filter {
+				schema("Test") {
+					maximum(10L)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"maximum": 10,
+						"exclusiveMaximum": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Long (exclusive)") {
+			filter {
+				schema("Test") {
+					maximum(10L, exclusive = true)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"maximum": 10,
+						"exclusiveMaximum": true
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Double (inclusive)") {
+			filter {
+				schema("Test") {
+					maximum(10.5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"maximum": 10.5,
+						"exclusiveMaximum": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Double (exclusive)") {
+			filter {
+				schema("Test") {
+					maximum(10.5, exclusive = true)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"maximum": 10.5,
+						"exclusiveMaximum": true
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite("minimum") {
+		test("Int (inclusive)") {
+			filter {
+				schema("Test") {
+					minimum(10)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minimum": 10,
+						"exclusiveMinimum": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Int (exclusive)") {
+			filter {
+				schema("Test") {
+					minimum(10, exclusive = true)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minimum": 10,
+						"exclusiveMinimum": true
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Long (inclusive)") {
+			filter {
+				schema("Test") {
+					minimum(10L)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minimum": 10,
+						"exclusiveMinimum": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Long (exclusive)") {
+			filter {
+				schema("Test") {
+					minimum(10L, exclusive = true)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minimum": 10,
+						"exclusiveMinimum": true
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Double (inclusive)") {
+			filter {
+				schema("Test") {
+					minimum(10.5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minimum": 10.5,
+						"exclusiveMinimum": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Double (exclusive)") {
+			filter {
+				schema("Test") {
+					minimum(10.5, exclusive = true)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minimum": 10.5,
+						"exclusiveMinimum": true
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
 }

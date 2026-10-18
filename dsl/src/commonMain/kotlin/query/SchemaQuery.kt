@@ -314,22 +314,352 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 	// endregion
 	// region Numeric
 
+	/**
+	 * Restricts this property's value to multiples of [number].
+	 *
+	 * If the property does not contain a [Number], this constraint is ignored.
+	 *
+	 * [number] must be strictly positive.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val _id: ObjectId,
+	 *     val quantityInPack: Int,
+	 * )
+	 *
+	 * products.find {
+	 *     schema("Product") {
+	 *         properties {
+	 *             property(Product::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(Product::quantityInPack) {
+	 *                 type(BsonType.Int32)
+	 *                 multipleOf(6)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.1)
+	 */
 	fun multipleOf(number: Int)
 
+	/**
+	 * Restricts this property's value to multiples of [number].
+	 *
+	 * If the property does not contain a [Number], this constraint is ignored.
+	 *
+	 * [number] must be strictly positive.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val _id: ObjectId,
+	 *     val quantityInPack: Int,
+	 * )
+	 *
+	 * products.find {
+	 *     schema("Product") {
+	 *         properties {
+	 *             property(Product::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(Product::quantityInPack) {
+	 *                 type(BsonType.Int32)
+	 *                 multipleOf(6)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.1)
+	 */
 	fun multipleOf(number: Long)
 
+	/**
+	 * Restricts this property's value to multiples of [number].
+	 *
+	 * If the property does not contain a [Number], this constraint is ignored.
+	 *
+	 * [number] must be strictly positive.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Product(
+	 *     val _id: ObjectId,
+	 *     val quantityInPack: Int,
+	 * )
+	 *
+	 * products.find {
+	 *     schema("Product") {
+	 *         properties {
+	 *             property(Product::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(Product::quantityInPack) {
+	 *                 type(BsonType.Int32)
+	 *                 multipleOf(6)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.1)
+	 */
 	fun multipleOf(number: Double)
 
+	/**
+	 * Restricts this property's value to be less than [number].
+	 *
+	 * - If [exclusive] is `true`, the value must be strictly less than [number].
+	 * - If [exclusive] is `false`, the value must be less than or equal to [number].
+	 *
+	 * If the property does not contain a [Number], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Int32)
+	 *                 maximum(120)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.2)
+	 */
 	fun maximum(number: Int, exclusive: Boolean = false)
 
+	/**
+	 * Restricts this property's value to be less than [number].
+	 *
+	 * - If [exclusive] is `true`, the value must be strictly less than [number].
+	 * - If [exclusive] is `false`, the value must be less than or equal to [number].
+	 *
+	 * If the property does not contain a [Number], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Int32)
+	 *                 maximum(120)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.2)
+	 */
 	fun maximum(number: Long, exclusive: Boolean = false)
 
+	/**
+	 * Restricts this property's value to be less than [number].
+	 *
+	 * - If [exclusive] is `true`, the value must be strictly less than [number].
+	 * - If [exclusive] is `false`, the value must be less than or equal to [number].
+	 *
+	 * If the property does not contain a [Number], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Int32)
+	 *                 maximum(120)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.2)
+	 */
 	fun maximum(number: Double, exclusive: Boolean = false)
 
+	/**
+	 * Restricts this property's value to be greater than [number].
+	 *
+	 * - If [exclusive] is `true`, the value must be strictly greater than [number].
+	 * - If [exclusive] is `false`, the value must be greater than or equal to [number].
+	 *
+	 * If the property does not contain a [Number], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Int32)
+	 *                 minimum(0)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.3)
+	 */
 	fun minimum(number: Int, exclusive: Boolean = false)
 
+	/**
+	 * Restricts this property's value to be greater than [number].
+	 *
+	 * - If [exclusive] is `true`, the value must be strictly greater than [number].
+	 * - If [exclusive] is `false`, the value must be greater than or equal to [number].
+	 *
+	 * If the property does not contain a [Number], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Int32)
+	 *                 minimum(0)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.3)
+	 */
 	fun minimum(number: Long, exclusive: Boolean = false)
 
+	/**
+	 * Restricts this property's value to be greater than [number].
+	 *
+	 * - If [exclusive] is `true`, the value must be strictly greater than [number].
+	 * - If [exclusive] is `false`, the value must be greater than or equal to [number].
+	 *
+	 * If the property does not contain a [Number], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::age) {
+	 *                 type(BsonType.Int32)
+	 *                 minimum(0)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.1.3)
+	 */
 	fun minimum(number: Double, exclusive: Boolean = false)
 
 	// endregion

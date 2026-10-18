@@ -108,8 +108,10 @@ private class SchemaQueryImpl<T>(
 	// endregion
 	// region Numeric
 
+	@OptIn(LowLevelApi::class)
 	private fun multipleOf(number: Number, type: KType) {
-		TODO()
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.MultipleOf(number, type, context) as Schema.Constraint<T>)
 	}
 
 	override fun multipleOf(number: Double) {
@@ -124,8 +126,10 @@ private class SchemaQueryImpl<T>(
 		multipleOf(number, typeOf<Long>())
 	}
 
+	@OptIn(LowLevelApi::class)
 	private fun maximum(number: Number, exclusive: Boolean, type: KType) {
-		TODO()
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.Maximum(number, type, exclusive, context) as Schema.Constraint<T>)
 	}
 
 	override fun maximum(number: Double, exclusive: Boolean) {
@@ -140,8 +144,10 @@ private class SchemaQueryImpl<T>(
 		maximum(number, exclusive, typeOf<Long>())
 	}
 
+	@OptIn(LowLevelApi::class)
 	private fun minimum(number: Number, exclusive: Boolean, type: KType) {
-		TODO()
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.Minimum(number, type, exclusive, context) as Schema.Constraint<T>)
 	}
 
 	override fun minimum(number: Double, exclusive: Boolean) {
