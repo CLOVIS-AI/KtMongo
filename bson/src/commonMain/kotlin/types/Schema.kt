@@ -431,12 +431,15 @@ class Schema<T> internal constructor(
 	 * If the property does not contain an array, this constraint is ignored.
 	 */
 	class UniqueItems(
+		val unique: Boolean,
 		factory: BsonFactory,
 	) : SimpleConstraint<Collection<*>>("uniqueItems", factory) {
 
+		constructor(factory: BsonFactory) : this(true, factory)
+
 		@OptIn(LowLevelApi::class)
 		override fun BsonValueWriter.write() {
-			writeBoolean(true)
+			writeBoolean(unique)
 		}
 	}
 

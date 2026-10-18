@@ -439,4 +439,214 @@ val SchemaTest by multiContextSuite {
 		""".trimIndent()
 	}
 
+	suite("Array items") {
+		test("Homogeneous") {
+			filter {
+				schema("Test") {
+					items<String>("Item") {
+						type(BsonType.String)
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"items": {
+							"title": "Item",
+							"bsonType": "string"
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("In order (without additional items)") {
+			filter {
+				schema("Test") {
+					itemsInOrder<Any?> {
+						schema("First") {
+							type(BsonType.String)
+						}
+						schema("Second") {
+							type(BsonType.Int32)
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"items": [
+							{
+								"title": "First",
+								"bsonType": "string"
+							},
+							{
+								"title": "Second",
+								"bsonType": "int"
+							}
+						],
+						"additionalItems": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("In order (with additional items)") {
+			filter {
+				schema("Test") {
+					itemsInOrder<Any?> {
+						schema("First") {
+							type(BsonType.String)
+						}
+						schema("Second") {
+							type(BsonType.Int32)
+						}
+						additionalItems("Rest") {
+							type(BsonType.Double)
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"items": [
+							{
+								"title": "First",
+								"bsonType": "string"
+							},
+							{
+								"title": "Second",
+								"bsonType": "int"
+							}
+						],
+						"additionalItems": {
+							"title": "Rest",
+							"bsonType": "double"
+						}
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite("Array size") {
+		test("maxItems") {
+			filter {
+				schema("Test") {
+					type(BsonType.Array)
+					maxItems(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"bsonType": "array",
+						"maxItems": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("minItems") {
+			filter {
+				schema("Test") {
+					type(BsonType.Array)
+					minItems(2)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"bsonType": "array",
+						"minItems": 2
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Exact") {
+			filter {
+				schema("Test") {
+					size(5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minItems": 5,
+						"maxItems": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("IntRange") {
+			filter {
+				schema("Test") {
+					size(2..5)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minItems": 2,
+						"maxItems": 5
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("UIntRange") {
+			filter {
+				schema("Test") {
+					size(2u..5u)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"minItems": 2,
+						"maxItems": 5
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
+	suite("Array unique items") {
+		test("True") {
+			filter {
+				schema("Test") {
+					type(BsonType.Array)
+					uniqueItems()
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"bsonType": "array",
+						"uniqueItems": true
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("False") {
+			filter {
+				schema("Test") {
+					uniqueItems(false)
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"uniqueItems": false
+					}
+				}
+			""".trimIndent()
+		}
+	}
+
 }

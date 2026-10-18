@@ -183,24 +183,111 @@ private class SchemaQueryImpl<T>(
 	// endregion
 	// region Arrays
 
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun <I> items(title: String, schema: SchemaQuery<I>.() -> Unit) {
-		TODO("Not yet implemented")
+		accept(ItemsBsonNode(SchemaQuery<I>(title, context).apply(schema), context))
 	}
 
+	@OptIn(LowLevelApi::class)
+	private class ItemsBsonNode<I>(
+		val schema: SchemaQuery<I>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+
+		@LowLevelApi
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument("items") {
+				schema.writeTo(this)
+			}
+		}
+	}
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun <I> itemsInOrder(schemas: SchemaQuery.SchemaHostArrayQuery<I>.() -> Unit) {
-		TODO("Not yet implemented")
+		accept(SchemaHostArrayQueryImpl<I>(context).apply(schemas))
 	}
 
+	@OptIn(LowLevelApi::class)
+	private class SchemaHostArrayQueryImpl<T>(
+		context: BsonContext,
+	) : AbstractCompoundBsonNode(context), SchemaQuery.SchemaHostArrayQuery<T> {
+
+		@OptIn(DangerousMongoApi::class)
+		override fun schema(title: String, block: SchemaQuery<T>.() -> Unit) {
+			accept(ItemSchemaBsonNode(SchemaQuery<T>(title, context).apply(block), context))
+		}
+
+		@OptIn(DangerousMongoApi::class)
+		override fun additionalItems(title: String, schema: SchemaQuery<T>.() -> Unit) {
+			accept(AdditionalItemsBsonNode(SchemaQuery<T>(title, context).apply(schema), context))
+		}
+
+		override fun simplify(children: List<BsonNode>): AbstractBsonNode {
+			val items = children.filterIsInstance<ItemSchemaBsonNode<*>>()
+			require(items.isNotEmpty()) { "itemsInOrder must contain at least one schema" }
+			val additionalItemsCount = children.count { it is AdditionalItemsBsonNode<*> }
+			check(additionalItemsCount <= 1) { "Cannot declare additionalItems more than once: $this" }
+			return this
+		}
+
+		override fun write(writer: BsonFieldWriter, children: List<BsonNode>) = with(writer) {
+			val items = children.filterIsInstance<ItemSchemaBsonNode<*>>()
+			val additionalItems = children.filterIsInstance<AdditionalItemsBsonNode<*>>().singleOrNull()
+
+			writeArray("items") {
+				for (item in items) {
+					writeDocument {
+						item.writeTo(this)
+					}
+				}
+			}
+
+			if (additionalItems != null) {
+				writeDocument("additionalItems") {
+					additionalItems.writeTo(this)
+				}
+			} else {
+				writeBoolean("additionalItems", false)
+			}
+		}
+	}
+
+	@LowLevelApi
+	private class ItemSchemaBsonNode<T>(
+		val schema: SchemaQuery<T>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+		override fun write(writer: BsonFieldWriter) {
+			schema.writeTo(writer)
+		}
+	}
+
+	@LowLevelApi
+	private class AdditionalItemsBsonNode<T>(
+		val schema: SchemaQuery<T>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+		override fun write(writer: BsonFieldWriter) {
+			schema.writeTo(writer)
+		}
+	}
+
+	@OptIn(LowLevelApi::class)
 	override fun maxItems(size: Int) {
-		TODO("Not yet implemented")
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.MaxItems(size, context) as Schema.Constraint<T>)
 	}
 
+	@OptIn(LowLevelApi::class)
 	override fun minItems(size: Int) {
-		TODO("Not yet implemented")
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.MinItems(size, context) as Schema.Constraint<T>)
 	}
 
-	override fun uniqueItems(boolean: Boolean) {
-		TODO("Not yet implemented")
+	@OptIn(LowLevelApi::class)
+	override fun uniqueItems(unique: Boolean) {
+		@Suppress("UNCHECKED_CAST")
+		accept(Schema.UniqueItems(unique, context) as Schema.Constraint<T>)
 	}
 
 	// endregion

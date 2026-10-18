@@ -131,9 +131,58 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 	@ExperimentalBsonSchemaApi
 	fun accept(constraint: Schema.Constraint<T>)
 
+	/**
+	 * DSL to allow declaring new schema. For more information, see [SchemaQuery].
+	 */
 	@KtMongoDsl
 	interface SchemaHostQuery<T> : CompoundBsonNode {
 
+		/**
+		 * Matches documents that satisfy the specified schema.
+		 *
+		 * ### Example
+		 *
+		 * Find all documents that can be successfully deserialized:
+		 *
+		 * ```kotlin
+		 * class City(
+		 *     val _id: ObjectId,
+		 *     val name: String,
+		 *     val countryCode: String,
+		 *     val popularity: Int? = null,
+		 * )
+		 *
+		 * collection.find {
+		 *     schema("City") {
+		 *         type(BsonType.Document)
+		 *         properties {
+		 *             property(City::_id) {
+		 *                 type(BsonType.ObjectId)
+		 *             }
+		 *
+		 *             property(City::name) {
+		 *                 type(BsonType.String)
+		 *             }
+		 *
+		 *             property(City::countryCode) {
+		 *                 type(BsonType.String)
+		 *                 length(2)
+		 *             }
+		 *
+		 *             property(City::popularity, required = false) {
+		 *                 type(BsonType.Int32)
+		 *             }
+		 *         }
+		 *     }
+		 * }
+		 * ```
+		 *
+		 * To see the list of operators, read [SchemaQuery].
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema)
+		 */
 		fun schema(title: String, block: SchemaQuery<T>.() -> Unit)
 
 	}
@@ -887,21 +936,399 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 	// endregion
 	// region Arrays
 
+	/**
+	 * Restricts this property's array items to conform to [schema].
+	 *
+	 * Using this method, all items of the array must confirm to the specified schema.
+	 * To specify different schema for the different items, see [itemsInOrder].
+	 *
+	 * If the property does not contain a [BsonType.Array], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val tags: List<String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::tags) {
+	 *                 type(BsonType.Array)
+	 *                 items<String>("Tag") {
+	 *                     type(BsonType.String)
+	 *                     maxLength(20)
+	 *                 }
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.1)
+	 */
 	fun <I> items(title: String, schema: SchemaQuery<I>.() -> Unit)
 
+	/**
+	 * Operators available in [itemsInOrder].
+	 */
 	@KtMongoDsl
 	interface SchemaHostArrayQuery<T> : SchemaHostQuery<T> {
 
+		/**
+		 * Specifies the behavior of [itemsInOrder] when more items are found than declared in the schema.
+		 *
+		 * If this function is not called, additional items beyond the declared schemas are forbidden.
+		 *
+		 * If this function is called, additional items beyond the declared schemas are allowed if they confirm to the [schema].
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * class Coordinates(
+		 *     val _id: ObjectId,
+		 *     val values: List<Double>,
+		 * )
+		 *
+		 * coordinates.find {
+		 *     schema("Coordinates") {
+		 *         properties {
+		 *             property(Coordinates::_id) {
+		 *                 type(BsonType.ObjectId)
+		 *             }
+		 *
+		 *             property(Coordinates::values) {
+		 *                 type(BsonType.Array)
+		 *                 itemsInOrder<Double> {
+		 *                     // The first item must be a Double
+		 *                     schema("Latitude") {
+		 *                         type(BsonType.Double)
+		 *                     }
+		 *
+		 *                     // The second item must be a Double
+		 *                     schema("Longitude") {
+		 *                         type(BsonType.Double)
+		 *                     }
+		 *
+		 *                     // If there are other items, they must also be a Double
+		 *                     additionalItems("Altitude") {
+		 *                         type(BsonType.Double)
+		 *                     }
+		 *                 }
+		 *             }
+		 *         }
+		 *     }
+		 * }
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+		 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.1)
+		 */
 		fun additionalItems(title: String, schema: SchemaQuery<T>.() -> Unit)
 	}
 
+	/**
+	 * Restricts this property's array items to conform to the given sequence of [schemas].
+	 *
+	 * The first item in the array must match the first declared schema, the second item must match the second declared schema, etc.
+	 *
+	 * By default, if the array contains more items than declared schemas, validation fails.
+	 * To allow additional items, declare an [additionalItems][SchemaHostArrayQuery.additionalItems] schema inside [schemas].
+	 *
+	 * If the property does not contain a [BsonType.Array], this constraint is ignored.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class Coordinates(
+	 *     val _id: ObjectId,
+	 *     val values: List<Double>,
+	 * )
+	 *
+	 * coordinates.find {
+	 *     schema("Coordinates") {
+	 *         properties {
+	 *             property(Coordinates::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(Coordinates::values) {
+	 *                 type(BsonType.Array)
+	 *                 itemsInOrder<Double> {
+	 *                     schema("Latitude") {
+	 *                         type(BsonType.Double)
+	 *                     }
+	 *                     schema("Longitude") {
+	 *                         type(BsonType.Double)
+	 *                     }
+	 *                 }
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.1)
+	 */
 	fun <I> itemsInOrder(schemas: SchemaHostArrayQuery<I>.() -> Unit)
 
+	/**
+	 * Restricts this property's array value to have at most [size] items (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.Array], this constraint is ignored.
+	 *
+	 * [size] must be non-negative.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val tags: List<String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::tags) {
+	 *                 type(BsonType.Array)
+	 *                 maxItems(5)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.2)
+	 */
 	fun maxItems(size: Int)
 
+	/**
+	 * Restricts this property's array value to have at least [size] items (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.Array], this constraint is ignored.
+	 *
+	 * [size] must be non-negative.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val tags: List<String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::tags) {
+	 *                 type(BsonType.Array)
+	 *                 minItems(1)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.3)
+	 */
 	fun minItems(size: Int)
 
-	fun uniqueItems(boolean: Boolean)
+	/**
+	 * Restricts this property's array value to have exactly [size] items.
+	 *
+	 * If the property does not contain a [BsonType.Array], this constraint is ignored.
+	 *
+	 * [size] must be non-negative.
+	 *
+	 * This function is syntax sugar to set both [minItems] and [maxItems].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val tags: List<String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::tags) {
+	 *                 type(BsonType.Array)
+	 *                 size(5)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.2)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.3)
+	 */
+	fun size(size: Int) {
+		minItems(size)
+		maxItems(size)
+	}
+
+	/**
+	 * Restricts this property's array value to have between `size.first` and `size.last` items (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.Array], this constraint is ignored.
+	 *
+	 * The range boundaries must be non-negative.
+	 *
+	 * This function is syntax sugar to set both [minItems] and [maxItems].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val tags: List<String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::tags) {
+	 *                 type(BsonType.Array)
+	 *                 size(1..5)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.2)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.3)
+	 */
+	fun size(size: IntRange) {
+		minItems(size.first)
+		maxItems(size.last)
+	}
+
+	/**
+	 * Restricts this property's array value to have between `size.first` and `size.last` items (inclusive).
+	 *
+	 * If the property does not contain a [BsonType.Array], this constraint is ignored.
+	 *
+	 * This function is syntax sugar to set both [minItems] and [maxItems].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val tags: List<String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::tags) {
+	 *                 type(BsonType.Array)
+	 *                 size(1..5)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.2)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.3)
+	 */
+	fun size(size: UIntRange) {
+		minItems(size.first.toInt())
+		maxItems(size.last.toInt())
+	}
+
+	/**
+	 * Restricts this property's array value to only contain unique items.
+	 *
+	 * If the property does not contain a [BsonType.Array], this constraint is ignored.
+	 *
+	 * If [unique] is `false`, duplicate items are allowed.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val tags: List<String>,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::tags) {
+	 *                 type(BsonType.Array)
+	 *                 uniqueItems()
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.3.4)
+	 */
+	fun uniqueItems(unique: Boolean = true)
 
 	// endregion
 	// region Objects
