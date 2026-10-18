@@ -1578,7 +1578,7 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 		fun <E> property(
 			name: String,
 			required: Boolean = true,
-			schema: SchemaQuery<E>.() -> Unit,
+			schema: SchemaPropertyQuery<T, E>.() -> Unit,
 		): Property<T>
 
 		/**
@@ -1615,7 +1615,7 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 		fun <E> property(
 			field: Field<T, E>,
 			required: Boolean = true,
-			schema: SchemaQuery<E>.() -> Unit,
+			schema: SchemaPropertyQuery<T, E>.() -> Unit,
 		): Property<T> {
 			val name = (field.path.segment as? PathSegment.Field)?.name
 			requireNotNull(name) { "\$jsonSchema only supports textual fields, found: $field" }
@@ -1656,7 +1656,7 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 		fun <E> property(
 			field: KProperty1<T, E>,
 			required: Boolean = true,
-			schema: SchemaQuery<E>.() -> Unit,
+			schema: SchemaPropertyQuery<T, E>.() -> Unit,
 		): Property<T> {
 			return property(field.field, required, schema)
 		}
@@ -1720,16 +1720,126 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 			schema: SchemaQuery<*>.() -> Unit,
 		)
 
+		/**
+		 * Operators available within [SchemaQuery.SchemaPropertiesQuery.property].
+		 */
 		@KtMongoDsl
-		interface Property<R> : CompoundBsonNode, FieldDsl {
+		interface SchemaPropertyQuery<R, T> : SchemaQuery<T> {
 
+			/**
+			 * Declares that if this property is present in the document, then the given [property] must also be present.
+			 *
+			 * ### Example
+			 *
+			 * ```kotlin
+			 * class User(
+			 *     val _id: ObjectId,
+			 *     val shippingAddress: Address?,
+			 *     val billingAddress: Address?,
+			 * )
+			 *
+			 * users.find {
+			 *     schema("User") {
+			 *         properties {
+			 *             val billing = property(User::billingAddress, required = false) {
+			 *                 type(BsonType.Document)
+			 *             }
+			 *             property(User::shippingAddress, required = false) {
+			 *                 type(BsonType.Document)
+			 *                 dependsOn(billing)
+			 *             }
+			 *         }
+			 *     }
+			 * }
+			 * ```
+			 *
+			 * ### External resources
+			 *
+			 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+			 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.5)
+			 */
 			fun dependsOn(property: Property<R>)
 
+			/**
+			 * Declares that if this property is present in the document, then the property named [property] must also be present.
+			 *
+			 * ### Example
+			 *
+			 * ```kotlin
+			 * class User(
+			 *     val _id: ObjectId,
+			 *     val shippingAddress: Address?,
+			 *     val billingAddress: Address?,
+			 * )
+			 *
+			 * users.find {
+			 *     schema("User") {
+			 *         properties {
+			 *             property(User::billingAddress, required = false) {
+			 *                 type(BsonType.Document)
+			 *             }
+			 *             property(User::shippingAddress, required = false) {
+			 *                 type(BsonType.Document)
+			 *                 dependsOn("billingAddress")
+			 *             }
+			 *         }
+			 *     }
+			 * }
+			 * ```
+			 *
+			 * ### External resources
+			 *
+			 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+			 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.5)
+			 */
 			fun dependsOn(property: String)
 
+			/**
+			 * Declares that if this property is present in the document, then the document must also satisfy the schema given by [schema].
+			 *
+			 * ### Example
+			 *
+			 * ```kotlin
+			 * class User(
+			 *     val _id: ObjectId,
+			 *     val creditCard: String?,
+			 *     val billingAddress: Address?,
+			 * )
+			 *
+			 * users.find {
+			 *     schema("User") {
+			 *         properties {
+			 *             property(User::creditCard, required = false) {
+			 *                 type(BsonType.String)
+			 *                 dependsOn {
+			 *                     properties {
+			 *                         property(User::billingAddress) {
+			 *                             type(BsonType.Document)
+			 *                         }
+			 *                     }
+			 *                 }
+			 *             }
+			 *         }
+			 *     }
+			 * }
+			 * ```
+			 *
+			 * ### External resources
+			 *
+			 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+			 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.5)
+			 */
 			fun dependsOn(schema: SchemaQuery<R>.() -> Unit)
 
 		}
+
+		/**
+		 * Allows specifying additional configuration on this property.
+		 *
+		 * See [SchemaPropertyQuery.dependsOn].
+		 */
+		@KtMongoDsl
+		sealed interface Property<R>
 	}
 
 	/**

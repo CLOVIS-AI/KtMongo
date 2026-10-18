@@ -33,7 +33,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 @OptIn(ExperimentalBsonSchemaApi::class)
-private class SchemaQueryImpl<T>(
+private open class SchemaQueryImpl<T>(
 	context: BsonContext,
 	private val title: String,
 ) : AbstractCompoundBsonNode(context), SchemaQuery<T> {
@@ -322,10 +322,11 @@ private class SchemaQueryImpl<T>(
 		override fun <E> property(
 			name: String,
 			required: Boolean,
-			schema: SchemaQuery<E>.() -> Unit,
+			schema: SchemaQuery.SchemaPropertiesQuery.SchemaPropertyQuery<T, E>.() -> Unit,
 		): SchemaQuery.SchemaPropertiesQuery.Property<T> {
-			accept(PropertyDeclarationBsonNode(name, required, SchemaQuery<E>(name, context).apply(schema), context))
-			return PropertyImpl()
+			val propQuery = SchemaPropertyQueryImpl<T, E>(name, context).apply(schema)
+			accept(PropertyDeclarationBsonNode(name, required, propQuery, context))
+			return PropertyImpl(name)
 		}
 
 		@OptIn(DangerousMongoApi::class)
@@ -344,17 +345,32 @@ private class SchemaQueryImpl<T>(
 			accept(AdditionalPropertiesDeclarationBsonNode(SchemaQuery<Any?>(title, context).apply(schema), context))
 		}
 
-		private inner class PropertyImpl : AbstractCompoundBsonNode(context), SchemaQuery.SchemaPropertiesQuery.Property<T> {
-			override fun dependsOn(property: SchemaQuery.SchemaPropertiesQuery.Property<T>) {
-				TODO("Not yet implemented")
+		private class PropertyImpl<R>(
+			val name: String,
+		) : SchemaQuery.SchemaPropertiesQuery.Property<R> {
+
+			override fun toString(): String =
+				"Property($name)"
+		}
+
+		private inner class SchemaPropertyQueryImpl<R, E>(
+			val name: String,
+			context: BsonContext,
+		) : SchemaQueryImpl<E>(context, name), SchemaQuery.SchemaPropertiesQuery.SchemaPropertyQuery<R, E> {
+
+			override fun dependsOn(property: SchemaQuery.SchemaPropertiesQuery.Property<R>) {
+				check(property is PropertyImpl<*>) { "Unknown Property implementation: $property" }
+				dependsOn(property.name)
 			}
 
+			@OptIn(DangerousMongoApi::class)
 			override fun dependsOn(property: String) {
-				TODO("Not yet implemented")
+				this@SchemaPropertiesQueryImpl.accept(PropertyDependencyDeclarationBsonNode(name, property, context))
 			}
 
-			override fun dependsOn(schema: SchemaQuery<T>.() -> Unit) {
-				TODO("Not yet implemented")
+			@OptIn(DangerousMongoApi::class)
+			override fun dependsOn(schema: SchemaQuery<R>.() -> Unit) {
+				this@SchemaPropertiesQueryImpl.accept(SchemaDependencyDeclarationBsonNode(name, SchemaQuery<R>(name, context).apply(schema), context))
 			}
 		}
 
@@ -382,10 +398,13 @@ private class SchemaQueryImpl<T>(
 			return this
 		}
 
+		@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 		override fun write(writer: BsonFieldWriter, children: List<BsonNode>) = with(writer) {
 			val namedProperties = children.filterIsInstance<PropertyDeclarationBsonNode>()
 			val patternProperties = children.filterIsInstance<PatternPropertyDeclarationBsonNode>()
 			val additionalProperties = children.filterIsInstance<AdditionalPropertiesDeclarationBsonNode>().singleOrNull()
+			val propertyDependencies = children.filterIsInstance<PropertyDependencyDeclarationBsonNode>()
+			val schemaDependencies = children.filterIsInstance<SchemaDependencyDeclarationBsonNode>()
 
 			val requiredProperties = namedProperties.filter { it.required }.map { it.name }
 			if (requiredProperties.isNotEmpty()) {
@@ -423,6 +442,71 @@ private class SchemaQueryImpl<T>(
 			} else {
 				writeBoolean("additionalProperties", false)
 			}
+
+			val allDepFromKeys = (propertyDependencies.map { it.from } + schemaDependencies.map { it.from }).distinct()
+			if (allDepFromKeys.isNotEmpty()) {
+				writeDocument("dependencies") {
+					for (from in allDepFromKeys) {
+						val fromSchemaDeps = schemaDependencies.filter { it.from == from }
+						val fromPropDeps = propertyDependencies.filter { it.from == from }.map { it.to }.distinct()
+
+						if (fromSchemaDeps.isNotEmpty()) {
+							val nonPropertiesChildren = ArrayList<BsonNode>()
+							val propertiesChildren = ArrayList<BsonNode>()
+
+							for (schemaDep in fromSchemaDeps) {
+								val schemaImpl = schemaDep.schema as? SchemaQueryImpl<*>
+								if (schemaImpl != null) {
+									for (node in schemaImpl.children) {
+										if (node is SchemaPropertiesQueryImpl<*>) {
+											propertiesChildren.addAll(node.children)
+										} else {
+											nonPropertiesChildren.add(node)
+										}
+									}
+								}
+							}
+
+							val finalPropertiesChildren = ArrayList<BsonNode>()
+							for (node in propertiesChildren) {
+								if (node is PropertyDeclarationBsonNode && node.name in fromPropDeps && !node.required) {
+									finalPropertiesChildren.add(PropertyDeclarationBsonNode(node.name, required = true, node.schema, context))
+								} else {
+									finalPropertiesChildren.add(node)
+								}
+							}
+							val existingPropertyNames = finalPropertiesChildren.filterIsInstance<PropertyDeclarationBsonNode>().map { it.name }.toSet()
+							for (to in fromPropDeps) {
+								if (to !in existingPropertyNames) {
+									finalPropertiesChildren.add(PropertyDeclarationBsonNode(to, required = true, SchemaQuery<Any?>(to, context), context))
+								}
+							}
+
+							val targetSchema = SchemaQueryImpl<Any?>(context, from)
+							for (node in nonPropertiesChildren) {
+								targetSchema.accept(node)
+							}
+							if (finalPropertiesChildren.isNotEmpty()) {
+								val combinedProps = SchemaPropertiesQueryImpl<Any?>(context)
+								for (node in finalPropertiesChildren) {
+									combinedProps.accept(node)
+								}
+								targetSchema.accept(combinedProps)
+							}
+
+							writeDocument(from) {
+								targetSchema.writeTo(this)
+							}
+						} else {
+							writeArray(from) {
+								for (target in fromPropDeps) {
+									writeString(target)
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -430,6 +514,26 @@ private class SchemaQueryImpl<T>(
 	private class PropertyDeclarationBsonNode(
 		val name: String,
 		val required: Boolean,
+		val schema: SchemaQuery<*>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+		override fun write(writer: BsonFieldWriter) {
+			schema.writeTo(writer)
+		}
+	}
+
+	@LowLevelApi
+	private class PropertyDependencyDeclarationBsonNode(
+		val from: String,
+		val to: String,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+		override fun write(writer: BsonFieldWriter) {}
+	}
+
+	@LowLevelApi
+	private class SchemaDependencyDeclarationBsonNode(
+		val from: String,
 		val schema: SchemaQuery<*>,
 		context: BsonContext,
 	) : SchemaBsonNode(context) {

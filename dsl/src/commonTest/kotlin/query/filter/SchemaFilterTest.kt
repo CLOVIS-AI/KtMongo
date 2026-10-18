@@ -961,6 +961,157 @@ val SchemaTest by multiContextSuite {
 				}
 			""".trimIndent()
 		}
+
+		test("Multiple property dependencies") {
+			filter {
+				schema("Test") {
+					properties {
+						property(User::name, required = false) {
+							type(BsonType.String)
+						}
+						val city = property<String>("city", required = false) {
+							type(BsonType.String)
+						}
+						property(User::age, required = false) {
+							type(BsonType.Int32)
+							dependsOn("name")
+							dependsOn(city)
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"properties": {
+							"name": {
+								"title": "name",
+								"bsonType": "string"
+							},
+							"city": {
+								"title": "city",
+								"bsonType": "string"
+							},
+							"age": {
+								"title": "age",
+								"bsonType": "int"
+							}
+						},
+						"additionalProperties": false,
+						"dependencies": {
+							"age": [
+								"name",
+								"city"
+							]
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Schema dependency") {
+			filter {
+				schema("Test") {
+					properties {
+						property(User::age, required = false) {
+							type(BsonType.Int32)
+							dependsOn {
+								properties {
+									property(User::name) {
+										type(BsonType.String)
+									}
+								}
+							}
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"properties": {
+							"age": {
+								"title": "age",
+								"bsonType": "int"
+							}
+						},
+						"additionalProperties": false,
+						"dependencies": {
+							"age": {
+								"title": "age",
+								"required": [
+									"name"
+								],
+								"properties": {
+									"name": {
+										"title": "name",
+										"bsonType": "string"
+									}
+								},
+								"additionalProperties": false
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Mixed dependencies") {
+			filter {
+				schema("Test") {
+					properties {
+						val name = property(User::name, required = false) {
+							type(BsonType.String)
+						}
+						property(User::age, required = false) {
+							type(BsonType.Int32)
+							dependsOn(name)
+							dependsOn {
+								properties {
+									property<String>("city") {
+										type(BsonType.String)
+									}
+								}
+							}
+						}
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"properties": {
+							"name": {
+								"title": "name",
+								"bsonType": "string"
+							},
+							"age": {
+								"title": "age",
+								"bsonType": "int"
+							}
+						},
+						"additionalProperties": false,
+						"dependencies": {
+							"age": {
+								"title": "age",
+								"required": [
+									"city",
+									"name"
+								],
+								"properties": {
+									"city": {
+										"title": "city",
+										"bsonType": "string"
+									},
+									"name": {}
+								},
+								"additionalProperties": false
+							}
+						}
+					}
+				}
+			""".trimIndent()
+		}
 	}
 
 }
