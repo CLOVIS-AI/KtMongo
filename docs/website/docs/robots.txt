@@ -1,0 +1,5 @@
+User-agent: *
+Content-Signal: ai-train=no, search=yes, ai-input=yes
+Allow: /
+
+# The 'Sitemap' line will be generated after this one in CI
