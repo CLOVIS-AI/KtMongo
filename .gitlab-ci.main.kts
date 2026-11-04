@@ -245,6 +245,7 @@ gitlabCi {
 			shell($$"""echo "repo_url: $CI_PROJECT_URL">>mkdocs.yml""")
 			shell($$"""echo "repo_name: $CI_PROJECT_TITLE">>mkdocs.yml""")
 			shell($$"""echo "site_url: $$siteUrl">>mkdocs.yml""")
+			shell($$"""echo "Sitemap: $$siteUrl/sitemap.xml">>docs/robots.txt""")
 		}
 
 		script {
