@@ -149,6 +149,31 @@ val GroupTest by multiContextSuite {
 			""".trimIndent())
 	}
 
+	test($$"Simple $group with $addToSet") {
+		TestPipeline<Score>()
+			.group<Results> {
+				Results::totals addToSet Score::score.toDouble()
+			}
+			.also {
+				@Suppress("unused")
+				val _: Pipeline<Results> = it // Won't compile if 'group' stops changing the type automatically to Results
+			}
+			.shouldBeBson($$"""
+				[
+					{
+						"$group": {
+							"_id": null,
+							"totals": {
+								"$addToSet": {
+									"$toDouble": "$score"
+								}
+							}
+						}
+					}
+				]
+			""".trimIndent())
+	}
+
 	test($$"Simple $group with _id") {
 		TestPipeline<Score>()
 			.group {
