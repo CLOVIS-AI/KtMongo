@@ -25,12 +25,6 @@ import kotlin.reflect.KType
 annotation class ExperimentalBsonSchemaApi
 
 /**
- * Marker of the builder DSL for [Schema].
- */
-@DslMarker
-annotation class SchemaDsl
-
-/**
  * A schema for a BSON document.
  *
  * A schema specifies which fields are allowed, their type, and constraints on their values.
@@ -55,6 +49,11 @@ class Schema<T> internal constructor(
 	 * The different properties this document should have.
 	 */
 	val constraints: List<Constraint<*>>,
+
+	/**
+	 * The factory used to create the BSON values that appear in this schema.
+	 */
+	val factory: BsonFactory,
 ) : BsonFieldWriteable {
 
 	@LowLevelApi
@@ -66,9 +65,9 @@ class Schema<T> internal constructor(
 		}
 	}
 
-	override fun toString(): String {
-		return super.toString() // TODO
-	}
+	@OptIn(LowLevelApi::class)
+	override fun toString(): String =
+		factory.buildDocument { writeTo(this) }.toString()
 
 	/**
 	 * A constraint on a [BsonValue].
@@ -764,7 +763,8 @@ class Schema<T> internal constructor(
 		/**
 		 * Creates a [Schema] that accepts all values.
 		 */
+		context(factory: BsonFactory)
 		fun acceptAll(): Schema<Any?> =
-			Schema("kotlin.Any?", emptyList())
+			Schema("kotlin.Any?", emptyList(), factory)
 	}
 }
