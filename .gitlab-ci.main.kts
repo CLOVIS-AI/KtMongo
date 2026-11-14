@@ -271,6 +271,12 @@ gitlabCi {
 		script {
 			gradlew.tasks(
 				"iosSimulatorArm64Test macosArm64Test tvosSimulatorArm64Test watchosSimulatorArm64Test",
+				// Don't run integration tests
+				// The macOS runner does not have a MongoDB instance
+				"-x :driver-multiplatform-wire:iosSimulatorArm64Test",
+				"-x :driver-multiplatform-wire:macosArm64Test",
+				"-x :driver-multiplatform-wire:tvosSimulatorArm64Test",
+				"-x :driver-multiplatform-wire:watchosSimulatorArm64Test",
 				$$"-PappVersion=$project_version",
 			)
 		}
