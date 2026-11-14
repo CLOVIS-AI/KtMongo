@@ -4402,4 +4402,55 @@ interface FilterQuery<T> : CompoundBsonNode, FieldDsl {
 
 	// endregion
 	// endregion
+	// region Schema
+
+	/**
+	 * Matches documents that satisfy the specified schema.
+	 *
+	 * ### Example
+	 *
+	 * Find all documents that can be successfully deserialized:
+	 *
+	 * ```kotlin
+	 * class City(
+	 *     val _id: ObjectId,
+	 *     val name: String,
+	 *     val countryCode: String,
+	 *     val popularity: Int? = null,
+	 * )
+	 *
+	 * collection.find {
+	 *     schema("City") {
+	 *         type(BsonType.Document)
+	 *         properties {
+	 *             property(City::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(City::name) {
+	 *                 type(BsonType.String)
+	 *             }
+	 *
+	 *             property(City::countryCode) {
+	 *                 type(BsonType.String)
+	 *                 length(2)
+	 *             }
+	 *
+	 *             property(City::popularity, required = false) {
+	 *                 type(BsonType.Int32)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * To see the list of operators, read [SchemaQuery].
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema)
+	 */
+	fun schema(title: String, block: SchemaQuery<T>.() -> Unit)
+
+	// endregion
 }

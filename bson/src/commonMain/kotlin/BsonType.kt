@@ -27,6 +27,7 @@ import opensavvy.ktmongo.bson.types.Vector
  * ### External resources
  *
  * - [BSON spec](https://bsonspec.org/spec.html)
+ * - [MongoDB documentation](https://www.mongodb.com/docs/manual/reference/bson-types)
  */
 enum class BsonType(
 	/**
@@ -35,6 +36,11 @@ enum class BsonType(
 	 * Guaranteed to be in the range `-1` ([MinKey]) to `127` ([MaxKey]).
 	 */
 	val code: Byte,
+
+	/**
+	 * The string identifier for this particular type.
+	 */
+	val alias: String,
 ) {
 	/**
 	 * A 64-bit floating-point number, represented by the Kotlin class [kotlin.Double].
@@ -42,7 +48,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeDouble Read this type.
 	 * @see BsonFieldWriter.writeDouble Write this type.
 	 */
-	Double(1),
+	Double(1, "double"),
 
 	/**
 	 * A UTF-8 encoded string, represented by the Kotlin class [kotlin.String].
@@ -50,7 +56,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeString Read this type.
 	 * @see BsonFieldWriter.writeString Write this type.
 	 */
-	String(2),
+	String(2, "string"),
 
 	/**
 	 * An arbitrary document, represented by the Kotlin interface [BsonDocument].
@@ -58,7 +64,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeDocument Read this type.
 	 * @see BsonFieldWriter.writeDocument Write this type.
 	 */
-	Document(3),
+	Document(3, "object"),
 
 	/**
 	 * An array of arbitrary values, represented by the Kotlin interface [BsonArray].
@@ -66,7 +72,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeArray Read this type.
 	 * @see BsonFieldWriter.writeArray Write this type.
 	 */
-	Array(4),
+	Array(4, "array"),
 
 	/**
 	 * An arbitrary binary block.
@@ -84,7 +90,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeBinaryDataType Read the subtype.
 	 * @see BsonFieldWriter.writeBinaryData Write this type.
 	 */
-	BinaryData(5),
+	BinaryData(5, "binData"),
 
 	/**
 	 * The undefined value.
@@ -93,7 +99,7 @@ enum class BsonType(
 	 * @see BsonFieldWriter.writeUndefined Write this type.
 	 */
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	Undefined(6),
+	Undefined(6, "undefined"),
 
 	/**
 	 * A 12-bytes, time-sorted unique identifier for documents, represented by the Kotlin class [ObjectId][opensavvy.ktmongo.bson.types.ObjectId].
@@ -102,7 +108,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeObjectIdBytes Low-level read.
 	 * @see BsonFieldWriter.writeObjectId Write this type.
 	 */
-	ObjectId(7),
+	ObjectId(7, "objectId"),
 
 	/**
 	 * A boolean value, represented by the Kotlin class [kotlin.Boolean].
@@ -110,7 +116,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeBoolean Read this type.
 	 * @see BsonFieldWriter.writeBoolean Write this type.
 	 */
-	Boolean(8),
+	Boolean(8, "bool"),
 
 	/**
 	 * A date and time in UTC, represented by the Kotlin class [kotlin.time.Instant].
@@ -120,7 +126,7 @@ enum class BsonType(
 	 * @see BsonFieldWriter.writeInstant Write this type.
 	 * @see BsonFieldWriter.writeDateTime Low-level write as a Unix timestamp.
 	 */
-	Datetime(9),
+	Datetime(9, "date"),
 
 	/**
 	 * The null value.
@@ -128,7 +134,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeNull Read this type.
 	 * @see BsonFieldWriter.writeNull Write this type.
 	 */
-	Null(10),
+	Null(10, "null"),
 
 	/**
 	 * A MongoDB regular expression.
@@ -139,7 +145,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeRegularExpressionOptions Read the options.
 	 * @see BsonFieldWriter.writeRegularExpression Write this type.
 	 */
-	RegExp(11),
+	RegExp(11, "regex"),
 
 	/**
 	 * A reference to a document in another collection.
@@ -151,7 +157,7 @@ enum class BsonType(
 	 * @see BsonFieldWriter.writeDBPointer Write this type.
 	 */
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	DBPointer(12),
+	DBPointer(12, "dbPointer"),
 
 	/**
 	 * A string of JavaScript code.
@@ -159,7 +165,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeJavaScript Read this type.
 	 * @see BsonFieldWriter.writeJavaScript Write this type.
 	 */
-	JavaScript(13),
+	JavaScript(13, "javascript"),
 
 	/**
 	 * A symbol.
@@ -168,7 +174,7 @@ enum class BsonType(
 	 * @see BsonFieldWriter.writeSymbol Write this type.
 	 */
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	Symbol(14),
+	Symbol(14, "symbol"),
 
 	/**
 	 * A string of JavaScript code, accompanied by a document containing variables.
@@ -178,7 +184,7 @@ enum class BsonType(
 	 * @see BsonFieldWriter.writeJavaScriptWithScope Write this type.
 	 */
 	@Deprecated(DEPRECATED_IN_BSON_SPEC)
-	JavaScriptWithScope(15),
+	JavaScriptWithScope(15, "javascriptWithScope"),
 
 	/**
 	 * A 32-bit signed integer, represented by the Kotlin class [kotlin.Int].
@@ -186,7 +192,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeInt32 Read this type.
 	 * @see BsonFieldWriter.writeInt32 Write this type.
 	 */
-	Int32(16),
+	Int32(16, "int"),
 
 	/**
 	 * A special type used in MongoDB logs, represented by the Kotlin class [Timestamp][opensavvy.ktmongo.bson.types.Timestamp].
@@ -195,7 +201,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeTimestamp Read this type.
 	 * @see BsonFieldWriter.writeTimestamp Write this type.
 	 */
-	Timestamp(17),
+	Timestamp(17, "timestamp"),
 
 	/**
 	 * A 64-bit signed integer, represented by the Kotlin class [kotlin.Long].
@@ -203,7 +209,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeInt64 Read this type.
 	 * @see BsonFieldWriter.writeInt64 Write this type.
 	 */
-	Int64(18),
+	Int64(18, "long"),
 
 	/**
 	 * A 128-bit floating-point number.
@@ -211,7 +217,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeDecimal128Bytes Read this type.
 	 * @see BsonFieldWriter.writeDecimal128 Write this type.
 	 */
-	Decimal128(19),
+	Decimal128(19, "decimal"),
 
 	/**
 	 * A special value containing the minimum possible value.
@@ -219,7 +225,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeMinKey Read this type.
 	 * @see BsonFieldWriter.writeMinKey Write this type.
 	 */
-	MinKey(-1),
+	MinKey(-1, "minKey"),
 
 	/**
 	 * A special value containing the maximum possible value.
@@ -227,7 +233,7 @@ enum class BsonType(
 	 * @see BsonValue.decodeMaxKey Read this type.
 	 * @see BsonFieldWriter.writeMaxKey Write this type.
 	 */
-	MaxKey(127),
+	MaxKey(127, "maxKey"),
 	;
 
 	companion object {
