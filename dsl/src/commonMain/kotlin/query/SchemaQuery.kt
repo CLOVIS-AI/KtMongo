@@ -1962,18 +1962,35 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 	// endregion
 	// region Combinators
 
-	fun allOf(
-		block: SchemaHostQuery<T>.() -> Unit,
-	)
-
-	fun anyOf(
-		block: SchemaHostQuery<T>.() -> Unit,
-	)
-
-	fun oneOf(
-		block: SchemaHostQuery<T>.() -> Unit,
-	)
-
+	/**
+	 * Matches documents that do not satisfy the specified schema.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         not("NotYoung") {
+	 *             properties {
+	 *                 property(User::age) {
+	 *                     maximum(18)
+	 *                 }
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.5.6)
+	 */
 	fun not(
 		title: String,
 		block: SchemaQuery<T>.() -> Unit,

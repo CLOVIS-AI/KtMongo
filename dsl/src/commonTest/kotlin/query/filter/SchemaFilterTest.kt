@@ -1144,4 +1144,36 @@ val SchemaTest by multiContextSuite {
 		}
 	}
 
+	test("not") {
+		filter {
+			schema("Test") {
+				not("NotYoung") {
+					properties {
+						property(User::age) {
+							maximum(18)
+						}
+					}
+				}
+			}
+		} shouldBeBson $$"""
+			{
+				"$jsonSchema": {
+					"title": "Test",
+					"not": {
+						"title": "NotYoung",
+						"required": ["age"],
+						"properties": {
+							"age": {
+								"title": "age",
+								"maximum": 18,
+								"exclusiveMaximum": false
+							}
+						},
+						"additionalProperties": false
+					}
+				}
+			}
+		""".trimIndent()
+	}
+
 }

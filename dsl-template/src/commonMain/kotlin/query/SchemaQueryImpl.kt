@@ -564,20 +564,21 @@ private open class SchemaQueryImpl<T>(
 	// endregion
 	// region Combinators
 
-	override fun allOf(block: SchemaQuery.SchemaHostQuery<T>.() -> Unit) {
-		TODO("Not yet implemented")
-	}
-
-	override fun anyOf(block: SchemaQuery.SchemaHostQuery<T>.() -> Unit) {
-		TODO("Not yet implemented")
-	}
-
-	override fun oneOf(block: SchemaQuery.SchemaHostQuery<T>.() -> Unit) {
-		TODO("Not yet implemented")
-	}
-
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun not(title: String, block: SchemaQuery<T>.() -> Unit) {
-		TODO("Not yet implemented")
+		accept(NotBsonNode(SchemaQuery<T>(title, context).apply(block), context))
+	}
+
+	@LowLevelApi
+	private class NotBsonNode<T>(
+		val schema: SchemaQuery<T>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+		override fun write(writer: BsonFieldWriter) = with(writer) {
+			writeDocument("not") {
+				schema.writeTo(this)
+			}
+		}
 	}
 
 	// endregion
