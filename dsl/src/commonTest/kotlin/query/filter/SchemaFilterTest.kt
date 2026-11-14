@@ -82,6 +82,36 @@ val SchemaTest by multiContextSuite {
 		}
 	}
 
+	test("Enum") {
+		filter {
+			schema("Test") {
+				type(BsonType.Document)
+				properties {
+					property(User::isAlive) {
+						type(BsonType.Boolean)
+						enum(true, false)
+					}
+				}
+			}
+		} shouldBeBson $$"""
+			{
+				"$jsonSchema": {
+					"title": "Test",
+					"bsonType": "object",
+					"required": ["isAlive"],
+					"properties": {
+						"isAlive": {
+							"title": "isAlive",
+							"bsonType": "bool",
+							"enum": [true, false]
+						}
+					},
+					"additionalProperties": false
+				}
+			}
+		""".trimIndent()
+	}
+
 	test("Description") {
 		filter {
 			schema("Test") {

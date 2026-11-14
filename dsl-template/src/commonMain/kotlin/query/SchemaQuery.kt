@@ -27,6 +27,8 @@ import opensavvy.ktmongo.dsl.path.PathSegment
 import opensavvy.ktmongo.dsl.tree.CompoundBsonNode
 import org.intellij.lang.annotations.Language
 import kotlin.reflect.KProperty1
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * DSL for the [`$jsonSchema` operator][FilterQuery.schema].
@@ -317,7 +319,88 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 	 */
 	fun type(bsonType: Number)
 
-	fun enum(values: List<T>)
+	/**
+	 * Verifies that the value is one of the specified [values].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val type: String,
+	 * )
+	 *
+	 * enum class UserType {
+	 *     Admin,
+	 *     Member,
+	 *     Guest,
+	 * }
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::type) {
+	 *                 enum(Admin, Member, Guest)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.5.1)
+	 */
+	fun enum(values: List<T>, type: KType)
+
+	/**
+	 * Verifies that the value is one of the specified [values].
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val type: String,
+	 * )
+	 *
+	 * enum class UserType {
+	 *     Admin,
+	 *     Member,
+	 *     Guest,
+	 * }
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         properties {
+	 *             property(User::_id) {
+	 *                 type(BsonType.ObjectId)
+	 *             }
+	 *
+	 *             property(User::type) {
+	 *                 enum(Admin, Member, Guest)
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.5.1)
+	 */
+	@Suppress("WRONG_MODIFIER_CONTAINING_DECLARATION")
+	final inline fun <reified E : T> enum(
+		vararg values: E,
+	) {
+		enum(values.asList(), typeOf<E>())
+	}
 
 	/**
 	 * Provides a human-readable description of this schema.

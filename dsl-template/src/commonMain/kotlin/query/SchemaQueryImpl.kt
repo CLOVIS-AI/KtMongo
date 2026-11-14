@@ -81,8 +81,9 @@ private open class SchemaQueryImpl<T>(
 		accept(Schema.TypeNumber(context))
 	}
 
-	override fun enum(values: List<T>) {
-		TODO("Not yet implemented")
+	@OptIn(LowLevelApi::class)
+	override fun enum(values: List<T>, type: KType) {
+		accept(Schema.Enum(values.map { it to type }, context))
 	}
 
 	@OptIn(DangerousMongoApi::class, LowLevelApi::class)
