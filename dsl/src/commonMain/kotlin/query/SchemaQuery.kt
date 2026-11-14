@@ -1963,6 +1963,135 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 	// region Combinators
 
 	/**
+	 * Matches documents that satisfy all of the specified schemas.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         allOf {
+	 *             schema("HasAge") {
+	 *                 properties {
+	 *                     property(User::age) {
+	 *                         minimum(18)
+	 *                     }
+	 *                 }
+	 *             }
+	 *             schema("HasName") {
+	 *                 properties {
+	 *                     property(User::name) {
+	 *                         minLength(1)
+	 *                     }
+	 *                 }
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.5.3)
+	 */
+	fun allOf(
+		block: SchemaHostQuery<T>.() -> Unit,
+	)
+
+	/**
+	 * Matches documents that satisfy at least one of the specified schemas.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         anyOf {
+	 *             schema("Young") {
+	 *                 properties {
+	 *                     property(User::age) {
+	 *                         maximum(17)
+	 *                     }
+	 *                 }
+	 *             }
+	 *             schema("Named") {
+	 *                 properties {
+	 *                     property(User::name) {
+	 *                         minLength(1)
+	 *                     }
+	 *                 }
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.5.4)
+	 */
+	fun anyOf(
+		block: SchemaHostQuery<T>.() -> Unit,
+	)
+
+	/**
+	 * Matches documents that satisfy exactly one of the specified schemas.
+	 *
+	 * ### Example
+	 *
+	 * ```kotlin
+	 * class User(
+	 *     val _id: ObjectId,
+	 *     val age: Int,
+	 *     val name: String,
+	 * )
+	 *
+	 * users.find {
+	 *     schema("User") {
+	 *         oneOf {
+	 *             schema("Young") {
+	 *                 properties {
+	 *                     property(User::age) {
+	 *                         maximum(17)
+	 *                     }
+	 *                 }
+	 *             }
+	 *             schema("Adult") {
+	 *                 properties {
+	 *                     property(User::age) {
+	 *                         minimum(18)
+	 *                     }
+	 *                 }
+	 *             }
+	 *         }
+	 *     }
+	 * }
+	 * ```
+	 *
+	 * ### External resources
+	 *
+	 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+	 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.5.5)
+	 */
+	fun oneOf(
+		block: SchemaHostQuery<T>.() -> Unit,
+	)
+
+	/**
 	 * Matches documents that do not satisfy the specified schema.
 	 *
 	 * ### Example

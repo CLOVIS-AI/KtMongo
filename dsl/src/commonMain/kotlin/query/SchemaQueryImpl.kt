@@ -568,8 +568,60 @@ private open class SchemaQueryImpl<T>(
 	// region Combinators
 
 	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	override fun allOf(block: SchemaQuery.SchemaHostQuery<T>.() -> Unit) {
+		accept(CombinatorBsonNode<T>("allOf", context).apply(block))
+	}
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	override fun anyOf(block: SchemaQuery.SchemaHostQuery<T>.() -> Unit) {
+		accept(CombinatorBsonNode<T>("anyOf", context).apply(block))
+	}
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
+	override fun oneOf(block: SchemaQuery.SchemaHostQuery<T>.() -> Unit) {
+		accept(CombinatorBsonNode<T>("oneOf", context).apply(block))
+	}
+
+	@OptIn(LowLevelApi::class, DangerousMongoApi::class)
 	override fun not(title: String, block: SchemaQuery<T>.() -> Unit) {
 		accept(NotBsonNode(SchemaQuery<T>(title, context).apply(block), context))
+	}
+
+	@LowLevelApi
+	private class CombinatorSchemaBsonNode<T>(
+		val schema: SchemaQuery<T>,
+		context: BsonContext,
+	) : SchemaBsonNode(context) {
+		override fun write(writer: BsonFieldWriter) {
+			schema.writeTo(writer)
+		}
+	}
+
+	@OptIn(LowLevelApi::class)
+	private class CombinatorBsonNode<T>(
+		private val key: String,
+		context: BsonContext,
+	) : AbstractCompoundBsonNode(context), SchemaQuery.SchemaHostQuery<T> {
+
+		@OptIn(DangerousMongoApi::class)
+		override fun schema(title: String, block: SchemaQuery<T>.() -> Unit) {
+			accept(CombinatorSchemaBsonNode(SchemaQuery<T>(title, context).apply(block), context))
+		}
+
+		override fun simplify(children: List<BsonNode>): AbstractBsonNode {
+			require(children.isNotEmpty()) { "Combinator must contain at least one schema" }
+			return this
+		}
+
+		override fun write(writer: BsonFieldWriter, children: List<BsonNode>) = with(writer) {
+			writeArray(key) {
+				for (child in children.filterIsInstance<CombinatorSchemaBsonNode<T>>()) {
+					writeDocument {
+						child.writeTo(this)
+					}
+				}
+			}
+		}
 	}
 
 	@LowLevelApi

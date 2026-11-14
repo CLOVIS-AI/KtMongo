@@ -1176,4 +1176,167 @@ val SchemaTest by multiContextSuite {
 		""".trimIndent()
 	}
 
+	test("allOf") {
+		filter {
+			schema("Test") {
+				allOf {
+					schema("HasAge") {
+						properties {
+							property(User::age) {
+								minimum(18)
+							}
+						}
+					}
+					schema("HasName") {
+						properties {
+							property(User::name) {
+								minLength(1)
+							}
+						}
+					}
+				}
+			}
+		} shouldBeBson $$"""
+			{
+				"$jsonSchema": {
+					"title": "Test",
+					"allOf": [
+						{
+							"title": "HasAge",
+							"required": ["age"],
+							"properties": {
+								"age": {
+									"title": "age",
+									"minimum": 18,
+									"exclusiveMinimum": false
+								}
+							},
+							"additionalProperties": false
+						},
+						{
+							"title": "HasName",
+							"required": ["name"],
+							"properties": {
+								"name": {
+									"title": "name",
+									"minLength": 1
+								}
+							},
+							"additionalProperties": false
+						}
+					]
+				}
+			}
+		""".trimIndent()
+	}
+
+	test("anyOf") {
+		filter {
+			schema("Test") {
+				anyOf {
+					schema("Young") {
+						properties {
+							property(User::age) {
+								maximum(17)
+							}
+						}
+					}
+					schema("Named") {
+						properties {
+							property(User::name) {
+								minLength(1)
+							}
+						}
+					}
+				}
+			}
+		} shouldBeBson $$"""
+			{
+				"$jsonSchema": {
+					"title": "Test",
+					"anyOf": [
+						{
+							"title": "Young",
+							"required": ["age"],
+							"properties": {
+								"age": {
+									"title": "age",
+									"maximum": 17,
+									"exclusiveMaximum": false
+								}
+							},
+							"additionalProperties": false
+						},
+						{
+							"title": "Named",
+							"required": ["name"],
+							"properties": {
+								"name": {
+									"title": "name",
+									"minLength": 1
+								}
+							},
+							"additionalProperties": false
+						}
+					]
+				}
+			}
+		""".trimIndent()
+	}
+
+	test("oneOf") {
+		filter {
+			schema("Test") {
+				oneOf {
+					schema("Young") {
+						properties {
+							property(User::age) {
+								maximum(17)
+							}
+						}
+					}
+					schema("Adult") {
+						properties {
+							property(User::age) {
+								minimum(18)
+							}
+						}
+					}
+				}
+			}
+		} shouldBeBson $$"""
+			{
+				"$jsonSchema": {
+					"title": "Test",
+					"oneOf": [
+						{
+							"title": "Young",
+							"required": ["age"],
+							"properties": {
+								"age": {
+									"title": "age",
+									"maximum": 17,
+									"exclusiveMaximum": false
+								}
+							},
+							"additionalProperties": false
+						},
+						{
+							"title": "Adult",
+							"required": ["age"],
+							"properties": {
+								"age": {
+									"title": "age",
+									"minimum": 18,
+									"exclusiveMinimum": false
+								}
+							},
+							"additionalProperties": false
+						}
+					]
+				}
+			}
+		""".trimIndent()
+	}
+
 }
