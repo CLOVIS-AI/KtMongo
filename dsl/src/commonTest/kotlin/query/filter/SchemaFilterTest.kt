@@ -105,8 +105,7 @@ val SchemaTest by multiContextSuite {
 							"bsonType": "bool",
 							"enum": [true, false]
 						}
-					},
-					"additionalProperties": false
+					}
 				}
 			}
 		""".trimIndent()
@@ -801,8 +800,7 @@ val SchemaTest by multiContextSuite {
 								"title": "age",
 								"bsonType": "int"
 							}
-						},
-						"additionalProperties": false
+						}
 					}
 				}
 			""".trimIndent()
@@ -833,8 +831,7 @@ val SchemaTest by multiContextSuite {
 								"title": "^num_.*$",
 								"bsonType": "int"
 							}
-						},
-						"additionalProperties": false
+						}
 					}
 				}
 			""".trimIndent()
@@ -869,6 +866,64 @@ val SchemaTest by multiContextSuite {
 							"title": "Extra",
 							"bsonType": "string"
 						}
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Additional properties (closed)") {
+			filter {
+				schema("Test") {
+					properties {
+						property(User::name) {
+							type(BsonType.String)
+						}
+						additionalProperties(false)
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"required": [
+							"name"
+						],
+						"properties": {
+							"name": {
+								"title": "name",
+								"bsonType": "string"
+							}
+						},
+						"additionalProperties": false
+					}
+				}
+			""".trimIndent()
+		}
+
+		test("Additional properties (open)") {
+			filter {
+				schema("Test") {
+					properties {
+						property(User::name) {
+							type(BsonType.String)
+						}
+						additionalProperties(true)
+					}
+				}
+			} shouldBeBson $$"""
+				{
+					"$jsonSchema": {
+						"title": "Test",
+						"required": [
+							"name"
+						],
+						"properties": {
+							"name": {
+								"title": "name",
+								"bsonType": "string"
+							}
+						},
+						"additionalProperties": true
 					}
 				}
 			""".trimIndent()
@@ -942,8 +997,7 @@ val SchemaTest by multiContextSuite {
 								"title": "age",
 								"bsonType": "int"
 							}
-						},
-						"additionalProperties": false
+						}
 					}
 				}
 			""".trimIndent()
@@ -985,8 +1039,7 @@ val SchemaTest by multiContextSuite {
 								"title": "custom",
 								"bsonType": "string"
 							}
-						},
-						"additionalProperties": false
+						}
 					}
 				}
 			""".trimIndent()
@@ -1027,7 +1080,6 @@ val SchemaTest by multiContextSuite {
 								"bsonType": "int"
 							}
 						},
-						"additionalProperties": false,
 						"dependencies": {
 							"age": [
 								"name",
@@ -1065,7 +1117,6 @@ val SchemaTest by multiContextSuite {
 								"bsonType": "int"
 							}
 						},
-						"additionalProperties": false,
 						"dependencies": {
 							"age": {
 								"title": "age",
@@ -1077,8 +1128,7 @@ val SchemaTest by multiContextSuite {
 										"title": "name",
 										"bsonType": "string"
 									}
-								},
-								"additionalProperties": false
+								}
 							}
 						}
 					}
@@ -1120,7 +1170,6 @@ val SchemaTest by multiContextSuite {
 								"bsonType": "int"
 							}
 						},
-						"additionalProperties": false,
 						"dependencies": {
 							"age": {
 								"title": "age",
@@ -1134,8 +1183,7 @@ val SchemaTest by multiContextSuite {
 										"bsonType": "string"
 									},
 									"name": {}
-								},
-								"additionalProperties": false
+								}
 							}
 						}
 					}
@@ -1168,8 +1216,7 @@ val SchemaTest by multiContextSuite {
 								"maximum": 18,
 								"exclusiveMaximum": false
 							}
-						},
-						"additionalProperties": false
+						}
 					}
 				}
 			}
@@ -1210,8 +1257,7 @@ val SchemaTest by multiContextSuite {
 									"minimum": 18,
 									"exclusiveMinimum": false
 								}
-							},
-							"additionalProperties": false
+							}
 						},
 						{
 							"title": "HasName",
@@ -1221,8 +1267,7 @@ val SchemaTest by multiContextSuite {
 									"title": "name",
 									"minLength": 1
 								}
-							},
-							"additionalProperties": false
+							}
 						}
 					]
 				}
@@ -1264,8 +1309,7 @@ val SchemaTest by multiContextSuite {
 									"maximum": 17,
 									"exclusiveMaximum": false
 								}
-							},
-							"additionalProperties": false
+							}
 						},
 						{
 							"title": "Named",
@@ -1275,8 +1319,7 @@ val SchemaTest by multiContextSuite {
 									"title": "name",
 									"minLength": 1
 								}
-							},
-							"additionalProperties": false
+							}
 						}
 					]
 				}
@@ -1318,8 +1361,7 @@ val SchemaTest by multiContextSuite {
 									"maximum": 17,
 									"exclusiveMaximum": false
 								}
-							},
-							"additionalProperties": false
+							}
 						},
 						{
 							"title": "Adult",
@@ -1330,8 +1372,7 @@ val SchemaTest by multiContextSuite {
 									"minimum": 18,
 									"exclusiveMinimum": false
 								}
-							},
-							"additionalProperties": false
+							}
 						}
 					]
 				}

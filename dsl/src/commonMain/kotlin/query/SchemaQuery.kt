@@ -1776,6 +1776,8 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 		/**
 		 * Declares constraints on any property not explicitly declared with [property] or [properties].
 		 *
+		 * By default, any property not declared in the schema is allowed, no matter its type.
+		 *
 		 * ### Example
 		 *
 		 * ```kotlin
@@ -1801,6 +1803,36 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 		fun additionalProperties(
 			title: String,
 			schema: SchemaQuery<*>.() -> Unit,
+		)
+
+		/**
+		 * Explicitly controls whether additional properties beyond those declared with [property] are allowed.
+		 *
+		 * - `additionalProperties(true)`: Explicitly allow properties not declared in the schema (default behavior).
+		 * - `additionalProperties(false)`: Explicitly forbid properties not declared in the schema.
+		 *
+		 * ### Example
+		 *
+		 * ```kotlin
+		 * users.find {
+		 *     schema("User") {
+		 *         properties {
+		 *             property("name") {
+		 *                 type(BsonType.String)
+		 *             }
+		 *             additionalProperties(allowed = false)
+		 *         }
+		 *     }
+		 * }
+		 * ```
+		 *
+		 * ### External resources
+		 *
+		 * - [Official documentation](https://www.mongodb.com/docs/manual/reference/operator/query/jsonschema/#json-schema)
+		 * - [RFC](https://datatracker.ietf.org/doc/html/draft-fge-json-schema-validation-00#section-5.4.4)
+		 */
+		fun additionalProperties(
+			allowed: Boolean,
 		)
 
 		/**
@@ -1929,6 +1961,9 @@ interface SchemaQuery<T> : CompoundBsonNode, FieldDsl {
 	 * Declares constraints on the properties of this object.
 	 *
 	 * If the property does not contain a [BsonType.Document], this constraint is ignored.
+	 *
+	 * By default, the document is allowed to have additional properties that match none of the configured field.
+	 * To control properties that are not declared, see [SchemaPropertiesQuery.additionalProperties].
 	 *
 	 * ### Example
 	 *

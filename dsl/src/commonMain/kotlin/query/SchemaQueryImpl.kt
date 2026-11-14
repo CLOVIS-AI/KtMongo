@@ -343,7 +343,14 @@ private open class SchemaQueryImpl<T>(
 			title: String,
 			schema: SchemaQuery<*>.() -> Unit,
 		) {
-			accept(AdditionalPropertiesDeclarationBsonNode(SchemaQuery<Any?>(title, context).apply(schema), context))
+			accept(AdditionalPropertiesDeclarationBsonNode(SchemaQuery<Any?>(title, context).apply(schema), null, context))
+		}
+
+		@OptIn(DangerousMongoApi::class)
+		override fun additionalProperties(
+			allowed: Boolean,
+		) {
+			accept(AdditionalPropertiesDeclarationBsonNode(null, allowed, context))
 		}
 
 		private class PropertyImpl<R>(
@@ -437,11 +444,13 @@ private open class SchemaQueryImpl<T>(
 			}
 
 			if (additionalProperties != null) {
-				writeDocument("additionalProperties") {
-					additionalProperties.writeTo(this)
+				if (additionalProperties.schema != null) {
+					writeDocument("additionalProperties") {
+						additionalProperties.schema.writeTo(this)
+					}
+				} else {
+					writeBoolean("additionalProperties", additionalProperties.allowed!!)
 				}
-			} else {
-				writeBoolean("additionalProperties", false)
 			}
 
 			val allDepFromKeys = (propertyDependencies.map { it.from } + schemaDependencies.map { it.from }).distinct()
@@ -556,11 +565,12 @@ private open class SchemaQueryImpl<T>(
 
 	@LowLevelApi
 	private class AdditionalPropertiesDeclarationBsonNode(
-		val schema: SchemaQuery<*>,
+		val schema: SchemaQuery<*>?,
+		val allowed: Boolean?,
 		context: BsonContext,
 	) : SchemaBsonNode(context) {
 		override fun write(writer: BsonFieldWriter) {
-			schema.writeTo(writer)
+			// No-op: written by SchemaPropertiesQueryImpl.write
 		}
 	}
 
