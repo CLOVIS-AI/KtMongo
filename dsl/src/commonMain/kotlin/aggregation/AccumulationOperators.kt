@@ -22,6 +22,7 @@ package opensavvy.ktmongo.dsl.aggregation
 import opensavvy.ktmongo.dsl.BsonContext
 import opensavvy.ktmongo.dsl.KtMongoDsl
 import opensavvy.ktmongo.dsl.aggregation.accumulators.ArithmeticValueAccumulators
+import opensavvy.ktmongo.dsl.aggregation.accumulators.ArrayValueAccumulators
 import opensavvy.ktmongo.dsl.aggregation.accumulators.ValueAccumulators
 import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
 
@@ -38,13 +39,17 @@ import opensavvy.ktmongo.dsl.tree.AbstractCompoundBsonNode
  * - [`$percentile`][ArithmeticValueAccumulators.percentiles]
  * - [`$sum`][ArithmeticValueAccumulators.sum]
  *
+ * Array operators:
+ * - [`$addToSet`][ArrayValueAccumulators.addToSet]
+ *
  * @see Value Representation of an aggregation value.
  * @see AggregationOperators Learn more about regular aggregation operators.
  */
 @KtMongoDsl
 interface AccumulationOperators<From : Any, Into : Any> : ValueAccumulators<From, Into>,
 	AggregationOperators,
-	ArithmeticValueAccumulators<From, Into>
+	ArithmeticValueAccumulators<From, Into>,
+	ArrayValueAccumulators<From, Into>
 
 internal class AccumulationOperatorsImpl<From : Any, Into : Any>(
 	context: BsonContext,
